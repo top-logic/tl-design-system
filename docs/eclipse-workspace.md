@@ -39,20 +39,55 @@ deshalb bleiben parallele Worktrees sauber getrennt.
 
 Alternativ über den Workspace-Dialog beim normalen Start.
 
-## 4. Projekte importieren
+## 4. Projekte importieren — **General, nicht Maven**
 
-`File ▸ Import… ▸ Maven ▸ Existing Maven Projects`
+`File ▸ Import… ▸ General ▸ Existing Projects into Workspace`
 
-* **Root Directory:** `/Users/hendrik/git/tl8-wt-29579`
-* Alle Module auswählen (125 Stück), `Finish`.
+* **Select root directory:** `/Users/hendrik/git/tl8-wt-29579`
+* „Search for nested projects" an, „Copy projects into workspace" **aus**
+* Alle auswählen, `Finish`.
 
-`.project` und `.classpath` sind für jedes Modul in git eingecheckt — Eclipse übernimmt sie
-unverändert, es wird nichts kopiert.
+### Warum nicht der Maven-Import
+
+`.project` und `.classpath` sind für jedes Modul in git eingecheckt, und sie referenzieren
+einander über den **Projektnamen aus `.project`** — also den Verzeichnisnamen:
+
+```
+com.top_logic.xio/.classpath:37
+  <classpathentry kind="src" path="/com.top_logic.layout.codeedit"/>
+```
+
+`Existing Maven Projects` benennt die Projekte dagegen nach der **artifactId** —
+`tl-layout-codeedit` statt `com.top_logic.layout.codeedit`. Damit zeigt jede dieser Referenzen
+ins Leere. Konkret gemessen: **146 Fehler**, davon rund 90 identisch
+
+```
+Unable to load annotation processor factory '/tl-build_processor/type-indexer.jar'
+```
+
+— der Annotationsprozessor liegt als `tl-build_processor/type-indexer.jar` im Worktree, aber der
+Maven-Import hatte das Projekt `tl-build-processor` genannt (Bindestrich statt Unterstrich).
+
+Die eingecheckten `.project`-Dateien tragen die m2e-Nature ohnehin schon:
+
+```xml
+<nature>org.eclipse.jdt.core.javanature</nature>
+<nature>org.eclipse.m2e.core.maven2Nature</nature>
+```
+
+Der General-Import verliert also nichts — m2e verwaltet die Fremdbibliotheken weiter, nur heißen
+die Projekte richtig. Aus demselben Grund findet auch die Startkonfiguration ihr Projekt: sie
+zeigt auf `com.top_logic.demo.react`, nicht auf `tl-demo-react`.
 
 ## 5. Workspace-Build abwarten
 
-Der erste Durchlauf dauert. Danach gilt: **„Resolve dependencies from Workspace projects"** muss
-aktiv sein (m2e-Standard). Ist es das, wird kein einziges Modul aus dem Maven-Repository geholt.
+Der erste Durchlauf dauert rund sieben Minuten. Danach gilt: **„Resolve dependencies from
+Workspace projects"** muss aktiv sein (m2e-Standard). Ist es das, wird kein einziges Modul aus dem
+Maven-Repository geholt.
+
+Warnungen bleiben und sind harmlos: `Dependency … with type test-jar is not fully supported`,
+Javadoc-Meldungen, `finalize() … deprecated`. Der GWT-Fehler `gwt-servlet.jar is missing` betrifft
+nur `tl-graph-*` und nicht die React-Demo.
 
 ## 6. Starten
 
