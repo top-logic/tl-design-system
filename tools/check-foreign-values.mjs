@@ -44,6 +44,13 @@ const deliveredPaths = new Set(
     .split('\n').filter(Boolean)
     .map(l => l.replace(/<style name="/, '').replace(/"$/, ''))
 );
+// Seit der Umstellung der React-Schicht werden Stylesheets zusaetzlich ueber
+// StyleSheetConfig in *.conf.config.xml registriert, nicht mehr ueber theme.xml.
+for (const line of execSync(
+  `find "${ROOT}" -name "*.config.xml" -not -path "*/target/*" -print0 | xargs -0 grep -hoE 'resource="/style/[^"]+"' || true`,
+  { encoding: 'utf8', maxBuffer: 1 << 28 }).split('\n').filter(Boolean)) {
+  deliveredPaths.add(line.replace(/resource="/, '').replace(/"$/, ''));
+}
 const isDelivered = (abs) => {
   const i = abs.indexOf('/src/main/webapp/');
   return i > -1 && deliveredPaths.has('/' + abs.slice(i + '/src/main/webapp/'.length));
