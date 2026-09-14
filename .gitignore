@@ -4,3 +4,6 @@ node_modules/
 
 # Generierter Nutzungsindex — aus tools/token-inventory.mjs reproduzierbar.
 inventory/token-inventory.json
+
+# Eclipse-Workspaces je Worktree — lokal, gehören niemandem sonst.
+eclipse-ws/

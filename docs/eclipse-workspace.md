@@ -20,10 +20,11 @@ curl -s http://localhost:8080/admin/stop
 ## 2. Workspace-Ordner anlegen — **außerhalb** des Worktrees
 
 `.metadata` steht nicht in der `.gitignore` von `tl-engine-7`. Ein Workspace im Worktree
-verschmutzt also `git status`.
+verschmutzt also `git status`. Sonst ist der Ort frei — hier liegt er im Design-System-Repo,
+wo `eclipse-ws/` in der `.gitignore` steht:
 
 ```bash
-mkdir -p ~/eclipse-ws/tl8-wt-29579
+mkdir -p ~/Claude/TopLogic-v8-DesignSystem/eclipse-ws/tl8-wt-29579
 ```
 
 Ein Workspace pro Worktree. Die Eclipse-Einstellungen (u. a. Maven) sind workspace-lokal — genau
@@ -32,7 +33,8 @@ deshalb bleiben parallele Worktrees sauber getrennt.
 ## 3. Eclipse mit diesem Workspace starten
 
 ```bash
-/Applications/java-2024-06/Eclipse.app/Contents/MacOS/eclipse -data ~/eclipse-ws/tl8-wt-29579
+/Applications/java-2024-06/Eclipse.app/Contents/MacOS/eclipse \
+  -data ~/Claude/TopLogic-v8-DesignSystem/eclipse-ws/tl8-wt-29579
 ```
 
 Alternativ über den Workspace-Dialog beim normalen Start.
