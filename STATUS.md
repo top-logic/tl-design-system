@@ -6,23 +6,52 @@
 
 ## Wo anknüpfen
 
-Nächster Schritt ist **AP 3 — Dark-Theme reparieren** (`plan.md`). Größerer fachlicher Nutzen als
-AP 2, weil dort ein echter Barrierefreiheitsmangel steckt: `text-on-color` auf `button-primary`
-liegt im Dark-Theme bei etwa **2,4:1** und damit unter WCAG AA.
+**PR !1618 ist visuell verifiziert und merge-reif.** Offen: dieselbe Prüfung für **PR !1621**
+(Worktree `~/git/tl8-wt-29579`, eigener Vollbuild nötig, ~4 min).
 
-Alternativ AP 2 (Audit erweitern) — mechanischer, aber breiter wirksam.
+Danach **AP 3 — Dark-Theme reparieren** (`plan.md`). Größerer fachlicher Nutzen als AP 2, weil
+dort ein echter Barrierefreiheitsmangel steckt: `text-on-color` auf `button-primary` liegt im
+Dark-Theme bei etwa **2,4:1** und damit unter WCAG AA.
 
 ## Erledigt
 
 | | Inhalt | Ergebnis |
 |---|---|---|
-| **PR !1618** | #29576 — doppelte React-Instanz durch direkten `createPortal`-Import | −16.743 B (−7,0 %), drei Duplikat-Marker eliminiert. **Offen** |
-| **PR !1621** | #29579 — Marken-Token + `<ref>`-Zielvalidierung | 11 Tokens auf 5 Primitives, alle Werte beweisbar identisch, 15 Tests grün. **Offen** |
+| **PR !1618** | #29576 — doppelte React-Instanz durch direkten `createPortal`-Import | −16.743 B (−7,0 %), drei Duplikat-Marker eliminiert. **Offen, visuell verifiziert** |
+| **PR !1621** | #29579 — Marken-Token + `<ref>`-Zielvalidierung | 11 Tokens auf 5 Primitives, alle Werte beweisbar identisch, 15 Tests grün. **Offen, Sichtprüfung fehlt** |
 | Analyse | `master` vollständig inventarisiert | `findings/` |
 | Repo | angelegt, Werkzeuge gebaut | `tools/`, `spikes/` |
 
-**Beide PRs sind nicht visuell verifiziert.** `CLAUDE.md` schreibt für UI-Änderungen eine
-Prüfung in der Demo-App vor. Das steht so in beiden PRs und Tickets.
+**PR !1618 visuell verifiziert am 2026-09-14** in `tl-demo-react` (Port 8080, Dark-Theme):
+
+* **Dropdown-Portal** — `Attribute ▸ Auswahl + Formular ▸ Neu ▸ Priorität`: Popup öffnet über
+  `document.body`, wird von keinem Vorfahren beschnitten, Filterfeld und Optionen erscheinen,
+  Auswahl „Hoch" wird übernommen und setzt den Dirty-Marker.
+* **Toolbar-Portal** — `Switch-Demo ▸ ≡`: Overflow-Menü öffnet über der Tabelle,
+  Ausführbarkeit stimmt (`Beispiele erzeugen` aktiv, `Löschen` inaktiv ohne Selektion), der
+  Klick löst das Server-Kommando aus (Antwort kam als Berechtigungs-Toast zurück).
+* **Konsole**: 279 Meldungen, davon **0 Fehler und 0 Warnungen** — kein „useState is null",
+  kein Hook-Fehler.
+* **Ausgelieferte Datei** geprüft: `GET /script/tl-react-controls.js` → 220.942 B, null Treffer
+  für `react.production.js`, `react-dom.production.js`, `__DOM_INTERNALS_DO_NOT_USE`.
+
+**PR !1621 ist nicht visuell verifiziert.** `CLAUDE.md` schreibt für UI-Änderungen eine Prüfung
+in der Demo-App vor.
+
+### Demo-App starten (die `tl-app`-Skill existiert nicht mehr)
+
+`CLAUDE.md:217` verweist auf eine `tl-app`-Skill; das Plugin-Verzeichnis
+`~/.claude/plugins/data/tl-claude-tools-inline` ist leer. Der funktionierende Weg:
+
+```bash
+cd <worktree> && .claude/scripts/local-m2.sh          # isoliertes .m2 mit Read-only-Tail
+mvn -B install -DskipTests -pl com.top_logic.demo.react -am    # 63 Module, ~3:20 min
+cd com.top_logic.demo.react
+mvn -B -Pide exec:java@start-app -Dtl.port=8080       # http://localhost:8080/tl-demo-react/
+```
+
+Das globale `~/.m2` enthält nur 28 der ~130 TopLogic-Module als `8.0.0-SNAPSHOT` — der Tail
+allein trägt nicht, ein Vollbuild pro Worktree ist nötig.
 
 ## Worktrees
 
