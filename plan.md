@@ -67,7 +67,7 @@ fremde Styling-Konvention, gegen die ein neues System ankämpfen müsste.
 | Dark Mode | `light-dark()` pro Token, generiert aus der Token-Quelle. |
 | Dichte | Bleibt Theme-Layer (Server braucht die Maße), aber entdoppelt über Mehrfachvererbung. |
 | Migration | Neue Primitive-Schicht, bestehende Controls Datei für Datei. Kein Big-Bang. |
-| Verortung | Eigenes Gitea-Repo `TopLogic/tl-design-system`, liefert ein Maven-Artefakt an die Engine. |
+| Verortung | Gitea, liefert ein Maven-Artefakt an die Engine. **Aktuell `hpe/tl-design-system`** — der Owner liess sich beim Anlegen nicht auf `TopLogic` setzen (Repo-Limit der Organisation). Transfer nach `TopLogic` steht aus, siehe offene Punkte. |
 | Zuschnitt Stufe 1 | Fundament. Noch keine Komponenten-Migration. |
 | Schrift | Offen — Entscheidung über Specimen-Test bei 12/13/14px mit echten TopLogic-Inhalten. |
 

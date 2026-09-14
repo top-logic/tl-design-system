@@ -47,6 +47,15 @@ Stufe 1 (Fundament) läuft. Siehe `plan.md`.
 | `tools/check-foreign-values.mjs` | Fremdpaletten-Wächter |
 | `spikes/oxlint/` | Nachweis, dass oxlint-JS-Plugins tragen |
 
+## Offene organisatorische Punkte
+
+**Repo-Transfer nach `TopLogic`.** Das Repo liegt derzeit unter `hpe/tl-design-system`, weil sich
+der Owner beim Anlegen nicht umstellen liess (Repo-Limit der Organisation). Es gehoert nach
+`TopLogic`, sobald das geklaert ist — *Settings -> Transfer Ownership*.
+
+**Sichtbarkeit.** Die Gitea-Instanz erzwingt private Repos beim Anlegen. Wenn das System spaeter
+fuer Partner oder Kunden lesbar sein soll, ueber *Settings -> Make public* umstellen.
+
 ## Verwandte Tickets
 
 | Ticket | Inhalt |
