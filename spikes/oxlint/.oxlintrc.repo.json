@@ -1,0 +1,5 @@
+{
+  "jsPlugins": ["./rules/index.js"],
+  "categories": {},
+  "rules": { "tl/no-react-import": "error" }
+}

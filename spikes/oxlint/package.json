@@ -1,0 +1,7 @@
+{
+  "name": "tl-oxlint-spike",
+  "private": true,
+  "type": "module",
+  "scripts": { "lint": "oxlint --config .oxlintrc.json fixtures" },
+  "devDependencies": { "oxlint": "1.46.0" }
+}
