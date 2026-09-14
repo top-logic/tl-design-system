@@ -36,11 +36,15 @@ Durchgesetzt wird das durch:
 
 ## Stand
 
-Stufe 1 (Fundament) läuft. Siehe `plan.md`.
+**Siehe `STATUS.md`** — Sitzungsstand, offene PRs, wo anzuknüpfen ist.
+
+`plan.md` beschreibt die Arbeitspakete.
 
 | Artefakt | Inhalt |
 |---|---|
-| `plan.md` | vollständiger Plan, alle Stufen |
+| `STATUS.md` | Sitzungsstand: was erledigt ist, wo weitergeht |
+| `plan.md` | Arbeitspakete AP 1–10, gegen `master` |
+| `findings/AP-korrektur-master.md` | warum der erste Plan hinfällig war |
 | `findings/AP0-blocker.md` | Blocker-Verifikation: Deploy-Modus, Browser-Matrix, oxlint-Spike, `@layer` |
 | `findings/AP1-token-inventar.md` | Token-Nutzungsindex, die drei Drift-Familien |
 | `tools/token-inventory.mjs` | erzeugt den Nutzungsindex aus Repo + Java-Deklarationen |

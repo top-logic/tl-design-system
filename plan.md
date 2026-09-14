@@ -5,6 +5,23 @@
 
 ---
 
+## Scope
+
+**Nur die React-Seite.** Das Legacy-System (`com.top_logic.gui.Theme` / `theme-settings.xml` /
+`CSSBuffer`) koexistiert absichtlich — es ist der Migrationspfad, über den bestehende Apps
+schrittweise auf die React-Oberflächen umgestellt werden. **Ziel ist seine vollständige Ablösung.**
+
+Daraus folgt: Am Legacy-System wird nichts verbessert. Keine Marken-Abstraktion dort, kein
+Aufräumen der 792 toten Tokens, keine Behebung der 12 hartkodierten `#2968c8`. Jede Stunde dort
+ist in ein System investiert, das verschwinden soll.
+
+Zwei Befunde aus der Legacy-Analyse bleiben trotzdem relevant und sind als Tickets abgelegt,
+gehören aber **nicht** in dieses Vorhaben:
+
+* **#29577** — im Deploy-Modus wird kein Theme-CSS generiert. Betrifft ausschließlich Legacy-Apps
+  (`/servlet/`); die React-Seite liefert ihre Tokens inline über `writeThemeStyles`.
+* **#29578** — Fremdpaletten und literale Fallbacks. Auf die React-Seite eingegrenzt.
+
 ## Context
 
 Auf `master` existiert bereits ein Token-System für die React-Schicht, gebaut von bhu in den
@@ -71,11 +88,12 @@ unverändert:
 - `text-on-color: #FFFFFF`, während `button-primary` auf `#5B9BF0` aufhellt → **Weiß auf Hellblau,
   ca. 2,4:1, unter WCAG AA**
 
-**3. Zwei Token-Welten koexistieren ohne Verbindung.** Die React-Schicht (`UIThemeService`,
-`/view/`) und die Legacy-UI (`Theme`/`theme-settings.xml`/`CSSBuffer`, `/servlet/`) haben
-teilweise gleiche Token-Namen, aber keine technische Kopplung. Ein Theme-Wechsel auf einer Seite
-wirkt nicht auf die andere. Die Legacy-Seite ist unverändert gedriftet: `#2968c8` steht dort
-**12× hart kodiert**, 792 Tokens sind tot.
+**3. Die Farbliterale stecken in genau einer Datei.** Von den fünf React-Stylesheets sind vier
+vollständig sauber — `tlReactBase.css`, `tlScriptEditor.css`, `tl-react-chartjs.css` und
+`tl-react-wysiwyg.css` haben null Fallbacks, null Hex, null `rgba()`. Die gesamte Last liegt in
+`tlReactControls.css`: **57 Hex- und 20 `rgba()`-Literale**. Die vier verbleibenden
+`var(--cal-ev-bg, #4589ff)` sind der von der FAQ zugelassene Fall (selbst deklarierte Property mit
+Default) und bleiben.
 
 ---
 
@@ -259,13 +277,6 @@ lückenhaft:
 - `useFocusTrap` nur in 3 von 74 Controls.
 - `TLFormField`: hartkodiert englisches `aria-label="Help"` in einer i18n-fähigen Schicht.
 
-### AP 11 — Legacy-Seite (offen, eigener Zuschnitt)
-
-Die Nicht-React-UI ist unverändert: `#2968c8` 12× hart, 792 tote Tokens, Deploy-Lücke #29577.
-
-**Das ist eine Architekturfrage, keine Aufgabe:** Löst die React-Schicht die Legacy-UI ab, und
-wenn ja, wann? Solange beide existieren, braucht Kunden-Theming zwei Einstiegspunkte. Zu klären
-mit bhu, bevor hier Aufwand fließt.
 
 ---
 
@@ -279,20 +290,17 @@ mit bhu, bevor hier Aufwand fließt.
 | AP 9–10 TSX-Seite, Accessibility | 12 |
 | **Summe** | **~47 PT** + 8–12 PT Design |
 
-AP 11 nicht geschätzt — hängt an der Architekturentscheidung.
-
 ---
 
 ## Offene Entscheidungen
 
-1. **Legacy-Ablösung** (AP 11). Bestimmt, wo Kunden-Theming andockt.
-2. **Token-Namen.** Die Namen sind IBM-Carbon-Nomenklatur (`layer-01`, `spacing-01..06`,
+1. **Token-Namen.** Die Namen sind IBM-Carbon-Nomenklatur (`layer-01`, `spacing-01..06`,
    `body-compact-01`, `support-*`). Die *Werte* sind TopLogic. Umbenennen hieße 81 Tokens,
    6.011 CSS-Zeilen und 6 Audit-Tests anfassen. **Empfehlung: behalten** — die Namen sind
    intent-basiert und funktionieren; „Carbon" ist hier eine Namenskonvention, keine Palette.
-3. **Schrift.** `font-family: 'Inter'` ist gesetzt. Ob das bleibt, entscheidet ein Specimen-Test
+2. **Schrift.** `font-family: 'Inter'` ist gesetzt. Ob das bleibt, entscheidet ein Specimen-Test
    bei 12/13/14px mit echten TopLogic-Tabellen — Kriterium ist Lesbarkeit bei hoher Dichte.
-4. **Markenfarbe.** `#2968C8` ist der Ist-Wert. Eine Auffrischung ist gewünscht, `#0f62fe`
+3. **Markenfarbe.** `#2968C8` ist der Ist-Wert. Eine Auffrischung ist gewünscht, `#0f62fe`
    scheidet aus (exakt IBM Carbon Blue 60). Nach AP 1 ist das eine Ein-Wert-Änderung.
 
 ---
