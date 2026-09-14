@@ -53,6 +53,9 @@ mvn -B -Pide exec:java@start-app -Dtl.port=8080       # http://localhost:8080/tl
 Das globale `~/.m2` enthält nur 28 der ~130 TopLogic-Module als `8.0.0-SNAPSHOT` — der Tail
 allein trägt nicht, ein Vollbuild pro Worktree ist nötig.
 
+**Ohne Vollbuild geht es über Eclipse**: m2e löst die 125 Module gegeneinander im Workspace auf.
+Anleitung: [`docs/eclipse-workspace.md`](docs/eclipse-workspace.md).
+
 ## Worktrees
 
 ```
