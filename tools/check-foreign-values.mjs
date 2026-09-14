@@ -35,27 +35,43 @@ const FOREIGN = {
   '#f1f5f9': 'Tailwind slate-100',   '#e2e8f0': 'Tailwind slate-200',
 };
 
+// Ausgeliefert wird nur, was eine theme.xml referenziert. Alles andere liegt zwar
+// im webapp-Ordner, erreicht aber nie den Browser — Verstoesse dort sind Altlast,
+// keine aktive Drift, und werden getrennt gezaehlt.
+const deliveredPaths = new Set(
+  execSync(`find "${ROOT}" -name theme.xml -not -path "*/target/*" -print0 | xargs -0 grep -hoE '<style name="[^"]+"'`,
+    { encoding: 'utf8', maxBuffer: 1 << 28 })
+    .split('\n').filter(Boolean)
+    .map(l => l.replace(/<style name="/, '').replace(/"$/, ''))
+);
+const isDelivered = (abs) => {
+  const i = abs.indexOf('/src/main/webapp/');
+  return i > -1 && deliveredPaths.has('/' + abs.slice(i + '/src/main/webapp/'.length));
+};
+
 const VENDOR = /\/ext\.|fontawesome|bootstrap-icons|remixicon|fotorama|mdtimepicker|diagram-js|bpmn|highlight|atelier-heath|pdf_viewer|viewer\.css|tl_iconFont|importGoogleFonts|interFonts/i;
 const files = execSync(`find "${ROOT}" -name "*.css" -path "*/src/main/webapp/*" -not -path "*/target/*" -not -name "_*"`,
   { encoding: 'utf8', maxBuffer: 1 << 28 }).trim().split('\n').filter(f => f && !VENDOR.test(f));
 
 const findings = [];
+const dormant = [];
 for (const f of files) {
   const rel = relative(ROOT, f);
+  const sink = isDelivered(f) ? findings : dormant;
   readFileSync(f, 'utf8').split('\n').forEach((line, i) => {
     for (const m of line.matchAll(/var\(\s*--[A-Za-z0-9_-]+\s*,\s*([^;)]+(?:\([^)]*\))?[^;)]*)\)/g)) {
       // Ein Fallback, der selbst auf ein Token zeigt, ist kein Verstoss: der Wert
       // bleibt von uns definiert. Das ist das bewusste Override-Muster
       // (z.B. var(--highlight, var(--link-primary))). Nur Literale sind Drift.
       if (/^\s*var\(\s*--/.test(m[1])) continue;
-      findings.push({ rule: 'no-literal-fallback', file: rel, line: i + 1,
+      sink.push({ rule: 'no-literal-fallback', file: rel, line: i + 1,
         detail: m[0].trim().slice(0, 80),
         msg: 'Fallback entfernen. Fehlt das Token, wird es definiert — nicht umgangen.' });
     }
     for (const m of line.matchAll(/#[0-9a-fA-F]{3,8}\b/g)) {
       const hex = m[0].toLowerCase();
       const known = FOREIGN[hex] ?? FOREIGN[hex.length === 4 ? `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}` : hex];
-      if (known) findings.push({ rule: 'no-foreign-palette', file: rel, line: i + 1,
+      if (known) sink.push({ rule: 'no-foreign-palette', file: rel, line: i + 1,
         detail: m[0], msg: `${known}. TopLogic definiert seine Farben selbst.` });
     }
   });
@@ -63,7 +79,7 @@ for (const f of files) {
 
 const byRule = findings.reduce((a, f) => ((a[f.rule] = (a[f.rule] ?? 0) + 1), a), {});
 console.log('Fremdpaletten-Waechter\n');
-console.log(`  Geprueft: ${files.length} TopLogic-Stylesheets`);
+console.log(`  Geprueft: ${files.length} TopLogic-Stylesheets, davon ${files.filter(isDelivered).length} ausgeliefert`);
 for (const [r, n] of Object.entries(byRule)) console.log(`  ${r.padEnd(22)} ${n}`);
 console.log(`  ${'GESAMT'.padEnd(22)} ${findings.length}\n`);
 
@@ -71,6 +87,13 @@ const top = findings.reduce((a, f) => ((a[f.file] = (a[f.file] ?? 0) + 1), a), {
 console.log('  Nach Datei:');
 for (const [f, n] of Object.entries(top).sort((a, b) => b[1] - a[1]).slice(0, 12))
   console.log(`    ${String(n).padStart(4)}  ${f}`);
+
+if (dormant.length) {
+  const df = dormant.reduce((a, f) => ((a[f.file] = (a[f.file] ?? 0) + 1), a), {});
+  console.log(`\n  Nicht ausgeliefert (Altlast, zaehlt nicht gegen das Budget): ${dormant.length}`);
+  for (const [f, n] of Object.entries(df).sort((a, b) => b[1] - a[1]))
+    console.log(`    ${String(n).padStart(4)}  ${f}`);
+}
 
 if (BUDGET !== null) {
   console.log('');

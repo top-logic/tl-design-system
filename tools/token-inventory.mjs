@@ -41,11 +41,25 @@ for (const f of settingFiles) {
 }
 
 // ---------- 2. Verbrauch ----------
+// Ausgeliefert wird nur, was eine theme.xml referenziert.
+const deliveredPaths = new Set(
+  execSync(`find "${ROOT}" -name theme.xml -not -path "*/target/*" -print0 | xargs -0 grep -hoE '<style name="[^"]+"'`,
+    { encoding: 'utf8', maxBuffer: 1 << 28 })
+    .split('\n').filter(Boolean)
+    .map(l => l.replace(/<style name="/, '').replace(/"$/, ''))
+);
+const isDelivered = (abs) => {
+  const i = abs.indexOf('/src/main/webapp/');
+  return i > -1 && deliveredPaths.has('/' + abs.slice(i + '/src/main/webapp/'.length));
+};
+
 // Nur TopLogic-eigenes CSS. Fremdbibliotheken (pdf.js, diagram-js, FontAwesome, ...)
 // haben eigene Custom-Property-Namensraeume und sind fuer das Design System irrelevant.
 const VENDOR = /\/ext\.|fontawesome|bootstrap-icons|remixicon|fotorama|mdtimepicker|diagram-js|bpmn|highlight|atelier-heath|pdf_viewer|viewer\.css|tl_iconFont|importGoogleFonts|interFonts/i;
 const cssFiles = sh(`find "${ROOT}" -name "*.css" -path "*/src/main/webapp/*" -not -path "*/target/*" -not -name "_*"`)
   .filter(f => !VENDOR.test(f));
+const deliveredCss = cssFiles.filter(isDelivered);
+const dormantCss   = cssFiles.filter(f => !isDelivered(f));
 const used = new Map();           // token -> {count, fallbacks:Set, files:Set}
 for (const f of cssFiles) {
   const src = readFileSync(f, 'utf8');
@@ -106,6 +120,8 @@ const report = {
     settingFiles: settingFiles.length,
     settingsRaw: rawCount,
     cssFiles: cssFiles.length,
+    cssDelivered: deliveredCss.length,
+    cssDormant: dormantCss.length,
     definedCssRelevant: defined.size,
     consumed: consumed.size,
     undefinedRealDrift: undefinedTokens.length,
@@ -121,6 +137,7 @@ const report = {
     token: t, uses: used.get(t).count,
     fallbacks: [...used.get(t).fallbacks],
     files: [...used.get(t).files],
+    delivered: [...used.get(t).files].some(rf => deliveredCss.some(d => relative(ROOT, d) === rf)),
   })),
   javaDefaultOnly: javaOnly.map(t => ({
     token: t, uses: used.get(t).count, ...javaDefs.get(t),
@@ -138,7 +155,12 @@ mkdirSync(OUT, { recursive: true });
 writeFileSync(join(OUT, 'token-inventory.json'), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report.counts, null, 2));
 console.log('\n--- ECHTE DRIFT: konsumiert, weder im Theme noch im CSS definiert ---');
-for (const u of report.undefinedTokens) console.log(`  --${u.token.padEnd(32)} ${String(u.uses).padStart(3)}x   fallback: ${u.fallbacks.join(' | ') || '-'}`);
+const live = report.undefinedTokens.filter(u => u.delivered);
+const dead = report.undefinedTokens.filter(u => !u.delivered);
+console.log(`  AUSGELIEFERT (${live.length}) — das ist die Arbeitsliste fuer AP 2:`);
+for (const u of live) console.log(`    --${u.token.padEnd(32)} ${String(u.uses).padStart(3)}x   fallback: ${u.fallbacks.join(' | ') || '-'}`);
+console.log(`\n  NICHT ausgeliefert (${dead.length}) — Altlast in nie geladenen Dateien:`);
+for (const u of dead) console.log(`    --${u.token.padEnd(32)} ${String(u.uses).padStart(3)}x   ${u.files.join(', ')}`);
 console.log(`\n--- Nur ueber Java @DefaultValue definiert (${javaOnly.length}) ---`);
 for (const t of javaOnly) console.log(`  --${t.padEnd(28)} ${String(used.get(t).count).padStart(3)}x  default=${JSON.stringify(javaDefs.get(t).defaultValue)}  ${javaDefs.get(t).file}`);
 console.log(`\n--- Legitime lokale CSS-Properties (ignorieren): ${localProps.length} ---`);

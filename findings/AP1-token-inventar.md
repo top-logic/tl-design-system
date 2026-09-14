@@ -11,8 +11,11 @@ Basis: `~/git/tl8-new-ui/TopLogic 8 (NewUI)`, Branch `CWS/CWS_29108_ui_flexibili
 | Settings insgesamt (roh) | 1.300 |
 | davon CSS-relevant (ohne `mime.*`) | 1.014 |
 | TopLogic-eigene Stylesheets | 43 |
+| davon von einer `theme.xml` **ausgeliefert** | 32 |
+| nie geladen (liegen nur im `webapp`-Ordner) | 11 |
 | konsumierte Custom Properties | 291 |
-| **echte Drift** (konsumiert, nirgends definiert) | **54** |
+| **echte Drift**, davon in ausgelieferten Dateien | **51** |
+| echte Drift in nie geladenen Dateien | 3 |
 | nur über Java-`@DefaultValue` definiert | 1 |
 | legitime lokale CSS-Properties | 15 |
 | geparste Java-`ThemeVar`/`ThemeImage`-Deklarationen | 554 |
@@ -106,7 +109,7 @@ Geprüft: **14 der 15 sind wirklich tot** — kein `ThemeVar`, kein `ThemeImage`
 
 Dateien: `tables.css`, `tabbar.css`, `form.css`, `contact.css`, `pdfExport.css`.
 
-### Der fünfzehnte Fall ist kein toter, sondern ein aktiver Konflikt
+### Der fünfzehnte Fall: `--TEXT_FAMILY` — zweimal korrigiert
 
 `--TEXT_FAMILY` steht in keiner `theme-settings.xml`, ist aber in
 `com.top_logic/src/main/java/com/top_logic/layout/Icons.java:44` deklariert:
@@ -120,15 +123,33 @@ public static ThemeVar<String> TEXT_FAMILY;
 Java-`@DefaultValue` ist die unterste Vererbungsebene (`Theme.initDefaults()` →
 `settings.addDefaults(_variables.values())`), landet also sehr wohl im `:root`.
 
-**Konsequenz:** `--TEXT_FAMILY` löst zu **Arial** auf, `--font-family` zu **Inter**.
-`com.top_logic.contact/src/main/webapp/style/contact.css` nutzt `var(--TEXT_FAMILY)` an
-**11 Stellen** — dieses Modul rendert damit in Arial, während der Rest der Anwendung in Inter
-rendert. Der Arial-gegen-Inter-Konflikt aus der Planungsphase ist keine Doku-Inkonsistenz,
-sondern steht sichtbar im ausgelieferten CSS.
+Erste Einschätzung war „tot" — falsch, die Java-Deklaration existiert.
+Zweite Einschätzung war „`contact.css` rendert deshalb in Arial statt Inter" — **ebenfalls falsch.**
 
-Fix in AP 2: `--TEXT_FAMILY` per `expr="%font-family%"` auf den Typo-Token umbiegen, oder die
-11 Stellen direkt auf `var(--font-family)` umstellen. Ersteres ist rückwärtskompatibel für
-Kunden-Themes, die `TEXT_FAMILY` überschreiben.
+`com.top_logic.contact/src/main/webapp/style/contact.css` ist die einzige CSS-Datei des Moduls,
+das Modul hat **keine `theme.xml`**, und die Datei wird nirgends im Repo referenziert. Sie erreicht
+den Browser nie. Die 11 `var(--TEXT_FAMILY)`-Stellen sind wirkungslos.
+
+Daraus folgte die Verschärfung des Werkzeugs: Beide Skripte unterscheiden jetzt zwischen
+**ausgeliefert** (von einer `theme.xml` referenziert) und **ruhend**. Ohne diese Unterscheidung
+misst man Altlast als aktive Drift.
+
+**Was an `--TEXT_FAMILY` trotzdem bleibt** — und zwar serverseitig:
+
+`com.top_logic.reporting/.../gantt/ui/AbstractGanttChartCreator.java:206`
+
+```java
+String configuredFamily = theme.getValue(Icons.TEXT_FAMILY);
+if (configuredFamily != null) fontName = configuredFamily;
+return new Font(fontName, Font.PLAIN, fontSize);
+```
+
+`java.awt.Font` erwartet einen **Familiennamen**, bekommt aber den CSS-Stack
+`Arial,Helvetica,sans-serif`. AWT kann das nicht auflösen und fällt still auf die Standardschrift
+zurück. Gantt-Diagramme rendern damit schon heute nicht in der Theme-Schrift.
+
+Das ist ein eigener latenter Fehler, kein Design-System-Thema — gehört in ein eigenes Ticket.
+Für AP 2 ist `--TEXT_FAMILY` dagegen **kein Handlungsbedarf**.
 
 ### Rest (3)
 
@@ -159,9 +180,9 @@ Pflicht — sie ist die Absicherung genau dieses Schritts, nicht die Reparatur e
 
 ## Arbeitsliste für AP 2
 
-1. `--TEXT_FAMILY` zuerst — 11 Stellen rendern heute in Arial statt Inter. Sichtbarer Fehler,
-   kleinster Fix.
-2. Familie C: die 14 toten Referenzen entfernen. Risikofrei, die Regeln greifen ohnehin nicht.
+1. Familie C: die toten Referenzen entfernen. Risikofrei — die Regeln greifen ohnehin nicht.
+   Drei davon (`--FRAME_BACK`, `--INVERT_TEXT`, `--TABLE_HEADER`) liegen in der nie geladenen
+   `contact.css`; die Datei kann als Ganzes gelöscht werden.
 3. Familie B auf die TopLogic-Namen umbiegen, Fallbacks ersatzlos streichen.
 4. Familie A: Entscheidung erzwingen — die beiden Satellitenmodule auf Theme-Tokens umstellen.
    Ihre Tailwind-Fallbacks sind die jüngste und damit gefährlichste Drift.
