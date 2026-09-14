@@ -1,5 +1,6 @@
 node_modules/
 .DS_Store
 *.log
-inventory/*.json
-!inventory/.gitkeep
+
+# Generierter Nutzungsindex — aus tools/token-inventory.mjs reproduzierbar.
+inventory/token-inventory.json

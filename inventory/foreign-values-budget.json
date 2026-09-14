@@ -1,0 +1,16 @@
+{
+  "_comment": "Basislinie des Fremdpaletten-Waechters. Budgets gehen nur runter. Siehe tools/check-foreign-values.mjs.",
+  "_measured": "2026-09-14, tl8-new-ui @ CWS/CWS_29108_ui_flexibility",
+  "total": 348,
+  "byRule": { "no-literal-fallback": 227, "no-foreign-palette": 121 },
+  "byFile": {
+    "com.top_logic.layout.react/src/main/webapp/style/tlReactControls.css": 244,
+    "com.top_logic.layout.react.wysiwyg/src/main/webapp/script/tl-react-wysiwyg.css": 60,
+    "com.top_logic.model.search.react/src/main/webapp/style/tlScriptEditor.css": 18,
+    "com.top_logic.layout.react.chartjs/src/main/webapp/style/tl-react-chartjs.css": 12,
+    "com.top_logic.themes.core/src/main/webapp/style/form.css": 7,
+    "com.top_logic.themes.core/src/main/webapp/style/tables.css": 4,
+    "com.top_logic.themes.core/src/main/webapp/style/core.css": 3
+  },
+  "target": 0
+}
