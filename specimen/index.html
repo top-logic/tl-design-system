@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>TopLogic Specimen</title>
+<link rel="stylesheet" href="/style/tlReactBase.css">
+<link rel="stylesheet" href="/style/tlReactControls.css">
+<style>
+  body { margin: 0; font-family: system-ui, sans-serif; }
+  .specimenKopf { display: flex; gap: 1rem; align-items: center; padding: .75rem 1rem;
+                  border-bottom: 1px solid #8884; position: sticky; top: 0; background: Canvas; }
+  .specimenBuehne { padding: 1.5rem; }
+  .specimenGate { font: 12px/1.5 ui-monospace, monospace; padding: 1rem;
+                  border-top: 1px solid #8884; white-space: pre-wrap; }
+  .specimenGate--gruen { color: #0a7; }
+  .specimenGate--rot { color: #c33; }
+</style>
+</head>
+<body>
+  <header class="specimenKopf">
+    <strong>Specimen</strong>
+    <label>Modus
+      <select id="modus"><option value="light">hell</option><option value="dark">dunkel</option></select>
+    </label>
+    <span id="gateKurz"></span>
+  </header>
+  <main class="specimenBuehne" id="buehne"></main>
+  <section class="specimenGate" id="gate"></section>
+  <script type="module" src="./specimen.mjs"></script>
+</body>
+</html>
