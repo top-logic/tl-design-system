@@ -9,8 +9,26 @@ export const nonText = (foreground, background) => ({ foreground, background, mi
 /**
  * Die Paare, die Bedeutung tragen, und das Verhältnis, das jedes schuldet.
  *
- * Deckungsgleich mit TestReactThemeContrast.REQUIREMENTS in tl-engine-7. Ein deaktiviertes
- * Control ist von WCAG ausgenommen und fehlt deshalb.
+ * War bis Stufe A deckungsgleich mit TestReactThemeContrast.REQUIREMENTS in tl-engine-7. Ein
+ * deaktiviertes Control ist von WCAG ausgenommen und fehlt deshalb.
+ *
+ * AB STUFE A WEICHT DIESE LISTE ABSICHTLICH VOM JAVA-GATE AB. Grund: der Marken-Explorer im
+ * Specimen leitet die Beschriftung einer gefüllten Fläche jetzt JE FLÄCHE ab (Entscheidung
+ * Hendrik), nicht mehr über ein einziges globales `text-on-color`. Diese Liste bildet den
+ * entschiedenen Zielzustand ab, den die Engine noch nicht hat — TestReactThemeContrast.java
+ * kennt `text-on-brand`, `icon-on-brand` und `text-on-danger` noch nicht und muss beim
+ * Nachziehen dieser Änderung entsprechend erweitert werden. Genau sechs Paare sind betroffen,
+ * durch Umbenennen des Vordergrund-Tokens, nicht durch Hinzufügen oder Entfernen von Paaren:
+ *   - text('text-on-color', 'button-primary')        → text('text-on-brand', 'button-primary')
+ *   - text('text-on-color', 'button-primary-hover')   → text('text-on-brand', 'button-primary-hover')
+ *   - text('text-on-color', 'button-primary-active')  → text('text-on-brand', 'button-primary-active')
+ *   - text('text-on-color', 'button-danger')          → text('text-on-danger', 'button-danger')
+ *   - text('text-on-color', 'button-danger-hover')    → text('text-on-danger', 'button-danger-hover')
+ *   - nonText('icon-on-color', 'button-primary')      → nonText('icon-on-brand', 'button-primary')
+ * `text('layer-accent-text', 'layer-accent')` bleibt unverändert — geprüft, dass der heutige
+ * `layer-accent-text`-Wert bereits genau der ist, den dieselbe Ableitungsregel liefern würde
+ * (siehe task-7-brand-report.md, Korrekturrunde 5), also keine Abweichung vom Java-Gate an
+ * dieser Stelle. Die Gesamtzahl der Paare bleibt bei 22 — reine Umbenennung, keine Erweiterung.
  */
 export const REQUIREMENTS = [
   // Fließtext auf den Flächen, auf denen er steht.
@@ -22,12 +40,12 @@ export const REQUIREMENTS = [
   text('text-helper', 'background'),
   text('text-placeholder', 'field'),
 
-  // Beschriftung auf einer gefüllten Fläche.
-  text('text-on-color', 'button-primary'),
-  text('text-on-color', 'button-primary-hover'),
-  text('text-on-color', 'button-primary-active'),
-  text('text-on-color', 'button-danger'),
-  text('text-on-color', 'button-danger-hover'),
+  // Beschriftung auf einer gefüllten Fläche — je Fläche eigenes Token, siehe Kommentar oben.
+  text('text-on-brand', 'button-primary'),
+  text('text-on-brand', 'button-primary-hover'),
+  text('text-on-brand', 'button-primary-active'),
+  text('text-on-danger', 'button-danger'),
+  text('text-on-danger', 'button-danger-hover'),
   text('layer-accent-text', 'layer-accent'),
 
   // Text, der einen Zustand trägt, und die invertierte Fläche.
@@ -39,7 +57,7 @@ export const REQUIREMENTS = [
   text('link-primary-hover', 'background'),
 
   // Icons und Begrenzungen, die zeigen, wo ein Control ist.
-  nonText('icon-on-color', 'button-primary'),
+  nonText('icon-on-brand', 'button-primary'),
   nonText('icon-primary', 'background'),
   nonText('border-interactive', 'background'),
   nonText('border-strong', 'background'),

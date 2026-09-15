@@ -36,9 +36,14 @@ test('Text schuldet 4,5, ein Icon oder eine Begrenzung 3', () => {
 });
 
 test('Die Paarliste deckt Text, Fläche, Zustand, Links und Begrenzungen ab', () => {
+  // Ab Stufe A leitet der Marken-Explorer die Beschriftung je Fläche ab (siehe Kommentar über
+  // REQUIREMENTS in requirements.mjs): 'text-on-color' auf button-primary ist deshalb durch
+  // 'text-on-brand' ersetzt — dieselbe Fläche, dasselbe Paar, nur umbenanntes Vordergrund-Token.
+  // Die Gesamtzahl bleibt 22: sechs Paare wurden umbenannt, keines hinzugefügt oder entfernt.
   assert.equal(REQUIREMENTS.length, 22);
   const paare = REQUIREMENTS.map((r) => `${r.foreground}|${r.background}`);
-  assert.ok(paare.includes('text-on-color|button-primary'));
+  assert.ok(paare.includes('text-on-brand|button-primary'));
+  assert.ok(paare.includes('text-on-danger|button-danger'));
   assert.ok(paare.includes('text-inverse|background-inverse'));
   assert.ok(paare.includes('text-placeholder|field'));
   assert.ok(paare.includes('focus|background'));

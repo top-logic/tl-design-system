@@ -215,15 +215,19 @@ export const DUNKEL_SCHRITT = 0.06;
 export const DUNKEL_ACTIVE_SCHRITT = 0.10;
 
 /**
- * Wählt die Beschriftungsfarbe (text-on-color, icon-on-color) für eine Fläche.
+ * Wählt die Beschriftungsfarbe für EINE Fläche — für jede gefüllte Fläche einzeln aufzurufen
+ * (button-primary, button-danger, layer-accent, …), nicht einmal global. Eine Fläche, die sich
+ * nicht mit der Marke ändert (button-danger, layer-accent), bekommt trotzdem eine ABGELEITETE
+ * Beschriftung, keinen fest hingeschriebenen Wert — falls sich diese Fläche selbst einmal
+ * ändert (anderes Theme, andere Statusfarbe), stimmt die Beschriftung dann automatisch weiter.
  *
  * Zwei feste Kandidaten — ein naher-schwarzer und ein weißer — treten gegeneinander an; es
  * gewinnt der mit dem höheren Kontrastverhältnis gegen die Fläche. Das ist bewusst KEIN fester
- * Wert je Modus: welcher Kandidat gewinnt, hängt von der gewählten Marke ab (eine sehr helle
- * Marke verlangt auch im hellen Modus dunkle Beschriftung), und ein fest hingeschriebener Wert
- * wäre beim nächsten Markenton, oder in einem anderen Theme, wieder falsch.
+ * Wert je Modus: welcher Kandidat gewinnt, hängt von der Fläche ab (eine sehr helle Marke
+ * verlangt auch im hellen Modus dunkle Beschriftung auf button-primary), und ein fest
+ * hingeschriebener Wert wäre beim nächsten Markenton, oder in einem anderen Theme, wieder falsch.
  */
-function beschriftungAbleiten(flaecheHex, { dunklerKandidat, hellerKandidat }) {
+export function beschriftungAbleiten(flaecheHex, { dunklerKandidat, hellerKandidat }) {
   const kontrastDunkel = ratio(dunklerKandidat, flaecheHex);
   const kontrastHell = ratio(hellerKandidat, flaecheHex);
   return kontrastDunkel >= kontrastHell
@@ -234,15 +238,17 @@ function beschriftungAbleiten(flaecheHex, { dunklerKandidat, hellerKandidat }) {
 /**
  * Berechnet die Marken-Primitives für beide Modi aus einer Grundfarbe.
  *
- * `kandidaten` sind die zwei Werte, zwischen denen beschriftungAbleiten() für text-on-color /
- * icon-on-color entscheidet — { dunklerKandidat, hellerKandidat }, beide als Hex. Die Regel
- * verlangt ausdrücklich, dass das die Werte sind, die tokens.json bereits führt (heute:
- * tokens.light['text-primary'] und '#FFFFFF'); dieses Modul liest tokens.json selbst nicht,
- * deshalb übergibt der Aufrufer sie.
+ * `kandidaten` sind die zwei Werte, zwischen denen beschriftungAbleiten() für die Beschriftung
+ * von button-primary (text-on-brand/icon-on-brand) entscheidet — { dunklerKandidat,
+ * hellerKandidat }, beide als Hex. Die Regel verlangt ausdrücklich, dass das die Werte sind, die
+ * tokens.json bereits führt (heute: tokens.light['text-primary'] und '#FFFFFF'); dieses Modul
+ * liest tokens.json selbst nicht, deshalb übergibt der Aufrufer sie. Für andere Flächen
+ * (button-danger, layer-accent) ruft der Aufrufer beschriftungAbleiten() selbst auf — die
+ * hängen nicht an der Marke, gehören deshalb nicht in diese Funktion.
  *
  * Rückgabeform: { light: {…}, dark: {…} }, je mit den Schlüsseln
  * brand-primary, brand-primary-hover, brand-primary-active, brand-link, brand-link-hover,
- * brand-text-on-color. Die ersten fünf sind { hex, reduziert, geklemmt, kollabiert }:
+ * brand-text-on-brand. Die ersten fünf sind { hex, reduziert, geklemmt, kollabiert }:
  *   - reduziert: die Chroma wurde gesenkt, um diese Stufe in sRGB darstellen zu können — normal
  *     und informativ, kein Fehler (siehe oklchZuHex()).
  *   - geklemmt: echter Fehlerfall — selbst vollständig entsättigt liegt die Stufe außerhalb des
@@ -254,7 +260,7 @@ function beschriftungAbleiten(flaecheHex, { dunklerKandidat, hellerKandidat }) {
  *     markiert, weil es schwerer wiegt als eine einzelne Chroma-Reduktion: zwei Stufen, die sich
  *     nicht mehr unterscheiden, sind für die Ableitung nicht mehr nutzbar, auch wenn jede für
  *     sich genommen ein gültiger, im Gamut liegender Hexwert ist.
- * `brand-text-on-color` ist { hex, verhaeltnis, kandidat } — siehe beschriftungAbleiten().
+ * `brand-text-on-brand` ist { hex, verhaeltnis, kandidat } — siehe beschriftungAbleiten().
  *
  * Link-Regel: im hellen Modus folgt der Link exakt der Marke (link = primary, link-hover = hover
  * — wie im heutigen Bestand). Im dunklen Modus liegt der Link eine Stufe über dem Button: er
@@ -300,8 +306,8 @@ export function markenRampe(grundfarbeHex, kandidaten) {
   // Die Beschriftung gehört nicht zur Chroma-Gamut-Maschinerie von mitKollisionen() (sie ist eine
   // Wahl zwischen zwei festen Kandidaten, kein reduzierter/geklemmter Farbpunkt) — deshalb erst
   // danach ergänzt, gegen die jeweils schon fertige (ggf. reduzierte) Fläche des Modus.
-  light['brand-text-on-color'] = beschriftungAbleiten(light['brand-primary'].hex, kandidaten);
-  dark['brand-text-on-color'] = beschriftungAbleiten(dark['brand-primary'].hex, kandidaten);
+  light['brand-text-on-brand'] = beschriftungAbleiten(light['brand-primary'].hex, kandidaten);
+  dark['brand-text-on-brand'] = beschriftungAbleiten(dark['brand-primary'].hex, kandidaten);
 
   return { light, dark };
 }
@@ -347,13 +353,15 @@ export function nurHex(rampeModus) {
  * unverändert. Jedes Token, das heute an der Marke hängt, wird ersetzt; welche das sind, ist in
  * dieser Liste sichtbar gehalten, statt über den Aufrufer verstreut zu sein.
  *
- * text-on-color und icon-on-color bekommen denselben abgeleiteten Wert (brand-text-on-color) —
- * beide sind Beschriftung auf derselben Fläche (button-primary), dieselbe Kontrastfrage gilt
- * für beide.
+ * text-on-brand und icon-on-brand bekommen denselben abgeleiteten Wert (brand-text-on-brand) —
+ * beide sind Beschriftung auf derselben Fläche (button-primary/-hover/-active, die die Marke
+ * teilen), dieselbe Kontrastfrage gilt für beide. Andere Flächen (button-danger, layer-accent)
+ * bekommen ihre Beschriftung NICHT hier, sondern über einen eigenen Aufruf von
+ * beschriftungAbleiten() beim Aufrufer — sie hängen nicht an der Marke.
  */
 export function rampeAnwenden(tokens, rampeModus) {
   const { 'brand-primary': primary, 'brand-primary-hover': hover, 'brand-primary-active': active,
-    'brand-link': link, 'brand-link-hover': linkHover, 'brand-text-on-color': beschriftung }
+    'brand-link': link, 'brand-link-hover': linkHover, 'brand-text-on-brand': beschriftung }
     = nurHex(rampeModus);
 
   return {
@@ -369,7 +377,7 @@ export function rampeAnwenden(tokens, rampeModus) {
     'button-secondary-active': active,
     'link-primary': link,
     'link-primary-hover': linkHover,
-    'text-on-color': beschriftung,
-    'icon-on-color': beschriftung,
+    'text-on-brand': beschriftung,
+    'icon-on-brand': beschriftung,
   };
 }

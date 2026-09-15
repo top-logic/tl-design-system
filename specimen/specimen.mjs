@@ -1,17 +1,20 @@
 import { REQUIREMENTS, report } from './requirements.mjs';
-import { markenRampe, rampeAnwenden } from './brand.mjs';
+import { markenRampe, rampeAnwenden, beschriftungAbleiten } from './brand.mjs';
 
 /** Die heutige Markenfarbe — Ausgangspunkt des Reglers, nicht ein empfohlener Wert. */
 const MARKE_STARTWERT = '#2968C8';
 
 /** Token-Namen, an denen die Marke hängt — für die "welche Paare fallen"-Anzeige hervorgehoben.
- *  text-on-color/icon-on-color gehören seit der Beschriftungs-Ableitung dazu: ihr Wert hängt
- *  jetzt vom Kontrast gegen brand-primary ab, nicht mehr nur von einem festen Tokenwert. */
+ *  text-on-brand/icon-on-brand gehören dazu: ihr Wert hängt vom Kontrast gegen brand-primary ab.
+ *  text-on-danger und layer-accent-text NICHT — die werden zwar genauso abgeleitet (zwei
+ *  Kandidaten, höherer Kontrast gewinnt), aber gegen eine Fläche, die sich mit der Marke gar
+ *  nicht ändert (button-danger, layer-accent sind fest). Nur was WIRKLICH von der gewählten
+ *  Marke abhängt, verdient hier den Stern. */
 const MARKEN_TOKENS = new Set([
   'button-primary', 'button-primary-hover', 'button-primary-active',
   'button-secondary', 'button-secondary-hover', 'button-secondary-active',
   'border-interactive', 'focus', 'interactive', 'link-primary', 'link-primary-hover',
-  'text-on-color', 'icon-on-color',
+  'text-on-brand', 'icon-on-brand',
 ]);
 
 const rohTokens = await fetch('./tokens.json').then((a) => a.json());
@@ -68,22 +71,39 @@ let markenfarbe = MARKE_STARTWERT;
 let aktuellerModus = 'light';
 
 /**
- * Kandidaten, zwischen denen die Beschriftung (text-on-color/icon-on-color) je Modus entscheidet
- * — die Regel verlangt ausdrücklich die Werte, die tokens.json schon führt: text-primary des
- * hellen Modus als dunklen Kandidaten, Weiß als hellen. Aus rohTokens gelesen, nicht fest
- * hingeschrieben — ändert sich tokens.json, zieht diese Ableitung automatisch mit.
+ * Kandidaten, zwischen denen JEDE Beschriftungs-Ableitung entscheidet — die Regel verlangt
+ * ausdrücklich die Werte, die tokens.json schon führt: text-primary des hellen Modus als
+ * dunklen Kandidaten, Weiß als hellen. Aus rohTokens gelesen, nicht fest hingeschrieben —
+ * ändert sich tokens.json, zieht jede Ableitung automatisch mit. Dieselben zwei Kandidaten für
+ * alle Flächen (brand, danger, accent) — nur die Fläche, gegen die geprüft wird, wechselt.
  */
 const BESCHRIFTUNGS_KANDIDATEN = {
   dunklerKandidat: rohTokens.light['text-primary'],
   hellerKandidat: '#FFFFFF',
 };
 
-/** Die Tokens beider Modi mit der aktuellen Markenfarbe eingesetzt — rohTokens bleibt unberührt. */
+/**
+ * Die Tokens beider Modi mit der aktuellen Markenfarbe eingesetzt — rohTokens bleibt unberührt.
+ *
+ * Beschriftung wird JE FLÄCHE abgeleitet, nicht mehr einmal global (Entscheidung Hendrik,
+ * Korrekturrunde 5): rampeAnwenden() liefert schon text-on-brand/icon-on-brand (hängt an der
+ * Marke, daher Teil der Rampe selbst). text-on-danger und layer-accent-text hängen NICHT an der
+ * Marke — button-danger und layer-accent ändern sich nicht, wenn der Regler bewegt wird — und
+ * werden deshalb hier, direkt gegen die (unveränderten) Flächen-Hexwerte, separat abgeleitet.
+ */
+function beschriftungenAbleiten(tokensDesModus) {
+  return {
+    ...tokensDesModus,
+    'text-on-danger': beschriftungAbleiten(tokensDesModus['button-danger'], BESCHRIFTUNGS_KANDIDATEN).hex,
+    'layer-accent-text': beschriftungAbleiten(tokensDesModus['layer-accent'], BESCHRIFTUNGS_KANDIDATEN).hex,
+  };
+}
+
 function effektiveTokens() {
   const rampe = markenRampe(markenfarbe, BESCHRIFTUNGS_KANDIDATEN);
   return {
-    light: rampeAnwenden(rohTokens.light, rampe.light),
-    dark: rampeAnwenden(rohTokens.dark, rampe.dark),
+    light: beschriftungenAbleiten(rampeAnwenden(rohTokens.light, rampe.light)),
+    dark: beschriftungenAbleiten(rampeAnwenden(rohTokens.dark, rampe.dark)),
     rampe,
   };
 }
@@ -152,11 +172,12 @@ function schwatch(name, eintrag) {
 }
 
 /**
- * Eine kopierbare Anzeige für die abgeleitete Beschriftungsfarbe (text-on-color/icon-on-color):
- * Hexwert, welcher der beiden Kandidaten gewonnen hat, und das erreichte Kontrastverhältnis
- * gegen brand-primary dieses Modus — die Zahl, die die Entscheidung erklärt.
+ * Eine kopierbare Anzeige für eine abgeleitete Beschriftungsfarbe (text-on-brand/icon-on-brand,
+ * text-on-danger, layer-accent-text/text-on-accent): Hexwert, welcher der beiden Kandidaten
+ * gewonnen hat, und das erreichte Kontrastverhältnis gegen DIESE Fläche — die Zahl, die die
+ * Entscheidung erklärt. `beschriftung` benennt die betroffenen Token(s) für die Anzeige.
  */
-function beschriftungSchwatch(eintrag) {
+function beschriftungSchwatch(beschriftung, flaeche, eintrag) {
   const { hex, verhaeltnis, kandidat } = eintrag;
   const span = document.createElement('span');
   span.className = 'specimenMarke__schwatch';
@@ -166,26 +187,38 @@ function beschriftungSchwatch(eintrag) {
   const text = document.createElement('span');
   text.className = 'specimenMarke__hex';
   text.title = 'Zum Kopieren markieren';
-  text.textContent = `text-on-color / icon-on-color: ${hex}`;
+  text.textContent = `${beschriftung}: ${hex}`;
   const hinweis = document.createElement('span');
   hinweis.className = 'specimenMarke__hinweis';
-  hinweis.textContent = `ⓘ Kandidat „${kandidat}" gewinnt — Verhältnis ${verhaeltnis.toFixed(2)} gegen brand-primary`;
+  hinweis.textContent = `ⓘ Kandidat „${kandidat}" gewinnt — Verhältnis ${verhaeltnis.toFixed(2)} gegen ${flaeche}`;
   span.append(feld, text, hinweis);
   return span;
 }
 
-/** Zeichnet die Rampen-Ausgabe (hell + dunkel), kopierbar als Hexwerte, mit Warnung je Stufe,
- *  plus die abgeleitete Beschriftungsfarbe je Modus. */
-function rampeZeichnen(rampe) {
+/**
+ * Zeichnet die Rampen-Ausgabe (hell + dunkel), kopierbar als Hexwerte, mit Warnung je Stufe,
+ * plus je Modus DREI unabhängig abgeleitete Beschriftungen: für button-primary (an der Marke,
+ * Teil der Rampe selbst), für button-danger und für layer-accent (beide unabhängig von der
+ * Marke, separat berechnet — `beschriftungenSonstige`).
+ *
+ * Grundsatz, den diese drei Zeilen zeigen: Hover und Active erben die Beschriftung ihrer
+ * Grundfläche (brand-text-on-brand gilt für button-primary UND -hover UND -active) — eine
+ * Schriftfarbe, die beim Überfahren umspringt, würde flackern.
+ */
+function rampeZeichnen(rampe, beschriftungenSonstige) {
   const hell = document.getElementById('rampeHell');
   const dunkel = document.getElementById('rampeDunkel');
-  const primitiven = (rampeModus) => Object.entries(rampeModus).filter(([n]) => n !== 'brand-text-on-color');
+  const primitiven = (rampeModus) => Object.entries(rampeModus).filter(([n]) => n !== 'brand-text-on-brand');
   hell.replaceChildren(
     ...primitiven(rampe.light).map(([n, e]) => schwatch(n, e)),
-    beschriftungSchwatch(rampe.light['brand-text-on-color']));
+    beschriftungSchwatch('text-on-brand / icon-on-brand', 'button-primary', rampe.light['brand-text-on-brand']),
+    beschriftungSchwatch('text-on-danger', 'button-danger', beschriftungenSonstige.light.danger),
+    beschriftungSchwatch('layer-accent-text (text-on-accent)', 'layer-accent', beschriftungenSonstige.light.accent));
   dunkel.replaceChildren(
     ...primitiven(rampe.dark).map(([n, e]) => schwatch(n, e)),
-    beschriftungSchwatch(rampe.dark['brand-text-on-color']));
+    beschriftungSchwatch('text-on-brand / icon-on-brand', 'button-primary', rampe.dark['brand-text-on-brand']),
+    beschriftungSchwatch('text-on-danger', 'button-danger', beschriftungenSonstige.dark.danger),
+    beschriftungSchwatch('layer-accent-text (text-on-accent)', 'layer-accent', beschriftungenSonstige.dark.accent));
 }
 
 /** Zeichnet das Gate-Panel: Zahlen für beide Modi getrennt, fehlende Paare als Meldung,
@@ -214,6 +247,16 @@ function gateZeichnen(ergebnisHell, ergebnisDunkel) {
     `hell ${ergebnisHell.haltend}/${ergebnisHell.gesamt} · dunkel ${ergebnisDunkel.haltend}/${ergebnisDunkel.gesamt} halten AA`;
 }
 
+/** Leitet die Beschriftung für button-danger und layer-accent ab — für die Anzeige, mit
+ *  Verhältnis und gewonnenem Kandidaten. Unabhängig von der Marke: beide Flächen ändern sich
+ *  nicht, wenn der Regler bewegt wird, deshalb reicht rohTokens (nicht der Modus-Rampen-Wert). */
+function beschriftungenAnzeigen(modus) {
+  return {
+    danger: beschriftungAbleiten(rohTokens[modus]['button-danger'], BESCHRIFTUNGS_KANDIDATEN),
+    accent: beschriftungAbleiten(rohTokens[modus]['layer-accent'], BESCHRIFTUNGS_KANDIDATEN),
+  };
+}
+
 /** Trägt die Tokens des aktuell angezeigten Modus als Custom Properties auf das Wurzelelement,
  *  rechnet die Rampe neu und zeichnet Rampen-Ausgabe und Gate für beide Modi. */
 function neuZeichnen() {
@@ -225,7 +268,7 @@ function neuZeichnen() {
   }
   wurzel.dataset.theme = aktuellerModus;
 
-  rampeZeichnen(rampe);
+  rampeZeichnen(rampe, { light: beschriftungenAnzeigen('light'), dark: beschriftungenAnzeigen('dark') });
   gateZeichnen(gatePruefen('light', light), gatePruefen('dark', dark));
 }
 
