@@ -141,6 +141,40 @@ Der Linkkontrast trägt auch einen gedämpften Grund: 5,84 auf Weiß, 5,59 auf `
 **Ausdrücklich vorläufig.** Der Ton kann sich ändern, sobald die Tokens in Figma liegen. Das kostet
 nichts: Rampe, Beschriftung und Kontrastprüfung sind abgeleitet, der Wechsel ist ein Wert.
 
+### Grundfläche: `#FAFAFA`
+
+Reines Weiß entfällt. Die vier Flächen-Tokens `background`, `layer-01`, `layer-02` und
+`color-surface` waren alle `#FFFFFF` — zu grell und zu klinisch für eine Oberfläche, in der man
+stundenlang arbeitet.
+
+Neutral statt markengetönt, weil die Grundfläche gegenüber jeder Marke funktionieren muss, auch
+gegenüber der eines Kunden mit ungewöhnlicher CI. Kostet fast nichts: Text fällt von 18,89 auf
+18,10, der Link von 5,84 auf 5,59.
+
+### Rahmen: vier Stufen, jede mit einer Aufgabe
+
+`border-subtle` wird aufgelöst. Der Grund ist derselbe wie bei `text-on-color`: **Ein Token hatte
+zwei Aufgaben.** Es trennte Tabellenzeilen *und* umrandete Eingabefelder. Das erste braucht keinen
+Kontrast, das zweite schuldet nach WCAG 1.4.11 mindestens 3,0. Ein Wert kann beides nicht — und
+weil der schwächere gewann, erfüllte kein Eingabefeld in TopLogic die Norm, hell wie dunkel.
+
+| Stufe | hell | dunkel | Verhältnis | Regel |
+|---|---|---|---|---|
+| `border-separator` | `#CBCED3` | `#383B3F` | ~1,5 | **Trennt**, begrenzt nicht. Tabellenzeilen, Abgrenzungen. Schuldet keinen Kontrast. |
+| `border-control` | `#8E9196` | `#64676B` | ~3,0 | **Begrenzt ein Bedienelement.** Eingabefelder, Auswahlfelder, Schaltflächen mit Umriss. |
+| `border-emphasis` | `#717378` | `#818489` | ~4,55 | **Hebt hervor.** Ausgewählte Zeile, betonte Abgrenzung. |
+| `border-interactive` | `#0B5ED7` | `#5394FF` | ~5,6 | **Trägt die Marke.** Fokus, aktiver Zustand. |
+
+Der Merksatz: *Eine Linie, die etwas trennt, ist ein Separator. Eine Linie, die etwas umschließt,
+worauf der Zeiger wirkt, ist ein Control-Rahmen.* Er hat dieselbe Form wie die vorhandene
+Radius-Regel, und das ist Absicht.
+
+Die Neutralen tragen ein sehr geringes Chroma (0,008) im Farbton der Marke. Sie wirken dadurch
+nicht farbig, binden die Skala aber an die Marke statt daneben zu stehen.
+
+**Das Gate prüft künftig `border-control` gegen den Grund**, nicht `border-separator` — ein
+Separator, der 3,0 erfüllen müsste, wäre keiner mehr.
+
 ---
 
 ## Offen
