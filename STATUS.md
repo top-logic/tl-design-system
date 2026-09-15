@@ -6,10 +6,9 @@
 
 ## Wo anknüpfen
 
-**PR !1618 ist visuell verifiziert und merge-reif.** Offen: dieselbe Prüfung für **PR !1621**
-(Worktree `~/git/tl8-wt-29579`, eigener Vollbuild nötig, ~4 min).
+**Beide PRs sind visuell verifiziert und merge-reif.**
 
-Danach **AP 3 — Dark-Theme reparieren** (`plan.md`). Größerer fachlicher Nutzen als AP 2, weil
+Nächster Schritt: **AP 3 — Dark-Theme reparieren** (`plan.md`). Größerer fachlicher Nutzen als AP 2, weil
 dort ein echter Barrierefreiheitsmangel steckt: `text-on-color` auf `button-primary` liegt im
 Dark-Theme bei etwa **2,4:1** und damit unter WCAG AA.
 
@@ -18,7 +17,7 @@ Dark-Theme bei etwa **2,4:1** und damit unter WCAG AA.
 | | Inhalt | Ergebnis |
 |---|---|---|
 | **PR !1618** | #29576 — doppelte React-Instanz durch direkten `createPortal`-Import | −16.743 B (−7,0 %), drei Duplikat-Marker eliminiert. **Offen, visuell verifiziert** |
-| **PR !1621** | #29579 — Marken-Token + `<ref>`-Zielvalidierung | 11 Tokens auf 5 Primitives, alle Werte beweisbar identisch, 15 Tests grün. **Offen, Sichtprüfung fehlt** |
+| **PR !1621** | #29579 — Marken-Token + `<ref>`-Zielvalidierung | 11 Tokens auf 5 Primitives, alle Werte beweisbar identisch, 15 Tests grün. **Offen, visuell verifiziert** |
 | Analyse | `master` vollständig inventarisiert | `findings/` |
 | Repo | angelegt, Werkzeuge gebaut | `tools/`, `spikes/` |
 
@@ -35,8 +34,29 @@ Dark-Theme bei etwa **2,4:1** und damit unter WCAG AA.
 * **Ausgelieferte Datei** geprüft: `GET /script/tl-react-controls.js` → 220.942 B, null Treffer
   für `react.production.js`, `react-dom.production.js`, `__DOM_INTERNALS_DO_NOT_USE`.
 
-**PR !1621 ist nicht visuell verifiziert.** `CLAUDE.md` schreibt für UI-Änderungen eine Prüfung
-in der Demo-App vor.
+**PR !1621 visuell verifiziert am 2026-09-15** in `tl-demo-react` aus Eclipse (`/react-demo`):
+
+* **Alle 11 Tokens in beiden Themes gemessen** — im Browser über eine Sonde
+  (`color: var(--token)` → `getComputedStyle`), verglichen mit den Literalen aus dem
+  Commit **vor** der Änderung (`HEAD~1`). 22 Werte, **0 Abweichungen**.
+
+  | | `default` | `dark` |
+  |---|---|---|
+  | `border-interactive`, `button-primary`, `button-secondary`, `focus`, `interactive` | `#2968C8` | `#5B9BF0` |
+  | `button-primary-hover`, `button-secondary-hover` | `#245DB2` | `#7AAEF3` |
+  | `button-primary-active`, `button-secondary-active` | `#09387E` | `#3F86E6` |
+  | `link-primary` | `#2968C8` | `#7AAEF3` |
+  | `link-primary-hover` | `#245DB2` | `#97C0F6` |
+
+* **An echten Elementen nachgemessen**, nicht nur am Token: Rand des Buttons „Neu" und
+  Unterstrich des aktiven Tabs sind `#2968C8` hell / `#5B9BF0` dunkel.
+* **Die `<ref>`-Kette löst im ausgelieferten CSS auf** — `getPropertyValue('--button-primary')`
+  liefert den Hex-Wert, nicht `var(--brand-primary)`. Auch die dreistufige Kette
+  `link-primary` → `brand-link` → `brand-primary` kommt korrekt an.
+* **Themewechsel ohne Reload** über `window.tlTheme.select()` funktioniert in beide Richtungen.
+* **Konsole**: 419 Meldungen, **0 Fehler**.
+* Dass wirklich der Branch läuft, beweist die Existenz des Tokens `--brand-primary` — auf
+  `master` gibt es das nicht.
 
 ### Demo-App starten (die `tl-app`-Skill existiert nicht mehr)
 
