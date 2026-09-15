@@ -236,6 +236,76 @@ Der Unterschied zum heutigen Zustand ist, dass es jetzt eine Regel ist statt ein
 `text-disabled`, `icon-disabled`, `field-disabled`, `button-disabled` sind von WCAG ausdrücklich
 ausgenommen und schulden keinen Kontrast. Sie bleiben in der Skala, aber ohne Gate.
 
+### Semantik: vier Bedeutungen, vier Rollen
+
+**Der Befund.** `support-warning` ist im Stylesheet gleichzeitig Textfarbe (`color`), Rahmenfarbe
+(`border-color`), Fläche (`background`) und Akzentfarbe (`accent-color`). **Ein Token, vier
+Aufgaben** — dasselbe Muster wie bei `text-on-color` und `border-subtle`.
+
+Die Folgen sind messbar:
+
+| Token | auf hellem Grund | auf dunklem Grund |
+|---|---|---|
+| `support-warning` | **2,27** ✗ | 7,52 (geerbt, zufällig) |
+| `support-success` | **3,04** ✗ | 5,61 (geerbt, zufällig) |
+| `support-error` | 5,14 ✓ | **3,32** ✗ |
+
+Warnung und Erfolg sind im **hellen** Theme als Text unlesbar. Das Gate meldet es nicht, weil nur
+`text-error` in der Paarliste steht.
+
+**Und der Beleg, dass jemand das Problem kannte:**
+
+```css
+.tlSnackbar--success { background: var(--support-success); color: #fff; }
+.tlSnackbar--warning { background: var(--support-warning); color: #000; }
+```
+
+Zwei hartkodierte Literale, weil ein Token für „Beschriftung auf dieser Fläche" fehlte. Die
+Unterscheidung war richtig gedacht — aber das Weiß auf Erfolgsgrün erreicht nur **3,17** und fällt
+durch. Die Ableitungsregel hätte beide getroffen.
+
+#### Die Skala
+
+Vier Bedeutungen — Fehler, Warnung, Erfolg, Info — mit je vier Rollen.
+
+| | Rolle | hell | dunkel | Prüfung |
+|---|---|---|---|---|
+| **Fehler** | `text` | `#D7352D` | `#E8463C` | 4,53 / 4,55 auf Grund |
+| | `border` | `#FB594D` | `#C51E1C` | 3,03 / 3,03 |
+| | `surface` | `#CC2823` | `#F14F43` | Beschriftung weiß 5,39 / dunkel 4,77 |
+| | `subtle` | `#FFEBE8` | `#35110D` | Text darauf 14,71 / 15,27 |
+| **Warnung** | `text` | `#936E00` | `#A27A00` | 4,50 / 4,51 |
+| | `border` | `#B88A00` | `#805F00` | 3,01 / 3,01 |
+| | `surface` | `#D9A514` | `#EAB532` | Beschriftung dunkel 7,51 / 8,96 |
+| | `subtle` | `#FEEFCF` | `#281C02` | 14,84 / 15,03 |
+| **Erfolg** | `text` | `#008459` | `#1E9266` | 4,53 / 4,54 |
+| | `border` | `#36A376` | `#00734D` | 3,02 / 3,01 |
+| | `surface` | `#3DA97B` | `#60C99A` | Beschriftung dunkel 5,75 / 8,29 |
+| | `subtle` | `#DCF8E9` | `#0C2319` | 14,99 / 14,88 |
+| **Info** | `text` | `#216EE8` | `#307CF8` | 4,51 / 4,54 |
+| | `border` | `#4C8FFF` | `#0C5DD6` | 3,01 / 3,01 |
+| | `surface` | `#1C69E3` | `#448BFF` | Beschriftung weiß 5,02 / dunkel 5,13 |
+| | `subtle` | `#E8F1FF` | `#0C1D3A` | 14,83 / 15,08 |
+
+**Die Regel, wann welche Rolle gilt:**
+
+> *Ein Zustand, der als **Text** erscheint, nimmt `text`. Eine Linie, die ihn trägt, nimmt
+> `border`. Eine gefüllte Fläche nimmt `surface` — die Beschriftung darauf wird abgeleitet, nie
+> geschrieben. Ein getönter Hinweisstreifen nimmt `subtle` und trägt gewöhnlichen Text.*
+
+**Die Beschriftung auf einer Semantikfläche wird abgeleitet**, nach derselben Regel wie auf der
+Marke. Das korrigiert nebenbei den Fehler in der Snackbar: Erfolg bekommt dunkle Schrift, nicht
+weiße.
+
+#### Zwei Anmerkungen
+
+**Warnung als Text ist notwendig dunkel** (`#936E00`). Bernstein erreicht auf hellem Grund erst bei
+dieser Tiefe 4,5 — was hell genug wäre, um „Bernstein" zu heißen, ist unlesbar. Die helle,
+erkennbare Warnfarbe lebt deshalb in `surface`, nicht in `text`.
+
+**Info trägt den Farbton der Marke** (260°). Das ist die Konvention und bindet das System, macht
+aber Info und Marke ähnlich. Falls sich beide je beißen, ist das die Stelle zum Nachjustieren.
+
 ---
 
 ## Offen
