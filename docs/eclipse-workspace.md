@@ -45,7 +45,18 @@ Alternativ über den Workspace-Dialog beim normalen Start.
 
 * **Select root directory:** `/Users/hendrik/git/tl8-wt-29579`
 * „Search for nested projects" an, „Copy projects into workspace" **aus**
-* Alle auswählen, `Finish`.
+* **Diese 10 wieder abwählen** — sie sind keine echten Module:
+
+  | Projekt | Was es ist |
+  |---|---|
+  | `pa` `pb` `pc` `pd` `pe` `pf` `pg` `px` | Test-Fixtures in `com.top_logic.basic/test/fixtures/TestWorkspace/` — absichtlich unvollständige Stub-Projekte |
+  | `${artifactId}` | Velocity-Vorlage in `tl-archetype-app/src/main/resources/archetype-resources/` — `pom.xml` mit `#if`/`#else`, Paketname `__packagePath__` |
+  | `tl-archetype-app` | baut das Archetype; m2e scheitert beim Filtern der `.class`-Dateien darin (`MalformedInputException`) |
+
+* Der Rest, `Finish`.
+
+Sind sie schon drin: im Package Explorer markieren, `Delete` — und **„Delete project contents on
+disk" unbedingt abgewählt lassen**, sonst ist der Worktree weg.
 
 ### Warum nicht der Maven-Import
 
@@ -122,6 +133,19 @@ die Eclipse-Startkonfiguration `/react-demo`.
 `com.top_logic.demo.react/tmp/h2.mv.db`, pro Worktree eigen, wird beim ersten Start selbst
 angelegt und steht in der `.gitignore` (`/tmp`). Ein Demosystem, keine echte Anwendung — die
 Datei darf jederzeit gelöscht werden, der nächste Start baut sie neu.
+
+## Fehler, die bleiben und nicht stören
+
+Auf `master` vorhanden, unabhängig von dieser Einrichtung:
+
+* **Javadoc-Fehler** in `com.top_logic.layout.configedit` und `com.top_logic.layout.view`
+  (`_withEditMode cannot be resolved`, `Invalid member type qualification`, …). Die Projekte
+  setzen `org.eclipse.jdt.core.compiler.problem.invalidJavadoc=error` in ihren eingecheckten
+  `.settings` — deshalb Fehler statt Warnung. Auf den Bytecode wirkt sich das nicht aus; der
+  Maven-Build meldet dieselben Stellen als `Error while creating javadoc report` und läuft durch.
+* `Dependency … with type test-jar is not fully supported`
+* `finalize() … deprecated since version 9`
+* `The GWT SDK JAR gwt-servlet.jar is missing` — betrifft nur `tl-graph-*`
 
 ## Wenn die Oberfläche ohne Stile oder ohne Funktion lädt
 
