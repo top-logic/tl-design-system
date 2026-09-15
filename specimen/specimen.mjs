@@ -92,13 +92,22 @@ function gatePruefen(modus, tokensDesModus) {
   return { haltend: REQUIREMENTS.length - fehlend.length, gesamt: REQUIREMENTS.length, fehlend };
 }
 
-/** Eine kopierbare Hex-Anzeige für einen Rampen-Wert, mit Warnung bei Gamut-Verlust.
- *  `eintrag` ist { hex, geklemmt, kollabiert } aus brand.mjs — nicht mehr nur ein Hexwert,
- *  weil genau diese beiden Zusatzinformationen jetzt sichtbar gemacht werden müssen. */
+/**
+ * Eine kopierbare Hex-Anzeige für einen Rampen-Wert, mit Warnung bei Gamut-Anpassung.
+ * `eintrag` ist { hex, reduziert, geklemmt, kollabiert } aus brand.mjs.
+ *
+ * Drei Zustände, klar unterschieden:
+ *   - kollabiert (rot, kräftig): diese Stufe ist von einer anderen nicht mehr zu unterscheiden.
+ *   - reduziert (gedeckter, informativ): normaler Zustand — dieser Ton ist in dieser Helligkeit
+ *     nicht in voller Sättigung darstellbar, die Chroma wurde gesenkt, L und H blieben stehen.
+ *   - geklemmt (Fehlerfall, sollte praktisch nie auftreten): selbst entsättigt außerhalb des
+ *     Gamuts — ein Fehler in der Ableitung, keine normale Gamut-Anpassung.
+ */
 function schwatch(name, eintrag) {
-  const { hex, geklemmt, kollabiert } = eintrag;
+  const { hex, reduziert, geklemmt, kollabiert } = eintrag;
   const span = document.createElement('span');
   span.className = 'specimenMarke__schwatch'
+    + (reduziert ? ' specimenMarke__schwatch--reduziert' : '')
     + (geklemmt ? ' specimenMarke__schwatch--geklemmt' : '')
     + (kollabiert ? ' specimenMarke__schwatch--kollabiert' : '');
   const feld = document.createElement('span');
@@ -117,7 +126,12 @@ function schwatch(name, eintrag) {
   } else if (geklemmt) {
     const warnung = document.createElement('span');
     warnung.className = 'specimenMarke__warnung';
-    warnung.textContent = '⚠ außerhalb des darstellbaren Farbraums, auf sRGB geklemmt';
+    warnung.textContent = '⚠ Fehler: selbst entsättigt außerhalb des Farbraums';
+    span.appendChild(warnung);
+  } else if (reduziert) {
+    const warnung = document.createElement('span');
+    warnung.className = 'specimenMarke__hinweis';
+    warnung.textContent = 'ⓘ Sättigung zurückgenommen — in voller Sättigung hier nicht darstellbar';
     span.appendChild(warnung);
   }
   return span;

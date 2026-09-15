@@ -61,13 +61,10 @@ function rgbZuOklab({ r, g, b }) {
   };
 }
 
-/**
- * OKLab → sRGB, mit Diagnose. Liefert zusätzlich `geklemmt`: true, wenn mindestens einer der
- * drei LINEAREN Kanäle vor der Begrenzung außerhalb von 0…1 lag — also außerhalb dessen, was ein
- * Bildschirm in sRGB überhaupt darstellen kann. Diese Information entsteht ohnehin an dieser
- * Stelle; sie wird hier nur nicht mehr weggeworfen (siehe markenRampe()).
- */
-function oklabZuRgb({ L, a, b }) {
+/** OKLab {L,a,b} → lineares sRGB {lr,lg,lb}, UNBEGRENZT — kann außerhalb von 0…1 liegen. Reine
+ *  Zahlenumrechnung, damit die Gamut-Suche unten dieselbe Rechnung beliebig oft wiederholen kann,
+ *  ohne jedes Mal auch schon zu runden oder zu klemmen. */
+function oklabZuLinearRgb({ L, a, b }) {
   const l_ = L + 0.3963377774 * a + 0.2158037573 * b;
   const m_ = L - 0.1055613458 * a - 0.0638541728 * b;
   const s_ = L - 0.0894841775 * a - 1.2914855480 * b;
@@ -76,19 +73,15 @@ function oklabZuRgb({ L, a, b }) {
   const m = m_ ** 3;
   const s = s_ ** 3;
 
-  const lr = 4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s;
-  const lg = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s;
-  const lb = -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s;
-
-  const inGamut = (kanal) => kanal >= 0 && kanal <= 1;
-
   return {
-    r: linearKanalZuSrgb(lr),
-    g: linearKanalZuSrgb(lg),
-    b: linearKanalZuSrgb(lb),
-    geklemmt: !(inGamut(lr) && inGamut(lg) && inGamut(lb)),
+    lr: 4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+    lg: -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+    lb: -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s,
   };
 }
+
+const KANAL_IM_GAMUT = (kanal) => kanal >= 0 && kanal <= 1;
+const ALLE_KANAELE_IM_GAMUT = ({ lr, lg, lb }) => KANAL_IM_GAMUT(lr) && KANAL_IM_GAMUT(lg) && KANAL_IM_GAMUT(lb);
 
 /** OKLab {L,a,b} als Zylinder {L,C,H} — H in Radiant, damit die Trigonometrie ohne Umrechnung passt. */
 function oklabZuOklch({ L, a, b }) {
@@ -105,19 +98,70 @@ export function hexZuOklch(hex) {
 }
 
 /**
- * OKLCH zu Hexwert, mit Diagnose statt stillem Verlust.
+ * Anzahl der Intervallhalbierungen bei der Chroma-Suche (siehe oklchZuHex()).
  *
- * Kanäle werden beim Zurückrechnen nach sRGB auf 0–255 begrenzt (Clipping, keine
- * Gamut-Anpassung von C/H). Das ist NICHT unauffällig: bei einer sehr hellen oder stark
- * gesättigten Grundfarbe kann eine einzelne Stufe schon den Farbraum verlassen, und mehrere
- * Stufen einer Rampe können dabei auf denselben geklemmten Hexwert (typischerweise Weiß)
- * zusammenfallen — die Rampe verliert dann lautlos ihre Abstufung, obwohl L, C und H der
- * Eingabe nach wie vor fünf verschiedene Punkte beschreiben. Deshalb liefert diese Funktion
- * `geklemmt` mit zurück, statt es zu verschweigen; markenRampe() macht daraus die Anzeige.
+ * Jeder Schritt halbiert das Unsicherheitsintervall der Chroma. 20 Schritte drücken es auf das
+ * 2^-20-fache seiner Ausgangsbreite zusammen — bei einer Ausgangs-Chroma von realistisch bis zu
+ * 0,4 sind das rund 4·10⁻⁷, weit unterhalb dessen, was ein 8-Bit-Farbkanal (Auflösung 1/255 ≈
+ * 0,0039) überhaupt unterscheiden kann. Eine analytische Lösung des Gamut-Rands in OKLCH gibt es
+ * nicht geschlossen (die Hin- und Rückmatrizen sind über die Kubikwurzel verschachtelt); die
+ * Suche ist dafür unabhängig vom Farbton immer gleich schnell und gleich genau.
  */
-export function oklchZuHex(oklch) {
-  const { r, g, b, geklemmt } = oklabZuRgb(oklchZuOklab(oklch));
-  return { hex: rgbZuHex({ r, g, b }), geklemmt };
+export const CHROMA_SUCH_SCHRITTE = 20;
+
+/**
+ * OKLCH zu Hexwert — mit Gamut-Anpassung statt stillem Verlust.
+ *
+ * Liegt {L,C,H} außerhalb dessen, was sRGB darstellen kann, wird NICHT geklemmt (das würde L und
+ * H verzerren, denn nach der Rundung ist der Kanal nicht mehr auf der ursprünglichen L/H-Linie).
+ * Statt dessen wird C bei gehaltenem L und H per Intervallhalbierung so weit verringert, bis alle
+ * drei linearen Kanäle in 0…1 liegen — das genau ist die Bedeutung von "Helligkeit und Farbton
+ * bleiben unangetastet, Chroma ist die Stellschraube". Das Ergebnis ist blasser als angefragt,
+ * aber auf derselben L/H-Linie: der schwächere, ehrliche Ersatz für einen Ton, den es an dieser
+ * Helligkeit in dieser Sättigung in sRGB nicht gibt.
+ *
+ * Rückgabe: { hex, reduziert, geklemmt }.
+ *   - reduziert: die Chroma wurde gesenkt, um im Gamut zu bleiben (normal, informativ).
+ *   - geklemmt: auch bei C=0 (vollständig entsättigt, ein Grauton auf derselben Helligkeit) bleibt
+ *     der Kanal außerhalb von 0…1 — das kann nur passieren, wenn L selbst außerhalb von 0…1 liegt.
+ *     Dann hilft keine Chroma-Reduktion mehr; das ist ein Fehlerfall, kein normaler Bestandteil
+ *     der Ableitung, und wird als solcher weiterhin gemeldet.
+ */
+export function oklchZuHex({ L, C, H }) {
+  const angefragt = oklabZuLinearRgb(oklchZuOklab({ L, C, H }));
+  if (ALLE_KANAELE_IM_GAMUT(angefragt)) {
+    return { hex: rgbZuHex(rundeLinearRgb(angefragt)), reduziert: false, geklemmt: false };
+  }
+
+  // Fehlerfall zuerst ausschließen: wenn schon der vollständig entsättigte Punkt (C=0) auf
+  // dieser Helligkeit außerhalb des Gamuts liegt, ist L selbst nicht darstellbar — keine
+  // Chroma-Reduktion kann das beheben.
+  const achromatisch = oklabZuLinearRgb(oklchZuOklab({ L, C: 0, H }));
+  if (!ALLE_KANAELE_IM_GAMUT(achromatisch)) {
+    return { hex: rgbZuHex(rundeLinearRgb(angefragt)), reduziert: false, geklemmt: true };
+  }
+
+  // Intervallhalbierung: unten ist immer im Gamut (Invariante, durch den Test oben gesichert),
+  // oben immer außerhalb (die Anfrage selbst, laut erstem Test). Nach CHROMA_SUCH_SCHRITTE
+  // Schritten ist "unten" die größte im Gamut liegende Chroma, bis auf die oben berechnete
+  // Rundungstoleranz.
+  let unten = 0;
+  let oben = C;
+  for (let schritt = 0; schritt < CHROMA_SUCH_SCHRITTE; schritt++) {
+    const mitte = (unten + oben) / 2;
+    const probe = oklabZuLinearRgb(oklchZuOklab({ L, C: mitte, H }));
+    if (ALLE_KANAELE_IM_GAMUT(probe)) unten = mitte; else oben = mitte;
+  }
+
+  const gefunden = oklabZuLinearRgb(oklchZuOklab({ L, C: unten, H }));
+  return { hex: rgbZuHex(rundeLinearRgb(gefunden)), reduziert: true, geklemmt: false };
+}
+
+/** Rundet lineares RGB auf sRGB-Kanäle 0–255. Wird nur auf Werte angewendet, die bereits (durch
+ *  oklchZuHex() sichergestellt) im Gamut liegen — bis auf den gemeldeten Fehlerfall, wo trotzdem
+ *  gerundet werden muss, um überhaupt einen Hexwert anzuzeigen. */
+function rundeLinearRgb({ lr, lg, lb }) {
+  return { r: linearKanalZuSrgb(lr), g: linearKanalZuSrgb(lg), b: linearKanalZuSrgb(lb) };
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -127,10 +171,11 @@ export function oklchZuHex(oklch) {
 // bleiben über die ganze Rampe erhalten. Das hält die Rampe an EINEM Farbton entlang einer
 // Helligkeitslinie, statt nebenbei den Ton zu verschieben — genau das Problem, das HSL hat.
 //
-// Kalibriert gegen den heutigen Startwert #2968C8: mit diesen Werten ergeben sich exakt die
-// heute geltenden Gate-Zahlen (hell 1 Verstoß, dunkel 7 Verstöße). Das ist kein Zufall, sondern
-// die Leitplanke, an der die Schrittweiten gewählt wurden — sie sind trotzdem nur ein Vorschlag,
-// keine Festlegung.
+// Ursprünglich gegen die heute geltenden Gate-Zahlen für #2968C8 kalibriert (hell 1 Verstoß,
+// dunkel 7 Verstöße). Seit oklchZuHex() bei Bedarf die Chroma senkt statt zu klemmen, weichen
+// diese Zahlen für #2968C8 leicht ab (siehe task-7-brand-report.md, Korrekturrunde 2) — die
+// Schrittweiten selbst sind unverändert, nur der Weg zum Hexwert an den Stufen, die den Gamut
+// verlassen, ist ein anderer. Die Werte bleiben trotzdem nur ein Vorschlag, keine Festlegung.
 // ---------------------------------------------------------------------------------------------
 
 /** Hell: hover ist um diesen Betrag dunkler als der Grundton. */
@@ -156,13 +201,18 @@ export const DUNKEL_SCHRITT = 0.06;
  *
  * Rückgabeform: { light: {…}, dark: {…} }, je mit den Schlüsseln
  * brand-primary, brand-primary-hover, brand-primary-active, brand-link, brand-link-hover.
- * Jeder Eintrag ist { hex, geklemmt, kollabiert }:
- *   - geklemmt: dieser einzelne Wert lag beim Rückweg nach sRGB außerhalb des Gamuts.
+ * Jeder Eintrag ist { hex, reduziert, geklemmt, kollabiert }:
+ *   - reduziert: die Chroma wurde gesenkt, um diese Stufe in sRGB darstellen zu können — normal
+ *     und informativ, kein Fehler (siehe oklchZuHex()).
+ *   - geklemmt: echter Fehlerfall — selbst vollständig entsättigt liegt die Stufe außerhalb des
+ *     Gamuts (nur möglich, wenn L selbst außerhalb 0…1 liegt). Sollte in der Praxis nicht
+ *     vorkommen; wenn doch, ist das ein Fehler in der Ableitung und muss auffallen.
  *   - kollabiert: dieser Wert ist (als Hex) identisch mit mindestens einem anderen Wert
- *     DERSELBEN Rampe (light oder dark) — die Rampe hat an dieser Stelle ihre Abstufung
- *     verloren. Das wird eigenständig markiert, weil es schwerer wiegt als einzelnes Klemmen:
- *     zwei Stufen, die sich nicht mehr unterscheiden, sind für die Ableitung nicht mehr nutzbar,
- *     auch wenn jede für sich genommen ein gültiger Hexwert ist.
+ *     DERSELBEN Rampe (light oder dark), UND mindestens einer der beiden wurde reduziert oder
+ *     geklemmt — die Rampe hat an dieser Stelle ihre Abstufung verloren. Das wird eigenständig
+ *     markiert, weil es schwerer wiegt als eine einzelne Chroma-Reduktion: zwei Stufen, die sich
+ *     nicht mehr unterscheiden, sind für die Ableitung nicht mehr nutzbar, auch wenn jede für
+ *     sich genommen ein gültiger, im Gamut liegender Hexwert ist.
  *
  * Link-Regel: im hellen Modus folgt der Link exakt der Marke (link = primary, link-hover = hover
  * — wie im heutigen Bestand). Im dunklen Modus liegt der Link eine Stufe über dem Button: er
@@ -172,7 +222,7 @@ export function markenRampe(grundfarbeHex) {
   const { L, C, H } = hexZuOklch(grundfarbeHex);
   const bei = (l) => oklchZuHex({ L: l, C, H });
 
-  const hellPrimary = { hex: grundfarbeHex.toUpperCase(), geklemmt: false };
+  const hellPrimary = { hex: grundfarbeHex.toUpperCase(), reduziert: false, geklemmt: false };
   const hellHover = bei(L - HELL_HOVER_SCHRITT);
   const hellActive = bei(L - HELL_ACTIVE_SCHRITT);
 
@@ -208,26 +258,29 @@ export function markenRampe(grundfarbeHex) {
 
 /**
  * Markiert jeden Eintrag einer Rampe mit `kollabiert`, wenn sein Hex mit dem eines anderen
- * Eintrags DERSELBEN Rampe übereinstimmt UND mindestens einer der beiden geklemmt ist.
+ * Eintrags DERSELBEN Rampe übereinstimmt UND mindestens einer der beiden reduziert oder
+ * geklemmt wurde — reiner Zufall bei zwei eigentlich verschiedenen, aber beide unverändert im
+ * Gamut liegenden Werten wäre keine Kollision, sondern nur eine sehr feine Rundung.
  *
  * `designGleich` nennt die Paare, die per Konstruktion immer denselben Wert tragen (die
- * Link-Regel) — die sind KEINE Kollision, egal ob geklemmt oder nicht, und werden deshalb von
- * der Prüfung ausgenommen. Ohne diese Ausnahme würde z. B. brand-link im dunklen Modus jedes
- * Mal fälschlich als "kollabiert" gemeldet, wenn brand-primary-hover geklemmt ist — nicht weil
- * die Rampe ihre Abstufung verloren hätte, sondern weil beide von Anfang an denselben Ton
- * tragen sollen.
+ * Link-Regel) — die sind KEINE Kollision, egal was mit ihnen passiert ist, und werden deshalb
+ * von der Prüfung ausgenommen. Ohne diese Ausnahme würde z. B. brand-link im dunklen Modus
+ * jedes Mal fälschlich als "kollabiert" gemeldet, wenn brand-primary-hover reduziert wird —
+ * nicht weil die Rampe ihre Abstufung verloren hätte, sondern weil beide von Anfang an denselben
+ * Ton tragen sollen.
  */
 function mitKollisionen(eintraege, designGleich) {
   const namen = Object.keys(eintraege);
   const istDesignGleich = (a, b) => designGleich.some(
     ([x, y]) => (x === a && y === b) || (x === b && y === a));
+  const veraendert = (eintrag) => eintrag.reduziert || eintrag.geklemmt;
   const ergebnis = {};
   for (const name of namen) {
     const eigener = eintraege[name];
     const kollabiert = namen.some((anderer) => anderer !== name
       && !istDesignGleich(name, anderer)
       && eintraege[anderer].hex === eigener.hex
-      && (eigener.geklemmt || eintraege[anderer].geklemmt));
+      && (veraendert(eigener) || veraendert(eintraege[anderer])));
     ergebnis[name] = { ...eigener, kollabiert };
   }
   return ergebnis;
