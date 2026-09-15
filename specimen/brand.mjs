@@ -7,7 +7,12 @@
  * ungefähr gleich stark wahrgenommen wird — die Rampen von Rot, Grün und Blau werden damit
  * vergleichbar. Die Umrechnung sRGB ↔ lineares RGB ↔ OKLab ↔ OKLCH ist geschlossene Mathematik
  * (Björn Ottossons Matrizen für OKLab) und zieht keine Abhängigkeit nach sich.
+ *
+ * Daneben leitet dieses Modul auch die Beschriftungsfarbe (text-on-color, icon-on-color) ab —
+ * dafür wird contrast.mjs importiert, nicht neu erfunden.
  */
+
+import { ratio } from './contrast.mjs';
 
 // ---------------------------------------------------------------------------------------------
 // sRGB ↔ linear ↔ OKLab ↔ OKLCH — reine Zahlenumrechnung, keine Bibliothek.
@@ -191,17 +196,53 @@ export const HELL_ACTIVE_SCHRITT = 0.14;
  */
 export const DUNKEL_GRUNDTON_SCHRITT = 0.16;
 
-/** Dunkel: jeder weitere Schritt (hover, dann active, dann die beiden Link-Stufen) hellt um
- *  denselben Betrag weiter auf. Ein einziger Schrittwert für die ganze dunkle Rampe, statt vier
- *  verschiedener — die Rampe bleibt dadurch gleichmäßig, wie im hellen Modus auch. */
+/** Dunkel: hover und link-hover hellen vom Grundton aus jeweils um diesen Betrag weiter auf
+ *  (link-hover zwei solcher Schritte). Ein einziger Schrittwert für die aufhellende Seite der
+ *  dunklen Rampe, statt mehrerer verschiedener. */
 export const DUNKEL_SCHRITT = 0.06;
 
 /**
- * Berechnet die fünf Marken-Primitives für beide Modi aus einer Grundfarbe.
+ * Dunkel: 'active' tritt vom Grundton aus zurück — dunkler, nicht heller wie hover. Das ist die
+ * Umkehr gegenüber der ersten Fassung dieser Ableitung: dort hellte active im dunklen Modus
+ * weiter auf als hover, was dem gängigen "gedrückt wirkt dunkler"-Verständnis widerspricht und
+ * zusätzlich Farbkraft kostete (Chroma musste bei der sehr viel höheren Helligkeit stark
+ * zurückgenommen werden). Ein Schritt zurück in Richtung Grundton braucht dagegen kaum
+ * Chroma-Reduktion, weil er sich von einem Punkt entfernt, an dem noch reichlich Gamut-Raum ist.
+ * Der Betrag liegt über dem Hover-Schritt (0,06) — der Unterschied zwischen "gedrückt" und
+ * "Maus drüber" soll deutlich bleiben — aber unter dem hellen Active-Schritt (0,14), weil der
+ * dunkle Grundton bereits angehoben ist und dieselbe Distanz ihn zu nah an Schwarz drücken würde.
+ */
+export const DUNKEL_ACTIVE_SCHRITT = 0.10;
+
+/**
+ * Wählt die Beschriftungsfarbe (text-on-color, icon-on-color) für eine Fläche.
+ *
+ * Zwei feste Kandidaten — ein naher-schwarzer und ein weißer — treten gegeneinander an; es
+ * gewinnt der mit dem höheren Kontrastverhältnis gegen die Fläche. Das ist bewusst KEIN fester
+ * Wert je Modus: welcher Kandidat gewinnt, hängt von der gewählten Marke ab (eine sehr helle
+ * Marke verlangt auch im hellen Modus dunkle Beschriftung), und ein fest hingeschriebener Wert
+ * wäre beim nächsten Markenton, oder in einem anderen Theme, wieder falsch.
+ */
+function beschriftungAbleiten(flaecheHex, { dunklerKandidat, hellerKandidat }) {
+  const kontrastDunkel = ratio(dunklerKandidat, flaecheHex);
+  const kontrastHell = ratio(hellerKandidat, flaecheHex);
+  return kontrastDunkel >= kontrastHell
+    ? { hex: dunklerKandidat.toUpperCase(), verhaeltnis: kontrastDunkel, kandidat: 'dunkel' }
+    : { hex: hellerKandidat.toUpperCase(), verhaeltnis: kontrastHell, kandidat: 'hell' };
+}
+
+/**
+ * Berechnet die Marken-Primitives für beide Modi aus einer Grundfarbe.
+ *
+ * `kandidaten` sind die zwei Werte, zwischen denen beschriftungAbleiten() für text-on-color /
+ * icon-on-color entscheidet — { dunklerKandidat, hellerKandidat }, beide als Hex. Die Regel
+ * verlangt ausdrücklich, dass das die Werte sind, die tokens.json bereits führt (heute:
+ * tokens.light['text-primary'] und '#FFFFFF'); dieses Modul liest tokens.json selbst nicht,
+ * deshalb übergibt der Aufrufer sie.
  *
  * Rückgabeform: { light: {…}, dark: {…} }, je mit den Schlüsseln
- * brand-primary, brand-primary-hover, brand-primary-active, brand-link, brand-link-hover.
- * Jeder Eintrag ist { hex, reduziert, geklemmt, kollabiert }:
+ * brand-primary, brand-primary-hover, brand-primary-active, brand-link, brand-link-hover,
+ * brand-text-on-color. Die ersten fünf sind { hex, reduziert, geklemmt, kollabiert }:
  *   - reduziert: die Chroma wurde gesenkt, um diese Stufe in sRGB darstellen zu können — normal
  *     und informativ, kein Fehler (siehe oklchZuHex()).
  *   - geklemmt: echter Fehlerfall — selbst vollständig entsättigt liegt die Stufe außerhalb des
@@ -213,12 +254,14 @@ export const DUNKEL_SCHRITT = 0.06;
  *     markiert, weil es schwerer wiegt als eine einzelne Chroma-Reduktion: zwei Stufen, die sich
  *     nicht mehr unterscheiden, sind für die Ableitung nicht mehr nutzbar, auch wenn jede für
  *     sich genommen ein gültiger, im Gamut liegender Hexwert ist.
+ * `brand-text-on-color` ist { hex, verhaeltnis, kandidat } — siehe beschriftungAbleiten().
  *
  * Link-Regel: im hellen Modus folgt der Link exakt der Marke (link = primary, link-hover = hover
  * — wie im heutigen Bestand). Im dunklen Modus liegt der Link eine Stufe über dem Button: er
- * teilt sich den hover-Ton, und link-hover geht einen Schritt weiter als der Button-hover.
+ * teilt sich den hover-Ton, und link-hover geht einen Schritt weiter als der Button-hover — der
+ * Link hellt im Dunkeln also durchgehend auf, unabhängig davon, dass 'active' das nicht mehr tut.
  */
-export function markenRampe(grundfarbeHex) {
+export function markenRampe(grundfarbeHex, kandidaten) {
   const { L, C, H } = hexZuOklch(grundfarbeHex);
   const bei = (l) => oklchZuHex({ L: l, C, H });
 
@@ -229,31 +272,38 @@ export function markenRampe(grundfarbeHex) {
   const dunkelBasis = L + DUNKEL_GRUNDTON_SCHRITT;
   const dunkelPrimary = bei(dunkelBasis);
   const dunkelHover = bei(dunkelBasis + DUNKEL_SCHRITT);
-  const dunkelActive = bei(dunkelBasis + 2 * DUNKEL_SCHRITT);
+  const dunkelActive = bei(dunkelBasis - DUNKEL_ACTIVE_SCHRITT);
   const dunkelLink = dunkelHover;
-  const dunkelLinkHover = bei(dunkelBasis + 3 * DUNKEL_SCHRITT);
+  const dunkelLinkHover = bei(dunkelBasis + 2 * DUNKEL_SCHRITT);
 
-  return {
+  const light = mitKollisionen({
     // Im hellen Modus ist brand-link IMMER = brand-primary und brand-link-hover IMMER =
     // brand-primary-hover — das ist die Link-Regel selbst (siehe oben), keine Kollision, die
     // beim Klemmen entstanden wäre. Deshalb von der Kollisionsprüfung ausgenommen.
-    light: mitKollisionen({
-      'brand-primary': hellPrimary,
-      'brand-primary-hover': hellHover,
-      'brand-primary-active': hellActive,
-      'brand-link': hellPrimary,
-      'brand-link-hover': hellHover,
-    }, [['brand-primary', 'brand-link'], ['brand-primary-hover', 'brand-link-hover']]),
+    'brand-primary': hellPrimary,
+    'brand-primary-hover': hellHover,
+    'brand-primary-active': hellActive,
+    'brand-link': hellPrimary,
+    'brand-link-hover': hellHover,
+  }, [['brand-primary', 'brand-link'], ['brand-primary-hover', 'brand-link-hover']]);
+
+  const dark = mitKollisionen({
     // Im dunklen Modus ist brand-link IMMER = brand-primary-hover (die Link-Regel: "eine Stufe
     // heller als der Button") — ebenfalls Design, keine Kollision.
-    dark: mitKollisionen({
-      'brand-primary': dunkelPrimary,
-      'brand-primary-hover': dunkelHover,
-      'brand-primary-active': dunkelActive,
-      'brand-link': dunkelLink,
-      'brand-link-hover': dunkelLinkHover,
-    }, [['brand-primary-hover', 'brand-link']]),
-  };
+    'brand-primary': dunkelPrimary,
+    'brand-primary-hover': dunkelHover,
+    'brand-primary-active': dunkelActive,
+    'brand-link': dunkelLink,
+    'brand-link-hover': dunkelLinkHover,
+  }, [['brand-primary-hover', 'brand-link']]);
+
+  // Die Beschriftung gehört nicht zur Chroma-Gamut-Maschinerie von mitKollisionen() (sie ist eine
+  // Wahl zwischen zwei festen Kandidaten, kein reduzierter/geklemmter Farbpunkt) — deshalb erst
+  // danach ergänzt, gegen die jeweils schon fertige (ggf. reduzierte) Fläche des Modus.
+  light['brand-text-on-color'] = beschriftungAbleiten(light['brand-primary'].hex, kandidaten);
+  dark['brand-text-on-color'] = beschriftungAbleiten(dark['brand-primary'].hex, kandidaten);
+
+  return { light, dark };
 }
 
 /**
@@ -296,10 +346,15 @@ export function nurHex(rampeModus) {
  * Trägt eine Marken-Rampe in die Tokens EINES Modus ein — als neues Objekt, das gegebene bleibt
  * unverändert. Jedes Token, das heute an der Marke hängt, wird ersetzt; welche das sind, ist in
  * dieser Liste sichtbar gehalten, statt über den Aufrufer verstreut zu sein.
+ *
+ * text-on-color und icon-on-color bekommen denselben abgeleiteten Wert (brand-text-on-color) —
+ * beide sind Beschriftung auf derselben Fläche (button-primary), dieselbe Kontrastfrage gilt
+ * für beide.
  */
 export function rampeAnwenden(tokens, rampeModus) {
   const { 'brand-primary': primary, 'brand-primary-hover': hover, 'brand-primary-active': active,
-    'brand-link': link, 'brand-link-hover': linkHover } = nurHex(rampeModus);
+    'brand-link': link, 'brand-link-hover': linkHover, 'brand-text-on-color': beschriftung }
+    = nurHex(rampeModus);
 
   return {
     ...tokens,
@@ -314,5 +369,7 @@ export function rampeAnwenden(tokens, rampeModus) {
     'button-secondary-active': active,
     'link-primary': link,
     'link-primary-hover': linkHover,
+    'text-on-color': beschriftung,
+    'icon-on-color': beschriftung,
   };
 }

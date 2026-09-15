@@ -4,11 +4,14 @@ import { markenRampe, rampeAnwenden } from './brand.mjs';
 /** Die heutige Markenfarbe — Ausgangspunkt des Reglers, nicht ein empfohlener Wert. */
 const MARKE_STARTWERT = '#2968C8';
 
-/** Token-Namen, an denen die Marke hängt — für die "welche Paare fallen"-Anzeige hervorgehoben. */
+/** Token-Namen, an denen die Marke hängt — für die "welche Paare fallen"-Anzeige hervorgehoben.
+ *  text-on-color/icon-on-color gehören seit der Beschriftungs-Ableitung dazu: ihr Wert hängt
+ *  jetzt vom Kontrast gegen brand-primary ab, nicht mehr nur von einem festen Tokenwert. */
 const MARKEN_TOKENS = new Set([
   'button-primary', 'button-primary-hover', 'button-primary-active',
   'button-secondary', 'button-secondary-hover', 'button-secondary-active',
   'border-interactive', 'focus', 'interactive', 'link-primary', 'link-primary-hover',
+  'text-on-color', 'icon-on-color',
 ]);
 
 const rohTokens = await fetch('./tokens.json').then((a) => a.json());
@@ -64,9 +67,20 @@ schriftAnwenden(document.getElementById('schrift').value);
 let markenfarbe = MARKE_STARTWERT;
 let aktuellerModus = 'light';
 
+/**
+ * Kandidaten, zwischen denen die Beschriftung (text-on-color/icon-on-color) je Modus entscheidet
+ * — die Regel verlangt ausdrücklich die Werte, die tokens.json schon führt: text-primary des
+ * hellen Modus als dunklen Kandidaten, Weiß als hellen. Aus rohTokens gelesen, nicht fest
+ * hingeschrieben — ändert sich tokens.json, zieht diese Ableitung automatisch mit.
+ */
+const BESCHRIFTUNGS_KANDIDATEN = {
+  dunklerKandidat: rohTokens.light['text-primary'],
+  hellerKandidat: '#FFFFFF',
+};
+
 /** Die Tokens beider Modi mit der aktuellen Markenfarbe eingesetzt — rohTokens bleibt unberührt. */
 function effektiveTokens() {
-  const rampe = markenRampe(markenfarbe);
+  const rampe = markenRampe(markenfarbe, BESCHRIFTUNGS_KANDIDATEN);
   return {
     light: rampeAnwenden(rohTokens.light, rampe.light),
     dark: rampeAnwenden(rohTokens.dark, rampe.dark),
@@ -137,12 +151,41 @@ function schwatch(name, eintrag) {
   return span;
 }
 
-/** Zeichnet die Rampen-Ausgabe (hell + dunkel), kopierbar als Hexwerte, mit Warnung je Stufe. */
+/**
+ * Eine kopierbare Anzeige für die abgeleitete Beschriftungsfarbe (text-on-color/icon-on-color):
+ * Hexwert, welcher der beiden Kandidaten gewonnen hat, und das erreichte Kontrastverhältnis
+ * gegen brand-primary dieses Modus — die Zahl, die die Entscheidung erklärt.
+ */
+function beschriftungSchwatch(eintrag) {
+  const { hex, verhaeltnis, kandidat } = eintrag;
+  const span = document.createElement('span');
+  span.className = 'specimenMarke__schwatch';
+  const feld = document.createElement('span');
+  feld.className = 'specimenMarke__farbe';
+  feld.style.background = hex;
+  const text = document.createElement('span');
+  text.className = 'specimenMarke__hex';
+  text.title = 'Zum Kopieren markieren';
+  text.textContent = `text-on-color / icon-on-color: ${hex}`;
+  const hinweis = document.createElement('span');
+  hinweis.className = 'specimenMarke__hinweis';
+  hinweis.textContent = `ⓘ Kandidat „${kandidat}" gewinnt — Verhältnis ${verhaeltnis.toFixed(2)} gegen brand-primary`;
+  span.append(feld, text, hinweis);
+  return span;
+}
+
+/** Zeichnet die Rampen-Ausgabe (hell + dunkel), kopierbar als Hexwerte, mit Warnung je Stufe,
+ *  plus die abgeleitete Beschriftungsfarbe je Modus. */
 function rampeZeichnen(rampe) {
   const hell = document.getElementById('rampeHell');
   const dunkel = document.getElementById('rampeDunkel');
-  hell.replaceChildren(...Object.entries(rampe.light).map(([n, e]) => schwatch(n, e)));
-  dunkel.replaceChildren(...Object.entries(rampe.dark).map(([n, e]) => schwatch(n, e)));
+  const primitiven = (rampeModus) => Object.entries(rampeModus).filter(([n]) => n !== 'brand-text-on-color');
+  hell.replaceChildren(
+    ...primitiven(rampe.light).map(([n, e]) => schwatch(n, e)),
+    beschriftungSchwatch(rampe.light['brand-text-on-color']));
+  dunkel.replaceChildren(
+    ...primitiven(rampe.dark).map(([n, e]) => schwatch(n, e)),
+    beschriftungSchwatch(rampe.dark['brand-text-on-color']));
 }
 
 /** Zeichnet das Gate-Panel: Zahlen für beide Modi getrennt, fehlende Paare als Meldung,
