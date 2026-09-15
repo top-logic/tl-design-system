@@ -100,7 +100,37 @@ Warnungen bleiben und sind harmlos: `Dependency … with type test-jar is not fu
 Javadoc-Meldungen, `finalize() … deprecated`. Der GWT-Fehler `gwt-servlet.jar is missing` betrifft
 nur `tl-graph-*` und nicht die React-Demo.
 
-## 6. Starten
+## 6. Maven-Profil `ide` aktivieren — sonst fehlt die Hauptklasse
+
+`Bootstrap` liegt in `com.top_logic.ide.jetty`, und dieses Modul hängt nur über ein Profil am
+Anwendungsprojekt (`tl-parent-app/pom.xml:73`):
+
+```xml
+<profile>
+  <id>ide</id>
+  <dependencies>
+    <dependency>
+      <groupId>com.top-logic</groupId>
+      <artifactId>tl-ide-jetty</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+  </dependencies>
+</profile>
+```
+
+Ist das Profil nicht aktiv, steht `tl-ide-jetty` nicht im Klassenpfad und der Start endet mit
+
+```
+java.lang.ClassNotFoundException: com.top_logic.ide.jetty.Bootstrap
+```
+
+Rechtsklick auf `com.top_logic.demo.react` ▸ `Properties` ▸ `Maven` ▸ Feld **„Active Maven
+Profiles (comma separated)"** → `ide` ▸ `Apply and Close`. Danach `Maven ▸ Update Project…`
+(Alt+F5) auf dem Projekt.
+
+Auf der Kommandozeile entspricht das dem `-Pide` im Startbefehl.
+
+## 7. Starten
 
 Die Startkonfiguration liegt im Repo:
 
@@ -119,7 +149,7 @@ Sie erscheint nach dem Import unter `Run ▸ Run Configurations… ▸ Java Appl
 `-Declipse.workspace` ist der Grund, warum der Workspace alle Module enthalten muss: die Anwendung
 liest die Webapp-Ressourcen der Module direkt von dort.
 
-## 7. Aufrufen
+## 8. Aufrufen
 
 **http://localhost:8080/react-demo/** — Login `root` / `root1234`.
 
