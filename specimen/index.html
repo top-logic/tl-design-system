@@ -5,6 +5,10 @@
 <title>TopLogic Specimen</title>
 <link rel="stylesheet" href="/style/tlReactBase.css">
 <link rel="stylesheet" href="/style/tlReactControls.css">
+<!-- Die @font-face-Deklarationen fuer Inter liegen in einem eigenen Modul (ext.com.inter.fonts),
+     das keines der beiden obigen Stylesheets einbindet. Ohne diesen Link rendert die Seite in
+     einer Ersatzschrift, obwohl "Inter" ueberall referenziert wird. -->
+<link rel="stylesheet" href="/interfonts/style/interFonts.css">
 <style>
   html, body { height: auto !important; overflow: auto !important; }
   body { margin: 0; font-family: system-ui, sans-serif; }
@@ -15,6 +19,37 @@
                   border-top: 1px solid #8884; white-space: pre-wrap; }
   .specimenGate--gruen { color: #0a7; }
   .specimenGate--rot { color: #c33; }
+
+  /* Schriftumschalter: setzt eine Custom Property, die die Buehne liest. Kein Download —
+     alle drei Stapel sind entweder jetzt lokal geladen (Inter) oder Systemschriften. */
+  .specimenBuehne {
+    font-family: var(--specimenSchrift, system-ui, sans-serif);
+  }
+  .specimenBuehne * {
+    font-family: inherit;
+  }
+
+  /* Typo-Probe: drei Stufen der Grundschrift ueber eine Custom Property, nicht per
+     Inline-Style an den Zellen. Jede Stufe setzt nur --specimenSchriftgroesse; das
+     tatsaechliche font-size liegt auf der Tabelle selbst. */
+  .specimenTypoStufe { margin-block-end: 2rem; }
+  .specimenTypoStufe__titel { font: 600 13px/1.4 system-ui, sans-serif; margin: 0 0 .5rem; }
+  .specimenTypoStufe--12 { --specimenSchriftgroesse: 12px; }
+  .specimenTypoStufe--13 { --specimenSchriftgroesse: 13px; }
+  .specimenTypoStufe--14 { --specimenSchriftgroesse: 14px; }
+  .specimenTypoStufe .tlTableView { font-size: var(--specimenSchriftgroesse); }
+
+  /* Sichtbar machen, dass 700 bei Inter kuenstlich (synthetisch) fett gerechnet wird:
+     Inter hat nur Regular (400) und SemiBold (deklariert als 700/bold). Ein echtes 700
+     gibt es nicht — der Browser skaliert das SemiBold-Outline algorithmisch. */
+  .specimenSchriftvergleich { display: flex; gap: 2rem; flex-wrap: wrap; padding: 1rem 1.5rem;
+                               border-bottom: 1px solid #8884; font-size: 16px; }
+  .specimenSchriftvergleich strong { display: block; font-size: 11px; font-weight: normal;
+                                      opacity: .6; margin-bottom: .25rem; }
+  .specimenSchriftvergleich span { font-family: var(--specimenSchrift, system-ui, sans-serif); }
+  .specimenSchriftvergleich .regular { font-weight: 400; }
+  .specimenSchriftvergleich .semibold { font-weight: bold; }   /* Inters echter zweiter Schnitt */
+  .specimenSchriftvergleich .synth700 { font-weight: 700; }    /* nur bei Inter = synthetisch */
 </style>
 </head>
 <body>
@@ -23,8 +58,26 @@
     <label>Modus
       <select id="modus"><option value="light">hell</option><option value="dark">dunkel</option></select>
     </label>
+    <label>Schrift
+      <select id="schrift">
+        <option value="'Inter', system-ui, sans-serif">Inter</option>
+        <option value="system-ui, sans-serif">System (system-ui)</option>
+        <option value="'SF Compact Text', system-ui, sans-serif">SF Compact Text (schmal, ziffernsicher)</option>
+      </select>
+    </label>
+    <label>Ansicht
+      <select id="ansicht">
+        <option value="fragmente">Fragmente (Buttons/Formular/Tabelle)</option>
+        <option value="typo">Typo-Probe (12/13/14px)</option>
+      </select>
+    </label>
     <span id="gateKurz"></span>
   </header>
+  <section class="specimenSchriftvergleich">
+    <span><strong>Regular (400)</strong><span class="regular">Grundstücksverkehrsgenehmigungsverfahren 0O1l7</span></span>
+    <span><strong>SemiBold (deklariert als bold)</strong><span class="semibold">Grundstücksverkehrsgenehmigungsverfahren 0O1l7</span></span>
+    <span><strong>font-weight: 700 (bei Inter synthetisch fett)</strong><span class="synth700">Grundstücksverkehrsgenehmigungsverfahren 0O1l7</span></span>
+  </section>
   <main class="specimenBuehne" id="buehne"></main>
   <section class="specimenGate" id="gate"></section>
   <script type="module" src="./specimen.mjs"></script>

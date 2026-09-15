@@ -6,16 +6,22 @@ import { homedir } from 'node:os';
 const PORT = 8137;
 const WORKTREE = process.env.TL_WORKTREE ?? join(homedir(), 'git/tl8-wt-29584');
 const STYLE = join(WORKTREE, 'com.top_logic.layout.react/src/main/webapp/style');
+// Die @font-face-Deklarationen fuer Inter liegen in einem anderen Modul als die
+// tlReact*.css-Stylesheets und werden vom obigen STYLE-Mapping nicht erfasst.
+const INTERFONTS = join(WORKTREE, 'ext.com.inter.fonts/src/main/webapp');
 const HIER = new URL('.', import.meta.url).pathname;
 
 const TYPEN = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
   '.mjs': 'text/javascript; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
-  '.json': 'application/json; charset=utf-8' };
+  '.json': 'application/json; charset=utf-8',
+  '.otf': 'font/otf', '.ttf': 'font/ttf', '.woff': 'font/woff', '.woff2': 'font/woff2' };
 
 createServer(async (anfrage, antwort) => {
   const pfad = normalize(decodeURIComponent(new URL(anfrage.url, 'http://x').pathname));
   const datei = pfad.startsWith('/style/')
     ? join(STYLE, pfad.slice('/style/'.length))
+    : pfad.startsWith('/interfonts/')
+    ? join(INTERFONTS, pfad.slice('/interfonts/'.length))
     : join(HIER, pfad === '/' ? 'index.html' : pfad);
   try {
     const inhalt = await readFile(datei);
