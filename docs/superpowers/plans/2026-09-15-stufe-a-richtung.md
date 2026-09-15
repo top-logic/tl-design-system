@@ -83,10 +83,12 @@ git log --oneline -1   # muss 21598dc7d zeigen
 ```bash
 cd ~/git/tl8-wt-29584
 mvn -B test -pl com.top_logic.layout.react -DskipTests=false \
-  -Dtest=test.com.top_logic.layout.react.theme.TestReactThemeContrast 2>&1 | grep -c "reaches"
+  -Dtest=test.com.top_logic.layout.react.theme.TestReactThemeContrast 2>&1 \
+  | grep -oE "^(default|dark): '[a-z-]+' \([^)]*\) on '[a-z-]+'" | sort -u | wc -l
 ```
 
-Erwartet: `8`
+Erwartet: `8`. Ein schlichtes `grep -c "reaches"` zählt doppelt — JUnit gibt jede Meldung
+einmal im Text und einmal im `assertEquals`-Vergleich aus.
 
 - [ ] **Schritt 3: Trac #29584 umschreiben**
 
