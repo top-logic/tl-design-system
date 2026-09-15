@@ -58,6 +58,34 @@ mehr.
 Die heutigen Werte liegen alle sauber im Raum — sie wurden nach Augenmaß gewählt und machen faktisch
 genau diese Abbildung. Die Regel schreibt nur fest, was dort schon richtig gemacht wurde.
 
+### Rampenrichtung: Gedrücktes tritt zurück
+
+Im **hellen** Modus dunkeln `hover` und `active` beide ab. Im **dunklen** Modus hellt `hover` auf,
+`active` dunkelt ab.
+
+**Warum:** Ein gedrückter Zustand, der zurücktritt, ist die verbreitete Konvention — Drücken
+suggeriert ein Eindrücken. Die Alternative, im Dunkeln monoton weiter aufzuhellen, kostet Farbkraft:
+Die abgeleitete Active-Stufe lag dort bei Chroma 0,095 gegen 0,163 im Grundton und wirkte deutlich
+blasser.
+
+Die Rampe läuft im Dunkelmodus damit in zwei Richtungen. Das ist Absicht und entspricht dem, was
+heute im Theme steht.
+
+### Beschriftung auf der Marke: dunkel im Dunkelmodus
+
+**Das ist keine Gestaltungsentscheidung, sondern eine Rechnung.** Weiße Schrift fällt im Dunkelmodus
+auf **jeder** Stufe durch, bei der abgeleiteten Rampe wie bei der heutigen:
+
+| Stufe | weiße Schrift | dunkle Schrift |
+|---|---|---|
+| abgeleitet `#5A9AFF` / `#7BAFFF` / `#9CC3FF` | 2,80 · 2,23 · 1,80 | 6,75 · 8,47 · 10,49 |
+| heute `#5B9BF0` / `#7AAEF3` / `#3F86E6` | 2,84 · 2,29 · 3,64 | 6,65 · 8,25 · 5,19 |
+
+Die Alternative wäre, den Button so weit abzudunkeln, dass Weiß trägt — bei `#2968C8` fällt er dann
+mit 3,18 gegen den dunklen Grund und hört auf, als Fläche zu lesen.
+
+`text-on-color` und `icon-on-color` bekommen im Dunkelmodus also einen dunklen Wert.
+
 ---
 
 ## Offen
