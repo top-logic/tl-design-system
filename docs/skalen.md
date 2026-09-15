@@ -112,6 +112,35 @@ nicht auf, weil dort beide Flächen dunkel sind und Weiß überall trägt.
 Nachgeprüft und als strukturell bestätigt, nicht als Umsetzungsfehler. Die Auflösung gehört zur
 Semantikskala und steht noch aus.
 
+### Marke: `#0B5ED7`, vorläufig
+
+Farbton 260°, Chroma 0,200, Helligkeit 0,515.
+
+| | hell | dunkel |
+|---|---|---|
+| `brand-primary` | `#0B5ED7` | `#5394FF` |
+| `brand-primary-hover` | `#004DBA` | `#75A9FF` |
+| `brand-primary-active` | `#003A8F` | `#2471EC` |
+| `brand-link` | `#0B5ED7` | `#75A9FF` |
+| `brand-link-hover` | `#004DBA` | `#95BDFF` |
+| Beschriftung darauf | `#FFFFFF` (5,84) | `#101113` (6,34) |
+
+**Warum dieser Ton.** Gegenüber dem heutigen `#2968C8` steigt das Chroma von 0,163 auf 0,200 bei
+fast gleichem Farbton — das Blau wird klarer, ohne die Familie zu wechseln. Zwei Alternativen
+schieden aus:
+
+* **Violettstichige Töne** (Indigo `#4338CA` bei 277°, Violett `#6D28D9` bei 293°) — gewünscht war
+  ein frisches Blau, kein Violett.
+* **Hellere Töne** (`#0A72F0` mit 4,49 und `#0E7BE8` mit 4,19 auf Weiß) — sie fallen als Linkfarbe
+  durch. *Frisch wird ein Blau über Chroma, nicht über Helligkeit*; Chroma kostet keinen Kontrast,
+  Helligkeit sofort.
+
+Der Linkkontrast trägt auch einen gedämpften Grund: 5,84 auf Weiß, 5,59 auf `#FAFAFA`, 5,45 auf
+`#F7F7F8`.
+
+**Ausdrücklich vorläufig.** Der Ton kann sich ändern, sobald die Tokens in Figma liegen. Das kostet
+nichts: Rampe, Beschriftung und Kontrastprüfung sind abgeleitet, der Wechsel ist ein Wert.
+
 ---
 
 ## Offen

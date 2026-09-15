@@ -28,7 +28,18 @@ export const nonText = (foreground, background) => ({ foreground, background, mi
  * `text('layer-accent-text', 'layer-accent')` bleibt unverändert — geprüft, dass der heutige
  * `layer-accent-text`-Wert bereits genau der ist, den dieselbe Ableitungsregel liefern würde
  * (siehe task-7-brand-report.md, Korrekturrunde 5), also keine Abweichung vom Java-Gate an
- * dieser Stelle. Die Gesamtzahl der Paare bleibt bei 22 — reine Umbenennung, keine Erweiterung.
+ * dieser Stelle. Bis dahin blieb die Gesamtzahl der Paare bei 22 — reine Umbenennung, keine
+ * Erweiterung.
+ *
+ * EINE WEITERE, UNABHÄNGIGE ABWEICHUNG (Ticket #29108): `nonText('border-subtle', 'background')`
+ * ist NEU in dieser Liste — eine ECHTE ERGÄNZUNG, keine Umbenennung. `border-subtle` ist der
+ * Rahmen von `.tlReactTextInput` (`border: 1px solid var(--border-subtle)`) und damit die
+ * Begrenzung eines Bedienelements im Sinn von WCAG 2.1, Kriterium 1.4.11 (Non-text Contrast,
+ * Schwelle 3,0) — bislang prüfte das Gate nur `border-interactive` und `border-strong`, nicht
+ * `border-subtle`, und deckte damit einen echten Mangel nicht auf: `#C4C7CC` gegen `background`
+ * erreicht im hellen Modus nur 1,70. TestReactThemeContrast.java kennt dieses Paar noch nicht und
+ * muss es beim Nachziehen von Stufe A ebenfalls aufnehmen. Die Gesamtzahl der Paare steigt dadurch
+ * von 22 auf 23.
  */
 export const REQUIREMENTS = [
   // Fließtext auf den Flächen, auf denen er steht.
@@ -61,6 +72,7 @@ export const REQUIREMENTS = [
   nonText('icon-primary', 'background'),
   nonText('border-interactive', 'background'),
   nonText('border-strong', 'background'),
+  nonText('border-subtle', 'background'),
   nonText('focus', 'background'),
 ];
 

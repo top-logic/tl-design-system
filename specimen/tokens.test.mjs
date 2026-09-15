@@ -18,8 +18,13 @@ test('Jede Anforderung findet ihre Tokens in beiden Modi', () => {
   }
 });
 
-test('Der Ausgangsstand ist auf genau den acht bekannten Paaren rot', () => {
+test('Der Ausgangsstand ist auf genau den bekannten Paaren rot', () => {
+  // War 8, solange REQUIREMENTS 'border-subtle' nicht kannte. Ticket #29108 nimmt
+  // nonText('border-subtle', 'background') auf (echte Erweiterung, siehe requirements.mjs) —
+  // der Rahmen von .tlReactTextInput erreicht gegen 'background' nur 1,70 (hell) bzw. 1,63
+  // (dunkel), beides unter der von WCAG 1.4.11 verlangten 3,0. Das deckt zwei zusätzliche,
+  // real vorhandene Verstöße auf: 8 + 2 = 10.
   const probleme = [...report('light', tokens.light, REQUIREMENTS),
                     ...report('dark', tokens.dark, REQUIREMENTS)];
-  assert.equal(probleme.length, 8, probleme.join('\n'));
+  assert.equal(probleme.length, 10, probleme.join('\n'));
 });

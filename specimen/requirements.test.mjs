@@ -39,12 +39,16 @@ test('Die Paarliste deckt Text, Fläche, Zustand, Links und Begrenzungen ab', ()
   // Ab Stufe A leitet der Marken-Explorer die Beschriftung je Fläche ab (siehe Kommentar über
   // REQUIREMENTS in requirements.mjs): 'text-on-color' auf button-primary ist deshalb durch
   // 'text-on-brand' ersetzt — dieselbe Fläche, dasselbe Paar, nur umbenanntes Vordergrund-Token.
-  // Die Gesamtzahl bleibt 22: sechs Paare wurden umbenannt, keines hinzugefügt oder entfernt.
-  assert.equal(REQUIREMENTS.length, 22);
+  // Das allein hätte die Gesamtzahl bei 22 gehalten (sechs Umbenennungen, nichts hinzugefügt
+  // oder entfernt). Ticket #29108 ergänzt zusätzlich, als ECHTE Erweiterung, das bislang fehlende
+  // Paar 'border-subtle' auf 'background' (WCAG 1.4.11 verlangt 3,0 für die Begrenzung eines
+  // Bedienelements, z. B. den Rahmen von .tlReactTextInput) — deshalb jetzt 23 Paare.
+  assert.equal(REQUIREMENTS.length, 23);
   const paare = REQUIREMENTS.map((r) => `${r.foreground}|${r.background}`);
   assert.ok(paare.includes('text-on-brand|button-primary'));
   assert.ok(paare.includes('text-on-danger|button-danger'));
   assert.ok(paare.includes('text-inverse|background-inverse'));
   assert.ok(paare.includes('text-placeholder|field'));
   assert.ok(paare.includes('focus|background'));
+  assert.ok(paare.includes('border-subtle|background'));
 });

@@ -1,5 +1,5 @@
 import { REQUIREMENTS, report } from './requirements.mjs';
-import { markenRampe, rampeAnwenden, beschriftungAbleiten } from './brand.mjs';
+import { markenRampe, rampeAnwenden, beschriftungAbleiten, hexZuOklch, oklchZuHex } from './brand.mjs';
 
 /** Die heutige Markenfarbe — Ausgangspunkt des Reglers, nicht ein empfohlener Wert. */
 const MARKE_STARTWERT = '#2968C8';
@@ -16,6 +16,44 @@ const MARKEN_TOKENS = new Set([
   'border-interactive', 'focus', 'interactive', 'link-primary', 'link-primary-hover',
   'text-on-brand', 'icon-on-brand',
 ]);
+
+// -------------------------------------------------------------------------------------------
+// Grundflächen-Regler (Ticket #29108): vier Stufen für die vier heute reinweißen Tokens
+// (background, layer-01, layer-02, color-surface) — reines Weiß, zwei neutrale Abtönungen und
+// eine markengetönte Stufe. Wirkt NUR im hellen Modus: die vier Tokens sind dort #FFFFFF, im
+// dunklen Modus sind ihre heutigen Werte bereits dunkel (#1A1C1E/#1F2327/#262A2E) und keine
+// "gedämpft"-Lesart aus der Aufgabe übersetzt sich sinnvoll auf sie — es gibt keine natürliche
+// Entsprechung zu "etwas weniger weiß" auf einer Fläche, die schon fast schwarz ist. Der Regler
+// bleibt im dunklen Modus deshalb bewusst wirkungslos (siehe Bericht).
+// -------------------------------------------------------------------------------------------
+
+/** Die vier Tokens, auf die der Grundflächen-Regler wirkt — heute reines #FFFFFF. */
+const GRUNDFLAECHEN_TOKENS = ['background', 'layer-01', 'layer-02', 'color-surface'];
+
+/** Ziel-Helligkeit/-Chroma der markengetönten Stufe, in OKLCH. Sehr geringes Chroma (0,01) hält
+ *  die Fläche praktisch neutral, aber erkennbar zur Marke hin verschoben; L=0,975 liegt zwischen
+ *  den beiden neutralen Stufen (0,98 und 0,97 in sRGB-Prozent gedacht) und bleibt weit im Gamut
+ *  (keine Chroma-Reduktion nötig, siehe oklchZuHex()). Derselbe Farbton (H) wie die Marke —
+ *  Chroma und Farbton sind unabhängig von L, deshalb ändert sich diese Stufe automatisch mit,
+ *  wenn die Markenfarbe wechselt, ohne dass hexZuOklch/oklchZuHex hier neu geschrieben werden.
+ */
+const GRUNDFLAECHE_MARKENTON_L = 0.975;
+const GRUNDFLAECHE_MARKENTON_C = 0.01;
+
+/** Die vier Stufen des Reglers. `marke` ist eine Funktion, weil sie von der aktuellen
+ *  Markenfarbe abhängt — die anderen drei sind feste Hexwerte. */
+const GRUNDFLAECHEN_STUFEN = {
+  weiss: { name: 'reines Weiß', hex: () => '#FFFFFF' },
+  n98: { name: 'neutral 98 %', hex: () => '#FAFAFA' },
+  n97: { name: 'neutral 97 %', hex: () => '#F7F7F8' },
+  marke: {
+    name: 'markengetönt',
+    hex: (markenfarbeHex) => {
+      const { H } = hexZuOklch(markenfarbeHex);
+      return oklchZuHex({ L: GRUNDFLAECHE_MARKENTON_L, C: GRUNDFLAECHE_MARKENTON_C, H }).hex;
+    },
+  },
+};
 
 const rohTokens = await fetch('./tokens.json').then((a) => a.json());
 const fragmente = await Promise.all(
@@ -69,6 +107,7 @@ schriftAnwenden(document.getElementById('schrift').value);
 
 let markenfarbe = MARKE_STARTWERT;
 let aktuellerModus = 'light';
+let grundflaecheStufe = 'weiss';
 
 /**
  * Kandidaten, zwischen denen JEDE Beschriftungs-Ableitung entscheidet — die Regel verlangt
@@ -99,11 +138,22 @@ function beschriftungenAbleiten(tokensDesModus) {
   };
 }
 
+/** Trägt die gewählte Grundflächen-Stufe in die vier betroffenen Tokens EINES Modus ein — als
+ *  neues Objekt, das gegebene bleibt unverändert. Nur der helle Modus wird tatsächlich verändert
+ *  (siehe Kommentar über GRUNDFLAECHEN_TOKENS); der dunkle Modus kommt unverändert zurück. */
+function grundflaecheAnwenden(tokensDesModus, modus) {
+  if (modus !== 'light') return tokensDesModus;
+  const hex = GRUNDFLAECHEN_STUFEN[grundflaecheStufe].hex(markenfarbe);
+  const ergebnis = { ...tokensDesModus };
+  for (const name of GRUNDFLAECHEN_TOKENS) ergebnis[name] = hex;
+  return ergebnis;
+}
+
 function effektiveTokens() {
   const rampe = markenRampe(markenfarbe, BESCHRIFTUNGS_KANDIDATEN);
   return {
-    light: beschriftungenAbleiten(rampeAnwenden(rohTokens.light, rampe.light)),
-    dark: beschriftungenAbleiten(rampeAnwenden(rohTokens.dark, rampe.dark)),
+    light: grundflaecheAnwenden(beschriftungenAbleiten(rampeAnwenden(rohTokens.light, rampe.light)), 'light'),
+    dark: grundflaecheAnwenden(beschriftungenAbleiten(rampeAnwenden(rohTokens.dark, rampe.dark)), 'dark'),
     rampe,
   };
 }
