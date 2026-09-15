@@ -306,6 +306,34 @@ erkennbare Warnfarbe lebt deshalb in `surface`, nicht in `text`.
 **Info trägt den Farbton der Marke** (260°). Das ist die Konvention und bindet das System, macht
 aber Info und Marke ähnlich. Falls sich beide je beißen, ist das die Stelle zum Nachjustieren.
 
+### Schrift: Inter bleibt
+
+Geprüft am 2026-09-15 an der ausgelieferten Datei, nicht nach Eindruck:
+
+* **Version 3.019, SIL OFL** — auch kommerziell auslieferbar.
+* **Tabellenziffern (`tnum`) und geschlitzte Null (`zero`) sind vorhanden.**
+* **TopLogic nutzt `tabular-nums` genau zweimal** — in einem Countdown und einem Label, *nicht* in
+  der Datentabelle. Die Zahlenspalten stehen also mit proportionalen Ziffern da und fluchten nicht.
+* **Zwei von neun Schnitten** sind ausgeliefert, und keine `woff2`-Dateien.
+
+**Der System-Font-Stack scheidet aus.** Nicht wegen der Qualität — Segoe UI und SF sind
+ausgezeichnet —, sondern wegen der **Metrik-Varianz**: Dieselbe Tabelle wird auf Windows, macOS und
+Linux verschieden breit. Ein Design System, das Abstände und Control-Höhen als Tokens festlegt,
+verliert damit seine Grundlage, und Dokumentation, Figma und Kundendemos zeigen jeweils etwas
+anderes.
+
+**Ein anderes Typeface scheidet vorerst aus**, weil Inter jede funktionale Anforderung erfüllt. Der
+Grund für einen Wechsel wäre Charakter, nicht Funktion — und die drei offenen Punkte oben sind
+Konfiguration, keine Eigenschaften der Schrift.
+
+Zu tun, wenn die Typo-Skala gebaut wird: `tnum` und `zero` in den Zahlenspalten einschalten, das
+fehlende Gewicht ergänzen, `woff2` nachliefern.
+
+**In Kundenprojekten wird die Schrift des Kunden verwendet.** Was dabei bricht und wie es
+abgefedert wird, steht in Issue #12 — Metrik-Normalisierung über `size-adjust` und die
+`*-override`-Deskriptoren, einheitenlose Zeilenhöhen, abgeleitete Control-Höhen, Feature-Rückfall
+und eine Validierung des Kunden-Themes.
+
 ---
 
 ## Offen

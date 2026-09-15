@@ -1,172 +1,77 @@
 # Stand
 
-**Letzte Sitzung:** 2026-09-14 · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT)
+**Letzte Sitzung:** 2026-09-15 · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT)
 
 ---
 
 ## Wo anknüpfen
 
-**Beide PRs sind visuell verifiziert und merge-reif.**
+**Stufe A läuft.** Die Maschinerie steht und ist geprüft; es fehlen noch sechs von elf Skalen.
 
-Nächster Schritt: **AP 3 — Dark-Theme reparieren** (`plan.md`). Größerer fachlicher Nutzen als AP 2, weil
-dort ein echter Barrierefreiheitsmangel steckt: `text-on-color` auf `button-primary` liegt im
-Dark-Theme bei gemessenen **2,84:1** und damit unter WCAG AA.
+Nächster Schritt: **Typo-Größen** — die Probe steht im Specimen, die Gewichtsfrage ist durch Inters
+zwei ausgelieferte Schnitte vorentschieden. Danach Radius, Fokus, Motion, Dichte,
+Komponenten-Maße.
 
-## Laufend: AP 3 — Dark-Theme (Trac #29584, Issue #3)
-
-Worktree `~/git/tl8-wt-29584`, Branch `CWS/CWS_29584_dark_theme_contrast`, drei Commits, kein PR.
-
-Das Kontrast-Gate läuft als Test (`ThemeContrast` neben `ThemeTokenAudit`, 23 Paare, gegen jedes
-Theme). Es war auf **acht** Paaren rot — nicht auf einem, wie der Plan annahm —, davon eines im
-**hellen** Theme. Der schlimmste Fall stand nirgends: `text-inverse` auf `background-inverse`
-erreichte **1,13** (Weiß auf `#F0F1F2`).
-
-Erledigt: `text-inverse` dunkel, `text-placeholder` in beiden Themes, `text-on-color` und
-`icon-on-color` im Dark-Theme auf `#101113`.
-
-**Offen — eine Designentscheidung, die drei Paare schließt:** das Fehlerrot auf dunklem Grund
-(`button-danger`, `button-danger-hover`, `text-error`). Orientierung: `#E8565A` erreicht 4,81
-gegen den Grund und trägt die dunkle Schrift mit 5,32.
-
-Ebenfalls offen, ohne Kontrastbezug: die drei Schatten, `overlay`, `support-*`, `layer-accent*`,
-`color-drop-zone`.
-
-## Planung
-
-Die Arbeitspakete liegen als **Gitea-Issues** in diesem Repo: [Issue-Liste](https://git.top-logic.com/hpe/tl-design-systemissues).
-AP *n* = Issue #*n*. Erledigt und geschlossen: [#1](https://git.top-logic.com/hpe/tl-design-system/issues/1) (Marken-Abstraktion) und
-[#11](https://git.top-logic.com/hpe/tl-design-system/issues/11) (doppelte React-Instanz).
-
-## Erledigt
-
-| | Inhalt | Ergebnis |
-|---|---|---|
-| **PR !1618** | #29576 — doppelte React-Instanz durch direkten `createPortal`-Import | −16.743 B (−7,0 %), drei Duplikat-Marker eliminiert. **Offen, visuell verifiziert** |
-| **PR !1621** | #29579 — Marken-Token + `<ref>`-Zielvalidierung | 11 Tokens auf 5 Primitives, alle Werte beweisbar identisch, 15 Tests grün. **Offen, visuell verifiziert** |
-| Analyse | `master` vollständig inventarisiert | `findings/` |
-| Repo | angelegt, Werkzeuge gebaut | `tools/`, `spikes/` |
-
-**PR !1618 visuell verifiziert am 2026-09-14** in `tl-demo-react` (Port 8080, Dark-Theme):
-
-* **Dropdown-Portal** — `Attribute ▸ Auswahl + Formular ▸ Neu ▸ Priorität`: Popup öffnet über
-  `document.body`, wird von keinem Vorfahren beschnitten, Filterfeld und Optionen erscheinen,
-  Auswahl „Hoch" wird übernommen und setzt den Dirty-Marker.
-* **Toolbar-Portal** — `Switch-Demo ▸ ≡`: Overflow-Menü öffnet über der Tabelle,
-  Ausführbarkeit stimmt (`Beispiele erzeugen` aktiv, `Löschen` inaktiv ohne Selektion), der
-  Klick löst das Server-Kommando aus (Antwort kam als Berechtigungs-Toast zurück).
-* **Konsole**: 279 Meldungen, davon **0 Fehler und 0 Warnungen** — kein „useState is null",
-  kein Hook-Fehler.
-* **Ausgelieferte Datei** geprüft: `GET /script/tl-react-controls.js` → 220.942 B, null Treffer
-  für `react.production.js`, `react-dom.production.js`, `__DOM_INTERNALS_DO_NOT_USE`.
-
-**PR !1621 visuell verifiziert am 2026-09-15** in `tl-demo-react` aus Eclipse (`/react-demo`):
-
-* **Alle 11 Tokens in beiden Themes gemessen** — im Browser über eine Sonde
-  (`color: var(--token)` → `getComputedStyle`), verglichen mit den Literalen aus dem
-  Commit **vor** der Änderung (`HEAD~1`). 22 Werte, **0 Abweichungen**.
-
-  | | `default` | `dark` |
-  |---|---|---|
-  | `border-interactive`, `button-primary`, `button-secondary`, `focus`, `interactive` | `#2968C8` | `#5B9BF0` |
-  | `button-primary-hover`, `button-secondary-hover` | `#245DB2` | `#7AAEF3` |
-  | `button-primary-active`, `button-secondary-active` | `#09387E` | `#3F86E6` |
-  | `link-primary` | `#2968C8` | `#7AAEF3` |
-  | `link-primary-hover` | `#245DB2` | `#97C0F6` |
-
-* **An echten Elementen nachgemessen**, nicht nur am Token: Rand des Buttons „Neu" und
-  Unterstrich des aktiven Tabs sind `#2968C8` hell / `#5B9BF0` dunkel.
-* **Die `<ref>`-Kette löst im ausgelieferten CSS auf** — `getPropertyValue('--button-primary')`
-  liefert den Hex-Wert, nicht `var(--brand-primary)`. Auch die dreistufige Kette
-  `link-primary` → `brand-link` → `brand-primary` kommt korrekt an.
-* **Themewechsel ohne Reload** über `window.tlTheme.select()` funktioniert in beide Richtungen.
-* **Konsole**: 419 Meldungen, **0 Fehler**.
-* Dass wirklich der Branch läuft, beweist die Existenz des Tokens `--brand-primary` — auf
-  `master` gibt es das nicht.
-
-### Demo-App starten (die `tl-app`-Skill existiert nicht mehr)
-
-`CLAUDE.md:217` verweist auf eine `tl-app`-Skill; das Plugin-Verzeichnis
-`~/.claude/plugins/data/tl-claude-tools-inline` ist leer. Der funktionierende Weg:
+Das Specimen starten:
 
 ```bash
-cd <worktree> && .claude/scripts/local-m2.sh          # isoliertes .m2 mit Read-only-Tail
-mvn -B install -DskipTests -pl com.top_logic.demo.react -am    # 63 Module, ~3:20 min
-cd com.top_logic.demo.react
-mvn -B -Pide exec:java@start-app -Dtl.port=8080       # http://localhost:8080/tl-demo-react/
+cd ~/Claude/TopLogic-v8-DesignSystem/specimen && node serve.mjs
 ```
 
-Das globale `~/.m2` enthält nur 28 der ~130 TopLogic-Module als `8.0.0-SNAPSHOT` — der Tail
-allein trägt nicht, ein Vollbuild pro Worktree ist nötig.
+Dann `http://localhost:8137/` — Markenregler, Grundflächenregler, Modus-, Ansichts- und
+Schriftumschalter, unten das Gate-Panel.
 
-**Ohne Vollbuild geht es über Eclipse**: m2e löst die 125 Module gegeneinander im Workspace auf.
-Anleitung: [`docs/eclipse-workspace.md`](docs/eclipse-workspace.md).
+## Entschieden, alles begründet in `docs/skalen.md`
 
-## Worktrees
+| | Entscheidung |
+|---|---|
+| Elevation | Fläche plus Schatten — hell trägt der Schatten, dunkel die Fläche |
+| Dark | zweite vollständige Palette, nichts wird geerbt |
+| Rampenregel | Sättigung zurücknehmen statt klemmen |
+| Rampenrichtung | Gedrücktes tritt zurück |
+| Beschriftung | je Fläche abgeleitet, nie geschrieben |
+| **Marke** | **`#0B5ED7`**, ausdrücklich vorläufig |
+| Grundfläche | `#FAFAFA`, neutral |
+| Rahmen | vier Stufen: separator, control, emphasis, interactive |
+| Neutrale | aus der Anforderung gestuft, nicht nach gleichem Abstand |
+| Semantik | vier Bedeutungen × vier Rollen |
+| Schrift | Inter bleibt; Kundenschriften siehe Issue #12 |
 
-```
-~/git/tl8-wt-29576   CWS/CWS_29576_duplicate_react   (von master)
-~/git/tl8-wt-29579   CWS/CWS_29579_brand_token       (von master)
-```
+## Was das Gate gefunden hat
 
-Das Verzeichnis des Nutzers `~/git/tl8-new-ui` bleibt unberührt — es steht auf einem veralteten
-Branch und enthält fremde uncommittete Änderungen.
+Zehn Verstöße, keiner davon vorher bekannt:
 
-## Die drei Befunde, die den Plan tragen
+| Befund | Wert |
+|---|---|
+| `text-inverse` auf `background-inverse`, dunkel | **1,13** — Weiß auf Fast-Weiß |
+| Feldumrandung `border-subtle`, beide Modi | **1,70** / 1,63 statt 3,0 |
+| `support-warning` als Text, hell | **2,27** |
+| `support-success` als Text, hell | 3,04 |
+| `text-placeholder` auf `field`, hell | 2,04 |
+| Snackbar-Erfolg, hartkodiertes `#fff` | 3,17 |
+| Beschriftung auf `button-primary`, dunkel | 2,80 |
 
-**1. Was existiert, ist ein Token-*Delivery*-System, kein Design System.**
-`UIThemeService` löst Deklaration mit Typprüfung, Vererbung, Auslieferung, Umschaltung ohne
-Reload, OS-Präferenz, Persistenz und Modulbeitrag — plus einen Audit, der in 6 Modulen ausgerollt
-ist und bereits einen Build gebrochen hat (#29573). Was darüber liegt, fehlt.
-
-**2. Der Audit prüft genau zwei Regeln.** Eine `var()`-Referenz ohne Definition, ein literaler
-`border-radius`. Ungeprüft durch `tlReactControls.css`:
-
-| Kategorie | literal | Tokens vorhanden? |
-|---|---|---|
-| `font-size` | 56 von 113 | 8, unvollständige Skala |
-| `font-weight` | 44 | **keine** |
-| `padding`/`gap`/`margin` | 111 | ja, gut angenommen |
-| Farben | 57 Hex + 20 `rgba()` | ja |
-| `transition` | 19 | **keine** |
-| `z-index` | 14, darunter `9999999999999999` | **keine** |
-| Fokusring-Breite | überall `2px`/`3px` | **keine** |
-
-Von fünf React-Stylesheets sind **vier vollständig sauber**. Die gesamte Last liegt in
-`tlReactControls.css`.
-
-**3. Das Dark-Theme erbt, was es nicht erben darf.** 36 Farben überschrieben, aber unverändert
-geerbt: die drei Schatten (`rgba(0,0,0,…)` — auf dunklem Grund unsichtbar), `overlay`,
-`support-error/-warning/-success`, `text-error`, `button-danger*`, `layer-accent*`.
-Dazu `color-drop-zone: rgba(41,104,200,0.08)` — das ist `#2968C8` in rgba-Tarnung, ein zwölfter
-hartkodierter Marken-Fundort, im Dark-Theme mit der *hellen* Markenfarbe getönt.
-
-## Was diese Sitzung teuer gemacht hat
-
-Die erste komplette Analyse lief gegen `~/git/tl8-new-ui` — **399 Commits hinter `master`**.
-Token-Zahlen, Komponenten-Inventar und Drift-Messungen stimmten alle nicht, und ein großer Teil
-des ersten Plans war bereits auf `master` anders gelöst.
-
-**Lehre:** Vor jeder Analyse `git fetch origin master` und dagegen prüfen. Siehe
-`findings/AP-korrektur-master.md`.
+**Dreimal dieselbe Ursache:** ein Token mit mehreren Aufgaben, und die schwächste Anforderung
+gewinnt — `text-on-color`, `border-subtle`, `support-warning`.
 
 ## Werkzeuge
 
-| Datei | Zweck | Anmerkung |
-|---|---|---|
-| `tools/token-inventory.mjs` | Nutzungsindex aus `theme-settings.xml` + 554 Java-Deklarationen gegen CSS-Verbrauch | kennt beide Auslieferungswege (`theme.xml`, `StyleSheetConfig`) |
-| `tools/check-foreign-values.mjs` | Fremdpaletten-Wächter mit Budget-Ratchet | `--budget N` bricht in **beide** Richtungen |
-| `spikes/oxlint/` | oxlint-JS-Plugins tragen: 125 ms für 96 Dateien, Exit 1 | hat #29576 gefunden |
+`specimen/` — Kontrastrechnung, 23 Paare, OKLCH-Markenableitung mit Gamut-Mapping, Server auf dem
+**echten** `tlReactControls.css`, Fragmente aus der laufenden Demo-App. 15 Tests, `node --test`.
 
-Beide Werkzeuge sind auf die Legacy-Analyse ausgelegt. Für AP 2 müssen sie auf das
-React-Token-System umgestellt werden — oder besser: die Regeln wandern in `ThemeTokenAudit`,
-wo sie hingehören und wo sie bereits in 6 Modulen laufen.
+## Offene Fäden
 
-## Offene Entscheidungen
+* Die Paarliste im Specimen weicht bewusst vom Java-Gate ab (sechs Umbenennungen, eine Ergänzung).
+  Stufe B zieht nach — die vollständige Liste steht im Bericht im SDD-Workspace.
+* PRs **!1618** und **!1621** sind verifiziert, aber weiterhin ungemergt. **B6 hängt an !1621.**
+* Issue **#13** hält fest, dass Kunden-Theming, Storybook und Accessibility beim Umschreiben ihr
+  Issue verloren haben.
+* Vier Stellen lesen `--text-on-color` ohne eindeutige Rolle; eine davon (`.tlAudioPlayer__icon--pause`)
+  hat eine hartkodierte Fläche `#24a148`.
 
-1. **Token-Namen.** Carbon-Nomenklatur (`layer-01`, `spacing-01..06`, `support-*`). Empfehlung:
-   behalten — Namenskonvention, keine Palette.
-2. **Schrift.** `'Inter'` ist gesetzt. Specimen-Test bei 12/13/14px mit echten TopLogic-Tabellen
-   steht aus.
-3. **Markenfarbe.** `#2968C8` ist der Ist-Wert, Auffrischung gewünscht. `#0f62fe` scheidet aus
-   (IBM Carbon Blue 60). Nach PR !1621 ist das eine Ein-Wert-Änderung.
-4. **Repo-Transfer** nach `TopLogic/` und Sichtbarkeit.
+## Planung
+
+Arbeitspakete als Gitea-Issues: https://git.top-logic.com/hpe/tl-design-system/issues
+Spec: `docs/superpowers/specs/2026-09-15-style-overhaul-design.md`
+Umsetzungsplan Stufe A: `docs/superpowers/plans/2026-09-15-stufe-a-richtung.md`
+Fortschritt und Rulings: `.superpowers/sdd/2026-09-15-stufe-a-richtung/progress.md`
