@@ -701,6 +701,10 @@ git commit -m "Ticket #29108: Specimen-Server auf dem echten Stylesheet, Fragmen
 <link rel="stylesheet" href="/style/tlReactBase.css">
 <link rel="stylesheet" href="/style/tlReactControls.css">
 <style>
+  /* tlReactBase.css setzt overflow:hidden und feste Hoehe — richtig fuer die
+     echte Anwendung, die ihr Scrollen selbst regelt, aber hier wuerde es das
+     Gate-Panel unerreichbar unter dem Falz halten. */
+  html, body { height: auto !important; overflow: auto !important; }
   body { margin: 0; font-family: system-ui, sans-serif; }
   .specimenKopf { display: flex; gap: 1rem; align-items: center; padding: .75rem 1rem;
                   border-bottom: 1px solid #8884; position: sticky; top: 0; background: Canvas; }
