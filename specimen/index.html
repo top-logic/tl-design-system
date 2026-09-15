@@ -10,6 +10,82 @@
      einer Ersatzschrift, obwohl "Inter" ueberall referenziert wird. -->
 <link rel="stylesheet" href="/interfonts/style/interFonts.css">
 <style>
+  /* -----------------------------------------------------------------------------------------
+     Zielzustand-Bindung: tlReactControls.css liest ausschliesslich --text-on-color/
+     --icon-on-color. Das Specimen leitet seit Korrekturrunde 5 aber text-on-brand, icon-on-brand
+     und text-on-danger je Flaeche ab — ohne diese Bindung wuerde die Buehne weiterhin nur das
+     statische --text-on-color aus tokens.json zeigen und der Regler haette keine sichtbare
+     Wirkung auf die Beschriftung. Diese Regeln bilden NUR nach, wie die echten Stylesheets den
+     Zielzustand konsumieren WUERDEN, falls sie --text-on-brand/--text-on-danger schon kennten
+     (Stufe B) — der Worktree selbst bleibt unangetastet. Jeder Selektor ist wortgleich aus
+     tlReactControls.css uebernommen (gleiche Spezifitaet), nur das var() ist ausgetauscht; durch
+     die Position NACH dem <link> auf tlReactControls.css gewinnt die spaetere, gleich
+     spezifische Regel in der Kaskade.
+
+     Bewusst NICHT hier aufgefuehrt (keiner der drei neuen Rollen eindeutig zuzuordnen, bleiben
+     auf --text-on-color — siehe task-7-brand-report.md, Korrekturrunde 6, fuer die Begruendung
+     je Stelle):
+       - button.tlReactButton.tlReactButton--active:disabled  (eigenes --text-on-color-disabled)
+       - .tlAudioPlayer__icon--pause / .tlAudioPlayer__button--playing:hover ...__icon--pause
+       - .tlTableView__sortPriority
+       - .tlIconSelect__btn--clear:hover
+     ----------------------------------------------------------------------------------------- */
+
+  /* Flaeche = button-primary ODER button-secondary (rampeAnwenden() setzt beide gleich) ODER
+     --interactive (dieselbe abgeleitete Farbe) → text-on-brand. */
+  button.tlReactButton:not(:disabled):active,
+  .tlReactButton--primary,
+  button.tlReactButton--primary,
+  button.tlReactButton--primary:not(:disabled):hover,
+  button.tlReactButton--primary:not(:disabled):active,
+  .tlReactButton.tlReactButton--active,
+  button.tlReactButton.tlReactButton--active:hover,
+  button.tlReactButton.tlReactButton--active:focus,
+  button.tlReactButton.tlReactButton--active:active,
+  button.tlCounter__button:hover,
+  button.tlDownload__downloadBtn:hover,
+  button.tlFileUpload__button:hover,
+  .tlSidebar__badge,
+  .tlBottomBar__badge,
+  .tlTableView__chip--active,
+  .tlTableView__chip--active:hover,
+  .tlColorInput__btn--ok,
+  .tlIconSelect__btn--ok,
+  .tlCalBtn--active,
+  .tlCalDayHead--today .tlCalDayNum,
+  .tlCalMonthDayNum--today,
+  .tlCalMiniDay--today {
+    color: var(--text-on-brand);
+  }
+
+  /* Icons (Fuellung/Rand), die auf derselben brand/secondary-Flaeche sitzen wie oben. */
+  button.tlAudioRecorder__button:hover .tlAudioRecorder__icon,
+  button.tlPhotoCapture__cameraBtn:hover .tlPhotoCapture__cameraIcon,
+  button.tlPhotoCapture__cameraBtn:hover .tlPhotoCapture__cameraIcon::before,
+  .tlPhotoCapture__cameraBtn--active .tlPhotoCapture__cameraIcon,
+  .tlPhotoCapture__cameraBtn--active .tlPhotoCapture__cameraIcon::before {
+    color: var(--icon-on-brand);
+    border-color: var(--icon-on-brand);
+    background: var(--icon-on-brand);
+  }
+
+  /* Flaeche = button-danger/-hover → text-on-danger. .tlAudioRecorder__icon--stop ist ein Icon
+     (kein Text), aber es gibt keine eigene icon-on-danger-Rolle in der Liste des Auftrags — die
+     naechstliegende abgeleitete Farbe ist text-on-danger (nonText-Schwelle 3.0 ist niedriger als
+     die von text-on-danger bereits erfuellte 4.5, haelt also ebenfalls). */
+  button.tlDownload__clearBtn:hover,
+  .tlAudioRecorder__icon--stop {
+    color: var(--text-on-danger);
+    background: var(--text-on-danger);
+  }
+
+  /* Flaeche = layer-accent (der App-Bar-Hintergrund). .tlAppBar--primary .tlText nutzt schon
+     --layer-accent-text; das Icon direkt daneben bekommt hier dieselbe abgeleitete Farbe, statt
+     als eigene, hier nicht verlangte "icon-on-accent"-Rolle zu erfinden. */
+  .tlAppBar--primary .tlReactButton--icon {
+    color: var(--layer-accent-text);
+  }
+
   html, body { height: auto !important; overflow: auto !important; }
   body { margin: 0; font-family: system-ui, sans-serif; }
   .specimenKopf { display: flex; gap: 1rem; align-items: center; padding: .75rem 1rem;

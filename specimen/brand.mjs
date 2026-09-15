@@ -358,6 +358,14 @@ export function nurHex(rampeModus) {
  * teilen), dieselbe Kontrastfrage gilt für beide. Andere Flächen (button-danger, layer-accent)
  * bekommen ihre Beschriftung NICHT hier, sondern über einen eigenen Aufruf von
  * beschriftungAbleiten() beim Aufrufer — sie hängen nicht an der Marke.
+ *
+ * text-on-color/icon-on-color werden HIER ebenfalls auf denselben Wert gesetzt — nicht, weil sie
+ * noch in REQUIREMENTS vorkämen (tun sie seit Korrekturrunde 5 nicht mehr), sondern weil die
+ * echte tlReactControls.css an einigen wenigen, keiner der drei neuen Rollen eindeutig
+ * zuzuordnenden Stellen ausschließlich diese beiden liest (siehe index.html, Kommentar über der
+ * Zielzustand-Bindung, und task-7-brand-report.md). Ohne diese Zeile bliebe --text-on-color beim
+ * statischen Wert aus tokens.json stehen, während der Rest der Bühne dem Regler folgt — genau
+ * das Auseinanderlaufen, das in Korrekturrunde 6 aufgefallen ist.
  */
 export function rampeAnwenden(tokens, rampeModus) {
   const { 'brand-primary': primary, 'brand-primary-hover': hover, 'brand-primary-active': active,
@@ -379,5 +387,7 @@ export function rampeAnwenden(tokens, rampeModus) {
     'link-primary-hover': linkHover,
     'text-on-brand': beschriftung,
     'icon-on-brand': beschriftung,
+    'text-on-color': beschriftung,
+    'icon-on-color': beschriftung,
   };
 }
