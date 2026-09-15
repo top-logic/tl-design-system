@@ -58,24 +58,38 @@
     color: var(--text-on-brand);
   }
 
-  /* Icons (Fuellung/Rand), die auf derselben brand/secondary-Flaeche sitzen wie oben. */
+  /* Icon-FUELLUNGEN auf derselben brand/secondary-Flaeche wie oben. Im Original setzen diese drei
+     Selektoren AUSSCHLIESSLICH "background" aus --text-on-color — keine "color", kein
+     "border-color". Nur background hier zu setzen erhaelt das; ein drittes, ungenutztes Feld
+     haette nichts kaputt gemacht, aber es gehoert nicht zur Eigenschaftsmenge des Originals. */
   button.tlAudioRecorder__button:hover .tlAudioRecorder__icon,
-  button.tlPhotoCapture__cameraBtn:hover .tlPhotoCapture__cameraIcon,
   button.tlPhotoCapture__cameraBtn:hover .tlPhotoCapture__cameraIcon::before,
-  .tlPhotoCapture__cameraBtn--active .tlPhotoCapture__cameraIcon,
   .tlPhotoCapture__cameraBtn--active .tlPhotoCapture__cameraIcon::before {
-    color: var(--icon-on-brand);
-    border-color: var(--icon-on-brand);
     background: var(--icon-on-brand);
   }
 
-  /* Flaeche = button-danger/-hover → text-on-danger. .tlAudioRecorder__icon--stop ist ein Icon
-     (kein Text), aber es gibt keine eigene icon-on-danger-Rolle in der Liste des Auftrags — die
-     naechstliegende abgeleitete Farbe ist text-on-danger (nonText-Schwelle 3.0 ist niedriger als
-     die von text-on-danger bereits erfuellte 4.5, haelt also ebenfalls). */
-  button.tlDownload__clearBtn:hover,
-  .tlAudioRecorder__icon--stop {
+  /* Icon-UMRISSE (nur border-color, KEIN background) auf derselben Flaeche. Diese Box ist im
+     Original ein Rahmen ohne Fuellung — eine gemeinsame Regel mit den obigen drei wuerde sie
+     fuellen und die Form aendern. Deshalb eine eigene, kleinere Gruppe statt einer groben. */
+  button.tlPhotoCapture__cameraBtn:hover .tlPhotoCapture__cameraIcon,
+  .tlPhotoCapture__cameraBtn--active .tlPhotoCapture__cameraIcon {
+    border-color: var(--icon-on-brand);
+  }
+
+  /* Flaeche = button-danger-hover → text-on-danger, NUR color: das Original setzt hier
+     background separat auf --button-danger-hover (nicht auf das Text-Token) — eine gemeinsame
+     Regel mit .tlAudioRecorder__icon--stop wuerde diesen Hover-Hintergrund ueberschreiben. */
+  button.tlDownload__clearBtn:hover {
     color: var(--text-on-danger);
+  }
+
+  /* .tlAudioRecorder__icon--stop ist ein Icon (kein Text) auf derselben Danger-Flaeche, aber im
+     Original die EINZIGE Eigenschaft der Regel ist background (die Box IST das Icon, keine
+     border/color-Deklaration daneben) — es gibt keine eigene icon-on-danger-Rolle in der Liste
+     des Auftrags, text-on-danger ist die naechstliegende (nonText-Schwelle 3.0 ist niedriger als
+     die von text-on-danger bereits erfuellte 4.5, haelt also ebenfalls). Eigene Regel, weil die
+     Eigenschaftsmenge (nur background) sich von der obigen (nur color) unterscheidet. */
+  .tlAudioRecorder__icon--stop {
     background: var(--text-on-danger);
   }
 
