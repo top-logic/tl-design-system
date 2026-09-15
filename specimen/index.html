@@ -81,6 +81,28 @@
   .specimenSchriftvergleich .regular { font-weight: 400; }
   .specimenSchriftvergleich .semibold { font-weight: bold; }   /* Inters echter zweiter Schnitt */
   .specimenSchriftvergleich .synth700 { font-weight: 700; }    /* nur bei Inter = synthetisch */
+
+  /* Marken-Explorer: Regler, Rampen-Ausgabe, erweitertes Gate. Eigener Block, eigene Zeile
+     unter dem Kopf — die Umschalter oben bleiben unverändert nutzbar. */
+  .specimenMarke { display: flex; gap: 1.5rem; align-items: flex-start; flex-wrap: wrap;
+                   padding: .75rem 1rem; border-bottom: 1px solid #8884; font: 13px/1.4 system-ui, sans-serif; }
+  .specimenMarke__regler { display: flex; gap: .5rem; align-items: center; }
+  .specimenMarke__regler input[type="color"] { width: 2.2rem; height: 2.2rem; padding: 0;
+                                                border: 1px solid #8886; border-radius: 4px; }
+  .specimenMarke__regler input[type="text"] { font: 13px ui-monospace, monospace; width: 6.5em;
+                                               padding: .25rem .4rem; }
+  .specimenMarke__rampen { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .specimenMarke__rampe { display: flex; flex-direction: column; gap: .15rem; }
+  .specimenMarke__rampe strong { font-size: 11px; opacity: .65; }
+  .specimenMarke__rampe output { display: flex; gap: .35rem; }
+  .specimenMarke__schwatch { display: flex; align-items: center; gap: .3rem; font: 11px ui-monospace, monospace; }
+  .specimenMarke__farbe { width: 1em; height: 1em; border-radius: 2px; border: 1px solid #8886; display: inline-block; }
+  .specimenMarke__hex { user-select: all; cursor: text; }
+
+  .specimenGate__zeile { padding-block: .1rem; }
+  .specimenGate__marke { font-weight: 700; }
+  .specimenGate__marke::before { content: "★ "; }
+  .specimenGate__kopf { font-weight: 700; margin-block-end: .25rem; }
 </style>
 </head>
 <body>
@@ -104,6 +126,25 @@
     </label>
     <span id="gateKurz"></span>
   </header>
+  <section class="specimenMarke">
+    <div class="specimenMarke__regler">
+      <label>Markenfarbe
+        <input type="color" id="markeFarbe" value="#2968C8">
+      </label>
+      <input type="text" id="markeHex" value="#2968C8" aria-label="Markenfarbe als Hex" maxlength="7">
+      <button type="button" id="markeZuruecksetzen">Zurücksetzen (#2968C8)</button>
+    </div>
+    <div class="specimenMarke__rampen">
+      <div class="specimenMarke__rampe">
+        <strong>hell</strong>
+        <output id="rampeHell"></output>
+      </div>
+      <div class="specimenMarke__rampe">
+        <strong>dunkel</strong>
+        <output id="rampeDunkel"></output>
+      </div>
+    </div>
+  </section>
   <section class="specimenSchriftvergleich">
     <span><strong>Regular (400)</strong><span class="regular">Grundstücksverkehrsgenehmigungsverfahren 0O1l7</span></span>
     <span><strong>SemiBold (deklariert als bold)</strong><span class="semibold">Grundstücksverkehrsgenehmigungsverfahren 0O1l7</span></span>
