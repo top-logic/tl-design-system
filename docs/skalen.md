@@ -84,7 +84,33 @@ auf **jeder** Stufe durch, bei der abgeleiteten Rampe wie bei der heutigen:
 Die Alternative wäre, den Button so weit abzudunkeln, dass Weiß trägt — bei `#2968C8` fällt er dann
 mit 3,18 gegen den dunklen Grund und hört auf, als Fläche zu lesen.
 
-`text-on-color` und `icon-on-color` bekommen im Dunkelmodus also einen dunklen Wert.
+`text-on-color` und `icon-on-color` werden deshalb **abgeleitet statt festgeschrieben**: Von zwei
+Kandidaten — `text-primary` des hellen Modus und Weiß — gewinnt der mit dem höheren Verhältnis
+gegen `brand-primary` des jeweiligen Modus.
+
+**Warum abgeleitet:** Die nötige Beschriftungsfarbe hängt vom gewählten Markenton ab. Ein fester
+Wert wäre beim nächsten Ton wieder falsch und in jedem Kunden-Theme erst recht. Nachgewiesen an
+zwei Gegenproben: Ein sehr heller Ton (`#F5E663`) schaltet **beide** Modi auf dunkle Schrift, ein
+sehr dunkler (`#1A0F3D`) beide auf weiße.
+
+### Offene Folge: ein Token kann nicht zwei Flächen bedienen
+
+Mit der abgeleiteten Beschriftung sank die Zahl der Verstöße im Dunkelmodus von 7 auf 5 — vier
+markenbezogene verschwanden, zwei neue kamen: `text-on-color` auf `button-danger` und
+`button-danger-hover`.
+
+| Fläche im Dunkelmodus | weiße Schrift | dunkle Schrift |
+|---|---|---|
+| `button-primary` `#5A9AFF` (hell) | 2,80 ✗ | **6,75 ✓** |
+| `button-danger` `#D3181B` (dunkel) | **5,36 ✓** | 3,52 ✗ |
+| `button-danger-hover` `#BC1518` | **6,44 ✓** | 2,93 ✗ |
+
+**Kein Wert besteht auf beiden Flächen.** Ein einzelnes `text-on-color` soll hier eine helle und
+eine dunkle Fläche gleichzeitig bedienen; das ist strukturell unmöglich. Im hellen Theme fiel es
+nicht auf, weil dort beide Flächen dunkel sind und Weiß überall trägt.
+
+Nachgeprüft und als strukturell bestätigt, nicht als Umsetzungsfehler. Die Auflösung gehört zur
+Semantikskala und steht noch aus.
 
 ---
 
