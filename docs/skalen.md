@@ -37,6 +37,27 @@ nicht. Bei vollständigen Paletten ist dieses Vergessen strukturell unmöglich.
 Folgeüberschreibungen braucht. Ein Kunden-Theme erbt weiterhin — die Vollständigkeit gilt für die
 beiden ausgelieferten Modi.
 
+### Rampenregel: Sättigung zurücknehmen statt klemmen
+
+Wird eine Stufe zu hell für ihre Sättigung, senkt die Ableitung das **Chroma**, bis die Farbe im
+darstellbaren Raum liegt. Helligkeit und Farbton bleiben unangetastet — sie tragen die Bedeutung
+der Stufe.
+
+**Warum:** Die erste Fassung der Ableitung hielt das Chroma und ließ den Rest klemmen. Für die
+heutige Markenfarbe `#2968C8` lagen dadurch **alle drei** Dunkel-Stufen mit dem Blaukanal auf 255:
+
+| | R | G | B |
+|---|---|---|---|
+| abgeleitet, klemmend | 90 / 108 / 126 | 154 / 173 / 193 | **255 / 255 / 255** |
+| heute im Theme | 91 / 122 / 63 | 155 / 174 / 134 | 240 / 243 / 230 |
+
+Beim Aufhellen konnte das Blau nicht mitwachsen, also wuchsen nur Rot und Grün: Die Rampe hörte
+auf, heller zu werden, und fing an zu entsättigen. Sie sah noch aus wie eine Rampe, war aber keine
+mehr.
+
+Die heutigen Werte liegen alle sauber im Raum — sie wurden nach Augenmaß gewählt und machen faktisch
+genau diese Abbildung. Die Regel schreibt nur fest, was dort schon richtig gemacht wurde.
+
 ---
 
 ## Offen
