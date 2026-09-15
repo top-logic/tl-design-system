@@ -94,10 +94,17 @@
   .specimenMarke__rampen { display: flex; gap: 1rem; flex-wrap: wrap; }
   .specimenMarke__rampe { display: flex; flex-direction: column; gap: .15rem; }
   .specimenMarke__rampe strong { font-size: 11px; opacity: .65; }
-  .specimenMarke__rampe output { display: flex; gap: .35rem; }
+  .specimenMarke__rampe output { display: flex; gap: .35rem; flex-wrap: wrap; }
   .specimenMarke__schwatch { display: flex; align-items: center; gap: .3rem; font: 11px ui-monospace, monospace; }
   .specimenMarke__farbe { width: 1em; height: 1em; border-radius: 2px; border: 1px solid #8886; display: inline-block; }
   .specimenMarke__hex { user-select: all; cursor: text; }
+
+  /* Gamut-Warnungen: geklemmt (dieser Wert lag außerhalb von sRGB) vs. kollabiert (zwei Stufen
+     der Rampe sind dadurch ununterscheidbar geworden — der schwerere Fall, deshalb kräftiger). */
+  .specimenMarke__schwatch--geklemmt .specimenMarke__hex { color: #b45; font-weight: 600; }
+  .specimenMarke__schwatch--kollabiert .specimenMarke__hex { color: #c11; font-weight: 700; }
+  .specimenMarke__warnung { color: #c11; font: 11px/1.3 system-ui, sans-serif; }
+  .specimenMarke__schwatch--geklemmt .specimenMarke__warnung { color: #b45; }
 
   .specimenGate__zeile { padding-block: .1rem; }
   .specimenGate__marke { font-weight: 700; }

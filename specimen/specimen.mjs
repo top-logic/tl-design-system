@@ -1,5 +1,4 @@
-import { REQUIREMENTS } from './requirements.mjs';
-import { ratio } from './contrast.mjs';
+import { REQUIREMENTS, report } from './requirements.mjs';
 import { markenRampe, rampeAnwenden } from './brand.mjs';
 
 /** Die heutige Markenfarbe — Ausgangspunkt des Reglers, nicht ein empfohlener Wert. */
@@ -69,8 +68,8 @@ let aktuellerModus = 'light';
 function effektiveTokens() {
   const rampe = markenRampe(markenfarbe);
   return {
-    light: rampeAnwenden(rohTokens.light, rampe.light, 'light'),
-    dark: rampeAnwenden(rohTokens.dark, rampe.dark, 'dark'),
+    light: rampeAnwenden(rohTokens.light, rampe.light),
+    dark: rampeAnwenden(rohTokens.dark, rampe.dark),
     rampe,
   };
 }
@@ -78,31 +77,30 @@ function effektiveTokens() {
 /**
  * Prüft alle 22 Paare für einen Modus gegen die gegebenen Tokens.
  *
- * Baut auf denselben REQUIREMENTS und derselben ratio() auf wie requirements.report() — nur mit
- * strukturiertem Ergebnis statt fertigem Text, damit sich Marken-Paare separat hervorheben und
- * beide Modi gleichzeitig anzeigen lassen.
+ * Ruft requirements.report() auf — dieselbe Funktion, dieselbe Meldung, derselbe Schutz gegen
+ * ein Token, das es nicht gibt. Kein zweiter, selbst mitgeführter Prüfweg, an dem Gate und
+ * Anzeige auseinanderdriften könnten. Die Marken-Markierung (★) entsteht danach, indem jede
+ * Meldung auf einen der MARKEN_TOKENS-Namen geprüft wird — report() formatiert jeden
+ * Tokennamen immer als '<name>' in Anführungszeichen, das Muster ist stabil.
  */
-function gatePruefen(tokensDesModus) {
-  let haltend = 0;
-  const fehlend = [];
-  for (const { foreground, background, minimum } of REQUIREMENTS) {
-    const vorne = tokensDesModus[foreground];
-    const hinten = tokensDesModus[background];
-    const ist = ratio(vorne, hinten);
-    if (ist >= minimum) {
-      haltend++;
-    } else {
-      const marke = MARKEN_TOKENS.has(foreground) || MARKEN_TOKENS.has(background);
-      fehlend.push({ foreground, background, vorne, hinten, ist, minimum, marke });
-    }
-  }
-  return { haltend, gesamt: REQUIREMENTS.length, fehlend };
+function gatePruefen(modus, tokensDesModus) {
+  const meldungen = report(modus, tokensDesModus, REQUIREMENTS);
+  const fehlend = meldungen.map((text) => ({
+    text,
+    marke: [...MARKEN_TOKENS].some((name) => text.includes(`'${name}'`)),
+  }));
+  return { haltend: REQUIREMENTS.length - fehlend.length, gesamt: REQUIREMENTS.length, fehlend };
 }
 
-/** Eine kopierbare Hex-Anzeige für einen Rampen-Wert. */
-function schwatch(name, hex) {
+/** Eine kopierbare Hex-Anzeige für einen Rampen-Wert, mit Warnung bei Gamut-Verlust.
+ *  `eintrag` ist { hex, geklemmt, kollabiert } aus brand.mjs — nicht mehr nur ein Hexwert,
+ *  weil genau diese beiden Zusatzinformationen jetzt sichtbar gemacht werden müssen. */
+function schwatch(name, eintrag) {
+  const { hex, geklemmt, kollabiert } = eintrag;
   const span = document.createElement('span');
-  span.className = 'specimenMarke__schwatch';
+  span.className = 'specimenMarke__schwatch'
+    + (geklemmt ? ' specimenMarke__schwatch--geklemmt' : '')
+    + (kollabiert ? ' specimenMarke__schwatch--kollabiert' : '');
   const feld = document.createElement('span');
   feld.className = 'specimenMarke__farbe';
   feld.style.background = hex;
@@ -111,18 +109,29 @@ function schwatch(name, hex) {
   text.title = 'Zum Kopieren markieren';
   text.textContent = `${name}: ${hex}`;
   span.append(feld, text);
+  if (kollabiert) {
+    const warnung = document.createElement('span');
+    warnung.className = 'specimenMarke__warnung';
+    warnung.textContent = '⚠ kollabiert — nicht mehr von einer anderen Stufe zu unterscheiden';
+    span.appendChild(warnung);
+  } else if (geklemmt) {
+    const warnung = document.createElement('span');
+    warnung.className = 'specimenMarke__warnung';
+    warnung.textContent = '⚠ außerhalb des darstellbaren Farbraums, auf sRGB geklemmt';
+    span.appendChild(warnung);
+  }
   return span;
 }
 
-/** Zeichnet die Rampen-Ausgabe (hell + dunkel), kopierbar als Hexwerte. */
+/** Zeichnet die Rampen-Ausgabe (hell + dunkel), kopierbar als Hexwerte, mit Warnung je Stufe. */
 function rampeZeichnen(rampe) {
   const hell = document.getElementById('rampeHell');
   const dunkel = document.getElementById('rampeDunkel');
-  hell.replaceChildren(...Object.entries(rampe.light).map(([n, h]) => schwatch(n, h)));
-  dunkel.replaceChildren(...Object.entries(rampe.dark).map(([n, h]) => schwatch(n, h)));
+  hell.replaceChildren(...Object.entries(rampe.light).map(([n, e]) => schwatch(n, e)));
+  dunkel.replaceChildren(...Object.entries(rampe.dark).map(([n, e]) => schwatch(n, e)));
 }
 
-/** Zeichnet das Gate-Panel: Zahlen für beide Modi getrennt, fehlende Paare mit Verhältnis,
+/** Zeichnet das Gate-Panel: Zahlen für beide Modi getrennt, fehlende Paare als Meldung,
  *  Marken-beteiligte Paare mit ★ hervorgehoben. */
 function gateZeichnen(ergebnisHell, ergebnisDunkel) {
   const gate = document.getElementById('gate');
@@ -139,8 +148,7 @@ function gateZeichnen(ergebnisHell, ergebnisDunkel) {
     for (const f of ergebnis.fehlend) {
       const zeile = document.createElement('div');
       zeile.className = `specimenGate__zeile${f.marke ? ' specimenGate__marke' : ''}`;
-      zeile.textContent = `'${f.foreground}' (${f.vorne}) auf '${f.background}' (${f.hinten}) `
-        + `erreicht ${f.ist.toFixed(2)}, unter den ${f.minimum.toFixed(1)}, die WCAG 2.1 AA verlangt.`;
+      zeile.textContent = f.text;
       gate.appendChild(zeile);
     }
   }
@@ -161,7 +169,7 @@ function neuZeichnen() {
   wurzel.dataset.theme = aktuellerModus;
 
   rampeZeichnen(rampe);
-  gateZeichnen(gatePruefen(light), gatePruefen(dark));
+  gateZeichnen(gatePruefen('light', light), gatePruefen('dark', dark));
 }
 
 document.getElementById('modus').addEventListener('change', (e) => {

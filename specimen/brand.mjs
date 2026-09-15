@@ -61,6 +61,12 @@ function rgbZuOklab({ r, g, b }) {
   };
 }
 
+/**
+ * OKLab → sRGB, mit Diagnose. Liefert zusätzlich `geklemmt`: true, wenn mindestens einer der
+ * drei LINEAREN Kanäle vor der Begrenzung außerhalb von 0…1 lag — also außerhalb dessen, was ein
+ * Bildschirm in sRGB überhaupt darstellen kann. Diese Information entsteht ohnehin an dieser
+ * Stelle; sie wird hier nur nicht mehr weggeworfen (siehe markenRampe()).
+ */
 function oklabZuRgb({ L, a, b }) {
   const l_ = L + 0.3963377774 * a + 0.2158037573 * b;
   const m_ = L - 0.1055613458 * a - 0.0638541728 * b;
@@ -74,10 +80,13 @@ function oklabZuRgb({ L, a, b }) {
   const lg = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s;
   const lb = -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s;
 
+  const inGamut = (kanal) => kanal >= 0 && kanal <= 1;
+
   return {
     r: linearKanalZuSrgb(lr),
     g: linearKanalZuSrgb(lg),
     b: linearKanalZuSrgb(lb),
+    geklemmt: !(inGamut(lr) && inGamut(lg) && inGamut(lb)),
   };
 }
 
@@ -95,11 +104,20 @@ export function hexZuOklch(hex) {
   return oklabZuOklch(rgbZuOklab(hexZuRgb(hex)));
 }
 
-/** OKLCH zu Hexwert. Kanäle werden beim Zurückrechnen nach sRGB auf 0–255 begrenzt (clipping,
- *  keine Gamut-Anpassung von C/H) — für die Schrittweiten unten bleibt das unauffällig, weil sie
- *  L bewegen und C/H halten, statt in extreme, außerhalb des sRGB-Gamuts liegende Ecken zu laufen. */
+/**
+ * OKLCH zu Hexwert, mit Diagnose statt stillem Verlust.
+ *
+ * Kanäle werden beim Zurückrechnen nach sRGB auf 0–255 begrenzt (Clipping, keine
+ * Gamut-Anpassung von C/H). Das ist NICHT unauffällig: bei einer sehr hellen oder stark
+ * gesättigten Grundfarbe kann eine einzelne Stufe schon den Farbraum verlassen, und mehrere
+ * Stufen einer Rampe können dabei auf denselben geklemmten Hexwert (typischerweise Weiß)
+ * zusammenfallen — die Rampe verliert dann lautlos ihre Abstufung, obwohl L, C und H der
+ * Eingabe nach wie vor fünf verschiedene Punkte beschreiben. Deshalb liefert diese Funktion
+ * `geklemmt` mit zurück, statt es zu verschweigen; markenRampe() macht daraus die Anzeige.
+ */
 export function oklchZuHex(oklch) {
-  return rgbZuHex(oklabZuRgb(oklchZuOklab(oklch)));
+  const { r, g, b, geklemmt } = oklabZuRgb(oklchZuOklab(oklch));
+  return { hex: rgbZuHex({ r, g, b }), geklemmt };
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -138,6 +156,13 @@ export const DUNKEL_SCHRITT = 0.06;
  *
  * Rückgabeform: { light: {…}, dark: {…} }, je mit den Schlüsseln
  * brand-primary, brand-primary-hover, brand-primary-active, brand-link, brand-link-hover.
+ * Jeder Eintrag ist { hex, geklemmt, kollabiert }:
+ *   - geklemmt: dieser einzelne Wert lag beim Rückweg nach sRGB außerhalb des Gamuts.
+ *   - kollabiert: dieser Wert ist (als Hex) identisch mit mindestens einem anderen Wert
+ *     DERSELBEN Rampe (light oder dark) — die Rampe hat an dieser Stelle ihre Abstufung
+ *     verloren. Das wird eigenständig markiert, weil es schwerer wiegt als einzelnes Klemmen:
+ *     zwei Stufen, die sich nicht mehr unterscheiden, sind für die Ableitung nicht mehr nutzbar,
+ *     auch wenn jede für sich genommen ein gültiger Hexwert ist.
  *
  * Link-Regel: im hellen Modus folgt der Link exakt der Marke (link = primary, link-hover = hover
  * — wie im heutigen Bestand). Im dunklen Modus liegt der Link eine Stufe über dem Button: er
@@ -147,7 +172,7 @@ export function markenRampe(grundfarbeHex) {
   const { L, C, H } = hexZuOklch(grundfarbeHex);
   const bei = (l) => oklchZuHex({ L: l, C, H });
 
-  const hellPrimary = grundfarbeHex.toUpperCase();
+  const hellPrimary = { hex: grundfarbeHex.toUpperCase(), geklemmt: false };
   const hellHover = bei(L - HELL_HOVER_SCHRITT);
   const hellActive = bei(L - HELL_ACTIVE_SCHRITT);
 
@@ -159,21 +184,59 @@ export function markenRampe(grundfarbeHex) {
   const dunkelLinkHover = bei(dunkelBasis + 3 * DUNKEL_SCHRITT);
 
   return {
-    light: {
+    // Im hellen Modus ist brand-link IMMER = brand-primary und brand-link-hover IMMER =
+    // brand-primary-hover — das ist die Link-Regel selbst (siehe oben), keine Kollision, die
+    // beim Klemmen entstanden wäre. Deshalb von der Kollisionsprüfung ausgenommen.
+    light: mitKollisionen({
       'brand-primary': hellPrimary,
       'brand-primary-hover': hellHover,
       'brand-primary-active': hellActive,
       'brand-link': hellPrimary,
       'brand-link-hover': hellHover,
-    },
-    dark: {
+    }, [['brand-primary', 'brand-link'], ['brand-primary-hover', 'brand-link-hover']]),
+    // Im dunklen Modus ist brand-link IMMER = brand-primary-hover (die Link-Regel: "eine Stufe
+    // heller als der Button") — ebenfalls Design, keine Kollision.
+    dark: mitKollisionen({
       'brand-primary': dunkelPrimary,
       'brand-primary-hover': dunkelHover,
       'brand-primary-active': dunkelActive,
       'brand-link': dunkelLink,
       'brand-link-hover': dunkelLinkHover,
-    },
+    }, [['brand-primary-hover', 'brand-link']]),
   };
+}
+
+/**
+ * Markiert jeden Eintrag einer Rampe mit `kollabiert`, wenn sein Hex mit dem eines anderen
+ * Eintrags DERSELBEN Rampe übereinstimmt UND mindestens einer der beiden geklemmt ist.
+ *
+ * `designGleich` nennt die Paare, die per Konstruktion immer denselben Wert tragen (die
+ * Link-Regel) — die sind KEINE Kollision, egal ob geklemmt oder nicht, und werden deshalb von
+ * der Prüfung ausgenommen. Ohne diese Ausnahme würde z. B. brand-link im dunklen Modus jedes
+ * Mal fälschlich als "kollabiert" gemeldet, wenn brand-primary-hover geklemmt ist — nicht weil
+ * die Rampe ihre Abstufung verloren hätte, sondern weil beide von Anfang an denselben Ton
+ * tragen sollen.
+ */
+function mitKollisionen(eintraege, designGleich) {
+  const namen = Object.keys(eintraege);
+  const istDesignGleich = (a, b) => designGleich.some(
+    ([x, y]) => (x === a && y === b) || (x === b && y === a));
+  const ergebnis = {};
+  for (const name of namen) {
+    const eigener = eintraege[name];
+    const kollabiert = namen.some((anderer) => anderer !== name
+      && !istDesignGleich(name, anderer)
+      && eintraege[anderer].hex === eigener.hex
+      && (eigener.geklemmt || eintraege[anderer].geklemmt));
+    ergebnis[name] = { ...eigener, kollabiert };
+  }
+  return ergebnis;
+}
+
+/** Reduziert eine Rampe (mit Diagnose-Feldern) auf die reinen Hexwerte — für alles, was nur den
+ *  darstellbaren Farbwert braucht, nicht seine Herkunft. */
+export function nurHex(rampeModus) {
+  return Object.fromEntries(Object.entries(rampeModus).map(([name, eintrag]) => [name, eintrag.hex]));
 }
 
 /**
@@ -181,14 +244,11 @@ export function markenRampe(grundfarbeHex) {
  * unverändert. Jedes Token, das heute an der Marke hängt, wird ersetzt; welche das sind, ist in
  * dieser Liste sichtbar gehalten, statt über den Aufrufer verstreut zu sein.
  */
-export function rampeAnwenden(tokens, rampe, modus) {
-  const primary = rampe['brand-primary'];
-  const hover = rampe['brand-primary-hover'];
-  const active = rampe['brand-primary-active'];
-  const link = rampe['brand-link'];
-  const linkHover = rampe['brand-link-hover'];
+export function rampeAnwenden(tokens, rampeModus) {
+  const { 'brand-primary': primary, 'brand-primary-hover': hover, 'brand-primary-active': active,
+    'brand-link': link, 'brand-link-hover': linkHover } = nurHex(rampeModus);
 
-  const ersetzt = {
+  return {
     ...tokens,
     'button-primary': primary,
     'button-secondary': primary,
@@ -202,9 +262,4 @@ export function rampeAnwenden(tokens, rampe, modus) {
     'link-primary': link,
     'link-primary-hover': linkHover,
   };
-  // 'modus' wird nicht ausgewertet — beide Modi tragen dieselben Tokennamen, nur der Aufrufer
-  // weiß, welches der beiden Tokenobjekte hier hereinkommt. Der Parameter bleibt aus Lesbarkeit
-  // an der Aufrufstelle: rampeAnwenden(tokens.dark, rampe.dark, 'dark').
-  void modus;
-  return ersetzt;
 }
