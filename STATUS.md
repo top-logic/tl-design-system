@@ -12,6 +12,12 @@ Nächster Schritt: **AP 3 — Dark-Theme reparieren** (`plan.md`). Größerer fa
 dort ein echter Barrierefreiheitsmangel steckt: `text-on-color` auf `button-primary` liegt im
 Dark-Theme bei etwa **2,4:1** und damit unter WCAG AA.
 
+## Planung
+
+Die Arbeitspakete liegen als **Gitea-Issues** in diesem Repo: [Issue-Liste](https://git.top-logic.com/hpe/tl-design-systemissues).
+AP *n* = Issue #*n*. Erledigt und geschlossen: [#1](https://git.top-logic.com/hpe/tl-design-system/issues/1) (Marken-Abstraktion) und
+[#11](https://git.top-logic.com/hpe/tl-design-system/issues/11) (doppelte React-Instanz).
+
 ## Erledigt
 
 | | Inhalt | Ergebnis |

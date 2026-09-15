@@ -113,6 +113,20 @@ Ein zweites System daneben wäre Doppelarbeit und würde eine dritte Token-Welt 
 
 Reihenfolge nach Nutzen pro Aufwand. AP 1–3 sind klein und sofort wirksam.
 
+**Die Planung läuft als Gitea-Issues in diesem Repo** — AP *n* ist Issue **#*n***:
+
+| | | | | |
+|---|---|---|---|---|
+| [#1](https://git.top-logic.com/hpe/tl-design-system/issues/1) AP 1 ✅ | [#2](https://git.top-logic.com/hpe/tl-design-system/issues/2) AP 2 | [#3](https://git.top-logic.com/hpe/tl-design-system/issues/3) AP 3 | [#4](https://git.top-logic.com/hpe/tl-design-system/issues/4) AP 4 | [#5](https://git.top-logic.com/hpe/tl-design-system/issues/5) AP 5 |
+| [#6](https://git.top-logic.com/hpe/tl-design-system/issues/6) AP 6 | [#7](https://git.top-logic.com/hpe/tl-design-system/issues/7) AP 7 | [#8](https://git.top-logic.com/hpe/tl-design-system/issues/8) AP 8 | [#9](https://git.top-logic.com/hpe/tl-design-system/issues/9) AP 9 | [#10](https://git.top-logic.com/hpe/tl-design-system/issues/10) AP 10 |
+
+Dazu [#11](https://git.top-logic.com/hpe/tl-design-system/issues/11) ✅ — die doppelte React-Instanz, kein AP, sondern ein Fund aus der Vorarbeit.
+
+Trac bleibt für die Engine-Änderungen zuständig: ein serverseitiger Hook lehnt Pushes nach
+`tl-engine-7` ab, solange kein angenommenes Trac-Ticket existiert. Gitea und Trac teilen sich
+zudem keinen Nummernraum — Gitea zählt Issues und PRs aus demselben Zähler (PRs stehen bei
+~#1626), Trac-Tickets bei ~#29580.
+
 ### AP 1 — Marken-Abstraktion über `<ref>` (2 PT) ⚡
 
 `brand-primary` und die abgeleiteten Stufen als Primitives einführen, die sechs Marken-Tokens auf
