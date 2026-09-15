@@ -320,6 +320,18 @@ function neuZeichnen() {
 
   rampeZeichnen(rampe, { light: beschriftungenAnzeigen('light'), dark: beschriftungenAnzeigen('dark') });
   gateZeichnen(gatePruefen('light', light), gatePruefen('dark', dark));
+  grundflaecheAnzeigen();
+}
+
+/** Zeichnet die Anzeige des Grundflächen-Reglers: Farbfeld, Hexwert der aktuellen Stufe, und im
+ *  dunklen Modus einen Hinweis, dass der Regler dort ohne Wirkung bleibt. */
+function grundflaecheAnzeigen() {
+  const hex = GRUNDFLAECHEN_STUFEN[grundflaecheStufe].hex(markenfarbe);
+  document.getElementById('grundflaecheFarbe').style.background = hex;
+  document.getElementById('grundflaecheHex').textContent = hex;
+  document.getElementById('grundflaecheHinweis').textContent = aktuellerModus === 'dark'
+    ? 'ⓘ im dunklen Modus ohne Wirkung — die vier Tokens sind dort bereits dunkel, keine "gedämpft"-Lesart passt.'
+    : '';
 }
 
 document.getElementById('modus').addEventListener('change', (e) => {
@@ -344,5 +356,10 @@ markeHexEingabe.addEventListener('input', (e) => {
   if (HEX_MUSTER.test(wert)) markenfarbeSetzen(wert);
 });
 document.getElementById('markeZuruecksetzen').addEventListener('click', () => markenfarbeSetzen(MARKE_STARTWERT));
+
+document.getElementById('grundflaeche').addEventListener('change', (e) => {
+  grundflaecheStufe = e.target.value;
+  neuZeichnen();
+});
 
 neuZeichnen();
