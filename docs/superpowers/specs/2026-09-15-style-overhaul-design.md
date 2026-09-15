@@ -295,24 +295,24 @@ nicht fertig.
 
 ---
 
-## Aufwand
+## Was den Takt vorgibt
 
-| Stufe | Grobe Größe |
+Personentage sind hier die falsche Einheit — die Umsetzung erfolgt durch Claude, nicht durch einen
+tippenden Menschen. Was den Durchsatz tatsächlich begrenzt, ist ein anderes:
+
+| Bremse | Warum sie zählt |
 |---|---|
-| A — Richtung | ~5 PT, verwerfbar |
-| B1–B5 | je 2–4 PT, zusammen ~15 PT |
-| B6 — Farbe | ~10 PT; jede der 77 Stellen ist eine Rollenentscheidung |
-| B7 — `@layer` | Spike zuerst, danach schätzbar |
-| C — Gießen, Export, Figma | ~8 PT |
+| **Entscheidungen, die dir gehören** | Markenfarbe, Schrift, Stufenzahl je Skala, die zwei strukturellen Fragen aus Stufe A. Jede davon hält die Arbeit an, bis sie beantwortet ist. |
+| **Rollenentscheidungen in B6** | 77 Farbstellen, jede einzeln zuzuordnen. Das ist Urteilsarbeit, keine Tipparbeit — und sie lässt sich nicht parallelisieren, weil die Rollen voneinander abhängen. |
+| **Verifikationszyklen** | Ein Modulbau dauert ~1 min, ein Vollbau 3:20 min, eine Sichtprüfung in der Demo-App einige Minuten. Das summiert sich über viele Schnitte. |
+| **PR-Durchlauf** | Review und Merge durch Kollegen liegen außerhalb unserer Kontrolle. Bei 8–10 PRs ist das die längste Wanduhr-Zeit im ganzen Vorhaben. |
+| **Der `@layer`-Spike** | Die einzige echte Unbekannte. Bis er gelaufen ist, weiß niemand, ob B7 klein oder groß ist. |
 
-**Grob 40–45 PT**, ohne B7. Das ist keine Ersparnis gegenüber den alten 47 PT — es
-ist dieselbe Größenordnung für ein anderes, größeres Ergebnis: Der alte Plan hätte eine reparierte
-alte Oberfläche geliefert, dieser eine neue plus das Fundament für das spätere Projekt.
+**Die Reihenfolge ist deshalb nicht nach Aufwand sortiert, sondern nach Abhängigkeit.** Stufe B
+kann erst geplant werden, wenn Stufe A die Stufenzahl jeder Skala festgelegt hat — vorher wären
+ihre Aufgaben erfunden. Das ist der Grund für den Schnitt zwischen den Stufen, nicht die Größe.
 
-**B7 lässt sich vor dem Spike nicht seriös schätzen.** Ob die Fremd-Stylesheets ein Nachmittag oder
-zwei Wochen sind, weiß derzeit niemand.
-
----
+**Zahl der Schnitte:** Stufe A ein Block, Stufe B sieben PRs, Stufe C zwei. Dazu der Spike.
 
 ## Offene Punkte
 
