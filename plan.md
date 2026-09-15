@@ -86,7 +86,7 @@ unverändert:
 - `overlay: rgba(0,0,0,0.5)` — kaum vom Dialog zu unterscheiden
 - `support-error/-warning/-success`, `text-error`, `button-danger` — Light-Semantikfarben
 - `text-on-color: #FFFFFF`, während `button-primary` auf `#5B9BF0` aufhellt → **Weiß auf Hellblau,
-  ca. 2,4:1, unter WCAG AA**
+  gemessen 2,84:1, unter WCAG AA**
 
 **3. Die Farbliterale stecken in genau einer Datei.** Von den fünf React-Stylesheets sind vier
 vollständig sauber — `tlReactBase.css`, `tlScriptEditor.css`, `tl-react-chartjs.css` und

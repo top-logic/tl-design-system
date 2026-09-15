@@ -10,7 +10,26 @@
 
 Nächster Schritt: **AP 3 — Dark-Theme reparieren** (`plan.md`). Größerer fachlicher Nutzen als AP 2, weil
 dort ein echter Barrierefreiheitsmangel steckt: `text-on-color` auf `button-primary` liegt im
-Dark-Theme bei etwa **2,4:1** und damit unter WCAG AA.
+Dark-Theme bei gemessenen **2,84:1** und damit unter WCAG AA.
+
+## Laufend: AP 3 — Dark-Theme (Trac #29584, Issue #3)
+
+Worktree `~/git/tl8-wt-29584`, Branch `CWS/CWS_29584_dark_theme_contrast`, drei Commits, kein PR.
+
+Das Kontrast-Gate läuft als Test (`ThemeContrast` neben `ThemeTokenAudit`, 23 Paare, gegen jedes
+Theme). Es war auf **acht** Paaren rot — nicht auf einem, wie der Plan annahm —, davon eines im
+**hellen** Theme. Der schlimmste Fall stand nirgends: `text-inverse` auf `background-inverse`
+erreichte **1,13** (Weiß auf `#F0F1F2`).
+
+Erledigt: `text-inverse` dunkel, `text-placeholder` in beiden Themes, `text-on-color` und
+`icon-on-color` im Dark-Theme auf `#101113`.
+
+**Offen — eine Designentscheidung, die drei Paare schließt:** das Fehlerrot auf dunklem Grund
+(`button-danger`, `button-danger-hover`, `text-error`). Orientierung: `#E8565A` erreicht 4,81
+gegen den Grund und trägt die dunkle Schrift mit 5,32.
+
+Ebenfalls offen, ohne Kontrastbezug: die drei Schatten, `overlay`, `support-*`, `layer-accent*`,
+`color-drop-zone`.
 
 ## Planung
 
