@@ -5,3 +5,6 @@
 weil `master` das bereits anders löst. Siehe `findings/AP-korrektur-master.md`.
 
 Was daraus gültig bleibt, ist in `plan.md` übernommen.
+
+`plan-v2-vor-overhaul.md` reparierte die vorhandene Palette. Abgelöst durch den Style Overhaul,
+siehe `docs/superpowers/specs/2026-09-15-style-overhaul-design.md`.
