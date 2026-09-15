@@ -175,6 +175,67 @@ nicht farbig, binden die Skala aber an die Marke statt daneben zu stehen.
 **Das Gate prüft künftig `border-control` gegen den Grund**, nicht `border-separator` — ein
 Separator, der 3,0 erfüllen müsste, wäre keiner mehr.
 
+### Neutrale: nach Anforderung gestuft, nicht nach gleichem Abstand
+
+**Der Befund zuerst.** Die Neutralen umfassen **30 Tokens, aber nur 15 verschiedene Werte** im
+hellen Modus und 17 im dunklen. Die Hälfte sind unerklärte Dubletten:
+
+| Wert | Tokens |
+|---|---|
+| `#FFFFFF` | `background`, `color-surface`, `layer-01`, `layer-02`, `layer-accent-icon`, `layer-accent-text`, `text-inverse` |
+| `#F0F1F2` | `background-selected`, `field`, `field-disabled`, `layer` |
+| `#C4C7CC` | `border-subtle`, `layer-active`, `text-disabled` |
+| `#676B72` | `text-helper`, `text-secondary` |
+
+Im dunklen Modus sind `field`, `layer` und `layer-02` derselbe Wert — **ein Eingabefeld ist von
+der Fläche, auf der es liegt, nicht zu unterscheiden.**
+
+**Die Stufen leiten sich aus ihrer Aufgabe ab, nicht aus gleichmäßigen Helligkeitsschritten.** Eine
+Leiter mit festem Abstand klingt ordentlich, trifft aber die Schwellen nicht: Ein erster Versuch
+mit zwölf gleichen Schritten verfehlte vier von sechs Anforderungen. Also umgekehrt — jede Stufe
+ist der hellste Wert, der ihre Anforderung noch erfüllt.
+
+#### Text und Linien
+
+| Token | hell | dunkel | schuldet | gemessen gegen |
+|---|---|---|---|---|
+| `text-primary` | `#1B1D21` | `#F0F3F9` | 16,0 | Grund |
+| `text-secondary` | `#54565B` | `#A0A3A8` | 7,0 | Grund |
+| `text-helper` | `#676A6F` | `#888B90` | 5,2 | Grund |
+| `text-placeholder` | `#6B6E73` | `#8E9196` | 4,6 | **`field`**, nicht Grund |
+| `border-emphasis` | `#6F7277` | `#7F8286` | 4,6 | Grund |
+| `border-control` | `#8C8F94` | `#64676B` | 3,1 | Grund |
+| `border-separator` | `#C1C4C9` | `#34383C` | — | trennt nur |
+
+`text-placeholder` und `border-emphasis` landen im hellen Modus dicht beieinander. Das sind
+trotzdem zwei Tokens: Sie messen gegen **verschiedene** Flächen und würden auseinanderlaufen,
+sobald sich eine davon ändert.
+
+#### Flächen
+
+| Token | hell | dunkel |
+|---|---|---|
+| `background` | `#FAFAFA` | `#16181B` |
+| `layer-01` | `#FFFFFF` | `#1D2023` |
+| `layer-02` | `#FFFFFF` | `#242729` |
+| `field` | `#F0F4F9` | `#27292D` |
+| `layer-hover` | `#F0F2F6` | `#22262A` |
+| `layer-selected` | `#E5E8ED` | `#2B3034` |
+| `layer-active` | `#D9DDE3` | `#343A3F` |
+
+**`layer-01` und `layer-02` bleiben im hellen Modus beide weiß — und das ist diesmal richtig.**
+Über `#FAFAFA` liegt bis Weiß nur eine Stufe; drei Elevationsebenen lassen sich dort durch
+Helligkeit nicht ausdrücken. Im hellen Modus trägt deshalb der **Schatten** die Höhe, im dunklen
+die **Fläche**. Genau das meint die Entscheidung „Fläche plus Schatten": Jeder Modus nutzt das
+Mittel, das dort funktioniert.
+
+Der Unterschied zum heutigen Zustand ist, dass es jetzt eine Regel ist statt eines Zufalls.
+
+#### Ausgenommen
+
+`text-disabled`, `icon-disabled`, `field-disabled`, `button-disabled` sind von WCAG ausdrücklich
+ausgenommen und schulden keinen Kontrast. Sie bleiben in der Skala, aber ohne Gate.
+
 ---
 
 ## Offen
