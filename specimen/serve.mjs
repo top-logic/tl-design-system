@@ -14,7 +14,9 @@ const HIER = new URL('.', import.meta.url).pathname;
 const TYPEN = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8',
   '.mjs': 'text/javascript; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
-  '.otf': 'font/otf', '.ttf': 'font/ttf', '.woff': 'font/woff', '.woff2': 'font/woff2' };
+  // Kein Eintrag für .otf: interFonts.css deklariert diese Quelle mit dem ungültigen
+  // format("otf") (müsste "opentype" heißen) — der Browser fragt die Datei deshalb nie an.
+  '.ttf': 'font/ttf', '.woff': 'font/woff', '.woff2': 'font/woff2' };
 
 createServer(async (anfrage, antwort) => {
   const pfad = normalize(decodeURIComponent(new URL(anfrage.url, 'http://x').pathname));

@@ -8,9 +8,26 @@ const typoProbe = await fetch('./markup/typo.html').then((a) => a.text());
 const buehne = document.getElementById('buehne');
 const ansichten = { fragmente: fragmente.join('\n<hr>\n'), typo: typoProbe };
 
+/**
+ * Misst die tatsächliche, gerenderte Zeilenhöhe je Typo-Stufe und schreibt sie in die
+ * dazugehörige Anzeige. Ausgelesen mit getComputedStyle, nicht hingeschrieben — sonst würde
+ * die Probe genau die Frage vortäuschen, die sie eigentlich beantworten soll.
+ */
+function zeilenhoeheMessen() {
+  for (const stufe of buehne.querySelectorAll('.specimenTypoStufe')) {
+    const zeile = stufe.querySelector('.tlTableView__row');
+    const anzeige = stufe.querySelector('.specimenTypoStufe__messung');
+    if (!zeile || !anzeige) continue;
+    const hoehe = getComputedStyle(zeile).height;
+    const reihe = anzeige.dataset.messungReihe === 'auto' ? 'abgeleitet' : 'fest';
+    anzeige.textContent = `Gemessene Zeilenhöhe (${reihe}): ${hoehe}`;
+  }
+}
+
 /** Wechselt zwischen den Fragmenten (Buttons/Formular/Tabelle) und der Typo-Probe. */
 function ansichtAnwenden(name) {
   buehne.innerHTML = ansichten[name];
+  if (name === 'typo') zeilenhoeheMessen();
 }
 
 document.getElementById('ansicht').addEventListener('change', (e) => ansichtAnwenden(e.target.value));
@@ -19,6 +36,9 @@ ansichtAnwenden('fragmente');
 /** Trägt die gewählte Schriftfamilie als Custom Property auf das Wurzelelement. */
 function schriftAnwenden(stapel) {
   document.documentElement.style.setProperty('--specimenSchrift', stapel);
+  // Die Schriftgröße/-metrik kann die abgeleitete Zeilenhöhe ändern — neu messen, falls die
+  // Typo-Probe gerade sichtbar ist.
+  if (document.getElementById('ansicht').value === 'typo') zeilenhoeheMessen();
 }
 
 document.getElementById('schrift').addEventListener('change', (e) => schriftAnwenden(e.target.value));

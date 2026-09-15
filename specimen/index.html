@@ -38,6 +38,37 @@
   .specimenTypoStufe--13 { --specimenSchriftgroesse: 13px; }
   .specimenTypoStufe--14 { --specimenSchriftgroesse: 14px; }
   .specimenTypoStufe .tlTableView { font-size: var(--specimenSchriftgroesse); }
+  .specimenTypoStufe__messung { font: 12px/1.4 ui-monospace, monospace; margin: 0 0 .5rem;
+                                 padding: .35rem .6rem; background: #8881; border-radius: 4px;
+                                 display: inline-block; }
+
+  /* Zwei Reihen der Typo-Probe: "heute" (Zeilenhoehe bleibt die geerbte Fixhoehe der Tabelle)
+     gegen "abgeleitet" (Fixhoehe nur INNERHALB dieser Reihe aufgehoben, damit sich die
+     Zeilenhoehe aus font-size + Innenabstand ergibt). Wirkt ausschliesslich im Specimen-eigenen
+     Stil, auf keines der beiden Basis-Stylesheets. */
+  .specimenTypoReihe { margin-block-end: 2.5rem; }
+  .specimenTypoReihe__titel { font: 600 14px/1.4 system-ui, sans-serif; margin: 0 0 1rem;
+                               padding-block-end: .4rem; border-bottom: 2px solid #8886; }
+  /* height: auto allein reicht nicht: die eigentliche Zwangshöhe kommt nicht von
+     .tlTableView__row selbst (dort steht gar kein height), sondern indirekt vom
+     "Bearbeiten"-Button in der letzten Spalte (.tlReactButton { height: 2rem }, in rem also
+     relativ zur Wurzel-Schriftgröße, nicht zur Tabellen-Schriftgröße) — der Button bleibt bei
+     jeder Tabellengröße 32px hoch und zwingt die Zeile im Flex-Layout auf mindestens diese Höhe.
+     Um die Ableitung sichtbar zu machen, wird hier zusätzlich der Button (und aus Konsistenz
+     die Checkbox) von der rem-Fixgröße befreit und die Zellen bekommen einen von der
+     Schriftgröße abhängigen Innenabstand. Wirkt ausschließlich innerhalb dieser Reihe. */
+  .specimenTypoStufe--auto .tlTableView__row { height: auto; }
+  .specimenTypoStufe--auto .tlTableView__cell {
+    padding-block: calc(var(--specimenSchriftgroesse) * .4);
+  }
+  .specimenTypoStufe--auto .tlReactButton {
+    height: auto;
+    font-size: inherit;
+  }
+  .specimenTypoStufe--auto .tlReactCheckbox {
+    width: 1em;
+    height: 1em;
+  }
 
   /* Sichtbar machen, dass 700 bei Inter kuenstlich (synthetisch) fett gerechnet wird:
      Inter hat nur Regular (400) und SemiBold (deklariert als 700/bold). Ein echtes 700
