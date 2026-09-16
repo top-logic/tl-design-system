@@ -302,7 +302,46 @@ Drei eigene Kurven statt `ease`: **was erscheint, bremst ab — was verschwindet
 
 ---
 
-## 19 · Wie das geprüft wird
+## 19 · Abstände und Dichte
+
+**Die Abstandsskala hatte ein Loch — zwischen 8 und 16 px lag nichts.** Genau dort stehen heute **18 literale Abstände**: 12 px sechsmal, 6 px siebenmal, dazu 10 und 5 px.
+
+Neu: 4 · 8 · **12** · 16 · 24 · 32 · 48 px. Alle durch vier teilbar — Abstände, Zeilenhöhen und Control-Höhen liegen damit auf **einem** Raster.
+
+**Dichte: zwei Stufen. Die Schriftgröße bleibt in beiden gleich.**
+
+| | Standard | Kompakt |
+|---|---|---|
+| Control-Höhe | 32 px | 28 px |
+| Tabellenzeile | 36 px | 32 px |
+| Polsterung | 12 / 8 px | 8 / 4 px |
+| Schrift | 12 / 14 px | **12 / 14 px** |
+
+*Eine Tabelle wird eng, indem Luft verschwindet — nicht indem Text schrumpft.*
+
+**Der Bestand hatte schon drei Dichten** — je eine in Stack, Grid und Card, keine davon wirkt auf die anderen. Eine Maske mit allen dreien steht nach dem Umschalten in drei verschiedenen Dichten.
+
+---
+
+## 20 · Eine Einheitenregel für alles
+
+**Was mit der Schrift skalieren soll, steht in `rem`. Linien stehen in `px`.**
+
+| | Einheit |
+|---|---|
+| Schriftgrößen, Abstände, Polsterung | `rem` |
+| Control- und Zeilenhöhen, Radius | `rem` |
+| Rahmenbreite, Fokusring und -offset | `px` |
+
+**Warum das zählt:** Wer die Browserschrift auf 20 px stellt, tut das, weil er es braucht. Eine in `px` festgelegte Oberfläche ignoriert das — die Schrift wächst, die Luft nicht, und es wird enger statt lesbarer.
+
+Umgekehrt soll eine 1-px-Trennlinie eine Linie bleiben und nicht bei großer Schrift zu 1,25 px werden, die der Bildschirm unsauber rastert.
+
+> Sprechnotiz: Jeder `rem`-Wert im System ist ein glattes Sechzehntel — bei Standardeinstellung also ein ganzes Pixel.
+
+---
+
+## 21 · Wie das geprüft wird
 
 **Das Specimen — eine lauffähige Probe auf dem echten Stylesheet.**
 
@@ -316,22 +355,22 @@ Drei eigene Kurven statt `ease`: **was erscheint, bremst ab — was verschwindet
 
 ---
 
-## 20 · Was noch offen ist
+## 22 · Was noch offen ist
+
+**Alle elf Skalen stehen. Offen sind zwei Restfragen.**
 
 | Skala | Zu entscheiden |
 |---|---|
-| **Dichte** | wie viele Stufen, und was genau variiert |
-| **Komponenten-Maße** | Control-Höhen — belegt nötig, nicht vermutet |
-| Marke | wie viele Stufen die Rampe hat |
-| Rahmen | die Breiten |
+| Marke | wie viele Stufen die Rampe hat — die Farbe steht, ausdrücklich vorläufig |
+| Rahmen | die Breiten. Welche Stufe wann gilt, ist entschieden |
 
-**Warum die Dichte mehr Gewicht trägt als geplant:** Die Typo-Entscheidung hat ihr die Zeilenhöhe und die Polsterung zugewiesen. Eine Tabelle wird eng, indem Luft verschwindet, nicht indem Text schrumpft.
+**Damit ist Stufe A inhaltlich am Ziel:** Farbe, Dark, Elevation, Typografie, Radius, Fokus, Motion, Abstände und Dichte sind entschieden und begründet.
 
-**Und ein Beleg, dass Komponenten-Tokens nötig sind:** Bei 12, 13 und 14 px Schriftgröße misst die Tabellenzeile jeweils 33 px. Ursache ist ein Button mit `height: 2rem` — gekoppelt an die Wurzelschriftgröße, nicht an die der Tabelle. Eine Dichte, die nur Abstände und Schriftgrößen regelt, ändert an dieser Zeile nichts.
+> Sprechnotiz: Der Markenton kann sich noch ändern, sobald die Tokens in Figma liegen. Das kostet nichts — Rampe, Beschriftung und Prüfung sind abgeleitet.
 
 ---
 
-## 21 · Wie es weitergeht
+## 23 · Wie es weitergeht
 
 **Stufe A** — die Skalen festlegen und am Specimen belegen. *Läuft, vier Punkte offen.*
 

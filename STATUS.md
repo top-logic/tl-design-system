@@ -9,14 +9,17 @@
 **Stufe A läuft.** Die Maschinerie steht und ist geprüft. Offen sind noch Fokus, Motion, Dichte und
 die Komponenten-Maße, dazu zwei Restfragen: die Stufenzahl der Markenrampe und die Rahmenbreiten.
 
-Nächster Schritt: **Dichte** — wie viele Stufen, und was genau variiert. Sie trägt jetzt mehr
-Gewicht als geplant, weil die Typo-Entscheidung ihr die Zeilenhöhe und die Polsterung zugewiesen
-hat: Eine Tabelle wird eng, indem Luft verschwindet, nicht indem Text schrumpft. Danach die
-Komponenten-Maße.
+**Alle elf Skalen stehen.** Offen sind zwei Restfragen: die Stufenzahl der Markenrampe und die Rahmenbreiten. Beide brauchen keine neue Erhebung, nur eine Entscheidung.
 
-Aus der Fokus-Entscheidung stehen zwei Befunde offen, die Stufe B einsammeln muss: **22-mal
-`outline: none`** ohne erkennbaren Ersatz, und **`overflow: hidden`** an Behältern mit
-fokussierbaren Kindern.
+Danach beginnt **Stufe B**: die Skalen als Tokens ins Specimen, dann in die Anwendung. Nichts von Stufe A ist bisher im Specimen hinterlegt — weder die Typo-Klassen noch Radius, Fokus, Motion, Abstände oder Dichte. JetBrains Mono ist gewählt, aber nicht ausgeliefert.
+
+Offene Befunde für Stufe B, alle in dieser Sitzung gefunden:
+
+* **22× `outline: none`** ohne erkennbaren Ersatz — Kandidaten für fehlenden Fokus (WCAG 2.4.7).
+* **`overflow: hidden`** an Behältern mit fokussierbaren Kindern beschneidet den äußeren Fokusring.
+* **`--shadow-raised`** liegt auf vier Stellen, die nicht schweben; das Token entfällt ersatzlos.
+* **Drei Dichte-Modifier** in Stack, Grid und Card, die nichts voneinander wissen.
+* **`font-family: 'Inter'`** ohne Fallback, **`font-family-mono: monospace`** ohne gewählte Schrift.
 
 **Arbeitsweise, festgehalten am 2026-09-16:** Der Bestand ist kein Maßstab. Inventar erheben als
 Befund — entscheiden dann gegen den Befund, nicht aus ihm. Vor jeder Skala fragen, ob sie für eine
@@ -60,6 +63,10 @@ Schriftumschalter, unten das Gate-Panel.
 | Helle Flächen | trennt der Rahmen, nicht der Schatten; `layer-overlay` neu |
 | Fokus | ein Ring: `outline` 2 px, Offset 2 px, solid, nur `:focus-visible` |
 | Motion | drei Dauern, drei `cubic-bezier` plus `linear`, ein globaler Reduced-Motion-Schalter |
+| Abstände | sieben Stufen, `space-12` neu eingefügt; Namen tragen den Wert, keine Nummer |
+| Dichte | zwei Stufen, Schriftgröße bleibt in beiden gleich |
+| Komponenten-Maße | Control-Höhen je Dichte, Zeilenhöhe abgeleitet (Control + 4 px) |
+| Einheiten | `rem` für alles Skalierende, `px` nur für Linien |
 
 ## Was das Gate gefunden hat
 

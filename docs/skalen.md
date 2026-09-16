@@ -685,6 +685,72 @@ die Ladeanzeige steht ohnehin nie allein — daneben steht, worauf gewartet wird
 `0.01ms` statt `0`, weil ein `transitionend`-Ereignis sonst nie feuert und JavaScript hängen bleibt,
 das darauf wartet.
 
+### Abstände: sieben Stufen, und eine fehlte
+
+Die Skala des Bestands — `spacing-01` bis `-06` — ist 4 · 8 · 16 · 24 · 32 · 48 px. **Zwischen 8 und 16 liegt nichts**, und genau dort nehmen sich die Komponenten, was sie brauchen: 18 literale Abstände stehen in dieser Lücke.
+
+| Literal | Stellen |
+|---|---|
+| `12px` / `0.75rem` | 6 |
+| `6px` / `0.375rem` | 7 |
+| `10px` / `0.625rem` | 3 |
+| `5px` | 1 |
+
+Die neue Skala schließt sie:
+
+| Token | `rem` | px |
+|---|---|---|
+| `space-4` | `0.25rem` | 4 |
+| `space-8` | `0.5rem` | 8 |
+| **`space-12`** | **`0.75rem`** | **12** |
+| `space-16` | `1rem` | 16 |
+| `space-24` | `1.5rem` | 24 |
+| `space-32` | `2rem` | 32 |
+| `space-48` | `3rem` | 48 |
+
+**Die Namen tragen den Wert, nicht eine laufende Nummer.** Eine Skala mit `01`…`06` kann man nicht erweitern, ohne die Bedeutung bestehender Namen still zu verschieben — `spacing-03` hieße nach dem Einfügen 12 statt 16 px, und jede Verwendung wäre lautlos falsch. Mit `space-12` bricht stattdessen sichtbar, was noch `spacing-03` schreibt.
+
+Alle sieben Werte sind durch vier teilbar. Damit liegen **Abstände, Zeilenhöhen und Control-Höhen auf demselben 4-px-Raster**.
+
+### Dichte: zwei Stufen, und die Schrift bleibt gleich
+
+**Eine Tabelle wird eng, indem Luft verschwindet — nicht indem Text schrumpft.** Das ist die Folge der Typo-Entscheidung: Weil dort nur zwei Arbeitsgrößen stehen und 12 px die Untergrenze ist, kann Verdichtung nicht über die Schriftgröße laufen.
+
+| | Standard | Kompakt |
+|---|---|---|
+| Control-Höhe | `2rem` (32) | `1.75rem` (28) |
+| Control-Höhe klein | `1.5rem` (24) | `1.5rem` (24) |
+| Tabellenzeile | `2.25rem` (36) | `2rem` (32) |
+| Polsterung waagerecht | `space-12` | `space-8` |
+| Polsterung senkrecht | `space-8` | `space-4` |
+| Abstand im Formular | `space-16` | `space-12` |
+| Schriftgröße | **12 / 14 px** | **12 / 14 px** |
+
+**Zwei Stufen, nicht drei.** Jede Stufe muss in jeder Komponente umgesetzt und geprüft werden; eine dritte kostet die Hälfte mehr Pflege für einen Fall, den der Bestand nicht einmal andeutet.
+
+Die Zeilenhöhe ist **abgeleitet, nicht gesetzt**: Control-Höhe plus 4 px. Deshalb trägt die Zeile ihren Inhalt in beiden Stufen, statt ihn abzuschneiden.
+
+#### Warum das den heutigen Zustand auflöst
+
+Der Bestand hat bereits drei Dichte-Modifier — `.tlStack--gap-compact`, `.tlGrid--gap-compact`, `.tlCard__body--pad-compact`. **Drei Komponenten haben je für sich entschieden, was „kompakt" heißt**, und keine davon wirkt auf die anderen. Eine Maske, die alle drei enthält, ist nach dem Umschalten in drei verschiedenen Dichten.
+
+Dazu der bereits vermessene Befund: Bei 12, 13 und 14 px Schriftgröße misst die Tabellenzeile jeweils **33 px**. Ursache ist nicht die Zeile, sondern ein Button darin mit `height: 2rem` — gekoppelt an die Wurzelschriftgröße, nicht an die der Tabelle. **Eine Dichte, die nur Abstände regelt, ändert an dieser Zeile nichts.** Deshalb gehören die Control-Höhen in dieselbe Entscheidung.
+
+Vier Höhen aus dem Bestand fallen zusammen: `2rem` (18×) und `2.5rem` (8×) auf die Standard-Stufe, `1.5rem` (4×) auf die kleine Variante, die literalen `40px`, `32px`, `28px` und `24px` auf ihre jeweilige Stufe.
+
+#### Die Einheitenregel
+
+**Was mit der Schrift skalieren soll, steht in `rem`. Linien stehen in `px`.**
+
+| | Einheit | Grund |
+|---|---|---|
+| Abstände, Polsterung, Gaps | `rem` | Wer die Browserschrift auf 20 px stellt, braucht auch mehr Luft — sonst wird die Oberfläche genau für den enger, der sie größer gestellt hat |
+| Control- und Zeilenhöhen | `rem` | hängen ohnehin schon an der Wurzel |
+| Radius | `rem` | wächst mit dem Element, die Proportion bleibt |
+| Rahmenbreite, Fokusring und -offset | `px` | Eine 1-px-Linie soll eine Linie bleiben; bei 20 px Wurzel ergäbe `0.0625rem` 1,25 px und rasterte unsauber |
+
+Jeder `rem`-Wert der Skala ist ein glattes Sechzehntel und damit bei Standardwurzel ein ganzes Pixel.
+
 ---
 
 ## Offen
@@ -693,8 +759,6 @@ das darauf wartet.
 |---|---|
 | Marke | Wie viele Stufen die Rampe hat — die Farbe steht, vorläufig |
 | Rahmen | Die Breiten. Welche Stufe wann gilt, ist entschieden |
-| Dichte | Wie viele Stufen, und was genau variiert |
-| Komponenten-Maße | Control-Höhen — belegt nötig, siehe unten |
 
 ---
 
