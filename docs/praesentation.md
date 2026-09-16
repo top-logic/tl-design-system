@@ -341,7 +341,42 @@ Umgekehrt soll eine 1-px-Trennlinie eine Linie bleiben und nicht bei großer Sch
 
 ---
 
-## 21 · Wie das geprüft wird
+## 21 · Die letzten beiden Skalen
+
+**Rahmenbreiten: zwei.** 1 px ist der Regelfall, 2 px markiert Aktives und Betontes. Die `1.5px` aus dem Bestand fällt ersatzlos — ein halbes Pixel rastert auf keinem Bildschirm sauber.
+
+**Und ein breiter Balken ist kein Rahmen:** Die `0.4rem` und `0.65rem` im Bestand sind farbige Akzentbalken an Karten und Hinweisen. Sie tragen eine Bedeutung, sie umranden nichts — und bekommen deshalb eine eigene Rolle.
+
+**Die Marke bekommt keine Stufen, sondern zwei fehlende Rollen:** `brand-subtle` und `brand-subtle-hover` für markig getönte Flächen — aktiver Navigationspunkt, ausgewählter Reiter, getönter Streifen.
+
+| gemessen | hell | dunkel |
+|---|---|---|
+| Text auf `brand-subtle` | 15,71 | 14,35 |
+| Linktext darauf | 4,86 | 5,29 |
+
+**Eine volle Rampe mit zehn Stufen schied aus.** Die Hälfte hätte keine Aufgabe — und ein Token ohne Aufgabe ist genau die Beliebigkeit, die das System abstellen soll.
+
+---
+
+## 22 · Ein Befund zum Schluss
+
+**`brand-subtle` und `support-info-subtle` unterscheiden sich um 1,06.**
+
+Im Klartext: **Ein markig getönter Reiter und ein Info-Hinweis sehen gleich aus** — hell wie dunkel.
+
+Das ist kein falsch gewählter Wert, sondern strukturell: Die Marke ist blau, und Info ist es auch. Drei Auswege stehen offen:
+
+1. Info wechselt den Farbton, weg vom Markenton.
+2. Info verzichtet auf die getönte Fläche.
+3. Beide bleiben, unterschieden nur durch das Symbol — schwach, weil Farbe schneller gelesen wird als ein Icon.
+
+**Zu entscheiden, sobald beide Flächen im Specimen nebeneinander stehen.** Vorher wäre es eine Vermutung darüber, wie groß der Unterschied wirkt.
+
+> Sprechnotiz: Genau so sind auch die zehn Kontrastverstöße gefunden worden — durch Nebeneinanderlegen und Nachrechnen, nicht durch Hinsehen.
+
+---
+
+## 23 · Wie das geprüft wird
 
 **Das Specimen — eine lauffähige Probe auf dem echten Stylesheet.**
 
@@ -355,22 +390,23 @@ Umgekehrt soll eine 1-px-Trennlinie eine Linie bleiben und nicht bei großer Sch
 
 ---
 
-## 22 · Was noch offen ist
+## 24 · Stufe A ist am Ziel
 
-**Alle elf Skalen stehen. Offen sind zwei Restfragen.**
+**Alle elf Skalen sind entschieden und begründet.**
 
-| Skala | Zu entscheiden |
+| | |
 |---|---|
-| Marke | wie viele Stufen die Rampe hat — die Farbe steht, ausdrücklich vorläufig |
-| Rahmen | die Breiten. Welche Stufe wann gilt, ist entschieden |
+| Farbe | Marke, Grundfläche, Neutrale, Semantik, Rahmen |
+| Struktur | Dark, Elevation, Radius, Abstände, Dichte |
+| Text und Verhalten | Typografie, Fokus, Motion |
 
-**Damit ist Stufe A inhaltlich am Ziel:** Farbe, Dark, Elevation, Typografie, Radius, Fokus, Motion, Abstände und Dichte sind entschieden und begründet.
+**Was offen bleibt, ist genau ein Punkt** — und er lässt sich nicht am Schreibtisch klären, sondern nur am Bild: die Abgrenzung von Marke und Info.
 
-> Sprechnotiz: Der Markenton kann sich noch ändern, sobald die Tokens in Figma liegen. Das kostet nichts — Rampe, Beschriftung und Prüfung sind abgeleitet.
+> Sprechnotiz: Der Markenton selbst kann sich noch ändern, sobald die Tokens in Figma liegen. Das kostet nichts — Rampe, Beschriftung und Prüfung sind abgeleitet, der Wechsel ist ein Wert.
 
 ---
 
-## 23 · Wie es weitergeht
+## 25 · Wie es weitergeht
 
 **Stufe A** — die Skalen festlegen und am Specimen belegen. *Läuft, vier Punkte offen.*
 

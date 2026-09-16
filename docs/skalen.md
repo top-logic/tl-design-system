@@ -751,14 +751,69 @@ Vier Höhen aus dem Bestand fallen zusammen: `2rem` (18×) und `2.5rem` (8×) au
 
 Jeder `rem`-Wert der Skala ist ein glattes Sechzehntel und damit bei Standardwurzel ein ganzes Pixel.
 
+### Rahmenbreiten: zwei, und ein Balken ist kein Rahmen
+
+Der Bestand nutzt 1 px 77-mal, 2 px 17-mal, 3 px fünfmal — dazu `1.5px`, `4px`, `0.15rem`, `0.4rem` und `0.65rem`.
+
+| Token | Wert | Gilt für |
+|---|---|---|
+| `border-width-sm` | `1px` | der Regelfall: trennen, umschließen |
+| `border-width-md` | `2px` | aktiv, betont, ausgewählt |
+
+**Die breiten Werte sind keine Rahmen.** `0.4rem` (6,4 px) und `0.65rem` (10,4 px) stehen als `border-left` an Karten und Hinweisen — das ist ein **farbiger Akzentbalken**, der eine Bedeutung trägt, keine Umrandung. Er bekommt eine eigene Rolle `accent-bar` mit `4px` und ist damit von der Rahmenskala unabhängig.
+
+**`1.5px` fällt ersatzlos.** Ein halbes Pixel rastert auf keinem Bildschirm sauber; je nach Zoomstufe wird die Linie mal dicker, mal blasser als ihre Nachbarn. Die fünf `3px` gehen auf `border-width-md`.
+
+Beide Breiten stehen in `px`, nicht in `rem` — nach der Einheitenregel: Eine Linie soll eine Linie bleiben.
+
+### Marke: fünf Rollen plus zwei getönte Flächen
+
+Die Rampe bekommt **keine abstrakten Stufen.** Was fehlte, waren zwei Rollen — eine markig getönte Fläche und ihr Hover-Zustand:
+
+| Token | hell | dunkel | Gilt für |
+|---|---|---|---|
+| `brand-primary` | `#0B5ED7` | `#5394FF` | gefüllte Fläche, Schaltfläche |
+| `brand-primary-hover` | `#004DBA` | `#75A9FF` | |
+| `brand-primary-active` | `#003A8F` | `#2471EC` | |
+| `brand-link` | `#0B5ED7` | `#75A9FF` | Linktext |
+| `brand-link-hover` | `#004DBA` | `#95BDFF` | |
+| **`brand-subtle`** | **`#DFEBFF`** | **`#162338`** | aktiver Navigationspunkt, ausgewählter Reiter, getönter Streifen |
+| **`brand-subtle-hover`** | **`#CEE1FF`** | **`#1E2F4B`** | |
+
+Gemessen im Specimen:
+
+| | hell | dunkel |
+|---|---|---|
+| Text auf `brand-subtle` | 15,71 | 14,35 |
+| Text auf `brand-subtle-hover` | 14,25 | 12,22 |
+| `brand-link` auf `brand-subtle` | 4,86 | 5,29 |
+| gegen die Grundfläche | 1,15 | 1,13 |
+
+Die letzte Zeile ist Absicht: Eine getönte Fläche soll sich abheben, ohne eine Kante zu ziehen — dafür ist der Rahmen da.
+
+**Eine volle Rampe mit zehn Stufen schied aus.** Die Hälfte hätte keine Aufgabe, und ein Token ohne Aufgabe ist genau die Beliebigkeit, die dieses System abstellen soll. Für Diagrammfarben, das übliche Argument für lange Rampen, gibt es im React-Theme bislang keine Tokens.
+
+#### Offene Folge: Marke und Info belegen denselben Farbraum
+
+`brand-subtle` und `support-info-subtle` unterscheiden sich um **1,06** — hell wie dunkel. Praktisch heißt das: **Ein markig getönter Reiter und ein Info-Hinweis sehen gleich aus.**
+
+Das ist kein falsch gewählter Wert, sondern strukturell: Die Marke ist blau, und Info ist es auch. Drei Auswege stehen offen, und keiner davon gehört in die Rahmen- oder Markenentscheidung:
+
+1. Info wechselt den Farbton — weg vom Markenton, etwa ins Türkise.
+2. Info verzichtet auf die getönte Fläche und tritt nur als Text, Rahmen und gefüllte Fläche auf.
+3. Beide bleiben, unterschieden allein durch das Symbol davor — schwach, weil Farbe schneller gelesen wird als ein Icon.
+
+**Zu entscheiden, sobald beide Flächen im Specimen nebeneinander stehen.** Vorher wäre es eine Vermutung darüber, wie groß der Unterschied wirkt.
+
 ---
 
 ## Offen
 
-| Skala | Zu entscheiden |
+**Alle Skalen sind entschieden.** Es bleibt eine Folge, die erst am Bild zu entscheiden ist:
+
+| | Zu entscheiden |
 |---|---|
-| Marke | Wie viele Stufen die Rampe hat — die Farbe steht, vorläufig |
-| Rahmen | Die Breiten. Welche Stufe wann gilt, ist entschieden |
+| Marke ↔ Info | Beide belegen denselben Farbraum — `brand-subtle` und `support-info-subtle` trennen 1,06. Drei Auswege stehen oben; die Wahl braucht beide Flächen nebeneinander im Specimen. |
 
 ---
 

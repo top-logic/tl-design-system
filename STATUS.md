@@ -9,7 +9,9 @@
 **Stufe A läuft.** Die Maschinerie steht und ist geprüft. Offen sind noch Fokus, Motion, Dichte und
 die Komponenten-Maße, dazu zwei Restfragen: die Stufenzahl der Markenrampe und die Rahmenbreiten.
 
-**Alle elf Skalen stehen.** Offen sind zwei Restfragen: die Stufenzahl der Markenrampe und die Rahmenbreiten. Beide brauchen keine neue Erhebung, nur eine Entscheidung.
+**Stufe A ist inhaltlich am Ziel — alle elf Skalen sind entschieden.**
+
+Offen ist genau ein Punkt, und er lässt sich nicht am Schreibtisch klären: **`brand-subtle` und `support-info-subtle` trennen 1,06.** Ein markig getönter Reiter und ein Info-Hinweis sehen gleich aus, hell wie dunkel. Drei Auswege stehen in `skalen.md`; die Wahl braucht beide Flächen nebeneinander im Specimen.
 
 Danach beginnt **Stufe B**: die Skalen als Tokens ins Specimen, dann in die Anwendung. Nichts von Stufe A ist bisher im Specimen hinterlegt — weder die Typo-Klassen noch Radius, Fokus, Motion, Abstände oder Dichte. JetBrains Mono ist gewählt, aber nicht ausgeliefert.
 
@@ -67,6 +69,8 @@ Schriftumschalter, unten das Gate-Panel.
 | Dichte | zwei Stufen, Schriftgröße bleibt in beiden gleich |
 | Komponenten-Maße | Control-Höhen je Dichte, Zeilenhöhe abgeleitet (Control + 4 px) |
 | Einheiten | `rem` für alles Skalierende, `px` nur für Linien |
+| Rahmenbreiten | zwei: 1 px und 2 px; der breite Balken ist kein Rahmen, sondern `accent-bar` |
+| Markenrampe | keine Stufen, zwei neue Rollen: `brand-subtle` und `brand-subtle-hover` |
 
 ## Was das Gate gefunden hat
 
@@ -103,7 +107,7 @@ gewinnt — `text-on-color`, `border-subtle`, `support-warning`.
 ## Planung
 
 Arbeitspakete als Gitea-Issues: https://git.top-logic.com/hpe/tl-design-system/issues
-Präsentationsfassung: `docs/praesentation.md` — 21 Folien, alle Zahlen gemessen.
+Präsentationsfassung: `docs/praesentation.md` — 25 Folien, alle Zahlen gemessen.
 **Wird bei jeder Entscheidung mitgezogen**, zusammen mit `skalen.md` und dieser Datei.
 Spec: `docs/superpowers/specs/2026-09-15-style-overhaul-design.md`
 Umsetzungsplan Stufe A: `docs/superpowers/plans/2026-09-15-stufe-a-richtung.md`
