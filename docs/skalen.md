@@ -1,6 +1,6 @@
 # Die Skalen des Design Systems
 
-**Stand:** 2026-09-15 · Stufe A, in Arbeit
+**Stand:** 2026-09-16 · Stufe A, in Arbeit
 **Spec:** [`superpowers/specs/2026-09-15-style-overhaul-design.md`](superpowers/specs/2026-09-15-style-overhaul-design.md)
 
 Jede Skala hat eine Stufenzahl, eine Regel, wann welche Stufe gilt, und ein Gate, das Abweichungen
@@ -334,6 +334,43 @@ abgefedert wird, steht in Issue #12 — Metrik-Normalisierung über `size-adjust
 `*-override`-Deskriptoren, einheitenlose Zeilenhöhen, abgeleitete Control-Höhen, Feature-Rückfall
 und eine Validierung des Kunden-Themes.
 
+### Typo-Größen: sieben Stufen in `rem`, jede ein glattes Sechzehntel
+
+**Die Einheit ist `rem`, nicht `px`.** Eine in `px` festgelegte Skala ignoriert die
+Schriftgrößen-Einstellung des Browsers — wer dort 20 px einstellt, weil er sie braucht, bekommt von
+einer px-Skala trotzdem 12 px. Das ist ein Zugänglichkeitsfehler, kein Geschmacksfrage. `rem` bindet
+jede Stufe an die Wurzelgröße und skaliert mit.
+
+Damit fällt eine zweite Entscheidung von selbst: Die Control-Höhen hängen ohnehin schon an der
+Wurzel (`.tlReactButton { height: 2rem }`, siehe unten). Schrift in `rem` bringt Typo und
+Komponenten-Maße auf **dieselbe** Bezugsgröße, statt sie auseinanderlaufen zu lassen.
+
+**Jede Stufe ist ein Vielfaches von `0,0625rem`** — einem Pixel bei der Standardwurzel. Krumme
+Ausgangswerte wie `.72rem` (11,52 px) oder `.68rem` (10,88 px) entstehen damit gar nicht erst:
+
+| Token | `rem` | px bei 16 | Aufgabe | heute |
+|---|---|---|---|---|
+| `font-size-caption` | `0.6875rem` | 11 | Badge, Chip, Kalenderzeit, Hilfszeile | ersetzt **sieben** Werte zwischen 9 und 11,52 |
+| `font-size-label` | `0.75rem` | 12 | Feldbeschriftung, Spaltenkopf | 21 Deklarationen, `--label-01` |
+| `font-size-body-sm` | `0.8125rem` | 13 | dichte Tabelle, Nebentext | 8 Deklarationen, bisher ohne Token |
+| `font-size-body` | `0.875rem` | 14 | Fließtext, Bedienelemente | 48 Deklarationen, `--body-compact-01` |
+| `font-size-heading-sm` | `1rem` | 16 | Abschnittstitel | 7 Deklarationen |
+| `font-size-heading-md` | `1.25rem` | 20 | Dialogtitel | 4 Deklarationen |
+| `font-size-heading-lg` | `1.5rem` | 24 | Seitentitel | 1 Deklaration |
+
+Die Schrittweite ist bewusst **ungleichmäßig**: +1 px zwischen den vier Arbeitsgrößen, +2 und dann
++4 nach oben. Dieselbe Begründung wie bei den Neutralen — eine Oberfläche, die 69 % ihrer Fläche auf
+drei benachbarten Größen aufbaut, braucht dort feine Abstufung und darüber grobe. Eine modulare
+Skala mit festem Faktor träfe keinen der drei tragenden Werte und erzeugte an jeder Stufe außer der
+ersten Subpixel.
+
+Was die Skala **nicht** hat: die 32 px des Login-Bildschirms und die 17,60/18 px aus drei
+Einzelfällen. 32 px bleibt eine Sondergröße außerhalb der Skala und wird als solche benannt; 17,60
+und 18 fallen auf 16 oder 20.
+
+Zu den Zeilenhöhen gehört die Gegenprobe: Sie werden **einheitenlos** notiert (`1.4`), nie in `rem`
+— sonst erbt ein Kind die absolute Höhe des Elternteils statt seine eigene zu rechnen.
+
 ---
 
 ## Offen
@@ -343,7 +380,6 @@ und eine Validierung des Kunden-Themes.
 | Marke | Farbe, und wie viele Stufen die Rampe hat |
 | Neutrale | Wie viele Graustufen die Oberfläche trägt |
 | Semantik | Fehler/Warnung/Erfolg/Info — je wie viele Varianten |
-| Typo-Größen | Wie viele Stufen, welche Schrittweite |
 | Typo-Gewichte | **Faktisch zwei** — Inter liefert nur Regular und SemiBold, siehe unten |
 | Radius | Bleiben es zwei Stufen |
 | Rahmen | Breiten, und wann Rahmen statt Fläche |
