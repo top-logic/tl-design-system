@@ -96,6 +96,7 @@ gewinnt — `text-on-color`, `border-subtle`, `support-warning`.
 ## Planung
 
 Arbeitspakete als Gitea-Issues: https://git.top-logic.com/hpe/tl-design-system/issues
+Präsentationsfassung: `docs/praesentation.md` — 19 Folien, alle Zahlen gemessen
 Spec: `docs/superpowers/specs/2026-09-15-style-overhaul-design.md`
 Umsetzungsplan Stufe A: `docs/superpowers/plans/2026-09-15-stufe-a-richtung.md`
 Fortschritt und Rulings: `.superpowers/sdd/2026-09-15-stufe-a-richtung/progress.md`
