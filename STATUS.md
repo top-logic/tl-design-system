@@ -9,9 +9,10 @@
 **Stufe A läuft.** Die Maschinerie steht und ist geprüft. Offen sind noch Fokus, Motion, Dichte und
 die Komponenten-Maße, dazu zwei Restfragen: die Stufenzahl der Markenrampe und die Rahmenbreiten.
 
-Nächster Schritt: **Motion** — wie viele Dauern, wie viele Easings. Danach Dichte und
-Komponenten-Maße; die Dichte trägt jetzt mehr Gewicht, weil die Typo-Entscheidung ihr die
-Zeilenhöhe und die Polsterung zugewiesen hat.
+Nächster Schritt: **Dichte** — wie viele Stufen, und was genau variiert. Sie trägt jetzt mehr
+Gewicht als geplant, weil die Typo-Entscheidung ihr die Zeilenhöhe und die Polsterung zugewiesen
+hat: Eine Tabelle wird eng, indem Luft verschwindet, nicht indem Text schrumpft. Danach die
+Komponenten-Maße.
 
 Aus der Fokus-Entscheidung stehen zwei Befunde offen, die Stufe B einsammeln muss: **22-mal
 `outline: none`** ohne erkennbaren Ersatz, und **`overflow: hidden`** an Behältern mit
@@ -58,6 +59,7 @@ Schriftumschalter, unten das Gate-Panel.
 | Elevation-Stufen | drei Schatten, und **nur** Schwebendes bekommt einen |
 | Helle Flächen | trennt der Rahmen, nicht der Schatten; `layer-overlay` neu |
 | Fokus | ein Ring: `outline` 2 px, Offset 2 px, solid, nur `:focus-visible` |
+| Motion | drei Dauern, drei `cubic-bezier` plus `linear`, ein globaler Reduced-Motion-Schalter |
 
 ## Was das Gate gefunden hat
 

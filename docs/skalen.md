@@ -614,6 +614,77 @@ fokussierbaren Kindern wird zum Befund.** Der Ersatz ist `overflow: clip` mit ei
 Das Gate bekommt zwei Regeln: **`outline: none` ohne Ersatz im selben Block ist ein Verstoß**, und
 **jede Fokusdarstellung, die nicht `outline` ist, ebenso.**
 
+### Motion: drei Dauern, drei Kurven, ein Schalter
+
+Es gibt Motion in TopLogic — nur kein System dafür. 19 `transition` und 13 `@keyframes` stehen im
+CSS, und **kein einziger Wert ist ein Token.**
+
+| | Bestand |
+|---|---|
+| Dauern | acht verschiedene: 0,1 · 0,15 · 0,2 · 0,25 · 0,5 · 0,6 · 0,8 · 2 s |
+| Kurven | vier Browser-Defaults: `ease`, `ease-out`, `ease-in-out`, `linear` |
+| `cubic-bezier` | keins |
+| `prefers-reduced-motion` | **einmal** — bei 13 Animationen, davon **sechs mit `infinite`** |
+
+#### Die Dauern
+
+| Token | Wert | Gilt für |
+|---|---|---|
+| `duration-fast` | `100ms` | Hover, Aktiv, Fokus — alles, was direkt am Zeiger hängt |
+| `duration-base` | `150ms` | Normalfall: Farbe, Rahmen, Deckkraft, kleine Verschiebung |
+| `duration-slow` | `250ms` | Popover, Dialog, Drawer — alles, was eine Fläche bewegt |
+
+Drei Dauern decken die acht des Bestands vollständig ab. Die langen Werte (0,5 bis 2 s) gehören zu
+Endlos-Animationen und sind keine Übergänge — sie stehen bei ihrer Animation, nicht in der Skala.
+
+**Die Regel ist die Fläche, nicht die Wichtigkeit:** Je mehr Pixel sich bewegen, desto länger darf
+es dauern. Ein Farbwechsel am Knopf ist bei 100 ms fertig, ein Drawer braucht 250 ms, sonst wirkt
+er gerissen.
+
+#### Die Kurven
+
+| Token | Wert | Gilt für |
+|---|---|---|
+| `easing-standard` | `cubic-bezier(0.2, 0, 0.38, 0.9)` | Normalfall — alles, was bleibt und sich ändert |
+| `easing-entrance` | `cubic-bezier(0, 0, 0.38, 0.9)` | was erscheint: Popover öffnet, Toast kommt |
+| `easing-exit` | `cubic-bezier(0.2, 0, 1, 0.9)` | was verschwindet: Dialog schließt, Menü klappt zu |
+| `easing-linear` | `linear` | nur Endlosdrehung — ein Spinner mit Beschleunigung ruckelt |
+
+**`ease` ist kein Ausweg.** Es ist auf jeder Engine derselbe Wert und deshalb verlässlich — aber es
+startet und endet gleich träge, was jede kurze Bewegung weich und unentschlossen aussehen lässt.
+
+Die Aufteilung folgt einer physikalischen Regel: **Was erscheint, bremst ab. Was verschwindet,
+beschleunigt weg.** Etwas, das ankommt, wird langsamer, bis es liegt; etwas, das geht, muss nicht
+sanft enden, weil niemand mehr hinsieht. Deshalb hat `entrance` keine Anlaufzeit (`0, 0`) und `exit`
+kein Abbremsen (`1, 0.9`).
+
+#### Der Schalter
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+```
+
+Eine Regel, global, mit `!important`. Sie greift auf jede bestehende Animation, auf jede, die Stufe
+B baut, und auf jede, die ein Kunde ergänzt — ohne dass eine Komponente daran denken muss.
+
+**Warum global und nicht je Komponente:** Der Bestand zeigt, was die andere Variante ergibt — 13
+Animationen und eine Stelle, die die Einstellung berücksichtigt. Sechs davon laufen endlos: vier
+Spinner, zwei Wobble, ein Ripple. Wer die Einstellung gesetzt hat, tut das meist wegen vestibulärer
+Beschwerden, und eine dauerhaft kreisende Bewegung am Bildrand ist genau der Auslöser.
+
+Die Spinner drehen sich dann nicht mehr. Das ist beabsichtigt: Sie bleiben als Symbol sichtbar, und
+die Ladeanzeige steht ohnehin nie allein — daneben steht, worauf gewartet wird.
+
+`0.01ms` statt `0`, weil ein `transitionend`-Ereignis sonst nie feuert und JavaScript hängen bleibt,
+das darauf wartet.
+
 ---
 
 ## Offen
@@ -622,7 +693,6 @@ Das Gate bekommt zwei Regeln: **`outline: none` ohne Ersatz im selben Block ist 
 |---|---|
 | Marke | Wie viele Stufen die Rampe hat — die Farbe steht, vorläufig |
 | Rahmen | Die Breiten. Welche Stufe wann gilt, ist entschieden |
-| Motion | Wie viele Dauern, wie viele Easings |
 | Dichte | Wie viele Stufen, und was genau variiert |
 | Komponenten-Maße | Control-Höhen — belegt nötig, siehe unten |
 
