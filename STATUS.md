@@ -17,7 +17,8 @@ Nächster Schritt: die erzeugte `skala.css` gegen die Fragmente der laufenden De
 
 Offene Befunde für die Umsetzung:
 
-* Die vier `disabled`-Rollen fehlen in `skala.json` — von WCAG ausgenommen und deshalb nie abgeleitet.
+* `specimen/abbildung.json` ordnet **alle 54 Ist-Tokens** ein; **zwölf sind mehrdeutig** und brauchen je Verwendungsstelle eine Entscheidung nach der dort notierten Regel.
+* Die fünf `disabled`-Rollen und `script-editor-text-highlight` stehen als `offen` in der Abbildung.
 * **`.tlTableView__treeToggle` ist 20 × 20 px** und verstößt gegen WCAG 2.5.8; bei `.tlFormField__helpIcon` (20 px) ist zu prüfen, ob es bedienbar ist.
 * **22× `outline: none`** ohne erkennbaren Ersatz — Kandidaten für fehlenden Fokus (WCAG 2.4.7).
 * **`overflow: hidden`** an Behältern mit fokussierbaren Kindern beschneidet den äußeren Fokusring.

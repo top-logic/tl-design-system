@@ -162,7 +162,8 @@ Was aussteht, gehört zur Umsetzung, nicht zur Entscheidung:
 
 | | |
 |---|---|
-| `disabled`-Rollen | `text-disabled`, `icon-disabled`, `field-disabled`, `button-disabled` sind von WCAG ausgenommen und deshalb nie abgeleitet worden. Sie fehlen noch in `skala.json`. |
+| `disabled`-Rollen | `text-disabled`, `icon-disabled`, `field-disabled`, `button-disabled` und `text-on-color-disabled` sind von WCAG ausgenommen und deshalb nie abgeleitet worden. |
+| Syntaxhervorhebung | `script-editor-text-highlight` gehört zur Code-Klasse; die Skala führt dafür bisher keine Rolle. |
 
 ---|---|---|
 | `button-primary` `#5A9AFF` (hell) | 2,80 ✗ | **6,75 ✓** |
@@ -903,6 +904,35 @@ Die kleine Control-Höhe liegt bei genau 24 px. **Solange eine Icon-Schaltfläch
 Das Gate bekommt drei Regeln: **eine `font-size` an einem Icon, die keine Icon-Stufe ist, ist ein Verstoß**; **ein fokussierbares Element mit Icon und ohne Beschriftung unter 24 × 24 px ist ein Verstoß**; und **kein Icon nimmt eine Schriftgrößen-Rolle** — `var(--heading-compact-03-font-size)` an einem Symbolleisten-Icon ergibt zufällig 16 px und zieht mit, sobald jemand die Überschriftengröße ändert.
 
 **Eine Nebenwirkung, die die Schichtung belegt:** `icon-size-md` brauchte 20 px, und die Maßleiter sprang von 16 auf 24. Der Wert wurde als `size-05` eingefügt, wodurch die früheren `size-05` bis `size-07` aufrückten — **ohne dass ein einziger Rollenname sich ändern musste.** `space-lg` heißt weiter `space-lg` und zeigt jetzt auf `size-06`.
+
+### Die Abbildung: was aus jedem heutigen Token wird
+
+Stufe B braucht eine Zusage, die keine Liste von Umbenennungen ist: **Jedes der 54 Tokens des heutigen Themes trägt eine ausdrückliche Entscheidung.** Ein Token, das niemand einordnet, verschwindet beim Umschreiben still — und still verschwundene Tokens sind genau die Vererbungsfehler, die das Gate gefunden hat.
+
+| Art | Anzahl | Bedeutung |
+|---|---|---|
+| `bleibt` | 13 | Name und Rolle unverändert, oft mit neuem Wert |
+| `umbenannt` | 14 | dieselbe Aufgabe, ein Name, der sie benennt |
+| **`mehrdeutig`** | **12** | ein Token, mehrere Aufgaben — braucht je Verwendungsstelle eine Entscheidung |
+| `abgeleitet` | 7 | kein Token mehr, wird gerechnet |
+| `entfaellt` | 2 | ersatzlos |
+| `offen` | 6 | noch nicht entschieden, ausdrücklich vermerkt |
+
+**Die zwölf mehrdeutigen sind die eigentliche Arbeit.** Jedes von ihnen nennt mindestens zwei Ziele **und die Regel, wie zwischen ihnen zu entscheiden ist** — ein Eintrag mit nur einem Ziel würde die Mehrdeutigkeit nicht auflösen, sondern verdecken. Der Test erzwingt beides.
+
+| Token | Ziele | Regel in Kürze |
+|---|---|---|
+| `border-subtle` | 2 | trennt → `separator`; umschließt Bedientes → `control` |
+| `support-error` · `-warning` · `-success` | je 4 | Text, Linie, gefüllte Fläche, getönter Streifen |
+| `layer-accent` und seine zwei Zustände | je 2 | Höhe → `layer-overlay`; Zugehörigkeit zur Marke → `brand-subtle` |
+| `button-secondary` und seine zwei Zustände | je 2 | Linie → `border-control`; Beschriftung → `brand-primary` |
+| `button-danger` und sein Zustand | je 2 | gefüllt → `surface`; nur Text → `text` |
+
+#### Was die Abbildung nebenbei zeigt
+
+**Nur vier Rollen der neuen Skala sind wirklich neu** — die vier Info-Rollen, und die auch nur, weil Info im heutigen Theme überhaupt keine eigene Farbe hatte. Alles andere ist ein umbenanntes oder aufgespaltenes Token. **Die Skala erfindet fast nichts; sie ordnet, was schon da war.**
+
+Die sechs offenen sind benannt statt übergangen: die vier `disabled`-Rollen, ihre Beschriftungsvariante, und `script-editor-text-highlight` — Syntaxhervorhebung im TL-Script-Editor, für die die Skala bisher keine Rolle führt. Sie gehört zur Code-Klasse und steht noch aus.
 
 ---
 
