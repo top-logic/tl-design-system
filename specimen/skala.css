@@ -1,0 +1,247 @@
+/* Erzeugt aus skala.json. Nicht von Hand ändern — Werte und Begründung
+   stehen in docs/skalen.md, erzeugt wird mit specimen/generieren.mjs. */
+
+:root {
+  --font-size-label: 0.75rem;
+  --font-size-body: 0.875rem;
+  --font-size-heading-sm: 1rem;
+  --font-size-heading-md: 1.25rem;
+  --font-size-heading-lg: 1.5rem;
+  --font-size-display: 2rem;
+  --line-height-label: 16px;
+  --line-height-body: 20px;
+  --line-height-heading-sm: 24px;
+  --line-height-heading-md: 28px;
+  --line-height-heading-lg: 32px;
+  --line-height-display: 40px;
+  --space-4: 0.25rem;
+  --space-8: 0.5rem;
+  --space-12: 0.75rem;
+  --space-16: 1rem;
+  --space-24: 1.5rem;
+  --space-32: 2rem;
+  --space-48: 3rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-full: 999px;
+  --radius-round: 50%;
+  --border-width-sm: 1px;
+  --border-width-md: 2px;
+  --accent-bar: 4px;
+  --focus-width: 2px;
+  --focus-offset: 2px;
+  --font-family-sans: 'Inter', ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace;
+  --duration-fast: 100ms;
+  --duration-base: 150ms;
+  --duration-slow: 250ms;
+  --easing-standard: cubic-bezier(0.2, 0, 0.38, 0.9);
+  --easing-entrance: cubic-bezier(0, 0, 0.38, 0.9);
+  --easing-exit: cubic-bezier(0.2, 0, 1, 0.9);
+  --easing-linear: linear;
+
+  --background: #FAFAFA;
+  --layer-01: #FFFFFF;
+  --layer-02: #FFFFFF;
+  --layer-overlay: #FFFFFF;
+  --layer-hover: #F0F2F6;
+  --layer-selected: #E5E8ED;
+  --layer-active: #D9DDE3;
+  --field: #F0F4F9;
+  --text-primary: #1B1D21;
+  --text-secondary: #54565B;
+  --text-helper: #676A6F;
+  --text-placeholder: #6B6E73;
+  --border-separator: #C1C4C9;
+  --border-control: #8C8F94;
+  --border-emphasis: #6F7277;
+  --border-interactive: #0B5ED7;
+  --focus: #0B5ED7;
+  --brand-primary: #0B5ED7;
+  --brand-primary-hover: #004DBA;
+  --brand-primary-active: #003A8F;
+  --brand-link: #0B5ED7;
+  --brand-link-hover: #004DBA;
+  --brand-subtle: #DFEBFF;
+  --brand-subtle-hover: #CEE1FF;
+  --support-error-text: #D7352D;
+  --support-error-border: #FB594D;
+  --support-error-surface: #CC2823;
+  --support-error-subtle: #FFEBE8;
+  --support-warning-text: #936E00;
+  --support-warning-border: #B88A00;
+  --support-warning-surface: #D9A514;
+  --support-warning-subtle: #FEEFCF;
+  --support-success-text: #008459;
+  --support-success-border: #36A376;
+  --support-success-surface: #3DA97B;
+  --support-success-subtle: #DCF8E9;
+  --support-info-text: #216EE8;
+  --support-info-border: #4C8FFF;
+  --support-info-surface: #1C69E3;
+  --support-info-subtle: #E8F1FF;
+
+  --shadow-popover: 0 2px 8px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+  --shadow-dialog: 0 8px 24px rgba(0,0,0,0.16);
+  --shadow-drag: 0 12px 32px rgba(0,0,0,0.20);
+
+  --control-height: 2rem;
+  --control-height-sm: 1.5rem;
+  --row-height: 2.25rem;
+  --padding-x: var(--space-12);
+  --padding-y: var(--space-8);
+  --gap: var(--space-16);
+}
+
+[data-modus="dunkel"] {
+  --background: #16181B;
+  --layer-01: #1D2023;
+  --layer-02: #242729;
+  --layer-overlay: #2B2F33;
+  --layer-hover: #22262A;
+  --layer-selected: #2B3034;
+  --layer-active: #343A3F;
+  --field: #27292D;
+  --text-primary: #F0F3F9;
+  --text-secondary: #A0A3A8;
+  --text-helper: #888B90;
+  --text-placeholder: #8E9196;
+  --border-separator: #34383C;
+  --border-control: #64676B;
+  --border-emphasis: #7F8286;
+  --border-interactive: #5394FF;
+  --focus: #5394FF;
+  --brand-primary: #5394FF;
+  --brand-primary-hover: #75A9FF;
+  --brand-primary-active: #2471EC;
+  --brand-link: #75A9FF;
+  --brand-link-hover: #95BDFF;
+  --brand-subtle: #162338;
+  --brand-subtle-hover: #1E2F4B;
+  --support-error-text: #E8463C;
+  --support-error-border: #C51E1C;
+  --support-error-surface: #F14F43;
+  --support-error-subtle: #35110D;
+  --support-warning-text: #A27A00;
+  --support-warning-border: #805F00;
+  --support-warning-surface: #EAB532;
+  --support-warning-subtle: #281C02;
+  --support-success-text: #1E9266;
+  --support-success-border: #00734D;
+  --support-success-surface: #60C99A;
+  --support-success-subtle: #0C2319;
+  --support-info-text: #307CF8;
+  --support-info-border: #0C5DD6;
+  --support-info-surface: #448BFF;
+  --support-info-subtle: #0C1D3A;
+
+  --shadow-popover: 0 2px 8px rgba(0,0,0,0.40);
+  --shadow-dialog: 0 8px 24px rgba(0,0,0,0.56);
+  --shadow-drag: 0 12px 32px rgba(0,0,0,0.64);
+}
+
+[data-dichte="kompakt"] {
+  --control-height: 1.75rem;
+  --control-height-sm: 1.5rem;
+  --row-height: 2rem;
+  --padding-x: var(--space-8);
+  --padding-y: var(--space-4);
+  --gap: var(--space-12);
+}
+
+/* Klassen */
+
+.type-display {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-display);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.type-heading-lg {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-heading-lg);
+  font-weight: 600;
+  line-height: 1.3333;
+  letter-spacing: -0.005em;
+}
+
+.type-heading-md {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-heading-md);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+
+.type-heading-sm {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-heading-sm);
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.type-body {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-body);
+  font-weight: 400;
+  line-height: 1.4286;
+  letter-spacing: 0;
+}
+
+.type-body-strong {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-body);
+  font-weight: 600;
+  line-height: 1.4286;
+  letter-spacing: 0;
+}
+
+.type-label {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-label);
+  font-weight: 400;
+  line-height: 1.3333;
+  letter-spacing: 0.01em;
+}
+
+.type-label-strong {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-label);
+  font-weight: 600;
+  line-height: 1.3333;
+  letter-spacing: 0.01em;
+}
+
+.type-code {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-body);
+  font-weight: 400;
+  line-height: 1.4286;
+  letter-spacing: 0;
+}
+
+/* Zahlen in Spalten fluchten nur mit tabellarischen Ziffern. Pflicht, nicht Option. */
+.tabellenzahl {
+  font-feature-settings: "tnum" 1, "zero" 1;
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+
+/* Der Ring gehört der Tastatur. Wer klickt, weiß, wo er ist. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: var(--focus-width) solid var(--focus);
+  outline-offset: var(--focus-offset);
+}
+
+/* Wer Bewegung abbestellt hat, hat sie abbestellt — auch in Komponenten, die
+   es später gibt. 0.01ms statt 0, sonst feuert transitionend nie. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
