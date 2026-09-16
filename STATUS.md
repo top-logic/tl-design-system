@@ -11,8 +11,9 @@
 Nächster Schritt: **Radius** — zwei Stufen sind der Bestand, zu belegen ist, ob sie reichen. Danach
 Fokus, Motion, Dichte, Komponenten-Maße.
 
-Die Typo-Größen stehen als Entscheidung in `docs/skalen.md`, aber **noch nicht im Specimen**: Die
-sieben Stufen sind dort weder als Tokens hinterlegt noch an der Probe gezeigt.
+Die Typo-Entscheidung steht in `docs/skalen.md`, aber **noch nicht im Specimen**: weder die sechs
+Größen noch die neun Klassen sind dort als Tokens hinterlegt oder an der Probe gezeigt. JetBrains
+Mono ist gewählt, aber nicht ausgeliefert — es gibt noch kein Modul dafür.
 
 Das Specimen starten:
 
@@ -38,7 +39,10 @@ Schriftumschalter, unten das Gate-Panel.
 | Neutrale | aus der Anforderung gestuft, nicht nach gleichem Abstand |
 | Semantik | vier Bedeutungen × vier Rollen |
 | Schrift | Inter bleibt; Kundenschriften siehe Issue #12 |
-| Typo-Größen | sieben Stufen in `rem`, jede ein glattes Sechzehntel |
+| Typo-Größen | sechs Stufen in `rem`, Untergrenze 12 px, Zeilenhöhen auf dem 4-px-Raster |
+| Typo-Klassen | neun Klassen statt blanker Größen; `tnum` in Zahlenspalten ist Pflicht |
+| Schriftfamilien | Inter + JetBrains Mono, beide lokal, beide mit Fallback-Stack |
+| Druck | eigene Leiter in `pt`, vier Klassen |
 
 ## Was das Gate gefunden hat
 

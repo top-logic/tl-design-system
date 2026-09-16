@@ -334,42 +334,125 @@ abgefedert wird, steht in Issue #12 — Metrik-Normalisierung über `size-adjust
 `*-override`-Deskriptoren, einheitenlose Zeilenhöhen, abgeleitete Control-Höhen, Feature-Rückfall
 und eine Validierung des Kunden-Themes.
 
-### Typo-Größen: sieben Stufen in `rem`, jede ein glattes Sechzehntel
+### Typo: sechs Größen, neun Klassen, zwei Familien
 
-**Die Einheit ist `rem`, nicht `px`.** Eine in `px` festgelegte Skala ignoriert die
-Schriftgrößen-Einstellung des Browsers — wer dort 20 px einstellt, weil er sie braucht, bekommt von
-einer px-Skala trotzdem 12 px. Das ist ein Zugänglichkeitsfehler, kein Geschmacksfrage. `rem` bindet
-jede Stufe an die Wurzelgröße und skaliert mit.
+Die erste Fassung dieser Skala hatte sieben Größen und war aus dem Bestand abgeleitet: 14 px stand
+48-mal im CSS, also wurde 14 px zum Fließtext. **Häufigkeit ist kein Qualitätsargument.** Jede
+dieser Größen entstand als Einzelentscheidung, und dass 12, 13 und 14 px nebeneinander existieren,
+belegt nicht, dass eine Oberfläche drei Arbeitsgrößen braucht — es belegt, dass nie jemand
+entschieden hat.
 
-Damit fällt eine zweite Entscheidung von selbst: Die Control-Höhen hängen ohnehin schon an der
-Wurzel (`.tlReactButton { height: 2rem }`, siehe unten). Schrift in `rem` bringt Typo und
-Komponenten-Maße auf **dieselbe** Bezugsgröße, statt sie auseinanderlaufen zu lassen.
+Neu entschieden, gegen den Bestand:
 
-**Jede Stufe ist ein Vielfaches von `0,0625rem`** — einem Pixel bei der Standardwurzel. Krumme
-Ausgangswerte wie `.72rem` (11,52 px) oder `.68rem` (10,88 px) entstehen damit gar nicht erst:
+**Zwei Arbeitsgrößen, nicht drei.** 13 px fällt weg. Der Unterschied zu 14 px ist für niemanden
+sichtbar, aber jede Komponente muss ihn trotzdem entscheiden. Wer dichter will, schaltet die
+**Dichte** — die regelt Zeilenhöhe und Polsterung, nicht die Schriftgröße. Eine Tabelle wird eng,
+indem Luft verschwindet, nicht indem Text schrumpft.
 
-| Token | `rem` | px bei 16 | Aufgabe | heute |
-|---|---|---|---|---|
-| `font-size-caption` | `0.6875rem` | 11 | Badge, Chip, Kalenderzeit, Hilfszeile | ersetzt **sieben** Werte zwischen 9 und 11,52 |
-| `font-size-label` | `0.75rem` | 12 | Feldbeschriftung, Spaltenkopf | 21 Deklarationen, `--label-01` |
-| `font-size-body-sm` | `0.8125rem` | 13 | dichte Tabelle, Nebentext | 8 Deklarationen, bisher ohne Token |
-| `font-size-body` | `0.875rem` | 14 | Fließtext, Bedienelemente | 48 Deklarationen, `--body-compact-01` |
-| `font-size-heading-sm` | `1rem` | 16 | Abschnittstitel | 7 Deklarationen |
-| `font-size-heading-md` | `1.25rem` | 20 | Dialogtitel | 4 Deklarationen |
-| `font-size-heading-lg` | `1.5rem` | 24 | Seitentitel | 1 Deklaration |
+**12 px ist die Untergrenze, ausnahmslos.** TopLogic steht bei Kunden im öffentlichen Sektor, wo
+BITV 2.0 und EN 301 549 gelten. Die sieben Werte zwischen 9 und 11,52 px fallen alle auf 12. Ein
+Badge, das kleiner sein will, bekommt engere Polsterung, nicht kleinere Schrift.
 
-Die Schrittweite ist bewusst **ungleichmäßig**: +1 px zwischen den vier Arbeitsgrößen, +2 und dann
-+4 nach oben. Dieselbe Begründung wie bei den Neutralen — eine Oberfläche, die 69 % ihrer Fläche auf
-drei benachbarten Größen aufbaut, braucht dort feine Abstufung und darüber grobe. Eine modulare
-Skala mit festem Faktor träfe keinen der drei tragenden Werte und erzeugte an jeder Stufe außer der
-ersten Subpixel.
+#### Die Größen
 
-Was die Skala **nicht** hat: die 32 px des Login-Bildschirms und die 17,60/18 px aus drei
-Einzelfällen. 32 px bleibt eine Sondergröße außerhalb der Skala und wird als solche benannt; 17,60
-und 18 fallen auf 16 oder 20.
+| Token | `rem` | px | Zeilenhöhe px |
+|---|---|---|---|
+| `font-size-label` | `0.75rem` | 12 | 16 |
+| `font-size-body` | `0.875rem` | 14 | 20 |
+| `font-size-heading-sm` | `1rem` | 16 | 24 |
+| `font-size-heading-md` | `1.25rem` | 20 | 28 |
+| `font-size-heading-lg` | `1.5rem` | 24 | 32 |
+| `font-size-display` | `2rem` | 32 | 40 |
 
-Zu den Zeilenhöhen gehört die Gegenprobe: Sie werden **einheitenlos** notiert (`1.4`), nie in `rem`
-— sonst erbt ein Kind die absolute Höhe des Elternteils statt seine eigene zu rechnen.
+Sechs Werte, davon fünf für die Oberfläche und `display` für Login, Leerbild und Report-Deckblatt.
+Jede Größe ist ein Vielfaches von `0,0625rem` — einem Pixel bei Standardwurzel —, und **jede
+Zeilenhöhe liegt auf dem 4-px-Raster**. Damit rastet Typografie in dasselbe Raster wie Abstände und
+Control-Höhen ein, statt daneben zu laufen.
+
+`rem` statt `px`, weil eine px-Skala die Schriftgrößen-Einstellung des Browsers ignoriert und die
+Control-Höhen mit `height: 2rem` ohnehin schon an der Wurzel hängen.
+
+#### Die Klassen
+
+Eine Größe ist keine Klasse. Eine Klasse legt Familie, Größe, Gewicht, Zeilenhöhe, Laufweite und
+die Regel fest, wann sie gilt — sonst entscheidet jede Komponente das Gewicht neu, und genau so
+entstanden die 44 literalen `font-weight`.
+
+| Klasse | Größe | Gewicht | Zeilenhöhe | Laufweite | Gilt für |
+|---|---|---|---|---|---|
+| `type-display` | 32 | 600 | 1.25 | −0.01em | Login, Leerbild, Report-Deckblatt |
+| `type-heading-lg` | 24 | 600 | 1.3333 | −0.005em | Seitentitel |
+| `type-heading-md` | 20 | 600 | 1.4 | 0 | Dialogtitel |
+| `type-heading-sm` | 16 | 600 | 1.5 | 0 | Abschnittstitel, Gruppenrahmen |
+| `type-body` | 14 | 400 | 1.4286 | 0 | alles Gelesene |
+| `type-body-strong` | 14 | 600 | 1.4286 | 0 | Hervorhebung im Fließtext, aktive Zeile |
+| `type-label` | 12 | 400 | 1.3333 | +0.01em | Feldbeschriftung, Hilfstext, Badge |
+| `type-label-strong` | 12 | 600 | 1.3333 | +0.01em | Spaltenkopf, Registerreiter |
+| `type-code` | 14 | 400 | 1.4286 | 0 | TL-Script, XML, Stacktrace |
+
+Neun Klassen aus sechs Größen und zwei Gewichten. Mehr Gewichte gibt es nicht — Inter liefert nur
+Regular und SemiBold, das ist eine Feststellung, keine Entscheidung.
+
+Die Laufweite folgt einer Regel statt dem Gefühl: **kleine Größen laufen weiter, große enger.** Bei
+12 px öffnet `+0.01em` das Wortbild, bei 24 und 32 px schließt negatives Tracking die Lücken, die
+bei großer Darstellung auffallen. Zwischen 14 und 20 px bleibt sie unverändert.
+
+**Zahlen sind eine Eigenschaft, keine eigene Klasse.** Jede Klasse kennt einen numerischen Zustand,
+der `font-feature-settings: "tnum" 1, "zero" 1` setzt — tabellarische Ziffern und geschlitzte Null.
+**In Tabellenspalten mit Zahlen ist er Pflicht, nicht Option.** Heute nutzt TopLogic
+`tabular-nums` genau zweimal, in einem Countdown und einem Label, und nicht in der Datentabelle —
+die Zahlenspalten fluchten also nicht. Inter trägt beide Merkmale, sie sind nur nie eingeschaltet
+worden.
+
+#### Die Familien
+
+| | Stack |
+|---|---|
+| `--font-family` | `'Inter', ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif` |
+| `--font-family-mono` | `'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace` |
+
+**Beide Familien werden lokal ausgeliefert**, wie Inter heute in `ext.com.inter.fonts`. Kein CDN,
+keine Google-Fonts-Einbindung — TopLogic läuft in Installationen ohne Internetzugang, und eine
+Schrift, die von außen nachgeladen wird, ist ein Datenschutz- und ein Verfügbarkeitsproblem
+zugleich.
+
+Zwei Fehler im Bestand, die dabei mitfallen:
+
+* **`font-family: 'Inter'` hat heute keinen Fallback** — keine generische Familie, kein Stack. Lädt
+  Inter nicht, rendert TopLogic in der Standardschrift des Browsers, also meist Times.
+* **`font-family-mono: monospace` ist keine Entscheidung**, sondern der Verzicht darauf. Auf Windows
+  bedeutet das Courier New. Für eine Plattform mit TL-Script-Editor, Konfigurations-XML und
+  Stacktraces ist das zu wenig — genutzt wird die Familie heute an genau einer Stelle
+  (`.tlViewError__detail`).
+
+**JetBrains Mono**, OFL, wegen der Zeichen, an denen TL-Script-Fehler entstehen: geschlitzte Null,
+unterscheidbares `l`/`1`/`I` und `O`/`0`. Die x-Höhe liegt über der von Inter, deshalb wird die
+Familie per `size-adjust` metrisch angeglichen, statt `type-code` eine Stufe kleiner zu setzen —
+dieselbe Technik, die Issue #12 für Kundenschriften vorsieht.
+
+#### Druck und Report
+
+TopLogic erzeugt PDFs und Exporte, und dort trägt keine der obigen Größen: `rem` hat im Druck keine
+Wurzel, und 14 px sind auf Papier weder eine Größe noch eine Aussage über Lesbarkeit.
+
+Die Druckklassen rechnen deshalb in **pt** und bilden eine eigene, kürzere Leiter — Papier braucht
+weniger Abstufung als eine Oberfläche, weil es keine Bedienelemente hat:
+
+| Klasse | Größe | Gewicht | Zeilenhöhe |
+|---|---|---|---|
+| `print-title` | 18pt | 600 | 1.25 |
+| `print-heading` | 12pt | 600 | 1.35 |
+| `print-body` | 10pt | 400 | 1.4 |
+| `print-caption` | 8pt | 400 | 1.35 |
+
+`print-caption` darf die 12-px-Untergrenze unterschreiten, weil sie für den Bildschirm gilt: Papier
+hat eine höhere Auflösung und keinen Zoom-Ersatz nötig. Zahlen im Druck tragen `tnum` ohne Ausnahme.
+
+#### Was daraus folgt
+
+Das Gate bekommt eine Regel mehr: **Ein `font-size` oder `font-weight` außerhalb einer Klasse ist
+ein Verstoß.** Ohne sie wandert die nächste Komponente wieder auf `.72rem`, so wie es der
+Größenbefund oben für sieben Werte zwischen 9 und 11,52 px zeigt.
 
 ---
 
