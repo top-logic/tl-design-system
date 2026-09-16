@@ -8,6 +8,19 @@ dokumentiert ist, sondern weil alles andere nicht durch CI kommt.
 
 > *„Anything you put in a doc is a probability, not a guarantee."*
 
+## Werkzeuge
+
+```bash
+cd specimen
+node inventar.mjs      # das ausgelieferte CSS auszählen
+node generieren.mjs    # skala.css aus skala.json erzeugen
+node --test            # alle Gates prüfen
+node serve.mjs         # Specimen auf http://localhost:8137/
+```
+
+Jede Zahl in `docs/` stammt aus `inventar.mjs` und wird gegen das echte Stylesheet gehalten.
+Details in [`CLAUDE.md`](CLAUDE.md).
+
 ## Die eine nicht verhandelbare Regel
 
 **Jeder Design-Wert in TopLogic wird hier definiert. Keine Fremdpaletten. Keine Fallbacks.**
