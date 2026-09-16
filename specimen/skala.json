@@ -38,10 +38,10 @@
       "support-success-border": "#36A376",
       "support-success-surface": "#3DA97B",
       "support-success-subtle": "#DCF8E9",
-      "support-info-text": "#216EE8",
-      "support-info-border": "#4C8FFF",
-      "support-info-surface": "#1C69E3",
-      "support-info-subtle": "#E8F1FF"
+      "support-info-text": "#007F92",
+      "support-info-border": "#159FB6",
+      "support-info-surface": "#33C1DB",
+      "support-info-subtle": "#CEF3FB"
     },
     "dunkel": {
       "background": "#16181B",
@@ -80,10 +80,10 @@
       "support-success-border": "#00734D",
       "support-success-surface": "#60C99A",
       "support-success-subtle": "#0C2319",
-      "support-info-text": "#307CF8",
-      "support-info-border": "#0C5DD6",
-      "support-info-surface": "#448BFF",
-      "support-info-subtle": "#0C1D3A"
+      "support-info-text": "#008DA2",
+      "support-info-border": "#006E80",
+      "support-info-surface": "#33C1DB",
+      "support-info-subtle": "#002830"
     }
   },
   "mass": {
@@ -130,12 +130,28 @@
       "ausloeser": ":focus-visible"
     },
     "control-height": {
-      "standard": { "control": "2rem", "control-sm": "1.5rem", "row": "2.25rem" },
-      "kompakt": { "control": "1.75rem", "control-sm": "1.5rem", "row": "2rem" }
+      "standard": {
+        "control": "2rem",
+        "control-sm": "1.5rem",
+        "row": "2.25rem"
+      },
+      "kompakt": {
+        "control": "1.75rem",
+        "control-sm": "1.5rem",
+        "row": "2rem"
+      }
     },
     "dichte-polsterung": {
-      "standard": { "x": "space-12", "y": "space-8", "gap": "space-16" },
-      "kompakt": { "x": "space-8", "y": "space-4", "gap": "space-12" }
+      "standard": {
+        "x": "space-12",
+        "y": "space-8",
+        "gap": "space-16"
+      },
+      "kompakt": {
+        "x": "space-8",
+        "y": "space-4",
+        "gap": "space-12"
+      }
     }
   },
   "familie": {
@@ -143,22 +159,80 @@
     "mono": "'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace"
   },
   "typo": {
-    "type-display":     { "familie": "sans", "groesse": "display",    "gewicht": 600, "zeilenhoehe": 1.25,   "laufweite": "-0.01em" },
-    "type-heading-lg":  { "familie": "sans", "groesse": "heading-lg", "gewicht": 600, "zeilenhoehe": 1.3333, "laufweite": "-0.005em" },
-    "type-heading-md":  { "familie": "sans", "groesse": "heading-md", "gewicht": 600, "zeilenhoehe": 1.4,    "laufweite": "0" },
-    "type-heading-sm":  { "familie": "sans", "groesse": "heading-sm", "gewicht": 600, "zeilenhoehe": 1.5,    "laufweite": "0" },
-    "type-body":        { "familie": "sans", "groesse": "body",       "gewicht": 400, "zeilenhoehe": 1.4286, "laufweite": "0" },
-    "type-body-strong": { "familie": "sans", "groesse": "body",       "gewicht": 600, "zeilenhoehe": 1.4286, "laufweite": "0" },
-    "type-label":       { "familie": "sans", "groesse": "label",      "gewicht": 400, "zeilenhoehe": 1.3333, "laufweite": "0.01em" },
-    "type-label-strong":{ "familie": "sans", "groesse": "label",      "gewicht": 600, "zeilenhoehe": 1.3333, "laufweite": "0.01em" },
-    "type-code":        { "familie": "mono", "groesse": "body",       "gewicht": 400, "zeilenhoehe": 1.4286, "laufweite": "0" }
+    "type-display": {
+      "familie": "sans",
+      "groesse": "display",
+      "gewicht": 600,
+      "zeilenhoehe": 1.25,
+      "laufweite": "-0.01em"
+    },
+    "type-heading-lg": {
+      "familie": "sans",
+      "groesse": "heading-lg",
+      "gewicht": 600,
+      "zeilenhoehe": 1.3333,
+      "laufweite": "-0.005em"
+    },
+    "type-heading-md": {
+      "familie": "sans",
+      "groesse": "heading-md",
+      "gewicht": 600,
+      "zeilenhoehe": 1.4,
+      "laufweite": "0"
+    },
+    "type-heading-sm": {
+      "familie": "sans",
+      "groesse": "heading-sm",
+      "gewicht": 600,
+      "zeilenhoehe": 1.5,
+      "laufweite": "0"
+    },
+    "type-body": {
+      "familie": "sans",
+      "groesse": "body",
+      "gewicht": 400,
+      "zeilenhoehe": 1.4286,
+      "laufweite": "0"
+    },
+    "type-body-strong": {
+      "familie": "sans",
+      "groesse": "body",
+      "gewicht": 600,
+      "zeilenhoehe": 1.4286,
+      "laufweite": "0"
+    },
+    "type-label": {
+      "familie": "sans",
+      "groesse": "label",
+      "gewicht": 400,
+      "zeilenhoehe": 1.3333,
+      "laufweite": "0.01em"
+    },
+    "type-label-strong": {
+      "familie": "sans",
+      "groesse": "label",
+      "gewicht": 600,
+      "zeilenhoehe": 1.3333,
+      "laufweite": "0.01em"
+    },
+    "type-code": {
+      "familie": "mono",
+      "groesse": "body",
+      "gewicht": 400,
+      "zeilenhoehe": 1.4286,
+      "laufweite": "0"
+    }
   },
   "zahlen": {
     "_": "In Zahlenspalten Pflicht, nicht Option.",
     "font-feature-settings": "\"tnum\" 1, \"zero\" 1"
   },
   "motion": {
-    "duration": { "fast": "100ms", "base": "150ms", "slow": "250ms" },
+    "duration": {
+      "fast": "100ms",
+      "base": "150ms",
+      "slow": "250ms"
+    },
     "easing": {
       "standard": "cubic-bezier(0.2, 0, 0.38, 0.9)",
       "entrance": "cubic-bezier(0, 0, 0.38, 0.9)",
@@ -180,9 +254,25 @@
   },
   "druck": {
     "_": "rem hat im Druck keine Wurzel. Eigene Leiter in pt.",
-    "print-title":   { "groesse": "18pt", "gewicht": 600, "zeilenhoehe": 1.25 },
-    "print-heading": { "groesse": "12pt", "gewicht": 600, "zeilenhoehe": 1.35 },
-    "print-body":    { "groesse": "10pt", "gewicht": 400, "zeilenhoehe": 1.4 },
-    "print-caption": { "groesse": "8pt",  "gewicht": 400, "zeilenhoehe": 1.35 }
+    "print-title": {
+      "groesse": "18pt",
+      "gewicht": 600,
+      "zeilenhoehe": 1.25
+    },
+    "print-heading": {
+      "groesse": "12pt",
+      "gewicht": 600,
+      "zeilenhoehe": 1.35
+    },
+    "print-body": {
+      "groesse": "10pt",
+      "gewicht": 400,
+      "zeilenhoehe": 1.4
+    },
+    "print-caption": {
+      "groesse": "8pt",
+      "gewicht": 400,
+      "zeilenhoehe": 1.35
+    }
   }
 }

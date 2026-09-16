@@ -391,3 +391,20 @@ export function rampeAnwenden(tokens, rampeModus) {
     'icon-on-color': beschriftung,
   };
 }
+
+/**
+ * Abstand zweier Farben im Farbton, in Grad (0 bis 180).
+ *
+ * Für getönte Flächen ist das WCAG-Kontrastverhältnis das falsche Maß: Es
+ * misst Helligkeit. Zwei Flächen gleicher Helligkeit erreichen immer rund
+ * 1,0 — auch wenn die eine blau und die andere orange ist. Ob zwei Tönungen
+ * als verschieden gelesen werden, entscheidet der Farbton.
+ */
+export function farbtonAbstand(hexA, hexB) {
+  const a = hexZuOklch(hexA), b = hexZuOklch(hexB);
+  const grad = ((a.H - b.H) * 180) / Math.PI;
+  return Math.abs(((grad % 360) + 540) % 360 - 180);
+}
+
+/** Ab diesem Farbtonabstand lesen sich zwei getönte Flächen als verschieden. */
+export const FARBTON_ABSTAND_MIN = 30;

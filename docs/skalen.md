@@ -154,14 +154,17 @@ Wert wäre beim nächsten Ton wieder falsch und in jedem Kunden-Theme erst recht
 zwei Gegenproben: Ein sehr heller Ton (`#F5E663`) schaltet **beide** Modi auf dunkle Schrift, ein
 sehr dunkler (`#1A0F3D`) beide auf weiße.
 
-### Offene Folge: ein Token kann nicht zwei Flächen bedienen
+### Offen
 
-Mit der abgeleiteten Beschriftung sank die Zahl der Verstöße im Dunkelmodus von 7 auf 5 — vier
-markenbezogene verschwanden, zwei neue kamen: `text-on-color` auf `button-danger` und
-`button-danger-hover`.
+**Alle Skalen sind entschieden, und die letzte offene Folge ist aufgelöst.**
 
-| Fläche im Dunkelmodus | weiße Schrift | dunkle Schrift |
-|---|---|---|
+Was aussteht, gehört zur Umsetzung, nicht zur Entscheidung:
+
+| | |
+|---|---|
+| `disabled`-Rollen | `text-disabled`, `icon-disabled`, `field-disabled`, `button-disabled` sind von WCAG ausgenommen und deshalb nie abgeleitet worden. Sie fehlen noch in `skala.json`. |
+
+---|---|---|
 | `button-primary` `#5A9AFF` (hell) | 2,80 ✗ | **6,75 ✓** |
 | `button-danger` `#D3181B` (dunkel) | **5,36 ✓** | 3,52 ✗ |
 | `button-danger-hover` `#BC1518` | **6,44 ✓** | 2,93 ✗ |
@@ -348,10 +351,10 @@ Vier Bedeutungen — Fehler, Warnung, Erfolg, Info — mit je vier Rollen.
 | | `border` | `#36A376` | `#00734D` | 3,02 / 3,01 |
 | | `surface` | `#3DA97B` | `#60C99A` | Beschriftung dunkel 5,75 / 8,29 |
 | | `subtle` | `#DCF8E9` | `#0C2319` | 14,99 / 14,88 |
-| **Info** | `text` | `#216EE8` | `#307CF8` | 4,51 / 4,54 |
-| | `border` | `#4C8FFF` | `#0C5DD6` | 3,01 / 3,01 |
-| | `surface` | `#1C69E3` | `#448BFF` | Beschriftung weiß 5,02 / dunkel 5,13 |
-| | `subtle` | `#E8F1FF` | `#0C1D3A` | 14,83 / 15,08 |
+| **Info** | `text` | `#007F92` | `#008DA2` | 4,52 / 4,52 |
+| | `border` | `#159FB6` | `#006E80` | 3,02 / 3,00 |
+| | `surface` | `#33C1DB` | `#33C1DB` | Beschriftung dunkel 7,87 / 7,87 |
+| | `subtle` | `#CEF3FB` | `#002830` | 14,34 / 14,03 |
 
 **Die Regel, wann welche Rolle gilt:**
 
@@ -797,17 +800,24 @@ Die letzte Zeile ist Absicht: Eine getönte Fläche soll sich abheben, ohne eine
 
 **Eine volle Rampe mit zehn Stufen schied aus.** Die Hälfte hätte keine Aufgabe, und ein Token ohne Aufgabe ist genau die Beliebigkeit, die dieses System abstellen soll. Für Diagrammfarben, das übliche Argument für lange Rampen, gibt es im React-Theme bislang keine Tokens.
 
-#### Offene Folge: Marke und Info belegen denselben Farbraum
+#### Gelöst: Info verlässt den Markenton
 
-`brand-subtle` und `support-info-subtle` unterscheiden sich um **1,06** — hell wie dunkel. Praktisch heißt das: **Ein markig getönter Reiter und ein Info-Hinweis sehen gleich aus.**
+`brand-subtle` und `support-info-subtle` waren nicht zu unterscheiden — beide Blau, beide hell, beide wenig gesättigt. **Ein markig getönter Reiter und ein Info-Hinweis sahen gleich aus**, hell wie dunkel.
 
-Das ist kein falsch gewählter Wert, sondern strukturell: Die Marke ist blau, und Info ist es auch. Drei Auswege stehen offen, und keiner davon gehört in die Rahmen- oder Markenentscheidung:
+**Das Maß dafür war zuerst falsch gewählt.** Notiert stand ein Kontrastverhältnis von 1,06, und daraus ließ sich nichts schließen: **Das WCAG-Verhältnis misst Helligkeit.** Zwei gleich helle Flächen erreichen immer rund 1,0 — auch wenn die eine blau und die andere orange ist. Der Gegencheck machte es sichtbar: Ein türkiser Kandidat, deutlich anders aussehend, kam auf 1,02 und damit auf einen noch *kleineren* Wert.
 
-1. Info wechselt den Farbton — weg vom Markenton, etwa ins Türkise.
-2. Info verzichtet auf die getönte Fläche und tritt nur als Text, Rahmen und gefüllte Fläche auf.
-3. Beide bleiben, unterschieden allein durch das Symbol davor — schwach, weil Farbe schneller gelesen wird als ein Icon.
+Das richtige Maß ist der **Farbtonabstand**:
 
-**Zu entscheiden, sobald beide Flächen im Specimen nebeneinander stehen.** Vorher wäre es eine Vermutung darüber, wie groß der Unterschied wirkt.
+| | ΔH |
+|---|---|
+| `brand-subtle` ↔ `support-info-subtle`, vorher | **1,5°** |
+| `info-subtle` ↔ `success-subtle` | 96,8° |
+| `info-subtle` ↔ `warning-subtle` | 173,3° |
+| `brand-subtle` ↔ `support-info-subtle`, **jetzt** | **48,5°** hell, 45,2° dunkel |
+
+**Info wandert ins Türkise.** Es bleibt kühl und damit als neutrale Mitteilung lesbar, kollidiert aber nicht mehr mit der Marke. Alle vier Rollen sind nach demselben Prinzip abgeleitet wie die Neutralen — jede Stufe ist der hellste Wert, der ihre Anforderung noch erfüllt.
+
+**Das Gate hat jetzt eine Regel mehr:** Getönte Flächen verschiedener Bedeutung müssen **mindestens 30° im Farbton** auseinanderliegen. Ohne sie wäre dieser Fehler beim nächsten Markenton wieder möglich — und genau das war er: kein falscher Wert, sondern eine fehlende Prüfung.
 
 ---
 

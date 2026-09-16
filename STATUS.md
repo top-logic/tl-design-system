@@ -9,19 +9,21 @@
 **Stufe A läuft.** Die Maschinerie steht und ist geprüft. Offen sind noch Fokus, Motion, Dichte und
 die Komponenten-Maße, dazu zwei Restfragen: die Stufenzahl der Markenrampe und die Rahmenbreiten.
 
-**Stufe A ist inhaltlich am Ziel — alle elf Skalen sind entschieden.**
+**Stufe A ist abgeschlossen. Stufe B läuft.**
 
-Offen ist genau ein Punkt, und er lässt sich nicht am Schreibtisch klären: **`brand-subtle` und `support-info-subtle` trennen 1,06.** Ein markig getönter Reiter und ein Info-Hinweis sehen gleich aus, hell wie dunkel. Drei Auswege stehen in `skalen.md`; die Wahl braucht beide Flächen nebeneinander im Specimen.
+Was steht: `specimen/skala.json` hält den entschiedenen Soll-Zustand, `specimen/generieren.mjs` macht daraus `skala.css` (247 Zeilen, 135 Custom Properties), und zwei Testdateien sind das Gate dazu — **38 Tests, alle grün** (`cd specimen && node --test`).
 
-Danach beginnt **Stufe B**: die Skalen als Tokens ins Specimen, dann in die Anwendung. Nichts von Stufe A ist bisher im Specimen hinterlegt — weder die Typo-Klassen noch Radius, Fokus, Motion, Abstände oder Dichte. JetBrains Mono ist gewählt, aber nicht ausgeliefert.
+Nächster Schritt: die erzeugte `skala.css` gegen die Fragmente der laufenden Demo-App stellen, damit die Skala zum ersten Mal an echten Komponenten zu sehen ist.
 
-Offene Befunde für Stufe B, alle in dieser Sitzung gefunden:
+Offene Befunde für die Umsetzung:
 
+* Die vier `disabled`-Rollen fehlen in `skala.json` — von WCAG ausgenommen und deshalb nie abgeleitet.
 * **22× `outline: none`** ohne erkennbaren Ersatz — Kandidaten für fehlenden Fokus (WCAG 2.4.7).
 * **`overflow: hidden`** an Behältern mit fokussierbaren Kindern beschneidet den äußeren Fokusring.
 * **`--shadow-raised`** liegt auf vier Stellen, die nicht schweben; das Token entfällt ersatzlos.
 * **Drei Dichte-Modifier** in Stack, Grid und Card, die nichts voneinander wissen.
 * **`font-family: 'Inter'`** ohne Fallback, **`font-family-mono: monospace`** ohne gewählte Schrift.
+* JetBrains Mono ist gewählt, aber nicht ausgeliefert — es gibt noch kein Modul dafür.
 
 **Arbeitsweise, festgehalten am 2026-09-16:** Der Bestand ist kein Maßstab. Inventar erheben als
 Befund — entscheiden dann gegen den Befund, nicht aus ihm. Vor jeder Skala fragen, ob sie für eine
@@ -71,6 +73,7 @@ Schriftumschalter, unten das Gate-Panel.
 | Einheiten | `rem` für alles Skalierende, `px` nur für Linien |
 | Rahmenbreiten | zwei: 1 px und 2 px; der breite Balken ist kein Rahmen, sondern `accent-bar` |
 | Markenrampe | keine Stufen, zwei neue Rollen: `brand-subtle` und `brand-subtle-hover` |
+| Info-Ton | türkis statt blau — ΔH 48,5° zur Marke, sonst sehen die getönten Flächen gleich aus |
 
 ## Was das Gate gefunden hat
 

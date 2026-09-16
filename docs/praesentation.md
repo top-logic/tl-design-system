@@ -358,21 +358,25 @@ Umgekehrt soll eine 1-px-Trennlinie eine Linie bleiben und nicht bei großer Sch
 
 ---
 
-## 22 · Ein Befund zum Schluss
+## 22 · Ein Befund, und ein falsches Maß
 
-**`brand-subtle` und `support-info-subtle` unterscheiden sich um 1,06.**
+**Marke und Info sahen gleich aus** — ein markig getönter Reiter und ein Info-Hinweis, hell wie dunkel nicht zu unterscheiden.
 
-Im Klartext: **Ein markig getönter Reiter und ein Info-Hinweis sehen gleich aus** — hell wie dunkel.
+**Zuerst war das Maß falsch gewählt.** Notiert stand ein Kontrastverhältnis von 1,06 — daraus lässt sich nichts schließen, denn **das WCAG-Verhältnis misst Helligkeit.** Zwei gleich helle Flächen kommen immer auf rund 1,0, auch blau gegen orange. Der Gegencheck machte es sichtbar: Ein deutlich anders aussehender türkiser Kandidat kam auf 1,02 — einen noch kleineren Wert.
 
-Das ist kein falsch gewählter Wert, sondern strukturell: Die Marke ist blau, und Info ist es auch. Drei Auswege stehen offen:
+Das richtige Maß ist der **Farbtonabstand**:
 
-1. Info wechselt den Farbton, weg vom Markenton.
-2. Info verzichtet auf die getönte Fläche.
-3. Beide bleiben, unterschieden nur durch das Symbol — schwach, weil Farbe schneller gelesen wird als ein Icon.
+| | ΔH |
+|---|---|
+| Marke ↔ Info, vorher | **1,5°** |
+| Info ↔ Erfolg | 96,8° |
+| Marke ↔ Info, **jetzt** | **48,5°** |
 
-**Zu entscheiden, sobald beide Flächen im Specimen nebeneinander stehen.** Vorher wäre es eine Vermutung darüber, wie groß der Unterschied wirkt.
+**Info wandert ins Türkise** und bleibt damit kühl, ohne mit der Marke zu kollidieren.
 
-> Sprechnotiz: Genau so sind auch die zehn Kontrastverstöße gefunden worden — durch Nebeneinanderlegen und Nachrechnen, nicht durch Hinsehen.
+**Und das Gate bekommt eine Regel mehr:** Getönte Flächen verschiedener Bedeutung müssen mindestens 30° im Farbton auseinanderliegen.
+
+> Sprechnotiz: Das war kein falscher Wert, sondern eine fehlende Prüfung — genau der Unterschied, um den es in diesem Projekt geht.
 
 ---
 

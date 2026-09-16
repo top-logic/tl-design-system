@@ -129,3 +129,18 @@ test('Schatten trägt nur, was schwebt — drei Stufen je Modus', () => {
   }
   assert.ok(!JSON.stringify(skala).includes('shadow-raised'), 'shadow-raised entfällt ersatzlos');
 });
+
+test('getönte Flächen verschiedener Bedeutung trennen sich im Farbton', async () => {
+  // Nicht im Kontrast: Der misst Helligkeit, und zwei gleich helle Tönungen
+  // erreichen immer rund 1,0 — auch blau gegen orange. Getrennt wird im Ton.
+  const { farbtonAbstand, FARBTON_ABSTAND_MIN } = await import('./brand.mjs');
+  const getoent = ['brand-subtle', 'support-error-subtle', 'support-warning-subtle',
+                   'support-success-subtle', 'support-info-subtle'];
+  for (const modus of MODI)
+    for (let i = 0; i < getoent.length; i++)
+      for (let j = i + 1; j < getoent.length; j++) {
+        const abstand = farbtonAbstand(skala.farbe[modus][getoent[i]], skala.farbe[modus][getoent[j]]);
+        assert.ok(abstand >= FARBTON_ABSTAND_MIN,
+          `${modus}: ${getoent[i]} und ${getoent[j]} trennen nur ${abstand.toFixed(1)}° — sie sehen gleich aus`);
+      }
+});
