@@ -11,8 +11,7 @@ Stylesheet gemessen, nicht geschätzt.
 **TopLogic 8 bekommt ein Design System — Regeln statt Einzelwerte.**
 
 * Heute entscheidet jede Komponente ihre Farben, Größen und Abstände selbst.
-* Das Ergebnis ist kein Stilproblem, sondern ein Qualitätsproblem: Kontrastverstöße, unlesbare
-  Zustände, Oberflächen, die auf jedem Rechner anders aussehen.
+* Das Ergebnis ist kein Stilproblem, sondern ein Qualitätsproblem: Kontrastverstöße, unlesbare Zustände, Oberflächen, die auf jedem Rechner anders aussehen.
 * Stufe A legt die Skalen fest. Stufe B setzt sie in der Anwendung um.
 
 > Sprechnotiz: Nicht „schöner machen" — überprüfbar machen.
@@ -71,12 +70,9 @@ Stylesheet gemessen, nicht geschätzt.
 
 **Drei Regeln, die für jede Entscheidung gelten.**
 
-1. **Der Bestand ist kein Maßstab.** Dass ein Wert 48-mal vorkommt, belegt nur, dass niemand
-   entschieden hat. Inventar dient als Befund — entschieden wird dagegen.
-2. **Jede Regel muss prüfbar sein.** Eine Skala ohne Gate wird bei der nächsten Komponente wieder
-   umgangen.
-3. **Werte werden abgeleitet, nicht geschrieben.** Beschriftungsfarben, Kontraste und Rampen rechnet
-   das System aus — ein fester Wert ist beim nächsten Markenton wieder falsch.
+1. **Der Bestand ist kein Maßstab.** Dass ein Wert 48-mal vorkommt, belegt nur, dass niemand entschieden hat. Inventar dient als Befund — entschieden wird dagegen.
+2. **Jede Regel muss prüfbar sein.** Eine Skala ohne Gate wird bei der nächsten Komponente wieder umgangen.
+3. **Werte werden abgeleitet, nicht geschrieben.** Beschriftungsfarben, Kontraste und Rampen rechnet das System aus — ein fester Wert ist beim nächsten Markenton wieder falsch.
 
 ---
 
@@ -153,8 +149,7 @@ Schrift, nicht das hartkodierte Weiß mit 3,17.
 
 **Dark ist eine zweite vollständige Palette. Nichts wird geerbt.**
 
-Grund: Alle acht Dunkel-Verstöße waren Vererbungsfehler — jemand überschrieb 36 Werte und übersah
-den siebenunddreißigsten.
+Grund: Alle acht Dunkel-Verstöße waren Vererbungsfehler — jemand überschrieb 36 Werte und übersah den siebenunddreißigsten.
 
 **Elevation: Fläche plus Schatten.**
 
@@ -163,8 +158,7 @@ den siebenunddreißigsten.
 | Höhe wird getragen von | dem **Rahmen** | der **Fläche** |
 | Schatten | nur was schwebt | nur was schwebt |
 
-**Schatten bekommt ausschließlich, was über der Oberfläche liegt** — Popover, Dialog, Toast. Der
-Bestand verletzt das vierfach; `--shadow-raised` liegt heute auf Tabellenzeilen. Eine Tabellenzeile
+**Schatten bekommt ausschließlich, was über der Oberfläche liegt** — Popover, Dialog, Toast. Der Bestand verletzt das vierfach; `--shadow-raised` liegt heute auf Tabellenzeilen. Eine Tabellenzeile
 schwebt nicht.
 
 ---
