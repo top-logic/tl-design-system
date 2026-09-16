@@ -38,3 +38,19 @@ Attrappe.
 
 Der Sieger aus diesem Specimen wird vor Stufe B einmal in der echten Demo-App gegengeprüft,
 nicht nur im Specimen selbst.
+
+## Werkzeuge
+
+| Aufruf | Was es tut |
+|---|---|
+| `node --test` | alles prüfen — 63 Tests |
+| `node inventar.mjs` | das ausgelieferte CSS auszählen (`--json` für die Rohdaten) |
+| `node generieren.mjs` | `skala.css` aus `skala.json` neu erzeugen |
+| `node serve.mjs` | Specimen auf `http://localhost:8137/` |
+
+`skala.json` hält den **entschiedenen Soll-Zustand** in zwei Schichten: `primitiv` trägt die
+Werte, alles darüber nur Referenzen. `tokens.json` daneben hält den **Ist-Zustand** des
+ausgelieferten Themes.
+
+Das Inventar erwartet den Worktree unter `~/git/tl8-wt-29584` oder in `TL_WORKTREE`. Fehlt er,
+werden die Beleg-Tests übersprungen statt zu scheitern.
