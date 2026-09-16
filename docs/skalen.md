@@ -383,3 +383,37 @@ Zum Vergleich zeigt die Typo-Probe beide Reihen:
 |---|---|---|---|
 | heute: feste Höhe | 33 px | 33 px | 33 px |
 | abgeleitet aus der Schriftgröße | 30,59 px | 31,38 px | 32,19 px |
+
+### Die Schriftgrößen liegen auf drei Werten und einem Schwanz
+
+Alle 113 `font-size`-Deklarationen der beiden React-Stylesheets, die fünf Carbon-Tokens auf ihre
+Werte aus `tl-react-theme.config.xml` aufgelöst, in px bei 16 px Wurzelgröße:
+
+| px | Deklarationen | Herkunft |
+|---|---|---|
+| 9 | 3 | Literal |
+| 10 | 3 | Literal |
+| 10,40 · 10,88 · 11 · 11,20 · 11,52 | 1 · 1 · 2 · 3 · 4 | Literale, `rem` mit drei Nachkommastellen |
+| **12** | **21** | 13× `--label-01-font-size`, 8× Literal |
+| 12,80 | 1 | Literal |
+| **13** | **8** | nur Literale — kein Token |
+| **14** | **48** | 33× `--body-compact-01`, 8× `--heading-compact-02`, 7× Literal |
+| 16 | 7 | 2× `--heading-compact-03`, 5× Literal |
+| 17,60 | 1 | Literal |
+| 18 | 2 | Literal |
+| 20 | 4 | 1× `--heading-03`, 3× Literal |
+| 24 · 32 | 1 · 1 | Literal |
+
+Zwei weitere Deklarationen sind relativ (`inherit`, `0.875em`) und nicht umrechenbar.
+
+**Drei Werte tragen 69 %** der Oberfläche: 14, 12 und 13 px. Darüber stehen fünf Größen mit
+zusammen neun Vorkommen — eine Überschriftenskala, die nie als solche gebaut wurde.
+
+**Darunter liegt der eigentliche Befund:** 17 Deklarationen verteilen sich auf **sieben**
+verschiedene Werte zwischen 9 und 11,52 px. Keiner davon hat ein Token, und keiner unterscheidet
+sich vom Nachbarn um mehr als ein halbes Pixel — `.65rem`, `.68rem`, `.7rem`, `.72rem` stehen in
+denselben Kalendarkomponenten nebeneinander (`.tlCalMore`, `.tlCalEventTime`, `.tlCalChip`). Das
+sind keine Stufen, das sind Einzelfallentscheidungen, die nacheinander getroffen wurden.
+
+Die Skala muss diesen Schwanz auf **eine** Stufe abbilden. Wie viele Stufen es insgesamt werden und
+wo die kleinste liegt, ist damit die eigentliche Frage — nicht die Schrittweite.
