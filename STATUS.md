@@ -18,6 +18,7 @@ Nächster Schritt: die erzeugte `skala.css` gegen die Fragmente der laufenden De
 Offene Befunde für die Umsetzung:
 
 * Die vier `disabled`-Rollen fehlen in `skala.json` — von WCAG ausgenommen und deshalb nie abgeleitet.
+* **`.tlTableView__treeToggle` ist 20 × 20 px** und verstößt gegen WCAG 2.5.8; bei `.tlFormField__helpIcon` (20 px) ist zu prüfen, ob es bedienbar ist.
 * **22× `outline: none`** ohne erkennbaren Ersatz — Kandidaten für fehlenden Fokus (WCAG 2.4.7).
 * **`overflow: hidden`** an Behältern mit fokussierbaren Kindern beschneidet den äußeren Fokusring.
 * **`--shadow-raised`** liegt auf vier Stellen, die nicht schweben; das Token entfällt ersatzlos.
@@ -74,6 +75,7 @@ Schriftumschalter, unten das Gate-Panel.
 | Rahmenbreiten | zwei: 1 px und 2 px; der breite Balken ist kein Rahmen, sondern `accent-bar` |
 | Markenrampe | keine Stufen, zwei neue Rollen: `brand-subtle` und `brand-subtle-hover` |
 | Info-Ton | türkis statt blau — ΔH 48,5° zur Marke, sonst sehen die getönten Flächen gleich aus |
+| Icons | drei Stufen nach Rolle plus eine geschlossene Glyph-Ausnahme; die Trefferfläche ist eine Control-Höhe |
 
 ## Was das Gate gefunden hat
 

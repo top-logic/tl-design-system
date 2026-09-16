@@ -44,6 +44,7 @@ function massblock(mass, familie, motion) {
   for (const [n, w] of Object.entries(mass['line-height-px'])) z.push(zeile(`line-height-${n}`, alsVar(w)));
   for (const [n, w] of Object.entries(mass.space)) z.push(zeile(n, alsVar(w)));
   for (const [n, w] of Object.entries(mass.radius)) z.push(zeile(`radius-${n}`, alsVar(w)));
+  for (const [n, w] of Object.entries(mass['icon-size'])) z.push(zeile(`icon-size-${n}`, alsVar(w)));
   for (const [n, w] of Object.entries(mass['border-width'])) z.push(zeile(`border-width-${n}`, alsVar(w)));
   z.push(zeile('accent-bar', alsVar(mass['accent-bar'])));
   z.push(zeile('focus-width', alsVar(mass.focus.breite)));

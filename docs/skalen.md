@@ -846,6 +846,64 @@ Das richtige Maß ist der **Farbtonabstand**:
 
 **Das Gate hat jetzt eine Regel mehr:** Getönte Flächen verschiedener Bedeutung müssen **mindestens 30° im Farbton** auseinanderliegen. Ohne sie wäre dieser Fehler beim nächsten Markenton wieder möglich — und genau das war er: kein falscher Wert, sondern eine fehlende Prüfung.
 
+### Icons: drei Stufen nach Rolle, eine Ausnahme, und die Trefferfläche gehört nicht dazu
+
+**Der Mechanismus zuerst.** TopLogic-Icons sind Font-Glyphen: Ihre Größe ist eine `font-size`. Ohne Regel ist ein Icon deshalb so groß wie der Text, neben dem es zufällig steht.
+
+Gemessen an Regeln, deren Selektor ein Icon, einen Umschalter oder eine Ladeanzeige nennt: **22 Deklarationen auf acht Werten** — 10, 12, 13, 14, 16, 18, 20, 24 px. Der Beleg, dass niemand entschieden hat, sind die drei Ladeanzeigen: `.tlTreeView__spinner` misst 14 px, `.tlDropdownSelect__spinner` 20 px, `.tlIconSelect__spinner` 24 px. Dieselbe Sache, dreimal anders, und keine der drei Komponenten wusste von den anderen.
+
+| Token | Maß | px | Gilt für |
+|---|---|---|---|
+| `icon-size-sm` | `size-04` | 16 | **Der Regelfall.** Icon neben einer Beschriftung: Menüeintrag, Schaltfläche, Reiter, Tabellenzelle, Chip |
+| `icon-size-md` | `size-05` | 20 | **Das Icon ist das Bedienelement.** Symbolleiste, eingeklappte Sidebar — überall ohne Text daneben |
+| `icon-size-lg` | `size-06` | 24 | **Das Icon ist eine Aussage, keine Bedienung.** Dialogkopf, Vorschau, großer Statushinweis |
+| `icon-size-glyph` | `size-03` | 12 | Richtungszeichen **innerhalb** eines Controls |
+
+**Die Regel ist die Rolle, nicht die Größe:** *Steht Text daneben, gilt `sm`. Steht keiner daneben, gilt `md`. Wird nichts bedient, gilt `lg`.* Dieselbe Form wie die Radius- und die Rahmenregel.
+
+Drei Bestandswerte fallen zusammen: **18 → 20** (beide 18er stehen im Icon-Wähler neben einem 20er, der Unterschied ist unsichtbar), **14 → 16** (ein Icon ist kein Buchstabe — bei gleicher Zahl wirkt es kleiner als die Schrift, weil seine Zeichnung im Geviert liegt), **13 und 10 → 12** (für beide gibt es keinen Grund außer der Reihenfolge, in der sie geschrieben wurden).
+
+#### Ein Richtungszeichen ist kein Icon
+
+`icon-size-glyph` gilt für eine **geschlossene Liste**: Chevron am Baumknoten, Pfeil am Auswahlfeld, Sortierzeiger im Spaltenkopf, Ziehgriff. Diese Zeichen benennen nichts — sie zeigen eine Richtung an einem Control, das seine Bedeutung schon hat. Sie stehen neben 12 px starker Beschriftung, und ein 16-px-Pfeil würde den Text dominieren, den er begleitet.
+
+> *Ein Zeichen, das etwas benennt, ist ein Icon. Ein Zeichen, das eine Richtung anzeigt, ist ein Glyph.*
+
+Wer die Liste erweitern will, erweitert die Skala — nicht die Ausnahme.
+
+#### Die Trefferfläche ist nicht die Icon-Größe
+
+Das ist der eigentliche Mangel im Bestand, und er ist ein Mechanismusfehler. Zwei Baum-Umschalter mit derselben Aufgabe:
+
+| | Fläche |
+|---|---|
+| `.tlTableView__treeToggle` | **20 × 20 px** ✗ |
+| `.tlTreeView__toggle` | 24 × 24 px ✓ |
+| `.tlFormGroup__collapseToggle` | `1.5rem` = 24 px ✓ |
+
+**20 × 20 px unterschreitet die 24 CSS-Pixel aus WCAG 2.5.8** — dasselbe Argument, das in der Typo-Skala die 12-px-Untergrenze gesetzt hat. Nachgeprüft: Von neun quadratischen Flächen unter 24 px ist dies die **einzige bedienbare**; die übrigen sind Anzeigen, die der Norm nicht unterliegen. Bei `.tlFormField__helpIcon` (20 px) hängt es daran, ob es einen Tooltip öffnet — das ist bei der Umsetzung zu prüfen.
+
+**Die Skala bekommt dafür kein eigenes Token.** Eine Schaltfläche mit Icon ist ein Control und nimmt eine **Control-Höhe** aus der Dichte:
+
+| | Fläche | Icon |
+|---|---|---|
+| Icon-Schaltfläche, Standard | `2rem` / kompakt `1.75rem` | `icon-size-md` |
+| Icon-Schaltfläche, klein | `1.5rem` = 24 px | `icon-size-sm` |
+| Glyph im Control | keine eigene — das Control ist die Fläche | `icon-size-glyph` |
+
+Die kleine Control-Höhe liegt bei genau 24 px. **Solange eine Icon-Schaltfläche eine Control-Höhe nimmt, kann sie die Norm nicht verfehlen** — und der einzige Verstoß im Bestand ist genau der, der keine genommen hat.
+
+#### Zwei Eigenschaften, die zur Stufe gehören
+
+* **`line-height: 1` ist Pflicht.** Ein Font-Glyph erbt sonst die Zeilenhöhe des Fließtextes und macht die Zeile um ihre Differenz höher. Das steht in der Klasse, nicht in jeder Komponente.
+* **In einer Liste ist der Kasten quadratisch.** Font-Glyphen sind verschieden breit; ohne feste Breite fluchten die Beschriftungen einer Menü- oder Baumspalte nicht. Dieselbe Sorte Fehler wie die fehlenden Tabellenziffern, und derselbe einzeilige Ersatz.
+
+#### Was daraus folgt
+
+Das Gate bekommt drei Regeln: **eine `font-size` an einem Icon, die keine Icon-Stufe ist, ist ein Verstoß**; **ein fokussierbares Element mit Icon und ohne Beschriftung unter 24 × 24 px ist ein Verstoß**; und **kein Icon nimmt eine Schriftgrößen-Rolle** — `var(--heading-compact-03-font-size)` an einem Symbolleisten-Icon ergibt zufällig 16 px und zieht mit, sobald jemand die Überschriftengröße ändert.
+
+**Eine Nebenwirkung, die die Schichtung belegt:** `icon-size-md` brauchte 20 px, und die Maßleiter sprang von 16 auf 24. Der Wert wurde als `size-05` eingefügt, wodurch die früheren `size-05` bis `size-07` aufrückten — **ohne dass ein einziger Rollenname sich ändern musste.** `space-lg` heißt weiter `space-lg` und zeigt jetzt auf `size-06`.
+
 ---
 
 ## Offen

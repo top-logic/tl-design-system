@@ -79,9 +79,10 @@
       "size-02": "0.5rem",
       "size-03": "0.75rem",
       "size-04": "1rem",
-      "size-05": "1.5rem",
-      "size-06": "2rem",
-      "size-07": "3rem",
+      "size-05": "1.25rem",
+      "size-06": "1.5rem",
+      "size-07": "2rem",
+      "size-08": "3rem",
       "text-01": "0.75rem",
       "text-02": "0.875rem",
       "text-03": "1rem",
@@ -215,9 +216,9 @@
       "space-xs": "{size-02}",
       "space-sm": "{size-03}",
       "space-md": "{size-04}",
-      "space-lg": "{size-05}",
-      "space-xl": "{size-06}",
-      "space-2xl": "{size-07}"
+      "space-lg": "{size-06}",
+      "space-xl": "{size-07}",
+      "space-2xl": "{size-08}"
     },
     "radius": {
       "sm": "{corner-01}",
@@ -259,6 +260,12 @@
         "y": "var(--space-2xs)",
         "gap": "var(--space-sm)"
       }
+    },
+    "icon-size": {
+      "glyph": "{size-03}",
+      "sm": "{size-04}",
+      "md": "{size-05}",
+      "lg": "{size-06}"
     }
   },
   "familie": {

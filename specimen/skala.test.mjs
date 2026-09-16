@@ -147,3 +147,31 @@ test('getönte Flächen verschiedener Bedeutung trennen sich im Farbton', async 
           `${modus}: ${getoent[i]} und ${getoent[j]} trennen nur ${abstand.toFixed(1)}° — sie sehen gleich aus`);
       }
 });
+
+test('jede Icon-Stufe hat eine Aufgabe und ein Maß aus der Leiter', () => {
+  const stufen = Object.keys(skala.mass['icon-size']);
+  assert.deepEqual(stufen.sort(), ['glyph', 'lg', 'md', 'sm']);
+  for (const [name, wert] of Object.entries(skala.mass['icon-size'])) {
+    const px = parseFloat(wert) * 16;
+    assert.equal(px, Math.round(px), `icon-size-${name} = ${wert} ist kein ganzes Pixel`);
+    assert.ok(px >= 12, `icon-size-${name} unterschreitet 12 px`);
+  }
+});
+
+test('kein Icon nimmt eine Schriftgrößen-Rolle', () => {
+  // var(--heading-compact-03-font-size) an einem Icon ergibt zufällig 16 px
+  // und zieht mit, sobald jemand die Überschriftengröße ändert.
+  const schriftgroessen = new Set(Object.values(skala.mass['font-size']));
+  for (const [name, wert] of Object.entries(skala.mass['icon-size']))
+    assert.ok(!Object.keys(skala.mass['font-size']).includes(name) || !schriftgroessen.has(wert),
+      `icon-size-${name} hängt an einer Schriftgröße`);
+});
+
+test('die kleine Control-Höhe trägt die Trefferfläche aus WCAG 2.5.8', () => {
+  // Solange eine Icon-Schaltfläche eine Control-Höhe nimmt, kann sie die Norm
+  // nicht verfehlen. Der einzige Verstoß im Bestand ist der, der keine nimmt.
+  for (const dichte of ['standard', 'kompakt']) {
+    const px = parseFloat(skala.mass['control-height'][dichte]['control-sm']) * 16;
+    assert.ok(px >= 24, `${dichte}: control-sm = ${px}px unterschreitet die 24 CSS-Pixel`);
+  }
+});
