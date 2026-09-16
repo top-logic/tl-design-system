@@ -9,9 +9,16 @@
 **Stufe A läuft.** Die Maschinerie steht und ist geprüft. Offen sind noch Fokus, Motion, Dichte und
 die Komponenten-Maße, dazu zwei Restfragen: die Stufenzahl der Markenrampe und die Rahmenbreiten.
 
-Nächster Schritt: **Fokus** — Breite, Offset, Stil. Danach Motion und Dichte; die Dichte trägt
-jetzt mehr Gewicht, weil die Typo-Entscheidung ihr die Zeilenhöhe und die Polsterung zugewiesen
-hat.
+Nächster Schritt: **Fokus** — Breite, Offset, Stil. Der Bestand hat dafür drei verschiedene
+Schreibweisen nebeneinander (`inset 0 0 0 2px` plus `3px --focus-inset`, `0 0 0 2px --focus`, und
+einen eigenen `--focus-inset`), das Inventar dazu steht noch aus. Danach Motion und Dichte; die
+Dichte trägt jetzt mehr Gewicht, weil die Typo-Entscheidung ihr die Zeilenhöhe und die Polsterung
+zugewiesen hat.
+
+**Arbeitsweise, festgehalten am 2026-09-16:** Der Bestand ist kein Maßstab. Inventar erheben als
+Befund — entscheiden dann gegen den Befund, nicht aus ihm. Vor jeder Skala fragen, ob sie für eine
+Plattform in TopLogics Größe reicht. Die erste Typo-Fassung lief genau in diesen Fehler und wurde
+verworfen.
 
 Die Typo-Entscheidung steht in `docs/skalen.md`, aber **noch nicht im Specimen**: weder die sechs
 Größen noch die neun Klassen sind dort als Tokens hinterlegt oder an der Probe gezeigt. JetBrains
