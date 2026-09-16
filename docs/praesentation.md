@@ -380,7 +380,28 @@ Das richtige Maß ist der **Farbtonabstand**:
 
 ---
 
-## 23 · Zwei Schichten — und die Stelle für Kundenprojekte
+## 23 · Icons — und ein Verstoß, der dabei auffiel
+
+**Icons sind Font-Glyphen: Ihre Größe ist eine `font-size`.** Ohne Regel ist ein Icon so groß wie der Text, neben dem es zufällig steht. 22 Deklarationen auf acht Werten — und drei Ladeanzeigen messen **14, 20 und 24 px**, weil keine der drei Komponenten von den anderen wusste.
+
+| Stufe | px | Gilt für |
+|---|---|---|
+| `sm` | 16 | Text daneben — der Regelfall |
+| `md` | 20 | kein Text daneben, das Icon ist das Bedienelement |
+| `lg` | 24 | nicht bedienbar, eine Aussage |
+| `glyph` | 12 | Richtungszeichen **im** Control (geschlossene Liste) |
+
+> *Ein Zeichen, das etwas benennt, ist ein Icon. Ein Zeichen, das eine Richtung anzeigt, ist ein Glyph.*
+
+**Der eigentliche Fund ist ein anderer:** `.tlTableView__treeToggle` ist **20 × 20 px** und unterschreitet damit die 24 CSS-Pixel aus **WCAG 2.5.8**. Zwei andere Umschalter mit derselben Aufgabe haben 24 px — drei Komponenten haben je für sich entschieden, und eine hat falsch entschieden.
+
+**Die Lösung ist kein Wert, sondern ein Mechanismus:** Die Trefferfläche bekommt kein Icon-Token, sondern eine **Control-Höhe** aus der Dichte. Die kleine liegt bei genau 24 px — solange eine Icon-Schaltfläche eine nimmt, kann sie die Norm nicht verfehlen.
+
+> Sprechnotiz: Der einzige Verstoß im Bestand ist genau der, der keine Control-Höhe nimmt.
+
+---
+
+## 24 · Zwei Schichten — und die Stelle für Kundenprojekte
 
 **Der erste Entwurf schrieb Hex-Werte direkt an die Rollen — und reproduzierte genau den Befund, den er beseitigen sollte.**
 
@@ -402,7 +423,7 @@ Bei einem Markenwechsel wären vier Stellen nachzuziehen — und die vergessene 
 
 ---
 
-## 24 · Wie das geprüft wird
+## 25 · Wie das geprüft wird
 
 **Die Regeln stehen nicht nur im Dokument — sie laufen als Tests.** 63 Stück, `node --test`.
 
@@ -421,7 +442,7 @@ Bei einem Markenwechsel wären vier Stellen nachzuziehen — und die vergessene 
 
 ---
 
-## 25 · Stufe A ist am Ziel
+## 26 · Stufe A ist am Ziel
 
 **Alle elf Skalen sind entschieden und begründet.**
 
@@ -437,7 +458,7 @@ Bei einem Markenwechsel wären vier Stellen nachzuziehen — und die vergessene 
 
 ---
 
-## 26 · Wie es weitergeht
+## 27 · Wie es weitergeht
 
 **Stufe A — die Skalen festlegen und belegen.** *Abgeschlossen: alle elf entschieden.*
 

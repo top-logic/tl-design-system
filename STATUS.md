@@ -112,7 +112,7 @@ gewinnt — `text-on-color`, `border-subtle`, `support-warning`.
 ## Planung
 
 Arbeitspakete als Gitea-Issues: https://git.top-logic.com/hpe/tl-design-system/issues
-Präsentationsfassung: `docs/praesentation.md` — 25 Folien, alle Zahlen gemessen.
+Präsentationsfassung: `docs/praesentation.md` — 27 Folien, alle Zahlen gemessen.
 **Wird bei jeder Entscheidung mitgezogen**, zusammen mit `skalen.md` und dieser Datei.
 Spec: `docs/superpowers/specs/2026-09-15-style-overhaul-design.md`
 Umsetzungsplan Stufe A: `docs/superpowers/plans/2026-09-15-stufe-a-richtung.md`
