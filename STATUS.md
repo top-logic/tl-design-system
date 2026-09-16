@@ -6,10 +6,12 @@
 
 ## Wo anknüpfen
 
-**Stufe A läuft.** Die Maschinerie steht und ist geprüft; es fehlen noch fünf von elf Skalen.
+**Stufe A läuft.** Die Maschinerie steht und ist geprüft. Offen sind noch Fokus, Motion, Dichte und
+die Komponenten-Maße, dazu zwei Restfragen: die Stufenzahl der Markenrampe und die Rahmenbreiten.
 
-Nächster Schritt: **Radius** — zwei Stufen sind der Bestand, zu belegen ist, ob sie reichen. Danach
-Fokus, Motion, Dichte, Komponenten-Maße.
+Nächster Schritt: **Fokus** — Breite, Offset, Stil. Danach Motion und Dichte; die Dichte trägt
+jetzt mehr Gewicht, weil die Typo-Entscheidung ihr die Zeilenhöhe und die Polsterung zugewiesen
+hat.
 
 Die Typo-Entscheidung steht in `docs/skalen.md`, aber **noch nicht im Specimen**: weder die sechs
 Größen noch die neun Klassen sind dort als Tokens hinterlegt oder an der Probe gezeigt. JetBrains
@@ -43,6 +45,9 @@ Schriftumschalter, unten das Gate-Panel.
 | Typo-Klassen | neun Klassen statt blanker Größen; `tnum` in Zahlenspalten ist Pflicht |
 | Schriftfamilien | Inter + JetBrains Mono, beide lokal, beide mit Fallback-Stack |
 | Druck | eigene Leiter in `pt`, vier Klassen |
+| Radius | zwei Stufen (4/8 px) plus Pille und Kreis; bedient → sm, umschließt → md |
+| Elevation-Stufen | drei Schatten, und **nur** Schwebendes bekommt einen |
+| Helle Flächen | trennt der Rahmen, nicht der Schatten; `layer-overlay` neu |
 
 ## Was das Gate gefunden hat
 

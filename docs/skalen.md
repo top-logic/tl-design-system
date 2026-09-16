@@ -22,7 +22,68 @@ erzeugt kaum Kontur. Das heutige Dark-Theme erbt `rgba(0,0,0,…)` aus dem helle
 jede Elevation. Das ist kein falscher Wert, sondern der falsche Mechanismus.
 
 **Folge:** Die drei Elevationsstufen bekommen je eine zugehörige Flächenstufe. Die geerbten
-Schatten im Dark-Theme werden gegenstandslos und durch eigene, schwächere Werte ersetzt.
+Schatten im Dark-Theme werden gegenstandslos und durch eigene Werte ersetzt.
+
+#### Schatten bekommt nur, was wirklich schwebt
+
+Drei Flächenstufen — `background`, `layer-01`, `layer-02` — liegen *in* der Oberfläche. Sie werfen
+keinen Schatten. Einen Schatten bekommt ausschließlich, was **über** der Oberfläche liegt und sie
+verdeckt: Popover, Dropdown, Kontextmenü, Tooltip, Dialog, Toast, das Element am Ziehzeiger.
+
+Der Bestand hält sich nicht daran. `--shadow-raised` liegt heute auf:
+
+| Stelle | Warum das falsch ist |
+|---|---|
+| `.tlTableView__row--cursor` | Eine Tabellenzeile schwebt nicht. Der Cursor ist ein Zustand, keine Höhe. |
+| `.tlTableView__row--selected` | dito — Auswahl ist Fläche (`layer-selected`), nicht Elevation. |
+| `.tlCard--elevated` | Eine Karte liegt in der Oberfläche. Sie bekommt einen Rahmen. |
+| `.tlAppBar--elevated` | Eine Leiste ist Teil des Gerüsts, nichts schwebt darüber. |
+
+Übrig bleiben vier Stellen, die zu Recht einen Schatten tragen: `.tlDropdownSelect__dropdown`,
+`.tlColorInput__popup`, `.tlIconSelect__popup`, `.tl-tooltip-popover`. **`--shadow-raised` wird
+ersatzlos gestrichen** — es gibt keine Rolle mehr dafür.
+
+#### Die drei Stufen
+
+| Token | hell | dunkel | Gilt für |
+|---|---|---|---|
+| `shadow-popover` | `0 2px 8px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08)` | `0 2px 8px rgba(0,0,0,0.40)` | Dropdown, Kontextmenü, Tooltip, Popover |
+| `shadow-dialog` | `0 8px 24px rgba(0,0,0,0.16)` | `0 8px 24px rgba(0,0,0,0.56)` | Modaler Dialog, Drawer, Seitenpanel |
+| `shadow-drag` | `0 12px 32px rgba(0,0,0,0.20)` | `0 12px 32px rgba(0,0,0,0.64)` | Element am Ziehzeiger, Toast |
+
+Dunkel steigt die Deckkraft, weil ein schwacher Schwarzschatten auf `#16181B` unsichtbar bleibt —
+aber er trägt dort nicht allein, sondern begleitet die hellere Fläche.
+
+Das heutige `--shadow-menu` mit `rgba(0,0,0,0.32)` auf nur 6 px Weichzeichnung ist für eine
+Corporate-Oberfläche zu hart: viel Deckkraft auf kurzer Strecke ergibt eine sichtbare Kante statt
+einer Tiefe. Die neue Popover-Stufe verteilt dieselbe Wirkung auf 8 px und eine zweite, engere
+Lage.
+
+#### Overlays brauchen eine eigene Fläche
+
+Ein Popover liegt im dunklen Modus über `layer-02` (`#242729`) — und dort trägt die **Fläche** die
+Höhe. Es gibt aber keine Stufe darüber. Die Skala bekommt deshalb eine:
+
+| Token | hell | dunkel |
+|---|---|---|
+| `layer-overlay` | `#FFFFFF` | `#2B2F33` |
+
+Ohne sie wäre das Dark-Theme an genau der Stelle mechanismuslos, an der die Elevation zählt.
+
+#### Hell trennt der Rahmen, dunkel die Fläche
+
+`layer-01` und `layer-02` sind im hellen Modus beide weiß — über `#FAFAFA` liegt bis Weiß nur eine
+Stufe. Da sie jetzt auch keinen Schatten mehr tragen dürfen, trennt sie im hellen Modus ein
+**Rahmen**: `border-separator` (`#CBCED3`, ~1,5:1), eine Linie, die trennt und nichts behauptet.
+
+| | hell | dunkel |
+|---|---|---|
+| Karte, Panel, Gruppe | 1 px `border-separator` | keine Linie, hellere Fläche |
+| Popover, Dialog, Toast | Schatten **und** Rahmen | Schatten **und** `layer-overlay` |
+
+**Folge für die Komponenten:** `.tlCard--outlined` wird der Normalfall und `.tlCard--elevated`
+entfällt. Eine Karte, die sich abheben soll, tut das über ihren Rahmen — oder sie ist gar keine
+Karte, sondern ein Dialog.
 
 ### Dark: zwei vollständige Paletten
 
@@ -218,16 +279,17 @@ sobald sich eine davon ändert.
 | `background` | `#FAFAFA` | `#16181B` |
 | `layer-01` | `#FFFFFF` | `#1D2023` |
 | `layer-02` | `#FFFFFF` | `#242729` |
+| `layer-overlay` | `#FFFFFF` | `#2B2F33` |
 | `field` | `#F0F4F9` | `#27292D` |
 | `layer-hover` | `#F0F2F6` | `#22262A` |
 | `layer-selected` | `#E5E8ED` | `#2B3034` |
 | `layer-active` | `#D9DDE3` | `#343A3F` |
 
-**`layer-01` und `layer-02` bleiben im hellen Modus beide weiß — und das ist diesmal richtig.**
-Über `#FAFAFA` liegt bis Weiß nur eine Stufe; drei Elevationsebenen lassen sich dort durch
-Helligkeit nicht ausdrücken. Im hellen Modus trägt deshalb der **Schatten** die Höhe, im dunklen
-die **Fläche**. Genau das meint die Entscheidung „Fläche plus Schatten": Jeder Modus nutzt das
-Mittel, das dort funktioniert.
+**`layer-01`, `layer-02` und `layer-overlay` bleiben im hellen Modus alle weiß — und das ist
+diesmal richtig.** Über `#FAFAFA` liegt bis Weiß nur eine Stufe; drei Ebenen lassen sich dort durch
+Helligkeit nicht ausdrücken. Im hellen Modus trennt deshalb der **Rahmen**, im dunklen die
+**Fläche** — und der Schatten bleibt beiden vorbehalten, was wirklich über der Oberfläche schwebt.
+Die Regel steht vollständig unter „Elevation".
 
 Der Unterschied zum heutigen Zustand ist, dass es jetzt eine Regel ist statt eines Zufalls.
 
@@ -454,18 +516,49 @@ Das Gate bekommt eine Regel mehr: **Ein `font-size` oder `font-weight` außerhal
 ein Verstoß.** Ohne sie wandert die nächste Komponente wieder auf `.72rem`, so wie es der
 Größenbefund oben für sieben Werte zwischen 9 und 11,52 px zeigt.
 
+### Radius: zwei Stufen, zwei Formen
+
+TopLogic steht in Konzernen im Tagesbetrieb — acht Stunden Formulare, Tabellen und Dialoge. Ein
+weicher, verspielter Radius ermüdet dort und wirkt außerdem falsch neben der Corporate Identity der
+Kunden. Ein Radius von 0 wiederum wirkt hart und unfertig. **Die Skala bleibt bewusst am
+zurückhaltenden Ende**, dort wo Carbon (4 px) und Fluent (4 px) auch stehen.
+
+| Token | Wert | Gilt für |
+|---|---|---|
+| `radius-sm` | `0.25rem` (4 px) | Feld, Schaltfläche, Auswahlfeld, Checkbox, Reiter, Tabellenzelle, Chip-Ecke |
+| `radius-md` | `0.5rem` (8 px) | Karte, Dialog, Popover, Panel, Drawer |
+| `radius-full` | `999px` | Badge, Zähler, Umschalter, Fortschrittsbalken |
+| `radius-round` | `50%` | Avatar, Statuspunkt, runder Icon-Knopf |
+
+**Die Regel ist die Rolle, nicht die Größe:** Was bedient wird, bekommt `radius-sm`. Was etwas
+umschließt, bekommt `radius-md`. Ein Dialog ist ein Behälter, auch wenn er klein ist; eine
+Schaltfläche bleibt eine Schaltfläche, auch wenn sie breit ist. Damit hat die Regel dieselbe Form
+wie die Rahmenregel — *trennt oder umschließt* —, und das ist Absicht.
+
+`radius-full` und `radius-round` sind keine Stufen, sondern **Formen**. Sie stehen außerhalb der
+Skala, weil sie nicht mehr oder weniger Rundung bedeuten, sondern eine andere Gestalt: eine Pille
+und ein Kreis. Eine Zwischenstufe zwischen `radius-md` und `radius-full` gibt es deshalb nicht.
+
+Aus dem Bestand fallen zwei Werte:
+
+* **`2px`**, zweimal literal. Von 4 px ist er mit bloßem Auge nicht zu unterscheiden, kostet aber in
+  jeder Komponente eine Entscheidung. Er geht auf `radius-sm`.
+* **`0`**, zweimal literal. Wo eine Kante wirklich scharf sein muss — eine Zelle mitten in einer
+  Tabelle —, ist das kein Radiuswert, sondern das Fehlen eines Rahmens. Es wird nicht als Token
+  geführt.
+
+**Verschachtelung:** Liegt ein Element mit `radius-sm` bündig in einem Behälter mit `radius-md`,
+bleibt die innere Rundung kleiner als die äußere — 4 in 8 geht auf. Der umgekehrte Fall, ein
+gerundeter Behälter in einem schärferen, tritt in der Skala nicht auf.
+
 ---
 
 ## Offen
 
 | Skala | Zu entscheiden |
 |---|---|
-| Marke | Farbe, und wie viele Stufen die Rampe hat |
-| Neutrale | Wie viele Graustufen die Oberfläche trägt |
-| Semantik | Fehler/Warnung/Erfolg/Info — je wie viele Varianten |
-| Typo-Gewichte | **Faktisch zwei** — Inter liefert nur Regular und SemiBold, siehe unten |
-| Radius | Bleiben es zwei Stufen |
-| Rahmen | Breiten, und wann Rahmen statt Fläche |
+| Marke | Wie viele Stufen die Rampe hat — die Farbe steht, vorläufig |
+| Rahmen | Die Breiten. Welche Stufe wann gilt, ist entschieden |
 | Fokus | Breite, Offset, Stil |
 | Motion | Wie viele Dauern, wie viele Easings |
 | Dichte | Wie viele Stufen, und was genau variiert |
