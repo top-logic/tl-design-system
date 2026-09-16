@@ -380,21 +380,48 @@ Das richtige Maß ist der **Farbtonabstand**:
 
 ---
 
-## 23 · Wie das geprüft wird
+## 23 · Zwei Schichten — und die Stelle für Kundenprojekte
 
-**Das Specimen — eine lauffähige Probe auf dem echten Stylesheet.**
+**Der erste Entwurf schrieb Hex-Werte direkt an die Rollen — und reproduzierte genau den Befund, den er beseitigen sollte.**
 
-* Kontrastrechnung über **23 Paare**, beide Modi, gegen die WCAG-Schwellen.
-* OKLCH-Ableitung der Markenrampe samt Gamut-Mapping.
-* Regler für Marke und Grundfläche: Ein Ton wird gewechselt, die gesamte Oberfläche und alle Prüfungen rechnen mit.
-* Fragmente aus der **laufenden** Demo-Anwendung, nicht nachgebaut.
-* 15 Tests.
+| Wert | Rollen, die ihn als Literal trugen |
+|---|---|
+| `#0B5ED7` | `border-interactive`, `focus`, `brand-primary`, `brand-link` |
+| `#FFFFFF` | `layer-01`, `layer-02`, `layer-overlay` |
 
-> Sprechnotiz: Deshalb sind die Zahlen in dieser Präsentation gemessen und nicht geschätzt.
+Bei einem Markenwechsel wären vier Stellen nachzuziehen — und die vergessene fünfte wäre der Vererbungsfehler, der die acht Dunkel-Verstöße erzeugt hat.
+
+| Schicht | Beispiel | Regel |
+|---|---|---|
+| **1 · Primitive** | `blue-49: #0B5ED7` | reine Werte, **keine** Rolle im Namen |
+| **2 · Rollen** | `brand-primary: {blue-49}` | Bedeutung, **kein einziger Wert** |
+
+**Das ist mehr als Ordnung — es ist die Eingriffsstelle für Kundenprojekte.** Wer seine Hausfarbe einsetzen will, überschreibt `--blue-49`; alle vier markenbezogenen Rollen ziehen mit, ohne dass eine Klasse angefasst wird. Deshalb löst das erzeugte CSS die Referenzen **nicht** auf.
+
+> Sprechnotiz: Ein Test spielt genau diesen Tausch durch — das ist die Zusage an Kundenprojekte, in ausführbarer Form.
 
 ---
 
-## 24 · Stufe A ist am Ziel
+## 24 · Wie das geprüft wird
+
+**Die Regeln stehen nicht nur im Dokument — sie laufen als Tests.** 63 Stück, `node --test`.
+
+| Datei | Was sie durchsetzt |
+|---|---|
+| `skala.json` | der entschiedene Soll-Zustand, zweischichtig |
+| `generieren.mjs` | erzeugt daraus 354 Zeilen CSS mit 140 Referenzen |
+| `skala.test.mjs` | Kontraste, Farbabstände, das 4-px-Raster, die 12-px-Untergrenze |
+| `schichten.test.mjs` | kein Hex in der Rollenschicht, kein Primitiv ohne Verwendung, der Kundentausch |
+| `generieren.test.mjs` | keine Farbe außerhalb der Token-Blöcke, `:focus-visible` genau einmal |
+| `inventar.mjs` | zählt das ausgelieferte CSS aus — jede Zahl dieser Präsentation |
+
+**Ein Beispiel dafür, warum das nötig ist:** Beim ersten Lauf widersprach das Inventar den von Hand gezählten Zahlen — 14 px kam auf 7 statt 48. Ursache war ein zu enger Leser der Theme-Konfiguration. **Der Test dazu war grün und trotzdem falsch**, weil er nur den Fall prüfte, den der Leser beherrschte.
+
+> Sprechnotiz: Deshalb sind die Zahlen hier gemessen und nicht geschätzt — und bleiben es, weil ein eigener Test sie gegen das echte Stylesheet hält.
+
+---
+
+## 25 · Stufe A ist am Ziel
 
 **Alle elf Skalen sind entschieden und begründet.**
 
@@ -410,16 +437,20 @@ Das richtige Maß ist der **Farbtonabstand**:
 
 ---
 
-## 25 · Wie es weitergeht
+## 26 · Wie es weitergeht
 
-**Stufe A** — die Skalen festlegen und am Specimen belegen. *Läuft, vier Punkte offen.*
+**Stufe A — die Skalen festlegen und belegen.** *Abgeschlossen: alle elf entschieden.*
 
-**Stufe B** — die Skalen in der Anwendung umsetzen:
+**Stufe B — die Skalen in die Anwendung bringen.** *Begonnen:*
 
-1. Die Paarliste des Java-Gates auf die des Specimens ziehen (sechs Umbenennungen, eine Ergänzung).
-2. Die gefundenen Verstöße abräumen — Kontraste, 22× fehlender Fokus, `overflow: hidden` an Behältern mit fokussierbaren Kindern.
-3. Die Tokens in Figma spiegeln, damit Design und Code dieselbe Quelle haben.
-4. Kunden-Theming, Storybook und Accessibility als eigene Stränge (Issue #13).
+| | |
+|---|---|
+| ✓ | Die Skala ist maschinenlesbar, zweischichtig und durch 63 Tests abgesichert |
+| ✓ | Der Generator erzeugt das ausliefernde CSS |
+| ✓ | Das Inventar belegt die Zahlen reproduzierbar |
+| | Die erzeugte Datei gegen die Fragmente der laufenden Anwendung stellen |
+| | Die gefundenen Verstöße abräumen — Kontraste, 22× fehlender Fokus, `overflow: hidden` |
+| | Die Paarliste des Java-Gates nachziehen |
+| | Die Tokens in Figma spiegeln, damit Design und Code dieselbe Quelle haben |
 
-> Sprechnotiz: Stufe A entscheidet, Stufe B räumt auf. Die Reihenfolge ist wichtig — aufräumen ohne
-> Regel erzeugt denselben Zustand noch einmal.
+> Sprechnotiz: Stufe A entscheidet, Stufe B räumt auf. Die Reihenfolge ist wichtig — aufräumen ohne Regel erzeugt denselben Zustand noch einmal.
