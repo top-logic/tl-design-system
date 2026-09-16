@@ -551,6 +551,69 @@ Aus dem Bestand fallen zwei Werte:
 bleibt die innere Rundung kleiner als die äußere — 4 in 8 geht auf. Der umgekehrte Fall, ein
 gerundeter Behälter in einem schärferen, tritt in der Skala nicht auf.
 
+### Fokus: ein Ring, außen, nur bei Tastatur
+
+Der Fokus ist der unordentlichste Teil des Bestands. Fünf Mechanismen stehen nebeneinander für
+dieselbe Sache:
+
+| Mechanismus | Stellen |
+|---|---|
+| `outline: 2px solid var(--focus)` | 29 |
+| `box-shadow: inset` 2 px plus 3 px `--focus-inset` | 8 |
+| `box-shadow` außen — in 1 px, 2 px **und** 3 px | 7 |
+| `border-color: var(--focus)` | 5 |
+| `box-shadow: inset 0 ±2px` — nur Ober- und Unterkante | 5 |
+
+Dazu vier Mängel, die keiner für sich entstanden ist:
+
+* **`:focus` steht 36-mal, `:focus-visible` 28-mal.** Mehr als die Hälfte aller Stellen zeigt den
+  Ring also auch beim Mausklick.
+* **`outline: none` steht 22-mal**, und in den zwei Folgezeilen findet sich an keiner davon ein
+  `box-shadow`-Ersatz. Das sind Kandidaten für einen vollständig fehlenden Fokus — jeder einzelne
+  ein Verstoß gegen WCAG 2.4.7.
+* **Vier verschiedene Fokusfarben:** `--focus`, `--interactive`, `--support-warning`,
+  `--support-error`, dazu `currentColor`.
+* **`2px dashed`** steht zweimal neben 29-mal `solid`.
+
+#### Die Entscheidung
+
+| | Wert |
+|---|---|
+| Mechanismus | `outline`, immer außen |
+| Breite | `2px` |
+| Offset | `2px` |
+| Stil | `solid`, ausnahmslos |
+| Farbe | `focus` — hell `#0B5ED7`, dunkel `#5394FF`, dieselbe Farbe wie `border-interactive` |
+| Auslöser | `:focus-visible`, ausnahmslos |
+
+**Ein Mechanismus, keine Ausnahme.** Die vier anderen fallen weg. `outline` folgt in allen aktuellen
+Browsern dem `border-radius` von selbst, wird nicht vom Layout eingerechnet und liegt über allem —
+drei Eigenschaften, die ein `box-shadow`-Nachbau je einzeln nachstellen müsste.
+
+**Der Offset ist nicht Kosmetik, sondern der Grund, warum der Ring auf der Marke sichtbar bleibt.**
+Läge der Ring an der Kante, verschwände ein blauer Ring auf einer blauen Schaltfläche. Zwei Pixel
+Luft setzen ihn auf die dahinterliegende Fläche, wo er gegen `background` oder `layer-01` seinen
+Kontrast hat.
+
+**Nur `:focus-visible`.** Der Ring gehört der Tastatur- und Assistenzbedienung; wer klickt, weiß,
+wo er ist. WCAG 2.4.7 verlangt ihn dort nicht, und in einer Oberfläche, in der acht Stunden lang
+geklickt wird, ist ein Ring bei jedem Klick Lärm. Die 36 `:focus`-Stellen werden mechanisch
+umgestellt.
+
+**`--focus-inset` entfällt.** Es existierte nur als Konterlinie des Inset-Rings, und den gibt es
+nicht mehr.
+
+#### Was das an Komponenten nach sich zieht
+
+Ein außen liegender Ring kann von einem Vorfahren mit `overflow: hidden` beschnitten werden — in
+Tabellenzellen, Listenzeilen und Reiterleisten genau dort, wo der Bestand heute zum Inset-Ring
+greift. Der Ring weicht deswegen nicht aus; **`overflow: hidden` an einem Behälter mit
+fokussierbaren Kindern wird zum Befund.** Der Ersatz ist `overflow: clip` mit einem
+`overflow-clip-margin`, das die vier Pixel aus Offset und Breite freihält.
+
+Das Gate bekommt zwei Regeln: **`outline: none` ohne Ersatz im selben Block ist ein Verstoß**, und
+**jede Fokusdarstellung, die nicht `outline` ist, ebenso.**
+
 ---
 
 ## Offen
@@ -559,7 +622,6 @@ gerundeter Behälter in einem schärferen, tritt in der Skala nicht auf.
 |---|---|
 | Marke | Wie viele Stufen die Rampe hat — die Farbe steht, vorläufig |
 | Rahmen | Die Breiten. Welche Stufe wann gilt, ist entschieden |
-| Fokus | Breite, Offset, Stil |
 | Motion | Wie viele Dauern, wie viele Easings |
 | Dichte | Wie viele Stufen, und was genau variiert |
 | Komponenten-Maße | Control-Höhen — belegt nötig, siehe unten |

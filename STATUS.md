@@ -9,11 +9,13 @@
 **Stufe A läuft.** Die Maschinerie steht und ist geprüft. Offen sind noch Fokus, Motion, Dichte und
 die Komponenten-Maße, dazu zwei Restfragen: die Stufenzahl der Markenrampe und die Rahmenbreiten.
 
-Nächster Schritt: **Fokus** — Breite, Offset, Stil. Der Bestand hat dafür drei verschiedene
-Schreibweisen nebeneinander (`inset 0 0 0 2px` plus `3px --focus-inset`, `0 0 0 2px --focus`, und
-einen eigenen `--focus-inset`), das Inventar dazu steht noch aus. Danach Motion und Dichte; die
-Dichte trägt jetzt mehr Gewicht, weil die Typo-Entscheidung ihr die Zeilenhöhe und die Polsterung
-zugewiesen hat.
+Nächster Schritt: **Motion** — wie viele Dauern, wie viele Easings. Danach Dichte und
+Komponenten-Maße; die Dichte trägt jetzt mehr Gewicht, weil die Typo-Entscheidung ihr die
+Zeilenhöhe und die Polsterung zugewiesen hat.
+
+Aus der Fokus-Entscheidung stehen zwei Befunde offen, die Stufe B einsammeln muss: **22-mal
+`outline: none`** ohne erkennbaren Ersatz, und **`overflow: hidden`** an Behältern mit
+fokussierbaren Kindern.
 
 **Arbeitsweise, festgehalten am 2026-09-16:** Der Bestand ist kein Maßstab. Inventar erheben als
 Befund — entscheiden dann gegen den Befund, nicht aus ihm. Vor jeder Skala fragen, ob sie für eine
@@ -55,6 +57,7 @@ Schriftumschalter, unten das Gate-Panel.
 | Radius | zwei Stufen (4/8 px) plus Pille und Kreis; bedient → sm, umschließt → md |
 | Elevation-Stufen | drei Schatten, und **nur** Schwebendes bekommt einen |
 | Helle Flächen | trennt der Rahmen, nicht der Schatten; `layer-overlay` neu |
+| Fokus | ein Ring: `outline` 2 px, Offset 2 px, solid, nur `:focus-visible` |
 
 ## Was das Gate gefunden hat
 
