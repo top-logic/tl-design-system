@@ -219,12 +219,16 @@ zwei Aufgaben.** Es trennte Tabellenzeilen *und* umrandete Eingabefelder. Das er
 Kontrast, das zweite schuldet nach WCAG 1.4.11 mindestens 3,0. Ein Wert kann beides nicht — und
 weil der schwächere gewann, erfüllte kein Eingabefeld in TopLogic die Norm, hell wie dunkel.
 
-| Stufe | hell | dunkel | Verhältnis | Regel |
+| Stufe | hell | dunkel | hell / dunkel | Regel |
 |---|---|---|---|---|
-| `border-separator` | `#CBCED3` | `#383B3F` | ~1,5 | **Trennt**, begrenzt nicht. Tabellenzeilen, Abgrenzungen. Schuldet keinen Kontrast. |
-| `border-control` | `#8E9196` | `#64676B` | ~3,0 | **Begrenzt ein Bedienelement.** Eingabefelder, Auswahlfelder, Schaltflächen mit Umriss. |
-| `border-emphasis` | `#717378` | `#818489` | ~4,55 | **Hebt hervor.** Ausgewählte Zeile, betonte Abgrenzung. |
-| `border-interactive` | `#0B5ED7` | `#5394FF` | ~5,6 | **Trägt die Marke.** Fokus, aktiver Zustand. |
+| `border-separator` | `#C1C4C9` | `#34383C` | 1,68 / 1,51 | **Trennt**, begrenzt nicht. Tabellenzeilen, Abgrenzungen. Schuldet keinen Kontrast. |
+| `border-control` | `#8C8F94` | `#64676B` | 3,11 / 3,13 | **Begrenzt ein Bedienelement.** Eingabefelder, Auswahlfelder, Schaltflächen mit Umriss. |
+| `border-emphasis` | `#6F7277` | `#7F8286` | 4,63 / 4,61 | **Hebt hervor.** Ausgewählte Zeile, betonte Abgrenzung. |
+| `border-interactive` | `#0B5ED7` | `#5394FF` | 5,59 / 5,97 | **Trägt die Marke.** Fokus, aktiver Zustand. |
+
+> Die Werte dieser Tabelle stammen aus der späteren, aus den Anforderungen abgeleiteten
+> Neutralenskala und ersetzen die zuerst notierten Schätzwerte. Die Verhältnisse sind gegen
+> `background` gerechnet, nicht geschätzt.
 
 Der Merksatz: *Eine Linie, die etwas trennt, ist ein Separator. Eine Linie, die etwas umschließt,
 worauf der Zeiger wirkt, ist ein Control-Rahmen.* Er hat dieselbe Form wie die vorhandene

@@ -1,0 +1,188 @@
+{
+  "_": "Der entschiedene Soll-Zustand. tokens.json daneben haelt den Ist-Zustand des ausgelieferten Themes. Begruendung zu jedem Wert: docs/skalen.md",
+  "farbe": {
+    "hell": {
+      "background": "#FAFAFA",
+      "layer-01": "#FFFFFF",
+      "layer-02": "#FFFFFF",
+      "layer-overlay": "#FFFFFF",
+      "layer-hover": "#F0F2F6",
+      "layer-selected": "#E5E8ED",
+      "layer-active": "#D9DDE3",
+      "field": "#F0F4F9",
+      "text-primary": "#1B1D21",
+      "text-secondary": "#54565B",
+      "text-helper": "#676A6F",
+      "text-placeholder": "#6B6E73",
+      "border-separator": "#C1C4C9",
+      "border-control": "#8C8F94",
+      "border-emphasis": "#6F7277",
+      "border-interactive": "#0B5ED7",
+      "focus": "#0B5ED7",
+      "brand-primary": "#0B5ED7",
+      "brand-primary-hover": "#004DBA",
+      "brand-primary-active": "#003A8F",
+      "brand-link": "#0B5ED7",
+      "brand-link-hover": "#004DBA",
+      "brand-subtle": "#DFEBFF",
+      "brand-subtle-hover": "#CEE1FF",
+      "support-error-text": "#D7352D",
+      "support-error-border": "#FB594D",
+      "support-error-surface": "#CC2823",
+      "support-error-subtle": "#FFEBE8",
+      "support-warning-text": "#936E00",
+      "support-warning-border": "#B88A00",
+      "support-warning-surface": "#D9A514",
+      "support-warning-subtle": "#FEEFCF",
+      "support-success-text": "#008459",
+      "support-success-border": "#36A376",
+      "support-success-surface": "#3DA97B",
+      "support-success-subtle": "#DCF8E9",
+      "support-info-text": "#216EE8",
+      "support-info-border": "#4C8FFF",
+      "support-info-surface": "#1C69E3",
+      "support-info-subtle": "#E8F1FF"
+    },
+    "dunkel": {
+      "background": "#16181B",
+      "layer-01": "#1D2023",
+      "layer-02": "#242729",
+      "layer-overlay": "#2B2F33",
+      "layer-hover": "#22262A",
+      "layer-selected": "#2B3034",
+      "layer-active": "#343A3F",
+      "field": "#27292D",
+      "text-primary": "#F0F3F9",
+      "text-secondary": "#A0A3A8",
+      "text-helper": "#888B90",
+      "text-placeholder": "#8E9196",
+      "border-separator": "#34383C",
+      "border-control": "#64676B",
+      "border-emphasis": "#7F8286",
+      "border-interactive": "#5394FF",
+      "focus": "#5394FF",
+      "brand-primary": "#5394FF",
+      "brand-primary-hover": "#75A9FF",
+      "brand-primary-active": "#2471EC",
+      "brand-link": "#75A9FF",
+      "brand-link-hover": "#95BDFF",
+      "brand-subtle": "#162338",
+      "brand-subtle-hover": "#1E2F4B",
+      "support-error-text": "#E8463C",
+      "support-error-border": "#C51E1C",
+      "support-error-surface": "#F14F43",
+      "support-error-subtle": "#35110D",
+      "support-warning-text": "#A27A00",
+      "support-warning-border": "#805F00",
+      "support-warning-surface": "#EAB532",
+      "support-warning-subtle": "#281C02",
+      "support-success-text": "#1E9266",
+      "support-success-border": "#00734D",
+      "support-success-surface": "#60C99A",
+      "support-success-subtle": "#0C2319",
+      "support-info-text": "#307CF8",
+      "support-info-border": "#0C5DD6",
+      "support-info-surface": "#448BFF",
+      "support-info-subtle": "#0C1D3A"
+    }
+  },
+  "mass": {
+    "font-size": {
+      "label": "0.75rem",
+      "body": "0.875rem",
+      "heading-sm": "1rem",
+      "heading-md": "1.25rem",
+      "heading-lg": "1.5rem",
+      "display": "2rem"
+    },
+    "line-height-px": {
+      "label": "16px",
+      "body": "20px",
+      "heading-sm": "24px",
+      "heading-md": "28px",
+      "heading-lg": "32px",
+      "display": "40px"
+    },
+    "space": {
+      "space-4": "0.25rem",
+      "space-8": "0.5rem",
+      "space-12": "0.75rem",
+      "space-16": "1rem",
+      "space-24": "1.5rem",
+      "space-32": "2rem",
+      "space-48": "3rem"
+    },
+    "radius": {
+      "sm": "0.25rem",
+      "md": "0.5rem",
+      "full": "999px",
+      "round": "50%"
+    },
+    "border-width": {
+      "sm": "1px",
+      "md": "2px"
+    },
+    "accent-bar": "4px",
+    "focus": {
+      "breite": "2px",
+      "offset": "2px",
+      "stil": "solid",
+      "ausloeser": ":focus-visible"
+    },
+    "control-height": {
+      "standard": { "control": "2rem", "control-sm": "1.5rem", "row": "2.25rem" },
+      "kompakt": { "control": "1.75rem", "control-sm": "1.5rem", "row": "2rem" }
+    },
+    "dichte-polsterung": {
+      "standard": { "x": "space-12", "y": "space-8", "gap": "space-16" },
+      "kompakt": { "x": "space-8", "y": "space-4", "gap": "space-12" }
+    }
+  },
+  "familie": {
+    "sans": "'Inter', ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif",
+    "mono": "'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace"
+  },
+  "typo": {
+    "type-display":     { "familie": "sans", "groesse": "display",    "gewicht": 600, "zeilenhoehe": 1.25,   "laufweite": "-0.01em" },
+    "type-heading-lg":  { "familie": "sans", "groesse": "heading-lg", "gewicht": 600, "zeilenhoehe": 1.3333, "laufweite": "-0.005em" },
+    "type-heading-md":  { "familie": "sans", "groesse": "heading-md", "gewicht": 600, "zeilenhoehe": 1.4,    "laufweite": "0" },
+    "type-heading-sm":  { "familie": "sans", "groesse": "heading-sm", "gewicht": 600, "zeilenhoehe": 1.5,    "laufweite": "0" },
+    "type-body":        { "familie": "sans", "groesse": "body",       "gewicht": 400, "zeilenhoehe": 1.4286, "laufweite": "0" },
+    "type-body-strong": { "familie": "sans", "groesse": "body",       "gewicht": 600, "zeilenhoehe": 1.4286, "laufweite": "0" },
+    "type-label":       { "familie": "sans", "groesse": "label",      "gewicht": 400, "zeilenhoehe": 1.3333, "laufweite": "0.01em" },
+    "type-label-strong":{ "familie": "sans", "groesse": "label",      "gewicht": 600, "zeilenhoehe": 1.3333, "laufweite": "0.01em" },
+    "type-code":        { "familie": "mono", "groesse": "body",       "gewicht": 400, "zeilenhoehe": 1.4286, "laufweite": "0" }
+  },
+  "zahlen": {
+    "_": "In Zahlenspalten Pflicht, nicht Option.",
+    "font-feature-settings": "\"tnum\" 1, \"zero\" 1"
+  },
+  "motion": {
+    "duration": { "fast": "100ms", "base": "150ms", "slow": "250ms" },
+    "easing": {
+      "standard": "cubic-bezier(0.2, 0, 0.38, 0.9)",
+      "entrance": "cubic-bezier(0, 0, 0.38, 0.9)",
+      "exit": "cubic-bezier(0.2, 0, 1, 0.9)",
+      "linear": "linear"
+    }
+  },
+  "schatten": {
+    "hell": {
+      "popover": "0 2px 8px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08)",
+      "dialog": "0 8px 24px rgba(0,0,0,0.16)",
+      "drag": "0 12px 32px rgba(0,0,0,0.20)"
+    },
+    "dunkel": {
+      "popover": "0 2px 8px rgba(0,0,0,0.40)",
+      "dialog": "0 8px 24px rgba(0,0,0,0.56)",
+      "drag": "0 12px 32px rgba(0,0,0,0.64)"
+    }
+  },
+  "druck": {
+    "_": "rem hat im Druck keine Wurzel. Eigene Leiter in pt.",
+    "print-title":   { "groesse": "18pt", "gewicht": 600, "zeilenhoehe": 1.25 },
+    "print-heading": { "groesse": "12pt", "gewicht": 600, "zeilenhoehe": 1.35 },
+    "print-body":    { "groesse": "10pt", "gewicht": 400, "zeilenhoehe": 1.4 },
+    "print-caption": { "groesse": "8pt",  "gewicht": 400, "zeilenhoehe": 1.35 }
+  }
+}
