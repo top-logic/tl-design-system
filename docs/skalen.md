@@ -692,6 +692,33 @@ die Ladeanzeige steht ohnehin nie allein — daneben steht, worauf gewartet wird
 `0.01ms` statt `0`, weil ein `transitionend`-Ereignis sonst nie feuert und JavaScript hängen bleibt,
 das darauf wartet.
 
+### Zwei Schichten: Primitive und Rollen
+
+**Der erste Entwurf der Skala schrieb Hex-Werte direkt an die Rollen — und reproduzierte damit genau den Befund, den er beseitigen sollte.** Bei den Neutralen stand als Kritik: *30 Tokens, aber nur 15 verschiedene Werte.* Gemessen an der neuen Skala:
+
+| Wert | Rollen, die ihn als Literal trugen |
+|---|---|
+| `#0B5ED7` | `border-interactive`, `focus`, `brand-primary`, `brand-link` |
+| `#004DBA` | `brand-primary-hover`, `brand-link-hover` |
+| `#FFFFFF` | `layer-01`, `layer-02`, `layer-overlay` |
+
+Der Markenton ist **ausdrücklich vorläufig**. Bei einem Wechsel wären vier Stellen von Hand nachzuziehen, und die vergessene fünfte wäre genau der Vererbungsfehler, der die acht Dunkel-Verstöße erzeugt hat.
+
+Die Skala hat deshalb zwei Schichten:
+
+| Schicht | Beispiel | Regel |
+|---|---|---|
+| **1 · Primitive** | `blue-49: #0B5ED7` | reine Werte. Der Name nennt Familie und Helligkeitsstufe und behauptet **nichts** über eine Rolle. |
+| **2 · Rollen** | `brand-primary: {blue-49}` | Bedeutung. **Kein einziger Wert**, nur Referenzen. |
+
+70 Farb- und 30 Maß-Primitive tragen 80 Rollen je Modus.
+
+**Warum das mehr ist als Ordnung: Es ist die Eingriffsstelle für Kundenprojekte.** Ein Kunde, der seine Hausfarbe einsetzen will, überschreibt `--blue-49` — und `brand-primary`, `brand-link`, `focus` und `border-interactive` ziehen mit, ohne dass eine Klasse angefasst wird. Deshalb **löst das erzeugte CSS die Referenzen nicht auf**: Dort steht `var(--blue-49)`, nicht `#0B5ED7`. Aufgelöst wird nur zum Rechnen, wo Kontraste echte Werte brauchen.
+
+Die Primitivnamen werden **abgeleitet, nicht vergeben** (`specimen/primitive.mjs`): Familie aus dem Farbton, Stufe aus der Helligkeit, wobei eine höhere Stufe dunkler ist. Kollidieren zwei Werte auf derselben Stufe, rückt der zweite auf — sonst hinge die Zuordnung an der Reihenfolge, in der die Werte hereinkommen.
+
+**Vier Regeln setzt das Gate durch:** kein Hex in der Rollenschicht, jede Referenz zeigt auf ein vorhandenes Primitiv, kein Primitiv steht ungenutzt herum, und kein Primitivname enthält ein Rollenwort. Dazu ein Test, der einen Kundentausch durchspielt und prüft, dass alle vier markenbezogenen Rollen mitziehen.
+
 ### Abstände: sieben Stufen, und eine fehlte
 
 Die Skala des Bestands — `spacing-01` bis `-06` — ist 4 · 8 · 16 · 24 · 32 · 48 px. **Zwischen 8 und 16 liegt nichts**, und genau dort nehmen sich die Komponenten, was sie brauchen: 18 literale Abstände stehen in dieser Lücke.
@@ -705,17 +732,17 @@ Die Skala des Bestands — `spacing-01` bis `-06` — ist 4 · 8 · 16 · 24 · 
 
 Die neue Skala schließt sie:
 
-| Token | `rem` | px |
+| Rolle | Primitiv | px |
 |---|---|---|
-| `space-4` | `0.25rem` | 4 |
-| `space-8` | `0.5rem` | 8 |
-| **`space-12`** | **`0.75rem`** | **12** |
-| `space-16` | `1rem` | 16 |
-| `space-24` | `1.5rem` | 24 |
-| `space-32` | `2rem` | 32 |
-| `space-48` | `3rem` | 48 |
+| `space-2xs` | `size-01` | 4 |
+| `space-xs` | `size-02` | 8 |
+| **`space-sm`** | **`size-03`** | **12** |
+| `space-md` | `size-04` | 16 |
+| `space-lg` | `size-05` | 24 |
+| `space-xl` | `size-06` | 32 |
+| `space-2xl` | `size-07` | 48 |
 
-**Die Namen tragen den Wert, nicht eine laufende Nummer.** Eine Skala mit `01`…`06` kann man nicht erweitern, ohne die Bedeutung bestehender Namen still zu verschieben — `spacing-03` hieße nach dem Einfügen 12 statt 16 px, und jede Verwendung wäre lautlos falsch. Mit `space-12` bricht stattdessen sichtbar, was noch `spacing-03` schreibt.
+**Die Namen sind relativ, nicht absolut** — und das ist eine Korrektur. Zuerst standen hier `space-4` bis `space-48`, mit der Begründung, ein Name solle seinen Wert tragen und eine `01`…`06`-Leiter lasse sich nicht erweitern, ohne bestehende Namen still zu verschieben. Das galt, solange die Werte fest sind. **Mit austauschbaren Primitiven gilt es nicht mehr:** Setzt ein Kundenprojekt `size-03` auf 14 px, hieße ein Token `space-12` etwas, das es nicht ist. Ein relativer Name lügt nie.
 
 Alle sieben Werte sind durch vier teilbar. Damit liegen **Abstände, Zeilenhöhen und Control-Höhen auf demselben 4-px-Raster**.
 

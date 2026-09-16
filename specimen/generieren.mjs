@@ -6,21 +6,48 @@
 // keine Rechtfertigung mehr.
 
 const zeile = (name, wert) => `  --${name}: ${wert};`;
+const REFERENZ = /^\{([a-z0-9-]+)\}$/;
+
+/**
+ * Löst Referenzen auf die Primitiv-Schicht zu ihren Werten auf.
+ *
+ * Gebraucht wird das zum Rechnen — Kontraste und Farbabstände brauchen echte
+ * Werte. Das erzeugte CSS löst dagegen bewusst *nicht* auf: Dort bleibt die
+ * Referenz als var() stehen, damit ein Kundenprojekt ein Primitiv
+ * überschreiben kann und jede Rolle mitzieht.
+ */
+export function aufloesen(skala) {
+  const primitive = { ...skala.primitiv.farbe, ...skala.primitiv.mass };
+  const gehen = (o) => Object.fromEntries(Object.entries(o).map(([k, v]) => {
+    if (v && typeof v === 'object') return [k, gehen(v)];
+    const treffer = REFERENZ.exec(String(v));
+    if (!treffer) return [k, v];
+    if (!(treffer[1] in primitive)) throw new Error(`unbekanntes Primitiv: ${treffer[1]}`);
+    return [k, primitive[treffer[1]]];
+  }));
+  return { ...skala, farbe: gehen(skala.farbe), mass: gehen(skala.mass) };
+}
+
+/** Im CSS bleibt die Referenz eine Referenz. */
+const alsVar = (wert) => {
+  const treffer = REFERENZ.exec(String(wert));
+  return treffer ? `var(--${treffer[1]})` : wert;
+};
 
 function farbblock(farben) {
-  return Object.entries(farben).map(([n, w]) => zeile(n, w)).join('\n');
+  return Object.entries(farben).map(([n, w]) => zeile(n, alsVar(w))).join('\n');
 }
 
 function massblock(mass, familie, motion) {
   const z = [];
-  for (const [n, w] of Object.entries(mass['font-size'])) z.push(zeile(`font-size-${n}`, w));
-  for (const [n, w] of Object.entries(mass['line-height-px'])) z.push(zeile(`line-height-${n}`, w));
-  for (const [n, w] of Object.entries(mass.space)) z.push(zeile(n, w));
-  for (const [n, w] of Object.entries(mass.radius)) z.push(zeile(`radius-${n}`, w));
-  for (const [n, w] of Object.entries(mass['border-width'])) z.push(zeile(`border-width-${n}`, w));
-  z.push(zeile('accent-bar', mass['accent-bar']));
-  z.push(zeile('focus-width', mass.focus.breite));
-  z.push(zeile('focus-offset', mass.focus.offset));
+  for (const [n, w] of Object.entries(mass['font-size'])) z.push(zeile(`font-size-${n}`, alsVar(w)));
+  for (const [n, w] of Object.entries(mass['line-height-px'])) z.push(zeile(`line-height-${n}`, alsVar(w)));
+  for (const [n, w] of Object.entries(mass.space)) z.push(zeile(n, alsVar(w)));
+  for (const [n, w] of Object.entries(mass.radius)) z.push(zeile(`radius-${n}`, alsVar(w)));
+  for (const [n, w] of Object.entries(mass['border-width'])) z.push(zeile(`border-width-${n}`, alsVar(w)));
+  z.push(zeile('accent-bar', alsVar(mass['accent-bar'])));
+  z.push(zeile('focus-width', alsVar(mass.focus.breite)));
+  z.push(zeile('focus-offset', alsVar(mass.focus.offset)));
   for (const [n, w] of Object.entries(familie)) z.push(zeile(`font-family-${n}`, w));
   for (const [n, w] of Object.entries(motion.duration)) z.push(zeile(`duration-${n}`, w));
   for (const [n, w] of Object.entries(motion.easing)) z.push(zeile(`easing-${n}`, w));
@@ -29,12 +56,12 @@ function massblock(mass, familie, motion) {
 
 function dichteblock(hoehen, polsterung) {
   return [
-    zeile('control-height', hoehen.control),
-    zeile('control-height-sm', hoehen['control-sm']),
-    zeile('row-height', hoehen.row),
-    zeile('padding-x', `var(--${polsterung.x})`),
-    zeile('padding-y', `var(--${polsterung.y})`),
-    zeile('gap', `var(--${polsterung.gap})`),
+    zeile('control-height', alsVar(hoehen.control)),
+    zeile('control-height-sm', alsVar(hoehen['control-sm'])),
+    zeile('row-height', alsVar(hoehen.row)),
+    zeile('padding-x', polsterung.x),
+    zeile('padding-y', polsterung.y),
+    zeile('gap', polsterung.gap),
   ].join('\n');
 }
 
@@ -52,11 +79,24 @@ function schattenblock(schatten) {
   return Object.entries(schatten).map(([n, w]) => zeile(`shadow-${n}`, w)).join('\n');
 }
 
+function primitivblock(primitiv) {
+  return [...Object.entries(primitiv.farbe), ...Object.entries(primitiv.mass)]
+    .map(([n, w]) => zeile(n, w)).join('\n');
+}
+
 export function cssErzeugen(skala) {
-  const { farbe, mass, familie, typo, motion, schatten, zahlen } = skala;
+  const { farbe, mass, familie, typo, motion, schatten, zahlen, primitiv } = skala;
   return `/* Erzeugt aus skala.json. Nicht von Hand ändern — Werte und Begründung
    stehen in docs/skalen.md, erzeugt wird mit specimen/generieren.mjs. */
 
+/* Schicht 1: Primitive. Reine Werte ohne Bedeutung — und die Stelle, an der
+   ein Kundenprojekt eingreift. Wer hier einen Wert überschreibt, ändert jede
+   Rolle mit, die darauf verweist, ohne eine einzige Klasse anzufassen. */
+:root {
+${primitivblock(primitiv)}
+}
+
+/* Schicht 2: Rollen. Jede verweist auf ein Primitiv, keine trägt einen Wert. */
 :root {
 ${massblock(mass, familie, motion)}
 

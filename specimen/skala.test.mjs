@@ -5,8 +5,11 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { ratio } from './contrast.mjs';
+import { aufloesen } from './generieren.mjs';
 
-const skala = JSON.parse(readFileSync(new URL('./skala.json', import.meta.url)));
+// Gerechnet wird auf der aufgelösten Skala: Kontraste brauchen Werte, keine
+// Referenzen. Dass die Referenzen selbst stimmen, prüft schichten.test.mjs.
+const skala = aufloesen(JSON.parse(readFileSync(new URL('./skala.json', import.meta.url))));
 const HEX = /^#[0-9A-F]{6}$/;
 const MODI = ['hell', 'dunkel'];
 
