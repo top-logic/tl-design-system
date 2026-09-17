@@ -472,7 +472,7 @@ Damit das geht, nimmt die Skala den Rückweg — das ausgelieferte Stylesheet ke
 | Alternative | 9 | An jeder Stelle gilt genau eines. Die Regel entscheidet. |
 | **Aufteilung** | **3** | An derselben Stelle gelten **beide gleichzeitig** — hier ist nichts zu wählen. |
 
-Die drei sind die Umriss-Schaltfläche: Ein Token trägt heute ihre Linie **und** ihre Beschriftung. Mit `border-control` wird die Schrift grau, mit `brand-primary` verliert die Linie ihren Kontrast. **Beides ist falsch** — erst getrennte Tokens im Stylesheet lösen es.
+Die drei sind die Umriss-Schaltfläche: Ein Token trägt heute ihre Linie **und** ihre Beschriftung. Mit `border-control` wird die Schrift grau, mit `surface-brand` verliert die Linie ihren Kontrast. **Beides ist falsch** — erst getrennte Tokens im Stylesheet lösen es.
 
 > Sprechnotiz: Das ist der Wert der Ansicht. Auf dem Papier sah der Eintrag aus wie die anderen elf. An der Fläche war in zwei Sekunden zu sehen, dass dort gar keine Entscheidung ansteht, sondern eine Aufgabe.
 
