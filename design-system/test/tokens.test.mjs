@@ -47,13 +47,22 @@ test('border-separator trennt nur und schuldet keinen Kontrast', () => {
   }
 });
 
-test('jede Statusbedeutung erfüllt text 4,5 und border 3,0 auf dem Grund', () => {
+test('jede Statusbedeutung erfüllt text 4,5 und border 3,0 auf dem Grund — ein getönter Streifen trägt gewöhnlichen Text', () => {
   for (const m of MODES) for (const s of ['error', 'warning', 'success', 'info']) {
     const bg = R.color[m]['surface-base'];
     const t = ratio(R.color[m][`status-${s}-text`], bg);
     const b = ratio(R.color[m][`status-${s}-border`], bg);
     assert.ok(t >= 4.5, `${m}: status-${s}-text = ${t.toFixed(2)}`);
     assert.ok(b >= 3.0, `${m}: status-${s}-border = ${b.toFixed(2)}`);
+
+    // status-X-text ist für den Grund (surface-base) gerechnet, nicht für die eigene
+    // subtle-Fläche. Ein getönter Hinweisstreifen (background: subtle) nimmt darum
+    // gewöhnlichen Text (text-primary), nicht status-X-text — das Paar
+    // status-X-text × status-X-subtle ist von der Skala nicht versprochen und wird hier
+    // nur dokumentierend berechnet, nicht erzwungen.
+    const textAufSubtle = ratio(R.color[m][`status-${s}-text`], R.color[m][`status-${s}-subtle`]);
+    void textAufSubtle; // darf unter 4,5 liegen — kein Textpaar
+
     const sub = ratio(R.color[m]['text-primary'], R.color[m][`status-${s}-subtle`]);
     assert.ok(sub >= 4.5, `${m}: text-primary auf status-${s}-subtle = ${sub.toFixed(2)}`);
   }
