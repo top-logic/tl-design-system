@@ -39,15 +39,16 @@ Im Bestand wurden **drei konkurrierende Paletten** gefunden:
 | Tailwind | 16 Tokens in `tl-react-chartjs.css` und `tl-react-wysiwyg.css` (`#2563eb`, `#6b7280`, `#374151`) | wird entfernt |
 | TopLogic | `theme-settings.xml` | bleibt, wird zur einzigen Quelle |
 
-Durchgesetzt wird das durch:
+Durchgesetzt wird das durch die tatsächlichen Gates in `design-system/`:
 
 | Prüfung | Wirkung |
 |---|---|
-| `tools/check-foreign-values.mjs` | findet Fremdpaletten-Werte und Fallbacks, bricht den Build |
-| Stylelint `tl/no-token-fallback` | `var(--x, #hex)` ist verboten — fehlt ein Token, wird es angelegt, nicht umgangen |
-| Stylelint `tl/known-token` | jedes `var(--x)` muss in der generierten Allowlist stehen |
-| Stylelint `color-no-hex` | rohe Farbwerte im CSS sind verboten |
-| oxlint `tl/no-design-literals` | Hex- und px-Literale in TSX sind verboten |
+| `node --test` | Schichten, Kontrast, Maße, Erzeugtes, Ratsche — alles aus `docs/skalen.md` als Test |
+| `node tools/lint-css.mjs` | Klassen-Gate: Literale, Fremdvariablen, Fokusring, `!important`, Kurven u. a. im ausgelieferten CSS |
+| TSX-Lint | geplant, siehe `STATUS.md` |
+
+Die Verzeichnisse `tools/` und `inventory/` auf Repo-Ebene sind Vorarbeit der ersten
+Arbeitspakete (Auszählung des Altbestands, nicht Teil des laufenden Gates).
 
 ## Stand
 

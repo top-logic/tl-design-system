@@ -1,5 +1,6 @@
 // Erzeugt dist/ aus src/. Was hier nicht herauskommt, gibt es im Design System nicht.
 import { resolve, primitives } from './resolve.mjs';
+import { dtcg } from './dtcg.mjs';
 
 const REF = /^\{([a-z0-9-]+)\}$/;
 const line = (n, v) => `  --tl-${n}: ${v};`;
@@ -128,6 +129,6 @@ if (typeof process !== 'undefined' && import.meta.url === `file://${process.argv
     writeFileSync(new URL(name, dist), text);
     console.log(`geschrieben: dist/${name}`);
   }
-  const { dtcg } = await import('./dtcg.mjs').catch(() => ({ dtcg: null }));
-  if (dtcg) { writeFileSync(new URL('tokens.dtcg.json', dist), JSON.stringify(dtcg(P, T), null, 2) + '\n'); console.log('geschrieben: dist/tokens.dtcg.json'); }
+  writeFileSync(new URL('tokens.dtcg.json', dist), JSON.stringify(dtcg(P, T), null, 2) + '\n');
+  console.log('geschrieben: dist/tokens.dtcg.json');
 }

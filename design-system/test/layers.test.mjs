@@ -35,8 +35,10 @@ test('jede Referenz zeigt auf eine vorhandene Primitive', () => {
 });
 
 test('keine Primitive ohne Leser', () => {
+  // T.type verweist nicht per {ref} auf Primitive (family: "sans" statt {font-1}) — font-1/
+  // font-2 werden bereits über measure.font-family-* gelesen, eine Schleife über T.type hier
+  // wäre tote Schleife ohne Wirkung auf das Ergebnis.
   const used = new Set(semantisch().map(([, v]) => REF.exec(v)[1]));
-  for (const [, v] of leaves(T.type)) { const m = REF.exec(String(v)); if (m) used.add(m[1]); }
   for (const name of Object.keys(primitive()))
     assert.ok(used.has(name), `${name} wird von keinem Token gelesen`);
 });
