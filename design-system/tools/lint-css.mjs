@@ -6,12 +6,62 @@ const ALLOWED = new Set(['0', '1', 'auto', 'none', '100%', 'currentColor', 'inhe
   'fixed', 'sticky', 'center', 'start', 'end', 'stretch', 'baseline', 'nowrap', 'wrap', 'ellipsis', 'pointer',
   'default', 'not-allowed', 'border-box', 'both', 'row', 'column', 'space-between', 'left', 'right', 'inset',
   'uppercase', 'underline', 'middle', 'top', 'bottom', 'normal', 'clip', 'light', 'dark', 'reduce', 'antialiased',
-  'tabular-nums', 'slashed-zero', '!important']);
+  'tabular-nums', 'slashed-zero']);
+// !important ist NICHT mehr pauschal erlaubt (Punkt 7) — nur noch im Reduced-Motion-Block,
+// dort per Sonderfall unten geprüft, nicht über ALLOWED.
+
+// Punkt 1: die 147 CSS-Farbnamen aus dem CSS Color Level 4 Standard plus rebeccapurple.
+// `transparent`/`currentColor` sind Keywords, keine Farbnamen, und bleiben separat in ALLOWED.
+const NAMED_COLORS = new Set([
+  'aliceblue', 'antiquewhite', 'aqua', 'aquamarine', 'azure', 'beige', 'bisque', 'black',
+  'blanchedalmond', 'blue', 'blueviolet', 'brown', 'burlywood', 'cadetblue', 'chartreuse',
+  'chocolate', 'coral', 'cornflowerblue', 'cornsilk', 'crimson', 'cyan', 'darkblue', 'darkcyan',
+  'darkgoldenrod', 'darkgray', 'darkgreen', 'darkgrey', 'darkkhaki', 'darkmagenta',
+  'darkolivegreen', 'darkorange', 'darkorchid', 'darkred', 'darksalmon', 'darkseagreen',
+  'darkslateblue', 'darkslategray', 'darkslategrey', 'darkturquoise', 'darkviolet', 'deeppink',
+  'deepskyblue', 'dimgray', 'dimgrey', 'dodgerblue', 'firebrick', 'floralwhite', 'forestgreen',
+  'fuchsia', 'gainsboro', 'ghostwhite', 'gold', 'goldenrod', 'gray', 'grey', 'green',
+  'greenyellow', 'honeydew', 'hotpink', 'indianred', 'indigo', 'ivory', 'khaki', 'lavender',
+  'lavenderblush', 'lawngreen', 'lemonchiffon', 'lightblue', 'lightcoral', 'lightcyan',
+  'lightgoldenrodyellow', 'lightgray', 'lightgreen', 'lightgrey', 'lightpink', 'lightsalmon',
+  'lightseagreen', 'lightskyblue', 'lightslategray', 'lightslategrey', 'lightsteelblue',
+  'lightyellow', 'lime', 'limegreen', 'linen', 'magenta', 'maroon', 'mediumaquamarine',
+  'mediumblue', 'mediumorchid', 'mediumpurple', 'mediumseagreen', 'mediumslateblue',
+  'mediumspringgreen', 'mediumturquoise', 'mediumvioletred', 'midnightblue', 'mintcream',
+  'mistyrose', 'moccasin', 'navajowhite', 'navy', 'oldlace', 'olive', 'olivedrab', 'orange',
+  'orangered', 'orchid', 'palegoldenrod', 'palegreen', 'paleturquoise', 'palevioletred',
+  'papayawhip', 'peachpuff', 'peru', 'pink', 'plum', 'powderblue', 'purple', 'rebeccapurple',
+  'red', 'rosybrown', 'royalblue', 'saddlebrown', 'salmon', 'sandybrown', 'seagreen', 'seashell',
+  'sienna', 'silver', 'skyblue', 'slateblue', 'slategray', 'slategrey', 'snow', 'springgreen',
+  'steelblue', 'tan', 'teal', 'thistle', 'tomato', 'turquoise', 'violet', 'wheat', 'white',
+  'whitesmoke', 'yellow', 'yellowgreen',
+]);
+
 const COLOR = /#[0-9a-fA-F]{3,8}\b|\b(rgba?|hsla?|oklch|color-mix)\(/;
 const LENGTH = /(^|\s)-?\d*\.?\d+(px|rem|em|%|vh|vw|ch|pt)\b/;
+// Einheitenlose Literale (Punkt 10): opacity, flex, order und grid-* nehmen bewusst
+// dimensionslose Zahlen entgegen (0.5, 2, -1 …) — das ist keine Maß-Angabe und wird darum
+// nicht verschärft. LENGTH greift ohnehin nur bei einer Einheit, hier nur dokumentiert.
 const TIME = /\b\d*\.?\d+m?s\b/;
 const BEM = /^tl-[a-z0-9]+(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)?(--[a-z0-9]+(-[a-z0-9]+)*)?$/;
 const TYPE_FILES = /^(base|type)\.css$/;
+const TYPE_SELECTOR = /\.tl-(type|print)-/;
+
+// Punkt 2: Fallback im var() — wird VOR dem Entfernen von var(...) aus dem Wert geprüft.
+const VAR_FALLBACK = /var\(\s*--[a-z0-9-]+\s*,/i;
+// Punkt 3: Variable ohne tl-Präfix.
+const FOREIGN_VAR = /var\(\s*(--(?!tl-)[a-z0-9-]+)/gi;
+// Punkt 3: eigene Variablen dürfen nur in tokens.css stehen (:root oder [data-tl-…]).
+const TOKEN_SELECTOR = /^(:root\b|\[data-tl-)/;
+// Punkt 4: Fokusring nur als Mechanismus, nie per Einzeleigenschaft abgeschaltet.
+const OUTLINE_OFF = /^(none|0(\s+0)?(px)?)$/;
+// Punkt 7: !important nur im Reduced-Motion-Block, über genau diesen Selektor/diese Eigenschaften.
+const REDUCED_MOTION_SELECTOR = '*, *::before, *::after';
+const REDUCED_MOTION_PROPS = /^(animation-duration|animation-iteration-count|transition-duration|scroll-behavior)$/;
+// Punkt 8: Kurven nur aus --tl-easing-*, nie als Literal in transition*/animation*.
+const EASING_WORDS = /\b(ease-in-out|ease-in|ease-out|ease|linear)\b/;
+// Punkt 9: Attributselektoren, die auf Klassen zielen, umgehen das BEM/Prefix-Gate.
+const CLASS_ATTR_SELECTOR = /\[class[*^~]=/;
 
 export function knownVariables(css) {
   return new Set([...css.matchAll(/--tl-[a-z0-9-]+(?=:)/g)].map((m) => m[0]));
@@ -21,24 +71,69 @@ export function lint(css, { known, file }) {
   const out = [];
   const say = (d, msg) => out.push(`${file}:${d.line} ${d.selector} { ${d.property} } — ${msg}`);
   for (const d of declarations(css)) {
-    if (d.property.startsWith('--')) continue; // Token-Deklarationen (tokens.css)
     const sel = d.selector;
-    for (const cls of sel.matchAll(/\.([A-Za-z0-9_-]+)/g))
+    const isTypeClass = TYPE_FILES.test(file) && TYPE_SELECTOR.test(sel);
+
+    // Punkt 2: Fallback im var() — vor jeder weiteren Wert-Verarbeitung, sonst ist der
+    // Fallback schon aus dem Wert verschwunden.
+    if (VAR_FALLBACK.test(d.value)) say(d, 'Fallback im var() — fehlt ein Token, wird es angelegt, nicht umgangen');
+
+    if (d.property.startsWith('--')) {
+      // Punkt 3: eine eigene Variable außerhalb von tokens.css (:root/[data-tl-…]) ist ein
+      // Verstoß — Komponenten bekommen ihre Werte aus src/tokens.json, nicht aus einer
+      // lokalen Deklaration in der Klasse. Das gilt auch für --tl-*-Namen.
+      if (!TOKEN_SELECTOR.test(sel)) say(d, 'eigene Variable in einer Klasse — Tokens gehören nach src/tokens.json');
+      continue; // Token-Deklarationen (tokens.css) werden nicht auf Literale geprüft
+    }
+
+    const sel2 = sel;
+    for (const cls of sel2.matchAll(/\.([A-Za-z0-9_-]+)/g))
       if (!BEM.test(cls[1])) out.push(`${file}:${d.line} .${cls[1]} — kein tl-Präfix oder kein BEM (block__element--modifier)`);
+    if (CLASS_ATTR_SELECTOR.test(sel)) say(d, 'Attributselektor auf Klassen — umgeht das BEM/Prefix-Gate');
     if (/:focus\b(?!-visible|-within)/.test(sel)) say(d, ':focus ohne -visible');
-    if (d.property === 'outline' && /^none|^0$/.test(d.value)) say(d, 'outline: none — der Ring ist Pflicht');
-    if (d.property === 'font-size' && !(TYPE_FILES.test(file) && /\.tl-(type|print)-/.test(sel)))
-      say(d, 'font-size außerhalb einer tl-type-Klasse');
-    if (d.property === 'font-weight' && !(TYPE_FILES.test(file) && /\.tl-(type|print)-/.test(sel)))
-      say(d, 'font-weight außerhalb einer tl-type-Klasse');
+
+    if (d.property === 'outline' && OUTLINE_OFF.test(d.value.trim())) say(d, 'outline: none/0 — der Ring ist Pflicht');
+    if (d.property === 'outline-width' && /^0(px)?$/.test(d.value.trim())) say(d, 'outline-width: 0 — der Ring ist Pflicht');
+    if (d.property === 'outline-style' && d.value.trim() === 'none') say(d, 'outline-style: none — der Ring ist Pflicht');
+    if (d.property === 'outline-color' && d.value.trim() === 'transparent') say(d, 'outline-color: transparent — der Ring ist Pflicht');
+
+    if (d.property === 'font-size' && !isTypeClass) say(d, 'font-size außerhalb einer tl-type-Klasse');
+    if (d.property === 'font-weight' && !isTypeClass) say(d, 'font-weight außerhalb einer tl-type-Klasse');
+    // Punkt 5: die font-Kurzform setzt Größe und Gewicht mit — Keyword-only-Werte (inherit,
+    // initial, unset, normal) setzen nichts Konkretes und bleiben darum erlaubt.
+    if (d.property === 'font' && !isTypeClass && !/^(inherit|initial|unset|normal)$/.test(d.value.trim()))
+      say(d, 'font-Kurzform setzt Größe und Gewicht außerhalb einer Typo-Klasse');
+    // Punkt 6: line-height wie font-size — body bekommt die System-Zeilenhöhe, sonst nur Typo-Klassen.
+    if (d.property === 'line-height' && !isTypeClass && sel !== 'body')
+      say(d, 'line-height außerhalb einer Typo-Klasse');
+
     if (d.property === 'z-index' && !/^var\(--tl-layer-/.test(d.value)) say(d, 'z-index nur aus --tl-layer-*');
     if (d.property === 'box-shadow' && !/^var\(--tl-shadow-/.test(d.value) && !/^inset\b/.test(d.value))
       say(d, 'box-shadow nur --tl-shadow-* oder inset-Linie');
+
+    // Punkt 8: Kurve nur aus --tl-easing-* — Literale in transition*/animation* geprüft
+    // NACH Entfernen von var(...), sonst matcht "linear" aus --tl-easing-linear.
+    if (/^(transition|animation)/.test(d.property)) {
+      const ohneVar = d.value.replace(/var\([^)]*\)/g, ' ');
+      if (/cubic-bezier\(/.test(ohneVar) || EASING_WORDS.test(ohneVar)) say(d, 'Kurve nur aus --tl-easing-*');
+    }
+
+    // Punkt 3: var(--foo) ohne tl-Präfix.
+    for (const v of d.value.matchAll(FOREIGN_VAR)) say(d, `Variable ohne tl-Präfix: ${v[1]}`);
     for (const v of d.value.matchAll(/var\((--tl-[a-z0-9-]+)/g))
       if (!known.has(v[1])) say(d, `unbekannte Variable ${v[1]}`);
-    let rest = d.value.replace(/var\([^)]*\)/g, '').replace(/calc\(|\)/g, ' ').replace(/,/g, ' ');
+
+    // Punkt 7: !important nur im Reduced-Motion-Block (genau dieser Selektor/diese Eigenschaften).
+    if (/!important/.test(d.value)) {
+      const erlaubt = sel === REDUCED_MOTION_SELECTOR && REDUCED_MOTION_PROPS.test(d.property);
+      if (!erlaubt) say(d, '!important nur im Reduced-Motion-Block');
+    }
+
+    let rest = d.value.replace(/var\([^)]*\)/g, '').replace(/calc\(|\)/g, ' ').replace(/,/g, ' ').replace(/!important/g, '');
     rest = rest.split(/\s+/).filter((word) => word && !ALLOWED.has(word)).join(' ');
     if (COLOR.test(rest)) say(d, `Farbliteral: ${d.value}`);
+    // Punkt 1: benannte Farben (weiß, rot, …) sind ein Farbliteral wie ein Hex-Wert.
+    for (const word of rest.split(/\s+/)) if (NAMED_COLORS.has(word.toLowerCase())) say(d, `Farbliteral (benannte Farbe): ${d.value}`);
     if (TIME.test(rest) && !/0\.01ms/.test(rest)) say(d, `Dauer-Literal: ${d.value}`);
     if (file !== 'base.css' || !/\.tl-print-|line-height|letter-spacing/.test(sel + d.property))
       if (LENGTH.test(rest)) say(d, `Maß-Literal: ${d.value}`);
