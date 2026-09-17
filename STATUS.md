@@ -22,12 +22,17 @@ gelöscht. Der Button ist die Vorlage. Arbeitsliste: `docs/migration/altlast.md`
 
 Offen aus der Spec, nicht Teil von Welle 0:
 
-* `tl-ds derive` — Kundenstufe A, die Ableitung einer Palette aus Hausfarbe und Grauwahl
+* `tl-ds derive` — Kundenstufe A, die Ableitung einer Palette aus Hausfarbe und Grauwahl; muss die
+  Beschriftungen mitrechnen und nach `tokens.css` laden — siehe skalen.md „Zwei Schichten“
 * Token-Mapper — Miniprojekt, Browserwerkzeug für Kunden-Styleguides
 * Figma-Push aus `tokens.dtcg.json`
 * Maven-Wrapper für das Paket; bis dahin kopiert `tools/publish-to-worktree.mjs`
 * TSX-Lint-Regel (kein Hex, kein `style={{ color }}`, nur `tl-`-Klassen)
 * Prüfung in der laufenden Demo-App (Browser); bisher ist nur das Specimen im Browser geprüft
+* `tools/lib/color.mjs`: `markenRampe`, `rampeAnwenden`, `nurHex` tragen noch alte Rollennamen;
+  vor `derive` umbenennen
+* Spec §5 `overflow: hidden` an Behältern mit fokussierbaren Kindern ist statisch nicht prüfbar —
+  wird ein DOM-Test im Specimen, kein Klassen-Gate
 
 ## Der Schnitt vom 17.09.
 

@@ -145,7 +145,7 @@ auf **jeder** Stufe durch, bei der abgeleiteten Rampe wie bei der heutigen:
 Die Alternative wäre, den Button so weit abzudunkeln, dass Weiß trägt — bei `#2968C8` fällt er dann
 mit 3,18 gegen den dunklen Grund und hört auf, als Fläche zu lesen.
 
-`text-on-color` und `icon-on-color` werden deshalb **abgeleitet statt festgeschrieben**: Von zwei
+`text-on-brand` und `icon-on-brand` werden deshalb **abgeleitet statt festgeschrieben**: Von zwei
 Kandidaten — `text-primary` des hellen Modus und Weiß — gewinnt der mit dem höheren Verhältnis
 gegen `surface-brand` des jeweiligen Modus.
 
@@ -162,7 +162,7 @@ Was aussteht, gehört zur Umsetzung, nicht zur Entscheidung:
 
 | | |
 |---|---|
-| `disabled`-Rollen | `text-disabled`, `icon-disabled`, `field-disabled`, `button-disabled` und `text-on-color-disabled` sind von WCAG ausgenommen und deshalb nie abgeleitet worden. |
+| `disabled`-Rollen | entschieden — siehe „Disabled: vier Rollen ohne Gate": `surface-disabled`, `border-disabled`, `text-disabled`, `icon-disabled`; Beschriftung auf einer deaktivierten Fläche ist `text-disabled`. |
 | Syntaxhervorhebung | `script-editor-text-highlight` gehört zur Code-Klasse; die Skala führt dafür bisher keine Rolle. |
 
 ### Marke: `#0B5ED7`, vorläufig
@@ -176,7 +176,7 @@ Farbton 260°, Chroma 0,200, Helligkeit 0,515.
 | `surface-brand-active` | `#003A8F` | `#2471EC` |
 | `text-link` | `#0B5ED7` | `#75A9FF` |
 | `text-link-hover` | `#004DBA` | `#95BDFF` |
-| Beschriftung darauf | `#FFFFFF` (5,84) | `#101113` (6,34) |
+| Beschriftung darauf | `#FFFFFF` (5,84) | `#1B1D21` (5,66) |
 
 **Warum dieser Ton.** Gegenüber dem heutigen `#2968C8` steigt das Chroma von 0,163 auf 0,200 bei
 fast gleichem Farbton — das Blau wird klarer, ohne die Familie zu wechseln. Zwei Alternativen
@@ -206,7 +206,7 @@ gegenüber der eines Kunden mit ungewöhnlicher CI. Kostet fast nichts: Text fä
 
 ### Rahmen: vier Stufen, jede mit einer Aufgabe
 
-`border-subtle` wird aufgelöst. Der Grund ist derselbe wie bei `text-on-color`: **Ein Token hatte
+`border-subtle` wird aufgelöst. Der Grund ist derselbe wie bei `text-on-brand`: **Ein Token hatte
 zwei Aufgaben.** Es trennte Tabellenzeilen *und* umrandete Eingabefelder. Das erste braucht keinen
 Kontrast, das zweite schuldet nach WCAG 1.4.11 mindestens 3,0. Ein Wert kann beides nicht — und
 weil der schwächere gewann, erfüllte kein Eingabefeld in TopLogic die Norm, hell wie dunkel.
@@ -291,14 +291,14 @@ Der Unterschied zum heutigen Zustand ist, dass es jetzt eine Regel ist statt ein
 
 #### Ausgenommen
 
-`text-disabled`, `icon-disabled`, `field-disabled`, `button-disabled` sind von WCAG ausdrücklich
+`text-disabled`, `icon-disabled`, `surface-disabled`, `border-disabled` sind von WCAG ausdrücklich
 ausgenommen und schulden keinen Kontrast. Sie bleiben in der Skala, aber ohne Gate.
 
 ### Semantik: vier Bedeutungen, vier Rollen
 
 **Der Befund.** `status-warning` ist im Stylesheet gleichzeitig Textfarbe (`color`), Rahmenfarbe
 (`border-color`), Fläche (`surface-base`) und Akzentfarbe (`accent-color`). **Ein Token, vier
-Aufgaben** — dasselbe Muster wie bei `text-on-color` und `border-subtle`.
+Aufgaben** — dasselbe Muster wie bei `text-on-brand` und `border-subtle`.
 
 Die Folgen sind messbar:
 
@@ -361,8 +361,8 @@ weiße.
 dieser Tiefe 4,5 — was hell genug wäre, um „Bernstein" zu heißen, ist unlesbar. Die helle,
 erkennbare Warnfarbe lebt deshalb in `surface`, nicht in `text`.
 
-**Info trägt den Farbton der Marke** (260°). Das ist die Konvention und bindet das System, macht
-aber Info und Marke ähnlich. Falls sich beide je beißen, ist das die Stelle zum Nachjustieren.
+**Info stand zuerst im Farbton der Marke** (260°); warum es ins Türkise gewandert ist, steht unter
+„Gelöst: Info verlässt den Markenton".
 
 ### Schrift: Inter bleibt
 
@@ -702,7 +702,9 @@ Die Skala hat deshalb zwei Schichten:
 
 70 Farb- und 30 Maß-Primitive tragen 80 Rollen je Modus.
 
-**Warum das mehr ist als Ordnung: Es ist die Eingriffsstelle für Kundenprojekte.** Ein Kunde, der seine Hausfarbe einsetzen will, überschreibt `--blue-49` — und `surface-brand`, `text-link`, `focus-ring` und `border-interactive` ziehen mit, ohne dass eine Klasse angefasst wird. Deshalb **löst das erzeugte CSS die Referenzen nicht auf**: Dort steht `var(--blue-49)`, nicht `#0B5ED7`. Aufgelöst wird nur zum Rechnen, wo Kontraste echte Werte brauchen.
+**Warum das mehr ist als Ordnung: Es ist die Eingriffsstelle für Kundenprojekte.** Ein Kunde, der seine Hausfarbe einsetzen will, überschreibt `--tl-blue-49` — und `surface-brand`, `text-link`, `focus-ring` und `border-interactive` ziehen mit, ohne dass eine Klasse angefasst wird. Deshalb **löst das erzeugte CSS die Referenzen nicht auf**: Dort steht `var(--tl-blue-49)`, nicht `#0B5ED7`. Aufgelöst wird nur zum Rechnen, wo Kontraste echte Werte brauchen.
+
+**Eine Ausnahme, benannt:** Die Beschriftungen auf Flächen (`--tl-text-on-*`, `--tl-icon-on-*`) stehen als gerechnete Hex-Werte in `tokens.css`. Überschreibt ein Kunde nur `--tl-blue-49`, folgt `surface-brand`, die Beschriftung darauf aber nicht — auf einer hellen Hausfarbe wäre Weiß unlesbar. Deshalb rechnet `derive` (Kundenstufe A) die Beschriftungen mit und schreibt sie in eine Datei, die **nach** `tokens.css` geladen wird. Die Ladereihenfolge ist Teil des Kundenvertrags, nicht Kosmetik.
 
 Die Primitivnamen werden **abgeleitet, nicht vergeben** (`design-system/tools/lib/naming.mjs`): Familie aus dem Farbton, Stufe aus der Helligkeit, wobei eine höhere Stufe dunkler ist. Kollidieren zwei Werte auf derselben Stufe, rückt der zweite auf — sonst hinge die Zuordnung an der Reihenfolge, in der die Werte hereinkommen.
 
