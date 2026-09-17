@@ -79,6 +79,46 @@ function gruppieren(rohwerte, tokens, wurzel) {
   };
 }
 
+/**
+ * Wo liest das CSS ein Token, und als was?
+ *
+ * Die Abbildung sagt, WAS aus einem mehrdeutigen Token wird — nicht, an welcher
+ * Stelle welches Ziel gilt. Ihre Regeln ("trennt → separator, umschließt
+ * Bedientes → control") lassen sich erst anwenden, wenn die Stellen mit
+ * Selektor und Eigenschaft vorliegen. Eine Trefferzahl reicht dafür nicht: Sie
+ * sagt, wie oft entschieden werden muss, aber nicht wie.
+ *
+ * Der Regelleser ist absichtlich einfach — das ausgelieferte CSS ist flach,
+ * verschachtelt wird nur über @media, und dessen innere Regeln findet das
+ * Muster von selbst, weil ein Selektor keine geschweifte Klammer enthält.
+ *
+ * @returns {{selektor: string, eigenschaft: string, wert: string, token: string}[]}
+ */
+export function lesestellen(css, token) {
+  // Wortgrenze am Ende: --border-subtle und --border-subtle-hover sind zwei
+  // Tokens. Wer nur den Anfang prüft, wirft sie zusammen und zählt zu viel.
+  const gesucht = new RegExp(`var\\(\\s*--${token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*[),]`);
+  const raus = [];
+  // Kommentare zuerst weg: Im ausgelieferten CSS steht über fast jeder Regel
+  // einer, und er klebte sonst am Selektor — womit die Stelle nicht mehr
+  // zuzuordnen wäre, was der einzige Zweck dieser Auszählung ist.
+  const ohneKommentare = css.replace(/\/\*[\s\S]*?\*\//g, ' ');
+  for (const regel of ohneKommentare.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+    const selektor = regel[1].trim();
+    // Was vor dem Block steht, ist nur dann ein Selektor, wenn es keiner
+    // At-Regel gehört — @media bringt seine eigene Zeile mit.
+    if (!selektor || selektor.startsWith('@')) continue;
+    for (const deklaration of regel[2].split(';')) {
+      const doppelpunkt = deklaration.indexOf(':');
+      if (doppelpunkt < 0) continue;
+      const eigenschaft = deklaration.slice(0, doppelpunkt).trim();
+      const wert = deklaration.slice(doppelpunkt + 1).trim();
+      if (eigenschaft && gesucht.test(wert)) raus.push({ selektor, eigenschaft, wert, token });
+    }
+  }
+  return raus;
+}
+
 const ABSTANDS_EIGENSCHAFTEN = ['padding', 'padding-top', 'padding-right', 'padding-bottom',
   'padding-left', 'margin', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left', 'gap'];
 
