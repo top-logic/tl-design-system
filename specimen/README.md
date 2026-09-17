@@ -26,6 +26,24 @@ Nachbildungen; entfernt wurden nur `id`-Attribute, Inline-`style` und Sitzungs-/
 Wer das Specimen öffnet, sieht also Token-Werte auf vorhandenen Controls, nicht auf einer
 Attrappe.
 
+## Die Vergleichsansicht
+
+Ansicht → *Vergleich* zeigt dieselben Fragmente zweimal: links unter dem heutigen Theme
+(`tokens.json`), rechts unter der entschiedenen Skala (`skala.json`). Das ausgelieferte
+`tlReactControls.css` kennt nur die heutigen Tokennamen — die Skala nimmt deshalb den Rückweg
+über `abbildung.json`. Der Umweg ist die Probe: **Was sich nicht zurückführen lässt, ist in
+Stufe B eine Änderung am Stylesheet, keine an der Skala.**
+
+Die Custom Properties liegen **je Seite auf dem Container**, nicht auf `:root` — nur so gelten
+zwei Token-Sätze gleichzeitig. Deshalb setzt `abbildung.mjs` jedes der 54 Ist-Tokens
+ausdrücklich: Ein fehlendes würde vom heutigen Theme erben und die alte Farbe als neue zeigen.
+Was entfällt, bekommt `initial` und fällt sichtbar aus; was offen ist, trägt den heutigen Wert
+und wird als offen ausgewiesen.
+
+Die Leiste darüber führt die zwölf mehrdeutigen Tokens mit ihrer Regel. **Drei davon sind rot
+markiert:** Dort gelten beide Ziele gleichzeitig für verschiedene Eigenschaften, der Umschalter
+zeigt nur einen Ausschnitt.
+
 ## Was das Specimen nicht beweist
 
 - Kein SSE, keine Server-Push-Aktualisierung.
@@ -43,7 +61,7 @@ nicht nur im Specimen selbst.
 
 | Aufruf | Was es tut |
 |---|---|
-| `node --test` | alles prüfen — 63 Tests |
+| `node --test` | alles prüfen — 86 Tests |
 | `node inventar.mjs` | das ausgelieferte CSS auszählen (`--json` für die Rohdaten) |
 | `node generieren.mjs` | `skala.css` aus `skala.json` neu erzeugen |
 | `node serve.mjs` | Specimen auf `http://localhost:8137/` |

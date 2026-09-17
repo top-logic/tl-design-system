@@ -11,13 +11,25 @@ die Komponenten-Maße, dazu zwei Restfragen: die Stufenzahl der Markenrampe und 
 
 **Stufe A ist abgeschlossen. Stufe B läuft.**
 
-Was steht: `specimen/skala.json` hält den entschiedenen Soll-Zustand, `specimen/generieren.mjs` macht daraus `skala.css` (247 Zeilen, 135 Custom Properties), und zwei Testdateien sind das Gate dazu — **38 Tests, alle grün** (`cd specimen && node --test`).
+Was steht: `specimen/skala.json` hält den entschiedenen Soll-Zustand, `specimen/generieren.mjs` macht daraus `skala.css` (359 Zeilen, 240 Custom Properties in zwei Schichten), und die Testdateien daneben sind das Gate dazu — **86 Tests, alle grün** (`cd specimen && node --test`).
 
-Nächster Schritt: die erzeugte `skala.css` gegen die Fragmente der laufenden Demo-App stellen, damit die Skala zum ersten Mal an echten Komponenten zu sehen ist.
+**Die Skala steht jetzt an echten Komponenten.** Die Vergleichsansicht im Specimen (Ansicht →
+*Vergleich*) zeigt dieselben Fragmente aus der Demo-App zweimal: links unter dem heutigen Theme,
+rechts unter der Skala, über `abbildung.json` auf die heutigen Tokennamen zurückgeführt.
+`specimen/abbildung.mjs` macht die Abbildung dafür ausführbar, `abbildung.anwenden.test.mjs` ist
+das Gate dazu — **86 Tests, alle grün**.
+
+Nächster Schritt: die **drei Aufteilungen** im Stylesheet trennen (siehe unten), dann die
+mehrdeutigen Alternativen je Verwendungsstelle entscheiden — die Umschalter in der
+Vergleichsansicht sind dafür da.
 
 Offene Befunde für die Umsetzung:
 
-* `specimen/abbildung.json` ordnet **alle 54 Ist-Tokens** ein; **zwölf sind mehrdeutig** und brauchen je Verwendungsstelle eine Entscheidung nach der dort notierten Regel.
+* `specimen/abbildung.json` ordnet **alle 54 Ist-Tokens** ein; **zwölf sind mehrdeutig** — davon
+  sind aber nur **neun eine Wahl**. Die **drei übrigen sind Aufteilungen**: `button-secondary`
+  und seine zwei Zustände tragen an derselben Stelle Linie *und* Beschriftung. Dort ist nichts zu
+  entscheiden — `border-color` und `color` müssen in `tlReactControls.css` getrennte Tokens
+  lesen. Aufgefallen ist das erst in der Vergleichsansicht.
 * Die fünf `disabled`-Rollen und `script-editor-text-highlight` stehen als `offen` in der Abbildung.
 * **`.tlTableView__treeToggle` ist 20 × 20 px** und verstößt gegen WCAG 2.5.8; bei `.tlFormField__helpIcon` (20 px) ist zu prüfen, ob es bedienbar ist.
 * **22× `outline: none`** ohne erkennbaren Ersatz — Kandidaten für fehlenden Fokus (WCAG 2.4.7).
@@ -43,7 +55,9 @@ cd ~/Claude/TopLogic-v8-DesignSystem/specimen && node serve.mjs
 ```
 
 Dann `http://localhost:8137/` — Markenregler, Grundflächenregler, Modus-, Ansichts- und
-Schriftumschalter, unten das Gate-Panel.
+Schriftumschalter, unten das Gate-Panel. Ansicht → *Vergleich* stellt heutiges Theme und Skala
+nebeneinander; die Leiste darüber schaltet die mehrdeutigen Tokens um und nennt je Zeile die
+Regel, nach der zu entscheiden ist.
 
 ## Entschieden, alles begründet in `docs/skalen.md`
 
@@ -113,7 +127,7 @@ gewinnt — `text-on-color`, `border-subtle`, `support-warning`.
 ## Planung
 
 Arbeitspakete als Gitea-Issues: https://git.top-logic.com/hpe/tl-design-system/issues
-Präsentationsfassung: `docs/praesentation.md` — 27 Folien, alle Zahlen gemessen.
+Präsentationsfassung: `docs/praesentation.md` — 28 Folien, alle Zahlen gemessen.
 **Wird bei jeder Entscheidung mitgezogen**, zusammen mit `skalen.md` und dieser Datei.
 Spec: `docs/superpowers/specs/2026-09-15-style-overhaul-design.md`
 Umsetzungsplan Stufe A: `docs/superpowers/plans/2026-09-15-stufe-a-richtung.md`

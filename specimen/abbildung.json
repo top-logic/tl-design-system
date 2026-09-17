@@ -143,7 +143,8 @@
         "border-control"
       ],
       "regel": "Trennt die Linie nur (Tabellenzeile, Abgrenzung), gilt border-separator. Umschließt sie ein Bedienelement, auf das der Zeiger wirkt (Eingabefeld, Auswahlfeld, Umriss-Schaltfläche), gilt border-control — das ist die Stelle, an der heute kein Feld die 3,0 aus WCAG 1.4.11 erreicht.",
-      "warum": "Ein Token mit zwei Aufgaben, und die schwächere Anforderung gewann. Der wiederkehrende Befund."
+      "warum": "Ein Token mit zwei Aufgaben, und die schwächere Anforderung gewann. Der wiederkehrende Befund.",
+      "natur": "alternative"
     },
     "support-error": {
       "art": "mehrdeutig",
@@ -154,7 +155,8 @@
         "support-error-subtle"
       ],
       "regel": "Als Text gilt -text, als Linie -border, als gefüllte Fläche -surface (Beschriftung abgeleitet), als getönter Hinweisstreifen -subtle.",
-      "warum": "Im Ist gleichzeitig color, border-color, background und accent-color."
+      "warum": "Im Ist gleichzeitig color, border-color, background und accent-color.",
+      "natur": "alternative"
     },
     "support-warning": {
       "art": "mehrdeutig",
@@ -165,7 +167,8 @@
         "support-warning-subtle"
       ],
       "regel": "Wie support-error. Als Text schuldet die Rolle 4,5 — heute erreicht das Token 2,27 und ist unlesbar.",
-      "warum": "Vier Aufgaben, ein Wert."
+      "warum": "Vier Aufgaben, ein Wert.",
+      "natur": "alternative"
     },
     "support-success": {
       "art": "mehrdeutig",
@@ -176,7 +179,8 @@
         "support-success-subtle"
       ],
       "regel": "Wie support-error. Die Snackbar mit hartkodiertem #fff auf dieser Fläche erreicht 3,17 und bekommt künftig die abgeleitete dunkle Beschriftung.",
-      "warum": "Vier Aufgaben, ein Wert."
+      "warum": "Vier Aufgaben, ein Wert.",
+      "natur": "alternative"
     },
     "layer-accent": {
       "art": "mehrdeutig",
@@ -185,7 +189,8 @@
         "brand-subtle"
       ],
       "regel": "Hebt die Fläche durch Höhe ab (Popover, Menü), gilt layer-overlay. Hebt sie durch Zugehörigkeit zur Marke ab (aktiver Navigationspunkt, ausgewählter Reiter), gilt brand-subtle.",
-      "warum": "Im Ist ein neutrales Grau für beide Fälle; die Skala trennt Höhe von Bedeutung."
+      "warum": "Im Ist ein neutrales Grau für beide Fälle; die Skala trennt Höhe von Bedeutung.",
+      "natur": "alternative"
     },
     "layer-accent-hover": {
       "art": "mehrdeutig",
@@ -194,7 +199,8 @@
         "brand-subtle-hover"
       ],
       "regel": "Folgt der Entscheidung, die für layer-accent an derselben Stelle getroffen wurde: layer-hover bei Höhe, brand-subtle-hover bei Zugehörigkeit zur Marke.",
-      "warum": "wie layer-accent."
+      "warum": "wie layer-accent.",
+      "natur": "alternative"
     },
     "layer-accent-active": {
       "art": "mehrdeutig",
@@ -203,7 +209,8 @@
         "brand-subtle-hover"
       ],
       "regel": "Folgt der Entscheidung, die für layer-accent an derselben Stelle getroffen wurde: layer-active bei Höhe, brand-subtle-hover bei Zugehörigkeit zur Marke.",
-      "warum": "wie layer-accent."
+      "warum": "wie layer-accent.",
+      "natur": "alternative"
     },
     "button-secondary": {
       "art": "mehrdeutig",
@@ -212,7 +219,9 @@
         "brand-primary"
       ],
       "regel": "Die Umriss-Schaltfläche nimmt border-control für ihre Linie und brand-primary für Beschriftung und Symbol. Im Ist trägt ein Token beides.",
-      "warum": "Ein Token für Linie und Schrift — dieselbe Doppelaufgabe wie bei border-subtle."
+      "warum": "Ein Token für Linie und Schrift — dieselbe Doppelaufgabe wie bei border-subtle.",
+      "natur": "aufteilung",
+      "naturWarum": "Linie und Beschriftung derselben Umriss-Schaltfläche. Ein Token kann nicht beides tragen — die Regel ist erst erfüllt, wenn border-color und color im Stylesheet getrennte Tokens lesen."
     },
     "button-secondary-hover": {
       "art": "mehrdeutig",
@@ -221,7 +230,9 @@
         "brand-primary-hover"
       ],
       "regel": "Wie button-secondary, eine Stufe weiter: die Linie nimmt border-interactive, Beschriftung und Symbol nehmen brand-primary-hover.",
-      "warum": "wie button-secondary."
+      "warum": "wie button-secondary.",
+      "natur": "aufteilung",
+      "naturWarum": "wie button-secondary."
     },
     "button-secondary-active": {
       "art": "mehrdeutig",
@@ -230,7 +241,9 @@
         "brand-primary-active"
       ],
       "regel": "Wie button-secondary, gedrückt: die Linie nimmt border-interactive, Beschriftung und Symbol nehmen brand-primary-active.",
-      "warum": "wie button-secondary."
+      "warum": "wie button-secondary.",
+      "natur": "aufteilung",
+      "naturWarum": "wie button-secondary."
     },
     "button-danger": {
       "art": "mehrdeutig",
@@ -239,7 +252,8 @@
         "support-error-text"
       ],
       "regel": "Die gefüllte Gefahr-Schaltfläche nimmt support-error-surface, die Beschriftung darauf wird abgeleitet. Eine Schaltfläche, die Gefahr nur als Text zeigt, nimmt support-error-text.",
-      "warum": "Fläche und Text aus einem Token — und genau hier besteht kein einziger text-on-color-Wert beide Flächen."
+      "warum": "Fläche und Text aus einem Token — und genau hier besteht kein einziger text-on-color-Wert beide Flächen.",
+      "natur": "alternative"
     },
     "button-danger-hover": {
       "art": "mehrdeutig",
@@ -248,35 +262,50 @@
         "support-error-text"
       ],
       "regel": "Wie button-danger, eine Stufe weiter: die gefüllte Fläche im Zeigerzustand nimmt support-error-surface, die Beschriftung darauf wird abgeleitet.",
-      "warum": "wie button-danger."
+      "warum": "wie button-danger.",
+      "natur": "alternative"
     },
     "text-on-color": {
       "art": "abgeleitet",
-      "warum": "Wird je Fläche gerechnet, nie geschrieben: von zwei Kandidaten gewinnt der mit dem höheren Verhältnis. Ein fester Wert kann helle und dunkle Flächen nicht gleichzeitig bedienen — nachgewiesen an button-primary und button-danger im Dunkelmodus."
+      "warum": "Wird je Fläche gerechnet, nie geschrieben: von zwei Kandidaten gewinnt der mit dem höheren Verhältnis. Ein fester Wert kann helle und dunkle Flächen nicht gleichzeitig bedienen — nachgewiesen an button-primary und button-danger im Dunkelmodus.",
+      "flaeche": "brand-primary",
+      "flaecheWarum": "Die Sammelrolle steht im ausgelieferten CSS überwiegend auf der Markenfläche; die vier Stellen ohne eindeutige Rolle sind in STATUS.md vermerkt und werden je Stelle entschieden."
     },
     "text-on-brand": {
       "art": "abgeleitet",
-      "warum": "Sonderfall von text-on-color für die Markenfläche; dieselbe Ableitung."
+      "warum": "Sonderfall von text-on-color für die Markenfläche; dieselbe Ableitung.",
+      "flaeche": "brand-primary",
+      "flaecheWarum": "Die Markenfläche selbst."
     },
     "text-on-danger": {
       "art": "abgeleitet",
-      "warum": "Sonderfall von text-on-color für die Gefahrfläche; dieselbe Ableitung."
+      "warum": "Sonderfall von text-on-color für die Gefahrfläche; dieselbe Ableitung.",
+      "flaeche": "support-error-surface",
+      "flaecheWarum": "Die gefüllte Gefahr-Fläche; die Textvariante support-error-text trägt keine Beschriftung, die abzuleiten wäre."
     },
     "icon-on-color": {
       "art": "abgeleitet",
-      "warum": "Ein Symbol auf einer Fläche schuldet denselben Kontrast wie Text darauf."
+      "warum": "Ein Symbol auf einer Fläche schuldet denselben Kontrast wie Text darauf.",
+      "flaeche": "brand-primary",
+      "flaecheWarum": "wie text-on-color — ein Symbol schuldet denselben Kontrast."
     },
     "icon-on-brand": {
       "art": "abgeleitet",
-      "warum": "wie icon-on-color."
+      "warum": "wie icon-on-color.",
+      "flaeche": "brand-primary",
+      "flaecheWarum": "wie text-on-brand."
     },
     "layer-accent-text": {
       "art": "abgeleitet",
-      "warum": "Beschriftung auf einer Akzentfläche — abgeleitet wie jede Beschriftung auf einer Fläche."
+      "warum": "Beschriftung auf einer Akzentfläche — abgeleitet wie jede Beschriftung auf einer Fläche.",
+      "flaeche": "@layer-accent",
+      "flaecheWarum": "Folgt der Entscheidung, die für layer-accent an derselben Stelle getroffen wurde — sonst zeigt der Vergleich eine Beschriftung auf einer Fläche, die dort nie steht."
     },
     "layer-accent-icon": {
       "art": "abgeleitet",
-      "warum": "wie layer-accent-text."
+      "warum": "wie layer-accent-text.",
+      "flaeche": "@layer-accent",
+      "flaecheWarum": "wie layer-accent-text."
     },
     "focus-inset": {
       "art": "entfaellt",

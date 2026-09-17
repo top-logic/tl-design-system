@@ -210,6 +210,41 @@
                                   border: 1px solid #8886; display: inline-block; }
   .specimenGrundflaeche__hinweis { color: #7a6a00; font: 11px/1.3 system-ui, sans-serif; }
 
+  /* Vergleichsansicht: dieselben Fragmente zweimal, links unter dem heutigen Theme
+     (tokens.json), rechts unter der entschiedenen Skala (skala.json, über abbildung.json
+     auf die heutigen Tokennamen zurückgeführt — tlReactControls.css kennt nur diese).
+     Die Custom Properties liegen JE SEITE auf dem Container, nicht auf :root: nur so
+     können zwei Token-Sätze gleichzeitig gelten. Ein Token, das eine Seite nicht setzt,
+     würde von :root erben und die fremde Farbe als eigene zeigen — deshalb setzt
+     themaAusSkala() jedes Ist-Token ausdrücklich, auch die entfallenen. */
+  .specimenVergleich { display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+                       background: #8884; align-items: start; }
+  @media (max-width: 1100px) { .specimenVergleich { grid-template-columns: 1fr; } }
+  .specimenVergleich__seite { background: var(--background); min-width: 0; }
+  .specimenVergleich__kopf { position: sticky; top: 0; z-index: 2;
+                             font: 600 12px/1.4 system-ui, sans-serif; padding: .5rem .75rem;
+                             background: #8882; backdrop-filter: blur(4px);
+                             display: flex; gap: .5rem; align-items: baseline; }
+  .specimenVergleich__kopf small { font-weight: 400; opacity: .7; font-family: ui-monospace, monospace; }
+  .specimenVergleich__inhalt { padding: .75rem; }
+  .specimenVergleich__inhalt hr { margin-block: 1.5rem; border: 0; border-top: 1px solid #8884; }
+
+  /* Entscheidungsleiste: die zwölf mehrdeutigen Tokens. Ihre Regel steht daneben, nicht
+     in einer Fußnote — wer hier umschaltet, soll lesen können, wonach zu entscheiden ist. */
+  .specimenEntscheidung { padding: .75rem 1rem; border-bottom: 1px solid #8884;
+                          font: 13px/1.4 system-ui, sans-serif; }
+  .specimenEntscheidung[hidden] { display: none; }
+  .specimenEntscheidung__kopf { font-weight: 700; margin-block-end: .5rem; }
+  .specimenEntscheidung__liste { display: grid; gap: .3rem;
+                                 grid-template-columns: max-content max-content 1fr; align-items: baseline; }
+  .specimenEntscheidung__name { font: 12px ui-monospace, monospace; }
+  .specimenEntscheidung__regel { font-size: 11px; opacity: .7; }
+  .specimenEntscheidung__regel--aufteilung { color: #c11; opacity: 1; }
+  .specimenEntscheidung__befunde { margin-block-start: .75rem; font-size: 12px; }
+  .specimenEntscheidung__befund { padding-block: .1rem; }
+  .specimenEntscheidung__befund--entfaellt { color: #c11; }
+  .specimenEntscheidung__befund--offen { color: #7a6a00; }
+
   .specimenGate__zeile { padding-block: .1rem; }
   .specimenGate__marke { font-weight: 700; }
   .specimenGate__marke::before { content: "★ "; }
@@ -233,6 +268,7 @@
       <select id="ansicht">
         <option value="fragmente">Fragmente (Buttons/Formular/Tabelle)</option>
         <option value="typo">Typo-Probe (12/13/14px)</option>
+        <option value="vergleich">Vergleich (heute / Skala)</option>
       </select>
     </label>
     <span id="gateKurz"></span>
@@ -270,6 +306,11 @@
       <span id="grundflaecheHex"></span>
     </output>
     <span class="specimenGrundflaeche__hinweis" id="grundflaecheHinweis"></span>
+  </section>
+  <section class="specimenEntscheidung" id="entscheidung" hidden>
+    <div class="specimenEntscheidung__kopf">Mehrdeutige Tokens — je Verwendungsstelle zu entscheiden</div>
+    <div class="specimenEntscheidung__liste" id="entscheidungListe"></div>
+    <div class="specimenEntscheidung__befunde" id="entscheidungBefunde"></div>
   </section>
   <section class="specimenSchriftvergleich">
     <span><strong>Regular (400)</strong><span class="regular">Grundstücksverkehrsgenehmigungsverfahren 0O1l7</span></span>

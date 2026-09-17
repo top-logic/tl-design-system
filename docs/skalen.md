@@ -928,6 +928,26 @@ Stufe B braucht eine Zusage, die keine Liste von Umbenennungen ist: **Jedes der 
 | `button-secondary` und seine zwei Zustände | je 2 | Linie → `border-control`; Beschriftung → `brand-primary` |
 | `button-danger` und sein Zustand | je 2 | gefüllt → `surface`; nur Text → `text` |
 
+#### Neun sind zu wählen, drei sind aufzuteilen
+
+Die Vergleichsansicht hat einen Unterschied sichtbar gemacht, den die Tabelle oben noch
+verwischt: **Mehrdeutig heißt nicht immer dasselbe.**
+
+| Natur | Anzahl | Was zu tun ist |
+|---|---|---|
+| `alternative` | 9 | An jeder Stelle gilt **genau eines** der Ziele. Die Regel entscheidet welches. |
+| `aufteilung` | 3 | An **derselben** Stelle gelten **beide gleichzeitig**, für verschiedene Eigenschaften. |
+
+Die drei sind `button-secondary` und seine zwei Zustände. Die Umriss-Schaltfläche liest heute
+ein einziges Token für ihre Linie **und** für ihre Beschriftung. Welches Ziel man auch einsetzt,
+die jeweils andere Eigenschaft bekommt den falschen Wert — im Vergleich sofort zu sehen: Mit
+`border-control` wird die Schrift grau, mit `brand-primary` verliert die Linie ihren Kontrast.
+
+**Hier ist nichts zu entscheiden.** Die Regel ist erst erfüllt, wenn `border-color` und `color`
+im Stylesheet getrennte Tokens lesen — das ist eine Änderung an `tlReactControls.css`, keine an
+der Skala. Die Vergleichsansicht markiert diese drei deshalb rot und nennt den Umschalter dort
+ausdrücklich einen Ausschnitt, keine Wahl.
+
 #### Was die Abbildung nebenbei zeigt
 
 **Nur vier Rollen der neuen Skala sind wirklich neu** — die vier Info-Rollen, und die auch nur, weil Info im heutigen Theme überhaupt keine eigene Farbe hatte. Alles andere ist ein umbenanntes oder aufgespaltenes Token. **Die Skala erfindet fast nichts; sie ordnet, was schon da war.**
@@ -1009,3 +1029,28 @@ sind keine Stufen, das sind Einzelfallentscheidungen, die nacheinander getroffen
 
 Die Skala muss diesen Schwanz auf **eine** Stufe abbilden. Wie viele Stufen es insgesamt werden und
 wo die kleinste liegt, ist damit die eigentliche Frage — nicht die Schrittweite.
+
+### Die Vergleichsansicht: die Abbildung wird ausführbar
+
+`abbildung.json` war bis hierhin ein Dokument — 54 Einträge, jeder mit Ziel und Begründung, aber
+keiner je an einer Fläche nachgerechnet. Die Vergleichsansicht im Specimen setzt sie in Werte um:
+dieselben Fragmente aus der Demo-App, links unter dem heutigen Theme, rechts unter der Skala.
+
+Damit das überhaupt geht, muss die Skala den Rückweg nehmen: Das ausgelieferte
+`tlReactControls.css` kennt nur die heutigen Tokennamen. Der Umweg ist kein Behelf, sondern die
+Probe — **was sich nicht zurückführen lässt, ist in Stufe B eine Änderung am Stylesheet, keine am
+Token.** Genau so sind die drei Aufteilungen aufgefallen.
+
+Drei Regeln hält der Test fest, weil sie leicht zu verletzen und schwer zu bemerken sind:
+
+* **Kein Token darf fehlen.** Die Werte liegen je Seite auf einem Container, nicht auf `:root`.
+  Ein Token ohne Wert erbt dort vom heutigen Theme und zeigt die alte Farbe als neue — genau die
+  stille Vererbung, die das Gate schon einmal gefunden hat.
+* **Was entfällt, erbt nicht.** `focus-inset` und `background-inverse` bekommen `initial`. Wo ein
+  Fragment sie noch liest, fällt die Stelle sichtbar aus, statt still zu funktionieren.
+* **Was offen ist, trägt den heutigen Wert** — und die Ansicht sagt es. Sechs Rollen stehen so da;
+  ohne sie wäre die Fläche daneben unlesbar und der Vergleich wertlos.
+
+Die Beschriftungen bleiben auch hier gerechnet, nicht gesetzt: `layer-accent-text` folgt der
+Wahl, die für `layer-accent` getroffen wurde. Wer die Fläche umschaltet und die Beschriftung
+gegen die alte weiterrechnet, sieht eine Kombination, die es an keiner Stelle gibt.

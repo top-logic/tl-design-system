@@ -458,7 +458,26 @@ Bei einem Markenwechsel wären vier Stellen nachzuziehen — und die vergessene 
 
 ---
 
-## 27 · Wie es weitergeht
+## 27 · Die Skala am echten Material — und was dabei auffiel
+
+**Dieselben Fragmente aus der laufenden Anwendung, zweimal:** links das heutige Theme, rechts die Skala.
+
+Damit das geht, nimmt die Skala den Rückweg — das ausgelieferte Stylesheet kennt nur die heutigen Tokennamen. **Der Umweg ist die Probe:** Was sich nicht zurückführen lässt, ist eine Änderung am Stylesheet, keine an der Skala.
+
+**Der Befund:** Von den zwölf mehrdeutigen Tokens sind nur neun eine Wahl.
+
+| Natur | Anzahl | Was zu tun ist |
+|---|---|---|
+| Alternative | 9 | An jeder Stelle gilt genau eines. Die Regel entscheidet. |
+| **Aufteilung** | **3** | An derselben Stelle gelten **beide gleichzeitig** — hier ist nichts zu wählen. |
+
+Die drei sind die Umriss-Schaltfläche: Ein Token trägt heute ihre Linie **und** ihre Beschriftung. Mit `border-control` wird die Schrift grau, mit `brand-primary` verliert die Linie ihren Kontrast. **Beides ist falsch** — erst getrennte Tokens im Stylesheet lösen es.
+
+> Sprechnotiz: Das ist der Wert der Ansicht. Auf dem Papier sah der Eintrag aus wie die anderen elf. An der Fläche war in zwei Sekunden zu sehen, dass dort gar keine Entscheidung ansteht, sondern eine Aufgabe.
+
+---
+
+## 28 · Wie es weitergeht
 
 **Stufe A — die Skalen festlegen und belegen.** *Abgeschlossen: alle elf entschieden.*
 
@@ -466,11 +485,12 @@ Bei einem Markenwechsel wären vier Stellen nachzuziehen — und die vergessene 
 
 | | |
 |---|---|
-| ✓ | Die Skala ist maschinenlesbar, zweischichtig und durch 63 Tests abgesichert |
+| ✓ | Die Skala ist maschinenlesbar, zweischichtig und durch 86 Tests abgesichert |
 | ✓ | Der Generator erzeugt das ausliefernde CSS |
 | ✓ | Das Inventar belegt die Zahlen reproduzierbar |
-| | Die erzeugte Datei gegen die Fragmente der laufenden Anwendung stellen |
+| ✓ | Die erzeugte Datei steht gegen die Fragmente der laufenden Anwendung — Vergleichsansicht |
 | | Die gefundenen Verstöße abräumen — Kontraste, 22× fehlender Fokus, `overflow: hidden` |
+| | Die drei Aufteilungen im Stylesheet trennen — `border-color` und `color` lesen getrennte Tokens |
 | | Die Paarliste des Java-Gates nachziehen |
 | | Die Tokens in Figma spiegeln, damit Design und Code dieselbe Quelle haben |
 

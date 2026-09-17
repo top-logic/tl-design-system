@@ -147,8 +147,10 @@ ${typoklassen(typo)}
 `;
 }
 
-// Direkt aufgerufen schreibt der Generator die Datei: node generieren.mjs
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Direkt aufgerufen schreibt der Generator die Datei: node generieren.mjs.
+// Die process-Prüfung davor ist kein Zierrat: Seit die Vergleichsansicht aufloesen()
+// importiert, lädt der Browser dieses Modul mit — und dort gibt es kein process.
+if (typeof process !== 'undefined' && import.meta.url === `file://${process.argv[1]}`) {
   const { readFileSync, writeFileSync } = await import('node:fs');
   const skala = JSON.parse(readFileSync(new URL('./skala.json', import.meta.url)));
   const ziel = new URL('./skala.css', import.meta.url);

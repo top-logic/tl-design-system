@@ -1,5 +1,7 @@
 import { REQUIREMENTS, report } from './requirements.mjs';
 import { markenRampe, rampeAnwenden, beschriftungAbleiten, hexZuOklch, oklchZuHex } from './brand.mjs';
+import { themaAusSkala, mehrdeutige } from './abbildung.mjs';
+import { aufloesen } from './generieren.mjs';
 
 /** Die heutige Markenfarbe — Ausgangspunkt des Reglers, nicht ein empfohlener Wert. */
 const MARKE_STARTWERT = '#2968C8';
@@ -60,8 +62,29 @@ const fragmente = await Promise.all(
   ['buttons', 'form', 'table'].map((n) => fetch(`./markup/${n}.html`).then((a) => a.text())));
 const typoProbe = await fetch('./markup/typo.html').then((a) => a.text());
 
+// Der Soll-Zustand daneben: die entschiedene Skala und die Abbildung, die sie auf die
+// Tokennamen zurückführt, die das ausgelieferte CSS heute liest. Die Referenzen auf die
+// Primitiv-Schicht werden dabei aufgelöst — der Vergleich braucht Werte, nicht var().
+const skala = aufloesen(await fetch('./skala.json').then((a) => a.json()));
+const abbildung = await fetch('./abbildung.json').then((a) => a.json());
+
+
 const buehne = document.getElementById('buehne');
-const ansichten = { fragmente: fragmente.join('\n<hr>\n'), typo: typoProbe };
+const fragmenteZusammen = fragmente.join('\n<hr>\n');
+
+/** Dieselben Fragmente zweimal, je Seite ein eigener Token-Satz auf dem Container. */
+const vergleichsAnsicht = () => `<div class="specimenVergleich">
+  <div class="specimenVergleich__seite" id="seiteIst">
+    <div class="specimenVergleich__kopf">Heute <small>tokens.json</small></div>
+    <div class="specimenVergleich__inhalt">${fragmenteZusammen}</div>
+  </div>
+  <div class="specimenVergleich__seite" id="seiteSoll">
+    <div class="specimenVergleich__kopf">Skala <small>skala.json über abbildung.json</small></div>
+    <div class="specimenVergleich__inhalt">${fragmenteZusammen}</div>
+  </div>
+</div>`;
+
+const ansichten = { fragmente: fragmenteZusammen, typo: typoProbe, vergleich: vergleichsAnsicht };
 
 /**
  * Misst die tatsächliche, gerenderte Zeilenhöhe je Typo-Stufe und schreibt sie in die
@@ -81,8 +104,12 @@ function zeilenhoeheMessen() {
 
 /** Wechselt zwischen den Fragmenten (Buttons/Formular/Tabelle) und der Typo-Probe. */
 function ansichtAnwenden(name) {
-  buehne.innerHTML = ansichten[name];
+  const inhalt = ansichten[name];
+  buehne.innerHTML = typeof inhalt === 'function' ? inhalt() : inhalt;
   if (name === 'typo') zeilenhoeheMessen();
+  // Die Entscheidungsleiste gehört zum Vergleich — anderswo hat sie keinen Gegenstand.
+  document.getElementById('entscheidung').hidden = name !== 'vergleich';
+  if (name === 'vergleich') neuZeichnen();
 }
 
 document.getElementById('ansicht').addEventListener('change', (e) => ansichtAnwenden(e.target.value));
@@ -307,6 +334,94 @@ function beschriftungenAnzeigen(modus) {
   };
 }
 
+// -------------------------------------------------------------------------------------------
+// Vergleich: dieselben Fragmente unter dem heutigen Theme und unter der Skala.
+//
+// Die zwölf mehrdeutigen Tokens sind der Grund, warum das kein reines Nebeneinanderstellen
+// sein kann: Jedes trägt heute mehrere Aufgaben, und die Skala trennt sie. Welche Aufgabe an
+// EINER Stelle gilt, entscheidet die Regel aus abbildung.json — der Umschalter macht beide
+// Lesarten sichtbar, statt eine davon stillschweigend zu wählen.
+// -------------------------------------------------------------------------------------------
+
+/** Ist-Token → gewähltes Ziel. Leer heißt: das erste in abbildung.json genannte Ziel gilt. */
+const wahl = {};
+
+/** Die Kandidaten der Ableitung auf der SOLL-Seite: Text der Skala gegen Weiß, nicht die des
+ *  heutigen Themes — sonst würde die neue Fläche gegen die alte Schriftfarbe gemessen. */
+const SKALA_KANDIDATEN = { dunklerKandidat: skala.farbe.hell['text-primary'], hellerKandidat: '#FFFFFF' };
+
+/** Trägt einen Token-Satz auf einen Container statt auf :root — zwei Sätze gleichzeitig. */
+function tokensAuftragen(element, tokens) {
+  for (const [name, wert] of Object.entries(tokens)) element.style.setProperty(`--${name}`, wert);
+}
+
+/** Zeichnet die Umschalter für die mehrdeutigen Tokens, einmal; danach nur noch Werte. */
+function entscheidungslisteZeichnen() {
+  const liste = document.getElementById('entscheidungListe');
+  if (liste.childElementCount) return;
+  for (const { name, ziele, regel, natur, naturWarum } of mehrdeutige(abbildung)) {
+    const kennung = document.createElement('label');
+    kennung.className = 'specimenEntscheidung__name';
+    kennung.textContent = name;
+    kennung.htmlFor = `wahl-${name}`;
+    const auswahl = document.createElement('select');
+    auswahl.id = `wahl-${name}`;
+    for (const ziel of ziele) {
+      const option = document.createElement('option');
+      option.value = ziel;
+      option.textContent = ziel;
+      auswahl.append(option);
+    }
+    auswahl.addEventListener('change', (e) => {
+      wahl[name] = e.target.value;
+      neuZeichnen();
+    });
+    const erklaerung = document.createElement('span');
+    erklaerung.className = 'specimenEntscheidung__regel';
+    // Bei einer Aufteilung gibt es nichts zu wählen: An derselben Stelle gelten beide Ziele,
+    // nur für verschiedene Eigenschaften. Der Umschalter zeigt dort einen Ausschnitt — das
+    // muss dastehen, sonst liest man die Vorgabe als getroffene Entscheidung.
+    if (natur === 'aufteilung') {
+      erklaerung.classList.add('specimenEntscheidung__regel--aufteilung');
+      erklaerung.textContent = `Aufteilung, keine Wahl: ${naturWarum} — der Umschalter zeigt hier nur einen Ausschnitt. ${regel}`;
+    } else {
+      erklaerung.textContent = regel;
+    }
+    liste.append(kennung, auswahl, erklaerung);
+  }
+}
+
+/** Zeigt, was die Abbildung NICHT entscheidet: was entfällt und was offen ist. Beides sieht
+ *  man der Fläche nicht an — das Entfallene fehlt, das Offene trägt noch den alten Wert. */
+function befundeZeichnen(herkunft) {
+  const ziel = document.getElementById('entscheidungBefunde');
+  const zeilen = [];
+  for (const art of ['entfaellt', 'offen']) {
+    const namen = Object.entries(herkunft).filter(([, h]) => h.art === art).map(([n]) => n);
+    if (!namen.length) continue;
+    const text = art === 'entfaellt'
+      ? `entfällt ersatzlos (${namen.length}) — wo das Fragment sie noch liest, fällt die Stelle aus: `
+      : `noch offen (${namen.length}) — zeigt weiter den heutigen Wert: `;
+    zeilen.push(`<div class="specimenEntscheidung__befund specimenEntscheidung__befund--${art}">${text}${namen.join(', ')}</div>`);
+  }
+  ziel.innerHTML = zeilen.join('');
+}
+
+/** Trägt beide Token-Sätze auf, sobald die Vergleichsansicht sichtbar ist. */
+function vergleichZeichnen(istTokensDesModus) {
+  const seiteIst = document.getElementById('seiteIst');
+  const seiteSoll = document.getElementById('seiteSoll');
+  if (!seiteIst || !seiteSoll) return;
+  entscheidungslisteZeichnen();
+  const sollFarben = aktuellerModus === 'light' ? skala.farbe.hell : skala.farbe.dunkel;
+  const istFarben = aktuellerModus === 'light' ? rohTokens.light : rohTokens.dark;
+  const { tokens, herkunft } = themaAusSkala(sollFarben, abbildung,
+    { wahl, istFarben, kandidaten: SKALA_KANDIDATEN });
+  tokensAuftragen(seiteIst, istTokensDesModus);
+  tokensAuftragen(seiteSoll, tokens);
+  befundeZeichnen(herkunft);
+}
+
 /** Trägt die Tokens des aktuell angezeigten Modus als Custom Properties auf das Wurzelelement,
  *  rechnet die Rampe neu und zeichnet Rampen-Ausgabe und Gate für beide Modi. */
 function neuZeichnen() {
@@ -318,6 +433,7 @@ function neuZeichnen() {
   }
   wurzel.dataset.theme = aktuellerModus;
 
+  vergleichZeichnen(tokensDesModus);
   rampeZeichnen(rampe, { light: beschriftungenAnzeigen('light'), dark: beschriftungenAnzeigen('dark') });
   gateZeichnen(gatePruefen('light', light), gatePruefen('dark', dark));
   grundflaecheAnzeigen();
