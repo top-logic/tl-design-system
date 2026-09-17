@@ -249,9 +249,10 @@
       "art": "mehrdeutig",
       "ziele": [
         "support-error-surface",
-        "support-error-text"
+        "support-error-text",
+        "support-error-border"
       ],
-      "regel": "Die gefüllte Gefahr-Schaltfläche nimmt support-error-surface, die Beschriftung darauf wird abgeleitet. Eine Schaltfläche, die Gefahr nur als Text zeigt, nimmt support-error-text.",
+      "regel": "Die gefüllte Gefahr-Schaltfläche nimmt support-error-surface, die Beschriftung darauf wird abgeleitet. Eine Schaltfläche, die Gefahr nur als Text zeigt, nimmt support-error-text. Dazu die Linie: support-error-border. Die Linie kam beim Aufschreiben nicht vor: Der Aufnahmeknopf trägt seinen Gefahrzustand als Rahmen, nicht als Fläche — an drei Stellen als \"box-shadow: inset 0 0 0 2px\". Gefunden beim Zuordnen der Lesestellen, nicht beim Aufschreiben der Regel.",
       "warum": "Fläche und Text aus einem Token — und genau hier besteht kein einziger text-on-color-Wert beide Flächen.",
       "natur": "alternative"
     },
@@ -259,9 +260,10 @@
       "art": "mehrdeutig",
       "ziele": [
         "support-error-surface",
-        "support-error-text"
+        "support-error-text",
+        "support-error-border"
       ],
-      "regel": "Wie button-danger, eine Stufe weiter: die gefüllte Fläche im Zeigerzustand nimmt support-error-surface, die Beschriftung darauf wird abgeleitet.",
+      "regel": "Wie button-danger, eine Stufe weiter: die gefüllte Fläche im Zeigerzustand nimmt support-error-surface, die Beschriftung darauf wird abgeleitet. Dazu die Linie: support-error-border. wie button-danger. Die Linie bleibt im Zeigerzustand dieselbe — die Skala führt keine Hover-Stufe der Semantikfarben; das ist vermerkt, nicht erfunden.",
       "warum": "wie button-danger.",
       "natur": "alternative"
     },

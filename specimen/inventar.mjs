@@ -104,7 +104,9 @@ export function lesestellen(css, token) {
   // zuzuordnen wäre, was der einzige Zweck dieser Auszählung ist.
   const ohneKommentare = css.replace(/\/\*[\s\S]*?\*\//g, ' ');
   for (const regel of ohneKommentare.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
-    const selektor = regel[1].trim();
+    // Eine Zeile, ein Leerzeichen nach jedem Komma: Gruppenselektoren stehen im
+    // Bestand über mehrere Zeilen und taugen sonst nicht als Schlüssel.
+    const selektor = regel[1].trim().replace(/\s*,\s*/g, ', ').replace(/\s+/g, ' ');
     // Was vor dem Block steht, ist nur dann ein Selektor, wenn es keiner
     // At-Regel gehört — @media bringt seine eigene Zeile mit.
     if (!selektor || selektor.startsWith('@')) continue;

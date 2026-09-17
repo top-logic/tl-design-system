@@ -11,49 +11,70 @@
 import { lesestellen } from './inventar.mjs';
 
 /**
- * Was die Eigenschaft allein schon entscheidet.
+ * Wonach eine Eigenschaft gelesen wird: als Linie, als Text oder als Fläche.
  *
- * Bei den Semantikfarben trennt die Regel nach der Aufgabe — Text, Linie,
- * Fläche — und genau die steht in der Eigenschaft. Diese Stellen brauchen
- * keinen Menschen. Was hier nicht abgedeckt ist, braucht einen.
+ * Überall dort, wo die Ziele eines Tokens verschiedene Aufgaben haben, ist das
+ * schon die ganze Entscheidung — die Aufgabe steht in der Eigenschaft. Nur wo
+ * beide Ziele dieselbe Aufgabe haben (border-separator gegen border-control),
+ * muss der Selektor ran.
  */
-export const NACH_EIGENSCHAFT = {
-  color: 'text',
-  'border-color': 'border',
-  border: 'border',
-  'border-top': 'border', 'border-right': 'border', 'border-bottom': 'border', 'border-left': 'border',
-  outline: 'border',
-  'outline-color': 'border',
-  background: 'surface',
-  'background-color': 'surface',
-  'accent-color': 'surface',
+export const KLASSEN = {
+  linie: ['border', 'border-top', 'border-right', 'border-bottom', 'border-left',
+          'border-color', 'outline', 'outline-color'],
+  text: ['color'],
+  flaeche: ['background', 'background-color', 'accent-color'],
 };
 
-/** Ordnet eine Stelle einem Ziel zu, soweit die Eigenschaft das hergibt. */
-export function zuordnen(stelle, ziele) {
-  const rolle = NACH_EIGENSCHAFT[stelle.eigenschaft];
-  if (!rolle) return null;
-  // Die Semantikfarben tragen die Aufgabe im Namen: support-error-text usw.
-  const treffer = ziele.filter((z) => z.endsWith(`-${rolle}`));
-  return treffer.length === 1 ? treffer[0] : null;
+/**
+ * Die Klasse einer Stelle, oder null.
+ *
+ * box-shadow zählt NUR mit `inset` als Linie: Der Bestand baut die
+ * Umriss-Schaltfläche an 25 Stellen als `inset 0 0 0 2px`. Wer den Schatten
+ * pauschal als Elevation liest, ordnet jede davon falsch zu; wer ihn pauschal
+ * als Linie liest, verwechselt ihn mit einem echten Schatten.
+ */
+export function klasseVon({ eigenschaft, wert }) {
+  if (eigenschaft === 'box-shadow') return /\binset\b/.test(wert) ? 'linie' : null;
+  for (const [klasse, eigenschaften] of Object.entries(KLASSEN))
+    if (eigenschaften.includes(eigenschaft)) return klasse;
+  return null;
+}
+
+/**
+ * Das Ziel einer Stelle, nach der Entscheidung aus stellen.json.
+ *
+ * @returns {{ziel: string|null, zweckfremd: object|null}}
+ */
+export function zuordnen(stelle, eintrag) {
+  if (!eintrag) return { ziel: null, zweckfremd: null };
+  const fremd = eintrag.zweckfremd?.[stelle.selektor];
+  if (fremd) return { ziel: null, zweckfremd: fremd };
+  for (const [ziel, selektoren] of Object.entries(eintrag.nachSelektor ?? {}))
+    if (selektoren.includes(stelle.selektor)) return { ziel, zweckfremd: null };
+  const klasse = klasseVon(stelle);
+  const nachKlasse = klasse && eintrag.nachKlasse?.[klasse];
+  return { ziel: nachKlasse ?? null, zweckfremd: null };
 }
 
 /**
  * Alle Lesestellen der mehrdeutigen Tokens, je Stelle mit dem Ziel, das die
  * Eigenschaft hergibt — oder `null`, wo eine Entscheidung am Bild nötig ist.
  */
-export function stellenBericht(css, abbildung) {
+export function stellenBericht(css, abbildung, entscheidungen) {
   const raus = {};
   for (const [name, e] of Object.entries(abbildung.farbe)) {
     if (e.art !== 'mehrdeutig') continue;
-    const stellen = lesestellen(css, name).map((s) => ({ ...s, ziel: zuordnen(s, e.ziele) }));
+    const eintrag = entscheidungen?.token?.[name];
+    const stellen = lesestellen(css, name).map((s) => ({ ...s, ...zuordnen(s, eintrag) }));
     raus[name] = {
       natur: e.natur,
       ziele: e.ziele,
       regel: e.regel,
+      entscheidung: eintrag?.entscheidung ?? null,
       stellen,
       zugeordnet: stellen.filter((s) => s.ziel).length,
-      offen: stellen.filter((s) => !s.ziel).length,
+      zweckfremd: stellen.filter((s) => s.zweckfremd).length,
+      offen: stellen.filter((s) => !s.ziel && !s.zweckfremd).length,
     };
   }
   return raus;
@@ -70,23 +91,26 @@ if (typeof process !== 'undefined' && import.meta.url === `file://${process.argv
   const css = ['style/tlReactBase.css', 'style/tlReactControls.css']
     .map((d) => readFileSync(join(MODUL, d), 'utf8')).join('\n');
   const abbildung = JSON.parse(readFileSync(new URL('./abbildung.json', import.meta.url)));
-  const bericht = stellenBericht(css, abbildung);
+  const entscheidungen = JSON.parse(readFileSync(new URL('./stellen.json', import.meta.url)));
+  const bericht = stellenBericht(css, abbildung, entscheidungen);
 
   const nur = process.argv.slice(2).find((a) => !a.startsWith('--'));
   if (process.argv.includes('--json')) {
     console.log(JSON.stringify(nur ? { [nur]: bericht[nur] } : bericht, null, 2));
   } else {
-    let gesamt = 0; let offen = 0;
+    let gesamt = 0; let offen = 0; let fremd = 0;
     for (const [name, b] of Object.entries(bericht)) {
       if (nur && name !== nur) continue;
-      gesamt += b.stellen.length; offen += b.offen;
-      console.log(`\n== ${name} == ${b.stellen.length} Stellen · ${b.zugeordnet} durch die Eigenschaft entschieden`
-        + `, ${b.offen} offen${b.natur === 'aufteilung' ? '  [AUFTEILUNG — nicht zu wählen]' : ''}`);
+      gesamt += b.stellen.length; offen += b.offen; fremd += b.zweckfremd;
+      console.log(`\n== ${name} == ${b.stellen.length} Stellen · ${b.zugeordnet} zugeordnet`
+        + (b.zweckfremd ? `, ${b.zweckfremd} zweckfremd` : '')
+        + (b.offen ? `, ${b.offen} OFFEN` : '')
+        + (b.natur === 'aufteilung' ? '  [AUFTEILUNG — je Deklaration eindeutig, je Token nicht]' : ''));
       for (const s of b.stellen) {
-        const marke = s.ziel ? `→ ${s.ziel}` : '?';
-        console.log(`  ${marke.padEnd(26)} ${s.eigenschaft.padEnd(14)} ${s.selektor.replace(/\s+/g, ' ')}`);
+        const marke = s.ziel ? `→ ${s.ziel}` : s.zweckfremd ? `ZWECKFREMD → ${s.zweckfremd.vorschlag}` : '?  OHNE ENTSCHEIDUNG';
+        console.log(`  ${marke.padEnd(30)} ${s.eigenschaft.padEnd(14)} ${s.selektor}`);
       }
     }
-    console.log(`\n${gesamt} Lesestellen, davon ${offen} ohne Zuordnung durch die Eigenschaft.`);
+    console.log(`\n${gesamt} Lesestellen · ${gesamt - offen - fremd} zugeordnet · ${fremd} zweckfremd · ${offen} ohne Entscheidung.`);
   }
 }

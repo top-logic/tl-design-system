@@ -477,7 +477,27 @@ Die drei sind die Umriss-Schaltfläche: Ein Token trägt heute ihre Linie **und*
 
 ---
 
-## 28 · Wie es weitergeht
+## 28 · 131 Stellen, 0 offen
+
+**Die Abbildung entscheidet je Token. Bei den mehrdeutigen entscheidet erst die Stelle.**
+
+Das ausgelieferte CSS liest die zwölf mehrdeutigen Tokens an **131 Stellen**. Jede trägt jetzt eine Entscheidung, und ein Test hält fest, dass keine ohne bleibt.
+
+| | |
+|---|---|
+| 131 Lesestellen | **129 zugeordnet · 2 zweckfremd · 0 ohne Entscheidung** |
+| `border-subtle` | 51 trennen → `border-separator`, **14 werden bedient → `border-control`** |
+| Semantikfarben | 26 — allein die Eigenschaft entscheidet: `color`, `border`, `background` |
+
+**Der Einzelfund, der Stufe B am meisten spart:** Der Bestand baut die Umriss-Schaltfläche an 25 Stellen nicht mit `border`, sondern mit `box-shadow: inset 0 0 0 2px`. Damit wird die Aufteilung **mechanisch** — eine Ersetzungsregel statt 25 Einzelfallentscheidungen.
+
+**Dreimal war die Regel am Schreibtisch zu eng:** `border-subtle` kannte den umschließenden Rahmen um etwas *Unbedientes* nicht (Karte, Popover, Ladering). `button-danger` hatte keine Linie. `layer-accent` stand an keiner der Stellen, für die die Regel gemacht war.
+
+> Sprechnotiz: Zwei Stellen sind als zweckfremd vermerkt statt in die Regel gebogen. Für beide steht ein Vorschlag daneben, und der Test verlangt ihn. Eine Regel, die überall passt, hat meist aufgehört, etwas zu behaupten.
+
+---
+
+## 29 · Wie es weitergeht
 
 **Stufe A — die Skalen festlegen und belegen.** *Abgeschlossen: alle elf entschieden.*
 
@@ -485,12 +505,13 @@ Die drei sind die Umriss-Schaltfläche: Ein Token trägt heute ihre Linie **und*
 
 | | |
 |---|---|
-| ✓ | Die Skala ist maschinenlesbar, zweischichtig und durch 86 Tests abgesichert |
+| ✓ | Die Skala ist maschinenlesbar, zweischichtig und durch 105 Tests abgesichert |
 | ✓ | Der Generator erzeugt das ausliefernde CSS |
 | ✓ | Das Inventar belegt die Zahlen reproduzierbar |
 | ✓ | Die erzeugte Datei steht gegen die Fragmente der laufenden Anwendung — Vergleichsansicht |
 | | Die gefundenen Verstöße abräumen — Kontraste, 22× fehlender Fokus, `overflow: hidden` |
-| | Die drei Aufteilungen im Stylesheet trennen — `border-color` und `color` lesen getrennte Tokens |
+| ✓ | Jede der 131 Lesestellen der mehrdeutigen Tokens trägt eine Entscheidung |
+| | Die Ersetzung durchführen — `stellen.json` sagt je Deklaration, was einzusetzen ist |
 | | Die Paarliste des Java-Gates nachziehen |
 | | Die Tokens in Figma spiegeln, damit Design und Code dieselbe Quelle haben |
 

@@ -948,6 +948,66 @@ im Stylesheet getrennte Tokens lesen — das ist eine Änderung an `tlReactContr
 der Skala. Die Vergleichsansicht markiert diese drei deshalb rot und nennt den Umschalter dort
 ausdrücklich einen Ausschnitt, keine Wahl.
 
+#### Die Stellen entscheiden, nicht die Tokens
+
+Die Abbildung entscheidet je **Token**. Bei den mehrdeutigen reicht das nicht — dort entscheidet
+erst die **Stelle**. `specimen/stellen.mjs` zählt sie aus dem ausgelieferten CSS aus:
+**131 Lesestellen** über die zwölf Tokens. `specimen/stellen.json` trägt für jede eine
+Entscheidung, und ein Test hält fest, dass keine ohne bleibt.
+
+Das Meiste entscheidet dabei die **Eigenschaft**, nicht der Selektor: Wo die Ziele eines Tokens
+verschiedene Aufgaben haben, steht die Aufgabe schon in der Deklaration.
+
+| Klasse | Eigenschaften | Beispiel |
+|---|---|---|
+| Linie | `border*`, `outline*`, **`box-shadow` mit `inset`** | `support-error` → `-border` |
+| Text | `color` | `support-error` → `-text` |
+| Fläche | `background*`, `accent-color` | `support-error` → `-surface` |
+
+**Der `inset`-Schatten ist der wichtigste Einzelfund dieser Auszählung.** Der Bestand baut die
+Umriss-Schaltfläche an 25 Stellen nicht mit `border`, sondern mit `box-shadow: inset 0 0 0 2px`.
+Wer den Schatten pauschal als Elevation liest, ordnet jede davon falsch zu. Damit wird die
+Aufteilung von `button-secondary` **mechanisch durchführbar**: je Deklaration eindeutig, auch
+wenn sie je Token unmöglich bleibt. Das ist für Stufe B der Unterschied zwischen 25
+Einzelfallentscheidungen und einer Ersetzungsregel.
+
+| Ergebnis | |
+|---|---|
+| 131 Lesestellen | 129 zugeordnet, 2 zweckfremd, **0 ohne Entscheidung** |
+| `border-subtle` | 51 → `border-separator`, **14 → `border-control`** |
+| `button-secondary` samt Zuständen | 13 → Linie, 12 → Beschriftung/Fläche |
+| Semantikfarben | 26, allein durch die Eigenschaft |
+
+#### Was die Auszählung an den Regeln korrigiert hat
+
+**Dreimal war die Regel am Schreibtisch zu eng gefasst** — und dreimal hat erst der Bestand es
+gezeigt:
+
+1. **`border-subtle` kannte einen Fall nicht.** Die Regel trennte „trennt nur" von „umschließt
+   Bedientes". Der häufigste Fall im Bestand ist ein dritter: der umschließende Rahmen um etwas,
+   das **nicht bedient** wird — Karte, Kachel, Popover, Ladering. WCAG 1.4.11 verlangt die 3,0 für
+   Bedienelemente, nicht für Umrandungen. Die Regel heißt deshalb jetzt nicht mehr „umschließt",
+   sondern **„wird bedient"**: 14 Stellen bekommen `border-control`, darunter die Eingabefelder,
+   an denen der ganze Befund hängt.
+2. **`button-danger` hatte keine Linie.** Der Aufnahmeknopf trägt seinen Gefahrzustand als Rahmen,
+   nicht als Fläche. `support-error-border` ist als Ziel nachgetragen.
+3. **`layer-accent` steht an keiner der Stellen, für die die Regel gemacht war.** Sie sprach von
+   Popover und ausgewähltem Reiter. Im CSS steht das Token an der Markenleiste (→ `brand-subtle`)
+   und an zwei Stellen, für die die Skala **kein Ziel führt**.
+
+Diese zwei sind als **zweckfremd** vermerkt, nicht in die Regel gebogen:
+
+| Stelle | Was sie wirklich ist | Vorschlag |
+|---|---|---|
+| `.tlAvatar--empty` | die schwach gefüllte Kreisfläche eines Avatars ohne Namen — eine neutrale Tönung | `layer-02` |
+| `.tlFormField__dirtyDot` | der Punkt neben einem geänderten Feld; eine getönte Fläche wäre unsichtbar | `brand-primary` |
+
+**Eine Stelle, an der die Regel nicht greift, ist ein Befund — kein Anlass, die Regel zu dehnen,
+bis sie irgendwie passt.** Der Test verlangt für jede zweckfremde Stelle Grund *und* Vorschlag.
+
+Offen bleibt daraus eines: Die Skala führt **keine Hover-Stufe der Semantikfarben**.
+`button-danger-hover` nimmt deshalb dieselbe Linie wie `button-danger`.
+
 #### Was die Abbildung nebenbei zeigt
 
 **Nur vier Rollen der neuen Skala sind wirklich neu** — die vier Info-Rollen, und die auch nur, weil Info im heutigen Theme überhaupt keine eigene Farbe hatte. Alles andere ist ein umbenanntes oder aufgespaltenes Token. **Die Skala erfindet fast nichts; sie ordnet, was schon da war.**

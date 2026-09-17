@@ -61,8 +61,9 @@ nicht nur im Specimen selbst.
 
 | Aufruf | Was es tut |
 |---|---|
-| `node --test` | alles prüfen — 86 Tests |
+| `node --test` | alles prüfen — 105 Tests |
 | `node inventar.mjs` | das ausgelieferte CSS auszählen (`--json` für die Rohdaten) |
+| `node stellen.mjs [token]` | auszählen, wo das CSS die mehrdeutigen Tokens liest, und was dort gilt |
 | `node generieren.mjs` | `skala.css` aus `skala.json` neu erzeugen |
 | `node serve.mjs` | Specimen auf `http://localhost:8137/` |
 

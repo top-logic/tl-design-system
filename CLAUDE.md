@@ -16,6 +16,7 @@ Alle im Verzeichnis `specimen/`, alle mit `node` ohne Abhängigkeiten:
 |---|---|
 | `node inventar.mjs` | **Zählt das ausgelieferte CSS aus** — Schriftgrößen, Radien, Rahmenbreiten, Abstände samt Lücken, die Fokus-Mechanismen, Motion. Löst die Theme-Tokens auf. `--json` für die Rohdaten. |
 | `node generieren.mjs` | Erzeugt `skala.css` aus `skala.json`. Nach jeder Änderung an der Skala aufrufen. |
+| `node stellen.mjs [token]` | **Zählt aus, WO das CSS die mehrdeutigen Tokens liest** — Selektor, Eigenschaft und die Rolle, die dort gilt. `--json` für die Rohdaten. |
 | `node --test` | Alle Tests — sie sind das Gate, nicht nur Prüfung. |
 | `node serve.mjs` | Specimen auf `http://localhost:8137/` |
 

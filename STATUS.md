@@ -19,17 +19,32 @@ rechts unter der Skala, über `abbildung.json` auf die heutigen Tokennamen zurü
 `specimen/abbildung.mjs` macht die Abbildung dafür ausführbar, `abbildung.anwenden.test.mjs` ist
 das Gate dazu — **86 Tests, alle grün**.
 
-Nächster Schritt: die **drei Aufteilungen** im Stylesheet trennen (siehe unten), dann die
-mehrdeutigen Alternativen je Verwendungsstelle entscheiden — die Umschalter in der
-Vergleichsansicht sind dafür da.
+**Alle 131 Lesestellen der mehrdeutigen Tokens sind entschieden.** `specimen/stellen.mjs` zählt
+sie aus dem ausgelieferten CSS aus, `specimen/stellen.json` trägt je Stelle die Entscheidung, und
+ein Test hält fest, dass keine ohne bleibt — **105 Tests, alle grün**.
+
+| | |
+|---|---|
+| 131 Lesestellen | 129 zugeordnet · 2 zweckfremd · **0 ohne Entscheidung** |
+| `border-subtle` | 51 → `border-separator`, **14 → `border-control`** (darunter die Eingabefelder) |
+| Semantikfarben | 26 — allein die Eigenschaft entscheidet |
+
+Nächster Schritt: **die Ersetzung durchführen.** `node stellen.mjs` sagt je Deklaration, was
+einzusetzen ist. Das ist die erste Änderung am ausgelieferten `tlReactControls.css` — bis hierhin
+wurde nur gemessen und entschieden.
 
 Offene Befunde für die Umsetzung:
 
-* `specimen/abbildung.json` ordnet **alle 54 Ist-Tokens** ein; **zwölf sind mehrdeutig** — davon
-  sind aber nur **neun eine Wahl**. Die **drei übrigen sind Aufteilungen**: `button-secondary`
-  und seine zwei Zustände tragen an derselben Stelle Linie *und* Beschriftung. Dort ist nichts zu
-  entscheiden — `border-color` und `color` müssen in `tlReactControls.css` getrennte Tokens
-  lesen. Aufgefallen ist das erst in der Vergleichsansicht.
+* `specimen/abbildung.json` ordnet **alle 54 Ist-Tokens** ein; **zwölf sind mehrdeutig**, davon
+  **drei Aufteilungen** (`button-secondary` samt Zuständen: Linie *und* Beschriftung aus einem
+  Token). Die Aufteilung ist **je Deklaration eindeutig** — der Bestand baut den Rahmen an 25
+  Stellen als `box-shadow: inset 0 0 0 2px`, damit wird die Ersetzung mechanisch statt
+  einzelfallweise.
+* **Zwei Stellen sind zweckfremd** und stehen als Befund, nicht als Entscheidung:
+  `.tlAvatar--empty` (Vorschlag `layer-02`) und `.tlFormField__dirtyDot` (Vorschlag
+  `brand-primary`) lesen `layer-accent` für etwas, für das die Skala kein Ziel führt.
+* Die Skala führt **keine Hover-Stufe der Semantikfarben** — `button-danger-hover` nimmt deshalb
+  dieselbe Linie wie `button-danger`.
 * Die fünf `disabled`-Rollen und `script-editor-text-highlight` stehen als `offen` in der Abbildung.
 * **`.tlTableView__treeToggle` ist 20 × 20 px** und verstößt gegen WCAG 2.5.8; bei `.tlFormField__helpIcon` (20 px) ist zu prüfen, ob es bedienbar ist.
 * **22× `outline: none`** ohne erkennbaren Ersatz — Kandidaten für fehlenden Fokus (WCAG 2.4.7).
@@ -127,7 +142,7 @@ gewinnt — `text-on-color`, `border-subtle`, `support-warning`.
 ## Planung
 
 Arbeitspakete als Gitea-Issues: https://git.top-logic.com/hpe/tl-design-system/issues
-Präsentationsfassung: `docs/praesentation.md` — 28 Folien, alle Zahlen gemessen.
+Präsentationsfassung: `docs/praesentation.md` — 29 Folien, alle Zahlen gemessen.
 **Wird bei jeder Entscheidung mitgezogen**, zusammen mit `skalen.md` und dieser Datei.
 Spec: `docs/superpowers/specs/2026-09-15-style-overhaul-design.md`
 Umsetzungsplan Stufe A: `docs/superpowers/plans/2026-09-15-stufe-a-richtung.md`

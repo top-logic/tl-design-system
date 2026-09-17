@@ -131,6 +131,13 @@ test('lesestellen nimmt den Kommentar über einer Regel nicht für ihren Selekto
   assert.deepEqual(lesestellen(css, 'border-subtle').map((s) => s.selektor), ['.tlSplitPanel__splitter']);
 });
 
+test('lesestellen gibt einen Selektor in einer Zeile zurück', () => {
+  // Gruppenselektoren stehen im Bestand über mehrere Zeilen. Als Schlüssel
+  // einer Zuordnung taugen sie nur in einer stabilen Schreibweise.
+  const css = '.a,\n  .b { color: var(--x); }';
+  assert.deepEqual(lesestellen(css, 'x').map((s) => s.selektor), ['.a, .b']);
+});
+
 test('lesestellen übersieht keine Stelle, deren Kommentar selbst geschweifte Klammern enthält', () => {
   const css = '/* nimmt { und } mit */ .a { color: var(--x); }';
   assert.deepEqual(lesestellen(css, 'x').map((s) => s.selektor), ['.a']);

@@ -1,0 +1,203 @@
+{
+  "_": "Die Zuordnung JEDER Lesestelle eines mehrdeutigen Tokens auf eine Rolle der Skala. abbildung.json entscheidet je Token, diese Datei je Stelle — bei den mehrdeutigen ist erst das die Entscheidung. Begründung zu jeder Rolle: docs/skalen.md",
+  "klassen": {
+    "_": "Wonach eine Eigenschaft gelesen wird. Die Klasse entscheidet überall dort, wo die Ziele eines Tokens verschiedene Aufgaben haben (Text, Linie, Fläche).",
+    "linie": [
+      "border",
+      "border-top",
+      "border-right",
+      "border-bottom",
+      "border-left",
+      "border-color",
+      "outline",
+      "outline-color",
+      "box-shadow (inset)"
+    ],
+    "text": [
+      "color"
+    ],
+    "flaeche": [
+      "background",
+      "background-color",
+      "accent-color"
+    ],
+    "hinweis": "box-shadow zählt NUR mit inset als Linie: Der Bestand baut die Umriss-Schaltfläche an 25 Stellen als \"inset 0 0 0 2px\". Ein äußerer Schatten ist Elevation und trägt kein Farbtoken der Skala."
+  },
+  "token": {
+    "border-subtle": {
+      "entscheidung": "Der Rahmen gehört zu border-control, wenn der Zeiger auf das UMSCHLOSSENE Element wirkt — Eingabefeld, Auswahlfeld, Umriss-Schaltfläche, wählbares Feld, Auslöser. Alles andere ist border-separator, auch wenn es umschließt.",
+      "warum": "Die Regel der Abbildung kannte zwei Fälle: trennen und Bedientes umschließen. Der Bestand hat einen dritten, der häufiger ist als beide — der umschließende Rahmen um etwas, das nicht bedient wird: Karte, Kachel, Popover, Ladering. WCAG 1.4.11 verlangt die 3,0 für Bedienelemente, nicht für Umrandungen. Deshalb entscheidet nicht \"umschließt\", sondern \"wird bedient\".",
+      "nachSelektor": {
+        "border-control": [
+          ".tlReactTextInput, .tlReactNumberInput, .tlReactDatePicker, .tlReactSelect",
+          ".tlDropdownSelect",
+          ".tlColorInput__input",
+          ".tlIconSelect__editInput",
+          ".tlColorInput__btn--cancel",
+          ".tlColorInput__btn--reset",
+          ".tlIconSelect__btn--cancel",
+          ".tlFileChips__add",
+          ".tlIconSelect__swatch",
+          ".tlIconSelect__swatch:disabled:hover",
+          ".tlColorInput__swatch:disabled",
+          ".tlColorInput__paletteCell--empty",
+          ".tlTableView__chip",
+          ".tlAvatar--empty"
+        ],
+        "border-separator": [
+          ".tlPanel__header",
+          ".tlPanel--card",
+          ".tlSplitPanel__splitter",
+          ".tlSidebar__nav",
+          ".tlSidebar__headerSlot, .tlSidebar__footerSlot",
+          ".tlSidebar__footerSlot",
+          ".tlSidebar__separator",
+          ".tlSidebar__collapseBtn",
+          ".tlSidebar__flyoutHeader",
+          ".tlCard--outlined",
+          ".tlCard__header",
+          ".tlAppBar--surface",
+          ".tlBottomBar",
+          ".tlWindow__header",
+          ".tlWindow__footer",
+          ".tlDrawer__header",
+          ".tlMenu__separator",
+          ".tlTableView__filterBar",
+          ".tlTableView__header",
+          ".tlTableView__headerCell",
+          ".tlTableView__row",
+          ".tlTableView__cell",
+          ".tlFormGroup--border-subtle",
+          ".tlFormGroup__header",
+          ".tlFileChip",
+          ".tlFileChip__remove",
+          ".tlTreeView__spinner",
+          ".tlToolbar__separator",
+          ".tlDropdownSelect__searchWrapper",
+          ".tlDropdownSelect__spinner",
+          ".tlColorInput--immutable",
+          ".tlColorInput__popup",
+          ".tlColorInput__tabs",
+          ".tlColorInput__previewSwatch",
+          ".tlColorInput__divider",
+          ".tlIconSelect__popup",
+          ".tlIconSelect__tabs",
+          ".tlIconSelect__searchWrapper",
+          ".tlIconSelect__spinner",
+          ".tlIconSelect__advancedArea",
+          ".tlIconSelect__previewIcon",
+          ".tlIconSelect__actions",
+          ".tlDashboard__tile",
+          ".tlToolbar__dropdownSeparator",
+          ".tlPanel__buttonBar",
+          ".tlCalDayHead",
+          ".tlCalAllDayCell",
+          ".tlCalCol",
+          ".tlCalHourLine",
+          ".tlCalMonthCell"
+        ]
+      }
+    },
+    "support-error": {
+      "entscheidung": "nach Klasse — die Aufgabe steht in der Eigenschaft.",
+      "nachKlasse": {
+        "text": "support-error-text",
+        "linie": "support-error-border",
+        "flaeche": "support-error-surface"
+      }
+    },
+    "support-warning": {
+      "entscheidung": "wie support-error.",
+      "nachKlasse": {
+        "text": "support-warning-text",
+        "linie": "support-warning-border",
+        "flaeche": "support-warning-surface"
+      }
+    },
+    "support-success": {
+      "entscheidung": "wie support-error.",
+      "nachKlasse": {
+        "text": "support-success-text",
+        "linie": "support-success-border",
+        "flaeche": "support-success-surface"
+      }
+    },
+    "button-danger": {
+      "entscheidung": "nach Klasse. Die Linie war in der Abbildung nicht vorgesehen — der Aufnahmeknopf trägt seinen Gefahrzustand als Rahmen, nicht als Fläche.",
+      "nachKlasse": {
+        "text": "support-error-text",
+        "linie": "support-error-border",
+        "flaeche": "support-error-surface"
+      }
+    },
+    "button-danger-hover": {
+      "entscheidung": "wie button-danger. Die Linie bleibt im Zeigerzustand dieselbe — die Skala führt keine Hover-Stufe der Semantikfarben.",
+      "nachKlasse": {
+        "text": "support-error-text",
+        "linie": "support-error-border",
+        "flaeche": "support-error-surface"
+      }
+    },
+    "button-secondary": {
+      "entscheidung": "nach Klasse — genau die Aufteilung, die ein Token nicht leisten kann.",
+      "nachKlasse": {
+        "linie": "border-control",
+        "text": "brand-primary",
+        "flaeche": "brand-primary"
+      }
+    },
+    "button-secondary-hover": {
+      "entscheidung": "wie button-secondary, eine Stufe weiter. Die gefüllte Fläche im Zeigerzustand ist heute dieselbe Farbe wie button-primary-hover.",
+      "nachKlasse": {
+        "linie": "border-interactive",
+        "text": "brand-primary-hover",
+        "flaeche": "brand-primary-hover"
+      }
+    },
+    "button-secondary-active": {
+      "entscheidung": "wie button-secondary, gedrückt.",
+      "nachKlasse": {
+        "linie": "border-interactive",
+        "text": "brand-primary-active",
+        "flaeche": "brand-primary-active"
+      }
+    },
+    "layer-accent": {
+      "entscheidung": "Die Markenleiste nimmt brand-subtle. Zwei Stellen lesen das Token für etwas, das weder Höhe noch Markenzugehörigkeit ist — sie stehen als zweckfremd.",
+      "warum": "Die Regel wurde aus zwei plausiblen Fällen gebildet (Popover, ausgewählter Reiter). Im ausgelieferten CSS steht das Token an keinem von beiden.",
+      "nachSelektor": {
+        "brand-subtle": [
+          ".tlAppBar--primary"
+        ]
+      },
+      "zweckfremd": {
+        ".tlAvatar--empty": {
+          "warum": "Die schwach gefüllte Kreisfläche eines Avatars ohne Namen. Weder eine Ebene über dem Grund noch eine Markenfläche — eine neutrale Tönung, für die die Regel kein Ziel führt.",
+          "vorschlag": "layer-02"
+        },
+        ".tlFormField__dirtyDot": {
+          "warum": "Der Punkt neben einem geänderten Feld. Er muss auffallen; eine getönte Fläche wäre auf hellem Grund praktisch unsichtbar. Das ist ein Statuszeichen, keine Fläche.",
+          "vorschlag": "brand-primary"
+        }
+      }
+    },
+    "layer-accent-hover": {
+      "entscheidung": "Beide Stellen liegen in der Markenleiste und folgen deren Entscheidung.",
+      "nachSelektor": {
+        "brand-subtle-hover": [
+          ".tlAppBar--primary .tlMenuRegion--click:hover",
+          ".tlAppBar--primary button.tlToolbar__menuTrigger:not(:disabled):hover"
+        ]
+      }
+    },
+    "layer-accent-active": {
+      "entscheidung": "wie layer-accent-hover.",
+      "nachSelektor": {
+        "brand-subtle-hover": [
+          ".tlAppBar--primary .tlMenuRegion--click[aria-expanded=\"true\"]",
+          ".tlAppBar--primary button.tlToolbar__menuTrigger[aria-expanded=\"true\"]"
+        ]
+      }
+    }
+  }
+}
