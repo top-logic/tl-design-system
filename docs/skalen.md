@@ -1,7 +1,7 @@
 # Die Skalen des Design Systems
 
-**Stand:** 2026-09-16 · Stufe A, in Arbeit
-**Spec:** [`superpowers/specs/2026-09-15-style-overhaul-design.md`](superpowers/specs/2026-09-15-style-overhaul-design.md)
+**Stand:** 2026-09-17 · Skalen entschieden, Welle 0 umgesetzt
+**Spec:** [`superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`](superpowers/specs/2026-09-17-design-system-neuaufbau-design.md)
 
 Jede Skala hat eine Stufenzahl, eine Regel, wann welche Stufe gilt, und ein Gate, das Abweichungen
 bricht. Eine Skala ohne diese Regel wird beim nächsten Control wieder umgangen — genau deshalb gibt
@@ -26,7 +26,7 @@ Schatten im Dark-Theme werden gegenstandslos und durch eigene Werte ersetzt.
 
 #### Schatten bekommt nur, was wirklich schwebt
 
-Drei Flächenstufen — `background`, `layer-01`, `layer-02` — liegen *in* der Oberfläche. Sie werfen
+Drei Flächenstufen — `surface-base`, `surface-layer`, `surface-layer-nested` — liegen *in* der Oberfläche. Sie werfen
 keinen Schatten. Einen Schatten bekommt ausschließlich, was **über** der Oberfläche liegt und sie
 verdeckt: Popover, Dropdown, Kontextmenü, Tooltip, Dialog, Toast, das Element am Ziehzeiger.
 
@@ -35,7 +35,7 @@ Der Bestand hält sich nicht daran. `--shadow-raised` liegt heute auf:
 | Stelle | Warum das falsch ist |
 |---|---|
 | `.tlTableView__row--cursor` | Eine Tabellenzeile schwebt nicht. Der Cursor ist ein Zustand, keine Höhe. |
-| `.tlTableView__row--selected` | dito — Auswahl ist Fläche (`layer-selected`), nicht Elevation. |
+| `.tlTableView__row--selected` | dito — Auswahl ist Fläche (`surface-interactive-selected`), nicht Elevation. |
 | `.tlCard--elevated` | Eine Karte liegt in der Oberfläche. Sie bekommt einen Rahmen. |
 | `.tlAppBar--elevated` | Eine Leiste ist Teil des Gerüsts, nichts schwebt darüber. |
 
@@ -61,25 +61,25 @@ Lage.
 
 #### Overlays brauchen eine eigene Fläche
 
-Ein Popover liegt im dunklen Modus über `layer-02` (`#242729`) — und dort trägt die **Fläche** die
+Ein Popover liegt im dunklen Modus über `surface-layer-nested` (`#242729`) — und dort trägt die **Fläche** die
 Höhe. Es gibt aber keine Stufe darüber. Die Skala bekommt deshalb eine:
 
 | Token | hell | dunkel |
 |---|---|---|
-| `layer-overlay` | `#FFFFFF` | `#2B2F33` |
+| `surface-overlay` | `#FFFFFF` | `#2B2F33` |
 
 Ohne sie wäre das Dark-Theme an genau der Stelle mechanismuslos, an der die Elevation zählt.
 
 #### Hell trennt der Rahmen, dunkel die Fläche
 
-`layer-01` und `layer-02` sind im hellen Modus beide weiß — über `#FAFAFA` liegt bis Weiß nur eine
+`surface-layer` und `surface-layer-nested` sind im hellen Modus beide weiß — über `#FAFAFA` liegt bis Weiß nur eine
 Stufe. Da sie jetzt auch keinen Schatten mehr tragen dürfen, trennt sie im hellen Modus ein
 **Rahmen**: `border-separator` (`#CBCED3`, ~1,5:1), eine Linie, die trennt und nichts behauptet.
 
 | | hell | dunkel |
 |---|---|---|
 | Karte, Panel, Gruppe | 1 px `border-separator` | keine Linie, hellere Fläche |
-| Popover, Dialog, Toast | Schatten **und** Rahmen | Schatten **und** `layer-overlay` |
+| Popover, Dialog, Toast | Schatten **und** Rahmen | Schatten **und** `surface-overlay` |
 
 **Folge für die Komponenten:** `.tlCard--outlined` wird der Normalfall und `.tlCard--elevated`
 entfällt. Eine Karte, die sich abheben soll, tut das über ihren Rahmen — oder sie ist gar keine
@@ -147,7 +147,7 @@ mit 3,18 gegen den dunklen Grund und hört auf, als Fläche zu lesen.
 
 `text-on-color` und `icon-on-color` werden deshalb **abgeleitet statt festgeschrieben**: Von zwei
 Kandidaten — `text-primary` des hellen Modus und Weiß — gewinnt der mit dem höheren Verhältnis
-gegen `brand-primary` des jeweiligen Modus.
+gegen `surface-brand` des jeweiligen Modus.
 
 **Warum abgeleitet:** Die nötige Beschriftungsfarbe hängt vom gewählten Markenton ab. Ein fester
 Wert wäre beim nächsten Ton wieder falsch und in jedem Kunden-Theme erst recht. Nachgewiesen an
@@ -165,29 +165,17 @@ Was aussteht, gehört zur Umsetzung, nicht zur Entscheidung:
 | `disabled`-Rollen | `text-disabled`, `icon-disabled`, `field-disabled`, `button-disabled` und `text-on-color-disabled` sind von WCAG ausgenommen und deshalb nie abgeleitet worden. |
 | Syntaxhervorhebung | `script-editor-text-highlight` gehört zur Code-Klasse; die Skala führt dafür bisher keine Rolle. |
 
----|---|---|
-| `button-primary` `#5A9AFF` (hell) | 2,80 ✗ | **6,75 ✓** |
-| `button-danger` `#D3181B` (dunkel) | **5,36 ✓** | 3,52 ✗ |
-| `button-danger-hover` `#BC1518` | **6,44 ✓** | 2,93 ✗ |
-
-**Kein Wert besteht auf beiden Flächen.** Ein einzelnes `text-on-color` soll hier eine helle und
-eine dunkle Fläche gleichzeitig bedienen; das ist strukturell unmöglich. Im hellen Theme fiel es
-nicht auf, weil dort beide Flächen dunkel sind und Weiß überall trägt.
-
-Nachgeprüft und als strukturell bestätigt, nicht als Umsetzungsfehler. Die Auflösung gehört zur
-Semantikskala und steht noch aus.
-
 ### Marke: `#0B5ED7`, vorläufig
 
 Farbton 260°, Chroma 0,200, Helligkeit 0,515.
 
 | | hell | dunkel |
 |---|---|---|
-| `brand-primary` | `#0B5ED7` | `#5394FF` |
-| `brand-primary-hover` | `#004DBA` | `#75A9FF` |
-| `brand-primary-active` | `#003A8F` | `#2471EC` |
-| `brand-link` | `#0B5ED7` | `#75A9FF` |
-| `brand-link-hover` | `#004DBA` | `#95BDFF` |
+| `surface-brand` | `#0B5ED7` | `#5394FF` |
+| `surface-brand-hover` | `#004DBA` | `#75A9FF` |
+| `surface-brand-active` | `#003A8F` | `#2471EC` |
+| `text-link` | `#0B5ED7` | `#75A9FF` |
+| `text-link-hover` | `#004DBA` | `#95BDFF` |
 | Beschriftung darauf | `#FFFFFF` (5,84) | `#101113` (6,34) |
 
 **Warum dieser Ton.** Gegenüber dem heutigen `#2968C8` steigt das Chroma von 0,163 auf 0,200 bei
@@ -208,7 +196,7 @@ nichts: Rampe, Beschriftung und Kontrastprüfung sind abgeleitet, der Wechsel is
 
 ### Grundfläche: `#FAFAFA`
 
-Reines Weiß entfällt. Die vier Flächen-Tokens `background`, `layer-01`, `layer-02` und
+Reines Weiß entfällt. Die vier Flächen-Tokens `surface-base`, `surface-layer`, `surface-layer-nested` und
 `color-surface` waren alle `#FFFFFF` — zu grell und zu klinisch für eine Oberfläche, in der man
 stundenlang arbeitet.
 
@@ -232,7 +220,7 @@ weil der schwächere gewann, erfüllte kein Eingabefeld in TopLogic die Norm, he
 
 > Die Werte dieser Tabelle stammen aus der späteren, aus den Anforderungen abgeleiteten
 > Neutralenskala und ersetzen die zuerst notierten Schätzwerte. Die Verhältnisse sind gegen
-> `background` gerechnet, nicht geschätzt.
+> `surface-base` gerechnet, nicht geschätzt.
 
 Der Merksatz: *Eine Linie, die etwas trennt, ist ein Separator. Eine Linie, die etwas umschließt,
 worauf der Zeiger wirkt, ist ein Control-Rahmen.* Er hat dieselbe Form wie die vorhandene
@@ -251,12 +239,12 @@ hellen Modus und 17 im dunklen. Die Hälfte sind unerklärte Dubletten:
 
 | Wert | Tokens |
 |---|---|
-| `#FFFFFF` | `background`, `color-surface`, `layer-01`, `layer-02`, `layer-accent-icon`, `layer-accent-text`, `text-inverse` |
-| `#F0F1F2` | `background-selected`, `field`, `field-disabled`, `layer` |
-| `#C4C7CC` | `border-subtle`, `layer-active`, `text-disabled` |
+| `#FFFFFF` | `surface-base`, `color-surface`, `surface-layer`, `surface-layer-nested`, `layer-accent-icon`, `layer-accent-text`, `text-inverse` |
+| `#F0F1F2` | `background-selected`, `surface-field`, `field-disabled`, `layer` |
+| `#C4C7CC` | `border-subtle`, `surface-interactive-active`, `text-disabled` |
 | `#676B72` | `text-helper`, `text-secondary` |
 
-Im dunklen Modus sind `field`, `layer` und `layer-02` derselbe Wert — **ein Eingabefeld ist von
+Im dunklen Modus sind `surface-field`, `layer` und `surface-layer-nested` derselbe Wert — **ein Eingabefeld ist von
 der Fläche, auf der es liegt, nicht zu unterscheiden.**
 
 **Die Stufen leiten sich aus ihrer Aufgabe ab, nicht aus gleichmäßigen Helligkeitsschritten.** Eine
@@ -271,7 +259,7 @@ ist der hellste Wert, der ihre Anforderung noch erfüllt.
 | `text-primary` | `#1B1D21` | `#F0F3F9` | 16,0 | Grund |
 | `text-secondary` | `#54565B` | `#A0A3A8` | 7,0 | Grund |
 | `text-helper` | `#676A6F` | `#888B90` | 5,2 | Grund |
-| `text-placeholder` | `#6B6E73` | `#8E9196` | 4,6 | **`field`**, nicht Grund |
+| `text-placeholder` | `#6B6E73` | `#8E9196` | 4,6 | **`surface-field`**, nicht Grund |
 | `border-emphasis` | `#6F7277` | `#7F8286` | 4,6 | Grund |
 | `border-control` | `#8C8F94` | `#64676B` | 3,1 | Grund |
 | `border-separator` | `#C1C4C9` | `#34383C` | — | trennt nur |
@@ -284,16 +272,16 @@ sobald sich eine davon ändert.
 
 | Token | hell | dunkel |
 |---|---|---|
-| `background` | `#FAFAFA` | `#16181B` |
-| `layer-01` | `#FFFFFF` | `#1D2023` |
-| `layer-02` | `#FFFFFF` | `#242729` |
-| `layer-overlay` | `#FFFFFF` | `#2B2F33` |
-| `field` | `#F0F4F9` | `#27292D` |
-| `layer-hover` | `#F0F2F6` | `#22262A` |
-| `layer-selected` | `#E5E8ED` | `#2B3034` |
-| `layer-active` | `#D9DDE3` | `#343A3F` |
+| `surface-base` | `#FAFAFA` | `#16181B` |
+| `surface-layer` | `#FFFFFF` | `#1D2023` |
+| `surface-layer-nested` | `#FFFFFF` | `#242729` |
+| `surface-overlay` | `#FFFFFF` | `#2B2F33` |
+| `surface-field` | `#F0F4F9` | `#27292D` |
+| `surface-interactive-hover` | `#F0F2F6` | `#22262A` |
+| `surface-interactive-selected` | `#E5E8ED` | `#2B3034` |
+| `surface-interactive-active` | `#D9DDE3` | `#343A3F` |
 
-**`layer-01`, `layer-02` und `layer-overlay` bleiben im hellen Modus alle weiß — und das ist
+**`surface-layer`, `surface-layer-nested` und `surface-overlay` bleiben im hellen Modus alle weiß — und das ist
 diesmal richtig.** Über `#FAFAFA` liegt bis Weiß nur eine Stufe; drei Ebenen lassen sich dort durch
 Helligkeit nicht ausdrücken. Im hellen Modus trennt deshalb der **Rahmen**, im dunklen die
 **Fläche** — und der Schatten bleibt beiden vorbehalten, was wirklich über der Oberfläche schwebt.
@@ -308,17 +296,17 @@ ausgenommen und schulden keinen Kontrast. Sie bleiben in der Skala, aber ohne Ga
 
 ### Semantik: vier Bedeutungen, vier Rollen
 
-**Der Befund.** `support-warning` ist im Stylesheet gleichzeitig Textfarbe (`color`), Rahmenfarbe
-(`border-color`), Fläche (`background`) und Akzentfarbe (`accent-color`). **Ein Token, vier
+**Der Befund.** `status-warning` ist im Stylesheet gleichzeitig Textfarbe (`color`), Rahmenfarbe
+(`border-color`), Fläche (`surface-base`) und Akzentfarbe (`accent-color`). **Ein Token, vier
 Aufgaben** — dasselbe Muster wie bei `text-on-color` und `border-subtle`.
 
 Die Folgen sind messbar:
 
 | Token | auf hellem Grund | auf dunklem Grund |
 |---|---|---|
-| `support-warning` | **2,27** ✗ | 7,52 (geerbt, zufällig) |
-| `support-success` | **3,04** ✗ | 5,61 (geerbt, zufällig) |
-| `support-error` | 5,14 ✓ | **3,32** ✗ |
+| `status-warning` | **2,27** ✗ | 7,52 (geerbt, zufällig) |
+| `status-success` | **3,04** ✗ | 5,61 (geerbt, zufällig) |
+| `status-error` | 5,14 ✓ | **3,32** ✗ |
 
 Warnung und Erfolg sind im **hellen** Theme als Text unlesbar. Das Gate meldet es nicht, weil nur
 `text-error` in der Paarliste steht.
@@ -450,15 +438,15 @@ entstanden die 44 literalen `font-weight`.
 
 | Klasse | Größe | Gewicht | Zeilenhöhe | Laufweite | Gilt für |
 |---|---|---|---|---|---|
-| `type-display` | 32 | 600 | 1.25 | −0.01em | Login, Leerbild, Report-Deckblatt |
-| `type-heading-lg` | 24 | 600 | 1.3333 | −0.005em | Seitentitel |
-| `type-heading-md` | 20 | 600 | 1.4 | 0 | Dialogtitel |
-| `type-heading-sm` | 16 | 600 | 1.5 | 0 | Abschnittstitel, Gruppenrahmen |
-| `type-body` | 14 | 400 | 1.4286 | 0 | alles Gelesene |
-| `type-body-strong` | 14 | 600 | 1.4286 | 0 | Hervorhebung im Fließtext, aktive Zeile |
-| `type-label` | 12 | 400 | 1.3333 | +0.01em | Feldbeschriftung, Hilfstext, Badge |
-| `type-label-strong` | 12 | 600 | 1.3333 | +0.01em | Spaltenkopf, Registerreiter |
-| `type-code` | 14 | 400 | 1.4286 | 0 | TL-Script, XML, Stacktrace |
+| `tl-type-display` | 32 | 600 | 1.25 | −0.01em | Login, Leerbild, Report-Deckblatt |
+| `tl-type-heading-lg` | 24 | 600 | 1.3333 | −0.005em | Seitentitel |
+| `tl-type-heading-md` | 20 | 600 | 1.4 | 0 | Dialogtitel |
+| `tl-type-heading-sm` | 16 | 600 | 1.5 | 0 | Abschnittstitel, Gruppenrahmen |
+| `tl-type-body` | 14 | 400 | 1.4286 | 0 | alles Gelesene |
+| `tl-type-body-strong` | 14 | 600 | 1.4286 | 0 | Hervorhebung im Fließtext, aktive Zeile |
+| `tl-type-label` | 12 | 400 | 1.3333 | +0.01em | Feldbeschriftung, Hilfstext, Badge |
+| `tl-type-label-strong` | 12 | 600 | 1.3333 | +0.01em | Spaltenkopf, Registerreiter |
+| `tl-type-code` | 14 | 400 | 1.4286 | 0 | TL-Script, XML, Stacktrace |
 
 Neun Klassen aus sechs Größen und zwei Gewichten. Mehr Gewichte gibt es nicht — Inter liefert nur
 Regular und SemiBold, das ist eine Feststellung, keine Entscheidung.
@@ -497,7 +485,7 @@ Zwei Fehler im Bestand, die dabei mitfallen:
 
 **JetBrains Mono**, OFL, wegen der Zeichen, an denen TL-Script-Fehler entstehen: geschlitzte Null,
 unterscheidbares `l`/`1`/`I` und `O`/`0`. Die x-Höhe liegt über der von Inter, deshalb wird die
-Familie per `size-adjust` metrisch angeglichen, statt `type-code` eine Stufe kleiner zu setzen —
+Familie per `size-adjust` metrisch angeglichen, statt `tl-type-code` eine Stufe kleiner zu setzen —
 dieselbe Technik, die Issue #12 für Kundenschriften vorsieht.
 
 #### Druck und Report
@@ -579,8 +567,8 @@ Dazu vier Mängel, die keiner für sich entstanden ist:
 * **`outline: none` steht 22-mal**, und in den zwei Folgezeilen findet sich an keiner davon ein
   `box-shadow`-Ersatz. Das sind Kandidaten für einen vollständig fehlenden Fokus — jeder einzelne
   ein Verstoß gegen WCAG 2.4.7.
-* **Vier verschiedene Fokusfarben:** `--focus`, `--interactive`, `--support-warning`,
-  `--support-error`, dazu `currentColor`.
+* **Vier verschiedene Fokusfarben:** `--tl-focus-ring`, `--interactive`, `--tl-status-warning`,
+  `--tl-status-error`, dazu `currentColor`.
 * **`2px dashed`** steht zweimal neben 29-mal `solid`.
 
 #### Die Entscheidung
@@ -591,7 +579,7 @@ Dazu vier Mängel, die keiner für sich entstanden ist:
 | Breite | `2px` |
 | Offset | `2px` |
 | Stil | `solid`, ausnahmslos |
-| Farbe | `focus` — hell `#0B5ED7`, dunkel `#5394FF`, dieselbe Farbe wie `border-interactive` |
+| Farbe | `focus-ring` — hell `#0B5ED7`, dunkel `#5394FF`, dieselbe Farbe wie `border-interactive` |
 | Auslöser | `:focus-visible`, ausnahmslos |
 
 **Ein Mechanismus, keine Ausnahme.** Die vier anderen fallen weg. `outline` folgt in allen aktuellen
@@ -600,7 +588,7 @@ drei Eigenschaften, die ein `box-shadow`-Nachbau je einzeln nachstellen müsste.
 
 **Der Offset ist nicht Kosmetik, sondern der Grund, warum der Ring auf der Marke sichtbar bleibt.**
 Läge der Ring an der Kante, verschwände ein blauer Ring auf einer blauen Schaltfläche. Zwei Pixel
-Luft setzen ihn auf die dahinterliegende Fläche, wo er gegen `background` oder `layer-01` seinen
+Luft setzen ihn auf die dahinterliegende Fläche, wo er gegen `surface-base` oder `surface-layer` seinen
 Kontrast hat.
 
 **Nur `:focus-visible`.** Der Ring gehört der Tastatur- und Assistenzbedienung; wer klickt, weiß,
@@ -699,9 +687,9 @@ das darauf wartet.
 
 | Wert | Rollen, die ihn als Literal trugen |
 |---|---|
-| `#0B5ED7` | `border-interactive`, `focus`, `brand-primary`, `brand-link` |
-| `#004DBA` | `brand-primary-hover`, `brand-link-hover` |
-| `#FFFFFF` | `layer-01`, `layer-02`, `layer-overlay` |
+| `#0B5ED7` | `border-interactive`, `focus-ring`, `surface-brand`, `text-link` |
+| `#004DBA` | `surface-brand-hover`, `text-link-hover` |
+| `#FFFFFF` | `surface-layer`, `surface-layer-nested`, `surface-overlay` |
 
 Der Markenton ist **ausdrücklich vorläufig**. Bei einem Wechsel wären vier Stellen von Hand nachzuziehen, und die vergessene fünfte wäre genau der Vererbungsfehler, der die acht Dunkel-Verstöße erzeugt hat.
 
@@ -710,13 +698,13 @@ Die Skala hat deshalb zwei Schichten:
 | Schicht | Beispiel | Regel |
 |---|---|---|
 | **1 · Primitive** | `blue-49: #0B5ED7` | reine Werte. Der Name nennt Familie und Helligkeitsstufe und behauptet **nichts** über eine Rolle. |
-| **2 · Rollen** | `brand-primary: {blue-49}` | Bedeutung. **Kein einziger Wert**, nur Referenzen. |
+| **2 · Rollen** | `surface-brand: {blue-49}` | Bedeutung. **Kein einziger Wert**, nur Referenzen. |
 
 70 Farb- und 30 Maß-Primitive tragen 80 Rollen je Modus.
 
-**Warum das mehr ist als Ordnung: Es ist die Eingriffsstelle für Kundenprojekte.** Ein Kunde, der seine Hausfarbe einsetzen will, überschreibt `--blue-49` — und `brand-primary`, `brand-link`, `focus` und `border-interactive` ziehen mit, ohne dass eine Klasse angefasst wird. Deshalb **löst das erzeugte CSS die Referenzen nicht auf**: Dort steht `var(--blue-49)`, nicht `#0B5ED7`. Aufgelöst wird nur zum Rechnen, wo Kontraste echte Werte brauchen.
+**Warum das mehr ist als Ordnung: Es ist die Eingriffsstelle für Kundenprojekte.** Ein Kunde, der seine Hausfarbe einsetzen will, überschreibt `--blue-49` — und `surface-brand`, `text-link`, `focus-ring` und `border-interactive` ziehen mit, ohne dass eine Klasse angefasst wird. Deshalb **löst das erzeugte CSS die Referenzen nicht auf**: Dort steht `var(--blue-49)`, nicht `#0B5ED7`. Aufgelöst wird nur zum Rechnen, wo Kontraste echte Werte brauchen.
 
-Die Primitivnamen werden **abgeleitet, nicht vergeben** (`specimen/primitive.mjs`): Familie aus dem Farbton, Stufe aus der Helligkeit, wobei eine höhere Stufe dunkler ist. Kollidieren zwei Werte auf derselben Stufe, rückt der zweite auf — sonst hinge die Zuordnung an der Reihenfolge, in der die Werte hereinkommen.
+Die Primitivnamen werden **abgeleitet, nicht vergeben** (`design-system/tools/lib/naming.mjs`): Familie aus dem Farbton, Stufe aus der Helligkeit, wobei eine höhere Stufe dunkler ist. Kollidieren zwei Werte auf derselben Stufe, rückt der zweite auf — sonst hinge die Zuordnung an der Reihenfolge, in der die Werte hereinkommen.
 
 **Vier Regeln setzt das Gate durch:** kein Hex in der Rollenschicht, jede Referenz zeigt auf ein vorhandenes Primitiv, kein Primitiv steht ungenutzt herum, und kein Primitivname enthält ein Rollenwort. Dazu ein Test, der einen Kundentausch durchspielt und prüft, dass alle vier markenbezogenen Rollen mitziehen.
 
@@ -735,15 +723,15 @@ Die neue Skala schließt sie:
 
 | Rolle | Primitiv | px |
 |---|---|---|
-| `space-2xs` | `size-01` | 4 |
-| `space-xs` | `size-02` | 8 |
-| **`space-sm`** | **`size-03`** | **12** |
-| `space-md` | `size-04` | 16 |
-| `space-lg` | `size-05` | 24 |
-| `space-xl` | `size-06` | 32 |
-| `space-2xl` | `size-07` | 48 |
+| `space-2xs` | `size-1` | 4 |
+| `space-xs` | `size-2` | 8 |
+| **`space-sm`** | **`size-3`** | **12** |
+| `space-md` | `size-4` | 16 |
+| `space-lg` | `size-6` | 24 |
+| `space-xl` | `size-7` | 32 |
+| `space-2xl` | `size-8` | 48 |
 
-**Die Namen sind relativ, nicht absolut** — und das ist eine Korrektur. Zuerst standen hier `space-4` bis `space-48`, mit der Begründung, ein Name solle seinen Wert tragen und eine `01`…`06`-Leiter lasse sich nicht erweitern, ohne bestehende Namen still zu verschieben. Das galt, solange die Werte fest sind. **Mit austauschbaren Primitiven gilt es nicht mehr:** Setzt ein Kundenprojekt `size-03` auf 14 px, hieße ein Token `space-12` etwas, das es nicht ist. Ein relativer Name lügt nie.
+**Die Namen sind relativ, nicht absolut** — und das ist eine Korrektur. Zuerst standen hier `space-4` bis `space-48`, mit der Begründung, ein Name solle seinen Wert tragen und eine `01`…`06`-Leiter lasse sich nicht erweitern, ohne bestehende Namen still zu verschieben. Das galt, solange die Werte fest sind. **Mit austauschbaren Primitiven gilt es nicht mehr:** Setzt ein Kundenprojekt `size-3` auf 14 px, hieße ein Token `space-12` etwas, das es nicht ist. Ein relativer Name lügt nie.
 
 Alle sieben Werte sind durch vier teilbar. Damit liegen **Abstände, Zeilenhöhen und Control-Höhen auf demselben 4-px-Raster**.
 
@@ -756,9 +744,9 @@ Alle sieben Werte sind durch vier teilbar. Damit liegen **Abstände, Zeilenhöhe
 | Control-Höhe | `2rem` (32) | `1.75rem` (28) |
 | Control-Höhe klein | `1.5rem` (24) | `1.5rem` (24) |
 | Tabellenzeile | `2.25rem` (36) | `2rem` (32) |
-| Polsterung waagerecht | `space-12` | `space-8` |
-| Polsterung senkrecht | `space-8` | `space-4` |
-| Abstand im Formular | `space-16` | `space-12` |
+| Polsterung waagerecht | `space-sm` | `space-xs` |
+| Polsterung senkrecht | `space-xs` | `space-2xs` |
+| Abstand im Formular | `space-md` | `space-sm` |
 | Schriftgröße | **12 / 14 px** | **12 / 14 px** |
 
 **Zwei Stufen, nicht drei.** Jede Stufe muss in jeder Komponente umgesetzt und geprüft werden; eine dritte kostet die Hälfte mehr Pflege für einen Fall, den der Bestand nicht einmal andeutet.
@@ -795,7 +783,7 @@ Der Bestand nutzt 1 px 77-mal, 2 px 17-mal, 3 px fünfmal — dazu `1.5px`, `4px
 | `border-width-sm` | `1px` | der Regelfall: trennen, umschließen |
 | `border-width-md` | `2px` | aktiv, betont, ausgewählt |
 
-**Die breiten Werte sind keine Rahmen.** `0.4rem` (6,4 px) und `0.65rem` (10,4 px) stehen als `border-left` an Karten und Hinweisen — das ist ein **farbiger Akzentbalken**, der eine Bedeutung trägt, keine Umrandung. Er bekommt eine eigene Rolle `accent-bar` mit `4px` und ist damit von der Rahmenskala unabhängig.
+**Die breiten Werte sind keine Rahmen.** `0.4rem` (6,4 px) und `0.65rem` (10,4 px) stehen als `border-left` an Karten und Hinweisen — das ist ein **farbiger Akzentbalken**, der eine Bedeutung trägt, keine Umrandung. Er bekommt eine eigene Rolle `border-width-accent` mit `4px` und ist damit von der Rahmenskala unabhängig.
 
 **`1.5px` fällt ersatzlos.** Ein halbes Pixel rastert auf keinem Bildschirm sauber; je nach Zoomstufe wird die Linie mal dicker, mal blasser als ihre Nachbarn. Die fünf `3px` gehen auf `border-width-md`.
 
@@ -807,21 +795,21 @@ Die Rampe bekommt **keine abstrakten Stufen.** Was fehlte, waren zwei Rollen —
 
 | Token | hell | dunkel | Gilt für |
 |---|---|---|---|
-| `brand-primary` | `#0B5ED7` | `#5394FF` | gefüllte Fläche, Schaltfläche |
-| `brand-primary-hover` | `#004DBA` | `#75A9FF` | |
-| `brand-primary-active` | `#003A8F` | `#2471EC` | |
-| `brand-link` | `#0B5ED7` | `#75A9FF` | Linktext |
-| `brand-link-hover` | `#004DBA` | `#95BDFF` | |
-| **`brand-subtle`** | **`#DFEBFF`** | **`#162338`** | aktiver Navigationspunkt, ausgewählter Reiter, getönter Streifen |
-| **`brand-subtle-hover`** | **`#CEE1FF`** | **`#1E2F4B`** | |
+| `surface-brand` | `#0B5ED7` | `#5394FF` | gefüllte Fläche, Schaltfläche |
+| `surface-brand-hover` | `#004DBA` | `#75A9FF` | |
+| `surface-brand-active` | `#003A8F` | `#2471EC` | |
+| `text-link` | `#0B5ED7` | `#75A9FF` | Linktext |
+| `text-link-hover` | `#004DBA` | `#95BDFF` | |
+| **`surface-brand-subtle`** | **`#DFEBFF`** | **`#162338`** | aktiver Navigationspunkt, ausgewählter Reiter, getönter Streifen |
+| **`surface-brand-subtle-hover`** | **`#CEE1FF`** | **`#1E2F4B`** | |
 
 Gemessen im Specimen:
 
 | | hell | dunkel |
 |---|---|---|
-| Text auf `brand-subtle` | 15,71 | 14,35 |
-| Text auf `brand-subtle-hover` | 14,25 | 12,22 |
-| `brand-link` auf `brand-subtle` | 4,86 | 5,29 |
+| Text auf `surface-brand-subtle` | 15,71 | 14,35 |
+| Text auf `surface-brand-subtle-hover` | 14,25 | 12,22 |
+| `text-link` auf `surface-brand-subtle` | 4,86 | 5,29 |
 | gegen die Grundfläche | 1,15 | 1,13 |
 
 Die letzte Zeile ist Absicht: Eine getönte Fläche soll sich abheben, ohne eine Kante zu ziehen — dafür ist der Rahmen da.
@@ -830,7 +818,7 @@ Die letzte Zeile ist Absicht: Eine getönte Fläche soll sich abheben, ohne eine
 
 #### Gelöst: Info verlässt den Markenton
 
-`brand-subtle` und `support-info-subtle` waren nicht zu unterscheiden — beide Blau, beide hell, beide wenig gesättigt. **Ein markig getönter Reiter und ein Info-Hinweis sahen gleich aus**, hell wie dunkel.
+`surface-brand-subtle` und `status-info-subtle` waren nicht zu unterscheiden — beide Blau, beide hell, beide wenig gesättigt. **Ein markig getönter Reiter und ein Info-Hinweis sahen gleich aus**, hell wie dunkel.
 
 **Das Maß dafür war zuerst falsch gewählt.** Notiert stand ein Kontrastverhältnis von 1,06, und daraus ließ sich nichts schließen: **Das WCAG-Verhältnis misst Helligkeit.** Zwei gleich helle Flächen erreichen immer rund 1,0 — auch wenn die eine blau und die andere orange ist. Der Gegencheck machte es sichtbar: Ein türkiser Kandidat, deutlich anders aussehend, kam auf 1,02 und damit auf einen noch *kleineren* Wert.
 
@@ -838,10 +826,10 @@ Das richtige Maß ist der **Farbtonabstand**:
 
 | | ΔH |
 |---|---|
-| `brand-subtle` ↔ `support-info-subtle`, vorher | **1,5°** |
+| `surface-brand-subtle` ↔ `status-info-subtle`, vorher | **1,5°** |
 | `info-subtle` ↔ `success-subtle` | 96,8° |
 | `info-subtle` ↔ `warning-subtle` | 173,3° |
-| `brand-subtle` ↔ `support-info-subtle`, **jetzt** | **48,5°** hell, 45,2° dunkel |
+| `surface-brand-subtle` ↔ `status-info-subtle`, **jetzt** | **48,5°** hell, 45,2° dunkel |
 
 **Info wandert ins Türkise.** Es bleibt kühl und damit als neutrale Mitteilung lesbar, kollidiert aber nicht mehr mit der Marke. Alle vier Rollen sind nach demselben Prinzip abgeleitet wie die Neutralen — jede Stufe ist der hellste Wert, der ihre Anforderung noch erfüllt.
 
@@ -855,10 +843,10 @@ Gemessen an Regeln, deren Selektor ein Icon, einen Umschalter oder eine Ladeanze
 
 | Token | Maß | px | Gilt für |
 |---|---|---|---|
-| `icon-size-sm` | `size-04` | 16 | **Der Regelfall.** Icon neben einer Beschriftung: Menüeintrag, Schaltfläche, Reiter, Tabellenzelle, Chip |
-| `icon-size-md` | `size-05` | 20 | **Das Icon ist das Bedienelement.** Symbolleiste, eingeklappte Sidebar — überall ohne Text daneben |
-| `icon-size-lg` | `size-06` | 24 | **Das Icon ist eine Aussage, keine Bedienung.** Dialogkopf, Vorschau, großer Statushinweis |
-| `icon-size-glyph` | `size-03` | 12 | Richtungszeichen **innerhalb** eines Controls |
+| `size-icon-sm` | `size-4` | 16 | **Der Regelfall.** Icon neben einer Beschriftung: Menüeintrag, Schaltfläche, Reiter, Tabellenzelle, Chip |
+| `size-icon-md` | `size-5` | 20 | **Das Icon ist das Bedienelement.** Symbolleiste, eingeklappte Sidebar — überall ohne Text daneben |
+| `size-icon-lg` | `size-6` | 24 | **Das Icon ist eine Aussage, keine Bedienung.** Dialogkopf, Vorschau, großer Statushinweis |
+| `size-icon-glyph` | `size-3` | 12 | Richtungszeichen **innerhalb** eines Controls |
 
 **Die Regel ist die Rolle, nicht die Größe:** *Steht Text daneben, gilt `sm`. Steht keiner daneben, gilt `md`. Wird nichts bedient, gilt `lg`.* Dieselbe Form wie die Radius- und die Rahmenregel.
 
@@ -866,7 +854,7 @@ Drei Bestandswerte fallen zusammen: **18 → 20** (beide 18er stehen im Icon-Wä
 
 #### Ein Richtungszeichen ist kein Icon
 
-`icon-size-glyph` gilt für eine **geschlossene Liste**: Chevron am Baumknoten, Pfeil am Auswahlfeld, Sortierzeiger im Spaltenkopf, Ziehgriff. Diese Zeichen benennen nichts — sie zeigen eine Richtung an einem Control, das seine Bedeutung schon hat. Sie stehen neben 12 px starker Beschriftung, und ein 16-px-Pfeil würde den Text dominieren, den er begleitet.
+`size-icon-glyph` gilt für eine **geschlossene Liste**: Chevron am Baumknoten, Pfeil am Auswahlfeld, Sortierzeiger im Spaltenkopf, Ziehgriff. Diese Zeichen benennen nichts — sie zeigen eine Richtung an einem Control, das seine Bedeutung schon hat. Sie stehen neben 12 px starker Beschriftung, und ein 16-px-Pfeil würde den Text dominieren, den er begleitet.
 
 > *Ein Zeichen, das etwas benennt, ist ein Icon. Ein Zeichen, das eine Richtung anzeigt, ist ein Glyph.*
 
@@ -888,9 +876,9 @@ Das ist der eigentliche Mangel im Bestand, und er ist ein Mechanismusfehler. Zwe
 
 | | Fläche | Icon |
 |---|---|---|
-| Icon-Schaltfläche, Standard | `2rem` / kompakt `1.75rem` | `icon-size-md` |
-| Icon-Schaltfläche, klein | `1.5rem` = 24 px | `icon-size-sm` |
-| Glyph im Control | keine eigene — das Control ist die Fläche | `icon-size-glyph` |
+| Icon-Schaltfläche, Standard | `2rem` / kompakt `1.75rem` | `size-icon-md` |
+| Icon-Schaltfläche, klein | `1.5rem` = 24 px | `size-icon-sm` |
+| Glyph im Control | keine eigene — das Control ist die Fläche | `size-icon-glyph` |
 
 Die kleine Control-Höhe liegt bei genau 24 px. **Solange eine Icon-Schaltfläche eine Control-Höhe nimmt, kann sie die Norm nicht verfehlen** — und der einzige Verstoß im Bestand ist genau der, der keine genommen hat.
 
@@ -903,126 +891,75 @@ Die kleine Control-Höhe liegt bei genau 24 px. **Solange eine Icon-Schaltfläch
 
 Das Gate bekommt drei Regeln: **eine `font-size` an einem Icon, die keine Icon-Stufe ist, ist ein Verstoß**; **ein fokussierbares Element mit Icon und ohne Beschriftung unter 24 × 24 px ist ein Verstoß**; und **kein Icon nimmt eine Schriftgrößen-Rolle** — `var(--heading-compact-03-font-size)` an einem Symbolleisten-Icon ergibt zufällig 16 px und zieht mit, sobald jemand die Überschriftengröße ändert.
 
-**Eine Nebenwirkung, die die Schichtung belegt:** `icon-size-md` brauchte 20 px, und die Maßleiter sprang von 16 auf 24. Der Wert wurde als `size-05` eingefügt, wodurch die früheren `size-05` bis `size-07` aufrückten — **ohne dass ein einziger Rollenname sich ändern musste.** `space-lg` heißt weiter `space-lg` und zeigt jetzt auf `size-06`.
+**Eine Nebenwirkung, die die Schichtung belegt:** `size-icon-md` brauchte 20 px, und die Maßleiter sprang von 16 auf 24. Der Wert wurde als `size-5` eingefügt, wodurch die früheren `size-5` bis `size-7` aufrückten — **ohne dass ein einziger Rollenname sich ändern musste.** `space-lg` heißt weiter `space-lg` und zeigt jetzt auf `size-6`.
 
-### Die Abbildung: was aus jedem heutigen Token wird
+### Die Abbildung der alten Tokens: erledigt und abgeschnitten
 
-Stufe B braucht eine Zusage, die keine Liste von Umbenennungen ist: **Jedes der 54 Tokens des heutigen Themes trägt eine ausdrückliche Entscheidung.** Ein Token, das niemand einordnet, verschwindet beim Umschreiben still — und still verschwundene Tokens sind genau die Vererbungsfehler, die das Gate gefunden hat.
+Bevor der Schnitt entschieden war, wurde jedes der 54 alten Farbtokens einer Rolle der Skala
+zugeordnet und jede der 131 Lesestellen der zwölf mehrdeutigen Tokens einzeln entschieden. Drei
+Befunde daraus bleiben gültig und sind in die Regeln eingegangen:
 
-| Art | Anzahl | Bedeutung |
+* **Mehrdeutig heißt nicht immer dasselbe.** Neun Tokens waren eine *Alternative* (an jeder
+  Stelle gilt genau ein Ziel), drei eine *Aufteilung* (`button-secondary` samt Zuständen trug
+  Linie **und** Beschriftung). Eine Aufteilung ist am Token nicht lösbar, nur im Stylesheet — ein
+  Grund mehr, das Stylesheet neu zu schreiben statt Tokens zu tauschen.
+* **Der `inset`-Schatten ist eine Linie.** Der Bestand baut Umriss-Schaltflächen an 25 Stellen als
+  `box-shadow: inset 0 0 0 2px`. Das Klassen-Gate liest ihn deshalb als Linie, nicht als Elevation.
+* **„Wird bedient“, nicht „umschließt“.** WCAG 1.4.11 verlangt die 3,0 für Bedienelemente, nicht
+  für Umrandungen. Der Rahmen einer Karte ist ein Separator; der eines Feldes ist ein Control-Rahmen.
+
+Die Werkzeuge dahinter (Abbildung, Lesestellen, Vergleichsansicht) sind nach
+[`docs/migration/altlast.md`](migration/altlast.md) exportiert und gelöscht. Die Datei ist die
+Arbeitsliste der Wellen 1 bis 5; sie nennt je alter Rolle und je Lesestelle das neue Token.
+
+### Disabled: vier Rollen ohne Gate
+
+| Token | hell | dunkel |
 |---|---|---|
-| `bleibt` | 13 | Name und Rolle unverändert, oft mit neuem Wert |
-| `umbenannt` | 14 | dieselbe Aufgabe, ein Name, der sie benennt |
-| **`mehrdeutig`** | **12** | ein Token, mehrere Aufgaben — braucht je Verwendungsstelle eine Entscheidung |
-| `abgeleitet` | 7 | kein Token mehr, wird gerechnet |
-| `entfaellt` | 2 | ersatzlos |
-| `offen` | 6 | noch nicht entschieden, ausdrücklich vermerkt |
+| `text-disabled`, `icon-disabled` | `gray-29` | `gray-49` |
+| `surface-disabled` | `gray-7` | `gray-69` |
+| `border-disabled` | `gray-18` | `gray-66` |
 
-**Die zwölf mehrdeutigen sind die eigentliche Arbeit.** Jedes von ihnen nennt mindestens zwei Ziele **und die Regel, wie zwischen ihnen zu entscheiden ist** — ein Eintrag mit nur einem Ziel würde die Mehrdeutigkeit nicht auflösen, sondern verdecken. Der Test erzwingt beides.
+Deaktivierte Elemente sind von WCAG 1.4.3 und 1.4.11 ausgenommen und tragen deshalb kein
+Kontrastpaar. Die Werte sind so gewählt, dass deaktivierter Text im hellen Modus schwächer als
+`text-placeholder` bleibt und die deaktivierte Fläche in beiden Modi neben `surface-interactive-selected`
+liegt — ein Zustand, der zurücktritt, ohne zu verschwinden.
 
-| Token | Ziele | Regel in Kürze |
+### Scrim und Ebenen
+
+Ein modaler Dialog dunkelt die Seite darunter ab. Diese Fläche fehlte der Skala; sie heißt
+`surface-scrim` und steht unter den Effekten, weil sie als einzige Rolle Deckkraft trägt: hell
+`rgba(22, 24, 27, 0.48)`, dunkel `rgba(0, 0, 0, 0.64)`. Dunkel mehr, weil ein Dialog sich sonst
+nicht von der Fläche löst, über der er liegt.
+
+Die Stapelordnung bekommt sechs Ebenen statt 28 literaler `z-index` bis `9999999999999999`:
+
+| Token | Wert | Gilt für |
 |---|---|---|
-| `border-subtle` | 2 | trennt → `separator`; umschließt Bedientes → `control` |
-| `support-error` · `-warning` · `-success` | je 4 | Text, Linie, gefüllte Fläche, getönter Streifen |
-| `layer-accent` und seine zwei Zustände | je 2 | Höhe → `layer-overlay`; Zugehörigkeit zur Marke → `brand-subtle` |
-| `button-secondary` und seine zwei Zustände | je 2 | Linie → `border-control`; Beschriftung → `brand-primary` |
-| `button-danger` und sein Zustand | je 2 | gefüllt → `surface`; nur Text → `text` |
+| `layer-base` | 0 | die Fläche |
+| `layer-raised` | 10 | festes Kopfband, eingefrorene Spalte |
+| `layer-sticky` | 100 | Elemente, die beim Rollen haften |
+| `layer-overlay` | 1000 | Scrim, Drawer |
+| `layer-popover` | 1100 | Menü, Dropdown, Tooltip |
+| `layer-toast` | 1200 | Snackbar — liegt über allem, weil sie nichts verdeckt außer kurz |
 
-#### Neun sind zu wählen, drei sind aufzuteilen
+Die Sprünge lassen Kundenkomponenten Platz, ohne dass eine Ebene umbenannt werden muss. Ein
+`z-index`, der kein `var(--tl-layer-*)` ist, ist ein Verstoß.
 
-Die Vergleichsansicht hat einen Unterschied sichtbar gemacht, den die Tabelle oben noch
-verwischt: **Mehrdeutig heißt nicht immer dasselbe.**
+### Der Schnitt vom 17.09.
 
-| Natur | Anzahl | Was zu tun ist |
-|---|---|---|
-| `alternative` | 9 | An jeder Stelle gilt **genau eines** der Ziele. Die Regel entscheidet welches. |
-| `aufteilung` | 3 | An **derselben** Stelle gelten **beide gleichzeitig**, für verschiedene Eigenschaften. |
+Die Spec vom 15.09. plante, das ausgelieferte `tlReactControls.css` an Ort und Stelle auf die
+Skala umzuschreiben. Die Prüfung vor der Ersetzung ergab: Der Rückweg vom Neuen ins Alte deckte nur
+die Farbschicht — 31 gelesene Maß-, Schatten- und Typo-Tokens hatten kein Ziel —, die
+abgeleiteten Beschriftungen existierten nicht als CSS, und die Skala schrieb Attribute, die die
+Anwendung nicht setzt. Reparierbar, aber der Weg führte an einen Ort, an den niemand will: alte
+Namen mit neuen Werten.
 
-Die drei sind `button-secondary` und seine zwei Zustände. Die Umriss-Schaltfläche liest heute
-ein einziges Token für ihre Linie **und** für ihre Beschriftung. Welches Ziel man auch einsetzt,
-die jeweils andere Eigenschaft bekommt den falschen Wert — im Vergleich sofort zu sehen: Mit
-`border-control` wird die Schrift grau, mit `brand-primary` verliert die Linie ihren Kontrast.
-
-**Hier ist nichts zu entscheiden.** Die Regel ist erst erfüllt, wenn `border-color` und `color`
-im Stylesheet getrennte Tokens lesen — das ist eine Änderung an `tlReactControls.css`, keine an
-der Skala. Die Vergleichsansicht markiert diese drei deshalb rot und nennt den Umschalter dort
-ausdrücklich einen Ausschnitt, keine Wahl.
-
-#### Die Stellen entscheiden, nicht die Tokens
-
-Die Abbildung entscheidet je **Token**. Bei den mehrdeutigen reicht das nicht — dort entscheidet
-erst die **Stelle**. `specimen/stellen.mjs` zählt sie aus dem ausgelieferten CSS aus:
-**131 Lesestellen** über die zwölf Tokens. `specimen/stellen.json` trägt für jede eine
-Entscheidung, und ein Test hält fest, dass keine ohne bleibt.
-
-Das Meiste entscheidet dabei die **Eigenschaft**, nicht der Selektor: Wo die Ziele eines Tokens
-verschiedene Aufgaben haben, steht die Aufgabe schon in der Deklaration.
-
-| Klasse | Eigenschaften | Beispiel |
-|---|---|---|
-| Linie | `border*`, `outline*`, **`box-shadow` mit `inset`** | `support-error` → `-border` |
-| Text | `color` | `support-error` → `-text` |
-| Fläche | `background*`, `accent-color` | `support-error` → `-surface` |
-
-**Der `inset`-Schatten ist der wichtigste Einzelfund dieser Auszählung.** Der Bestand baut die
-Umriss-Schaltfläche an 25 Stellen nicht mit `border`, sondern mit `box-shadow: inset 0 0 0 2px`.
-Wer den Schatten pauschal als Elevation liest, ordnet jede davon falsch zu. Damit wird die
-Aufteilung von `button-secondary` **mechanisch durchführbar**: je Deklaration eindeutig, auch
-wenn sie je Token unmöglich bleibt. Das ist für Stufe B der Unterschied zwischen 25
-Einzelfallentscheidungen und einer Ersetzungsregel.
-
-| Ergebnis | |
-|---|---|
-| 131 Lesestellen | 129 zugeordnet, 2 zweckfremd, **0 ohne Entscheidung** |
-| `border-subtle` | 51 → `border-separator`, **14 → `border-control`** |
-| `button-secondary` samt Zuständen | 13 → Linie, 12 → Beschriftung/Fläche |
-| Semantikfarben | 26, allein durch die Eigenschaft |
-
-#### Was die Auszählung an den Regeln korrigiert hat
-
-**Dreimal war die Regel am Schreibtisch zu eng gefasst** — und dreimal hat erst der Bestand es
-gezeigt:
-
-1. **`border-subtle` kannte einen Fall nicht.** Die Regel trennte „trennt nur" von „umschließt
-   Bedientes". Der häufigste Fall im Bestand ist ein dritter: der umschließende Rahmen um etwas,
-   das **nicht bedient** wird — Karte, Kachel, Popover, Ladering. WCAG 1.4.11 verlangt die 3,0 für
-   Bedienelemente, nicht für Umrandungen. Die Regel heißt deshalb jetzt nicht mehr „umschließt",
-   sondern **„wird bedient"**: 14 Stellen bekommen `border-control`, darunter die Eingabefelder,
-   an denen der ganze Befund hängt.
-2. **`button-danger` hatte keine Linie.** Der Aufnahmeknopf trägt seinen Gefahrzustand als Rahmen,
-   nicht als Fläche. `support-error-border` ist als Ziel nachgetragen.
-3. **`layer-accent` steht an keiner der Stellen, für die die Regel gemacht war.** Sie sprach von
-   Popover und ausgewähltem Reiter. Im CSS steht das Token an der Markenleiste (→ `brand-subtle`)
-   und an zwei Stellen, für die die Skala **kein Ziel führt**.
-
-Diese zwei sind als **zweckfremd** vermerkt, nicht in die Regel gebogen:
-
-| Stelle | Was sie wirklich ist | Vorschlag |
-|---|---|---|
-| `.tlAvatar--empty` | die schwach gefüllte Kreisfläche eines Avatars ohne Namen — eine neutrale Tönung | `layer-02` |
-| `.tlFormField__dirtyDot` | der Punkt neben einem geänderten Feld; eine getönte Fläche wäre unsichtbar | `brand-primary` |
-
-**Eine Stelle, an der die Regel nicht greift, ist ein Befund — kein Anlass, die Regel zu dehnen,
-bis sie irgendwie passt.** Der Test verlangt für jede zweckfremde Stelle Grund *und* Vorschlag.
-
-Offen bleibt daraus eines: Die Skala führt **keine Hover-Stufe der Semantikfarben**.
-`button-danger-hover` nimmt deshalb dieselbe Linie wie `button-danger`.
-
-#### Was die Abbildung nebenbei zeigt
-
-**Nur vier Rollen der neuen Skala sind wirklich neu** — die vier Info-Rollen, und die auch nur, weil Info im heutigen Theme überhaupt keine eigene Farbe hatte. Alles andere ist ein umbenanntes oder aufgespaltenes Token. **Die Skala erfindet fast nichts; sie ordnet, was schon da war.**
-
-Die sechs offenen sind benannt statt übergangen: die vier `disabled`-Rollen, ihre Beschriftungsvariante, und `script-editor-text-highlight` — Syntaxhervorhebung im TL-Script-Editor, für die die Skala bisher keine Rolle führt. Sie gehört zur Code-Klasse und steht noch aus.
-
----
-
-## Offen
-
-**Alle Skalen sind entschieden.** Es bleibt eine Folge, die erst am Bild zu entscheiden ist:
-
-| | Zu entscheiden |
-|---|---|
-| Marke ↔ Info | Beide belegen denselben Farbraum — `brand-subtle` und `support-info-subtle` trennen 1,06. Drei Auswege stehen oben; die Wahl braucht beide Flächen nebeneinander im Specimen. |
+**Entschieden:** Altlasten werden abgeschnitten, nicht übersetzt. Die Skalen bleiben. Neu sind das
+Ziel (ein eigenes Paket `@toplogic/design-system`), die Namen (Englisch, kebab-case, Präfix `tl`,
+BEM für Klassen, geschlossene Kategorien für Tokens) und die Reihenfolge (Tokens und Grundklassen
+zuerst, dann Komponente für Komponente, bis das alte Stylesheet leer ist). Die Spec dazu:
+[`superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`](superpowers/specs/2026-09-17-design-system-neuaufbau-design.md).
 
 ---
 
@@ -1090,27 +1027,11 @@ sind keine Stufen, das sind Einzelfallentscheidungen, die nacheinander getroffen
 Die Skala muss diesen Schwanz auf **eine** Stufe abbilden. Wie viele Stufen es insgesamt werden und
 wo die kleinste liegt, ist damit die eigentliche Frage — nicht die Schrittweite.
 
-### Die Vergleichsansicht: die Abbildung wird ausführbar
+### Die Vergleichsansicht: was sie gezeigt hat
 
-`abbildung.json` war bis hierhin ein Dokument — 54 Einträge, jeder mit Ziel und Begründung, aber
-keiner je an einer Fläche nachgerechnet. Die Vergleichsansicht im Specimen setzt sie in Werte um:
-dieselben Fragmente aus der Demo-App, links unter dem heutigen Theme, rechts unter der Skala.
-
-Damit das überhaupt geht, muss die Skala den Rückweg nehmen: Das ausgelieferte
-`tlReactControls.css` kennt nur die heutigen Tokennamen. Der Umweg ist kein Behelf, sondern die
-Probe — **was sich nicht zurückführen lässt, ist in Stufe B eine Änderung am Stylesheet, keine am
-Token.** Genau so sind die drei Aufteilungen aufgefallen.
-
-Drei Regeln hält der Test fest, weil sie leicht zu verletzen und schwer zu bemerken sind:
-
-* **Kein Token darf fehlen.** Die Werte liegen je Seite auf einem Container, nicht auf `:root`.
-  Ein Token ohne Wert erbt dort vom heutigen Theme und zeigt die alte Farbe als neue — genau die
-  stille Vererbung, die das Gate schon einmal gefunden hat.
-* **Was entfällt, erbt nicht.** `focus-inset` und `background-inverse` bekommen `initial`. Wo ein
-  Fragment sie noch liest, fällt die Stelle sichtbar aus, statt still zu funktionieren.
-* **Was offen ist, trägt den heutigen Wert** — und die Ansicht sagt es. Sechs Rollen stehen so da;
-  ohne sie wäre die Fläche daneben unlesbar und der Vergleich wertlos.
-
-Die Beschriftungen bleiben auch hier gerechnet, nicht gesetzt: `layer-accent-text` folgt der
-Wahl, die für `layer-accent` getroffen wurde. Wer die Fläche umschaltet und die Beschriftung
-gegen die alte weiterrechnet, sieht eine Kombination, die es an keiner Stelle gibt.
+Die Vergleichsansicht stellte dieselben Fragmente der Demo-App links unter dem alten Theme und
+rechts unter der Skala nebeneinander, indem sie die Skala auf die alten Tokennamen zurückführte.
+Sie hat zwei Dinge sichtbar gemacht, die auf dem Papier nicht zu sehen waren: dass drei der zwölf
+mehrdeutigen Tokens keine Wahl, sondern eine Aufteilung sind, und dass eine Beschriftung immer der
+Fläche folgen muss, auf der sie steht. Mit dem Schnitt entfällt der Rückweg, und die Ansicht mit
+ihm. Was sie gezeigt hat, steht oben unter „Die Abbildung der alten Tokens“.

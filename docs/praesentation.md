@@ -1,6 +1,6 @@
 # TopLogic Design System — Präsentationsfassung
 
-**Stand:** 2026-09-16 · Stufe A · Ticket #29108
+**Stand:** 2026-09-17 · Welle 0 · Ticket #29108
 
 Eine Folie je Abschnitt. Belege stehen in [`skalen.md`](skalen.md), Zahlen sind am echten Stylesheet gemessen, nicht geschätzt.
 
@@ -407,17 +407,17 @@ Das richtige Maß ist der **Farbtonabstand**:
 
 | Wert | Rollen, die ihn als Literal trugen |
 |---|---|
-| `#0B5ED7` | `border-interactive`, `focus`, `brand-primary`, `brand-link` |
-| `#FFFFFF` | `layer-01`, `layer-02`, `layer-overlay` |
+| `#0B5ED7` | `border-interactive`, `focus-ring`, `surface-brand`, `text-link` |
+| `#FFFFFF` | `surface-layer`, `surface-layer-nested`, `surface-overlay` |
 
 Bei einem Markenwechsel wären vier Stellen nachzuziehen — und die vergessene fünfte wäre der Vererbungsfehler, der die acht Dunkel-Verstöße erzeugt hat.
 
 | Schicht | Beispiel | Regel |
 |---|---|---|
-| **1 · Primitive** | `blue-49: #0B5ED7` | reine Werte, **keine** Rolle im Namen |
-| **2 · Rollen** | `brand-primary: {blue-49}` | Bedeutung, **kein einziger Wert** |
+| **1 · Primitive** | `--tl-blue-49: #0B5ED7` | reine Werte, **keine** Rolle im Namen |
+| **2 · Rollen** | `--tl-surface-brand: var(--tl-blue-49)` | Bedeutung, **kein einziger Wert** |
 
-**Das ist mehr als Ordnung — es ist die Eingriffsstelle für Kundenprojekte.** Wer seine Hausfarbe einsetzen will, überschreibt `--blue-49`; alle vier markenbezogenen Rollen ziehen mit, ohne dass eine Klasse angefasst wird. Deshalb löst das erzeugte CSS die Referenzen **nicht** auf.
+**Das ist mehr als Ordnung — es ist die Eingriffsstelle für Kundenprojekte.** Wer seine Hausfarbe einsetzen will, überschreibt `--tl-blue-49`; alle vier markenbezogenen Rollen ziehen mit, ohne dass eine Klasse angefasst wird. Deshalb löst das erzeugte CSS die Referenzen **nicht** auf.
 
 > Sprechnotiz: Ein Test spielt genau diesen Tausch durch — das ist die Zusage an Kundenprojekte, in ausführbarer Form.
 
@@ -425,16 +425,17 @@ Bei einem Markenwechsel wären vier Stellen nachzuziehen — und die vergessene 
 
 ## 25 · Wie das geprüft wird
 
-**Die Regeln stehen nicht nur im Dokument — sie laufen als Tests.** 63 Stück, `node --test`.
+**Die Regeln stehen nicht nur im Dokument — sie laufen als Tests.** 65 Stück, `node --test` im Paket.
 
 | Datei | Was sie durchsetzt |
 |---|---|
-| `skala.json` | der entschiedene Soll-Zustand, zweischichtig |
-| `generieren.mjs` | erzeugt daraus 354 Zeilen CSS mit 140 Referenzen |
-| `skala.test.mjs` | Kontraste, Farbabstände, das 4-px-Raster, die 12-px-Untergrenze |
-| `schichten.test.mjs` | kein Hex in der Rollenschicht, kein Primitiv ohne Verwendung, der Kundentausch |
-| `generieren.test.mjs` | keine Farbe außerhalb der Token-Blöcke, `:focus-visible` genau einmal |
-| `inventar.mjs` | zählt das ausgelieferte CSS aus — jede Zahl dieser Präsentation |
+| `src/primitives.json`, `src/tokens.json` | der entschiedene Soll-Zustand, zweischichtig |
+| `tools/generate.mjs` | erzeugt daraus `primitives.css`, `tokens.css`, `base.css`, `tokens.dtcg.json` |
+| `test/tokens.test.mjs` | Kontraste, Farbabstände, das 4-px-Raster, die 12-px-Untergrenze |
+| `test/layers.test.mjs` | kein Wert in der Rollenschicht, keine Primitive ohne Leser, geschlossene Kategorien, der Kundentausch |
+| `test/lint-css.test.mjs` | das Klassen-Gate: kein Literal, kein `:focus`, kein `outline: none`, nur Tokens |
+| `test/ratchet.test.mjs` | das alte Stylesheet darf nur schrumpfen |
+| `test/dist.test.mjs` | `dist/` ist byte-identisch mit dem Erzeugnis aus `src/` |
 
 **Ein Beispiel dafür, warum das nötig ist:** Beim ersten Lauf widersprach das Inventar den von Hand gezählten Zahlen — 14 px kam auf 7 statt 48. Ursache war ein zu enger Leser der Theme-Konfiguration. **Der Test dazu war grün und trotzdem falsch**, weil er nur den Fall prüfte, den der Leser beherrschte.
 
@@ -497,22 +498,52 @@ Das ausgelieferte CSS liest die zwölf mehrdeutigen Tokens an **131 Stellen**. J
 
 ---
 
-## 29 · Wie es weitergeht
+## 29 · Der Schnitt
 
-**Stufe A — die Skalen festlegen und belegen.** *Abgeschlossen: alle elf entschieden.*
+**Der Rückweg ins alte Stylesheet war reparierbar — aber er führte an einen Ort, an den niemand will: alte Namen mit neuen Werten.**
 
-**Stufe B — die Skalen in die Anwendung bringen.** *Begonnen:*
+Die Prüfung vor der Ersetzung fand drei Lücken: Die Abbildung deckte nur die Farbschicht, 31 gelesene Maß-, Schatten- und Typo-Tokens hatten kein Ziel. Die gerechneten Beschriftungen existierten nicht als CSS. Und die Skala schrieb Attribute, die die Anwendung nicht setzt.
+
+**Entschieden:** Altlasten abschneiden, nicht übersetzen. Die Skalen bleiben, das Ziel wird ein eigenes Paket, die Namen werden neu.
+
+| Alt | Neu |
+|---|---|
+| `layer-01` | `--tl-surface-layer` |
+| `support-error` | `--tl-status-error-text` · `-border` · `-surface` · `-subtle` |
+| `button-primary` | `--tl-surface-brand` |
+| `.tlReactButton--primary` | `.tl-button--primary` |
+| `data-theme="dark"` | `data-tl-mode="dark"` |
+
+Englisch, kebab-case, Präfix `tl`, BEM für Klassen, geschlossene Kategorien für Tokens. Zustände als Attribute, nicht als Klassen.
+
+> Sprechnotiz: Was die Abbildung gefunden hat, ist nicht verloren — es steht als Arbeitsliste in `docs/migration/altlast.md`. Die Werkzeuge dahinter sind gelöscht.
+
+---
+
+## 30 · Welle 0 steht
+
+**Das Paket `@toplogic/design-system` liefert, was jede Klasse liest.**
 
 | | |
 |---|---|
-| ✓ | Die Skala ist maschinenlesbar, zweischichtig und durch 105 Tests abgesichert |
-| ✓ | Der Generator erzeugt das ausliefernde CSS |
-| ✓ | Das Inventar belegt die Zahlen reproduzierbar |
-| ✓ | Die erzeugte Datei steht gegen die Fragmente der laufenden Anwendung — Vergleichsansicht |
-| | Die gefundenen Verstöße abräumen — Kontraste, 22× fehlender Fokus, `overflow: hidden` |
-| ✓ | Jede der 131 Lesestellen der mehrdeutigen Tokens trägt eine Entscheidung |
-| | Die Ersetzung durchführen — `stellen.json` sagt je Deklaration, was einzusetzen ist |
-| | Die Paarliste des Java-Gates nachziehen |
-| | Die Tokens in Figma spiegeln, damit Design und Code dieselbe Quelle haben |
+| `primitives.css` | 125 Zeilen — Werte, die Stelle für Kundenprojekte |
+| `tokens.css` | 189 Zeilen — nur Referenzen, hell als Standard, `[data-tl-mode="dark"]`, `[data-tl-density="compact"]` |
+| `base.css` | Typografieklassen, Fokusring, Reduced Motion, Zahlenklasse, Druck |
+| `tokens.dtcg.json` | W3C-Format für Figma und Kundenwerkzeuge |
+| 65 Tests | Schichten, Kontrast, Maße, Farbton, Erzeugtes, Klassen-Gate, Ratsche |
 
-> Sprechnotiz: Stufe A entscheidet, Stufe B räumt auf. Die Reihenfolge ist wichtig — aufräumen ohne Regel erzeugt denselben Zustand noch einmal.
+**Das Klassen-Gate** bricht bei jedem Literal, jedem `:focus` ohne `-visible`, jedem `outline: none`, jedem `z-index` ohne Ebene. **Die Ratsche** zählt das alte Stylesheet und lässt es nur schrumpfen.
+
+Die Demo-App lädt die drei Dateien und setzt `data-tl-mode` und `data-tl-density` am `html`.
+
+**Wie es weitergeht — fünf Wellen, jede Komponente nach demselben Rhythmus:** CSS ins Paket, Klassen im TSX umbenennen, Zustände auf Attribute, Specimen, Vertrag, Gate grün, alter Block gelöscht.
+
+| Welle | Komponenten |
+|---|---|
+| 1 | Button, ToggleButton, Pill, Avatar, Progress, FontIcon |
+| 2 | Felder, Checkbox, BooleanChoice, DropdownSelect, FormField, FormGroup, FormLayout |
+| 3 | TableView, TreeView, Menu, Toolbar, TabBar, Breadcrumb |
+| 4 | Dialog, Window, Drawer, Snackbar, NoticeBar, Shell, Layoutcontainer |
+| 5 | Calendar, ColorInput, IconSelect, Medien, Dashboard |
+
+> Sprechnotiz: Eine Komponente ist fertig, wenn ihr alter Block leer ist. Nicht früher.

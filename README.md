@@ -11,15 +11,17 @@ dokumentiert ist, sondern weil alles andere nicht durch CI kommt.
 ## Werkzeuge
 
 ```bash
-cd specimen
-node inventar.mjs      # das ausgelieferte CSS auszählen
-node generieren.mjs    # skala.css aus skala.json erzeugen
-node --test            # alle Gates prüfen
-node serve.mjs         # Specimen auf http://localhost:8137/
+cd design-system
+node --test                 # alle Gates
+node tools/generate.mjs     # dist/ aus src/ erzeugen
+node tools/lint-css.mjs     # Klassen-Gate
+node tools/serve.mjs        # Specimen auf http://localhost:8137/
 ```
 
-Jede Zahl in `docs/` stammt aus `inventar.mjs` und wird gegen das echte Stylesheet gehalten.
-Details in [`CLAUDE.md`](CLAUDE.md).
+Das Paket `@toplogic/design-system` liegt in `design-system/`: `src/` ist die Quelle
+(Primitive und Tokens als JSON), `dist/` das eingecheckte Erzeugnis (`primitives.css`,
+`tokens.css`, `base.css`, `tokens.dtcg.json`). Details in [`CLAUDE.md`](CLAUDE.md), die Spec in
+[`docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`](docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md).
 
 ## Die eine nicht verhandelbare Regel
 
@@ -51,18 +53,13 @@ Durchgesetzt wird das durch:
 
 **Siehe `STATUS.md`** — Sitzungsstand, offene PRs, wo anzuknüpfen ist.
 
-`plan.md` beschreibt die Arbeitspakete.
-
 | Artefakt | Inhalt |
 |---|---|
 | `STATUS.md` | Sitzungsstand: was erledigt ist, wo weitergeht |
-| `plan.md` | Arbeitspakete AP 1–10, gegen `master` |
-| `findings/AP-korrektur-master.md` | warum der erste Plan hinfällig war |
-| `findings/AP0-blocker.md` | Blocker-Verifikation: Deploy-Modus, Browser-Matrix, oxlint-Spike, `@layer` |
-| `findings/AP1-token-inventar.md` | Token-Nutzungsindex, die drei Drift-Familien |
-| `tools/token-inventory.mjs` | erzeugt den Nutzungsindex aus Repo + Java-Deklarationen |
-| `tools/check-foreign-values.mjs` | Fremdpaletten-Wächter |
-| `spikes/oxlint/` | Nachweis, dass oxlint-JS-Plugins tragen |
+| `docs/skalen.md` | jede Skala mit Regel und Begründung |
+| `docs/praesentation.md` | dieselben Inhalte folienweise |
+| `docs/migration/altlast.md` | Arbeitsliste für die Migration der Komponenten |
+| `design-system/` | das Paket: Quelle, Erzeugnis, Werkzeuge, Gates, Specimen |
 
 ## Offene organisatorische Punkte
 

@@ -1,78 +1,40 @@
 # Stand
 
-**Letzte Sitzung:** 2026-09-16 · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT)
-
----
+**Letzte Sitzung:** 2026-09-17 · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Spec:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`
 
 ## Wo anknüpfen
 
-**Stufe A läuft.** Die Maschinerie steht und ist geprüft. Offen sind noch Fokus, Motion, Dichte und
-die Komponenten-Maße, dazu zwei Restfragen: die Stufenzahl der Markenrampe und die Rahmenbreiten.
+**Welle 0 ist umgesetzt.** Das Paket `design-system/` liefert `dist/primitives.css`,
+`dist/tokens.css`, `dist/base.css` und `dist/tokens.dtcg.json`. `cd design-system && node --test`
+ist das Gate — **65 Tests, alle grün**. `node tools/lint-css.mjs` ist das Klassen-Gate,
+`test/ratchet.json` das Budget des alten Stylesheets (6065 Zeilen, darf nur sinken).
 
-**Stufe A ist abgeschlossen. Stufe B läuft.**
+Die Demo-App lädt die drei Dateien als `ClientResources` und setzt `data-tl-mode` und
+`data-tl-density` am `html`. Das liegt im Worktree auf dem Branch
+`CWS/CWS_29108_design_system_welle_0` (Commit `156a65c29`, `TestUIThemeService` 9/9 grün),
+**noch nicht gepusht**. Der Push braucht das angenommene Trac-Ticket #29108.
 
-Was steht: `specimen/skala.json` hält den entschiedenen Soll-Zustand, `specimen/generieren.mjs` macht daraus `skala.css` (359 Zeilen, 240 Custom Properties in zwei Schichten), und die Testdateien daneben sind das Gate dazu — **86 Tests, alle grün** (`cd specimen && node --test`).
+**Nächster Schritt: Welle 1.** Button, ToggleButton, Pill, Avatar, Progress, FontIcon. Je
+Komponente: CSS nach `src/components/`, Klassen im TSX umbenennen, Zustände auf Attribute,
+`className` durchreichen, Specimen, Vertrag, Gate grün, alter Block in `tlReactControls.css`
+gelöscht. Der Button ist die Vorlage. Arbeitsliste: `docs/migration/altlast.md`.
 
-**Die Skala steht jetzt an echten Komponenten.** Die Vergleichsansicht im Specimen (Ansicht →
-*Vergleich*) zeigt dieselben Fragmente aus der Demo-App zweimal: links unter dem heutigen Theme,
-rechts unter der Skala, über `abbildung.json` auf die heutigen Tokennamen zurückgeführt.
-`specimen/abbildung.mjs` macht die Abbildung dafür ausführbar, `abbildung.anwenden.test.mjs` ist
-das Gate dazu — **86 Tests, alle grün**.
+Offen aus der Spec, nicht Teil von Welle 0:
 
-**Alle 131 Lesestellen der mehrdeutigen Tokens sind entschieden.** `specimen/stellen.mjs` zählt
-sie aus dem ausgelieferten CSS aus, `specimen/stellen.json` trägt je Stelle die Entscheidung, und
-ein Test hält fest, dass keine ohne bleibt — **105 Tests, alle grün**.
+* `tl-ds derive` — Kundenstufe A, die Ableitung einer Palette aus Hausfarbe und Grauwahl
+* Token-Mapper — Miniprojekt, Browserwerkzeug für Kunden-Styleguides
+* Figma-Push aus `tokens.dtcg.json`
+* Maven-Wrapper für das Paket; bis dahin kopiert `tools/publish-to-worktree.mjs`
+* TSX-Lint-Regel (kein Hex, kein `style={{ color }}`, nur `tl-`-Klassen)
+* Prüfung in der laufenden Demo-App (Browser); bisher ist nur das Specimen im Browser geprüft
 
-| | |
-|---|---|
-| 131 Lesestellen | 129 zugeordnet · 2 zweckfremd · **0 ohne Entscheidung** |
-| `border-subtle` | 51 → `border-separator`, **14 → `border-control`** (darunter die Eingabefelder) |
-| Semantikfarben | 26 — allein die Eigenschaft entscheidet |
+## Der Schnitt vom 17.09.
 
-Nächster Schritt: **die Ersetzung durchführen.** `node stellen.mjs` sagt je Deklaration, was
-einzusetzen ist. Das ist die erste Änderung am ausgelieferten `tlReactControls.css` — bis hierhin
-wurde nur gemessen und entschieden.
-
-Offene Befunde für die Umsetzung:
-
-* `specimen/abbildung.json` ordnet **alle 54 Ist-Tokens** ein; **zwölf sind mehrdeutig**, davon
-  **drei Aufteilungen** (`button-secondary` samt Zuständen: Linie *und* Beschriftung aus einem
-  Token). Die Aufteilung ist **je Deklaration eindeutig** — der Bestand baut den Rahmen an 25
-  Stellen als `box-shadow: inset 0 0 0 2px`, damit wird die Ersetzung mechanisch statt
-  einzelfallweise.
-* **Zwei Stellen sind zweckfremd** und stehen als Befund, nicht als Entscheidung:
-  `.tlAvatar--empty` (Vorschlag `layer-02`) und `.tlFormField__dirtyDot` (Vorschlag
-  `brand-primary`) lesen `layer-accent` für etwas, für das die Skala kein Ziel führt.
-* Die Skala führt **keine Hover-Stufe der Semantikfarben** — `button-danger-hover` nimmt deshalb
-  dieselbe Linie wie `button-danger`.
-* Die fünf `disabled`-Rollen und `script-editor-text-highlight` stehen als `offen` in der Abbildung.
-* **`.tlTableView__treeToggle` ist 20 × 20 px** und verstößt gegen WCAG 2.5.8; bei `.tlFormField__helpIcon` (20 px) ist zu prüfen, ob es bedienbar ist.
-* **22× `outline: none`** ohne erkennbaren Ersatz — Kandidaten für fehlenden Fokus (WCAG 2.4.7).
-* **`overflow: hidden`** an Behältern mit fokussierbaren Kindern beschneidet den äußeren Fokusring.
-* **`--shadow-raised`** liegt auf vier Stellen, die nicht schweben; das Token entfällt ersatzlos.
-* **Drei Dichte-Modifier** in Stack, Grid und Card, die nichts voneinander wissen.
-* **`font-family: 'Inter'`** ohne Fallback, **`font-family-mono: monospace`** ohne gewählte Schrift.
-* JetBrains Mono ist gewählt, aber nicht ausgeliefert — es gibt noch kein Modul dafür.
-
-**Arbeitsweise, festgehalten am 2026-09-16:** Der Bestand ist kein Maßstab. Inventar erheben als
-Befund — entscheiden dann gegen den Befund, nicht aus ihm. Vor jeder Skala fragen, ob sie für eine
-Plattform in TopLogics Größe reicht. Die erste Typo-Fassung lief genau in diesen Fehler und wurde
-verworfen.
-
-Die Typo-Entscheidung steht in `docs/skalen.md`, aber **noch nicht im Specimen**: weder die sechs
-Größen noch die neun Klassen sind dort als Tokens hinterlegt oder an der Probe gezeigt. JetBrains
-Mono ist gewählt, aber nicht ausgeliefert — es gibt noch kein Modul dafür.
-
-Das Specimen starten:
-
-```bash
-cd ~/Claude/TopLogic-v8-DesignSystem/specimen && node serve.mjs
-```
-
-Dann `http://localhost:8137/` — Markenregler, Grundflächenregler, Modus-, Ansichts- und
-Schriftumschalter, unten das Gate-Panel. Ansicht → *Vergleich* stellt heutiges Theme und Skala
-nebeneinander; die Leiste darüber schaltet die mehrdeutigen Tokens um und nennt je Zeile die
-Regel, nach der zu entscheiden ist.
+Die Werkzeuge zur Abbildung des alten Themes (`abbildung.json`, `stellen.json`,
+Vergleichsansicht) sind nach `docs/migration/altlast.md` exportiert und gelöscht. Begründung in
+`docs/skalen.md` unter „Der Schnitt vom 17.09.“. Die Skalen selbst sind unverändert; nur die
+Namen sind neu (Englisch, Präfix `tl`, geschlossene Kategorien).
 
 ## Entschieden, alles begründet in `docs/skalen.md`
 
@@ -82,34 +44,35 @@ Regel, nach der zu entscheiden ist.
 | Dark | zweite vollständige Palette, nichts wird geerbt |
 | Rampenregel | Sättigung zurücknehmen statt klemmen |
 | Rampenrichtung | Gedrücktes tritt zurück |
-| Beschriftung | je Fläche abgeleitet, nie geschrieben |
+| Beschriftung | je Fläche erzeugt, nie geschrieben (`text-on-brand`, `text-on-status-*`) |
 | **Marke** | **`#0B5ED7`**, ausdrücklich vorläufig |
 | Grundfläche | `#FAFAFA`, neutral |
-| Rahmen | vier Stufen: separator, control, emphasis, interactive |
+| Rahmen | vier Stufen: `border-separator`, `-control`, `-emphasis`, `-interactive` |
 | Neutrale | aus der Anforderung gestuft, nicht nach gleichem Abstand |
-| Semantik | vier Bedeutungen × vier Rollen |
+| Semantik | vier Bedeutungen × vier Rollen: `status-{error,warning,success,info}-{text,border,surface,subtle}` |
 | Schrift | Inter bleibt; Kundenschriften siehe Issue #12 |
 | Typo-Größen | sechs Stufen in `rem`, Untergrenze 12 px, Zeilenhöhen auf dem 4-px-Raster |
-| Typo-Klassen | neun Klassen statt blanker Größen; `tnum` in Zahlenspalten ist Pflicht |
+| Typo-Klassen | neun `.tl-type-*` statt blanker Größen; `.tl-nums` in Zahlenspalten ist Pflicht |
 | Schriftfamilien | Inter + JetBrains Mono, beide lokal, beide mit Fallback-Stack |
-| Druck | eigene Leiter in `pt`, vier Klassen |
+| Druck | eigene Leiter in `pt`, vier `.tl-print-*`-Klassen |
 | Radius | zwei Stufen (4/8 px) plus Pille und Kreis; bedient → sm, umschließt → md |
 | Elevation-Stufen | drei Schatten, und **nur** Schwebendes bekommt einen |
-| Helle Flächen | trennt der Rahmen, nicht der Schatten; `layer-overlay` neu |
+| Helle Flächen | trennt der Rahmen, nicht der Schatten; `surface-overlay` neu |
 | Fokus | ein Ring: `outline` 2 px, Offset 2 px, solid, nur `:focus-visible` |
 | Motion | drei Dauern, drei `cubic-bezier` plus `linear`, ein globaler Reduced-Motion-Schalter |
-| Abstände | sieben Stufen, `space-12` neu eingefügt; Namen tragen den Wert, keine Nummer |
-| Dichte | zwei Stufen, Schriftgröße bleibt in beiden gleich |
-| Komponenten-Maße | Control-Höhen je Dichte, Zeilenhöhe abgeleitet (Control + 4 px) |
+| Abstände | sieben Stufen, `space-sm` (12 px) neu eingefügt; relative Namen |
+| Dichte | zwei Stufen, `data-tl-density`, Schriftgröße bleibt in beiden gleich |
+| Komponenten-Maße | `size-control` je Dichte, `size-row` abgeleitet (Control + 4 px) |
 | Einheiten | `rem` für alles Skalierende, `px` nur für Linien |
-| Rahmenbreiten | zwei: 1 px und 2 px; der breite Balken ist kein Rahmen, sondern `accent-bar` |
-| Markenrampe | keine Stufen, zwei neue Rollen: `brand-subtle` und `brand-subtle-hover` |
-| Info-Ton | türkis statt blau — ΔH 48,5° zur Marke, sonst sehen die getönten Flächen gleich aus |
-| Icons | drei Stufen nach Rolle plus eine geschlossene Glyph-Ausnahme; die Trefferfläche ist eine Control-Höhe |
+| Rahmenbreiten | zwei: 1 px und 2 px; der breite Balken ist `border-width-accent` |
+| Markenrampe | keine Stufen, zwei getönte Rollen: `surface-brand-subtle` und `-hover` |
+| Info-Ton | türkis statt blau — ΔH 48,5° zur Marke |
+| Icons | drei Stufen nach Rolle plus Glyph; die Trefferfläche ist eine Control-Höhe |
+| Disabled | vier Rollen ohne Gate, von WCAG ausgenommen |
+| Scrim und Ebenen | `surface-scrim` mit Deckkraft; sechs Ebenen `layer-*` statt literaler `z-index` |
+| Zwei Schichten | Primitive tragen Werte, Tokens nur Referenzen; Präfix `--tl-` |
 
-## Was das Gate gefunden hat
-
-Zehn Verstöße, keiner davon vorher bekannt:
+## Was das Gate im Altbestand gefunden hat
 
 | Befund | Wert |
 |---|---|
@@ -122,28 +85,24 @@ Zehn Verstöße, keiner davon vorher bekannt:
 | Beschriftung auf `button-primary`, dunkel | 2,80 |
 
 **Dreimal dieselbe Ursache:** ein Token mit mehreren Aufgaben, und die schwächste Anforderung
-gewinnt — `text-on-color`, `border-subtle`, `support-warning`.
+gewinnt. Die neue Skala löst jedes dieser Tokens in Rollen mit je einer Aufgabe auf.
 
 ## Werkzeuge
 
-`specimen/` — Kontrastrechnung, 23 Paare, OKLCH-Markenableitung mit Gamut-Mapping, Server auf dem
-**echten** `tlReactControls.css`, Fragmente aus der laufenden Demo-App. 15 Tests, `node --test`.
+Siehe `CLAUDE.md`. Alles in `design-system/`, alles mit `node`, keine Abhängigkeiten.
 
 ## Offene Fäden
 
-* Die Paarliste im Specimen weicht bewusst vom Java-Gate ab (sechs Umbenennungen, eine Ergänzung).
-  Stufe B zieht nach — die vollständige Liste steht im Bericht im SDD-Workspace.
-* PRs **!1618** und **!1621** sind verifiziert, aber weiterhin ungemergt. **B6 hängt an !1621.**
+* PRs **!1618** und **!1621** im Framework sind verifiziert, aber weiterhin ungemergt.
 * Issue **#13** hält fest, dass Kunden-Theming, Storybook und Accessibility beim Umschreiben ihr
   Issue verloren haben.
-* Vier Stellen lesen `--text-on-color` ohne eindeutige Rolle; eine davon (`.tlAudioPlayer__icon--pause`)
-  hat eine hartkodierte Fläche `#24a148`.
+* Zwei Commits von Welle 0 (`5ab2ae3`, `6d709f4`) tragen den Trailer eines anderen Modells; ein
+  Umschreiben der Historie wurde nicht durchgeführt.
 
 ## Planung
 
 Arbeitspakete als Gitea-Issues: https://git.top-logic.com/hpe/tl-design-system/issues
-Präsentationsfassung: `docs/praesentation.md` — 29 Folien, alle Zahlen gemessen.
-**Wird bei jeder Entscheidung mitgezogen**, zusammen mit `skalen.md` und dieser Datei.
-Spec: `docs/superpowers/specs/2026-09-15-style-overhaul-design.md`
-Umsetzungsplan Stufe A: `docs/superpowers/plans/2026-09-15-stufe-a-richtung.md`
-Fortschritt und Rulings: `.superpowers/sdd/2026-09-15-stufe-a-richtung/progress.md`
+Präsentation: `docs/praesentation.md` — 30 Folien. **Wird bei jeder Entscheidung mitgezogen.**
+Spec: `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`
+Plan Welle 0: `docs/superpowers/plans/2026-09-17-welle-0-paket.md`
+Arbeitsliste Wellen 1–5: `docs/migration/altlast.md`
