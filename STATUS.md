@@ -3,6 +3,17 @@
 **Letzte Sitzung:** 2026-09-17 · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Spec:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`
 
+## Morgen zuerst
+
+Zwei Entscheidungen von Hendrik stehen aus, beide in einer Minute erledigt:
+
+1. **Push und PR** des Worktree-Branches `CWS/CWS_29108_design_system_welle_0` gegen `master`
+   (zwei Commits, `TestUIThemeService` 9/9). Voraussetzung: Trac-Ticket #29108 ist angenommen.
+2. **Trailer** der Commits `5ab2ae3` und `6d709f4` („Claude Haiku 4.5“): stehen lassen oder mit
+   Freigabe umschreiben.
+
+Danach beginnt **Welle 1** mit dem Button als Vorlage (siehe unten).
+
 ## Wo anknüpfen
 
 **Welle 0 ist umgesetzt.** Das Paket `design-system/` liefert `dist/primitives.css`,
@@ -12,7 +23,7 @@ ist das Gate — **79 Tests, alle grün**. `node tools/lint-css.mjs` ist das Kla
 
 Die Demo-App lädt die drei Dateien als `ClientResources` und setzt `data-tl-mode` und
 `data-tl-density` am `html`. Das liegt im Worktree auf dem Branch
-`CWS/CWS_29108_design_system_welle_0` (Commit `156a65c29`, `TestUIThemeService` 9/9 grün),
+`CWS/CWS_29108_design_system_welle_0` (Commits `156a65c29`, `5d27762c1`; `TestUIThemeService` 9/9 grün),
 **noch nicht gepusht**. Der Push braucht das angenommene Trac-Ticket #29108.
 
 **Nächster Schritt: Welle 1.** Button, ToggleButton, Pill, Avatar, Progress, FontIcon. Je
