@@ -58,7 +58,7 @@ for (const [alt, b] of Object.entries(stellenBericht(css, abbildung, entscheidun
     zeilen.push(`| \`${s.selektor}\` | \`${s.eigenschaft}\` | \`${alt}\` | \`${ziel}\` |`);
   }
 zeilen.push('', '## Nicht abgebildete Alt-Tokens (Maße, Schatten, Typo)', '',
-  'Diese 31 Tokens las das alte CSS ohne Ziel in der Skala. Sie fallen mit ihrer Komponente:', '',
+  'Das alte CSS liest 31 Namen ohne Ziel in der Skala; die Tabelle fasst sie zu Gruppen zusammen. Sie fallen mit ihrer Komponente:', '',
   '| Alt | Neu |', '|---|---|',
   '| `spacing-01` … `spacing-06` | `space-2xs`, `space-xs`, `space-md`, `space-lg`, `space-xl`, `space-2xl` (Lücke 12 px = `space-sm`) |',
   '| `corner-radius` | `radius-sm` |', '| `border-radius-02` | `radius-md` |',

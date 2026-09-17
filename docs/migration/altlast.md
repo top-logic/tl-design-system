@@ -200,7 +200,7 @@ Die Werkzeuge dahinter sind gelöscht; diese Datei ist ihr Erbe.
 
 ## Nicht abgebildete Alt-Tokens (Maße, Schatten, Typo)
 
-Diese 31 Tokens las das alte CSS ohne Ziel in der Skala. Sie fallen mit ihrer Komponente:
+Das alte CSS liest 31 Namen ohne Ziel in der Skala; die Tabelle fasst sie zu Gruppen zusammen. Sie fallen mit ihrer Komponente:
 
 | Alt | Neu |
 |---|---|
