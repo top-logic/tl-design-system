@@ -26,8 +26,58 @@ test('jedes Token hat $value und $type', () => {
 
 test('Primitive tragen Werte, Rollen tragen Aliase in geschweiften Klammern', () => {
   for (const [path, t] of tokens(D.primitive)) assert.ok(!String(t.$value).startsWith('{'), path);
-  for (const [path, t] of tokens(D.semantic.light.color))
-    assert.match(String(t.$value), /^\{primitive\.color\.[a-z]+-\d+\}$/, path);
+  // Beschriftungen auf Flächen (text-on-*, icon-on-*) sind gerechnet, kein Alias — sie tragen
+  // stattdessen $extensions['com.top-logic.derived-from'] und sind hier ausgenommen.
+  const derivedNames = new Set(Object.keys(T.derived.light));
+  for (const [path, t] of tokens(D.semantic.light.color)) {
+    const name = path.split('.').pop();
+    if (derivedNames.has(name)) {
+      assert.match(String(t.$value), /^#[0-9A-F]{6}$/, path);
+      assert.equal(t.$extensions?.['com.top-logic.derived-from'], T.derived.light[name].surface, path);
+    } else {
+      assert.match(String(t.$value), /^\{primitive\.color\.[a-z]+-\d+\}$/, path);
+    }
+  }
+});
+
+test('Wertformen je $type: cubicBezier, number, shadow, duration, dimension, fontFamily', () => {
+  for (const [p, t] of tokens(D.primitive.motion)) {
+    if (t.$type === 'cubicBezier') assert.equal(t.$value.length, 4, p);
+    if (t.$type === 'duration') assert.ok(typeof t.$value === 'object' && 'value' in t.$value && 'unit' in t.$value, p);
+  }
+  for (const [p, t] of tokens(D.primitive.measure)) {
+    if (t.$type === 'number') assert.equal(typeof t.$value, 'number', p);
+    if (t.$type === 'dimension') assert.ok(typeof t.$value === 'object' && 'value' in t.$value && 'unit' in t.$value, p);
+  }
+  for (const [p, t] of tokens(D.primitive.effect)) {
+    if (t.$type === 'shadow') {
+      assert.ok(Array.isArray(t.$value), p);
+      for (const layer of t.$value) assert.deepEqual(Object.keys(layer).sort(), ['blur', 'color', 'offsetX', 'offsetY', 'spread'], p);
+    }
+  }
+  for (const [p, t] of tokens(D.primitive.font)) assert.ok(Array.isArray(t.$value), p);
+  const percent = D.primitive.measure['corner-4'];
+  assert.deepEqual(percent.$value, { value: 50, unit: '%' });
+  assert.equal(percent.$extensions?.['com.top-logic.note'], 'percent, not a DTCG dimension');
+});
+
+test('jeder Name aus T.derived.light steht im Export', () => {
+  for (const name of Object.keys(T.derived.light)) assert.ok(name in D.semantic.light.color, name);
+  for (const name of Object.keys(T.derived.dark)) assert.ok(name in D.semantic.dark.color, name);
+});
+
+test('jede Typo-Klasse steht im Export als $type typography', () => {
+  for (const [n, k] of Object.entries(T.type)) {
+    if (n.startsWith('_')) continue;
+    const t = D.semantic.type[n];
+    assert.ok(t, n);
+    assert.equal(t.$type, 'typography', n);
+    assert.equal(t.$value.fontWeight, k.weight, n);
+    assert.equal(t.$value.lineHeight, k.lineHeight, n);
+    assert.equal(t.$value.letterSpacing, k.tracking, n);
+    assert.match(t.$value.fontFamily, /^\{semantic\.measure\.font-family-[a-z]+\}$/, n);
+    assert.match(t.$value.fontSize, /^\{semantic\.measure\.font-size-[a-z-]+\}$/, n);
+  }
 });
 
 test('jeder Alias zeigt auf ein vorhandenes Token', () => {
