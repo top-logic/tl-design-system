@@ -1,0 +1,52 @@
+{
+  "_": "Reine Werte ohne Bedeutung. Einzige Stelle mit Zahlen. Hier greift ein Kundenprojekt ein.",
+  "color": {
+    "amber-4": "#FEEFCF", "amber-20": "#EAB532", "amber-25": "#D9A514", "amber-34": "#B88A00",
+    "amber-40": "#A27A00", "amber-44": "#936E00", "amber-49": "#805F00", "amber-76": "#281C02",
+    "blue-6": "#DFEBFF", "blue-9": "#CEE1FF", "blue-21": "#95BDFF", "blue-27": "#75A9FF",
+    "blue-32": "#5394FF", "blue-43": "#2471EC", "blue-49": "#0B5ED7", "blue-55": "#004DBA",
+    "blue-62": "#003A8F", "blue-69": "#1E2F4B", "blue-74": "#162338",
+    "gray-0": "#FFFFFF", "gray-1": "#FAFAFA", "gray-3": "#F0F4F9", "gray-4": "#F0F2F6",
+    "gray-5": "#F0F3F9", "gray-7": "#E5E8ED", "gray-10": "#D9DDE3", "gray-18": "#C1C4C9",
+    "gray-29": "#A0A3A8", "gray-34": "#8E9196", "gray-35": "#8C8F94", "gray-36": "#888B90",
+    "gray-39": "#7F8286", "gray-45": "#6F7277", "gray-46": "#6B6E73", "gray-48": "#676A6F",
+    "gray-49": "#64676B", "gray-55": "#54565B", "gray-66": "#34383C", "gray-67": "#343A3F",
+    "gray-69": "#2B3034", "gray-70": "#2B2F33", "gray-72": "#27292D", "gray-73": "#22262A",
+    "gray-74": "#242729", "gray-76": "#1D2023", "gray-77": "#1B1D21", "gray-79": "#16181B",
+    "green-5": "#DCF8E9", "green-24": "#60C99A", "green-34": "#3DA97B", "green-36": "#36A376",
+    "green-41": "#1E9266", "green-46": "#008459", "green-51": "#00734D", "green-77": "#0C2319",
+    "red-4": "#FFEBE8", "red-32": "#FB594D", "red-35": "#F14F43", "red-37": "#E8463C",
+    "red-42": "#D7352D", "red-45": "#CC2823", "red-47": "#C51E1C", "red-77": "#35110D",
+    "teal-6": "#CEF3FB", "teal-25": "#33C1DB", "teal-35": "#159FB6", "teal-41": "#008DA2",
+    "teal-45": "#007F92", "teal-51": "#006E80", "teal-75": "#002830"
+  },
+  "measure": {
+    "size-1": "0.25rem", "size-2": "0.5rem", "size-3": "0.75rem", "size-4": "1rem",
+    "size-5": "1.25rem", "size-6": "1.5rem", "size-7": "2rem", "size-8": "3rem",
+    "text-1": "0.75rem", "text-2": "0.875rem", "text-3": "1rem", "text-4": "1.25rem",
+    "text-5": "1.5rem", "text-6": "2rem",
+    "height-1": "1.5rem", "height-2": "1.75rem", "height-3": "2rem", "height-4": "2.25rem",
+    "line-1": "1px", "line-2": "2px", "line-3": "4px",
+    "corner-1": "0.25rem", "corner-2": "0.5rem", "corner-3": "999px", "corner-4": "50%",
+    "depth-0": "0", "depth-1": "10", "depth-2": "100", "depth-3": "1000", "depth-4": "1100", "depth-5": "1200"
+  },
+  "font": {
+    "font-1": "'Inter', ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif",
+    "font-2": "'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace"
+  },
+  "motion": {
+    "dur-1": "100ms", "dur-2": "150ms", "dur-3": "250ms",
+    "curve-1": "cubic-bezier(0.2, 0, 0.38, 0.9)", "curve-2": "cubic-bezier(0, 0, 0.38, 0.9)",
+    "curve-3": "cubic-bezier(0.2, 0, 1, 0.9)", "curve-4": "linear"
+  },
+  "effect": {
+    "shadow-1": "0 2px 8px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08)",
+    "shadow-2": "0 8px 24px rgba(0,0,0,0.16)",
+    "shadow-3": "0 12px 32px rgba(0,0,0,0.20)",
+    "shadow-4": "0 2px 8px rgba(0,0,0,0.40)",
+    "shadow-5": "0 8px 24px rgba(0,0,0,0.56)",
+    "shadow-6": "0 12px 32px rgba(0,0,0,0.64)",
+    "scrim-1": "rgba(22, 24, 27, 0.48)",
+    "scrim-2": "rgba(0, 0, 0, 0.64)"
+  }
+}
