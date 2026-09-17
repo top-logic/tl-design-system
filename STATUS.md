@@ -7,7 +7,7 @@
 
 **Welle 0 ist umgesetzt.** Das Paket `design-system/` liefert `dist/primitives.css`,
 `dist/tokens.css`, `dist/base.css` und `dist/tokens.dtcg.json`. `cd design-system && node --test`
-ist das Gate — **65 Tests, alle grün**. `node tools/lint-css.mjs` ist das Klassen-Gate,
+ist das Gate — **79 Tests, alle grün**. `node tools/lint-css.mjs` ist das Klassen-Gate,
 `test/ratchet.json` das Budget des alten Stylesheets (6065 Zeilen, darf nur sinken).
 
 Die Demo-App lädt die drei Dateien als `ClientResources` und setzt `data-tl-mode` und

@@ -72,6 +72,9 @@ test('der Fokusring darf nicht per Einzeleigenschaft abgeschaltet werden', () =>
   assert.equal(lint('.tl-x:focus-visible { outline-color: transparent; }', { known, file: 'x.css' }).length, 1);
   assert.equal(lint('.tl-x:focus-visible { outline: 0 0; }', { known, file: 'x.css' }).length, 1);
   assert.equal(lint('.tl-x:focus-visible { outline: 0px; }', { known, file: 'x.css' }).length >= 1, true);
+  assert.equal(lint('.tl-x:focus-visible { outline: 0 none; }', { known, file: 'x.css' }).length >= 1, true);
+  assert.equal(lint('.tl-x:focus-visible { outline: solid 0 currentColor; }', { known, file: 'x.css' }).length >= 1, true);
+  assert.deepEqual(lint('.tl-x:focus-visible { outline: var(--tl-focus-width) solid var(--tl-focus-ring); }', { known, file: 'x.css' }), []);
   assert.deepEqual(lint('.tl-x:focus-visible { outline: var(--tl-focus-width) solid var(--tl-focus-ring); }', { known, file: 'x.css' }), []);
 });
 

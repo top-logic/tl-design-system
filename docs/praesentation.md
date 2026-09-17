@@ -425,7 +425,7 @@ Bei einem Markenwechsel wären vier Stellen nachzuziehen — und die vergessene 
 
 ## 25 · Wie das geprüft wird
 
-**Die Regeln stehen nicht nur im Dokument — sie laufen als Tests.** 65 Stück, `node --test` im Paket.
+**Die Regeln stehen nicht nur im Dokument — sie laufen als Tests.** 79 Stück, `node --test` im Paket.
 
 | Datei | Was sie durchsetzt |
 |---|---|
@@ -530,7 +530,7 @@ Englisch, kebab-case, Präfix `tl`, BEM für Klassen, geschlossene Kategorien f�
 | `tokens.css` | 189 Zeilen — nur Referenzen, hell als Standard, `[data-tl-mode="dark"]`, `[data-tl-density="compact"]` |
 | `base.css` | Typografieklassen, Fokusring, Reduced Motion, Zahlenklasse, Druck |
 | `tokens.dtcg.json` | W3C-Format für Figma und Kundenwerkzeuge |
-| 65 Tests | Schichten, Kontrast, Maße, Farbton, Erzeugtes, Klassen-Gate, Ratsche |
+| 79 Tests | Schichten, Kontrast, Maße, Farbton, Erzeugtes, Klassen-Gate, Ratsche |
 
 **Das Klassen-Gate** bricht bei jedem Literal, jedem `:focus` ohne `-visible`, jedem `outline: none`, jedem `z-index` ohne Ebene. **Die Ratsche** zählt das alte Stylesheet und lässt es nur schrumpfen.
 

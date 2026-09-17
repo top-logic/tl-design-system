@@ -54,7 +54,8 @@ const FOREIGN_VAR = /var\(\s*(--(?!tl-)[a-z0-9-]+)/gi;
 // Punkt 3: eigene Variablen dürfen nur in tokens.css stehen (:root oder [data-tl-…]).
 const TOKEN_SELECTOR = /^(:root\b|\[data-tl-)/;
 // Punkt 4: Fokusring nur als Mechanismus, nie per Einzeleigenschaft abgeschaltet.
-const OUTLINE_OFF = /^(none|0(\s+0)?(px)?)$/;
+// Jede outline-Kurzform, die den Ring abschaltet: `none`, `hidden` oder eine Breite 0 an beliebiger Stelle.
+const OUTLINE_OFF = /(^|\s)(none|hidden|0|0px)(\s|$)/;
 // Punkt 7: !important nur im Reduced-Motion-Block, über genau diesen Selektor/diese Eigenschaften.
 const REDUCED_MOTION_SELECTOR = '*, *::before, *::after';
 const REDUCED_MOTION_PROPS = /^(animation-duration|animation-iteration-count|transition-duration|scroll-behavior)$/;
