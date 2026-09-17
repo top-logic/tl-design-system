@@ -1,0 +1,15 @@
+{
+  "name": "@toplogic/design-system",
+  "version": "0.1.0",
+  "description": "TopLogic Design System: Primitive, semantische Tokens, Grundklassen, Komponenten. Quelle in src/, Erzeugnis in dist/.",
+  "type": "module",
+  "license": "UNLICENSED",
+  "files": ["dist"],
+  "scripts": {
+    "build": "node tools/generate.mjs",
+    "lint": "node tools/lint-css.mjs",
+    "test": "node --test test/",
+    "serve": "node tools/serve.mjs"
+  },
+  "engines": { "node": ">=22" }
+}
