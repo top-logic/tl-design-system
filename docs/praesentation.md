@@ -579,3 +579,5 @@ Der Anlass: Beim Nachziehen auf `master` wuchs das alte Stylesheet um 23 Zeilen 
 Der Befund dahinter: drei Erscheinungen, zwei kaum genutzte Größen, ein gedrückter Zustand als Klasse, die Primary dupliziert, fünf Kontextblöcke mit Literalen, nichts für Destruktives.
 
 > Sprechnotiz: Warum Tönung statt fünfter Erscheinung — Löschen ist mal Umriss, mal gefüllt. Eine Erscheinung müsste beides sein: die nächste Dublette.
+
+> Sprechnotiz: `button.css` steht, das Gate verbietet Zustands-Modifier und fremde Modifier am Block. Zwei Kontrastbefunde offen (danger-secondary-hover hell, secondary-Linie dunkel auf surface-layer) — Skalen-Befund, mit Hendrik klären, bevor ein Token angefasst wird.

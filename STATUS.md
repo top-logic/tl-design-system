@@ -21,7 +21,11 @@ die Konvention noch nicht — mit ihm klären, sobald die erste Welle auf `maste
 `danger`, keine Größen-Modifier, Zustände als Attribute, keine Kontextselektoren, AppBar wird `surface-layer`.
 Der Umsetzungsplan liegt unter `docs/superpowers/plans/2026-09-18-welle-1-button.md` (acht Tasks: Pipeline für
 `components.css`, Danger-Rampe und Icon-Klassen, `button.css` mit Gate-Regeln, Specimen, Vertrag, Java-Seite, TSX mit
-`ButtonDefaults`, alter Block leer). Nächster Schritt: Plan ausführen. Prüfliste je Komponente:
+`ButtonDefaults`, alter Block leer). Task 3 (`button.css` und die Gate-Regeln für Modifier) ist umgesetzt: das Gate
+verbietet Zustandsnamen als Modifier und Modifier außerhalb der entschiedenen Liste am Block `tl-button`; der
+Kontrasttest `test/components.test.mjs` deckt zwei offene Skalen-Befunde auf (siehe skalen.md, Abschnitt Button) —
+mit Hendrik klären, bevor `status-error-subtle`, `status-error-text` oder `border-control` (dunkel) angefasst
+werden. Nächster Schritt: Task 4 (Specimen) des Plans. Prüfliste je Komponente:
 `docs/migration/altlast.md`, Abschnitt „Sichtbare Befunde aus der laufenden Anwendung“.
 
 ## Wo anknüpfen

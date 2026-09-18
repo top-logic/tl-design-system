@@ -1034,6 +1034,21 @@ Kontrasttest prüft `primary`, `secondary` und `ghost` je mit und ohne `danger` 
 
 ---
 
+**Befund aus `test/components.test.mjs` (Task 3, offen — nicht am Test oder Token gedreht):**
+Zwei Kombinationen unterschreiten die Anforderung mit den heutigen Tokens:
+
+- Hell, `danger-secondary` im Hover (Fläche `status-error-subtle`, Text `status-error-text`) auf
+  `surface-base`: 4,12 statt 4,5. Der Hover-Subtle-Ton der Fehlerfläche trägt `status-error-text`
+  nicht mehr, sobald er heller ist als der reine Grund.
+- Dunkel, `secondary` (Linie `border-control`) auf `surface-layer`: 2,88 statt 3,0. `border-control`
+  ist gegen `surface-base` entschieden (siehe oben, 3,0 erfüllt), trägt aber die zusätzliche Fläche
+  `surface-layer` im Dunkelmodus nicht mit.
+
+Beide sind Skalen-Befunde, nicht Bugs in `button.css` — mit Hendrik klären, bevor `status-error-subtle`,
+`status-error-text` oder `border-control` (dunkel) angefasst werden.
+
+---
+
 ## Befunde aus dem Specimen
 
 ### Inter trägt nur zwei Gewichte

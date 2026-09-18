@@ -130,3 +130,17 @@ test('die erzeugten Dateien des Pakets bestehen das Gate', () => {
     assert.deepEqual(v, [], `${f}:\n${v.join('\n')}`);
   }
 });
+
+test('ein Zustandsname als Modifier bricht — Zustände sind Attribute', () => {
+  for (const z of ['active', 'disabled', 'loading', 'hover', 'focus', 'pressed', 'selected', 'open', 'checked', 'busy'])
+    assert.equal(lint(`.tl-button--${z} { color: var(--tl-text-primary); }`, { known: new Set(['--tl-text-primary']), file: 'button/button.css' })
+      .filter((m) => /Zustand als Modifier/.test(m)).length, 1, z);
+});
+
+test('am Block tl-button sind nur die entschiedenen Modifier erlaubt', () => {
+  const known = new Set(['--tl-text-primary']);
+  for (const ok of ['primary', 'secondary', 'ghost', 'link', 'danger', 'sm'])
+    assert.deepEqual(lint(`.tl-button--${ok} { color: var(--tl-text-primary); }`, { known, file: 'button/button.css' }), [], ok);
+  assert.equal(lint('.tl-button--large { color: var(--tl-text-primary); }', { known, file: 'button/button.css' })
+    .filter((m) => /kein Modifier von tl-button/.test(m)).length, 1);
+});

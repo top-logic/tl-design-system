@@ -63,6 +63,10 @@ const REDUCED_MOTION_PROPS = /^(animation-duration|animation-iteration-count|tra
 const EASING_WORDS = /\b(ease-in-out|ease-in|ease-out|ease|linear)\b/;
 // Punkt 9: Attributselektoren, die auf Klassen zielen, umgehen das BEM/Prefix-Gate.
 const CLASS_ATTR_SELECTOR = /\[class[*^~]=/;
+// Punkt 10: Zustände sind Attribute (:disabled, [aria-pressed], [aria-busy], :focus-visible), nie Klassen.
+const STATE_MODIFIER = /--(active|disabled|loading|hover|focus|focused|pressed|selected|open|closed|checked|busy|invalid|dirty)$/;
+// Punkt 11: Die Modifier eines Blocks sind entschieden (docs/skalen.md), nicht gewachsen.
+const MODIFIERS = { 'tl-button': new Set(['primary', 'secondary', 'ghost', 'link', 'danger', 'sm']) };
 
 export function knownVariables(css) {
   return new Set([...css.matchAll(/--tl-[a-z0-9-]+(?=:)/g)].map((m) => m[0]));
@@ -90,6 +94,12 @@ export function lint(css, { known, file }) {
     const sel2 = sel;
     for (const cls of sel2.matchAll(/\.([A-Za-z0-9_-]+)/g))
       if (!BEM.test(cls[1])) out.push(`${file}:${d.line} .${cls[1]} — kein tl-Präfix oder kein BEM (block__element--modifier)`);
+    for (const cls of sel2.matchAll(/\.([A-Za-z0-9_-]+)/g)) {
+      if (STATE_MODIFIER.test(cls[1])) out.push(`${file}:${d.line} .${cls[1]} — Zustand als Modifier; Zustände sind Attribute`);
+      const m = /^(tl-[a-z0-9-]+?)--([a-z0-9-]+)$/.exec(cls[1]);
+      if (m && MODIFIERS[m[1]] && !MODIFIERS[m[1]].has(m[2]))
+        out.push(`${file}:${d.line} .${cls[1]} — kein Modifier von ${m[1]}; erlaubt: ${[...MODIFIERS[m[1]]].join(', ')}`);
+    }
     if (CLASS_ATTR_SELECTOR.test(sel)) say(d, 'Attributselektor auf Klassen — umgeht das BEM/Prefix-Gate');
     if (/:focus\b(?!-visible|-within)/.test(sel)) say(d, ':focus ohne -visible');
 
