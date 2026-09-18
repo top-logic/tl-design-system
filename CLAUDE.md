@@ -23,8 +23,8 @@ Alle in `design-system/`, alle mit `node` ohne Abhängigkeiten:
 | `node tools/publish-to-worktree.mjs` | Kopiert `dist/` in den Worktree, bis das Paket einen Maven-Wrapper hat. |
 | `node tools/serve.mjs` | Specimen auf `http://localhost:8137/` |
 
-Der Worktree liegt unter `~/git/tl8-wt-29584` (oder `TL_WORKTREE`), Branch
-`CWS/CWS_29617_design_system_welle_0`.
+Der Worktree liegt unter `~/git/tl8-wt-29584` (oder `TL_WORKTREE`). Welle 0 ist auf `master`; jede weitere
+Welle arbeitet auf einem eigenen Branch `CWS/CWS_29617_design_system_welle_<n>` (Trac #29617).
 
 ## Die zwei Schichten
 

@@ -5,20 +5,16 @@
 
 ## Zuerst
 
-**Erledigt am 2026-09-18:** Design-System-`main` gepusht. Der Worktree-Branch heißt jetzt
-`CWS/CWS_29617_design_system_welle_0` und ist gepusht; PR
-[!1641](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1641) gegen `master` ist offen.
-Grund für den neuen Namen: Trac #29108 (TL Views) ist geschlossen, der Push-Hook verlangt ein
-angenommenes Ticket. **#29617** ist das eigene Ticket des Design Systems (angenommen); alle
-Commits in beiden Repos tragen ab jetzt `Ticket #29617:`. Der alte lokale Branch liegt als
-`backup/welle0_ticket29108` im Worktree und kann gelöscht werden, sobald der PR gemerged ist.
+**Welle 0 ist auf `master`.** PR [!1641](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1641) wurde als
+Merge-Commit `59404c7f` gemerged (Trac #29617, angenommen). Der Worktree `~/git/tl8-wt-29584` steht auf
+`master`; die Branches der Welle 0 sind lokal gelöscht. Alle Commits in beiden Repos tragen `Ticket #29617:`.
+Jede weitere Welle bekommt einen eigenen Branch `CWS/CWS_29617_design_system_welle_<n>` von `master`.
 
-Eine Entscheidung steht noch aus:
+Offen geblieben, nicht blockierend: die Trailer der Commits `5ab2ae3` und `6d709f4` („Claude Haiku 4.5“)
+bleiben stehen — sie sind auf `origin/main`, Umschreiben hieße Force-Push.
 
-1. **Trailer** der Commits `5ab2ae3` und `6d709f4` („Claude Haiku 4.5“): stehen lassen oder mit
-   Freigabe umschreiben. Beide sind bereits auf `origin/main` — Umschreiben hieße Force-Push.
-
-Danach beginnt **Welle 1** mit dem Button als Vorlage (siehe unten).
+**Jetzt: Welle 1** mit dem Button als Vorlage (siehe unten). Prüfliste je Komponente:
+`docs/migration/altlast.md`, Abschnitt „Sichtbare Befunde aus der laufenden Anwendung“.
 
 ## Wo anknüpfen
 
@@ -28,10 +24,9 @@ ist das Gate — **79 Tests, alle grün**. `node tools/lint-css.mjs` ist das Kla
 `test/ratchet.json` das Budget des alten Stylesheets (6065 Zeilen, darf nur sinken).
 
 Die Demo-App lädt die drei Dateien als `ClientResources` und setzt `data-tl-mode` und
-`data-tl-density` am `html`. Das liegt im Worktree auf dem Branch
-`CWS/CWS_29617_design_system_welle_0` (Commits `2a8ac53c8`, `fa851a4ef`; `TestUIThemeService` 9/9 grün),
-gepusht, PR !1641 offen und **aus Testsicht mergefähig**: CSS-Reihenfolge, `data-tl-mode`/`data-tl-density` samt
-Theme-Wechsel, `TestUIThemeService` 9/9, Jenkins-Build (Docker-Instanz `docker:8005`) grün, kein Layoutbruch.
+`data-tl-density` am `html`. Das ist mit PR !1641 auf `master` (Commits `2a8ac53c8`, `fa851a4ef`, Merge `59404c7f`); verifiziert wurden
+CSS-Reihenfolge, `data-tl-mode`/`data-tl-density` samt Theme-Wechsel und System-Modus, `TestUIThemeService` 9/9,
+Jenkins-Build, kein Layoutbruch.
 
 **Prüfliste für die Wellen:** `docs/migration/altlast.md`, Abschnitt „Sichtbare Befunde aus der laufenden
 Anwendung“ — sieben Kontrast- und Fokusbefunde aus dem Darkmode, je Welle zugeordnet. Lightmode und Dichte
