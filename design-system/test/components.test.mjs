@@ -80,3 +80,14 @@ test('das Button-Specimen zeigt jede Erscheinung, die Tönung, sm, und jeden Zus
   assert.ok(html.includes('/dist/components.css'), 'lädt components.css nicht');
   assert.ok(!/style="/.test(html.replace(/<style>[\s\S]*?<\/style>/, '')), 'Inline-Style im Specimen');
 });
+
+test('der Vertrag nennt jedes Token, das button.css liest, und jedes Zustandsattribut', () => {
+  const css = readFileSync(new URL('../src/components/button/button.css', import.meta.url), 'utf8');
+  const md = readFileSync(new URL('../src/components/button/button.contract.md', import.meta.url), 'utf8');
+  const tokens = new Set([...css.matchAll(/var\((--tl-[a-z0-9-]+)\)/g)].map((m) => m[1]));
+  for (const t of tokens) assert.ok(md.includes('`' + t + '`'), `Vertrag nennt ${t} nicht`);
+  for (const a of ['disabled', 'aria-pressed', 'aria-busy', 'aria-label', 'focus-visible'])
+    assert.ok(md.includes(a), `Vertrag nennt ${a} nicht`);
+  for (const h of ['## Zustand', '## Aktionen', '## Tokens', '## Attribute', '## Konformität'])
+    assert.ok(md.includes(h), `Abschnitt ${h} fehlt`);
+});

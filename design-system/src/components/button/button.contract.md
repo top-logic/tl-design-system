@@ -1,0 +1,72 @@
+# Vertrag: Button
+
+Eine Kundenkomponente, die unter dem TopLogic-Namen `TLButton` registriert ist (Stufe C der Spec),
+bekommt vom Server den Zustand unten, löst die genannten Aktionen aus und trägt die genannten
+Attribute. TopLogic garantiert dann Funktion, Tastatur und Fokus — nicht das Aussehen. Wer ins Bild
+passen will, liest die Tokens.
+
+## Zustand
+
+Vom Server über `useTLState()`:
+
+| Schlüssel | Typ | Bedeutung |
+|---|---|---|
+| `label` | string | Beschriftung; bei icon-only der zugängliche Name (`aria-label`). |
+| `image` | string, optional | Kodiertes ThemeImage für das Icon (`ThemeIcon`). |
+| `displayMode` | `icon-only` \| `icon-label` \| `label-only`, optional | Standard `label-only`. Ohne `image` fällt `icon-only` auf `label-only` zurück. |
+| `appearance` | `primary` \| `ghost` \| `link`, optional | Fehlt er, gilt die Vorgabe des Containers (`ButtonDefaults`), sonst `secondary`. |
+| `tone` | `danger`, optional | Destruktive Aktion. Nicht mit `link`. |
+| `size` | `small`, optional | Nur mit `displayMode: icon-only` wirksam (`--sm`). |
+| `disabled` | boolean | Der Button ist `disabled`. |
+| `active` | boolean | Der Button ist gedrückt oder die geltende Alternative: `aria-pressed="true"`. |
+| `hidden` | boolean | Rendert nichts. Die Tastenbindung bleibt registriert und lehnt ab. |
+| `tooltip` | string, optional | Tooltip-Text; bei icon-only Rückfall auf `label`. |
+| `keyGesture` | string, optional | Tastengeste im umgebenden Scope (`useKeyboardBinding`). |
+| `navigateUrl`, `navigateNewWindow` | string, boolean, optional | Klick navigiert statt zu senden. |
+| `cssClasses` | string, optional | Zusätzliche Klassen des Kommandos; werden an `className` durchgereicht. |
+
+## Aktionen
+
+| Auslöser | Aktion |
+|---|---|
+| Klick, Enter, Leertaste | `sendCommand('click')` — oder `navigateUrl` öffnen, wenn gesetzt. |
+| Tastengeste `keyGesture` | dasselbe wie Klick; `false` zurückgeben, wenn `disabled` oder `hidden`. |
+
+## Tokens
+
+Fläche, Beschriftung und Linie je Erscheinung; Hover und Active eine Stufe weiter auf derselben Rampe.
+
+| Erscheinung | Fläche | Beschriftung | Linie |
+|---|---|---|---|
+| `secondary` (Default) | `--tl-surface-interactive-hover` / `--tl-surface-interactive-active` beim Zeigen und Drücken | `--tl-text-primary` | `--tl-border-control`, Breite `--tl-border-width-sm` |
+| `primary` | `--tl-surface-brand`, `--tl-surface-brand-hover`, `--tl-surface-brand-active` | `--tl-text-on-brand`, `--tl-text-on-brand-hover`, `--tl-text-on-brand-active` | — |
+| `ghost` | wie secondary beim Zeigen und Drücken | `--tl-text-primary` | — |
+| `link` | — | `--tl-text-link`, `--tl-text-link-hover` | — |
+| `danger` + `primary` | `--tl-status-error-surface`, `--tl-status-error-surface-hover`, `--tl-status-error-surface-active` | `--tl-text-on-status-error`, `--tl-text-on-status-error-hover`, `--tl-text-on-status-error-active` | — |
+| `danger` + `secondary` / `ghost` | Zeigen: `--tl-status-error-surface` (Beschriftung `--tl-text-on-status-error`); Drücken: `--tl-status-error-surface-active` (Beschriftung `--tl-text-on-status-error-active`) | `--tl-status-error-text` (Grundzustand, nicht gezeigt/gedrückt) | `--tl-status-error-border` (nur secondary; folgt beim Zeigen und Drücken der Fläche) |
+| gedrückt (`aria-pressed`) | `--tl-surface-brand-subtle`, `--tl-surface-brand-subtle-hover` | `--tl-text-primary` | `--tl-border-interactive` |
+| `disabled` | `--tl-surface-disabled` | `--tl-text-disabled` | `--tl-border-disabled` |
+
+Maße: Höhe `--tl-size-control` (klein `--tl-size-control-sm`), Innenabstand `--tl-space-control-x` (klein `--tl-space-2xs`), Abstand Icon–Text `--tl-space-xs`, Ecke `--tl-radius-sm`. Bewegung: `--tl-duration-fast` mit `--tl-easing-standard`. Icon: Klasse `.tl-icon-sm` neben Text, `.tl-icon-md` allein. Text: Klasse `.tl-type-label`.
+
+`--tl-status-error-subtle` wird vom Button nicht gelesen — die getönte Fläche bleibt dem
+Hinweisstreifen vorbehalten (siehe Kommentarkopf in `button.css`).
+
+## Attribute
+
+| Attribut | Wann |
+|---|---|
+| `type="button"` | immer — kein Submit. |
+| `disabled` | `state.disabled`. Nicht `aria-disabled`: der Button soll wirklich nicht bedienbar sein. |
+| `aria-pressed="true"` | `state.active`. Fehlt sonst ganz (nicht `false`), damit ein gewöhnlicher Button kein Umschalter wird. |
+| `aria-busy="true"` | während einer laufenden Aktion (Upload). Der Button nimmt keine Zeiger an. |
+| `aria-label` | bei icon-only oder wenn ein Icon gesetzt ist: der `label`. |
+| `data-tooltip` | `text:<tooltip>`; das Tooltip-System liest es. |
+| `:focus-visible` | den Ring liefert `base.css`; die Komponente setzt und entfernt keinen Fokusstil. |
+
+## Konformität
+
+Eine Komponente besteht den Vertrag, wenn sie im Specimen-Harness des Pakets für jeden Zustand
+oben das jeweilige Attribut trägt, auf Klick und Enter `click` sendet, bei `hidden` nichts rendert
+und im Klassen-Gate keine Klasse ohne `tl-`-Präfix hinterlässt. Der Test dazu folgt mit der
+ersten Kundenkomponente; bis dahin gilt dieser Text.
