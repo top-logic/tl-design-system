@@ -1,6 +1,28 @@
 // Erzeugt dist/ aus src/. Was hier nicht herauskommt, gibt es im Design System nicht.
 import { resolve, primitives } from './resolve.mjs';
 import { dtcg } from './dtcg.mjs';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { join, relative, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+/** Alle CSS-Dateien unter src/components/, rekursiv, sortiert nach Pfad. Name relativ mit '/'. */
+export function componentSources(dirUrl) {
+  const root = fileURLToPath(dirUrl);
+  const files = [];
+  (function walk(dir) {
+    for (const entry of readdirSync(dir).sort()) {
+      const p = join(dir, entry);
+      if (statSync(p).isDirectory()) walk(p);
+      else if (entry.endsWith('.css')) files.push(p);
+    }
+  })(root);
+  return files.sort().map((p) => ({ name: relative(root, p).split(sep).join('/'), css: readFileSync(p, 'utf8') }));
+}
+
+function componentsCss(components) {
+  return '/* Erzeugt aus src/components/ — nicht von Hand ändern. */\n\n'
+    + components.map((c) => `/* --- ${c.name} --- */\n${c.css.trimEnd()}\n`).join('\n');
+}
 
 const REF = /^\{([a-z0-9-]+)\}$/;
 const line = (n, v) => `  --tl-${n}: ${v};`;
@@ -114,18 +136,23 @@ ${print}
 `;
 }
 
-export function generate(P, T) {
+export function generate(P, T, components = []) {
   const R = resolve(P, T);
-  return { 'primitives.css': primitivesCss(P), 'tokens.css': tokensCss(P, T, R), 'base.css': baseCss(T) };
+  return {
+    'primitives.css': primitivesCss(P),
+    'tokens.css': tokensCss(P, T, R),
+    'base.css': baseCss(T),
+    'components.css': componentsCss(components),
+  };
 }
 
 if (typeof process !== 'undefined' && import.meta.url === `file://${process.argv[1]}`) {
-  const { readFileSync, writeFileSync, mkdirSync } = await import('node:fs');
+  const { writeFileSync, mkdirSync } = await import('node:fs');
   const P = JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.url)));
   const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)));
   const dist = new URL('../dist/', import.meta.url);
   mkdirSync(dist, { recursive: true });
-  for (const [name, text] of Object.entries(generate(P, T))) {
+  for (const [name, text] of Object.entries(generate(P, T, componentSources(new URL('../src/components/', import.meta.url))))) {
     writeFileSync(new URL(name, dist), text);
     console.log(`geschrieben: dist/${name}`);
   }

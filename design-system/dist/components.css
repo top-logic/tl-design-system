@@ -1,0 +1,7 @@
+/* Erzeugt aus src/components/ — nicht von Hand ändern. */
+
+/* --- button/button.css --- */
+/* Button — siehe docs/skalen.md „Button: vier Erscheinungen, eine Tönung, keine Größe“. */
+.tl-button {
+  display: inline-flex;
+}

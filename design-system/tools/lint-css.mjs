@@ -147,8 +147,11 @@ if (typeof process !== 'undefined' && import.meta.url === `file://${process.argv
   const dist = new URL('../dist/', import.meta.url);
   const comps = new URL('../src/components/', import.meta.url);
   const known = knownVariables(readFileSync(new URL('primitives.css', dist), 'utf8') + readFileSync(new URL('tokens.css', dist), 'utf8'));
-  const files = [...readdirSync(dist).filter((f) => f.endsWith('.css') && f !== 'primitives.css').map((f) => [f, new URL(f, dist)])];
-  if (existsSync(comps)) for (const f of readdirSync(comps).filter((f) => f.endsWith('.css'))) files.push([f, new URL(f, comps)]);
+  const files = [...readdirSync(dist).filter((f) => f.endsWith('.css') && f !== 'primitives.css' && f !== 'components.css').map((f) => [f, new URL(f, dist)])];
+  if (existsSync(comps)) {
+    const { componentSources } = await import('./generate.mjs');
+    for (const c of componentSources(comps)) files.push([c.name, new URL(c.name, comps)]);
+  }
   let n = 0;
   for (const [f, url] of files) for (const v of lint(readFileSync(url, 'utf8'), { known, file: f })) { console.log(v); n++; }
   console.log(n ? `${n} Verstöße` : 'Klassen-Gate grün');

@@ -1,0 +1,4 @@
+/* Button — siehe docs/skalen.md „Button: vier Erscheinungen, eine Tönung, keine Größe“. */
+.tl-button {
+  display: inline-flex;
+}

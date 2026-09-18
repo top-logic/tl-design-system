@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { generate } from '../tools/generate.mjs';
+import { generate, componentSources } from '../tools/generate.mjs';
 
 const P = JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.url)));
 const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)));
@@ -87,4 +87,15 @@ test('außerhalb von primitives.css steht keine Farbe und keine Dauer als Litera
   const text = tok.replace(/--tl-(text|icon)-on-[a-z-]+: #[0-9A-F]{6};/g, '') + base;
   assert.equal((text.match(/#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(/g) ?? []).length, 0, 'Farbliteral');
   assert.equal((text.replace(/0\.01ms/g, '').match(/\b\d+m?s\b/g) ?? []).length, 0, 'Dauer-Literal');
+});
+
+test('components.css hängt jede Komponente unter src/components/**/ in Pfadreihenfolge zusammen', () => {
+  const comps = componentSources(new URL('../src/components/', import.meta.url));
+  assert.ok(comps.some((c) => c.name === 'button/button.css'), 'button.css fehlt');
+  const out = generate(P, T, comps)['components.css'];
+  assert.ok(out.startsWith('/* Erzeugt aus src/components/ — nicht von Hand ändern. */'), 'Kopfzeile fehlt');
+  assert.ok(out.includes('/* --- button/button.css --- */'), 'Abschnittsmarke fehlt');
+  assert.ok(out.includes('.tl-button {'), 'Inhalt fehlt');
+  const names = comps.map((c) => c.name);
+  assert.deepEqual(names, [...names].sort(), 'nicht nach Pfad sortiert');
 });

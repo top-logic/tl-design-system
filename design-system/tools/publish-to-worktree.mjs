@@ -7,7 +7,7 @@ import { homedir } from 'node:os';
 const dest = join(process.env.TL_WORKTREE ?? join(homedir(), 'git/tl8-wt-29584'),
   'com.top_logic.layout.react/src/main/webapp/style/tl-design-system');
 mkdirSync(dest, { recursive: true });
-for (const f of ['primitives.css', 'tokens.css', 'base.css']) {
+for (const f of ['primitives.css', 'tokens.css', 'base.css', 'components.css']) {
   copyFileSync(new URL(`../dist/${f}`, import.meta.url), join(dest, f));
   console.log(`kopiert: ${f}`);
 }
