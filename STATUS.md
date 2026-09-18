@@ -19,7 +19,9 @@ die Konvention noch nicht — mit ihm klären, sobald die erste Welle auf `maste
 **Jetzt: Welle 1** mit dem Button als Vorlage (siehe unten). **Die Button-Varianten sind entschieden** (skalen.md
 „Button: vier Erscheinungen, eine Tönung, keine Größe“, Folie 32): `primary`/`secondary`/`ghost`/`link`, Tönung
 `danger`, keine Größen-Modifier, Zustände als Attribute, keine Kontextselektoren, AppBar wird `surface-layer`.
-Nächster Schritt: Umsetzungsplan für den Button nach dem Wellen-Rhythmus. Prüfliste je Komponente:
+Der Umsetzungsplan liegt unter `docs/superpowers/plans/2026-09-18-welle-1-button.md` (acht Tasks: Pipeline für
+`components.css`, Danger-Rampe und Icon-Klassen, `button.css` mit Gate-Regeln, Specimen, Vertrag, Java-Seite, TSX mit
+`ButtonDefaults`, alter Block leer). Nächster Schritt: Plan ausführen. Prüfliste je Komponente:
 `docs/migration/altlast.md`, Abschnitt „Sichtbare Befunde aus der laufenden Anwendung“.
 
 ## Wo anknüpfen
