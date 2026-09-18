@@ -1,6 +1,6 @@
 # TopLogic Design System — Präsentationsfassung
 
-**Stand:** 2026-09-17 · Welle 0 · Ticket #29108
+**Stand:** 2026-09-17 · Welle 0 · Ticket #29617
 
 Eine Folie je Abschnitt. Belege stehen in [`skalen.md`](skalen.md), Zahlen sind am echten Stylesheet gemessen, nicht geschätzt.
 

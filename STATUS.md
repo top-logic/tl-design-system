@@ -3,14 +3,20 @@
 **Letzte Sitzung:** 2026-09-17 · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Spec:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`
 
-## Morgen zuerst
+## Zuerst
 
-Zwei Entscheidungen von Hendrik stehen aus, beide in einer Minute erledigt:
+**Erledigt am 2026-09-18:** Design-System-`main` gepusht. Der Worktree-Branch heißt jetzt
+`CWS/CWS_29617_design_system_welle_0` und ist gepusht; PR
+[!1641](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1641) gegen `master` ist offen.
+Grund für den neuen Namen: Trac #29108 (TL Views) ist geschlossen, der Push-Hook verlangt ein
+angenommenes Ticket. **#29617** ist das eigene Ticket des Design Systems (angenommen); alle
+Commits in beiden Repos tragen ab jetzt `Ticket #29617:`. Der alte lokale Branch liegt als
+`backup/welle0_ticket29108` im Worktree und kann gelöscht werden, sobald der PR gemerged ist.
 
-1. **Push und PR** des Worktree-Branches `CWS/CWS_29108_design_system_welle_0` gegen `master`
-   (zwei Commits, `TestUIThemeService` 9/9). Voraussetzung: Trac-Ticket #29108 ist angenommen.
-2. **Trailer** der Commits `5ab2ae3` und `6d709f4` („Claude Haiku 4.5“): stehen lassen oder mit
-   Freigabe umschreiben.
+Eine Entscheidung steht noch aus:
+
+1. **Trailer** der Commits `5ab2ae3` und `6d709f4` („Claude Haiku 4.5“): stehen lassen oder mit
+   Freigabe umschreiben. Beide sind bereits auf `origin/main` — Umschreiben hieße Force-Push.
 
 Danach beginnt **Welle 1** mit dem Button als Vorlage (siehe unten).
 
@@ -23,8 +29,8 @@ ist das Gate — **79 Tests, alle grün**. `node tools/lint-css.mjs` ist das Kla
 
 Die Demo-App lädt die drei Dateien als `ClientResources` und setzt `data-tl-mode` und
 `data-tl-density` am `html`. Das liegt im Worktree auf dem Branch
-`CWS/CWS_29108_design_system_welle_0` (Commits `156a65c29`, `5d27762c1`; `TestUIThemeService` 9/9 grün),
-**noch nicht gepusht**. Der Push braucht das angenommene Trac-Ticket #29108.
+`CWS/CWS_29617_design_system_welle_0` (Commits `2a8ac53c8`, `fa851a4ef`; `TestUIThemeService` 9/9 grün),
+gepusht, PR !1641 offen.
 
 **Nächster Schritt: Welle 1.** Button, ToggleButton, Pill, Avatar, Progress, FontIcon. Je
 Komponente: CSS nach `src/components/`, Klassen im TSX umbenennen, Zustände auf Attribute,

@@ -77,4 +77,5 @@ fuer Partner oder Kunden lesbar sein soll, ueber *Settings -> Make public* umste
 |---|---|
 | #29576 | Zweite React-Instanz im Controls-Bundle (Fix liegt vor) |
 | #29577 | Deploy-Modus generiert kein Theme-CSS — blockiert Kunden-Theming |
-| #29108 | TL Views — die React-Schicht, auf der dieses System aufsetzt |
+| #29617 | Design System — Tokens und Grundklassen als eigenes Paket (Welle 0); alle Commits dieses Repos und der Worktree-Branch tragen diese Nummer |
+| #29108 | TL Views — die React-Schicht, auf der dieses System aufsetzt (geschlossen) |

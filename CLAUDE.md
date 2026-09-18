@@ -24,7 +24,7 @@ Alle in `design-system/`, alle mit `node` ohne Abhängigkeiten:
 | `node tools/serve.mjs` | Specimen auf `http://localhost:8137/` |
 
 Der Worktree liegt unter `~/git/tl8-wt-29584` (oder `TL_WORKTREE`), Branch
-`CWS/CWS_29108_design_system_welle_0`.
+`CWS/CWS_29617_design_system_welle_0`.
 
 ## Die zwei Schichten
 

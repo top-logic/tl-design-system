@@ -1,6 +1,6 @@
 # TopLogic Design System — Neuaufbau
 
-**Stand:** 2026-09-17 · Ticket #29108
+**Stand:** 2026-09-17 · Ticket #29617
 **Ersetzt:** [`2026-09-15-style-overhaul-design.md`](2026-09-15-style-overhaul-design.md)
 
 ---
