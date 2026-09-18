@@ -5,45 +5,25 @@
 
 ## Zuerst
 
-**Welle 0 ist auf `master`.** PR [!1641](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1641) wurde als
-Merge-Commit `59404c7f` gemerged (Trac #29617, angenommen). Der Worktree `~/git/tl8-wt-29584` steht auf
-`master`; die Branches der Welle 0 sind lokal gelöscht. Alle Commits in beiden Repos tragen `Ticket #29617:`.
-Jede weitere Welle bekommt einen eigenen Branch `CWS/CWS_29617_design_system_welle_<n>` von `master`.
+**Welle 1 (Button) ist fertig und im Merge.** PR [!1649](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1649)
+wurde von Bernhard approved; Hendrik hat den Merge mit „merge when all checks succeed“ angestoßen, er läuft
+automatisch durch, sobald der Jenkins-Build für `0fb0ade862` grün ist. Morgen zuerst prüfen:
 
-Offen geblieben, nicht blockierend: die Trailer der Commits `5ab2ae3` und `6d709f4` („Claude Haiku 4.5“)
-bleiben stehen — sie sind auf `origin/main`, Umschreiben hieße Force-Push.
+1. Ist !1649 gemerged? Dann im Worktree `git checkout master && git pull --ff-only`, Branch
+   `CWS/CWS_29617_design_system_welle_1` lokal löschen, in `docs/praesentation.md` Folie 32 und in
+   `docs/migration/altlast.md` „gemerged“ vermerken.
+2. Sichtprüfung in der Docker-Instanz: Toolbar rahmenlos, Dialogfuß primary/secondary, kleine
+   Tabellenzeilen-Icons, AppBar unter 768 px kollabiert zu Icons, AppBar liest `surface-layer`,
+   ein Löschen-Kommando mit `ButtonTone.DANGER` (heute kein Aufrufer — `setTone` einmal setzen).
+3. Danach die Pill — gegen Trac #29606 entwerfen: Farbe der Pill ist eine Rolle, kein Tokenname;
+   `--tlPill-color` von der Einfang-Liste holen.
 
-**Neu:** Der Namensraum `--tl` gehört dem Paket (skalen.md, Folie 31); die Ratsche prüft das. Bernhard kennt
-die Konvention noch nicht — mit ihm klären, sobald die erste Welle auf `master` liegt.
+Das Repo liegt jetzt unter `TopLogic/tl-design-system`; Wiki (Home, Übersicht, Anleitung Komponenten mit
+Claude, Regeldatei) ist der Einstieg für Bernhard, `docs/*.md` die gepflegte Quelle.
 
-**Jetzt: Welle 1** mit dem Button als Vorlage (siehe unten). **Die Button-Varianten sind entschieden** (skalen.md
-„Button: vier Erscheinungen, eine Tönung, keine Größe“, Folie 32): `primary`/`secondary`/`ghost`/`link`, Tönung
-`danger`, keine Größen-Modifier, Zustände als Attribute, keine Kontextselektoren, AppBar wird `surface-layer`.
-Der Umsetzungsplan liegt unter `docs/superpowers/plans/2026-09-18-welle-1-button.md` (acht Tasks: Pipeline für
-`components.css`, Danger-Rampe und Icon-Klassen, `button.css` mit Gate-Regeln, Specimen, Vertrag, Java-Seite, TSX mit
-`ButtonDefaults`, alter Block leer). Task 3 (`button.css` und die Gate-Regeln für Modifier) ist umgesetzt: das Gate
-verbietet Zustandsnamen als Modifier und Modifier außerhalb der entschiedenen Liste am Block `tl-button`. Fix-Runde 1
-hat zwei Kontrastbefunde entschieden (siehe skalen.md, Abschnitt Button): Danger füllt sich beim Zeigen
-(`status-error-surface`/`-active` statt `status-error-subtle`), `border-control` dunkel auf `gray-45`. Fix-Runde 2
-hat den dritten Befund entschieden — systemisch, alle vier `status-*-text` verfehlten dunkel auf `surface-layer`
-die 4,5 (Welle 0 hatte nur gegen `surface-base` gemessen): Regel jetzt für beide Flächen als Test festgeschrieben,
-alle vier Rollen angehoben (Fehler `red-32`, Warnung `amber-34`, Erfolg `green-36`, Info `teal-35`; die vier
-ungelesenen alten Stufen aus `primitives.json` entfernt). Fix-Runde 3 hat denselben Befund für die Linien
-entschieden — alle vier `status-*-border` verfehlten dunkel auf `surface-layer` die 3,0, Regel ebenfalls als
-Test festgeschrieben, alle vier Rollen angehoben (Fehler `red-42`, Warnung `amber-44`, Erfolg `green-46`, Info
-`teal-45`; die vier ungelesenen alten Stufen entfernt). **Alle vier Kontrastbefunde aus Task 3 sind entschieden.**
-**Welle 1: Button fertig** — Branch `CWS/CWS_29617_design_system_welle_1` im Worktree `~/git/tl8-wt-29584`
-(Task 7: TSX auf `tl-button`-Klassen und `ButtonDefaults`; Task 8: alter Block `TLButton`/`TLButton enhancements`
-und die fünf Kontextblöcke aus `tlReactControls.css` gelöscht, Ratsche nachgezogen, Commits in beiden Repos —
-Branch `CWS/CWS_29617_design_system_welle_1` ist gepusht, PR [!1649](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1649) offen, Reviewer Bernhard (bhu). Sichtprüfung in der Docker-Instanz steht aus. Bernhards Review (Request Changes: Ticket-Update) ist mit dem
-erweiterten Trac-Text beantwortet; erzeugte CSS nennt seit `04c2d50` ihre Herkunft.
-Für Bernhard: Gitea-Wiki des Design-System-Repos (Home, Übersicht, Anleitung Komponenten mit Claude, Regeldatei); das Wiki spiegelt `docs/*.md`, bei Abweichung gilt das Repo.
-ohne Fläche, `aria-busy` blockiert keine Zeiger mehr, die BUTTON-Map deckt jedes Farb-Token aus `button.css`,
-AppBar liest im alten Block die Flächen des Design Systems (Übergang bis Welle 4), Dropdown-Einträge
-linksbündig (Übergang bis Welle 3), WYSIWYG-Toolbar auf `ghost` umgestellt. Nächste Komponente:
-**ToggleButton ist mit dem Button erledigt** (nur `aria-pressed` fehlt noch als Attribut), danach folgt
-**Pill**. Die Suite steht bei **93/93**. Prüfliste je Komponente: `docs/migration/altlast.md`, Abschnitt
-„Sichtbare Befunde aus der laufenden Anwendung“.
+Offen, nicht blockierend: Trailer der Commits `5ab2ae3`/`6d709f4` bleiben stehen. Aus dem Final-Review für
+spätere Wellen: `surface-overlay` ins Kontrast-Gate (Welle 4), Icon-Schrift im Specimen, zwei
+`--layer-accent`-Leser außerhalb der AppBar (Avatar, Dirty-Dot), Element-Modifier im Gate, TSX-Lint-Regel.
 
 ## Wo anknüpfen
 
