@@ -1359,7 +1359,7 @@ cd /Users/hendrik/Claude/TopLogic-v8-DesignSystem && git add -A && git commit -m
 Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>" && git push origin main
 ```
 
-PR in Gitea (`TopLogic/tl-engine-7`, Base `master`, Titel `Ticket #29617: Design System wave 1 -- button on tl-button, containers choose the appearance`), Body auf Englisch: was der PR ändert (vier Punkte: components.css als Ressource; ButtonTone/ghost/kein large; TSX auf tl-button mit ButtonDefaults; alter Block gelöscht), wie geprüft (TestReactButtonControl 3/3, TestUIThemeService 9/9, Sichtprüfung in Toolbar, Dialogfuß, Tabellenzeile, kompakte AppBar), Abschluss `🤖 Generated with [Claude Code](https://claude.com/claude-code)`.
+PR in Gitea (`TopLogic/tl-engine-7`, Base `master`, Titel `Ticket #29617: Design System wave 1 -- button on tl-button, containers choose the appearance`), Body auf Englisch: was der PR ändert (vier Punkte: components.css als Ressource; ButtonTone/ghost/kein large; TSX auf tl-button mit ButtonDefaults; alter Block gelöscht), wie geprüft (TestReactButtonControl 3/3, TestUIThemeService 9/9, Sichtprüfung in Toolbar, Dialogfuß, Tabellenzeile, kompakte AppBar), Abschluss `🤖 Generated with [Claude Code](https://claude.com/claude-code)`. **Reviewer `bhu` (Bernhard Haumacher) eintragen** (`pull_request_write add_reviewers`) und im Trac-Ticket #29617 `cc` auf `bhu` setzen — jedes Framework-Ticket mit PR bezieht ihn ein.
 
 ---
 
