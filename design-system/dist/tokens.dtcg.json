@@ -22,10 +22,6 @@
         "$type": "color",
         "$value": "#936E00"
       },
-      "amber-49": {
-        "$type": "color",
-        "$value": "#805F00"
-      },
       "amber-76": {
         "$type": "color",
         "$value": "#281C02"
@@ -206,10 +202,6 @@
         "$type": "color",
         "$value": "#008459"
       },
-      "green-51": {
-        "$type": "color",
-        "$value": "#00734D"
-      },
       "green-77": {
         "$type": "color",
         "$value": "#0C2319"
@@ -238,10 +230,6 @@
         "$type": "color",
         "$value": "#CC2823"
       },
-      "red-47": {
-        "$type": "color",
-        "$value": "#C51E1C"
-      },
       "red-51": {
         "$type": "color",
         "$value": "#B7000A"
@@ -269,10 +257,6 @@
       "teal-45": {
         "$type": "color",
         "$value": "#007F92"
-      },
-      "teal-51": {
-        "$type": "color",
-        "$value": "#006E80"
       },
       "teal-75": {
         "$type": "color",
@@ -1080,7 +1064,7 @@
         },
         "status-error-border": {
           "$type": "color",
-          "$value": "{primitive.color.red-47}"
+          "$value": "{primitive.color.red-42}"
         },
         "status-error-surface": {
           "$type": "color",
@@ -1104,7 +1088,7 @@
         },
         "status-warning-border": {
           "$type": "color",
-          "$value": "{primitive.color.amber-49}"
+          "$value": "{primitive.color.amber-44}"
         },
         "status-warning-surface": {
           "$type": "color",
@@ -1120,7 +1104,7 @@
         },
         "status-success-border": {
           "$type": "color",
-          "$value": "{primitive.color.green-51}"
+          "$value": "{primitive.color.green-46}"
         },
         "status-success-surface": {
           "$type": "color",
@@ -1136,7 +1120,7 @@
         },
         "status-info-border": {
           "$type": "color",
-          "$value": "{primitive.color.teal-51}"
+          "$value": "{primitive.color.teal-45}"
         },
         "status-info-surface": {
           "$type": "color",

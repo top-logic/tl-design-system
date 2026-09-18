@@ -28,10 +28,11 @@ hat zwei Kontrastbefunde entschieden (siehe skalen.md, Abschnitt Button): Danger
 hat den dritten Befund entschieden — systemisch, alle vier `status-*-text` verfehlten dunkel auf `surface-layer`
 die 4,5 (Welle 0 hatte nur gegen `surface-base` gemessen): Regel jetzt für beide Flächen als Test festgeschrieben,
 alle vier Rollen angehoben (Fehler `red-32`, Warnung `amber-34`, Erfolg `green-36`, Info `teal-35`; die vier
-ungelesenen alten Stufen aus `primitives.json` entfernt). Dabei wurde ein vierter, bisher maskierter Befund
-sichtbar — `status-error-border` dunkel auf `surface-layer` 2,79 statt 3,0 — offen, mit Hendrik klären, bevor
-`status-error-border` (dunkel) angefasst wird. Nächster Schritt: vierten Befund entscheiden, dann Task 4 (Specimen)
-des Plans. Prüfliste je Komponente:
+ungelesenen alten Stufen aus `primitives.json` entfernt). Fix-Runde 3 hat denselben Befund für die Linien
+entschieden — alle vier `status-*-border` verfehlten dunkel auf `surface-layer` die 3,0, Regel ebenfalls als
+Test festgeschrieben, alle vier Rollen angehoben (Fehler `red-42`, Warnung `amber-44`, Erfolg `green-46`, Info
+`teal-45`; die vier ungelesenen alten Stufen entfernt). **Alle vier Kontrastbefunde aus Task 3 sind entschieden,
+die Suite steht bei 90/90.** Nächster Schritt: Task 4 (Specimen) des Plans. Prüfliste je Komponente:
 `docs/migration/altlast.md`, Abschnitt „Sichtbare Befunde aus der laufenden Anwendung“.
 
 ## Wo anknüpfen

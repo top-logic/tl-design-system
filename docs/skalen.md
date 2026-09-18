@@ -332,19 +332,19 @@ Vier Bedeutungen — Fehler, Warnung, Erfolg, Info — mit je vier Rollen.
 | | Rolle | hell | dunkel | Prüfung |
 |---|---|---|---|---|
 | **Fehler** | `text` | `#D7352D` | `#FB594D` | hell 4,53 auf Grund; dunkel 5,62 auf Grund, 5,17 auf Layer |
-| | `border` | `#FB594D` | `#C51E1C` | 3,03 / 3,03 |
+| | `border` | `#FB594D` | `#D7352D` | hell 3,03 auf Grund; dunkel 3,76 auf Grund, 3,46 auf Layer |
 | | `surface` | `#CC2823` | `#F14F43` | Beschriftung weiß 5,39 / dunkel 4,77 |
 | | `subtle` | `#FFEBE8` | `#35110D` | Text darauf 14,71 / 15,27 |
 | **Warnung** | `text` | `#936E00` | `#B88A00` | hell 4,50 auf Grund; dunkel 5,65 auf Grund, 5,20 auf Layer |
-| | `border` | `#B88A00` | `#805F00` | 3,01 / 3,01 |
+| | `border` | `#B88A00` | `#936E00` | hell 3,01 auf Grund; dunkel 3,79 auf Grund, 3,48 auf Layer |
 | | `surface` | `#D9A514` | `#EAB532` | Beschriftung dunkel 7,51 / 8,96 |
 | | `subtle` | `#FEEFCF` | `#281C02` | 14,84 / 15,03 |
 | **Erfolg** | `text` | `#008459` | `#36A376` | hell 4,53 auf Grund; dunkel 5,64 auf Grund, 5,19 auf Layer |
-| | `border` | `#36A376` | `#00734D` | 3,02 / 3,01 |
+| | `border` | `#36A376` | `#008459` | hell 3,02 auf Grund; dunkel 3,76 auf Grund, 3,46 auf Layer |
 | | `surface` | `#3DA97B` | `#60C99A` | Beschriftung dunkel 5,75 / 8,29 |
 | | `subtle` | `#DCF8E9` | `#0C2319` | 14,99 / 14,88 |
 | **Info** | `text` | `#007F92` | `#159FB6` | hell 4,52 auf Grund; dunkel 5,65 auf Grund, 5,20 auf Layer |
-| | `border` | `#159FB6` | `#006E80` | 3,02 / 3,00 |
+| | `border` | `#159FB6` | `#007F92` | hell 3,02 auf Grund; dunkel 3,77 auf Grund, 3,47 auf Layer |
 | | `surface` | `#33C1DB` | `#33C1DB` | Beschriftung dunkel 7,87 / 7,87 |
 | | `subtle` | `#CEF3FB` | `#002830` | 14,34 / 14,03 |
 
@@ -356,7 +356,12 @@ nur auf dem Grund; alle vier lagen dort bei etwa 4,15. `status-error-text` wechs
 `green-41` auf `green-36`, `status-info-text` von `teal-41` auf `teal-35` — jeweils die dunkelste
 vorhandene Stufe der Familie, die auf `surface-layer` noch 4,5 erreicht; keine neue Stufe war
 nötig. Die vier nun ungelesenen Primitive (`red-37`, `amber-40`, `green-41`, `teal-41`) sind aus
-`primitives.json` entfernt.
+`primitives.json` entfernt. **… dasselbe für die Linien: alle vier lagen auf `surface-layer` bei
+2,8.** `status-error-border` wechselt von `red-47` auf `red-42` (nicht `red-45` — das reicht mit
+3,04 nur knapp und trägt bereits `status-error-surface-active`), `status-warning-border` von
+`amber-49` auf `amber-44`, `status-success-border` von `green-51` auf `green-46`,
+`status-info-border` von `teal-51` auf `teal-45`; die vier nun ungelesenen Primitive (`red-47`,
+`amber-49`, `green-51`, `teal-51`) sind ebenfalls aus `primitives.json` entfernt.
 
 **Die Regel, wann welche Rolle gilt:**
 
@@ -1065,12 +1070,11 @@ hatte. Die Regel gilt jetzt für beide Flächen und ist als Test festgeschrieben
 „Semantik: vier Bedeutungen, vier Rollen“ oben); alle vier dunklen Text-Rollen wurden auf die
 dunkelste noch ausreichende vorhandene Stufe angehoben.
 
-**Neuer Befund, offen — durch dieselbe Fix-Runde sichtbar geworden** (der Kontrasttest lief mit
-angehobenem Text weiter und traf danach eine weitere, bisher maskierte Grenze): Dunkel,
-`danger-secondary` auf `surface-layer`, Linie `status-error-border` (`red-47`): **2,79** statt 3,0
-(auf `surface-base`: 3,03, bestanden). `status-error-border` ist wie `status-error-text` vorher
-nur gegen `surface-base` entschieden, nicht gegen `surface-layer` — mit Hendrik klären, bevor
-`status-error-border` (dunkel) angefasst wird; nicht am Test oder Token gedreht.
+**Entschieden (Fix-Runde 3, Ruling 4):** Dieselbe Klasse wie Ruling 3, jetzt für die Linien —
+im Dunkelmodus verfehlten alle vier `status-*-border` auf `surface-layer` die 3,0 (Fehler 2,79,
+Warnung 2,77, Erfolg 2,77, Info 2,76). Die Regel gilt jetzt für beide Flächen und ist als Test
+festgeschrieben (siehe „Semantik: vier Bedeutungen, vier Rollen“ oben); alle vier dunklen
+Border-Rollen wurden auf die dunkelste noch ausreichende vorhandene Stufe angehoben.
 
 ---
 

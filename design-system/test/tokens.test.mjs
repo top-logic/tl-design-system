@@ -63,6 +63,11 @@ test('jede Statusbedeutung erfüllt text 4,5 und border 3,0 auf dem Grund — ei
     const layer = ratio(R.color[m][`status-${s}-text`], R.color[m]['surface-layer']);
     assert.ok(layer >= 4.5, `${m}: status-${s}-text auf surface-layer = ${layer.toFixed(2)}`);
 
+    // Dieselbe Anforderung wie beim Text gilt für die Linie: eine Umriss-Erscheinung liegt
+    // ebenso auf surface-layer wie auf dem Grund.
+    const borderLayer = ratio(R.color[m][`status-${s}-border`], R.color[m]['surface-layer']);
+    assert.ok(borderLayer >= 3.0, `${m}: status-${s}-border auf surface-layer = ${borderLayer.toFixed(2)}`);
+
     // status-X-text ist für den Grund (surface-base) gerechnet, nicht für die eigene
     // subtle-Fläche. Ein getönter Hinweisstreifen (background: subtle) nimmt darum
     // gewöhnlichen Text (text-primary), nicht status-X-text — das Paar
