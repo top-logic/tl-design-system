@@ -57,6 +57,12 @@ test('jede Statusbedeutung erfüllt text 4,5 und border 3,0 auf dem Grund — ei
     assert.ok(t >= 4.5, `${m}: status-${s}-text = ${t.toFixed(2)}`);
     assert.ok(b >= 3.0, `${m}: status-${s}-border = ${b.toFixed(2)}`);
 
+    // Status-Text steht nicht nur auf dem Grund, sondern auf jeder Fläche, auf der ein Panel
+    // liegen kann — surface-layer ist die zweite Fläche, auf der der Button (und jede andere
+    // Komponente) diesen Text trägt.
+    const layer = ratio(R.color[m][`status-${s}-text`], R.color[m]['surface-layer']);
+    assert.ok(layer >= 4.5, `${m}: status-${s}-text auf surface-layer = ${layer.toFixed(2)}`);
+
     // status-X-text ist für den Grund (surface-base) gerechnet, nicht für die eigene
     // subtle-Fläche. Ein getönter Hinweisstreifen (background: subtle) nimmt darum
     // gewöhnlichen Text (text-primary), nicht status-X-text — das Paar

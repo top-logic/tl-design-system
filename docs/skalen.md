@@ -331,22 +331,32 @@ Vier Bedeutungen — Fehler, Warnung, Erfolg, Info — mit je vier Rollen.
 
 | | Rolle | hell | dunkel | Prüfung |
 |---|---|---|---|---|
-| **Fehler** | `text` | `#D7352D` | `#E8463C` | 4,53 / 4,55 auf Grund |
+| **Fehler** | `text` | `#D7352D` | `#FB594D` | hell 4,53 auf Grund; dunkel 5,62 auf Grund, 5,17 auf Layer |
 | | `border` | `#FB594D` | `#C51E1C` | 3,03 / 3,03 |
 | | `surface` | `#CC2823` | `#F14F43` | Beschriftung weiß 5,39 / dunkel 4,77 |
 | | `subtle` | `#FFEBE8` | `#35110D` | Text darauf 14,71 / 15,27 |
-| **Warnung** | `text` | `#936E00` | `#A27A00` | 4,50 / 4,51 |
+| **Warnung** | `text` | `#936E00` | `#B88A00` | hell 4,50 auf Grund; dunkel 5,65 auf Grund, 5,20 auf Layer |
 | | `border` | `#B88A00` | `#805F00` | 3,01 / 3,01 |
 | | `surface` | `#D9A514` | `#EAB532` | Beschriftung dunkel 7,51 / 8,96 |
 | | `subtle` | `#FEEFCF` | `#281C02` | 14,84 / 15,03 |
-| **Erfolg** | `text` | `#008459` | `#1E9266` | 4,53 / 4,54 |
+| **Erfolg** | `text` | `#008459` | `#36A376` | hell 4,53 auf Grund; dunkel 5,64 auf Grund, 5,19 auf Layer |
 | | `border` | `#36A376` | `#00734D` | 3,02 / 3,01 |
 | | `surface` | `#3DA97B` | `#60C99A` | Beschriftung dunkel 5,75 / 8,29 |
 | | `subtle` | `#DCF8E9` | `#0C2319` | 14,99 / 14,88 |
-| **Info** | `text` | `#007F92` | `#008DA2` | 4,52 / 4,52 |
+| **Info** | `text` | `#007F92` | `#159FB6` | hell 4,52 auf Grund; dunkel 5,65 auf Grund, 5,20 auf Layer |
 | | `border` | `#159FB6` | `#006E80` | 3,02 / 3,00 |
 | | `surface` | `#33C1DB` | `#33C1DB` | Beschriftung dunkel 7,87 / 7,87 |
 | | `subtle` | `#CEF3FB` | `#002830` | 14,34 / 14,03 |
+
+Dunkel angehoben, als der Button auf `surface-layer` gemessen wurde: Text steht auf Panels, nicht
+nur auf dem Grund; alle vier lagen dort bei etwa 4,15. `status-error-text` wechselt dafür von
+`red-37` auf `red-32` (nicht `red-35`, obwohl das auch reichen würde — `red-35` ist bereits
+`status-error-surface` dunkel, dieselbe Fläche wäre dann Text und Füllung zugleich).
+`status-warning-text` wechselt von `amber-40` auf `amber-34`, `status-success-text` von
+`green-41` auf `green-36`, `status-info-text` von `teal-41` auf `teal-35` — jeweils die dunkelste
+vorhandene Stufe der Familie, die auf `surface-layer` noch 4,5 erreicht; keine neue Stufe war
+nötig. Die vier nun ungelesenen Primitive (`red-37`, `amber-40`, `green-41`, `teal-41`) sind aus
+`primitives.json` entfernt.
 
 **Die Regel, wann welche Rolle gilt:**
 
@@ -1048,12 +1058,19 @@ Kontrasttest prüft `primary`, `secondary` und `ghost` je mit und ohne `danger` 
   `surface-layer` erreichte `gray-49` nur 2,88 statt 3,0; `gray-45` erreicht 3,39 (Grund 3,68,
   `surface-field` 3,02).
 
-**Neuer Befund, offen — durch die Fix-Runde erst sichtbar geworden** (der Kontrasttest brach zuvor
-schon bei `secondary`/`surface-layer` ab, bevor er `danger-secondary` erreichte): Dunkel,
-`danger-secondary` im Ruhezustand (Text `status-error-text`, kein `fill`) auf `surface-layer`:
-**4,19** statt 4,5 (auf `surface-base` 4,55, knapp bestanden). `status-error-text` ist nur gegen
-`surface-base` entschieden, nicht gegen `surface-layer` — mit Hendrik klären, bevor
-`status-error-text` (dunkel) angefasst wird; nicht am Test gedreht.
+**Entschieden (Fix-Runde 2, Ruling 3):** Der Befund war systemisch, nicht auf `danger-secondary`
+beschränkt — im Dunkelmodus verfehlten alle vier `status-*-text` auf `surface-layer` die 4,5
+(Fehler 4,19, Warnung 4,15, Erfolg 4,18, Info 4,16), weil Welle 0 nur gegen `surface-base` gemessen
+hatte. Die Regel gilt jetzt für beide Flächen und ist als Test festgeschrieben (siehe
+„Semantik: vier Bedeutungen, vier Rollen“ oben); alle vier dunklen Text-Rollen wurden auf die
+dunkelste noch ausreichende vorhandene Stufe angehoben.
+
+**Neuer Befund, offen — durch dieselbe Fix-Runde sichtbar geworden** (der Kontrasttest lief mit
+angehobenem Text weiter und traf danach eine weitere, bisher maskierte Grenze): Dunkel,
+`danger-secondary` auf `surface-layer`, Linie `status-error-border` (`red-47`): **2,79** statt 3,0
+(auf `surface-base`: 3,03, bestanden). `status-error-border` ist wie `status-error-text` vorher
+nur gegen `surface-base` entschieden, nicht gegen `surface-layer` — mit Hendrik klären, bevor
+`status-error-border` (dunkel) angefasst wird; nicht am Test oder Token gedreht.
 
 ---
 

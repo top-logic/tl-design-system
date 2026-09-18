@@ -2,7 +2,7 @@
   "_": "Reine Werte ohne Bedeutung. Einzige Stelle mit Zahlen. Hier greift ein Kundenprojekt ein.",
   "color": {
     "amber-4": "#FEEFCF", "amber-20": "#EAB532", "amber-25": "#D9A514", "amber-34": "#B88A00",
-    "amber-40": "#A27A00", "amber-44": "#936E00", "amber-49": "#805F00", "amber-76": "#281C02",
+    "amber-44": "#936E00", "amber-49": "#805F00", "amber-76": "#281C02",
     "blue-6": "#DFEBFF", "blue-9": "#CEE1FF", "blue-21": "#95BDFF", "blue-27": "#75A9FF",
     "blue-32": "#5394FF", "blue-43": "#2471EC", "blue-49": "#0B5ED7", "blue-55": "#004DBA",
     "blue-62": "#003A8F", "blue-69": "#1E2F4B", "blue-74": "#162338",
@@ -14,11 +14,11 @@
     "gray-69": "#2B3034", "gray-70": "#2B2F33", "gray-72": "#27292D", "gray-73": "#22262A",
     "gray-74": "#242729", "gray-76": "#1D2023", "gray-77": "#1B1D21", "gray-79": "#16181B",
     "green-5": "#DCF8E9", "green-24": "#60C99A", "green-34": "#3DA97B", "green-36": "#36A376",
-    "green-41": "#1E9266", "green-46": "#008459", "green-51": "#00734D", "green-77": "#0C2319",
+    "green-46": "#008459", "green-51": "#00734D", "green-77": "#0C2319",
     "red-4": "#FFEBE8", "red-29": "#FF6C5E", "red-32": "#FB594D",
-    "red-35": "#F14F43", "red-37": "#E8463C", "red-42": "#D7352D", "red-45": "#CC2823",
+    "red-35": "#F14F43", "red-42": "#D7352D", "red-45": "#CC2823",
     "red-47": "#C51E1C", "red-51": "#B7000A", "red-59": "#8F0006", "red-77": "#35110D",
-    "teal-6": "#CEF3FB", "teal-25": "#33C1DB", "teal-35": "#159FB6", "teal-41": "#008DA2",
+    "teal-6": "#CEF3FB", "teal-25": "#33C1DB", "teal-35": "#159FB6",
     "teal-45": "#007F92", "teal-51": "#006E80", "teal-75": "#002830"
   },
   "measure": {

@@ -24,10 +24,14 @@ Der Umsetzungsplan liegt unter `docs/superpowers/plans/2026-09-18-welle-1-button
 `ButtonDefaults`, alter Block leer). Task 3 (`button.css` und die Gate-Regeln für Modifier) ist umgesetzt: das Gate
 verbietet Zustandsnamen als Modifier und Modifier außerhalb der entschiedenen Liste am Block `tl-button`. Fix-Runde 1
 hat zwei Kontrastbefunde entschieden (siehe skalen.md, Abschnitt Button): Danger füllt sich beim Zeigen
-(`status-error-surface`/`-active` statt `status-error-subtle`), `border-control` dunkel auf `gray-45`. Dabei wurde
-ein dritter, bisher maskierter Befund sichtbar — `status-error-text` dunkel auf `surface-layer` 4,19 statt 4,5 —
-offen, mit Hendrik klären, bevor `status-error-text` (dunkel) angefasst wird. Nächster Schritt: dritten Befund
-entscheiden, dann Task 4 (Specimen) des Plans. Prüfliste je Komponente:
+(`status-error-surface`/`-active` statt `status-error-subtle`), `border-control` dunkel auf `gray-45`. Fix-Runde 2
+hat den dritten Befund entschieden — systemisch, alle vier `status-*-text` verfehlten dunkel auf `surface-layer`
+die 4,5 (Welle 0 hatte nur gegen `surface-base` gemessen): Regel jetzt für beide Flächen als Test festgeschrieben,
+alle vier Rollen angehoben (Fehler `red-32`, Warnung `amber-34`, Erfolg `green-36`, Info `teal-35`; die vier
+ungelesenen alten Stufen aus `primitives.json` entfernt). Dabei wurde ein vierter, bisher maskierter Befund
+sichtbar — `status-error-border` dunkel auf `surface-layer` 2,79 statt 3,0 — offen, mit Hendrik klären, bevor
+`status-error-border` (dunkel) angefasst wird. Nächster Schritt: vierten Befund entscheiden, dann Task 4 (Specimen)
+des Plans. Prüfliste je Komponente:
 `docs/migration/altlast.md`, Abschnitt „Sichtbare Befunde aus der laufenden Anwendung“.
 
 ## Wo anknüpfen
