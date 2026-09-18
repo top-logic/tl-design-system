@@ -248,7 +248,6 @@ Der Namensraum gehört dem Paket. Diese Namen führt der Altbestand heute; die W
 | `--tl-tt-padding` | `tlReactControls.css` (Tooltip) | Innenabstand des Tooltips, aus `spacing-02` | 3 |
 | `--tlGrid-gap` | `TLGrid.tsx`, `tlReactControls.css` (#29597) | Rasterabstand als Rechengröße für die Spaltenzahl | 4 |
 | `--tl-item-index` | `items.tsx`, `ReactLayoutControl.java`, `ObjectListElement.java` (#29597) | Position eines wiederholten Elements für gestaffelte Animation | 4 |
-| `--tl-surface-layer`, `--tl-text-primary`, `--tl-surface-interactive-hover`, `--tl-surface-interactive-active` | `tlReactControls.css` (AppBar-Block, Übergang F1) | Der alte AppBar-Block liest die Flächen und Text-Rolle des Pakets, bis Welle 4 die Shell neu schreibt — kein Fremdgut im eigentlichen Sinn, aber ein Lesezugriff von außerhalb des Pakets | 4 |
 
 `TLUploadButton` trägt am Wrapper die reservierte Klasse `tl-upload`; das Upload-Feld der Welle 2 definiert sie.
 

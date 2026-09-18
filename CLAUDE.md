@@ -43,8 +43,11 @@ Alles Öffentliche ist Englisch, kebab-case, Präfix `tl`: Variablen `--tl-surfa
 geschlossen: `surface`, `text`, `icon`, `border`, `focus`, `shadow`, `space`, `radius`, `size`,
 `font`, `duration`, `easing`, `layer`, `status`. Zustände sind Attribute, nicht Klassen.
 
-Der Namensraum `--tl` (jede Custom Property, die so beginnt) gehört dem Paket. Was der Altbestand
-darin führt, steht in `test/ratchet.json` unter `foreignTl` und wird in seiner Welle eingefangen.
+Der Namensraum `--tl` (jede Custom Property, die so beginnt) gehört dem Paket. Außerhalb von
+`dist/` wird darin nichts definiert; gelesen werden darf, was das Paket definiert — eine
+Übergangsregel im alten Stylesheet liest Tokens, definiert sie aber nicht. Was der Altbestand
+selbst darin definiert, steht in `test/ratchet.json` unter `foreignTl` und wird in seiner Welle
+eingefangen.
 
 ## Arbeitsweise
 

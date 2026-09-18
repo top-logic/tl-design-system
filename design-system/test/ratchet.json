@@ -9,13 +9,9 @@
     "zIndex": 28,
     "outlineNone": 22
   },
-  "_foreignTl": "Custom Properties im Namensraum --tl, die der Altbestand definiert oder liest. Einfang-Liste: jede Welle streicht, was sie ins Paket holt; Neues bricht den Test.",
+  "_foreignTl": "Custom Properties im Namensraum --tl, die der Altbestand selbst DEFINIERT (nicht: liest). Lesen ist erlaubt — dafuer sind Tokens da; fremd ist nur, was hier auftaucht oder was kein Paket-Token ist. Einfang-Liste: jede Welle streicht, was sie ins Paket holt; Neues bricht den Test.",
   "foreignTl": [
     "--tl-item-index",
-    "--tl-surface-interactive-active",
-    "--tl-surface-interactive-hover",
-    "--tl-surface-layer",
-    "--tl-text-primary",
     "--tl-tt-padding",
     "--tlGrid-gap",
     "--tlPill-color"

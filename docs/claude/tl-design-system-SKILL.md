@@ -33,7 +33,7 @@ Das Aussehen der React-Oberfläche kommt aus dem Paket `tl-design-system`
 | Zustände | Attribute: `:disabled`, `[aria-pressed="true"]`, `[aria-busy="true"]`, `[aria-expanded]`, `[aria-selected]`, `[aria-invalid]`, `:focus-visible`; sonst `data-tl-state="…"`. Eine Klasse `--active`/`--open`/`--loading` bricht das Gate. |
 | Schrift | `font-size`, `font-weight`, `line-height` nur über die Klassen `.tl-type-*` aus `base.css`; Icons über `.tl-icon-glyph|sm|md|lg`. Die Komponente setzt höchstens `font: inherit`. |
 | Fokus | Nie `:focus` ohne `-visible`, nie `outline: none`. Den Ring liefert `base.css` für alles Fokussierbare. |
-| Namensraum | Jede Custom Property, die mit `--tl` beginnt, gehört dem Paket. Eigene Mechanik-Variablen heißen anders (`--item-index`, nicht `--tl-item-index`); sonst schlägt die Ratsche an. |
+| Namensraum | Jede Custom Property, die mit `--tl` beginnt, gehört dem Paket. Außerhalb von `dist/` wird darin nichts definiert; gelesen werden darf, was das Paket definiert — eine Übergangsregel im alten Stylesheet liest Tokens, definiert sie aber nicht. Eigene Mechanik-Variablen heißen anders (`--item-index`, nicht `--tl-item-index`); sonst schlägt die Ratsche an. |
 | Kein Selektor von außen | Nicht `.tlToolbar .tl-button`. Der Container gibt Varianten per React-Kontext vor (`ButtonDefaults`); die Komponente stylt sich selbst. |
 | Kontrast | Text 4,5, Linie und Icon 3,0 — gegen `surface-base` UND `surface-layer`, hell und dunkel. Ein Test je Komponente prüft das (`test/components.test.mjs`). |
 | Altlast | Keine Aliase alter Namen, kein Übergang. Wenn du eine alte Komponente anfasst: neuer Block im Paket, alter Block in `tlReactControls.css` gelöscht. |

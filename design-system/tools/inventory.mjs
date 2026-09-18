@@ -10,6 +10,7 @@
 // Aufruf: node inventory.mjs [pfad-zum-css]
 
 import { declarations } from './lib/css.mjs';
+import { knownVariables } from './lint-css.mjs';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 
@@ -17,9 +18,9 @@ import { join } from 'node:path';
 const TL_NAME = /--tl[A-Za-z0-9-]*/g;
 
 /**
- * Custom Properties im Namensraum `--tl`, die der Altbestand selbst definiert oder liest.
- * Der Namensraum gehört dem Design System; alles, was hier auftaucht, ist Fremdgut und steht
- * in test/ratchet.json unter `foreignTl`, bis es eingefangen ist.
+ * Custom Properties im Namensraum `--tl`, die im Altbestand vorkommen — definiert oder
+ * gelesen, ungefiltert. Lesen ist erlaubt (siehe `foreignOf`); erst gefiltert gegen die
+ * bekannten Paket-Tokens ist das Ergebnis `foreignTl` aus test/ratchet.json.
  */
 export function foreignTlNames(css) {
   return uniq(css.replace(/\/\*[\s\S]*?\*\//g, '').match(TL_NAME) ?? []);
@@ -30,6 +31,15 @@ export function foreignTlInSources(dir) {
   const names = [];
   for (const file of walk(dir, /\.(tsx?|css)$/)) names.push(...(readFileSync(file, 'utf8').match(TL_NAME) ?? []));
   return uniq(names);
+}
+
+/**
+ * Lesen ist erlaubt — dafür sind Tokens da; fremd ist nur, was der Altbestand selbst im
+ * Namensraum definiert oder was kein Paket-Token ist. `known` kommt aus `knownVariables()`
+ * (tools/lint-css.mjs) über die erzeugten Dateien des Pakets.
+ */
+export function foreignOf(names, known) {
+  return uniq(names.filter((n) => !known.has(n)));
 }
 
 function* walk(dir, re) {
@@ -72,5 +82,12 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   );
   const css = readFileSync(pfad, 'utf8');
   const sources = join(pfad, '../../../../../react-src');
-  console.log(JSON.stringify({ ...measure(css), foreignTl: uniq([...foreignTlNames(css), ...foreignTlInSources(sources)]) }, null, 2));
+  const dist = new URL('../dist/', import.meta.url);
+  const known = knownVariables(
+    readFileSync(new URL('primitives.css', dist), 'utf8')
+    + readFileSync(new URL('tokens.css', dist), 'utf8')
+    + readFileSync(new URL('base.css', dist), 'utf8'),
+  );
+  const alle = [...foreignTlNames(css), ...foreignTlInSources(sources)];
+  console.log(JSON.stringify({ ...measure(css), foreignTl: foreignOf(alle, known) }, null, 2));
 }

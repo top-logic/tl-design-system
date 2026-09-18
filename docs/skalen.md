@@ -1001,7 +1001,8 @@ einführt.
 
 **Entschieden:** Der Namensraum `--tl` — jede Custom Property, die mit `--tl` beginnt, gleich
 welcher Schreibweise — gehört dem Design-System-Paket. Außerhalb von `dist/` wird darin nichts
-neu definiert und nichts gelesen. Was heute schon darin steht, ist Fremdgut und steht in
+definiert; gelesen werden darf, was das Paket definiert — eine Übergangsregel im alten
+Stylesheet liest Tokens, definiert sie aber nicht. Was heute schon darin steht, ist Fremdgut und steht in
 `test/ratchet.json` unter `foreignTl` als Einfang-Liste: Die Welle, die die Komponente holt,
 entscheidet, ob der Name ein Token wird (dann trägt er eine geschlossene Kategorie, etwa
 `--tl-space-…`) oder ein Mechanismus bleibt (dann heißt er anders). Neues auf der Liste bricht

@@ -552,7 +552,7 @@ Die Demo-App lädt die drei Dateien und setzt `data-tl-mode` und `data-tl-densit
 
 ## 31 · Der Namensraum
 
-**`--tl` gehört dem Paket. Außerhalb von `dist/` wird darin nichts definiert und nichts gelesen.**
+**`--tl` gehört dem Paket. Außerhalb von `dist/` wird darin nichts definiert; gelesen werden darf, was das Paket definiert — eine Übergangsregel im alten Stylesheet liest Tokens, definiert sie aber nicht.**
 
 Der Anlass: Beim Nachziehen auf `master` wuchs das alte Stylesheet um 23 Zeilen — legitim, aus einem fremden Ticket. Dabei fielen vier Custom Properties mit unserem Präfix im Altbestand auf: `--tl-item-index`, `--tlGrid-gap`, `--tlPill-color`, `--tl-tt-padding`.
 
