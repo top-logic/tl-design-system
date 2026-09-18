@@ -16,7 +16,10 @@ bleiben stehen — sie sind auf `origin/main`, Umschreiben hieße Force-Push.
 **Neu:** Der Namensraum `--tl` gehört dem Paket (skalen.md, Folie 31); die Ratsche prüft das. Bernhard kennt
 die Konvention noch nicht — mit ihm klären, sobald die erste Welle auf `master` liegt.
 
-**Jetzt: Welle 1** mit dem Button als Vorlage (siehe unten). Prüfliste je Komponente:
+**Jetzt: Welle 1** mit dem Button als Vorlage (siehe unten). **Die Button-Varianten sind entschieden** (skalen.md
+„Button: vier Erscheinungen, eine Tönung, keine Größe“, Folie 32): `primary`/`secondary`/`ghost`/`link`, Tönung
+`danger`, keine Größen-Modifier, Zustände als Attribute, keine Kontextselektoren, AppBar wird `surface-layer`.
+Nächster Schritt: Umsetzungsplan für den Button nach dem Wellen-Rhythmus. Prüfliste je Komponente:
 `docs/migration/altlast.md`, Abschnitt „Sichtbare Befunde aus der laufenden Anwendung“.
 
 ## Wo anknüpfen

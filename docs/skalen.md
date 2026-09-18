@@ -989,6 +989,45 @@ gehoben, nicht stillschweigend eingerechnet.
 
 ---
 
+### Button: vier Erscheinungen, eine Tönung, keine Größe
+
+Der Befund vor Welle 1: Der alte Block (Zeilen 100–270 plus fünf Kontextblöcke) kennt drei
+Erscheinungen — Umriss als Default, `primary` gefüllt, `link` — und dazu `small`/`large`, die
+serverseitig genau einmal gesetzt werden. Der gedrückte Zustand ist eine Klasse `--active`, die den
+Primary-Stil fast vollständig wiederholt, obwohl `aria-pressed` daneben gesetzt wird. Icon-only,
+icon-label und label-only sind Klassen. Fünf Selektoren von außen (`.tlAppBar--primary
+.tlReactButton`, Fenster-Toolbar, Tabellenzelle, Dropdown, Dialogfuß) überschreiben den Button je
+Kontext; die AppBar liest dabei weiße `rgba`-Literale. Eine Darstellung für destruktive Aktionen
+gibt es nicht.
+
+**Entschieden:**
+
+| Achse | Regel |
+|---|---|
+| Erscheinung | Vier Modifier, vom Autor gewählt: `primary` (gefüllt, `surface-brand`), `secondary` (Umriss, `border-control`; der Default), `ghost` (kein Rahmen; Toolbars, Icon-Schaltflächen), `link` (Textlink). |
+| Tönung | `danger` färbt die gewählte Erscheinung um und liest die Status-Rollen: mit `primary` die Fläche `status-error-surface` samt abgeleiteter Beschriftung, mit `secondary` Text `status-error-text` und Linie `status-error-border`, mit `ghost` nur den Text. Mit `link` nicht erlaubt — ein Textlink löscht nichts. |
+| Größe | Kein Modifier. Die Höhe kommt aus der Dichte (Control-Höhe). Einzig die Icon-Schaltfläche kennt `sm` (24 px) für Tabellenzeilen — siehe Icons. |
+| Darstellung | Keine Klassen. Icon und Beschriftung sind Elemente `__icon` und `__label`; icon-only heißt: kein `__label`, und `aria-label` ist Pflicht. |
+| Zustände | `:disabled`, `[aria-pressed="true"]` (ersetzt `--active`; ein ToggleButton ist ein Button mit `aria-pressed`, kein eigenes CSS), `data-tl-state="loading"`, `:focus-visible`, `:hover`, `:active`. |
+| Kontext | Kein Selektor von außen. Der Container wählt die Erscheinung — die Toolbar setzt `ghost`, der Dialogfuß `primary` und `secondary`. |
+
+Warum die Tönung keine fünfte Erscheinung ist: Ein Löschen steht im Bestand mal in der Toolbar
+(Umriss), mal im Dialog (gefüllt). Eine Erscheinung `danger` müsste beides sein und wäre die
+nächste Dublette nach dem Muster `--active` zu `--primary`. Die Tönung hat dieselbe Form wie die
+Semantik: eine Bedeutung, vier Rollen.
+
+**Die AppBar ist keine Markenfläche.** Der Fall „Schaltfläche auf Marke“ mit weißen Literalen
+entfällt, statt ein Kontextattribut zu bekommen: Die Kopfleiste wird `surface-layer` wie jede
+Fläche. Das gilt für die Shell in Welle 4 und ist hier festgehalten, weil der Button sonst eine
+zweite Farbwelt bräuchte.
+
+**Als Test:** Das Klassen-Gate erlaubt am Block `tl-button` nur die vier Erscheinungs-Modifier
+und `danger`; ein Zustandsname als Modifier (`--active`, `--disabled`, `--loading`) bricht. Der
+Kontrasttest prüft `primary`, `secondary` und `ghost` je mit und ohne `danger` in beiden Modi.
+`TLUploadButton` rendert dieselbe Chrome und bekommt damit dieselben Regeln.
+
+---
+
 ## Befunde aus dem Specimen
 
 ### Inter trägt nur zwei Gewichte

@@ -561,3 +561,19 @@ Der Anlass: Beim Nachziehen auf `master` wuchs das alte Stylesheet um 23 Zeilen 
 | Budget | Fremdzuwachs wird vermerkt und gehoben (6065 → 6088), nicht eingerechnet |
 
 > Sprechnotiz: Die Konvention ist im Team noch nicht bekannt. Die vier Namen werden in ihren Wellen eingefangen — als Token mit Kategorie oder unter anderem Namen.
+
+## 32 · Welle 1 beginnt: der Button
+
+**Vier Erscheinungen, eine Tönung, keine Größe — und kein Selektor von außen.**
+
+| | |
+|---|---|
+| Erscheinung | `primary` gefüllt · `secondary` Umriss (Default) · `ghost` ohne Rahmen · `link` |
+| Tönung | `danger` färbt die Erscheinung um, liest die Status-Rollen; nicht mit `link` |
+| Größe | aus der Dichte; nur die Icon-Schaltfläche kennt `sm` für Tabellenzeilen |
+| Zustände | `:disabled`, `aria-pressed`, `data-tl-state="loading"`, `:focus-visible` — Klassen dafür brechen das Gate |
+| Kontext | der Container wählt die Erscheinung; die AppBar ist keine Markenfläche mehr |
+
+Der Befund dahinter: drei Erscheinungen, zwei kaum genutzte Größen, ein gedrückter Zustand als Klasse, die Primary dupliziert, fünf Kontextblöcke mit Literalen, nichts für Destruktives.
+
+> Sprechnotiz: Warum Tönung statt fünfter Erscheinung — Löschen ist mal Umriss, mal gefüllt. Eine Erscheinung müsste beides sein: die nächste Dublette.
