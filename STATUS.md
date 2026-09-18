@@ -36,6 +36,8 @@ Test festgeschrieben, alle vier Rollen angehoben (Fehler `red-42`, Warnung `ambe
 (Task 7: TSX auf `tl-button`-Klassen und `ButtonDefaults`; Task 8: alter Block `TLButton`/`TLButton enhancements`
 und die fünf Kontextblöcke aus `tlReactControls.css` gelöscht, Ratsche nachgezogen, Commits in beiden Repos —
 Branch `CWS/CWS_29617_design_system_welle_1` ist gepusht, PR [!1649](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1649) offen, Reviewer Bernhard (bhu). Sichtprüfung in der Docker-Instanz steht aus.
+Für Bernhard: Gitea-Wiki des Design-System-Repos (Home, Übersicht, Anleitung Komponenten mit Claude, Regeldatei) und
+Issues #14/#15; das Wiki spiegelt `docs/*.md`, bei Abweichung gilt das Repo.
 ohne Fläche, `aria-busy` blockiert keine Zeiger mehr, die BUTTON-Map deckt jedes Farb-Token aus `button.css`,
 AppBar liest im alten Block die Flächen des Design Systems (Übergang bis Welle 4), Dropdown-Einträge
 linksbündig (Übergang bis Welle 3), WYSIWYG-Toolbar auf `ghost` umgestellt. Nächste Komponente:
