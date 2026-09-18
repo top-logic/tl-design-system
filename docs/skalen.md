@@ -965,6 +965,30 @@ zuerst, dann Komponente für Komponente, bis das alte Stylesheet leer ist). Die 
 
 ---
 
+### Der Namensraum `--tl` gehört dem Paket
+
+Beim Nachziehen des Worktrees auf `master` schlug die Ratsche an: 23 Zeilen Zuwachs im alten
+Stylesheet aus Ticket #29597 (Repeater-Grid). Der Zuwachs war legitim und kam von außen — die
+Ratsche kennt keinen Absender. Dabei fiel auf, dass der Altbestand Custom Properties mit dem
+Präfix `--tl` führt: `--tl-item-index`, `--tlGrid-gap`, `--tlPill-color`, `--tl-tt-padding`.
+Die Koexistenz beider Token-Sätze beruht auf getrennten Präfixen; ein Name aus dem Altbestand,
+der unser Präfix trägt, kann jederzeit mit einem Token kollidieren, das eine spätere Welle
+einführt.
+
+**Entschieden:** Der Namensraum `--tl` — jede Custom Property, die mit `--tl` beginnt, gleich
+welcher Schreibweise — gehört dem Design-System-Paket. Außerhalb von `dist/` wird darin nichts
+neu definiert und nichts gelesen. Was heute schon darin steht, ist Fremdgut und steht in
+`test/ratchet.json` unter `foreignTl` als Einfang-Liste: Die Welle, die die Komponente holt,
+entscheidet, ob der Name ein Token wird (dann trägt er eine geschlossene Kategorie, etwa
+`--tl-space-…`) oder ein Mechanismus bleibt (dann heißt er anders). Neues auf der Liste bricht
+den Test; Eingefangenes wird gestrichen, sonst bricht er ebenfalls.
+
+Das Ratschen-Budget wurde dabei einmalig von 6065 auf 6088 Zeilen gehoben, mit Vermerk der
+Herkunft. Die Regel „darf nur sinken" gilt für die Wellen; Fremdzuwachs wird vermerkt und
+gehoben, nicht stillschweigend eingerechnet.
+
+---
+
 ## Befunde aus dem Specimen
 
 ### Inter trägt nur zwei Gewichte

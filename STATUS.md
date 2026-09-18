@@ -13,6 +13,9 @@ Jede weitere Welle bekommt einen eigenen Branch `CWS/CWS_29617_design_system_wel
 Offen geblieben, nicht blockierend: die Trailer der Commits `5ab2ae3` und `6d709f4` („Claude Haiku 4.5“)
 bleiben stehen — sie sind auf `origin/main`, Umschreiben hieße Force-Push.
 
+**Neu:** Der Namensraum `--tl` gehört dem Paket (skalen.md, Folie 31); die Ratsche prüft das. Bernhard kennt
+die Konvention noch nicht — mit ihm klären, sobald die erste Welle auf `master` liegt.
+
 **Jetzt: Welle 1** mit dem Button als Vorlage (siehe unten). Prüfliste je Komponente:
 `docs/migration/altlast.md`, Abschnitt „Sichtbare Befunde aus der laufenden Anwendung“.
 
@@ -20,8 +23,9 @@ bleiben stehen — sie sind auf `origin/main`, Umschreiben hieße Force-Push.
 
 **Welle 0 ist umgesetzt.** Das Paket `design-system/` liefert `dist/primitives.css`,
 `dist/tokens.css`, `dist/base.css` und `dist/tokens.dtcg.json`. `cd design-system && node --test`
-ist das Gate — **79 Tests, alle grün**. `node tools/lint-css.mjs` ist das Klassen-Gate,
-`test/ratchet.json` das Budget des alten Stylesheets (6065 Zeilen, darf nur sinken).
+ist das Gate — **81 Tests, alle grün**. `node tools/lint-css.mjs` ist das Klassen-Gate,
+`test/ratchet.json` das Budget des alten Stylesheets (6088 Zeilen nach einmaligem Fremdzuwachs aus #29597, darf
+nur sinken) und die Einfang-Liste `foreignTl` der vier fremden `--tl`-Namen im Altbestand.
 
 Die Demo-App lädt die drei Dateien als `ClientResources` und setzt `data-tl-mode` und
 `data-tl-density` am `html`. Das ist mit PR !1641 auf `master` (Commits `2a8ac53c8`, `fa851a4ef`, Merge `59404c7f`); verifiziert wurden

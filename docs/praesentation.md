@@ -530,7 +530,7 @@ Englisch, kebab-case, Präfix `tl`, BEM für Klassen, geschlossene Kategorien f�
 | `tokens.css` | 189 Zeilen — nur Referenzen, hell als Standard, `[data-tl-mode="dark"]`, `[data-tl-density="compact"]` |
 | `base.css` | Typografieklassen, Fokusring, Reduced Motion, Zahlenklasse, Druck |
 | `tokens.dtcg.json` | W3C-Format für Figma und Kundenwerkzeuge |
-| 79 Tests | Schichten, Kontrast, Maße, Farbton, Erzeugtes, Klassen-Gate, Ratsche |
+| 81 Tests | Schichten, Kontrast, Maße, Farbton, Erzeugtes, Klassen-Gate, Ratsche, Namensraum |
 
 **Das Klassen-Gate** bricht bei jedem Literal, jedem `:focus` ohne `-visible`, jedem `outline: none`, jedem `z-index` ohne Ebene. **Die Ratsche** zählt das alte Stylesheet und lässt es nur schrumpfen.
 
@@ -547,3 +547,17 @@ Die Demo-App lädt die drei Dateien und setzt `data-tl-mode` und `data-tl-densit
 | 5 | Calendar, ColorInput, IconSelect, Medien, Dashboard |
 
 > Sprechnotiz: Eine Komponente ist fertig, wenn ihr alter Block leer ist. Nicht früher.
+
+## 31 · Der Namensraum
+
+**`--tl` gehört dem Paket. Außerhalb von `dist/` wird darin nichts definiert und nichts gelesen.**
+
+Der Anlass: Beim Nachziehen auf `master` wuchs das alte Stylesheet um 23 Zeilen — legitim, aus einem fremden Ticket. Dabei fielen vier Custom Properties mit unserem Präfix im Altbestand auf: `--tl-item-index`, `--tlGrid-gap`, `--tlPill-color`, `--tl-tt-padding`.
+
+| | |
+|---|---|
+| Regel | Jede Custom Property, die mit `--tl` beginnt, ist Design System |
+| Gate | Die Ratsche listet Fremdgut unter `foreignTl`; Neues bricht, Eingefangenes wird gestrichen |
+| Budget | Fremdzuwachs wird vermerkt und gehoben (6065 → 6088), nicht eingerechnet |
+
+> Sprechnotiz: Die Konvention ist im Team noch nicht bekannt. Die vier Namen werden in ihren Wellen eingefangen — als Token mit Kategorie oder unter anderem Namen.

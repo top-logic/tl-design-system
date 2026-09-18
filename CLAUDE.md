@@ -43,6 +43,9 @@ Alles Öffentliche ist Englisch, kebab-case, Präfix `tl`: Variablen `--tl-surfa
 geschlossen: `surface`, `text`, `icon`, `border`, `focus`, `shadow`, `space`, `radius`, `size`,
 `font`, `duration`, `easing`, `layer`, `status`. Zustände sind Attribute, nicht Klassen.
 
+Der Namensraum `--tl` (jede Custom Property, die so beginnt) gehört dem Paket. Was der Altbestand
+darin führt, steht in `test/ratchet.json` unter `foreignTl` und wird in seiner Welle eingefangen.
+
 ## Arbeitsweise
 
 **Der Bestand ist kein Maßstab.** Dass ein Wert 48-mal im CSS steht, belegt nicht, dass er gut ist

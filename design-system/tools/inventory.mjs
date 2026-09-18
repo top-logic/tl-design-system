@@ -10,6 +10,38 @@
 // Aufruf: node inventory.mjs [pfad-zum-css]
 
 import { declarations } from './lib/css.mjs';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { join } from 'node:path';
+
+/** Der Namensraum des Design Systems: jede Custom Property, die mit `--tl` beginnt. */
+const TL_NAME = /--tl[A-Za-z0-9-]*/g;
+
+/**
+ * Custom Properties im Namensraum `--tl`, die der Altbestand selbst definiert oder liest.
+ * Der Namensraum gehört dem Design System; alles, was hier auftaucht, ist Fremdgut und steht
+ * in test/ratchet.json unter `foreignTl`, bis es eingefangen ist.
+ */
+export function foreignTlNames(css) {
+  return uniq(css.replace(/\/\*[\s\S]*?\*\//g, '').match(TL_NAME) ?? []);
+}
+
+/** Dasselbe für die TSX-Quellen: jeder String-Literal mit `--tl` zählt. */
+export function foreignTlInSources(dir) {
+  const names = [];
+  for (const file of walk(dir, /\.(tsx?|css)$/)) names.push(...(readFileSync(file, 'utf8').match(TL_NAME) ?? []));
+  return uniq(names);
+}
+
+function* walk(dir, re) {
+  for (const name of readdirSync(dir)) {
+    const p = join(dir, name);
+    if (name === 'node_modules') continue;
+    if (statSync(p).isDirectory()) yield* walk(p, re);
+    else if (re.test(name)) yield p;
+  }
+}
+
+const uniq = (xs) => [...new Set(xs)].sort();
 
 /** Was die Ratsche zählt. Nur sinkend erlaubt. */
 export function measure(css) {
@@ -32,8 +64,6 @@ export function measure(css) {
 // Aufruf von der Kommandozeile: node inventory.mjs [pfad]
 // ---------------------------------------------------------------------------
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const { readFileSync } = await import('node:fs');
-  const { join } = await import('node:path');
   const { homedir } = await import('node:os');
 
   const pfad = process.argv[2] ?? join(
@@ -41,5 +71,6 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     'com.top_logic.layout.react/src/main/webapp/style/tlReactControls.css',
   );
   const css = readFileSync(pfad, 'utf8');
-  console.log(JSON.stringify(measure(css), null, 2));
+  const sources = join(pfad, '../../../../../react-src');
+  console.log(JSON.stringify({ ...measure(css), foreignTl: uniq([...foreignTlNames(css), ...foreignTlInSources(sources)]) }, null, 2));
 }

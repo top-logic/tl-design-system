@@ -233,7 +233,18 @@ Erhoben im Darkmode auf dem Branch der Welle 0; die Wellen prüfen je Komponente
 | 2 | Radio | Dialog „Neues Demo-Objekt“, Feld „Aktiv (Radio)“, unmarkiert | Für den Radio-Input ist kein `border`/`appearance` gesetzt (nur `accent-color` für den markierten Zustand) — der sichtbare Ring im unmarkierten Zustand ist reiner Browser-Standard, ohne Bezug zu einem Token; deutlich blasser als die benachbarte Checkbox mit eigenem Rand | `.tlBooleanChoice__option input` (tlReactControls.css:4343) | dark |
 | 2 | Select (Ressourcen-Referenz) | Tabelle „Demo-Objekte“, Spalte „Eigentümer“, Linktext `root` | Text `rgb(0,0,170)` (unveränderter Browser-Link-Standard) auf Zeilenhintergrund `rgb(26,28,30)`, 1,29:1 — für `.tlResourceCell` existiert keine Regel, `.tlDropdownSelect__readonlyValue` setzt keine `color`; der Link bleibt vollständig ungestylt und im Dunkelmodus fast unsichtbar | `.tlDropdownSelect__readonlyValue` (tlReactControls.css:4651) | dark |
 | 3 | Baum | Baum-Demo, Zeile bei Hover (`P2`) | Hover-Hintergrund `var(--layer-hover)` = `rgb(47,52,56)` auf Seitenhintergrund `rgb(26,28,30)`, 1,36:1 — Hover-Zustand kaum von der Ruhefläche zu unterscheiden | `.tlTreeView__node:hover` (tlReactControls.css:4093) | dark |
-| 4 | Tooltip | Toolbar-Button, Hover | Weiß (#FFF) auf Hellgrau (#F0F1F2), 1,2:1 — `text-inverse` wird im Dark-Theme nicht überschrieben (tl-react-theme.config.xml, Dark-Block bei Zeile 120) | `.tl-tooltip-popover` (tlReactControls.css:5546) | dark |
-| 4 | Menü | Benutzermenü „root“, Tastatur-Fokus auf erstem Eintrag („Abmelden“) | Fokus-Hintergrund `var(--layer-hover)` = `rgb(47,52,56)` auf Menühintergrund `rgb(38,42,46)`, 1,15:1, und kein sichtbarer Fokusring (`outline-style: none`); die einzige verlässliche Änderung ist die Texthelligkeit (`text-secondary` → `text-primary`) | `.tlMenu__item--focused` (tlReactControls.css:2593) | dark |
+| 3 | Tooltip (an Toolbar) | Toolbar-Button, Hover | Weiß (#FFF) auf Hellgrau (#F0F1F2), 1,2:1 — `text-inverse` wird im Dark-Theme nicht überschrieben (tl-react-theme.config.xml, Dark-Block bei Zeile 120) | `.tl-tooltip-popover` (tlReactControls.css:5546) | dark |
+| 3 | Menü | Benutzermenü „root“, Tastatur-Fokus auf erstem Eintrag („Abmelden“) | Fokus-Hintergrund `var(--layer-hover)` = `rgb(47,52,56)` auf Menühintergrund `rgb(38,42,46)`, 1,15:1, und kein sichtbarer Fokusring (`outline-style: none`); die einzige verlässliche Änderung ist die Texthelligkeit (`text-secondary` → `text-primary`) | `.tlMenu__item--focused` (tlReactControls.css:2593) | dark |
 
 Nicht geprüft: Lightmode (das Theme wurde absichtlich nicht umgeschaltet), Dichte-Umschaltung (`data-tl-density`), Tabelle mit Paginierung bei großen Datenmengen, Popover- und Snackbar-Komponenten, Formularlayout im Fehler-/Warnzustand, Toolbar-Icons ohne Tooltip-Text, sowie alle Ansichten in „Objektliste“, „Projekte“, „Diagramm-Demo“, „Gantt-Demo“, „Dokumentanzeige“, „Tiles“-Ansichten und „Responsive Master-Detail“.
+
+## Fremdgut im Namensraum `--tl`
+
+Der Namensraum gehört dem Paket. Diese Namen führt der Altbestand heute; die Welle der Komponente entscheidet, ob daraus ein Token mit Kategorie wird oder ein anders benannter Mechanismus. Gate: `test/ratchet.json`, `foreignTl`.
+
+| Name | Wo | Aufgabe | Welle |
+|---|---|---|---|
+| `--tlPill-color` | `TLPill.tsx`, `tlReactControls.css` | Serverseitige Farbe der Pill als Inline-Property | 1 |
+| `--tl-tt-padding` | `tlReactControls.css` (Tooltip) | Innenabstand des Tooltips, aus `spacing-02` | 3 |
+| `--tlGrid-gap` | `TLGrid.tsx`, `tlReactControls.css` (#29597) | Rasterabstand als Rechengröße für die Spaltenzahl | 4 |
+| `--tl-item-index` | `items.tsx`, `ReactLayoutControl.java`, `ObjectListElement.java` (#29597) | Position eines wiederholten Elements für gestaffelte Animation | 4 |
