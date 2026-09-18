@@ -4,7 +4,9 @@
 /* Button — docs/skalen.md „Button: vier Erscheinungen, eine Tönung, keine Größe“.
    Vier Erscheinungen (--primary, --secondary, --ghost, --link), eine Tönung (--danger),
    eine Größe nur für die Icon-Schaltfläche (--sm). Zustände sind Attribute; den Fokusring
-   liefert base.css. Kein Selektor von außen: der Container wählt die Erscheinung. */
+   liefert base.css. Kein Selektor von außen: der Container wählt die Erscheinung.
+   Umriss und Ghost füllen sich beim Zeigen: roter Text trägt auf keiner Hover-Fläche 4,5, die
+   getönte Fläche status-error-subtle bleibt dem Hinweisstreifen vorbehalten. */
 
 .tl-button {
   display: inline-flex;
@@ -105,10 +107,16 @@
   color: var(--tl-status-error-text);
 }
 .tl-button--danger.tl-button--secondary:hover,
-.tl-button--danger.tl-button--ghost:hover,
+.tl-button--danger.tl-button--ghost:hover {
+  background: var(--tl-status-error-surface);
+  border-color: var(--tl-status-error-surface);
+  color: var(--tl-text-on-status-error);
+}
 .tl-button--danger.tl-button--secondary:active,
 .tl-button--danger.tl-button--ghost:active {
-  background: var(--tl-status-error-subtle);
+  background: var(--tl-status-error-surface-active);
+  border-color: var(--tl-status-error-surface-active);
+  color: var(--tl-text-on-status-error-active);
 }
 
 /* --- Größe: nur die Icon-Schaltfläche ------------------------------------ */

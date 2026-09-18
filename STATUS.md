@@ -22,10 +22,12 @@ die Konvention noch nicht — mit ihm klären, sobald die erste Welle auf `maste
 Der Umsetzungsplan liegt unter `docs/superpowers/plans/2026-09-18-welle-1-button.md` (acht Tasks: Pipeline für
 `components.css`, Danger-Rampe und Icon-Klassen, `button.css` mit Gate-Regeln, Specimen, Vertrag, Java-Seite, TSX mit
 `ButtonDefaults`, alter Block leer). Task 3 (`button.css` und die Gate-Regeln für Modifier) ist umgesetzt: das Gate
-verbietet Zustandsnamen als Modifier und Modifier außerhalb der entschiedenen Liste am Block `tl-button`; der
-Kontrasttest `test/components.test.mjs` deckt zwei offene Skalen-Befunde auf (siehe skalen.md, Abschnitt Button) —
-mit Hendrik klären, bevor `status-error-subtle`, `status-error-text` oder `border-control` (dunkel) angefasst
-werden. Nächster Schritt: Task 4 (Specimen) des Plans. Prüfliste je Komponente:
+verbietet Zustandsnamen als Modifier und Modifier außerhalb der entschiedenen Liste am Block `tl-button`. Fix-Runde 1
+hat zwei Kontrastbefunde entschieden (siehe skalen.md, Abschnitt Button): Danger füllt sich beim Zeigen
+(`status-error-surface`/`-active` statt `status-error-subtle`), `border-control` dunkel auf `gray-45`. Dabei wurde
+ein dritter, bisher maskierter Befund sichtbar — `status-error-text` dunkel auf `surface-layer` 4,19 statt 4,5 —
+offen, mit Hendrik klären, bevor `status-error-text` (dunkel) angefasst wird. Nächster Schritt: dritten Befund
+entscheiden, dann Task 4 (Specimen) des Plans. Prüfliste je Komponente:
 `docs/migration/altlast.md`, Abschnitt „Sichtbare Befunde aus der laufenden Anwendung“.
 
 ## Wo anknüpfen

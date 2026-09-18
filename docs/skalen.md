@@ -214,7 +214,7 @@ weil der schwächere gewann, erfüllte kein Eingabefeld in TopLogic die Norm, he
 | Stufe | hell | dunkel | hell / dunkel | Regel |
 |---|---|---|---|---|
 | `border-separator` | `#C1C4C9` | `#34383C` | 1,68 / 1,51 | **Trennt**, begrenzt nicht. Tabellenzeilen, Abgrenzungen. Schuldet keinen Kontrast. |
-| `border-control` | `#8C8F94` | `#64676B` | 3,11 / 3,13 | **Begrenzt ein Bedienelement.** Eingabefelder, Auswahlfelder, Schaltflächen mit Umriss. |
+| `border-control` | `#8C8F94` | `#6F7277` | 3,11 / 3,68 | **Begrenzt ein Bedienelement.** Eingabefelder, Auswahlfelder, Schaltflächen mit Umriss. |
 | `border-emphasis` | `#6F7277` | `#7F8286` | 4,63 / 4,61 | **Hebt hervor.** Ausgewählte Zeile, betonte Abgrenzung. |
 | `border-interactive` | `#0B5ED7` | `#5394FF` | 5,59 / 5,97 | **Trägt die Marke.** Fokus, aktiver Zustand. |
 
@@ -231,6 +231,9 @@ nicht farbig, binden die Skala aber an die Marke statt daneben zu stehen.
 
 **Das Gate prüft künftig `border-control` gegen den Grund**, nicht `border-separator` — ein
 Separator, der 3,0 erfüllen müsste, wäre keiner mehr.
+
+Dunkel angehoben, als der Button auf `surface-layer` gemessen wurde: dort erreichte `gray-49` nur
+2,88.
 
 ### Neutrale: nach Anforderung gestuft, nicht nach gleichem Abstand
 
@@ -261,7 +264,7 @@ ist der hellste Wert, der ihre Anforderung noch erfüllt.
 | `text-helper` | `#676A6F` | `#888B90` | 5,2 | Grund |
 | `text-placeholder` | `#6B6E73` | `#8E9196` | 4,6 | **`surface-field`**, nicht Grund |
 | `border-emphasis` | `#6F7277` | `#7F8286` | 4,6 | Grund |
-| `border-control` | `#8C8F94` | `#64676B` | 3,1 | Grund |
+| `border-control` | `#8C8F94` | `#6F7277` | 3,68 | Grund |
 | `border-separator` | `#C1C4C9` | `#34383C` | — | trennt nur |
 
 `text-placeholder` und `border-emphasis` landen im hellen Modus dicht beieinander. Das sind
@@ -1034,18 +1037,23 @@ Kontrasttest prüft `primary`, `secondary` und `ghost` je mit und ohne `danger` 
 
 ---
 
-**Befund aus `test/components.test.mjs` (Task 3, offen — nicht am Test oder Token gedreht):**
-Zwei Kombinationen unterschreiten die Anforderung mit den heutigen Tokens:
+**Befunde aus `test/components.test.mjs` (Task 3) — entschieden (Fix-Runde 1):**
 
-- Hell, `danger-secondary` im Hover (Fläche `status-error-subtle`, Text `status-error-text`) auf
-  `surface-base`: 4,12 statt 4,5. Der Hover-Subtle-Ton der Fehlerfläche trägt `status-error-text`
-  nicht mehr, sobald er heller ist als der reine Grund.
-- Dunkel, `secondary` (Linie `border-control`) auf `surface-layer`: 2,88 statt 3,0. `border-control`
-  ist gegen `surface-base` entschieden (siehe oben, 3,0 erfüllt), trägt aber die zusätzliche Fläche
-  `surface-layer` im Dunkelmodus nicht mit.
+- Entschieden: Umriss und Ghost füllen sich mit `danger` beim Zeigen (`status-error-surface` im
+  Hover, `status-error-surface-active` im Aktiv-Zustand statt `status-error-subtle`) — roter Text
+  trug auf keiner Hover-Fläche 4,5 (`status-error-subtle` 4,12, `surface-interactive-hover` hell
+  4,22 / dunkel 3,90). `status-error-subtle` bleibt dem Hinweisstreifen vorbehalten und wird im
+  Button nicht mehr gelesen.
+- Entschieden: `border-control` dunkel von `gray-49` auf `gray-45` (`#6F7277`) angehoben — auf
+  `surface-layer` erreichte `gray-49` nur 2,88 statt 3,0; `gray-45` erreicht 3,39 (Grund 3,68,
+  `surface-field` 3,02).
 
-Beide sind Skalen-Befunde, nicht Bugs in `button.css` — mit Hendrik klären, bevor `status-error-subtle`,
-`status-error-text` oder `border-control` (dunkel) angefasst werden.
+**Neuer Befund, offen — durch die Fix-Runde erst sichtbar geworden** (der Kontrasttest brach zuvor
+schon bei `secondary`/`surface-layer` ab, bevor er `danger-secondary` erreichte): Dunkel,
+`danger-secondary` im Ruhezustand (Text `status-error-text`, kein `fill`) auf `surface-layer`:
+**4,19** statt 4,5 (auf `surface-base` 4,55, knapp bestanden). `status-error-text` ist nur gegen
+`surface-base` entschieden, nicht gegen `surface-layer` — mit Hendrik klären, bevor
+`status-error-text` (dunkel) angefasst wird; nicht am Test gedreht.
 
 ---
 

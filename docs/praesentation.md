@@ -580,4 +580,4 @@ Der Befund dahinter: drei Erscheinungen, zwei kaum genutzte Größen, ein gedrü
 
 > Sprechnotiz: Warum Tönung statt fünfter Erscheinung — Löschen ist mal Umriss, mal gefüllt. Eine Erscheinung müsste beides sein: die nächste Dublette.
 
-> Sprechnotiz: `button.css` steht, das Gate verbietet Zustands-Modifier und fremde Modifier am Block. Zwei Kontrastbefunde offen (danger-secondary-hover hell, secondary-Linie dunkel auf surface-layer) — Skalen-Befund, mit Hendrik klären, bevor ein Token angefasst wird.
+> Sprechnotiz: `button.css` steht, das Gate verbietet Zustands-Modifier und fremde Modifier am Block. Entschieden: Danger füllt sich mit `status-error-surface`/`-active` beim Zeigen (statt `status-error-subtle`), `border-control` dunkel auf `gray-45`. Offen, neu sichtbar geworden: `status-error-text` dunkel auf `surface-layer` 4,19 statt 4,5 — mit Hendrik klären.

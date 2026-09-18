@@ -28,9 +28,11 @@ const BUTTON = {
   'danger-primary-hover':  { fill: 'status-error-surface-hover', text: 'text-on-status-error-hover' },
   'danger-primary-active': { fill: 'status-error-surface-active', text: 'text-on-status-error-active' },
   'danger-secondary': { text: 'status-error-text', line: 'status-error-border' },
-  'danger-secondary-hover': { fill: 'status-error-subtle', text: 'status-error-text', line: 'status-error-border' },
+  'danger-secondary-hover': { fill: 'status-error-surface', text: 'text-on-status-error', line: 'status-error-border' },
+  'danger-secondary-active': { fill: 'status-error-surface-active', text: 'text-on-status-error-active' },
   'danger-ghost':     { text: 'status-error-text' },
-  'danger-ghost-hover': { fill: 'status-error-subtle', text: 'status-error-text' },
+  'danger-ghost-hover': { fill: 'status-error-surface', text: 'text-on-status-error' },
+  'danger-ghost-active': { fill: 'status-error-surface-active', text: 'text-on-status-error-active' },
 };
 
 for (const mode of ['light', 'dark']) {

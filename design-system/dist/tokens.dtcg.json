@@ -1072,7 +1072,7 @@
         },
         "border-control": {
           "$type": "color",
-          "$value": "{primitive.color.gray-49}"
+          "$value": "{primitive.color.gray-45}"
         },
         "border-emphasis": {
           "$type": "color",
