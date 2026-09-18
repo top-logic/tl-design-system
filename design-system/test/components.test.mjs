@@ -68,3 +68,15 @@ test('disabled liest die drei Disabled-Rollen und sonst nichts', () => {
   const vars = [...block[1].matchAll(/var\((--tl-[a-z0-9-]+)\)/g)].map((m) => m[1]).sort();
   assert.deepEqual(vars, ['--tl-border-disabled', '--tl-surface-disabled', '--tl-text-disabled'].sort());
 });
+
+test('das Button-Specimen zeigt jede Erscheinung, die Tönung, sm, und jeden Zustand', () => {
+  const html = readFileSync(new URL('../src/components/button/button.spec.html', import.meta.url), 'utf8');
+  for (const m of ['primary', 'secondary', 'ghost', 'link', 'danger', 'sm'])
+    assert.ok(html.includes(`tl-button--${m}`), `Modifier ${m} fehlt`);
+  for (const attr of ['disabled', 'aria-pressed="true"', 'aria-busy="true"', 'aria-label='])
+    assert.ok(html.includes(attr), `Zustand ${attr} fehlt`);
+  assert.ok(html.includes('tl-button__icon') && html.includes('tl-button__label'), 'Elemente fehlen');
+  assert.ok(html.includes('id="mode"') && html.includes('id="density"'), 'Schalter für Modus und Dichte fehlen');
+  assert.ok(html.includes('/dist/components.css'), 'lädt components.css nicht');
+  assert.ok(!/style="/.test(html.replace(/<style>[\s\S]*?<\/style>/, '')), 'Inline-Style im Specimen');
+});

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="de" data-tl-mode="light" data-tl-density="normal">
+<head>
+<meta charset="utf-8">
+<title>TopLogic Design System — Button</title>
+<link rel="stylesheet" href="/fonts/style/interFonts.css">
+<link rel="stylesheet" href="/dist/primitives.css">
+<link rel="stylesheet" href="/dist/tokens.css">
+<link rel="stylesheet" href="/dist/base.css">
+<link rel="stylesheet" href="/dist/components.css">
+<style>
+  .specimen { display: grid; gap: var(--tl-space-lg); padding: var(--tl-space-xl); max-width: 64rem; margin: 0 auto; }
+  .specimen__bar { display: flex; gap: var(--tl-space-sm); align-items: center; }
+  .specimen__panel { background: var(--tl-surface-layer); border: var(--tl-border-width-sm) solid var(--tl-border-separator);
+    border-radius: var(--tl-radius-md); padding: var(--tl-space-md); display: grid; gap: var(--tl-space-sm); }
+  .specimen__base { padding: var(--tl-space-md); display: grid; gap: var(--tl-space-sm); }
+  .specimen__row { display: flex; gap: var(--tl-space-sm); flex-wrap: wrap; align-items: center; }
+  .specimen__row > .tl-type-label { min-width: 9rem; color: var(--tl-text-secondary); }
+</style>
+</head>
+<body>
+<main class="specimen">
+  <div class="specimen__bar">
+    <a class="tl-type-label" href="/">← Grundklassen</a>
+    <span class="tl-type-heading-lg">Button</span>
+    <label class="tl-type-label"><input type="checkbox" id="mode"> dunkel</label>
+    <label class="tl-type-label"><input type="checkbox" id="density"> kompakt</label>
+  </div>
+
+  <!-- Jede Zeile: eine Erscheinung in Ruhe, mit Icon, icon-only, gedrückt, beschäftigt, deaktiviert. -->
+  <template id="rows">
+    <div class="specimen__row">
+      <span class="tl-type-label">%NAME%</span>
+      <button type="button" class="tl-button %MOD% tl-type-label"><span class="tl-button__label">Speichern</span></button>
+      <button type="button" class="tl-button %MOD% tl-type-label"><i class="ri-save-line tl-icon-sm tl-button__icon" aria-hidden="true"></i><span class="tl-button__label">Speichern</span></button>
+      <button type="button" class="tl-button %MOD% tl-type-label" aria-label="Speichern"><i class="ri-save-line tl-icon-md tl-button__icon" aria-hidden="true"></i></button>
+      <button type="button" class="tl-button %MOD% tl-type-label" aria-pressed="true"><span class="tl-button__label">Gedrückt</span></button>
+      <button type="button" class="tl-button %MOD% tl-type-label" aria-busy="true"><span class="tl-button__label">Beschäftigt</span></button>
+      <button type="button" class="tl-button %MOD% tl-type-label" disabled><span class="tl-button__label">Deaktiviert</span></button>
+    </div>
+  </template>
+
+  <section class="specimen__panel" id="on-layer"><p class="tl-type-heading-sm">Auf surface-layer</p></section>
+  <section class="specimen__base" id="on-base"><p class="tl-type-heading-sm">Auf surface-base</p></section>
+
+  <section class="specimen__panel">
+    <p class="tl-type-heading-sm">Icon-Schaltfläche klein (Tabellenzeile)</p>
+    <div class="specimen__row">
+      <span class="tl-type-label">ghost sm</span>
+      <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-type-label" aria-label="Bearbeiten"><i class="ri-pencil-line tl-icon-sm tl-button__icon" aria-hidden="true"></i></button>
+      <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--danger tl-type-label" aria-label="Löschen"><i class="ri-delete-bin-line tl-icon-sm tl-button__icon" aria-hidden="true"></i></button>
+      <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-type-label" aria-label="Bearbeiten" disabled><i class="ri-pencil-line tl-icon-sm tl-button__icon" aria-hidden="true"></i></button>
+    </div>
+  </section>
+</main>
+<script>
+  const VARIANTEN = [
+    ['primary', 'tl-button--primary'], ['secondary', 'tl-button--secondary'], ['ghost', 'tl-button--ghost'], ['link', 'tl-button--link'],
+    ['danger primary', 'tl-button--primary tl-button--danger'], ['danger secondary', 'tl-button--secondary tl-button--danger'], ['danger ghost', 'tl-button--ghost tl-button--danger'],
+  ];
+  const tpl = document.getElementById('rows').innerHTML;
+  for (const id of ['on-layer', 'on-base']) {
+    const host = document.getElementById(id);
+    for (const [name, mod] of VARIANTEN) host.insertAdjacentHTML('beforeend', tpl.replaceAll('%NAME%', name).replaceAll('%MOD%', mod));
+  }
+  const html = document.documentElement;
+  document.getElementById('mode').addEventListener('change', (e) => html.setAttribute('data-tl-mode', e.target.checked ? 'dark' : 'light'));
+  document.getElementById('density').addEventListener('change', (e) => html.setAttribute('data-tl-density', e.target.checked ? 'compact' : 'normal'));
+</script>
+</body>
+</html>
