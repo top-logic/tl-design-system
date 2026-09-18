@@ -1,7 +1,7 @@
 {
   "_": "Budget des alten tlReactControls.css. Darf nur sinken. Nach jeder Welle nachziehen.",
   "_lines": "Einmalig von 6065 auf 6088 gehoben: Fremdzuwachs durch Ticket #29597 (Repeater-Grid, .tlItem), nicht durch eine Welle.",
-  "lines": 5768,
+  "lines": 5766,
   "literals": {
     "color": 73,
     "fontSize": 54,
@@ -12,6 +12,10 @@
   "_foreignTl": "Custom Properties im Namensraum --tl, die der Altbestand definiert oder liest. Einfang-Liste: jede Welle streicht, was sie ins Paket holt; Neues bricht den Test.",
   "foreignTl": [
     "--tl-item-index",
+    "--tl-surface-interactive-active",
+    "--tl-surface-interactive-hover",
+    "--tl-surface-layer",
+    "--tl-text-primary",
     "--tl-tt-padding",
     "--tlGrid-gap",
     "--tlPill-color"

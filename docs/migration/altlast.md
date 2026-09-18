@@ -228,7 +228,7 @@ Erhoben im Darkmode auf dem Branch der Welle 0; die Wellen prüfen je Komponente
 
 | Welle | Komponente | Kontext / Zustand | Befund | Klasse (alt) | Modus |
 |---|---|---|---|---|---|
-| 1 | Button | Werkzeugleiste, deaktiviert (`Bearbeiten`/`Löschen` ohne Auswahl) | Text `rgb(111,115,120)` auf Panel-Hintergrund `rgb(38,42,46)`, 3,03:1 — deaktivierter Zustand ist kaum lesbar — **erledigt** — `text-disabled` auf `surface-disabled`, geprüft im Kontrasttest der Komponente | `.tlReactButton` (tlReactControls.css:82) | dark |
+| 1 | Button | Werkzeugleiste, deaktiviert (`Bearbeiten`/`Löschen` ohne Auswahl) | Text `rgb(111,115,120)` auf Panel-Hintergrund `rgb(38,42,46)`, 3,03:1 — deaktivierter Zustand ist kaum lesbar — **bewusst ausgenommen** — deaktivierte Bedienelemente unterliegen WCAG 1.4.3 nicht (skalen.md „Disabled: vier Rollen ohne Gate“); `text-disabled` auf `surface-disabled` misst 2,06 hell / 2,35 dunkel | `.tlReactButton` (tlReactControls.css:82) | dark |
 | 2 | Eingabefelder / Select | Dialog „Neues Demo-Objekt“, Feldrand im Ruhezustand (`Aktiv (Auswahl)` u. a.) | Rand `var(--border-subtle)` = `rgb(58,64,69)` auf Feldfläche `var(--field)` = `rgb(38,42,46)`, 1,38:1 — Feldgrenze im Dunkelmodus praktisch unsichtbar; betrifft gemeinsame Regel für `tlReactTextInput`, `tlReactNumberInput`, `tlReactDatePicker`, `tlReactSelect` | `.tlReactSelect` (tlReactControls.css:4197) | dark |
 | 2 | Radio | Dialog „Neues Demo-Objekt“, Feld „Aktiv (Radio)“, unmarkiert | Für den Radio-Input ist kein `border`/`appearance` gesetzt (nur `accent-color` für den markierten Zustand) — der sichtbare Ring im unmarkierten Zustand ist reiner Browser-Standard, ohne Bezug zu einem Token; deutlich blasser als die benachbarte Checkbox mit eigenem Rand | `.tlBooleanChoice__option input` (tlReactControls.css:4343) | dark |
 | 2 | Select (Ressourcen-Referenz) | Tabelle „Demo-Objekte“, Spalte „Eigentümer“, Linktext `root` | Text `rgb(0,0,170)` (unveränderter Browser-Link-Standard) auf Zeilenhintergrund `rgb(26,28,30)`, 1,29:1 — für `.tlResourceCell` existiert keine Regel, `.tlDropdownSelect__readonlyValue` setzt keine `color`; der Link bleibt vollständig ungestylt und im Dunkelmodus fast unsichtbar | `.tlDropdownSelect__readonlyValue` (tlReactControls.css:4651) | dark |
@@ -248,9 +248,16 @@ Der Namensraum gehört dem Paket. Diese Namen führt der Altbestand heute; die W
 | `--tl-tt-padding` | `tlReactControls.css` (Tooltip) | Innenabstand des Tooltips, aus `spacing-02` | 3 |
 | `--tlGrid-gap` | `TLGrid.tsx`, `tlReactControls.css` (#29597) | Rasterabstand als Rechengröße für die Spaltenzahl | 4 |
 | `--tl-item-index` | `items.tsx`, `ReactLayoutControl.java`, `ObjectListElement.java` (#29597) | Position eines wiederholten Elements für gestaffelte Animation | 4 |
+| `--tl-surface-layer`, `--tl-text-primary`, `--tl-surface-interactive-hover`, `--tl-surface-interactive-active` | `tlReactControls.css` (AppBar-Block, Übergang F1) | Der alte AppBar-Block liest die Flächen und Text-Rolle des Pakets, bis Welle 4 die Shell neu schreibt — kein Fremdgut im eigentlichen Sinn, aber ein Lesezugriff von außerhalb des Pakets | 4 |
 
 `TLUploadButton` trägt am Wrapper die reservierte Klasse `tl-upload`; das Upload-Feld der Welle 2 definiert sie.
+
+### Fremdgut-Nähe
+
+Andere Stylesheets mit `tl…`-Klassen des Altbestands (z. B. `TLWysiwygEditor.css`) stehen außerhalb der Ratsche; Welle 5 prüft sie.
 
 ## Welle 1 · Button — fertig
 
 Alter Block (`TLButton`, `TLButton enhancements`) und die fünf Kontextblöcke (AppBar, Fenster-Toolbar, Tabellenzelle, Dropdown, AppBar-Kollaps) sind gelöscht. Der Container wählt die Erscheinung über `ButtonDefaults`; der Dropdown-Eintrag streckt seinen Button per `display: grid` im Toolbar-Block, bis die Toolbar in Welle 3 folgt.
+
+Zwei Übergangsregeln im alten Stylesheet lesen den neuen Button von außen (Dropdown linksbündig, AppBar-Flächen); Welle 3 (Menu) und Welle 4 (Shell) lösen sie ab.

@@ -36,6 +36,10 @@ const BUTTON = {
   'danger-ghost':     { text: 'status-error-text' },
   'danger-ghost-hover': { fill: 'status-error-surface', text: 'text-on-status-error' },
   'danger-ghost-active': { fill: 'status-error-surface-active', text: 'text-on-status-error-active' },
+  // Disabled ist vom Kontrast-Gate ausgenommen (WCAG 1.4.3 nimmt inaktive Bedienelemente aus;
+  // skalen.md „Disabled: vier Rollen ohne Gate“) — nur Token-Existenz wird geprüft, keine Ratio.
+  disabled:           { fill: 'surface-disabled', text: 'text-disabled', line: 'border-disabled', exempt: true },
+  'ghost-disabled':   { text: 'text-disabled', exempt: true },
 };
 
 for (const mode of ['light', 'dark']) {
@@ -43,6 +47,13 @@ for (const mode of ['light', 'dark']) {
   test(`Button ${mode}: Text 4,5 und Linie 3,0 in jeder Erscheinung × Tönung, auf base und layer`, () => {
     for (const [name, k] of Object.entries(BUTTON)) {
       for (const g of GRUND) {
+        // Exempt (disabled, ghost-disabled): nur prüfen, dass die Token existieren, keine Ratio-Assertion.
+        if (k.exempt) {
+          if (k.fill) assert.ok(C[k.fill], `${name}: Token ${k.fill} fehlt`);
+          assert.ok(C[k.text], `${name}: Token ${k.text} fehlt`);
+          if (k.line) assert.ok(C[k.line], `${name}: Token ${k.line} fehlt`);
+          continue;
+        }
         const flaeche = k.fill ? C[k.fill] : C[g];
         assert.ok(C[k.text], `${name}: Token ${k.text} fehlt`);
         const t = ratio(C[k.text], flaeche);
@@ -79,6 +90,23 @@ test('das Button-Specimen zeigt jede Erscheinung, die Tönung, sm, und jeden Zus
   assert.ok(html.includes('id="mode"') && html.includes('id="density"'), 'Schalter für Modus und Dichte fehlen');
   assert.ok(html.includes('/dist/components.css'), 'lädt components.css nicht');
   assert.ok(!/style="/.test(html.replace(/<style>[\s\S]*?<\/style>/, '')), 'Inline-Style im Specimen');
+});
+
+test('jedes Farb-Token in button.css kommt in der BUTTON-Map vor', () => {
+  const css = readFileSync(new URL('../src/components/button/button.css', import.meta.url), 'utf8');
+  const farbTokens = new Set(
+    [...css.matchAll(/var\((--tl-(?:surface|text|icon|border|status)-[a-z0-9-]+)\)/g)]
+      .map((m) => m[1])
+      .filter((t) => !/^--tl-border-width-/.test(t)) // Maß-Rolle, kein Farbwert
+  );
+  const belegt = new Set();
+  for (const k of Object.values(BUTTON)) {
+    for (const rolle of [k.fill, k.text, k.line]) if (rolle) belegt.add(rolle);
+  }
+  for (const t of farbTokens) {
+    const rolle = t.replace(/^--tl-/, '');
+    assert.ok(belegt.has(rolle), `${t} kommt in keinem BUTTON-Map-Eintrag vor`);
+  }
 });
 
 test('der Vertrag nennt jedes Token, das button.css liest, und jedes Zustandsattribut', () => {

@@ -1032,7 +1032,7 @@ gibt es nicht.
 | Tönung | `danger` färbt die gewählte Erscheinung um und liest die Status-Rollen: mit `primary` die Fläche `status-error-surface` samt abgeleiteter Beschriftung, mit `secondary` Text `status-error-text` und Linie `status-error-border`, mit `ghost` nur den Text. Mit `link` nicht erlaubt — ein Textlink löscht nichts. |
 | Größe | Kein Modifier. Die Höhe kommt aus der Dichte (Control-Höhe). Einzig die Icon-Schaltfläche kennt `sm` (24 px) für Tabellenzeilen — siehe Icons. |
 | Darstellung | Keine Klassen. Icon und Beschriftung sind Elemente `__icon` und `__label`; icon-only heißt: kein `__label`, und `aria-label` ist Pflicht. |
-| Zustände | `:disabled`, `[aria-pressed="true"]` (ersetzt `--active`; ein ToggleButton ist ein Button mit `aria-pressed`, kein eigenes CSS), `data-tl-state="loading"`, `:focus-visible`, `:hover`, `:active`. |
+| Zustände | `:disabled`, `[aria-pressed="true"]` (ersetzt `--active`; ein ToggleButton ist ein Button mit `aria-pressed`, kein eigenes CSS), `aria-busy="true"`, `:focus-visible`, `:hover`, `:active`. |
 | Kontext | Kein Selektor von außen. Der Container wählt die Erscheinung — die Toolbar setzt `ghost`, der Dialogfuß `primary` und `secondary`. |
 
 Warum die Tönung keine fünfte Erscheinung ist: Ein Löschen steht im Bestand mal in der Toolbar
@@ -1044,6 +1044,8 @@ Semantik: eine Bedeutung, vier Rollen.
 entfällt, statt ein Kontextattribut zu bekommen: Die Kopfleiste wird `surface-layer` wie jede
 Fläche. Das gilt für die Shell in Welle 4 und ist hier festgehalten, weil der Button sonst eine
 zweite Farbwelt bräuchte.
+
+Umgesetzt mit Welle 1 als Übergangsregel im alten AppBar-Block; Welle 4 schreibt die Shell neu.
 
 **Als Test:** Das Klassen-Gate erlaubt am Block `tl-button` nur die vier Erscheinungs-Modifier
 und `danger`; ein Zustandsname als Modifier (`--active`, `--disabled`, `--loading`) bricht. Der
