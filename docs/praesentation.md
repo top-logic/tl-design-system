@@ -575,6 +575,7 @@ Der Anlass: Beim Nachziehen auf `master` wuchs das alte Stylesheet um 23 Zeilen 
 | Größe | aus der Dichte; nur die Icon-Schaltfläche kennt `sm` für Tabellenzeilen |
 | Zustände | `:disabled`, `aria-pressed`, `data-tl-state="loading"`, `:focus-visible` — Klassen dafür brechen das Gate |
 | Kontext | der Container wählt die Erscheinung; die AppBar ist keine Markenfläche mehr |
+| Umgesetzt | 320 Zeilen weniger im alten Stylesheet; Kontrasttest 22 Erscheinungen × 2 Modi grün |
 
 Der Befund dahinter: drei Erscheinungen, zwei kaum genutzte Größen, ein gedrückter Zustand als Klasse, die Primary dupliziert, fünf Kontextblöcke mit Literalen, nichts für Destruktives.
 

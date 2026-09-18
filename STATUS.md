@@ -31,17 +31,22 @@ alle vier Rollen angehoben (Fehler `red-32`, Warnung `amber-34`, Erfolg `green-3
 ungelesenen alten Stufen aus `primitives.json` entfernt). Fix-Runde 3 hat denselben Befund für die Linien
 entschieden — alle vier `status-*-border` verfehlten dunkel auf `surface-layer` die 3,0, Regel ebenfalls als
 Test festgeschrieben, alle vier Rollen angehoben (Fehler `red-42`, Warnung `amber-44`, Erfolg `green-46`, Info
-`teal-45`; die vier ungelesenen alten Stufen entfernt). **Alle vier Kontrastbefunde aus Task 3 sind entschieden,
-die Suite steht bei 90/90.** Nächster Schritt: Task 4 (Specimen) des Plans. Prüfliste je Komponente:
-`docs/migration/altlast.md`, Abschnitt „Sichtbare Befunde aus der laufenden Anwendung“.
+`teal-45`; die vier ungelesenen alten Stufen entfernt). **Alle vier Kontrastbefunde aus Task 3 sind entschieden.**
+**Welle 1: Button fertig** — Branch `CWS/CWS_29617_design_system_welle_1` im Worktree `~/git/tl8-wt-29584`
+(Task 7: TSX auf `tl-button`-Klassen und `ButtonDefaults`; Task 8: alter Block `TLButton`/`TLButton enhancements`
+und die fünf Kontextblöcke aus `tlReactControls.css` gelöscht, Ratsche nachgezogen, Commits in beiden Repos —
+**Push und PR stehen noch aus**). Nächste Komponente: **ToggleButton ist mit dem Button erledigt** (nur
+`aria-pressed` fehlt noch als Attribut), danach folgt **Pill**. Die Suite steht bei **92/92**. Prüfliste je
+Komponente: `docs/migration/altlast.md`, Abschnitt „Sichtbare Befunde aus der laufenden Anwendung“.
 
 ## Wo anknüpfen
 
 **Welle 0 ist umgesetzt.** Das Paket `design-system/` liefert `dist/primitives.css`,
 `dist/tokens.css`, `dist/base.css` und `dist/tokens.dtcg.json`. `cd design-system && node --test`
-ist das Gate — **85 Tests, alle grün**. `node tools/lint-css.mjs` ist das Klassen-Gate,
-`test/ratchet.json` das Budget des alten Stylesheets (6088 Zeilen nach einmaligem Fremdzuwachs aus #29597, darf
-nur sinken) und die Einfang-Liste `foreignTl` der vier fremden `--tl`-Namen im Altbestand.
+ist das Gate — **92 Tests, alle grün**. `node tools/lint-css.mjs` ist das Klassen-Gate,
+`test/ratchet.json` das Budget des alten Stylesheets (5768 Zeilen nach Welle 1, Budget davor 6088 nach
+einmaligem Fremdzuwachs aus #29597, darf nur sinken) und die Einfang-Liste `foreignTl` der vier fremden
+`--tl`-Namen im Altbestand.
 
 Die Demo-App lädt die drei Dateien als `ClientResources` und setzt `data-tl-mode` und
 `data-tl-density` am `html`. Das ist mit PR !1641 auf `master` (Commits `2a8ac53c8`, `fa851a4ef`, Merge `59404c7f`); verifiziert wurden
