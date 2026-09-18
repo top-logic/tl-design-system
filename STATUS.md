@@ -28,7 +28,7 @@ Der Umsetzungsplan liegt unter `docs/superpowers/plans/2026-09-18-welle-1-button
 
 **Welle 0 ist umgesetzt.** Das Paket `design-system/` liefert `dist/primitives.css`,
 `dist/tokens.css`, `dist/base.css` und `dist/tokens.dtcg.json`. `cd design-system && node --test`
-ist das Gate — **81 Tests, alle grün**. `node tools/lint-css.mjs` ist das Klassen-Gate,
+ist das Gate — **85 Tests, alle grün**. `node tools/lint-css.mjs` ist das Klassen-Gate,
 `test/ratchet.json` das Budget des alten Stylesheets (6088 Zeilen nach einmaligem Fremdzuwachs aus #29597, darf
 nur sinken) und die Einfang-Liste `foreignTl` der vier fremden `--tl`-Namen im Altbestand.
 

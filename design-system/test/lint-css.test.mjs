@@ -119,6 +119,11 @@ test('einheitenlose Literale bei opacity/flex bleiben erlaubt (Punkt 10, nicht v
   assert.deepEqual(lint('.tl-x { opacity: 0.5; flex: 2; }', { known, file: 'x.css' }), []);
 });
 
+test('font-size ist in .tl-icon-* in base.css erlaubt, außerhalb nicht', () => {
+  assert.deepEqual(lint('.tl-icon-sm { font-size: var(--tl-size-icon-sm); }', { known: new Set(['--tl-size-icon-sm']), file: 'base.css' }), []);
+  assert.equal(lint('.tl-button__icon { font-size: var(--tl-size-icon-sm); }', { known: new Set(['--tl-size-icon-sm']), file: 'button/button.css' }).length, 1);
+});
+
 test('die erzeugten Dateien des Pakets bestehen das Gate', () => {
   for (const f of readdirSync(dist).filter((f) => f.endsWith('.css') && f !== 'primitives.css')) {
     const v = lint(readFileSync(new URL(f, dist), 'utf8'), { known, file: f });

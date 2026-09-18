@@ -89,6 +89,16 @@ test('außerhalb von primitives.css steht keine Farbe und keine Dauer als Litera
   assert.equal((text.replace(/0\.01ms/g, '').match(/\b\d+m?s\b/g) ?? []).length, 0, 'Dauer-Literal');
 });
 
+test('base.css führt vier Icon-Klassen mit Größe aus size-icon-*, line-height 1, quadratisch', () => {
+  const base = generate(P, T)['base.css'];
+  for (const s of ['glyph', 'sm', 'md', 'lg']) {
+    const re = new RegExp(`\\.tl-icon-${s}\\s*\\{[^}]*font-size:\\s*var\\(--tl-size-icon-${s}\\)[^}]*\\}`);
+    assert.ok(re.test(base), `.tl-icon-${s} liest nicht --tl-size-icon-${s}`);
+  }
+  assert.ok(/\.tl-icon-glyph, \.tl-icon-sm, \.tl-icon-md, \.tl-icon-lg\s*\{[^}]*line-height:\s*1;[^}]*width:\s*1em;[^}]*height:\s*1em;[^}]*display:\s*inline-block;/.test(base),
+    'gemeinsame Regel fehlt (line-height 1, 1em-Quadrat, inline-block)');
+});
+
 test('components.css hängt jede Komponente unter src/components/**/ in Pfadreihenfolge zusammen', () => {
   const comps = componentSources(new URL('../src/components/', import.meta.url));
   assert.ok(comps.some((c) => c.name === 'button/button.css'), 'button.css fehlt');

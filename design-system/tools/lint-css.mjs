@@ -45,7 +45,7 @@ const LENGTH = /(^|\s)-?\d*\.?\d+(px|rem|em|%|vh|vw|ch|pt)\b/;
 const TIME = /\b\d*\.?\d+m?s\b/;
 const BEM = /^tl-[a-z0-9]+(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)?(--[a-z0-9]+(-[a-z0-9]+)*)?$/;
 const TYPE_FILES = /^(base|type)\.css$/;
-const TYPE_SELECTOR = /\.tl-(type|print)-/;
+const TYPE_SELECTOR = /\.tl-(type|print|icon)-/;
 
 // Punkt 2: Fallback im var() — wird VOR dem Entfernen von var(...) aus dem Wert geprüft.
 const VAR_FALLBACK = /var\(\s*--[a-z0-9-]+\s*,/i;
@@ -136,7 +136,7 @@ export function lint(css, { known, file }) {
     // Punkt 1: benannte Farben (weiß, rot, …) sind ein Farbliteral wie ein Hex-Wert.
     for (const word of rest.split(/\s+/)) if (NAMED_COLORS.has(word.toLowerCase())) say(d, `Farbliteral (benannte Farbe): ${d.value}`);
     if (TIME.test(rest) && !/0\.01ms/.test(rest)) say(d, `Dauer-Literal: ${d.value}`);
-    if (file !== 'base.css' || !/\.tl-print-|line-height|letter-spacing/.test(sel + d.property))
+    if (file !== 'base.css' || !/\.tl-print-|\.tl-icon-|line-height|letter-spacing/.test(sel + d.property))
       if (LENGTH.test(rest)) say(d, `Maß-Literal: ${d.value}`);
   }
   return out;

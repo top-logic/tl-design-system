@@ -399,6 +399,8 @@ Das richtige Maß ist der **Farbtonabstand**:
 
 > Sprechnotiz: Der einzige Verstoß im Bestand ist genau der, der keine Control-Höhe nimmt.
 
+Die vier Stufen stehen als Klassen `.tl-icon-glyph|sm|md|lg` in `base.css`; `font-size` ist nur dort erlaubt.
+
 ---
 
 ## 24 · Zwei Schichten — und die Stelle für Kundenprojekte

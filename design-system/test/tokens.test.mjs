@@ -3,8 +3,10 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { ratio } from '../tools/lib/contrast.mjs';
-import { farbtonAbstand, FARBTON_ABSTAND_MIN } from '../tools/lib/color.mjs';
+import { farbtonAbstand, FARBTON_ABSTAND_MIN, hexZuOklch } from '../tools/lib/color.mjs';
 import { resolve } from '../tools/resolve.mjs';
+
+const lum = (hex) => hexZuOklch(hex).L;
 
 const P = JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.url)));
 const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)));
@@ -146,4 +148,17 @@ test('die Ebenen steigen streng', () => {
   const v = ['layer-base', 'layer-raised', 'layer-sticky', 'layer-overlay', 'layer-popover', 'layer-toast']
     .map((n) => Number(R.layer[n]));
   for (let i = 1; i < v.length; i++) assert.ok(v[i] > v[i - 1], v.join(' < '));
+});
+
+test('die Fehlerfläche hat eine Rampe wie die Marke: hover und active je Modus, Beschriftung abgeleitet', () => {
+  for (const m of ['light', 'dark']) {
+    for (const k of ['status-error-surface-hover', 'status-error-surface-active'])
+      assert.ok(T.color[m][k], `${m}: ${k} fehlt`);
+    for (const k of ['text-on-status-error-hover', 'text-on-status-error-active'])
+      assert.ok(T.derived[m][k], `${m}: ${k} fehlt`);
+  }
+  const R = resolve(P, T);
+  // Rampenrichtung wie surface-brand: hell wird beim Zeigen dunkler, dunkel wird heller.
+  assert.ok(lum(R.color.light['status-error-surface-hover']) < lum(R.color.light['status-error-surface']), 'hell: hover muss dunkler sein');
+  assert.ok(lum(R.color.dark['status-error-surface-hover']) > lum(R.color.dark['status-error-surface']), 'dunkel: hover muss heller sein');
 });

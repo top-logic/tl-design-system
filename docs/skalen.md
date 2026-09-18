@@ -364,6 +364,10 @@ erkennbare Warnfarbe lebt deshalb in `surface`, nicht in `text`.
 **Info stand zuerst im Farbton der Marke** (260°); warum es ins Türkise gewandert ist, steht unter
 „Gelöst: Info verlässt den Markenton".
 
+**Ergänzt für den Button:** `status-error-surface` bekommt `-hover` und `-active` nach der
+Rampenregel der Marke, mit abgeleiteter Beschriftung. Die übrigen Bedeutungen bleiben ohne Rampe,
+bis eine Komponente sie als bedienbare Fläche braucht.
+
 ### Schrift: Inter bleibt
 
 Geprüft am 2026-09-15 an der ausgelieferten Datei, nicht nach Eindruck:
@@ -894,6 +898,8 @@ Die kleine Control-Höhe liegt bei genau 24 px. **Solange eine Icon-Schaltfläch
 Das Gate bekommt drei Regeln: **eine `font-size` an einem Icon, die keine Icon-Stufe ist, ist ein Verstoß**; **ein fokussierbares Element mit Icon und ohne Beschriftung unter 24 × 24 px ist ein Verstoß**; und **kein Icon nimmt eine Schriftgrößen-Rolle** — `var(--heading-compact-03-font-size)` an einem Symbolleisten-Icon ergibt zufällig 16 px und zieht mit, sobald jemand die Überschriftengröße ändert.
 
 **Eine Nebenwirkung, die die Schichtung belegt:** `size-icon-md` brauchte 20 px, und die Maßleiter sprang von 16 auf 24. Der Wert wurde als `size-5` eingefügt, wodurch die früheren `size-5` bis `size-7` aufrückten — **ohne dass ein einziger Rollenname sich ändern musste.** `space-lg` heißt weiter `space-lg` und zeigt jetzt auf `size-6`.
+
+Die vier Stufen stehen als Klassen `.tl-icon-glyph|sm|md|lg` in `base.css`; `font-size` ist nur dort erlaubt.
 
 ### Die Abbildung der alten Tokens: erledigt und abgeschnitten
 
