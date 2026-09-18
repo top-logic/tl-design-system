@@ -30,7 +30,12 @@ ist das Gate — **79 Tests, alle grün**. `node tools/lint-css.mjs` ist das Kla
 Die Demo-App lädt die drei Dateien als `ClientResources` und setzt `data-tl-mode` und
 `data-tl-density` am `html`. Das liegt im Worktree auf dem Branch
 `CWS/CWS_29617_design_system_welle_0` (Commits `2a8ac53c8`, `fa851a4ef`; `TestUIThemeService` 9/9 grün),
-gepusht, PR !1641 offen.
+gepusht, PR !1641 offen und **aus Testsicht mergefähig**: CSS-Reihenfolge, `data-tl-mode`/`data-tl-density` samt
+Theme-Wechsel, `TestUIThemeService` 9/9, Jenkins-Build (Docker-Instanz `docker:8005`) grün, kein Layoutbruch.
+
+**Prüfliste für die Wellen:** `docs/migration/altlast.md`, Abschnitt „Sichtbare Befunde aus der laufenden
+Anwendung“ — sieben Kontrast- und Fokusbefunde aus dem Darkmode, je Welle zugeordnet. Lightmode und Dichte
+sind noch nicht erhoben.
 
 **Nächster Schritt: Welle 1.** Button, ToggleButton, Pill, Avatar, Progress, FontIcon. Je
 Komponente: CSS nach `src/components/`, Klassen im TSX umbenennen, Zustände auf Attribute,
