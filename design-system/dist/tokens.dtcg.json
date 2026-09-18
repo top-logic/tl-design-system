@@ -226,10 +226,6 @@
         "$type": "color",
         "$value": "#FFEBE8"
       },
-      "red-13": {
-        "$type": "color",
-        "$value": "#FFC4BB"
-      },
       "red-29": {
         "$type": "color",
         "$value": "#FF6C5E"
@@ -1108,11 +1104,11 @@
         },
         "status-error-surface-hover": {
           "$type": "color",
-          "$value": "{primitive.color.red-13}"
+          "$value": "{primitive.color.red-29}"
         },
         "status-error-surface-active": {
           "$type": "color",
-          "$value": "{primitive.color.red-29}"
+          "$value": "{primitive.color.red-45}"
         },
         "status-error-subtle": {
           "$type": "color",
@@ -1210,7 +1206,7 @@
         },
         "text-on-status-error-active": {
           "$type": "color",
-          "$value": "#1B1D21",
+          "$value": "#FFFFFF",
           "$extensions": {
             "com.top-logic.derived-from": "status-error-surface-active"
           }

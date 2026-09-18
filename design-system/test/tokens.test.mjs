@@ -158,7 +158,20 @@ test('die Fehlerfläche hat eine Rampe wie die Marke: hover und active je Modus,
       assert.ok(T.derived[m][k], `${m}: ${k} fehlt`);
   }
   const R = resolve(P, T);
-  // Rampenrichtung wie surface-brand: hell wird beim Zeigen dunkler, dunkel wird heller.
+  // Rampenrichtung wie surface-brand: hell wird beim Zeigen dunkler, dunkel wird heller —
+  // aber 'active' geht in beiden Modi weiter in dieselbe Richtung als 'hover', nicht zurück.
   assert.ok(lum(R.color.light['status-error-surface-hover']) < lum(R.color.light['status-error-surface']), 'hell: hover muss dunkler sein');
   assert.ok(lum(R.color.dark['status-error-surface-hover']) > lum(R.color.dark['status-error-surface']), 'dunkel: hover muss heller sein');
+
+  // Rampenreihenfolge wie bei surface-brand (dunkel blue-32 -> hover blue-27 -> active blue-43):
+  // hell faellt streng (base > hover > active), dunkel steigt zwischen hover und base, faellt
+  // dann unter die Flaeche zurueck (hover > base > active).
+  assert.ok(
+    lum(R.color.light['status-error-surface']) > lum(R.color.light['status-error-surface-hover'])
+      && lum(R.color.light['status-error-surface-hover']) > lum(R.color.light['status-error-surface-active']),
+    'hell: base > hover > active');
+  assert.ok(
+    lum(R.color.dark['status-error-surface-hover']) > lum(R.color.dark['status-error-surface'])
+      && lum(R.color.dark['status-error-surface']) > lum(R.color.dark['status-error-surface-active']),
+    'dunkel: hover > base > active');
 });

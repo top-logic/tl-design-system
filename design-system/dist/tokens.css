@@ -155,8 +155,8 @@
   --tl-status-error-text: var(--tl-red-37);
   --tl-status-error-border: var(--tl-red-47);
   --tl-status-error-surface: var(--tl-red-35);
-  --tl-status-error-surface-hover: var(--tl-red-13);
-  --tl-status-error-surface-active: var(--tl-red-29);
+  --tl-status-error-surface-hover: var(--tl-red-29);
+  --tl-status-error-surface-active: var(--tl-red-45);
   --tl-status-error-subtle: var(--tl-red-77);
   --tl-status-warning-text: var(--tl-amber-40);
   --tl-status-warning-border: var(--tl-amber-49);
@@ -176,7 +176,7 @@
   --tl-icon-on-brand: #1B1D21;
   --tl-text-on-status-error: #1B1D21;
   --tl-text-on-status-error-hover: #1B1D21;
-  --tl-text-on-status-error-active: #1B1D21;
+  --tl-text-on-status-error-active: #FFFFFF;
   --tl-text-on-status-warning: #1B1D21;
   --tl-text-on-status-success: #1B1D21;
   --tl-text-on-status-info: #1B1D21;
