@@ -7,7 +7,7 @@ allowed-tools: Bash, Read, Write, Edit, Glob, Grep
 # TopLogic Design System — Regeln für Komponenten
 
 Das Aussehen der React-Oberfläche kommt aus dem Paket `tl-design-system`
-(Repo `hpe/tl-design-system`, Ordner `design-system/`). Es liefert
+(Repo `TopLogic/tl-design-system`, Ordner `design-system/`). Es liefert
 `primitives.css`, `tokens.css`, `base.css`, `components.css`, die dieses Modul unter
 `src/main/webapp/style/tl-design-system/` als `ClientResources` lädt. Das alte
 `tlReactControls.css` wird Komponente für Komponente geleert; eine Ratsche lässt es nur schrumpfen.
@@ -16,7 +16,7 @@ Das Aussehen der React-Oberfläche kommt aus dem Paket `tl-design-system`
 
 1. Lies im Design-System-Repo `CLAUDE.md`, dann `docs/skalen.md` (Abschnitt der Komponente, falls
    vorhanden) und `design-system/dist/tokens.css` (die Namen, die du lesen darfst). Pfad: das Repo
-   liegt neben dem Worktree, sonst `git clone http://tl.bos.local:3000/hpe/tl-design-system.git`.
+   liegt neben dem Worktree, sonst `git clone http://tl.bos.local:3000/TopLogic/tl-design-system.git`.
 2. Prüfe, ob die Komponente schon im Paket ist: `ls design-system/src/components/`. Wenn ja, ändere
    sie dort. Wenn nein, entsteht sie dort — nie in `tlReactControls.css`.
 3. Ist die Komponente in einer späteren Welle geplant (`docs/praesentation.md`, Folie 30) und du

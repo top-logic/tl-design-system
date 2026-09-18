@@ -128,7 +128,7 @@ Beide Systeme koexistieren, bis die letzte Welle durch ist: die alte XML-Tokenko
 
 | | |
 |---|---|
-| Paket | Gitea `hpe/tl-design-system`, Ordner `design-system/`; `node --test`, `node tools/generate.mjs`, `node tools/lint-css.mjs`, `node tools/serve.mjs` für das Specimen |
+| Paket | Gitea `TopLogic/tl-design-system`, Ordner `design-system/`; `node --test`, `node tools/generate.mjs`, `node tools/lint-css.mjs`, `node tools/serve.mjs` für das Specimen |
 | Entscheidungen | `docs/skalen.md`, jede mit Begründung; folienweise in `docs/praesentation.md` |
 | Spec | `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md` |
 | Arbeitsliste | `docs/migration/altlast.md`: alte Tokens → neue, Befunde aus der laufenden App je Welle, Einfang-Liste |

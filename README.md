@@ -64,7 +64,7 @@ Arbeitspakete (Auszählung des Altbestands, nicht Teil des laufenden Gates).
 
 ## Offene organisatorische Punkte
 
-**Repo-Transfer nach `TopLogic`.** Das Repo liegt derzeit unter `hpe/tl-design-system`, weil sich
+**Repo-Transfer nach `TopLogic`.** Das Repo liegt derzeit unter `TopLogic/tl-design-system`, weil sich
 der Owner beim Anlegen nicht umstellen liess (Repo-Limit der Organisation). Es gehoert nach
 `TopLogic`, sobald das geklaert ist — *Settings -> Transfer Ownership*.
 

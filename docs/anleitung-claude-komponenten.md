@@ -8,7 +8,7 @@ so prompten, und die Regeldatei, die Claude dabei selbst liest.
 
 1. **Design-System-Repo neben den Worktree legen.**
    ```
-   git clone http://tl.bos.local:3000/hpe/tl-design-system.git ~/git/tl-design-system
+   git clone http://tl.bos.local:3000/TopLogic/tl-design-system.git ~/git/tl-design-system
    export TL_WORKTREE=~/git/<dein-tl-engine-7-worktree>
    ```
    Die Werkzeuge brauchen nur `node` (22+), keine Installation. `TL_WORKTREE` sagt der Ratsche und

@@ -153,7 +153,7 @@ Siehe `CLAUDE.md`. Alles in `design-system/`, alles mit `node`, keine Abhängigk
 
 ## Planung
 
-Arbeitspakete als Gitea-Issues: https://git.top-logic.com/hpe/tl-design-system/issues
+Arbeitspakete als Gitea-Issues: https://git.top-logic.com/TopLogic/tl-design-system/issues
 Präsentation: `docs/praesentation.md` — 30 Folien. **Wird bei jeder Entscheidung mitgezogen.**
 Spec: `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`
 Plan Welle 0: `docs/superpowers/plans/2026-09-17-welle-0-paket.md`
