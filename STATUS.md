@@ -25,7 +25,19 @@ alle 11006 Tests grün, aber FAILURE im Resource-Check (`check-resources`): `mes
    Tabellenzeilen-Icons, AppBar unter 768 px kollabiert zu Icons, AppBar liest `surface-layer`,
    ein Löschen-Kommando mit `ButtonTone.DANGER` (heute kein Aufrufer — `setTone` einmal setzen).
 3. Danach die Pill — gegen Trac #29606 entwerfen: Farbe der Pill ist eine Rolle, kein Tokenname;
-   `--tlPill-color` von der Einfang-Liste holen.
+   `--tlPill-color` von der Einfang-Liste holen. Befund (Vorbereitung fürs Brainstorming):
+   * Server: `<color token="support-warning"/>` (`ColorSpec`, `TLColor`, #29546) wird zu `var(--support-warning)`
+     und landet als Inline-Property `--tlPill-color` an `TLPill.tsx` (`react-src/controls/pill/`).
+     Ohne Farbe: `currentColor`. #29606 validiert den Tokennamen gegen die emittierten Theme-Tokens
+     (`DesignTokenService`) und bietet nur Farb-Tokens an — es zementiert also den Tokennamen als Modell-Vertrag.
+   * CSS (`tlReactControls.css` ab Zeile 2933, ~35 Zeilen): Rahmen, Fläche und Text per `color-mix` aus der
+     einen Farbe (40 % / 16 % / 72 %), `border-radius: 999px`, `label-01`. Kein Zustand, kein Hover.
+   * Demo: `demo.tickets.model.xml` färbt Ticketstatus mit `support-warning`, `support-success` (und
+     `support-info` aus #29606).
+   * Das Paket hat je Status vier Rollen (`status-*-text/-border/-surface/-subtle`, hell und dunkel getrennt,
+     Beschriftung gerechnet). Offene Frage für das Brainstorming: Pill-Farbe als geschlossene Rollenmenge
+     (`error | warning | success | info | neutral | brand`) statt freiem Tokennamen — dann gehört die
+     Wahl ins Modell-Vokabular, und `color-mix` entfällt, weil `status-*-subtle` die Fläche liefert.
 
 Das Repo liegt jetzt unter `TopLogic/tl-design-system`; Wiki (Home, Übersicht, Anleitung Komponenten mit
 Claude, Regeldatei) ist der Einstieg für Bernhard, `docs/*.md` die gepflegte Quelle.
