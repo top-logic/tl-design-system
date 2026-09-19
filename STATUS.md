@@ -6,9 +6,14 @@
 ## Zuerst
 
 **Welle 1 (Button) ist fertig und im Merge.** PR [!1649](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1649)
-wurde von Bernhard approved; Hendrik hat den Merge mit „merge when all checks succeed“ angestoßen, er läuft
-automatisch durch, sobald der Jenkins-Build für `0fb0ade862` grün ist. Morgen zuerst prüfen:
+wurde von Bernhard approved. Der Auto-Merge auf `0fb0ade862` griff nicht: Build_Git #16031 war UNSTABLE, weil
+Bernhards Stylesheet-Audit aus #29550 (`TestReactStylesheetTokens`) die Übergangsregeln der AppBar ablehnte —
+sie lesen `--tl-*`-Tokens, die der Audit nicht kannte. Fix `1041fb64d4` auf dem Branch: der Audit kennt jetzt
+`tl-design-system/tokens.css` (Hook `tokenStylesheets()` in `AbstractStylesheetTokenTest`, Default leer für die
+sechs erbenden Module) — nur die Rollen, nicht die Primitive; ein Test hält das fest. Jenkins baut
+Build_Git #16055 und Docker #9144. Zuerst prüfen:
 
+0. Ist #16055 grün? Dann den Auto-Merge auf `1041fb64d4` neu scharfschalten (Gitea verwirft ihn bei neuem Head).
 1. Ist !1649 gemerged? Dann im Worktree `git checkout master && git pull --ff-only`, Branch
    `CWS/CWS_29617_design_system_welle_1` lokal löschen, in `docs/praesentation.md` Folie 32 und in
    `docs/migration/altlast.md` „gemerged“ vermerken.
