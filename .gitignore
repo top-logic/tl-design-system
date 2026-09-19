@@ -7,3 +7,6 @@ inventory/token-inventory.json
 
 # Eclipse-Workspaces je Worktree — lokal, gehören niemandem sonst.
 eclipse-ws/
+
+# Claude-Code-Sitzungsdaten: lokale Rechte und Worktrees paralleler Instanzen.
+.claude/

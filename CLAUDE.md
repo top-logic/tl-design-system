@@ -60,5 +60,15 @@ Befund entscheiden, die Regel als Test festschreiben.
 **Eine Komponente ist fertig, wenn ihr alter Block in `tlReactControls.css` leer ist** — nicht,
 wenn die neue aussieht wie die alte.
 
-Keine Zeitangaben in Docs. Änderungen an `docs/skalen.md` ziehen `docs/praesentation.md` und
-`STATUS.md` mit.
+Keine Zeit- oder Aufwandsangaben — weder in Docs noch in Antworten; das überstimmt die
+Schätz-Regel des ADHD-Skills. Pläne gliedern sich nach Reihenfolge und Fertig-Bedingung.
+Änderungen an `docs/skalen.md` ziehen `docs/praesentation.md` und `STATUS.md` mit.
+
+Jedes Arbeitspaket endet committet (Präfix `Ticket #29617:`), nichts Halbfertiges bleibt liegen.
+
+## Parallele Sitzungen
+
+Unter `.claude/worktrees/<name>/` können weitere Claude-Instanzen auf eigenen Branches arbeiten
+(eigener Memory-Ordner, eigene STATUS-Commits). Diese Verzeichnisse nicht anfassen, nicht
+mergen, nicht löschen — der Abgleich läuft über `git merge` des jeweiligen Branches nach `main`,
+wenn Hendrik es sagt. `STATUS.md` auf `main` gehört der Sitzung, die dort arbeitet.
