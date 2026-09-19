@@ -10,10 +10,14 @@ wurde von Bernhard approved. Der Auto-Merge auf `0fb0ade862` griff nicht: Build_
 Bernhards Stylesheet-Audit aus #29550 (`TestReactStylesheetTokens`) die Übergangsregeln der AppBar ablehnte —
 sie lesen `--tl-*`-Tokens, die der Audit nicht kannte. Fix `1041fb64d4` auf dem Branch: der Audit kennt jetzt
 `tl-design-system/tokens.css` (Hook `tokenStylesheets()` in `AbstractStylesheetTokenTest`, Default leer für die
-sechs erbenden Module) — nur die Rollen, nicht die Primitive; ein Test hält das fest. Jenkins baut
-Build_Git #16055 und Docker #9144. Zuerst prüfen:
+sechs erbenden Module) — nur die Rollen, nicht die Primitive; ein Test hält das fest. Build_Git #16055 danach:
+alle 11006 Tests grün, aber FAILURE im Resource-Check (`check-resources`): `messages_en/de.properties` ohne
+`ButtonTone`/`ButtonAppearance.GHOST`, `ButtonSize.LARGE` noch drin. Fix `64f5c32b33` (Texte aus dem Javadoc,
+„Grundschule“ → „Primär“). Docker #9144 war grün. Zuerst prüfen:
 
-0. Ist #16055 grün? Dann den Auto-Merge auf `1041fb64d4` neu scharfschalten (Gitea verwirft ihn bei neuem Head).
+0. Ist der Build_Git nach #16055 grün? Dann braucht !1649 Bernhards erneutes Approve (das alte ist bei Gitea
+   verworfen) und den Auto-Merge neu auf `64f5c32b33` (Gitea verwirft ihn bei neuem Head; per API kommt 409,
+   solange Jenkins' Request-Changes-Review steht).
 1. Ist !1649 gemerged? Dann im Worktree `git checkout master && git pull --ff-only`, Branch
    `CWS/CWS_29617_design_system_welle_1` lokal löschen, in `docs/praesentation.md` Folie 32 und in
    `docs/migration/altlast.md` „gemerged“ vermerken.
