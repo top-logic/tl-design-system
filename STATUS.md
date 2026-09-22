@@ -10,14 +10,21 @@ ist von Bernhard approved. Der Jenkins-Build brauchte drei Nachbesserungen, jede
 freigelegt: `1041fb64d4` (Token-Audit kennt `tokens.css`), `64f5c32b33` (fehlende Resource-Keys),
 `2900f5ded1` (der Build erzeugt `messages_en.properties` aus dem JavaDoc, die Handfassung von
 `ButtonTone.tooltip` wich ab). Build 16056 hatte alle 11006 Tests grün, scheiterte nur an dieser einen Zeile.
-Stand 22.09.: Build für `2900f5ded1` läuft. Der Auto-Merge war auf `0fb0ade862` scharf und muss auf dem
-neuen Head neu gesetzt werden („merge when all checks succeed“), sobald Jenkins grün ist. Dann:
+Build 16123 für `2900f5ded1` war grün — aber master war inzwischen weitergezogen (#29626 kollabierende
+Toolbar, #29523 Sidebar), der PR hatte Konflikte in `TLAppBar.tsx`, `TLToolbar.tsx`, `tlReactControls.css`.
+Der Merge von master in den Branch (22.09.) löst sie: Toolbar wickelt ihre Buttons in `ButtonDefaults`
+(`ghost`, wenn kein Container anderes sagt), Fensterfuß sagt `secondary`, der Kollaps zum Icon läuft über
+die kollabierende Toolbar (`tlToolbar--compact` liest `tl-button__label` als Übergangsregel), `collapseToIcon`
+und `AppShellContext` sind gestrichen, TLHtml-Druckknopf auf `tl-button--ghost`. Ratsche einmalig auf 6692
+gehoben (Fremdzuwachs), zwei fremde `--tl-toolbar-*` in `foreignTl`. Der Auto-Merge war auf `0fb0ade862`
+scharf und muss auf dem neuen Head neu gesetzt werden („merge when all checks succeed“), sobald Jenkins
+grün ist. Dann:
 
 1. Ist !1649 gemerged? Dann im Worktree `git checkout master && git pull --ff-only`, Branch
    `CWS/CWS_29617_design_system_welle_1` lokal löschen, in `docs/praesentation.md` Folie 32 und in
    `docs/migration/altlast.md` „gemerged“ vermerken.
 2. Sichtprüfung in der Docker-Instanz: Toolbar rahmenlos, Dialogfuß primary/secondary, kleine
-   Tabellenzeilen-Icons, AppBar unter 768 px kollabiert zu Icons, AppBar liest `surface-layer`,
+   Tabellenzeilen-Icons, AppBar-Toolbar kollabiert bei Platzmangel zu Icons (Mechanik aus #29626), AppBar liest `surface-layer`,
    ein Löschen-Kommando mit `ButtonTone.DANGER` (heute kein Aufrufer — `setTone` einmal setzen).
 3. Danach die Pill — gegen Trac #29606 entwerfen: Farbe der Pill ist eine Rolle, kein Tokenname;
    `--tlPill-color` von der Einfang-Liste holen.

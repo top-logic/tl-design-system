@@ -257,6 +257,8 @@ Andere Stylesheets mit `tl…`-Klassen des Altbestands (z. B. `TLWysiwygEditor.c
 
 ## Welle 1 · Button — fertig
 
-Alter Block (`TLButton`, `TLButton enhancements`) und die fünf Kontextblöcke (AppBar, Fenster-Toolbar, Tabellenzelle, Dropdown, AppBar-Kollaps) sind gelöscht. Der Container wählt die Erscheinung über `ButtonDefaults`; der Dropdown-Eintrag streckt seinen Button per `display: grid` im Toolbar-Block, bis die Toolbar in Welle 3 folgt.
+Alter Block (`TLButton`, `TLButton enhancements`) und die fünf Kontextblöcke (AppBar, Fenster-Toolbar, Tabellenzelle, Dropdown, AppBar-Kollaps) sind gelöscht. Der Container wählt die Erscheinung über `ButtonDefaults`: AppBar und Toolbar sagen `ghost`, Fensterfuß und Panel-Buttonleiste sagen `secondary`; die Toolbar setzt `ghost` nur, wenn kein Container etwas anderes vorgibt.
 
-Zwei Übergangsregeln im alten Stylesheet lesen den neuen Button von außen (Dropdown linksbündig, AppBar-Flächen); Welle 3 (Menu) und Welle 4 (Shell) lösen sie ab.
+Der Kollaps zum Icon ist keine Sache des Buttons mehr: Mit #29626 (master, gemerged 22.09.) misst die kollabierende Toolbar ihre Einheiten und schaltet per Klasse `tlToolbar--compact` um; der Kontext `collapseToIcon` und `AppShellContext` sind gestrichen. Die AppBar rendert ihre Kommandos seit #29626 durch diese Toolbar.
+
+Drei Übergangsregeln im alten Stylesheet lesen den neuen Button von außen (Dropdown-Eintrag füllt die Zeile und ist linksbündig, kompakte Toolbar blendet `tl-button__label` aus, AppBar-Flächen); Welle 3 (Toolbar, Menu) und Welle 4 (Shell) lösen sie ab. Die Ratsche wurde mit dem Merge einmalig auf 6692 Zeilen gehoben (Fremdzuwachs #29626, #29523, TLImage, TLValueList, TLHtml); `--tl-toolbar-trigger-size` und `--tl-toolbar-shrink-priority` stehen in `foreignTl` für Welle 3.

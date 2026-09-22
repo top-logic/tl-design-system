@@ -1,17 +1,19 @@
 {
   "_": "Budget des alten tlReactControls.css. Darf nur sinken. Nach jeder Welle nachziehen.",
-  "_lines": "Einmalig von 6065 auf 6088 gehoben: Fremdzuwachs durch Ticket #29597 (Repeater-Grid, .tlItem), nicht durch eine Welle.",
-  "lines": 5766,
+  "_lines": "Einmalig von 6065 auf 6088 gehoben: Fremdzuwachs durch Ticket #29597 (Repeater-Grid, .tlItem). Nach Welle 1 auf 5766 gesenkt. Mit dem Merge von master in Welle 1 (22.09.) einmalig auf 6692 gehoben: Fremdzuwachs durch #29626 (kollabierende Toolbar), #29523 (Sidebar), TLImage, TLValueList, TLHtml — nicht durch eine Welle.",
+  "lines": 6692,
   "literals": {
-    "color": 73,
-    "fontSize": 54,
-    "duration": 33,
+    "color": 75,
+    "fontSize": 58,
+    "duration": 37,
     "zIndex": 28,
     "outlineNone": 22
   },
-  "_foreignTl": "Custom Properties im Namensraum --tl, die der Altbestand selbst DEFINIERT (nicht: liest). Lesen ist erlaubt — dafuer sind Tokens da; fremd ist nur, was hier auftaucht oder was kein Paket-Token ist. Einfang-Liste: jede Welle streicht, was sie ins Paket holt; Neues bricht den Test.",
+  "_foreignTl": "Custom Properties im Namensraum --tl, die der Altbestand selbst DEFINIERT (nicht: liest). Lesen ist erlaubt — dafuer sind Tokens da; fremd ist nur, was hier auftaucht oder was kein Paket-Token ist. Einfang-Liste: jede Welle streicht, was sie ins Paket holt; Neues bricht den Test. --tl-toolbar-trigger-size und --tl-toolbar-shrink-priority kamen mit #29626 (master) und gehoeren in Welle 3 (Toolbar).",
   "foreignTl": [
     "--tl-item-index",
+    "--tl-toolbar-shrink-priority",
+    "--tl-toolbar-trigger-size",
     "--tl-tt-padding",
     "--tlGrid-gap",
     "--tlPill-color"

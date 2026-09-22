@@ -1034,7 +1034,8 @@ gibt es nicht.
 | Größe | Kein Modifier. Die Höhe kommt aus der Dichte (Control-Höhe). Einzig die Icon-Schaltfläche kennt `sm` (24 px) für Tabellenzeilen — siehe Icons. |
 | Darstellung | Keine Klassen. Icon und Beschriftung sind Elemente `__icon` und `__label`; icon-only heißt: kein `__label`, und `aria-label` ist Pflicht. |
 | Zustände | `:disabled`, `[aria-pressed="true"]` (ersetzt `--active`; ein ToggleButton ist ein Button mit `aria-pressed`, kein eigenes CSS), `aria-busy="true"`, `:focus-visible`, `:hover`, `:active`. |
-| Kontext | Kein Selektor von außen. Der Container wählt die Erscheinung — die Toolbar setzt `ghost`, der Dialogfuß `primary` und `secondary`. |
+| Kontext | Kein Selektor von außen. Der Container wählt die Erscheinung — die Toolbar setzt `ghost`, wenn kein Container etwas anderes vorgibt; AppBar `ghost`, Fensterfuß und Panel-Buttonleiste `secondary`, die Hauptaktion `primary`. |
+| Kollaps | Nicht Sache des Buttons. Ob eine beschriftete Schaltfläche zum Icon wird, entscheidet die Toolbar nach ihrem Platz (#29626, `tlToolbar--compact`), nicht ein Viewport-Breakpoint und kein Kontext am Button. Bis Welle 3 liest die Toolbar dafür `tl-button__label` als Übergangsregel. |
 
 Warum die Tönung keine fünfte Erscheinung ist: Ein Löschen steht im Bestand mal in der Toolbar
 (Umriss), mal im Dialog (gefüllt). Eine Erscheinung `danger` müsste beides sein und wäre die
