@@ -1,13 +1,17 @@
 # Stand
 
-**Letzte Sitzung:** 2026-09-17 · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-09-22 · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Spec:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`
 
 ## Zuerst
 
 **Welle 1 (Button) ist fertig und im Merge.** PR [!1649](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1649)
-wurde von Bernhard approved; Hendrik hat den Merge mit „merge when all checks succeed“ angestoßen, er läuft
-automatisch durch, sobald der Jenkins-Build für `0fb0ade862` grün ist. Morgen zuerst prüfen:
+ist von Bernhard approved. Der Jenkins-Build brauchte drei Nachbesserungen, jede hat den nächsten Fehler
+freigelegt: `1041fb64d4` (Token-Audit kennt `tokens.css`), `64f5c32b33` (fehlende Resource-Keys),
+`2900f5ded1` (der Build erzeugt `messages_en.properties` aus dem JavaDoc, die Handfassung von
+`ButtonTone.tooltip` wich ab). Build 16056 hatte alle 11006 Tests grün, scheiterte nur an dieser einen Zeile.
+Stand 22.09.: Build für `2900f5ded1` läuft. Der Auto-Merge war auf `0fb0ade862` scharf und muss auf dem
+neuen Head neu gesetzt werden („merge when all checks succeed“), sobald Jenkins grün ist. Dann:
 
 1. Ist !1649 gemerged? Dann im Worktree `git checkout master && git pull --ff-only`, Branch
    `CWS/CWS_29617_design_system_welle_1` lokal löschen, in `docs/praesentation.md` Folie 32 und in
