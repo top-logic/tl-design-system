@@ -1,6 +1,6 @@
 # Stand
 
-**Letzte Sitzung:** 2026-09-22 · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-09-23 · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Spec:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`
 
 ## Zuerst
@@ -16,9 +16,10 @@ Der Merge von master in den Branch (22.09.) löst sie: Toolbar wickelt ihre Butt
 (`ghost`, wenn kein Container anderes sagt), Fensterfuß sagt `secondary`, der Kollaps zum Icon läuft über
 die kollabierende Toolbar (`tlToolbar--compact` liest `tl-button__label` als Übergangsregel), `collapseToIcon`
 und `AppShellContext` sind gestrichen, TLHtml-Druckknopf auf `tl-button--ghost`. Ratsche einmalig auf 6692
-gehoben (Fremdzuwachs), zwei fremde `--tl-toolbar-*` in `foreignTl`. Der Auto-Merge war auf `0fb0ade862`
-scharf und muss auf dem neuen Head neu gesetzt werden („merge when all checks succeed“), sobald Jenkins
-grün ist. Dann:
+gehoben (Fremdzuwachs), zwei fremde `--tl-toolbar-*` in `foreignTl`. Am 23.09. zweiter Merge von master
+(#29497 Bridge-Tooltips, #29596 `rootClassName`/Text-Töne, #29505 Audit-Hook auch auf master): Button-Dateien
+nehmen `rootClassName(state, buttonClassName(…))` und `tooltipProps` von master, Ratsche auf 7390, `--tlText-tone`
+in `foreignTl`. Merge ist gesperrt, bis Bernhard erneut approved (405 aus Gitea). Dann:
 
 1. Ist !1649 gemerged? Dann im Worktree `git checkout master && git pull --ff-only`, Branch
    `CWS/CWS_29617_design_system_welle_1` lokal löschen, in `docs/praesentation.md` Folie 32 und in
