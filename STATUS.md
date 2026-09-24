@@ -19,6 +19,13 @@ neue Blöcke von außen stehen unter `unlisted` in `node tools/inventory.mjs`, b
 Fremdzuwachs hebt einen Block mit Ticketvermerk, nicht die Datei. Begründung in `docs/skalen.md` „Die
 Ratsche misst Blöcke“, Folie 32a.
 
+**Entschieden (24.09.): Themes sind eine dritte Achse.** `data-tl-theme="<id>"` am `html` neben Modus und
+Dichte; ohne Attribut gilt TopLogic auf `:root`, ein Kundentheme ist eine mit `derive` erzeugte Datei unter
+`[data-tl-theme="acme"]`, Beschriftungen je Theme × Modus, Gate je Theme. `UIThemeService` behält Nutzerwahl,
+Vererbung und Systemfolge und setzt künftig `data-tl-theme` statt `data-theme`. Die Spec-Fassung „Kunde
+tauscht auf `:root`“ ist damit überholt und wird mit `derive` fortgeschrieben. Begründung in `docs/skalen.md`
+„Themes: eine dritte Achse“, Folie 24a, Issue #16.
+
 **Sichtprüfung erledigt (24.09., Pill-PR-Instanz, hell und dunkel).** Kein Eclipse nötig. Jenkins baut je PR
 eine Docker-Instanz (`Docker_Git_Java17`, Kontext = Branchname mit `_`); sie ist **nur intern** erreichbar,
 `http://docker:80NN/<Kontext>/` (Port aus `WEB_PORT` im Build-Log, für !1694: 8007), von Hendriks Rechner per
@@ -83,6 +90,9 @@ Offen aus der Spec, nicht Teil von Welle 0:
 
 * `tl-ds derive` — Kundenstufe A, die Ableitung einer Palette aus Hausfarbe und Grauwahl; muss die
   Beschriftungen mitrechnen und nach `tokens.css` laden — siehe skalen.md „Zwei Schichten“
+* `data-tl-theme` — dritte Achse für mehrere Themes je Anwendung; `derive` schreibt je Theme eine Datei
+  unter `[data-tl-theme="<id>"]`, das Gate läuft je Theme, `UIThemeService` setzt das Attribut — Issue #16,
+  skalen.md „Themes: eine dritte Achse“
 * Token-Mapper — Miniprojekt, Browserwerkzeug für Kunden-Styleguides
 * Figma-Push aus `tokens.dtcg.json`
 * Maven-Wrapper für das Paket; bis dahin kopiert `tools/publish-to-worktree.mjs`
@@ -159,7 +169,7 @@ Siehe `CLAUDE.md`. Alles in `design-system/`, alles mit `node`, keine Abhängigk
 
 * PRs **!1618** und **!1621** im Framework sind verifiziert, aber weiterhin ungemergt.
 * Issue **#13** hält fest, dass Kunden-Theming, Storybook und Accessibility beim Umschreiben ihr
-  Issue verloren haben.
+  Issue verloren haben. Der Scope-Teil des Kunden-Themings ist seit 24.09. Issue #16 (dritte Achse).
 * Zwei Commits von Welle 0 (`5ab2ae3`, `6d709f4`) tragen den Trailer eines anderen Modells; ein
   Umschreiben der Historie wurde nicht durchgeführt.
 

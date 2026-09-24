@@ -732,6 +732,35 @@ Die Primitivnamen werden **abgeleitet, nicht vergeben** (`design-system/tools/li
 
 **Vier Regeln setzt das Gate durch:** kein Hex in der Rollenschicht, jede Referenz zeigt auf ein vorhandenes Primitiv, kein Primitiv steht ungenutzt herum, und kein Primitivname enthält ein Rollenwort. Dazu ein Test, der einen Kundentausch durchspielt und prüft, dass alle vier markenbezogenen Rollen mitziehen.
 
+### Themes: eine dritte Achse, nicht ein Tausch
+
+**Entschieden (24.09.): Ein Theme ist ein Attribut am `html`, `data-tl-theme="<id>"`, neben `data-tl-mode` und `data-tl-density`. Mehrere Themes stehen in einer Anwendung nebeneinander, der Nutzer wählt.**
+
+Die Spec vom 17.09. kennt den Kunden nur als Tausch: `customer.primitives.css` nach `primitives.css` geladen, auf `:root`, für alle Nutzer. Das reicht für eine Installation mit einem Look. Es reicht nicht für den Fall, der gebraucht wird: eine TopLogic-Anwendung mit dem TopLogic-Theme **und** einem oder mehreren Kundenthemes, zwischen denen umgeschaltet wird.
+
+**Was die Engine heute kann**, und was dabei nicht verloren gehen darf: `UIThemeService` (tl-engine-7, `com.top_logic.layout.react.theme`) führt beliebig viele benannte Themes aus XML mit `extends`-Vererbung und `color-scheme` je Theme, speichert die Wahl je Person (`PersonalConfiguration`, Schlüssel `react.theme`), folgt ohne Wahl dem Betriebssystem und schreibt jedes Theme als `<style>`-Block unter `[data-theme="<id>"]`. Die Demo-App zeigt damit vier Themes: `default`, `dark`, `flat`, `glass`. Die Werte darin sind die alten Rollen und fallen mit ihren Wellen; die Mechanik der Auswahl bleibt richtig.
+
+**Was das Paket heute kann:** zwei Achsen. `tokens.css` kennt `[data-tl-mode]` und `[data-tl-density]`, sonst nichts. Der Test in `layers.test.mjs` spielt den Tausch *einer* Primitive durch; Koexistenz zweier Wertesätze prüft niemand.
+
+**Die Regel:**
+
+| | |
+|---|---|
+| Achse | `data-tl-theme="<id>"` am `html`. Ohne Attribut gilt das TopLogic-Theme; es steht auf `:root`. |
+| Kundentheme | eine erzeugte Datei je Theme, Selektoren `[data-tl-theme="acme"]` und `[data-tl-theme="acme"][data-tl-mode="dark"]`, geladen nach `tokens.css`. `derive` schreibt sie aus `acme.primitives.json`. |
+| Beschriftungen | `--tl-text-on-*` und `--tl-icon-on-*` werden je Theme × Modus gerechnet; darum sind sie die Datei, nicht der Kunde. |
+| Gate | Kontrast, Schichten und Namensraum laufen je Theme, mit derselben Paarliste wie für `tl`. Ein Kundentheme, das ein Paar verfehlt, wird nicht erzeugt. |
+| Engine | `UIThemeService` setzt künftig `data-tl-theme` statt `data-theme` und behält Nutzerwahl, Vererbung und Systemfolge. Vererbung wird zur Frage an `derive`, nicht an CSS: Was das Kundentheme nicht setzt, bleibt beim Wert von `:root`, weil die Kaskade es so löst. |
+| Ort der Definition | im Paket als JSON, nicht in XML. Die XML-Tokenkonfiguration entfällt mit den Wellen (Spec §4). Wie die Engine die Liste der verfügbaren Themes erfährt, entscheidet die Welle, die `derive` bringt. |
+
+**Warum ein Attribut:** Zustände sind Attribute, nicht Klassen — das gilt bereits für Modus und Dichte. Ein Theme ist ein Zustand der Seite. Die Klassen bleiben unberührt; keine liest ein Theme, jede liest Rollen. Das ist derselbe Grund, aus dem das erzeugte CSS Referenzen nicht auflöst: Der Eingriff bleibt in der Primitivschicht, nur jetzt unter einem Selektor statt auf `:root`.
+
+**Verworfen:** ein Kundentheme, das TopLogic ersetzt (die Spec-Fassung: kann nicht umschalten, und eine Kundeninstallation verliert die Referenz, wie TopLogic aussieht); ein Theme je Datei-Ladereihenfolge (welches CSS zuletzt geladen wird, ist kein Nutzerzustand); Themes als Klassen am `body` (bricht die Attributregel und die Vor-dem-ersten-Paint-Logik, die `UIThemeService` schon am `html` setzt); Rollen je Theme in `tokens.json` (jedes Kundentheme wäre eine Änderung am Paket — genau das schließt der Kundenvertrag aus).
+
+**Als Test, sobald `derive` steht:** ein Test erzeugt aus einer zweiten Primitivdatei ein Theme `probe`, prüft, dass der Selektor `[data-tl-theme="probe"]` genau die überschriebenen Primitiven und die gerechneten Beschriftungen trägt, dass jede Rolle unter `probe` × hell und `probe` × dunkel die Paarliste besteht, und dass `:root` unverändert ist. Der bestehende Tausch-Test bleibt und wird zum Test des Falls „ohne Attribut".
+
+**Was dadurch offen wird:** Spec §2 „Wurzel" nennt zwei Attribute und §3 Stufe A eine Datei auf `:root`; beides wird mit `derive` fortgeschrieben. Issue #13 (Kunden-Theming ohne Issue) ist damit für den Scope-Teil beantwortet.
+
 ### Abstände: sieben Stufen, und eine fehlte
 
 Die Skala des Bestands — `spacing-01` bis `-06` — ist 4 · 8 · 16 · 24 · 32 · 48 px. **Zwischen 8 und 16 liegt nichts**, und genau dort nehmen sich die Komponenten, was sie brauchen: 18 literale Abstände stehen in dieser Lücke.

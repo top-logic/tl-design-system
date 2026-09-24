@@ -117,6 +117,10 @@ was das DOM ohnehin weiß; Kundenkomponenten (Stufe C) bekommen dieselben Zustä
 `data-tl-mode="light|dark"` und `data-tl-density="normal|compact"` am `html`. Das Skript, das
 heute `data-theme` vor dem ersten Paint setzt, setzt künftig diese beiden.
 
+> **Fortgeschrieben 24.09.:** dazu `data-tl-theme="<id>"` als dritte Achse für mehrere Themes je
+> Anwendung; ohne Attribut gilt TopLogic auf `:root`. Stufe A (§3) schreibt damit nicht auf `:root`,
+> sondern unter `[data-tl-theme="<id>"]`. Begründung: `docs/skalen.md` „Themes: eine dritte Achse“.
+
 ### Typografie als Klassen
 
 `.tl-type-display`, `.tl-type-heading-lg/md/sm`, `.tl-type-body`, `.tl-type-body-strong`,

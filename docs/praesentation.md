@@ -425,6 +425,24 @@ Bei einem Markenwechsel wären vier Stellen nachzuziehen — und die vergessene 
 
 ---
 
+## 24a · Themes: eine dritte Achse
+
+**Eine Anwendung, mehrere Themes, der Nutzer wählt — das TopLogic-Theme bleibt daneben stehen.**
+
+| Achse | Attribut am `html` | Werte |
+|---|---|---|
+| Modus | `data-tl-mode` | `light`, `dark` |
+| Dichte | `data-tl-density` | `normal`, `compact` |
+| **Theme** | **`data-tl-theme`** | `tl` ohne Attribut, sonst die Kennung des Kundenthemes |
+
+Ein Kundentheme ist eine erzeugte Datei unter `[data-tl-theme="acme"]`, aus `acme.primitives.json` gerechnet, mit Beschriftungen je Theme × Modus, nach `tokens.css` geladen. Kein Tausch, kein Ersatz: `:root` bleibt TopLogic.
+
+**Die Engine kann das schon.** `UIThemeService` führt heute vier Themes, speichert die Wahl je Person und folgt dem Betriebssystem — nur unter dem alten Attribut mit den alten Werten. Das Attribut wird `data-tl-theme`, die Werte kommen aus dem Paket.
+
+> Sprechnotiz: Die Spec vom 17.09. dachte den Kunden als Tausch auf `:root`. Das kann nicht umschalten. Entschieden am 24.09., Begründung in `docs/skalen.md` „Themes: eine dritte Achse“. Umsetzung mit `derive`.
+
+---
+
 ## 25 · Wie das geprüft wird
 
 **Die Regeln stehen nicht nur im Dokument — sie laufen als Tests.** 79 Stück, `node --test` im Paket.
