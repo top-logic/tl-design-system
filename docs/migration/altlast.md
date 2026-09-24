@@ -279,3 +279,7 @@ Sichtprüfung 24.09. in der PR-Instanz (`http://docker:8007/CWS_29617_design_sys
 ### Progress (Welle 1, PR !1695 mit dem Avatar)
 
 `TLProgress` (`ReactProgressControl`, `ProgressElement`, `<progress>`, `ProgressBar` in `TLJobStatus`); die alten Regeln standen ohne eigenen Block im Block `TLHtml` (Zeilen 3847–3908). Umstellung: `tl-progress` mit `__track`, `__fill`, `__label`; Spur `surface-interactive-selected`, Füllung `surface-brand`; unbestimmt über `[aria-busy="true"]`, die Klasse `tlProgress--indeterminate` fällt; Schwung aus `duration-loop` (neu, `dur-4` = 1200 ms), kein eigener Reduced-Motion-Block; Beschriftung trägt `.tl-type-label .tl-nums`. Es fallen sieben Literale und der Block-Anteil im `TLHtml`. Entscheidung: `docs/skalen.md` „Progress: ein Anteil, kein Urteil“; Motion-Skala um `duration-loop` ergänzt.
+
+### Icon (Welle 1, PR !1695 mit Avatar und Progress)
+
+`TLIcon` (`ReactIconControl`, `IconElement`, `<theme-icon>`), `ThemeIcon`, `FontIcon`. Umstellung: `<theme-icon size="sm|md|lg|glyph">` (Default `sm`), das Control rendert `tl-icon-<stufe>` aus `base.css` und hat kein eigenes CSS; die Regel `.tlIcon` (Block „The shape the text takes“) fällt; `ThemeIcon` ohne Inline-Maß am Bild und mit `aria-hidden` am Glyph; `FontIcon.tsx` fällt, vier Leser nehmen `ThemeIcon`. Offen für Welle 2–4: Menü, Toolbar, Sidebar, Reiter, Select geben `ThemeIcon` noch eigene Klassen statt einer Stufe. Entscheidung: `docs/skalen.md` „Icon: die Stufe ist die Rolle“.

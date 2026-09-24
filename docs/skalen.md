@@ -1271,6 +1271,31 @@ Breite, keine eigene Variable, den Schwung nur aus `duration-loop`, keinen eigen
 `duration-loop` ist `dur-4` = 1200 ms; das Specimen zeigt fünf Anteile, unbestimmt, ohne Beschriftung
 und eine schmale Zelle, auf beiden Flächen.
 
+### Icon: die Stufe ist die Rolle, das Control trägt keine eigene Klasse
+
+**Der Befund.** Die Icon-Skala ist seit Welle 0 entschieden und liegt als vier Klassen in `base.css`
+(siehe „Icons: drei Stufen nach Rolle“). Auf der Engine-Seite lag daneben: `TLIcon` mit eigener Klasse
+`.tlIcon` und drei Regeln, die `base.css` schon hat; `FontIcon.tsx` als zweite Implementierung von
+`ThemeIcon` (vier Leser); `ThemeIcon` setzt einem Bild-Icon `width: 1em; height: 1em` **inline**; kein
+Icon trägt eine Stufe — `<theme-icon>` ist so groß wie der Text, neben dem es zufällig steht.
+
+**Entschieden:**
+
+| Achse | Regel |
+|---|---|
+| Stufe | `<theme-icon size="sm|md|lg|glyph">`, Default `sm` (steht neben Text); `IconSize` heißt so. Das Control rendert `tl-icon-<stufe>` und sonst nichts — **kein eigenes CSS**, der Vertrag verweist auf `base.css`. |
+| Bild-Icon | Kein Inline-Maß. Die Stufenklasse macht ein `<img>` zum Quadrat ihrer Größe, weil `width: 1em` an einer Klasse mit `font-size` steht. |
+| Zugänglichkeit | Jeder Font-Glyph `<i>` ist `aria-hidden`; der Name steht am Element darum herum (`role="img"` + `aria-label` bei Tooltip, sonst `aria-hidden`). |
+| Dublette | `FontIcon.tsx` fällt; die vier Leser (ValueList, Panel, TextInput, FormField) nehmen `ThemeIcon`. Ihre eigenen Icon-Klassen (`tlReactTextInput__icon` …) bleiben bis zu ihrer Welle. |
+
+**Nicht in dieser Welle:** Menü, Toolbar, Sidebar, Reiter und Select geben `ThemeIcon` eine eigene Klasse
+statt einer Stufe; sie bekommen `tl-icon-sm|md` in Welle 2 bis 4. Bis dahin fehlt einem Bild-Icon dort
+das 1-em-Maß — sichtbar nur bei `theme:`-Bildern, nicht bei Font-Glyphen.
+
+**Als Test:** `components.test.mjs` prüft, dass die vier Klassen in `base.css` stehen und `size-icon-*`
+lesen, dass `components.css` keine `font-size` enthält, und dass Specimen und Vertrag die vier Stufen,
+das Bild-Icon ohne Inline-Breite und die Attribute zeigen.
+
 ## Befunde aus dem Specimen
 
 ### Inter trägt nur zwei Gewichte

@@ -67,15 +67,22 @@ Block `TLHtml` (226 → 164), Ratsche 7263, Gates 115/115. Lint kennt jetzt die 
 **Präsentation verdichtet (24.09., `f748c08`):** 15 Folien für die Kollegen statt 34; Zweck in CLAUDE.md und
 Memory festgehalten — keine Entscheidungsquelle, Marketing-Tonlage, wird PowerPoint.
 
+**Icon (24.09.) im selben PR !1695 — Welle 1 ist damit auf der Paketseite vollständig.** Entschieden: „die Stufe
+ist die Rolle“ (`docs/skalen.md`) — `<theme-icon size="sm|md|lg|glyph">`, Default `sm`, das Control rendert
+`tl-icon-<stufe>` aus `base.css` und hat kein eigenes CSS; `.tlIcon` fällt, `FontIcon.tsx` fällt (vier Leser auf
+`ThemeIcon`), Bild-Icons ohne Inline-Maß, Glyphen `aria-hidden`. Vertrag und Specimen ohne CSS-Datei. Ratsche
+7256, Gates 118/118. Offen für Welle 2–4: Menü, Toolbar, Sidebar, Reiter, Select geben `ThemeIcon` eigene
+Klassen statt einer Stufe (altlast.md „Icon“).
+
 Jetzt:
 
-1. PR !1694 abwarten (Reviewer Bernhard, Request-changes beantwortet); dann !1695 (Avatar + Progress) auf master
+1. PR !1694 abwarten (Reviewer Bernhard, Request-changes beantwortet); dann !1695 (Avatar + Progress + Icon) auf master
    rebasen, Basis umstellen, Docker-Instanz sichtprüfen (Kommentarköpfe, Bild-Demo `xl`, Fortschrittsbalken in
    Objektliste und Long-Job-Demo, unbestimmt mit und ohne Reduced Motion); nach dem Merge Worktree auf `master`, Branch löschen, Ratsche
    gegen master prüfen, Pill-Absatz in altlast.md als gemerged markieren.
 2. Nicht geprüft, offen: AppBar-Kollaps bei Platzmangel, AppBar auf `surface-layer`, `ButtonTone.DANGER`
    (kein Aufrufer — `setTone` einmal setzen).
-3. Letzte Komponente der Welle 1: FontIcon — Vorlage Button/Pill/Avatar/Progress.
+3. Welle 1 abschließen: nach den Merges Ratsche gegen master, Welle-1-Abschnitt in altlast.md; dann Welle 2 (Eingabefelder, Select) planen — Befunde stehen in altlast.md „Sichtbare Befunde“.
 
 Das Repo liegt jetzt unter `TopLogic/tl-design-system`; Wiki (Home, Übersicht, Anleitung Komponenten mit
 Claude, Regeldatei) ist der Einstieg für Bernhard, `docs/*.md` die gepflegte Quelle.

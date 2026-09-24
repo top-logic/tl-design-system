@@ -313,3 +313,36 @@ test('der Progress-Vertrag nennt jedes Token, das progress.css liest, die Custom
   for (const h of ['## Zustand', '## Aktionen', '## Tokens', '## Attribute', '## Konformität'])
     assert.ok(md.includes(h), `Abschnitt ${h} fehlt`);
 });
+
+// --- Icon --------------------------------------------------------------------------------------
+// Das Icon hat kein eigenes Stylesheet: die vier Stufen stehen in base.css. skalen.md „Icons“.
+const ICON_SIZES = { sm: 'size-4', md: 'size-5', lg: 'size-6', glyph: 'size-3' };
+
+test('die vier Icon-Stufen stehen als Klassen in base.css, font-size nur dort, und lesen size-icon-*', () => {
+  const base = readFileSync(new URL('../dist/base.css', import.meta.url), 'utf8');
+  for (const [s, prim] of Object.entries(ICON_SIZES)) {
+    assert.equal(T.measure[`size-icon-${s}`], `{${prim}}`);
+    assert.ok(new RegExp(`\\.tl-icon-${s}\\s*\\{\\s*font-size: var\\(--tl-size-icon-${s}\\);`).test(base), `.tl-icon-${s} fehlt oder liest nicht size-icon-${s}`);
+  }
+  assert.ok(/\.tl-icon-glyph, \.tl-icon-sm, \.tl-icon-md, \.tl-icon-lg \{[^}]*line-height: 1;[^}]*width: 1em;[^}]*height: 1em;/.test(base), 'line-height 1 und 1-em-Quadrat fehlen');
+  const comps = readFileSync(new URL('../dist/components.css', import.meta.url), 'utf8');
+  assert.ok(!/font-size/.test(comps), 'font-size in components.css — Icon- und Typo-Größen kommen aus base.css');
+});
+
+test('das Icon-Specimen zeigt jede Stufe, das Quadrat in einer Spalte und ein Bild-Icon ohne Inline-Breite', () => {
+  const html = readFileSync(new URL('../src/components/icon/icon.spec.html', import.meta.url), 'utf8');
+  for (const s of Object.keys(ICON_SIZES)) assert.ok(html.includes(`tl-icon-${s}`), `Stufe ${s} fehlt`);
+  assert.ok(html.includes('role="img"') && html.includes('aria-hidden="true"') && html.includes('<img class="tl-icon-sm" alt=""'), 'Attribute oder Bild-Icon fehlen');
+  assert.ok(html.includes('id="mode"') && html.includes('id="density"'), 'Schalter fehlen');
+  assert.ok(!/style="/.test(html.replace(/<style>[\s\S]*?<\/style>/, '')), 'Inline-Style im Specimen');
+});
+
+test('der Icon-Vertrag nennt die vier Klassen, die vier Tokens und die Attribute', () => {
+  const md = readFileSync(new URL('../src/components/icon/icon.contract.md', import.meta.url), 'utf8');
+  for (const s of Object.keys(ICON_SIZES)) {
+    assert.ok(md.includes(`.tl-icon-${s}`), `Vertrag nennt .tl-icon-${s} nicht`);
+    assert.ok(md.includes(`--tl-size-icon-${s}`), `Vertrag nennt --tl-size-icon-${s} nicht`);
+  }
+  for (const a of ['role="img"', 'aria-label', 'aria-hidden', 'alt=""']) assert.ok(md.includes(a), `Vertrag nennt ${a} nicht`);
+  for (const h of ['## Zustand', '## Aktionen', '## Tokens', '## Attribute', '## Konformität']) assert.ok(md.includes(h), `Abschnitt ${h} fehlt`);
+});
