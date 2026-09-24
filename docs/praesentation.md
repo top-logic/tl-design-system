@@ -2,7 +2,7 @@
 
 **Stand:** 2026-09-17 · Welle 0 · Ticket #29617
 
-Eine Folie je Abschnitt. Belege stehen in [`skalen.md`](skalen.md), Zahlen sind am echten Stylesheet gemessen, nicht geschätzt.
+Vorlage für die PowerPoint, mit der die Kollegen das Design System kennenlernen: was sich ändert, wie es funktioniert, warum so. Kurz und prägnant, eine Botschaft je Folie. Entscheidungen und Belege stehen allein in [`skalen.md`](skalen.md).
 
 ---
 

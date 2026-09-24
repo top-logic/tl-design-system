@@ -7,7 +7,7 @@
 | `STATUS.md` | Wo die Arbeit steht und wo anzuknüpfen ist |
 | `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md` | Die Spec: Paket, Namensschema, Kundenvertrag, Wellen, Gates |
 | `docs/skalen.md` | Jede Entscheidung mit ihrer Begründung — die maßgebliche Quelle |
-| `docs/praesentation.md` | Dieselben Inhalte folienweise, wird bei jeder Entscheidung mitgezogen |
+| `docs/praesentation.md` | Die künftige PowerPoint für die Kollegen: kurz, prägnant, eher Marketing — was sich ändert und warum. Keine Entscheidungsquelle; wird bei jeder Entscheidung mitgezogen, aber als Botschaft, nicht als Beleg |
 | `docs/migration/altlast.md` | Arbeitsliste für die Wellen 1–5: alte Rolle → neues Token je Lesestelle |
 
 ## Werkzeuge — nichts davon von Hand nachbauen
