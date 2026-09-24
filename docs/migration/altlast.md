@@ -272,6 +272,6 @@ Die Pill ist Teil von `TLText` (#29596) und wird von `withPill` in Select, Dropd
 
 Sichtprüfung 24.09. in der PR-Instanz (`http://docker:8007/CWS_29617_design_system_welle_1_pill/`, hell und dunkel): drei Rollen in Tabelle, Gruppenkopf, Dropdown-Liste und Chip zeichnen `tl-pill tl-pill--warning|info|success` aus `status-*-subtle`/`-border`, Text `text-primary`, kein Inline-Style, kein `.tlPill`. Zwei Befunde gehören der Select-Welle (Tabelle oben): Einzelwert ohne Pill, Abschneiden in schmaler Zelle.
 
-### Avatar (Welle 1, Branch `CWS/CWS_29617_design_system_welle_1_avatar`)
+### Avatar (Welle 1, PR !1695 auf `CWS/CWS_29617_design_system_welle_1_avatar`, gestapelt auf !1694)
 
 `TLAvatar` (`ReactAvatarControl`, `AvatarElement`, `<avatar>`), alter Block „TLAvatar“ (37 Zeilen). Umstellung: die Farbe wird eine Kategorie aus dem Namen (`tl-avatar--category-<n>`, Tokens der Kategorie), ohne Namen und mit Bild die neutrale Rolle; kein `hsl()`-Inline-Style, kein `#fff`. Größen `sm`/`md`/`lg`/`xl` aus `size-avatar-*` (neu `size-9`); `AvatarSize` und `<avatar size>` heißen so, die alten Namen fallen. Initialen tragen die Typo-Klasse ihrer Größe (`label-strong`, `body-strong`, `heading-md`, `heading-lg`). Es fallen: der Block `TLAvatar`, `hue()` im TSX, die Literale 0.5625/0.75/1.125/1.5 rem. Entscheidung: `docs/skalen.md` „Avatar: die Farbe ist eine Kategorie“, Folie 34.

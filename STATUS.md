@@ -48,13 +48,23 @@ umgeschrieben. Antwort steht im PR. Alte PRs aufgeräumt: !1621 (Brand-Token im 
 geschlossen als überholt; !1618 (doppeltes React im Controls-Bundle) auf master neu aufgesetzt
 (`b610c5658e`, −16.748 B, Bernhard Reviewer) — unabhängig vom Design System.
 
+**Avatar (24.09.) steht als PR.** ToggleButton war mit dem Button erledigt (`aria-pressed`, kein eigenes CSS).
+Avatar entschieden: die Farbe ist eine Kategorie aus dem Namen (`docs/skalen.md` „Avatar: die Farbe ist eine
+Kategorie“, Folie 34) — `tl-avatar--category-<n>`, Tokens der Kategorie, Initialen `text-primary`; vier Größen
+`size-avatar-sm/md/lg/xl` (neu `size-9`), nicht an der Dichte; Typo-Klasse je Größe. Paket: `avatar.css`, Vertrag,
+Specimen, Gates 109/109. Engine: PR [!1695](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1695) auf Branch
+`CWS/CWS_29617_design_system_welle_1_avatar`, **gestapelt auf den Pill-Branch** (Basis !1694) — nach dem Pill-Merge
+auf master rebasen und die Basis umstellen. `AvatarSize` heißt `sm|md|lg|xl`, alter Block `TLAvatar` raus,
+Ratsche auf 7325. Sichtprüfung offen (Kommentarköpfe in der Objektliste, Bild-Demo `xl`).
+
 Jetzt:
 
-1. PR !1694 abwarten (Reviewer Bernhard, Request-changes beantwortet); nach dem Merge Worktree auf `master`, Branch löschen, Ratsche
+1. PR !1694 abwarten (Reviewer Bernhard, Request-changes beantwortet); dann !1695 auf master rebasen, Basis umstellen,
+   Docker-Instanz sichtprüfen; nach dem Merge Worktree auf `master`, Branch löschen, Ratsche
    gegen master prüfen, Pill-Absatz in altlast.md als gemerged markieren.
 2. Nicht geprüft, offen: AppBar-Kollaps bei Platzmangel, AppBar auf `surface-layer`, `ButtonTone.DANGER`
    (kein Aufrufer — `setTone` einmal setzen).
-3. Nächste Komponente der Welle 1: ToggleButton, Avatar, Progress, FontIcon — Vorlage Button/Pill.
+3. Nächste Komponente der Welle 1: Progress, dann FontIcon — Vorlage Button/Pill/Avatar.
 
 Das Repo liegt jetzt unter `TopLogic/tl-design-system`; Wiki (Home, Übersicht, Anleitung Komponenten mit
 Claude, Regeldatei) ist der Einstieg für Bernhard, `docs/*.md` die gepflegte Quelle.
