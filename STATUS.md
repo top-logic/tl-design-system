@@ -19,6 +19,18 @@ neue Blöcke von außen stehen unter `unlisted` in `node tools/inventory.mjs`, b
 Fremdzuwachs hebt einen Block mit Ticketvermerk, nicht die Datei. Begründung in `docs/skalen.md` „Die
 Ratsche misst Blöcke“, Folie 32a.
 
+**Sichtprüfung (offen, für Button und Pill).** Kein Eclipse nötig: Jenkins baut je PR eine Docker-Instanz
+(`Docker_Git_Java17`, Kontext = Branchname). Für !1694: Build 9282 SUCCESS um 10:22, Instanz intern
+`http://docker:8007`, unter `https://apps.top-logic.com/CWS_29617_design_system_welle_1_pill/` um 10:26 noch 404
+(Proxy trägt sie erst nach vollständigem Start ein — bei Welle 1 hat es funktioniert). master-Stand läuft dauerhaft
+unter `https://apps.top-logic.com/tl-demo-react/` (liefert `components.css`, kein `tlReactButton`). Login
+`root`/`root1234` (JVM_ARGS des Jobs). Zum Prüfen entweder Chrome-Erweiterung „Claude in Chrome“ verbinden —
+dann macht Claude die Sichtprüfung und Screenshots — oder Hendrik selbst im Browser: Toolbar rahmenlos,
+Dialogfuß secondary + eine primary, Tabellenzeilen-Icons klein und rahmenlos, AppBar-Toolbar kollabiert bei
+Platzmangel zu Icons, AppBar auf `surface-layer`; Pill: Ticketstatus `open`/`inProgress`/`closed` als
+warning/info/success in Tabelle, Dropdown, Chips und Text, Paket-Specimen `node tools/serve.mjs` → Pill →
+14 Rollen auf beiden Flächen, hell und dunkel.
+
 Jetzt:
 
 1. Sichtprüfung in der master-Docker-Instanz: Toolbar rahmenlos, Dialogfuß primary/secondary, kleine
