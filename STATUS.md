@@ -33,9 +33,17 @@ kein Inline-Style, kein `.tlPill`, beide Modi. Button dort mitgeprüft: Toolbar 
 Select-Welle in `docs/migration/altlast.md` „Sichtbare Befunde“: gewählter Einzelwert ohne Pill (bewusste
 TSX-Regel), Pill in 120-px-Zelle hart abgeschnitten (`.tlOptionValue` ohne `min-width: 0`).
 
+**Review !1694 (24.09., Bernhard):** `.DS_Store` raus, und die Frage „wofür noch `DesignTokenService`?“ —
+beantwortet mit Commit `78e2f3627c`: Die Rolle bleibt Enum (geschlossene Liste, Vertrag des Pakets), der
+Token-Service von #29606 fällt mit seinem letzten Leser (`DesignTokenService`, `ThemeDesignTokens`,
+`UIThemeDesignTokens`, Registrierung, Test); `DesignTokenKind` bleibt für die Theme-Tokens. FAQ auf Rollen
+umgeschrieben. Antwort steht im PR. Alte PRs aufgeräumt: !1621 (Brand-Token im alten Theme-Config)
+geschlossen als überholt; !1618 (doppeltes React im Controls-Bundle) auf master neu aufgesetzt
+(`b610c5658e`, −16.748 B, Bernhard Reviewer) — unabhängig vom Design System.
+
 Jetzt:
 
-1. PR !1694 abwarten (Reviewer Bernhard); nach dem Merge Worktree auf `master`, Branch löschen, Ratsche
+1. PR !1694 abwarten (Reviewer Bernhard, Request-changes beantwortet); nach dem Merge Worktree auf `master`, Branch löschen, Ratsche
    gegen master prüfen, Pill-Absatz in altlast.md als gemerged markieren.
 2. Nicht geprüft, offen: AppBar-Kollaps bei Platzmangel, AppBar auf `surface-layer`, `ButtonTone.DANGER`
    (kein Aufrufer — `setTone` einmal setzen).
