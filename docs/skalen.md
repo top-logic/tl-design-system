@@ -653,7 +653,11 @@ CSS, und **kein einziger Wert ist ein Token.**
 | `duration-slow` | `250ms` | Popover, Dialog, Drawer — alles, was eine Fläche bewegt |
 
 Drei Dauern decken die acht des Bestands vollständig ab. Die langen Werte (0,5 bis 2 s) gehören zu
-Endlos-Animationen und sind keine Übergänge — sie stehen bei ihrer Animation, nicht in der Skala.
+Endlos-Animationen und sind keine Übergänge. **Nachgetragen (24.09., Progress):** „stehen bei ihrer
+Animation“ hieß Literal, und das Klassen-Gate lässt kein Dauer-Literal zu — zu Recht. Endlos-Animationen
+lesen deshalb eine vierte Dauer, `duration-loop` = 1200 ms (`dur-4`): ein Durchlauf des Schwungs im
+Fortschrittsbalken, eine Umdrehung des Spinners. Vier Dauern, nicht acht; die vierte ist keine
+Übergangsdauer und steht in keiner `transition`.
 
 **Die Regel ist die Fläche, nicht die Wichtigkeit:** Je mehr Pixel sich bewegen, desto länger darf
 es dauern. Ein Farbwechsel am Knopf ist bei 100 ms fertig, ein Drawer braucht 250 ms, sonst wirkt
@@ -1235,6 +1239,37 @@ Größen an der Dichte (ein Avatar in einer kompakten Tabelle ist `sm`, nicht ei
 der Dichte; `avatar.css` liest nur die Tokens der Rollen und `size-avatar-*`, keine Schriftregel,
 kein `hsl`, kein Literal; das Specimen zeigt acht Kategorien × vier Größen, ohne Namen und mit Bild,
 auf beiden Flächen.
+
+### Progress: ein Anteil, kein Urteil
+
+**Der Befund.** `.tlProgress` steht ohne eigenen Block im Block `TLHtml`: Spur `--layer-active`,
+Füllung `--interactive`, Höhe `0.5rem`, Mindestbreite `2rem`, Radius `999px`, Übergang `0.2s ease-out`,
+Schwung `1.4s ease-in-out infinite`, Beschriftung `--label-01-font-size` — sieben Literale, und ein
+eigener `prefers-reduced-motion`-Block, der die Füllung bei 75 % ruhen lässt. Unbestimmt ist eine Klasse
+`--indeterminate`, obwohl das Element `aria-busy` schon trägt.
+
+**Entschieden:**
+
+| Achse | Regel |
+|---|---|
+| Spur | `surface-interactive-selected` — die neutrale Fläche, die auch Pill und Avatar ohne Rolle tragen. `surface-layer-nested` schied aus: hell identisch mit `surface-layer`, die Spur wäre auf einem Panel unsichtbar. |
+| Füllung | `surface-brand`. Kontrast Füllung zu Spur 4,75 hell / 4,47 dunkel; Gate 3,0. |
+| Tönung | **Keine.** Ein Balken sagt, wie weit, nicht ob gut oder schlecht; das sagt der Text daneben oder der Status, der ihn zeigt. |
+| Maße | Höhe `size-progress` = `size-2` (8 px), Mindestbreite `size-control`, Abstand `space-xs`, Form `radius-full` (in der Radius-Skala für den Balken vorgesehen). |
+| Beschriftung | `text-secondary`, Klasse `.tl-type-label .tl-nums` von außen — Zähler sind Zahlenspalten. |
+| Breite der Füllung | **Daten, kein Gestaltungswert:** das Control setzt `style="width: 25%"`, dasselbe wie `aria-valuenow`. Eine Custom Property `--tl-progress-fraction` schied aus, weil der Namensraum `--tl` den Tokens gehört und das Gate komponenteneigene Variablen zu Recht ablehnt. |
+| Unbestimmt | Ein **Zustand**: `[aria-busy="true"]` ist der Selektor, keine Klasse. Die Füllung ist zwei Fünftel breit, ruht bei drei Vierteln und wandert mit `duration-loop` `easing-standard` endlos. |
+| Reduced Motion | **Kein eigener Block.** Der globale Schalter beendet die Animation nach einem Durchlauf, der Fill-Mode lässt die Füllung auf ihre Ruhelage zurückfallen — der Balken liest sich weiter als beschäftigt. Das ist die Probe, ob der Schalter aus Welle 0 trägt: er trägt. |
+
+**Verworfen:** eine Tönung je Status (der Bestand hat keine, und `TLJobStatus` sagt Scheitern im
+Text); der Anteil als Custom Property (siehe oben); Spur mit Linie (`border-separator` liegt bei 1,7
+gegen den Grund — eine Linie um 8 px Spur zeichnet nur Rauschen); eine eigene Klasse für unbestimmt.
+
+**Als Test:** `components.test.mjs` prüft Füllung 3,0 gegen Spur, Spur verschieden vom Grund,
+Beschriftung 4,5 auf base und layer, je Modus; `progress.css` liest genau drei Farbrollen, keine
+Breite, keine eigene Variable, den Schwung nur aus `duration-loop`, keinen eigenen Motion-Schalter;
+`duration-loop` ist `dur-4` = 1200 ms; das Specimen zeigt fünf Anteile, unbestimmt, ohne Beschriftung
+und eine schmale Zelle, auf beiden Flächen.
 
 ## Befunde aus dem Specimen
 

@@ -647,6 +647,13 @@
           "unit": "ms"
         }
       },
+      "dur-4": {
+        "$type": "duration",
+        "$value": {
+          "value": 1200,
+          "unit": "ms"
+        }
+      },
       "curve-1": {
         "$type": "cubicBezier",
         "$value": [
@@ -1592,6 +1599,10 @@
         "$type": "dimension",
         "$value": "{primitive.measure.size-9}"
       },
+      "size-progress": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-2}"
+      },
       "border-width-sm": {
         "$type": "dimension",
         "$value": "{primitive.measure.line-1}"
@@ -1623,6 +1634,10 @@
       "duration-slow": {
         "$type": "duration",
         "$value": "{primitive.motion.dur-3}"
+      },
+      "duration-loop": {
+        "$type": "duration",
+        "$value": "{primitive.motion.dur-4}"
       },
       "easing-standard": {
         "$type": "cubicBezier",

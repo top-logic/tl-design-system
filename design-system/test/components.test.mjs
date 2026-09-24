@@ -254,3 +254,62 @@ test('der Avatar-Vertrag nennt jedes Token, das avatar.css liest, jede Größe u
   for (const h of ['## Zustand', '## Aktionen', '## Tokens', '## Attribute', '## Konformität'])
     assert.ok(md.includes(h), `Abschnitt ${h} fehlt`);
 });
+
+// --- Progress ----------------------------------------------------------------------------------
+// Spur ist die vertiefte Fläche, Füllung die Marke; keine Tönung. Unbestimmt ist ein Zustand.
+// skalen.md „Progress: ein Anteil, kein Urteil“.
+const PROGRESS = { track: 'surface-interactive-selected', fill: 'surface-brand', label: 'text-secondary' };
+
+for (const mode of ['light', 'dark']) {
+  const C = { ...R.color[mode], ...R.derived[mode] };
+  test(`Progress ${mode}: Füllung 3,0 gegen die Spur, Spur sichtbar auf base und layer, Beschriftung 4,5`, () => {
+    const f = ratio(C[PROGRESS.fill], C[PROGRESS.track]);
+    assert.ok(f >= AA_NON_TEXT, `${mode}: Füllung ${PROGRESS.fill} auf Spur ${PROGRESS.track} ${f.toFixed(2)} < 3,0`);
+    for (const g of GRUND) {
+      assert.ok(C[PROGRESS.track] !== C[g], `${mode}: Spur fällt mit ${g} zusammen`);
+      const t = ratio(C[PROGRESS.label], C[g]);
+      assert.ok(t >= AA_TEXT, `${mode} auf ${g}: Beschriftung ${t.toFixed(2)} < 4,5`);
+    }
+  });
+}
+
+test('progress.css liest Spur, Füllung und Beschriftung der PROGRESS-Map und sonst keine Farbe; keine Breite, keine eigene Variable', () => {
+  const css = readFileSync(new URL('../src/components/progress/progress.css', import.meta.url), 'utf8');
+  const farbTokens = new Set([...css.matchAll(/var\((--tl-(?:surface|text|icon|border|status|category)-[a-z0-9-]+)\)/g)].map((m) => m[1]));
+  assert.deepEqual([...farbTokens].sort(), Object.values(PROGRESS).map((r) => '--tl-' + r).sort());
+  assert.ok(!/--tl-progress-[a-z]+:/.test(css), 'keine komponenteneigene Variable');
+  assert.ok(!/^\.tl-progress__fill\s*\{[^}]*\bwidth:/m.test(css), 'die Breite der Füllung ist Daten und kommt vom Control');
+  assert.ok(css.includes('[aria-busy="true"]') && !/tl-progress--/.test(css), 'unbestimmt ist ein Attribut, kein Modifier');
+  assert.ok(css.includes('var(--tl-duration-loop)') && !/\d+(\.\d+)?m?s\b/.test(css.replace(/var\([^)]*\)/g, '')), 'Schwung nur aus duration-loop');
+  assert.ok(!/prefers-reduced-motion|font-size|font-weight/.test(css), 'kein eigener Motion-Schalter, keine Schriftregel');
+  assert.ok(css.includes('--tl-size-progress') && css.includes('--tl-radius-full'), 'Höhe und Form aus der Skala');
+});
+
+test('duration-loop ist die vierte Dauer, nur für Endlos-Animationen, und size-progress liest size-2', () => {
+  assert.equal(T.measure['duration-loop'], '{dur-4}');
+  assert.equal(parseFloat(P.motion['dur-4']), 1200);
+  assert.equal(T.measure['size-progress'], '{size-2}');
+});
+
+test('das Progress-Specimen zeigt Anteile, unbestimmt, ohne Beschriftung und eine schmale Zelle, auf beiden Flächen', () => {
+  const html = readFileSync(new URL('../src/components/progress/progress.spec.html', import.meta.url), 'utf8');
+  for (const s of ['role="progressbar"', 'aria-valuemin="0"', 'aria-valuemax="100"', 'aria-valuenow=', 'aria-valuetext=', 'aria-busy="true"'])
+    assert.ok(html.includes(s), `${s} fehlt`);
+  for (const c of ['tl-progress__track', 'tl-progress__fill', 'tl-progress__label', 'tl-nums']) assert.ok(html.includes(c), `${c} fehlt`);
+  assert.ok(html.includes(".style.width = Math.round("), 'Breite nicht als Daten gesetzt');
+  assert.ok(html.includes('id="on-layer"') && html.includes('id="on-base"'), 'beide Flächen fehlen');
+  assert.ok(html.includes('id="mode"') && html.includes('id="density"'), 'Schalter für Modus und Dichte fehlen');
+  assert.ok(html.includes('/dist/components.css'), 'lädt components.css nicht');
+  assert.ok(!/style="/.test(html.replace(/<style>[\s\S]*?<\/style>/, '')), 'Inline-Style im Specimen');
+});
+
+test('der Progress-Vertrag nennt jedes Token, das progress.css liest, die Custom Property und die Attribute', () => {
+  const css = readFileSync(new URL('../src/components/progress/progress.css', import.meta.url), 'utf8');
+  const md = readFileSync(new URL('../src/components/progress/progress.contract.md', import.meta.url), 'utf8');
+  for (const t of new Set([...css.matchAll(/var\((--tl-[a-z0-9-]+)\)/g)].map((m) => m[1])))
+    assert.ok(md.includes('`' + t + '`'), `Vertrag nennt ${t} nicht`);
+  for (const a of ['role="progressbar"', 'aria-valuemin', 'aria-valuemax', 'aria-valuenow', 'aria-valuetext', 'aria-busy', 'style="width:'])
+    assert.ok(md.includes(a), `Vertrag nennt ${a} nicht`);
+  for (const h of ['## Zustand', '## Aktionen', '## Tokens', '## Attribute', '## Konformität'])
+    assert.ok(md.includes(h), `Abschnitt ${h} fehlt`);
+});
