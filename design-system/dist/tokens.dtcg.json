@@ -448,6 +448,13 @@
           "unit": "rem"
         }
       },
+      "size-9": {
+        "$type": "dimension",
+        "$value": {
+          "value": 4,
+          "unit": "rem"
+        }
+      },
       "text-1": {
         "$type": "dimension",
         "$value": {
@@ -1568,6 +1575,22 @@
       "size-icon-lg": {
         "$type": "dimension",
         "$value": "{primitive.measure.size-6}"
+      },
+      "size-avatar-sm": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-6}"
+      },
+      "size-avatar-md": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-7}"
+      },
+      "size-avatar-lg": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-8}"
+      },
+      "size-avatar-xl": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-9}"
       },
       "border-width-sm": {
         "$type": "dimension",

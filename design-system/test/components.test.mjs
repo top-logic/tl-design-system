@@ -183,3 +183,74 @@ test('der Pill-Vertrag nennt jedes Token, das pill.css liest, und jede Rolle', (
   for (const h of ['## Zustand', '## Aktionen', '## Tokens', '## Attribute', '## Konformität'])
     assert.ok(md.includes(h), `Abschnitt ${h} fehlt`);
 });
+
+// --- Avatar ------------------------------------------------------------------------------------
+// Die Farbe ist eine Kategorie aus dem Namen; ohne Namen die neutrale Fläche. Dieselben zwei Tokens je
+// Rolle wie bei der Pill, Initialen in text-primary. skalen.md „Avatar: die Farbe ist eine Kategorie“.
+const AVATAR = {
+  neutral: PILL.neutral,
+  ...Object.fromEntries([1, 2, 3, 4, 5, 6, 7, 8].map((k) => [`category-${k}`, PILL[`category-${k}`]])),
+};
+const AVATAR_SIZES = { sm: 'size-6', md: 'size-7', lg: 'size-8', xl: 'size-9' };
+
+for (const mode of ['light', 'dark']) {
+  const C = { ...R.color[mode], ...R.derived[mode] };
+  test(`Avatar ${mode}: Initialen 4,5 auf jeder Fläche, Linie 3,0 gegen base und layer`, () => {
+    for (const [name, k] of Object.entries(AVATAR)) {
+      const t = ratio(C['text-primary'], C[k.fill]);
+      assert.ok(t >= AA_TEXT, `${mode} ${name}: text-primary auf ${k.fill} ${t.toFixed(2)} < 4,5`);
+      for (const g of GRUND) {
+        const l = ratio(C[k.line], C[g]);
+        assert.ok(l >= AA_NON_TEXT, `${mode} ${name} auf ${g}: Linie ${k.line} ${l.toFixed(2)} < 3,0`);
+      }
+    }
+  });
+}
+
+test('die vier Avatar-Größen sind Maß-Tokens der Skala, 24/32/48/64 px, und folgen nicht der Dichte', () => {
+  for (const [s, prim] of Object.entries(AVATAR_SIZES)) {
+    assert.equal(T.measure[`size-avatar-${s}`], `{${prim}}`, `size-avatar-${s} liest nicht ${prim}`);
+  }
+  assert.deepEqual(Object.values(AVATAR_SIZES).map((p) => parseFloat(P.measure[p]) * 16), [24, 32, 48, 64]);
+  for (const d of Object.values(T.density)) assert.ok(!Object.keys(d).some((k) => k.startsWith('size-avatar')), 'Avatar-Größe in der Dichte');
+});
+
+test('avatar.css liest je Rolle genau Fläche und Linie der AVATAR-Map, Text nur als text-primary, Größen nur aus size-avatar-*', () => {
+  const css = readFileSync(new URL('../src/components/avatar/avatar.css', import.meta.url), 'utf8');
+  const farbTokens = new Set([...css.matchAll(/var\((--tl-(?:surface|text|icon|border|status|category)-[a-z0-9-]+)\)/g)]
+    .map((m) => m[1]).filter((t) => !/^--tl-border-width-/.test(t)));
+  const belegt = new Set(['text-primary']);
+  for (const k of Object.values(AVATAR)) { belegt.add(k.fill); belegt.add(k.line); }
+  for (const t of farbTokens) assert.ok(belegt.has(t.replace(/^--tl-/, '')), `${t} kommt in keinem AVATAR-Map-Eintrag vor`);
+  for (const rolle of belegt) assert.ok(farbTokens.has('--tl-' + rolle), `avatar.css liest ${rolle} nicht`);
+  assert.ok(!/color-mix|#[0-9a-fA-F]{3}|hsl\(/.test(css), 'kein color-mix, kein Literal, kein hsl');
+  for (const k of Object.keys(AVATAR).filter((n) => n !== 'neutral')) assert.ok(css.includes(`.tl-avatar--${k}`), `Modifier --${k} fehlt`);
+  for (const s of ['sm', 'lg', 'xl']) assert.ok(css.includes(`.tl-avatar--${s}`), `Größe --${s} fehlt`);
+  const masse = [...css.matchAll(/(?:width|height):\s*var\((--tl-[a-z0-9-]+)\)/g)].map((m) => m[1]);
+  assert.ok(masse.length >= 8 && masse.every((m) => /^--tl-size-avatar-(sm|md|lg|xl)$/.test(m)), `Maße nur aus size-avatar-*: ${masse}`);
+  assert.ok(!/font-size|font-weight|letter-spacing/.test(css), 'Typo kommt von der Klasse, nicht aus avatar.css');
+  assert.ok(css.includes('--tl-radius-round'), 'Form ist radius-round');
+});
+
+test('das Avatar-Specimen zeigt jede Kategorie, jede Größe, ohne Namen und mit Bild, auf beiden Flächen', () => {
+  const html = readFileSync(new URL('../src/components/avatar/avatar.spec.html', import.meta.url), 'utf8');
+  for (let k = 1; k <= 8; k++) assert.ok(html.includes(`category-${k}`), `Kategorie ${k} fehlt`);
+  for (const s of ['sm', 'lg', 'xl']) assert.ok(html.includes(`tl-avatar--${s}`), `Größe ${s} fehlt`);
+  for (const t of ['tl-type-label-strong', 'tl-type-body-strong', 'tl-type-heading-md', 'tl-type-heading-lg']) assert.ok(html.includes(t), `Typo ${t} fehlt`);
+  assert.ok(html.includes('tl-avatar__image') && html.includes('aria-hidden="true"') && html.includes('role="img"'), 'Bild, leer oder role fehlen');
+  assert.ok(html.includes('id="on-layer"') && html.includes('id="on-base"'), 'beide Flächen fehlen');
+  assert.ok(html.includes('id="mode"') && html.includes('id="density"'), 'Schalter für Modus und Dichte fehlen');
+  assert.ok(html.includes('/dist/components.css'), 'lädt components.css nicht');
+  assert.ok(!/style="/.test(html.replace(/<style>[\s\S]*?<\/style>/, '')), 'Inline-Style im Specimen');
+});
+
+test('der Avatar-Vertrag nennt jedes Token, das avatar.css liest, jede Größe und die Attribute', () => {
+  const css = readFileSync(new URL('../src/components/avatar/avatar.css', import.meta.url), 'utf8');
+  const md = readFileSync(new URL('../src/components/avatar/avatar.contract.md', import.meta.url), 'utf8');
+  for (const t of new Set([...css.matchAll(/var\((--tl-[a-z0-9-]+)\)/g)].map((m) => m[1])))
+    assert.ok(md.includes('`' + t + '`'), `Vertrag nennt ${t} nicht`);
+  for (const s of ['sm', 'md', 'lg', 'xl']) assert.ok(md.includes('`' + s + '`'), `Vertrag nennt Größe ${s} nicht`);
+  for (const a of ['role="img"', 'aria-label', 'aria-hidden', 'alt']) assert.ok(md.includes(a), `Vertrag nennt ${a} nicht`);
+  for (const h of ['## Zustand', '## Aktionen', '## Tokens', '## Attribute', '## Konformität'])
+    assert.ok(md.includes(h), `Abschnitt ${h} fehlt`);
+});

@@ -1199,6 +1199,43 @@ gegen `surface-base` und `surface-layer`; `tokens.test.mjs` prüft die Kategorie
 Text und Linie, und die 20°. `pill.css` darf nur die Tokens der Rollen lesen, kein `color-mix`,
 kein Literal; das Specimen zeigt jede Rolle auf beiden Flächen und im Fließtext.
 
+### Avatar: die Farbe ist eine Kategorie
+
+**Der Befund.** `TLAvatar` zeichnet Initialen auf `hsl(<hash des Namens>, 45%, 45%)` als
+Inline-Style, Text `#fff` als Literal; vier Größen 24/32/48/64 px mit Schriftgrößen 9/12/18/24 px als
+Literale — die 9 px unterschreiten die Untergrenze der Typo-Skala; der leere Avatar liest
+`layer-accent` (zweckfremd, die AppBar-Fläche) und `border-subtle`. Der Farbwert aus dem Hash ist
+die zweite Wahrheit neben der Palette: er kennt keinen Modus, sein Kontrast zum weißen Text ist
+Zufall des Namens (45 % Helligkeit ergibt 3,9 bis 5,1), und er steht im DOM, nicht im Stylesheet.
+
+**Entschieden:**
+
+| Achse | Regel |
+|---|---|
+| Farbe | Eine der acht **Kategorien**, aus dem Namen gerechnet (`1 + hash(name) mod 8`), als Klasse `tl-avatar--category-<n>`. Dieselben zwei Tokens wie die Pill: `category-N-subtle` als Fläche, `category-N-border` als Linie; Initialen `text-primary`. Kein Farbwert aus dem Namen, kein Inline-Style. |
+| Ohne Namen, mit Bild | Die neutrale Rolle der Pill: `surface-interactive-selected`, `border-control`. Das Bild füllt den Kreis (`object-fit: cover`), die Linie bleibt, damit ein helles Foto auf heller Fläche eine Kante hat. |
+| Größen | Vier Maß-Tokens `size-avatar-sm/md/lg/xl` = `size-6/7/8/9` (24/32/48/64 px); `size-9` = 4 rem kommt neu in die Primitive. Modifier `--sm`, `--lg`, `--xl`; `md` ohne Modifier. **Nicht** an der Dichte: ein Avatar ist kein Bedienelement. |
+| Initialen | Typo-Klasse je Größe, von außen wie beim Button: `sm` `label-strong` (12), `md` `body-strong` (14), `lg` `heading-md` (20), `xl` `heading-lg` (24). Keine Schriftregel in `avatar.css`. |
+| Form | `radius-round`, wie in der Radius-Skala vorgesehen. |
+| Zugänglichkeit | Initialen-Avatar `role="img"` + `aria-label`, Bild-Avatar `alt`, Avatar ohne Namen `aria-hidden`; der volle Name als Tooltip. |
+| Modell | `AvatarSize` heißt `sm`, `md`, `lg`, `xl` — der View schreibt `size="xl"`; die alten Namen `small`/`default`/`large`/`x-large` fallen ohne Alias. |
+
+**Warum eine Kategorie und keine eigene Avatar-Palette.** Der Avatar braucht genau das, was die
+Kategorien sind: Werte, die sich unterscheiden, ohne etwas zu bedeuten. Acht reichen — zwei Personen
+in derselben Kategorie unterscheidet der Text, nicht die Farbe, und das gilt für jede Palette mit
+endlich vielen Tönen. Der Gewinn: ein Avatar und eine Pill derselben Kategorie sehen gleich aus,
+das Kontrast-Gate der Kategorien deckt den Avatar mit ab, und die Farbe wechselt mit dem Modus.
+
+**Verworfen:** ein gerechneter Farbwert je Name (die zweite Wahrheit, siehe Pill); weiße Initialen
+auf gesättigter Fläche (`text-on-*` je Kategorie wäre eine dritte Rolle ohne weiteren Leser);
+Größen an der Dichte (ein Avatar in einer kompakten Tabelle ist `sm`, nicht ein geschrumpftes `md`).
+
+**Als Test:** `components.test.mjs` prüft je Rolle × Modus Initialen 4,5 und Linie 3,0 gegen
+`surface-base` und `surface-layer`; die vier Größen sind genau `size-6/7/8/9` und stehen nicht in
+der Dichte; `avatar.css` liest nur die Tokens der Rollen und `size-avatar-*`, keine Schriftregel,
+kein `hsl`, kein Literal; das Specimen zeigt acht Kategorien × vier Größen, ohne Namen und mit Bild,
+auf beiden Flächen.
+
 ## Befunde aus dem Specimen
 
 ### Inter trägt nur zwei Gewichte

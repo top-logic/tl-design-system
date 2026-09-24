@@ -91,7 +91,7 @@ Die Werkzeuge dahinter sind gelöscht; diese Datei ist ihr Erbe.
 | `.tlTableView__cell` | `border-right` | `border-subtle` | `border-separator` |
 | `.tlFormGroup--border-subtle` | `border` | `border-subtle` | `border-separator` |
 | `.tlFormGroup__header` | `border-bottom` | `border-subtle` | `border-separator` |
-| `.tlAvatar--empty` | `border` | `border-subtle` | `border-control` |
+| `.tlAvatar--empty` | `border` | `border-subtle` | `border-control` — **umgesetzt (Avatar, Welle 1)** |
 | `.tlFileChip` | `border` | `border-subtle` | `border-separator` |
 | `.tlFileChip__remove` | `border-left` | `border-subtle` | `border-separator` |
 | `.tlFileChips__add` | `border` | `border-subtle` | `border-control` |
@@ -158,7 +158,7 @@ Die Werkzeuge dahinter sind gelöscht; diese Datei ist ihr Erbe.
 | `.tlReactCheckbox--warning` | `accent-color` | `support-warning` | `status-warning-surface` |
 | `.tlSnackbar--success` | `background` | `support-success` | `status-success-surface` |
 | `.tlAppBar--primary` | `background` | `layer-accent` | `surface-brand-subtle` |
-| `.tlAvatar--empty` | `background` | `layer-accent` | `zweckfremd → surface-layer-nested` |
+| `.tlAvatar--empty` | `background` | `layer-accent` | zweckfremd → **entschieden `surface-interactive-selected`**, die neutrale Rolle der Pill — **umgesetzt (Avatar, Welle 1)** |
 | `.tlFormField__dirtyDot` | `background` | `layer-accent` | `zweckfremd → surface-brand` |
 | `.tlAppBar--primary .tlMenuRegion--click:hover` | `background` | `layer-accent-hover` | `surface-brand-subtle-hover` |
 | `.tlAppBar--primary button.tlToolbar__menuTrigger:not(:disabled):hover` | `background` | `layer-accent-hover` | `surface-brand-subtle-hover` |
@@ -271,3 +271,7 @@ Mit #29497 tragen die Buttons ihre Tooltips über die Bridge (`TOOLTIP_ATTR`, `W
 Die Pill ist Teil von `TLText` (#29596) und wird von `withPill` in Select, Dropdown, Chips und Tabellenzelle gezeichnet. Umstellung: die Farbe wird eine Rolle (`neutral`, `brand`, `error`, `warning`, `success`, `info`, `category-1` … `category-8`); `ReactValueColor.COLOR` trägt den Rollennamen statt CSS, `TLPill` rendert `tl-pill tl-pill--<rolle>`. Es fallen: `--tlPill-color` (aus `foreignTl`), die `color-mix`-Regeln im Block „The shape the text takes“, `ColorSpec.getValue()` (Literal), `ColorTokenOptions`/`ColorTokenConstraint` samt Resource-Keys, das Token `support-info`. Modelle: `demo.tickets.model.xml` nennt drei Rollen statt Tokens. Entscheidung: `docs/skalen.md` „Pill: Rolle statt Farbe“.
 
 Sichtprüfung 24.09. in der PR-Instanz (`http://docker:8007/CWS_29617_design_system_welle_1_pill/`, hell und dunkel): drei Rollen in Tabelle, Gruppenkopf, Dropdown-Liste und Chip zeichnen `tl-pill tl-pill--warning|info|success` aus `status-*-subtle`/`-border`, Text `text-primary`, kein Inline-Style, kein `.tlPill`. Zwei Befunde gehören der Select-Welle (Tabelle oben): Einzelwert ohne Pill, Abschneiden in schmaler Zelle.
+
+### Avatar (Welle 1, Branch `CWS/CWS_29617_design_system_welle_1_avatar`)
+
+`TLAvatar` (`ReactAvatarControl`, `AvatarElement`, `<avatar>`), alter Block „TLAvatar“ (37 Zeilen). Umstellung: die Farbe wird eine Kategorie aus dem Namen (`tl-avatar--category-<n>`, Tokens der Kategorie), ohne Namen und mit Bild die neutrale Rolle; kein `hsl()`-Inline-Style, kein `#fff`. Größen `sm`/`md`/`lg`/`xl` aus `size-avatar-*` (neu `size-9`); `AvatarSize` und `<avatar size>` heißen so, die alten Namen fallen. Initialen tragen die Typo-Klasse ihrer Größe (`label-strong`, `body-strong`, `heading-md`, `heading-lg`). Es fallen: der Block `TLAvatar`, `hue()` im TSX, die Literale 0.5625/0.75/1.125/1.5 rem. Entscheidung: `docs/skalen.md` „Avatar: die Farbe ist eine Kategorie“, Folie 34.

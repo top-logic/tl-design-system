@@ -630,3 +630,19 @@ Der Befund dahinter: drei Erscheinungen, zwei kaum genutzte Größen, ein gedrü
 Der Befund dahinter: `status-*-text` auf der eigenen `subtle`-Fläche erreicht hell 4,0 bis 4,2 — die Mischung im alten Stylesheet hatte Kontrast als Nebenprodukt.
 
 > Sprechnotiz: Kategorie 1 liegt 26° neben dem Fehlerrot. Darum heißen sie Kategorien: Wer Rot meint, nimmt `error`.
+
+## 34 · Welle 1 · der Avatar: die Farbe ist eine Kategorie
+
+**Der Name bestimmt die Kategorie, nicht die Farbe.**
+
+| | |
+|---|---|
+| Farbe | `1 + hash(name) mod 8` → `tl-avatar--category-<n>`; Fläche und Linie sind die Tokens der Kategorie, Initialen `text-primary` |
+| Ohne Namen / mit Bild | die neutrale Rolle der Pill; das Bild füllt den Kreis, die Linie bleibt |
+| Größen | `size-avatar-sm/md/lg/xl` = 24/32/48/64 px, neu `size-9` = 4 rem; nicht an der Dichte |
+| Initialen | Typo-Klasse je Größe: `label-strong` · `body-strong` · `heading-md` · `heading-lg` — nichts unter 12 px |
+| Verworfen | `hsl()` aus dem Namen als Inline-Style, weiße Initialen auf gesättigter Fläche, Größen an der Dichte |
+
+Der Befund dahinter: Der alte Avatar hatte 9-px-Initialen und einen Farbwert, der weder Modus noch Kontrast kannte.
+
+> Sprechnotiz: Ein Avatar und eine Pill derselben Kategorie sehen gleich aus. Das ist kein Zufall, das ist die Palette.
