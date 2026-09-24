@@ -1,6 +1,6 @@
 # Stand
 
-**Letzte Sitzung:** 2026-09-24 · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-09-24 (Pill-PR offen) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Spec:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`
 
 ## Zuerst
@@ -26,7 +26,7 @@ Jetzt:
    ein Löschen-Kommando mit `ButtonTone.DANGER` (heute kein Aufrufer — `setTone` einmal setzen).
 2. **Pill, in Arbeit (24.09.).** Entschieden: Rolle statt Farbe, acht Kategorien ohne Bedeutung (`docs/skalen.md`
    „Pill: Rolle statt Farbe“, Folie 33). Paketseite steht: 32 Primitive, 16 Kategorie-Rollen, `pill.css`, Vertrag,
-   Specimen, Gates 103/103. Engine-Seite auf Branch `CWS/CWS_29617_design_system_welle_1_pill` umgesetzt (PR folgt):
+   Specimen, Gates 103/103. Engine-Seite auf Branch `CWS/CWS_29617_design_system_welle_1_pill`, PR [!1694](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1694) mit Bernhard als Reviewer, Trac #29617 hat Absatz und Migrationshinweise:
    `ValueColor` → Rolle, `ReactValueColor.COLOR` trägt den Rollennamen, `TLPill` rendert `tl-pill--<rolle>`,
    `demo.tickets.model.xml` drei Rollen, alter Pill-Block und `--tlPill-color` fallen, `support-info`-Token fällt.
 

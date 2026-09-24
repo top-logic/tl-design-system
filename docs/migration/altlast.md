@@ -264,6 +264,6 @@ Drei Übergangsregeln im alten Stylesheet lesen den neuen Button von außen (Dro
 
 Mit #29497 tragen die Buttons ihre Tooltips über die Bridge (`TOOLTIP_ATTR`, `WHEN_TRUNCATED`: der Label-Tooltip erscheint nur, wenn die Beschriftung abgeschnitten oder von der kompakten Toolbar ausgeblendet ist); mit #29596 setzt `rootClassName(state, …)` die vom View konfigurierte `css-class` an die Wurzel — beides umschließt `buttonClassName`, ändert die Klassen des Buttons aber nicht.
 
-### Pill (Welle 1, umgesetzt auf `CWS/CWS_29617_design_system_welle_1_pill`)
+### Pill (Welle 1, PR !1694 auf `CWS/CWS_29617_design_system_welle_1_pill`)
 
 Die Pill ist Teil von `TLText` (#29596) und wird von `withPill` in Select, Dropdown, Chips und Tabellenzelle gezeichnet. Umstellung: die Farbe wird eine Rolle (`neutral`, `brand`, `error`, `warning`, `success`, `info`, `category-1` … `category-8`); `ReactValueColor.COLOR` trägt den Rollennamen statt CSS, `TLPill` rendert `tl-pill tl-pill--<rolle>`. Es fallen: `--tlPill-color` (aus `foreignTl`), die `color-mix`-Regeln im Block „The shape the text takes“, `ColorSpec.getValue()` (Literal), `ColorTokenOptions`/`ColorTokenConstraint` samt Resource-Keys, das Token `support-info`. Modelle: `demo.tickets.model.xml` nennt drei Rollen statt Tokens. Entscheidung: `docs/skalen.md` „Pill: Rolle statt Farbe“.
