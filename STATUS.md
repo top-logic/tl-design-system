@@ -57,14 +57,25 @@ Specimen, Gates 109/109. Engine: PR [!1695](https://git.top-logic.com/TopLogic/t
 auf master rebasen und die Basis umstellen. `AvatarSize` heißt `sm|md|lg|xl`, alter Block `TLAvatar` raus,
 Ratsche auf 7325. Sichtprüfung offen (Kommentarköpfe in der Objektliste, Bild-Demo `xl`).
 
+**Progress (24.09.) im selben PR !1695.** Entschieden: „ein Anteil, kein Urteil“ (`docs/skalen.md`) — Spur
+`surface-interactive-selected`, Füllung `surface-brand`, keine Tönung; unbestimmt ist `[aria-busy="true"]`, keine
+Klasse; der Schwung liest die **vierte Dauer `duration-loop`** (1200 ms, nur Endlos-Animationen; Motion-Abschnitt
+nachgetragen); kein eigener Reduced-Motion-Block — der globale Schalter trägt. Breite der Füllung ist Daten
+(`style="width: 25%"`), eine Custom Property `--tl-progress-fraction` schied am Gate aus. Alte Regeln aus dem
+Block `TLHtml` (226 → 164), Ratsche 7263, Gates 115/115. Lint kennt jetzt die Modifier von Pill, Avatar, Progress.
+
+**Präsentation verdichtet (24.09., `f748c08`):** 15 Folien für die Kollegen statt 34; Zweck in CLAUDE.md und
+Memory festgehalten — keine Entscheidungsquelle, Marketing-Tonlage, wird PowerPoint.
+
 Jetzt:
 
-1. PR !1694 abwarten (Reviewer Bernhard, Request-changes beantwortet); dann !1695 auf master rebasen, Basis umstellen,
-   Docker-Instanz sichtprüfen; nach dem Merge Worktree auf `master`, Branch löschen, Ratsche
+1. PR !1694 abwarten (Reviewer Bernhard, Request-changes beantwortet); dann !1695 (Avatar + Progress) auf master
+   rebasen, Basis umstellen, Docker-Instanz sichtprüfen (Kommentarköpfe, Bild-Demo `xl`, Fortschrittsbalken in
+   Objektliste und Long-Job-Demo, unbestimmt mit und ohne Reduced Motion); nach dem Merge Worktree auf `master`, Branch löschen, Ratsche
    gegen master prüfen, Pill-Absatz in altlast.md als gemerged markieren.
 2. Nicht geprüft, offen: AppBar-Kollaps bei Platzmangel, AppBar auf `surface-layer`, `ButtonTone.DANGER`
    (kein Aufrufer — `setTone` einmal setzen).
-3. Nächste Komponente der Welle 1: Progress, dann FontIcon — Vorlage Button/Pill/Avatar.
+3. Letzte Komponente der Welle 1: FontIcon — Vorlage Button/Pill/Avatar/Progress.
 
 Das Repo liegt jetzt unter `TopLogic/tl-design-system`; Wiki (Home, Übersicht, Anleitung Komponenten mit
 Claude, Regeldatei) ist der Einstieg für Bernhard, `docs/*.md` die gepflegte Quelle.
