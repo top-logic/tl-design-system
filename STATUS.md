@@ -19,28 +19,27 @@ neue Blöcke von außen stehen unter `unlisted` in `node tools/inventory.mjs`, b
 Fremdzuwachs hebt einen Block mit Ticketvermerk, nicht die Datei. Begründung in `docs/skalen.md` „Die
 Ratsche misst Blöcke“, Folie 32a.
 
-**Sichtprüfung (offen, für Button und Pill).** Kein Eclipse nötig: Jenkins baut je PR eine Docker-Instanz
-(`Docker_Git_Java17`, Kontext = Branchname). Für !1694: Build 9282 SUCCESS um 10:22, Instanz intern
-`http://docker:8007`, unter `https://apps.top-logic.com/CWS_29617_design_system_welle_1_pill/` um 10:26 noch 404
-(Proxy trägt sie erst nach vollständigem Start ein — bei Welle 1 hat es funktioniert). master-Stand läuft dauerhaft
-unter `https://apps.top-logic.com/tl-demo-react/` (liefert `components.css`, kein `tlReactButton`). Login
-`root`/`root1234` (JVM_ARGS des Jobs). Zum Prüfen entweder Chrome-Erweiterung „Claude in Chrome“ verbinden —
-dann macht Claude die Sichtprüfung und Screenshots — oder Hendrik selbst im Browser: Toolbar rahmenlos,
-Dialogfuß secondary + eine primary, Tabellenzeilen-Icons klein und rahmenlos, AppBar-Toolbar kollabiert bei
-Platzmangel zu Icons, AppBar auf `surface-layer`; Pill: Ticketstatus `open`/`inProgress`/`closed` als
-warning/info/success in Tabelle, Dropdown, Chips und Text, Paket-Specimen `node tools/serve.mjs` → Pill →
-14 Rollen auf beiden Flächen, hell und dunkel.
+**Sichtprüfung erledigt (24.09., Pill-PR-Instanz, hell und dunkel).** Kein Eclipse nötig. Jenkins baut je PR
+eine Docker-Instanz (`Docker_Git_Java17`, Kontext = Branchname mit `_`); sie ist **nur intern** erreichbar,
+`http://docker:80NN/<Kontext>/` (Port aus `WEB_PORT` im Build-Log, für !1694: 8007), von Hendriks Rechner per
+VPN. Der Apache unter `apps.top-logic.com` kennt PR-Instanzen nicht (404 ohne `Via`) — die frühere Annahme
+„bei Welle 1 hat es funktioniert“ war falsch, Welle 1 wurde nach dem Merge auf `tl-demo-react` geprüft.
+Login `root`/`root1234`, Hendrik loggt selbst ein; frische H2, Beispieldaten über „Beispiele erzeugen“.
+
+Ergebnis Pill: drei Rollen (`open` warning, `inProgress` info, `closed` success) in Tabelle, Gruppenkopf,
+Dropdown-Liste und Chip als `tl-pill tl-pill--<rolle>` aus `status-*-subtle`/`-border`, Text `text-primary`,
+kein Inline-Style, kein `.tlPill`, beide Modi. Button dort mitgeprüft: Toolbar `ghost`, Dialogfuß zwei
+`secondary` + eine `primary`, Zeilen-Icons klein und rahmenlos, kein `tlReactButton`. Zwei Befunde für die
+Select-Welle in `docs/migration/altlast.md` „Sichtbare Befunde“: gewählter Einzelwert ohne Pill (bewusste
+TSX-Regel), Pill in 120-px-Zelle hart abgeschnitten (`.tlOptionValue` ohne `min-width: 0`).
 
 Jetzt:
 
-1. Sichtprüfung in der master-Docker-Instanz: Toolbar rahmenlos, Dialogfuß primary/secondary, kleine
-   Tabellenzeilen-Icons, AppBar-Toolbar kollabiert bei Platzmangel zu Icons (Mechanik aus #29626), AppBar liest `surface-layer`,
-   ein Löschen-Kommando mit `ButtonTone.DANGER` (heute kein Aufrufer — `setTone` einmal setzen).
-2. **Pill, in Arbeit (24.09.).** Entschieden: Rolle statt Farbe, acht Kategorien ohne Bedeutung (`docs/skalen.md`
-   „Pill: Rolle statt Farbe“, Folie 33). Paketseite steht: 32 Primitive, 16 Kategorie-Rollen, `pill.css`, Vertrag,
-   Specimen, Gates 103/103. Engine-Seite auf Branch `CWS/CWS_29617_design_system_welle_1_pill`, PR [!1694](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1694) mit Bernhard als Reviewer, Trac #29617 hat Absatz und Migrationshinweise:
-   `ValueColor` → Rolle, `ReactValueColor.COLOR` trägt den Rollennamen, `TLPill` rendert `tl-pill--<rolle>`,
-   `demo.tickets.model.xml` drei Rollen, alter Pill-Block und `--tlPill-color` fallen, `support-info`-Token fällt.
+1. PR !1694 abwarten (Reviewer Bernhard); nach dem Merge Worktree auf `master`, Branch löschen, Ratsche
+   gegen master prüfen, Pill-Absatz in altlast.md als gemerged markieren.
+2. Nicht geprüft, offen: AppBar-Kollaps bei Platzmangel, AppBar auf `surface-layer`, `ButtonTone.DANGER`
+   (kein Aufrufer — `setTone` einmal setzen).
+3. Nächste Komponente der Welle 1: ToggleButton, Avatar, Progress, FontIcon — Vorlage Button/Pill.
 
 Das Repo liegt jetzt unter `TopLogic/tl-design-system`; Wiki (Home, Übersicht, Anleitung Komponenten mit
 Claude, Regeldatei) ist der Einstieg für Bernhard, `docs/*.md` die gepflegte Quelle.
