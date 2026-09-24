@@ -564,7 +564,7 @@ Der Anlass: Beim Nachziehen auf `master` wuchs das alte Stylesheet um 23 Zeilen 
 
 > Sprechnotiz: Die Konvention ist im Team noch nicht bekannt. Die vier Namen werden in ihren Wellen eingefangen — als Token mit Kategorie oder unter anderem Namen.
 
-## 32 · Welle 1 beginnt: der Button
+## 32 · Welle 1 · der Button — gemerged (!1649, 23.09.)
 
 **Vier Erscheinungen, eine Tönung, keine Größe — und kein Selektor von außen.**
 
@@ -576,7 +576,7 @@ Der Anlass: Beim Nachziehen auf `master` wuchs das alte Stylesheet um 23 Zeilen 
 | Zustände | `:disabled`, `aria-pressed`, `aria-busy="true"`, `:focus-visible` — Klassen dafür brechen das Gate |
 | Kontext | der Container wählt die Erscheinung; die AppBar ist keine Markenfläche mehr — umgesetzt mit Welle 1 als Übergangsregel im alten AppBar-Block, Welle 4 schreibt die Shell neu |
 | Kollaps | entscheidet die Toolbar nach ihrem Platz (#29626), nicht der Button und kein Breakpoint |
-| Umgesetzt | 320 Zeilen weniger im alten Stylesheet; Kontrasttest 22 Erscheinungen × 2 Modi grün |
+| Umgesetzt | 320 Zeilen weniger im alten Stylesheet; Kontrasttest 22 Erscheinungen × 2 Modi grün; auf `master` seit 23.09. (!1649, drei Build-Nachbesserungen, zwei Merges von master) |
 
 Der Befund dahinter: drei Erscheinungen, zwei kaum genutzte Größen, ein gedrückter Zustand als Klasse, die Primary dupliziert, fünf Kontextblöcke mit Literalen, nichts für Destruktives.
 

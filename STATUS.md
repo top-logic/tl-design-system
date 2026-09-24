@@ -1,34 +1,32 @@
 # Stand
 
-**Letzte Sitzung:** 2026-09-23 · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-09-24 · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Spec:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`
 
 ## Zuerst
 
-**Welle 1 (Button) ist fertig und im Merge.** PR [!1649](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1649)
-ist von Bernhard approved. Der Jenkins-Build brauchte drei Nachbesserungen, jede hat den nächsten Fehler
-freigelegt: `1041fb64d4` (Token-Audit kennt `tokens.css`), `64f5c32b33` (fehlende Resource-Keys),
-`2900f5ded1` (der Build erzeugt `messages_en.properties` aus dem JavaDoc, die Handfassung von
-`ButtonTone.tooltip` wich ab). Build 16056 hatte alle 11006 Tests grün, scheiterte nur an dieser einen Zeile.
-Build 16123 für `2900f5ded1` war grün — aber master war inzwischen weitergezogen (#29626 kollabierende
-Toolbar, #29523 Sidebar), der PR hatte Konflikte in `TLAppBar.tsx`, `TLToolbar.tsx`, `tlReactControls.css`.
-Der Merge von master in den Branch (22.09.) löst sie: Toolbar wickelt ihre Buttons in `ButtonDefaults`
-(`ghost`, wenn kein Container anderes sagt), Fensterfuß sagt `secondary`, der Kollaps zum Icon läuft über
-die kollabierende Toolbar (`tlToolbar--compact` liest `tl-button__label` als Übergangsregel), `collapseToIcon`
-und `AppShellContext` sind gestrichen, TLHtml-Druckknopf auf `tl-button--ghost`. Ratsche einmalig auf 6692
-gehoben (Fremdzuwachs), zwei fremde `--tl-toolbar-*` in `foreignTl`. Am 23.09. zweiter Merge von master
-(#29497 Bridge-Tooltips, #29596 `rootClassName`/Text-Töne, #29505 Audit-Hook auch auf master): Button-Dateien
-nehmen `rootClassName(state, buttonClassName(…))` und `tooltipProps` von master, Ratsche auf 7390, `--tlText-tone`
-in `foreignTl`. Merge ist gesperrt, bis Bernhard erneut approved (405 aus Gitea). Dann:
+**Welle 1 (Button) ist auf `master`.** PR [!1649](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1649)
+wurde am 23.09. gemerged (Merge-Commit `0fa0085060`). Der Weg dahin: drei Build-Nachbesserungen
+(`1041fb64d4` Token-Audit kennt `tokens.css`, `64f5c32b33` Resource-Keys, `2900f5ded1` der Build erzeugt
+`messages_en.properties` aus dem JavaDoc) und zwei Merges von master (`9c3d023936`: #29626 kollabierende
+Toolbar übernimmt den Kollaps zum Icon, `collapseToIcon`/`AppShellContext` gestrichen; `b88ac7dbb1`: #29497
+Bridge-Tooltips, #29596 `rootClassName`, Audit-Tests im master-Stand). Worktree steht auf `master`, der
+Welle-1-Branch ist gelöscht. Ratsche steht auf 7405 Zeilen — alles Fremdzuwachs seit 5766.
 
-1. Ist !1649 gemerged? Dann im Worktree `git checkout master && git pull --ff-only`, Branch
-   `CWS/CWS_29617_design_system_welle_1` lokal löschen, in `docs/praesentation.md` Folie 32 und in
-   `docs/migration/altlast.md` „gemerged“ vermerken.
-2. Sichtprüfung in der Docker-Instanz: Toolbar rahmenlos, Dialogfuß primary/secondary, kleine
+**Offene Frage an Hendrik: die Ratsche gegen einen lebenden master.** Drei Mal in drei Tagen musste das
+Zeilenbudget für fremden Zuwachs gehoben werden; „darf nur sinken“ gilt so nur für die eigene Welle.
+Vorschlag: das Budget misst nicht die Datei, sondern die Summe der noch nicht abgeschnittenen Komponenten-
+blöcke (Liste der Block-Überschriften je Welle in `ratchet.json`), oder es wird je Welle einmal gegen den
+master-Stand beim Branch-Start geeicht. Entscheidung offen, Test bleibt bis dahin wie er ist.
+
+Jetzt:
+
+1. Sichtprüfung in der master-Docker-Instanz: Toolbar rahmenlos, Dialogfuß primary/secondary, kleine
    Tabellenzeilen-Icons, AppBar-Toolbar kollabiert bei Platzmangel zu Icons (Mechanik aus #29626), AppBar liest `surface-layer`,
    ein Löschen-Kommando mit `ButtonTone.DANGER` (heute kein Aufrufer — `setTone` einmal setzen).
-3. Danach die Pill — gegen Trac #29606 entwerfen: Farbe der Pill ist eine Rolle, kein Tokenname;
-   `--tlPill-color` von der Einfang-Liste holen.
+2. Danach die Pill — gegen Trac #29606 entwerfen: Farbe der Pill ist eine Rolle, kein Tokenname;
+   `--tlPill-color` von der Einfang-Liste holen. Neuer Branch `CWS/CWS_29617_design_system_welle_1` ist weg;
+   Pill läuft auf einem eigenen Welle-1-Branch (z. B. `CWS/CWS_29617_design_system_welle_1_pill`).
 
 Das Repo liegt jetzt unter `TopLogic/tl-design-system`; Wiki (Home, Übersicht, Anleitung Komponenten mit
 Claude, Regeldatei) ist der Einstieg für Bernhard, `docs/*.md` die gepflegte Quelle.

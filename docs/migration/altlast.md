@@ -255,7 +255,7 @@ Der Namensraum gehört dem Paket. Diese Namen führt der Altbestand heute; die W
 
 Andere Stylesheets mit `tl…`-Klassen des Altbestands (z. B. `TLWysiwygEditor.css`) stehen außerhalb der Ratsche; Welle 5 prüft sie.
 
-## Welle 1 · Button — fertig
+## Welle 1 · Button — fertig, gemerged 23.09. (!1649, Merge-Commit `0fa0085060`)
 
 Alter Block (`TLButton`, `TLButton enhancements`) und die fünf Kontextblöcke (AppBar, Fenster-Toolbar, Tabellenzelle, Dropdown, AppBar-Kollaps) sind gelöscht. Der Container wählt die Erscheinung über `ButtonDefaults`: AppBar und Toolbar sagen `ghost`, Fensterfuß und Panel-Buttonleiste sagen `secondary`; die Toolbar setzt `ghost` nur, wenn kein Container etwas anderes vorgibt.
 

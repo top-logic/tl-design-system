@@ -1,7 +1,7 @@
 {
   "_": "Budget des alten tlReactControls.css. Darf nur sinken. Nach jeder Welle nachziehen.",
-  "_lines": "Einmalig von 6065 auf 6088 gehoben: Fremdzuwachs durch Ticket #29597 (Repeater-Grid, .tlItem). Nach Welle 1 auf 5766 gesenkt. Mit den Merges von master in Welle 1 (22./23.09.) auf 7390 gehoben: Fremdzuwachs durch #29626 (kollabierende Toolbar), #29523 (Sidebar), #29596 (Gestaltungsoptionen, Text-Toene), #29497 (Tooltips), #29500, #29503, #29505, TLImage, TLValueList, TLHtml — nicht durch eine Welle.",
-  "lines": 7390,
+  "_lines": "Einmalig von 6065 auf 6088 gehoben: Fremdzuwachs durch Ticket #29597 (Repeater-Grid, .tlItem). Nach Welle 1 auf 5766 gesenkt. Mit den Merges von master in Welle 1 (22./23.09.) auf 7390 gehoben, nach dem Merge von !1649 auf master (23.09.) auf 7405 (#29615): Fremdzuwachs durch #29626 (kollabierende Toolbar), #29523 (Sidebar), #29596 (Gestaltungsoptionen, Text-Toene), #29497 (Tooltips), #29500, #29503, #29505, TLImage, TLValueList, TLHtml — nicht durch eine Welle.",
+  "lines": 7405,
   "literals": {
     "color": 75,
     "fontSize": 58,
