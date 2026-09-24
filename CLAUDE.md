@@ -19,7 +19,7 @@ Alle in `design-system/`, alle mit `node` ohne Abhängigkeiten:
 | `node --test` | **Alle Gates.** Sie sind das Gate, nicht nur Prüfung. |
 | `node tools/generate.mjs` | Erzeugt `dist/` aus `src/`. Nach jeder Änderung an `src/` aufrufen; ein Test hält `dist/` byte-identisch. |
 | `node tools/lint-css.mjs` | **Klassen-Gate** über `dist/*.css` und `src/components/*.css`: kein Literal, kein `:focus` ohne `-visible`, kein `outline: none`, nur Tokens. |
-| `node tools/inventory.mjs` | Zählt das alte `tlReactControls.css` im Worktree (Ratsche). Budget in `test/ratchet.json`, darf nur sinken. |
+| `node tools/inventory.mjs` | Zählt das alte `tlReactControls.css` im Worktree je Block (Ratsche). Budget in `test/ratchet.json` unter `blocks`: kein Block wächst, ein abgeschnittener wird gestrichen, Fremdzuwachs hebt seinen Block mit Ticketvermerk. |
 | `node tools/publish-to-worktree.mjs` | Kopiert `dist/` in den Worktree, bis das Paket einen Maven-Wrapper hat. |
 | `node tools/serve.mjs` | Specimen auf `http://localhost:8137/` |
 

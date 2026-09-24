@@ -1014,6 +1014,34 @@ gehoben, nicht stillschweigend eingerechnet.
 
 ---
 
+### Die Ratsche misst Blöcke, nicht die Datei
+
+Der Befund nach Welle 1: Zwischen dem 19. und dem 24.09. musste das Zeilenbudget dreimal für
+fremden Zuwachs gehoben werden (5766 → 6692 → 7390 → 7405) — kollabierende Toolbar (#29626),
+Sidebar (#29523), Gestaltungsoptionen (#29596), Tooltips (#29497), zuletzt 15 Zeilen aus #29615
+nach dem Merge. Ein Budget über der ganzen Datei kennt keinen Absender: Jede Hebung steht bei
+der Welle, die gerade läuft, und die Regel „darf nur sinken" wird zur Formalie.
+
+**Entschieden:** Die Ratsche misst je Block des alten Stylesheets. Ein Block ist, was eine
+Überschrift `/* --- Name ------ */` eröffnet und die nächste beendet; was vor der ersten steht,
+ist der Block `Kopf`. `test/ratchet.json` führt unter `blocks` jeden Block mit seinem
+Zeilenstand, die Literale werden über die gelisteten Blöcke gezählt.
+
+* **Kein Block wächst.** Wächst einer, nennt der Test seinen Namen. Kommt der Zuwachs von außen,
+  wird dieser eine Block mit Vermerk des Tickets gehoben — der Absender ist zurechenbar, die
+  übrigen Blöcke bleiben unberührt.
+* **Ein abgeschnittener Block wird gestrichen.** Fehlt ein gelisteter Block in der Datei,
+  bricht der Test, bis er aus `blocks` fällt: Das ist der Nachweis „alter Block leer" je
+  Komponente, den die Spec als Fertig-Bedingung nennt.
+* **Neue Blöcke von außen brechen nicht.** `node tools/inventory.mjs` zeigt sie unter
+  `unlisted`; die Welle, die die Komponente holt, trägt den Block ein. Bis dahin ist er
+  Fremdgut wie die Namen in `foreignTl`.
+
+Verworfen: das Budget je Welle einmal gegen den master-Stand beim Branch-Start zu eichen. Das
+misst weiterhin die Datei und verliert zwischen zwei Eichungen jeden Absender.
+
+---
+
 ### Button: vier Erscheinungen, eine Tönung, keine Größe
 
 Der Befund vor Welle 1: Der alte Block (Zeilen 100–270 plus fünf Kontextblöcke) kennt drei

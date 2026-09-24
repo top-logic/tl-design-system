@@ -1,5 +1,5 @@
-// Die Ratsche über dem Altbestand: zählt, was im alten tlReactControls.css an
-// Literalen steckt (Farben, Schriftgrößen, Zeitangaben, z-index, outline: none).
+// Die Ratsche über dem Altbestand: zählt je Block des alten tlReactControls.css die Zeilen und
+// über die Blöcke die Literale (Farben, Schriftgrößen, Zeitangaben, z-index, outline: none).
 //
 // Das frühere Abbildungswerkzeug (ein hand-geschriebener Regex-Parser, der Werte
 // gruppiert nach px auszählte) ist nach dem Schnitt vom 17.09. exportiert und
@@ -53,7 +53,53 @@ function* walk(dir, re) {
 
 const uniq = (xs) => [...new Set(xs)].sort();
 
-/** Was die Ratsche zählt. Nur sinkend erlaubt. */
+/**
+ * Die Blöcke des alten Stylesheets: jede Überschrift der Form `/* --- Name ------ *\/` eröffnet
+ * einen, der bis zur nächsten reicht. Was vor der ersten steht, ist der Block `Kopf`. Die Ratsche
+ * misst je Block, nicht die Datei: Fremdzuwachs in einem Block, den keine Welle angefasst hat,
+ * bleibt dem Block zugeordnet und dem Absender zurechenbar (docs/skalen.md, „Die Ratsche misst
+ * Blöcke“).
+ */
+export function blocks(css) {
+  const re = /^\/\* --- (.*?) -{2,} \*\/[ \t]*$/gm;
+  const found = [];
+  let m;
+  while ((m = re.exec(css)) !== null) found.push({ name: m[1].trim(), start: m.index });
+  const result = [];
+  const seen = new Map();
+  const push = (name, text) => {
+    const n = (seen.get(name) ?? 0) + 1;
+    seen.set(name, n);
+    result.push({ name: n > 1 ? `${name} (${n})` : name, text, lines: text.replace(/\n$/, '').split('\n').length });
+  };
+  const head = css.slice(0, found[0]?.start ?? css.length);
+  if (head.trim()) push('Kopf', head);
+  found.forEach((b, i) => push(b.name, css.slice(b.start, found[i + 1]?.start ?? css.length)));
+  return result;
+}
+
+/**
+ * Die Ratsche über den Blöcken, die im Budget stehen: Zeilen je Block, Literale über alle
+ * gelisteten Blöcke, dazu die Blöcke, die das Budget nennt und die Datei nicht mehr hat
+ * (abgeschnitten — aus dem Budget streichen), und die Blöcke der Datei, die das Budget nicht
+ * kennt (neu von außen — die Welle, die sie holt, nimmt sie auf).
+ */
+export function measureBlocks(css, names) {
+  const all = blocks(css);
+  const byName = new Map(all.map((b) => [b.name, b]));
+  const listed = names.filter((n) => byName.has(n)).map((n) => byName.get(n));
+  const joined = listed.map((b) => b.text).join('\n');
+  const lines = Object.fromEntries(listed.map((b) => [b.name, b.lines]));
+  return {
+    blocks: lines,
+    lines: listed.reduce((sum, b) => sum + b.lines, 0),
+    literals: measure(joined).literals,
+    missing: names.filter((n) => !byName.has(n)),
+    unlisted: all.map((b) => b.name).filter((n) => !names.includes(n)),
+  };
+}
+
+/** Was die Ratsche zählt — Zeilen und Literale eines CSS-Texts. Nur sinkend erlaubt. */
 export function measure(css) {
   const lines = css.split('\n').length;
   const decls = declarations(css);
@@ -89,5 +135,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     + readFileSync(new URL('base.css', dist), 'utf8'),
   );
   const alle = [...foreignTlNames(css), ...foreignTlInSources(sources)];
-  console.log(JSON.stringify({ ...measure(css), foreignTl: foreignOf(alle, known) }, null, 2));
+  const budget = JSON.parse(readFileSync(new URL('../test/ratchet.json', import.meta.url), 'utf8'));
+  const ist = measureBlocks(css, Object.keys(budget.blocks));
+  console.log(JSON.stringify({ ...ist, file: measure(css).lines, foreignTl: foreignOf(alle, known) }, null, 2));
 }

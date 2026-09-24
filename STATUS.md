@@ -11,13 +11,13 @@ wurde am 23.09. gemerged (Merge-Commit `0fa0085060`). Der Weg dahin: drei Build-
 `messages_en.properties` aus dem JavaDoc) und zwei Merges von master (`9c3d023936`: #29626 kollabierende
 Toolbar übernimmt den Kollaps zum Icon, `collapseToIcon`/`AppShellContext` gestrichen; `b88ac7dbb1`: #29497
 Bridge-Tooltips, #29596 `rootClassName`, Audit-Tests im master-Stand). Worktree steht auf `master`, der
-Welle-1-Branch ist gelöscht. Ratsche steht auf 7405 Zeilen — alles Fremdzuwachs seit 5766.
+Welle-1-Branch ist gelöscht. Ratsche: 79 Blöcke, Summe 7404 Zeilen — alles Fremdzuwachs seit 5766.
 
-**Offene Frage an Hendrik: die Ratsche gegen einen lebenden master.** Drei Mal in drei Tagen musste das
-Zeilenbudget für fremden Zuwachs gehoben werden; „darf nur sinken“ gilt so nur für die eigene Welle.
-Vorschlag: das Budget misst nicht die Datei, sondern die Summe der noch nicht abgeschnittenen Komponenten-
-blöcke (Liste der Block-Überschriften je Welle in `ratchet.json`), oder es wird je Welle einmal gegen den
-master-Stand beim Branch-Start geeicht. Entscheidung offen, Test bleibt bis dahin wie er ist.
+**Entschieden (24.09.): die Ratsche misst Blöcke.** `test/ratchet.json` führt unter `blocks` jeden der 79
+Blöcke `/* --- Name --- */` mit seinem Zeilenstand; kein Block wächst, ein abgeschnittener wird gestrichen,
+neue Blöcke von außen stehen unter `unlisted` in `node tools/inventory.mjs`, bis ihre Welle sie holt.
+Fremdzuwachs hebt einen Block mit Ticketvermerk, nicht die Datei. Begründung in `docs/skalen.md` „Die
+Ratsche misst Blöcke“, Folie 32a.
 
 Jetzt:
 
@@ -39,7 +39,7 @@ spätere Wellen: `surface-overlay` ins Kontrast-Gate (Welle 4), Icon-Schrift im 
 
 **Welle 0 ist umgesetzt.** Das Paket `design-system/` liefert `dist/primitives.css`,
 `dist/tokens.css`, `dist/base.css` und `dist/tokens.dtcg.json`. `cd design-system && node --test`
-ist das Gate — **93 Tests, alle grün**. `node tools/lint-css.mjs` ist das Klassen-Gate,
+ist das Gate — **95 Tests, alle grün**. `node tools/lint-css.mjs` ist das Klassen-Gate,
 `test/ratchet.json` das Budget des alten Stylesheets (5766 Zeilen nach Welle 1 Final-Review, Budget davor 6088 nach
 einmaligem Fremdzuwachs aus #29597, darf nur sinken) und die Einfang-Liste `foreignTl` der vier fremden
 `--tl`-Namen im Altbestand.

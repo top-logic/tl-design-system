@@ -194,7 +194,7 @@ Ein Rhythmus für jede Komponente, keine Ausnahme:
 6. alter Block aus `tlReactControls.css` gelöscht
 
 **Fertig ist eine Komponente, wenn ihr alter Block leer ist.** Das Inventar zählt das alte
-Stylesheet; es darf nur schrumpfen.
+Stylesheet je Block; kein Block darf wachsen, ein leerer fällt aus dem Budget.
 
 | Welle | Komponenten | Warum hier |
 |---|---|---|
@@ -253,8 +253,10 @@ Overlays: `role`, `aria-modal`, Fokus-Trap.
 **TSX.** Eine Lint-Regel im React-Modul: kein Hex, kein `style={{ color }}`, keine Klasse ohne
 `tl-`-Präfix, keine Größe an einem SVG außer über Klasse. Baut auf dem oxlint-Spike auf.
 
-**Ratsche.** Bis das alte Stylesheet leer ist, zählt das Inventar seine Literale und Zeilen. Der
-Wert darf nur sinken.
+**Ratsche.** Bis das alte Stylesheet leer ist, zählt das Inventar je Block (`/* --- Name --- */`)
+die Zeilen und über die Blöcke die Literale. Kein Block wächst; ein abgeschnittener Block wird aus
+dem Budget gestrichen. Fremdzuwachs hebt einen Block mit Ticketvermerk, nicht die Datei
+(skalen.md „Die Ratsche misst Blöcke").
 
 **Erzeugtes.** `dist/` byte-identisch mit dem Erzeugnis aus `src/`. `tokens.dtcg.json` validiert
 gegen das W3C-Schema.

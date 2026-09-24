@@ -436,7 +436,7 @@ Bei einem Markenwechsel wären vier Stellen nachzuziehen — und die vergessene 
 | `test/tokens.test.mjs` | Kontraste, Farbabstände, das 4-px-Raster, die 12-px-Untergrenze |
 | `test/layers.test.mjs` | kein Wert in der Rollenschicht, keine Primitive ohne Leser, geschlossene Kategorien, der Kundentausch |
 | `test/lint-css.test.mjs` | das Klassen-Gate: kein Literal, kein `:focus`, kein `outline: none`, nur Tokens |
-| `test/ratchet.test.mjs` | das alte Stylesheet darf nur schrumpfen |
+| `test/ratchet.test.mjs` | kein Block des alten Stylesheets darf wachsen; ein abgeschnittener wird gestrichen |
 | `test/dist.test.mjs` | `dist/` ist byte-identisch mit dem Erzeugnis aus `src/` |
 
 **Ein Beispiel dafür, warum das nötig ist:** Beim ersten Lauf widersprach das Inventar den von Hand gezählten Zahlen — 14 px kam auf 7 statt 48. Ursache war ein zu enger Leser der Theme-Konfiguration. **Der Test dazu war grün und trotzdem falsch**, weil er nur den Fall prüfte, den der Leser beherrschte.
@@ -534,7 +534,7 @@ Englisch, kebab-case, Präfix `tl`, BEM für Klassen, geschlossene Kategorien f�
 | `tokens.dtcg.json` | W3C-Format für Figma und Kundenwerkzeuge |
 | 81 Tests | Schichten, Kontrast, Maße, Farbton, Erzeugtes, Klassen-Gate, Ratsche, Namensraum |
 
-**Das Klassen-Gate** bricht bei jedem Literal, jedem `:focus` ohne `-visible`, jedem `outline: none`, jedem `z-index` ohne Ebene. **Die Ratsche** zählt das alte Stylesheet und lässt es nur schrumpfen.
+**Das Klassen-Gate** bricht bei jedem Literal, jedem `:focus` ohne `-visible`, jedem `outline: none`, jedem `z-index` ohne Ebene. **Die Ratsche** zählt das alte Stylesheet je Block: keiner wächst, ein abgeschnittener wird gestrichen — Fremdzuwachs bleibt seinem Block und seinem Absender zugeordnet.
 
 Die Demo-App lädt die drei Dateien und setzt `data-tl-mode` und `data-tl-density` am `html`.
 
@@ -583,3 +583,16 @@ Der Befund dahinter: drei Erscheinungen, zwei kaum genutzte Größen, ein gedrü
 > Sprechnotiz: Warum Tönung statt fünfter Erscheinung — Löschen ist mal Umriss, mal gefüllt. Eine Erscheinung müsste beides sein: die nächste Dublette.
 
 > Sprechnotiz: `button.css` steht, das Gate verbietet Zustands-Modifier und fremde Modifier am Block. Entschieden: Danger füllt sich mit `status-error-surface`/`-active` beim Zeigen (statt `status-error-subtle`), `border-control` dunkel auf `gray-45`, alle vier `status-*-text` dunkel auf `surface-layer` angehoben (Fehler auf `red-32`, Warnung `amber-34`, Erfolg `green-36`, Info `teal-35`), dasselbe für die Linien (Fehler `red-42`, Warnung `amber-44`, Erfolg `green-46`, Info `teal-45`) — die Regel gilt jetzt für beide Flächen, als Test festgeschrieben. Alle Kontrastbefunde aus Task 3 sind entschieden.
+
+## 32a · Die Ratsche misst Blöcke
+
+**Ein Budget über der ganzen Datei kennt keinen Absender.**
+
+| | |
+|---|---|
+| Befund | dreimal in fünf Tagen Hebung für fremden Zuwachs: 5766 → 6692 → 7390 → 7405 (#29626, #29523, #29596, #29497, #29615) |
+| Entschieden | `ratchet.json` führt jeden Block `/* --- Name --- */` mit seinem Zeilenstand; kein Block wächst, ein abgeschnittener wird gestrichen |
+| Fremdzuwachs | hebt einen Block mit Ticketvermerk, nicht die Datei; neue Blöcke stehen unter `unlisted`, bis ihre Welle sie holt |
+| Verworfen | Eichung je Welle gegen master — misst weiter die Datei |
+
+> Sprechnotiz: Das ist zugleich der Fertig-Nachweis je Komponente: Der Block fällt aus der Liste, wenn er aus der Datei gefallen ist.
