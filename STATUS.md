@@ -26,7 +26,7 @@ Jetzt:
    ein Löschen-Kommando mit `ButtonTone.DANGER` (heute kein Aufrufer — `setTone` einmal setzen).
 2. **Pill, in Arbeit (24.09.).** Entschieden: Rolle statt Farbe, acht Kategorien ohne Bedeutung (`docs/skalen.md`
    „Pill: Rolle statt Farbe“, Folie 33). Paketseite steht: 32 Primitive, 16 Kategorie-Rollen, `pill.css`, Vertrag,
-   Specimen, Gates 103/103. Engine-Seite folgt auf Branch `CWS/CWS_29617_design_system_welle_1_pill`:
+   Specimen, Gates 103/103. Engine-Seite auf Branch `CWS/CWS_29617_design_system_welle_1_pill` umgesetzt (PR folgt):
    `ValueColor` → Rolle, `ReactValueColor.COLOR` trägt den Rollennamen, `TLPill` rendert `tl-pill--<rolle>`,
    `demo.tickets.model.xml` drei Rollen, alter Pill-Block und `--tlPill-color` fallen, `support-info`-Token fällt.
 
