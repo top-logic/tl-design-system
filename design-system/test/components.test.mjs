@@ -119,3 +119,67 @@ test('der Vertrag nennt jedes Token, das button.css liest, und jedes Zustandsatt
   for (const h of ['## Zustand', '## Aktionen', '## Tokens', '## Attribute', '## Konformität'])
     assert.ok(md.includes(h), `Abschnitt ${h} fehlt`);
 });
+
+// --- Pill --------------------------------------------------------------------------------------
+// Jede Rolle liest eine getönte Fläche und eine Linie; der Text darauf ist gewöhnlicher Text.
+// skalen.md „Pill: Rolle statt Farbe“.
+const PILL = {
+  neutral:  { fill: 'surface-interactive-selected', line: 'border-control' },
+  brand:    { fill: 'surface-brand-subtle', line: 'border-interactive' },
+  error:    { fill: 'status-error-subtle', line: 'status-error-border' },
+  warning:  { fill: 'status-warning-subtle', line: 'status-warning-border' },
+  success:  { fill: 'status-success-subtle', line: 'status-success-border' },
+  info:     { fill: 'status-info-subtle', line: 'status-info-border' },
+  ...Object.fromEntries([1, 2, 3, 4, 5, 6, 7, 8].map((k) => [`category-${k}`, { fill: `category-${k}-subtle`, line: `category-${k}-border` }])),
+};
+
+for (const mode of ['light', 'dark']) {
+  const C = { ...R.color[mode], ...R.derived[mode] };
+  test(`Pill ${mode}: Text 4,5 auf jeder Fläche, Linie 3,0 gegen base und layer, in jeder Rolle`, () => {
+    for (const [name, k] of Object.entries(PILL)) {
+      assert.ok(C[k.fill], `${name}: Token ${k.fill} fehlt`);
+      assert.ok(C[k.line], `${name}: Token ${k.line} fehlt`);
+      const t = ratio(C['text-primary'], C[k.fill]);
+      assert.ok(t >= AA_TEXT, `${mode} ${name}: text-primary auf ${k.fill} ${t.toFixed(2)} < 4,5`);
+      for (const g of GRUND) {
+        const l = ratio(C[k.line], C[g]);
+        assert.ok(l >= AA_NON_TEXT, `${mode} ${name} auf ${g}: Linie ${k.line} ${l.toFixed(2)} < 3,0`);
+      }
+    }
+  });
+}
+
+test('pill.css liest je Rolle genau die Fläche und die Linie der PILL-Map, und Text nur als text-primary', () => {
+  const css = readFileSync(new URL('../src/components/pill/pill.css', import.meta.url), 'utf8');
+  const farbTokens = new Set([...css.matchAll(/var\((--tl-(?:surface|text|icon|border|status|category)-[a-z0-9-]+)\)/g)]
+    .map((m) => m[1]).filter((t) => !/^--tl-border-width-/.test(t)));
+  const belegt = new Set(['text-primary']);
+  for (const k of Object.values(PILL)) { belegt.add(k.fill); belegt.add(k.line); }
+  for (const t of farbTokens) assert.ok(belegt.has(t.replace(/^--tl-/, '')), `${t} kommt in keinem PILL-Map-Eintrag vor`);
+  for (const rolle of belegt) assert.ok(farbTokens.has('--tl-' + rolle), `pill.css liest ${rolle} nicht`);
+  assert.ok(!/color-mix|#[0-9a-fA-F]{3}/.test(css), 'kein color-mix, kein Literal');
+  for (const k of Object.keys(PILL).filter((n) => n !== 'neutral'))
+    assert.ok(css.includes(`.tl-pill--${k}`), `Modifier --${k} fehlt`);
+});
+
+test('das Pill-Specimen zeigt jede Rolle, Icon und Beschriftung, auf beiden Flächen', () => {
+  const html = readFileSync(new URL('../src/components/pill/pill.spec.html', import.meta.url), 'utf8');
+  for (const k of Object.keys(PILL).filter((n) => n !== 'neutral'))
+    assert.ok(html.includes(`tl-pill--${k}`), `Rolle ${k} fehlt`);
+  assert.ok(html.includes('tl-pill__icon') && html.includes('tl-pill__label'), 'Elemente fehlen');
+  assert.ok(html.includes('id="on-layer"') && html.includes('id="on-base"'), 'beide Flächen fehlen');
+  assert.ok(html.includes('id="mode"') && html.includes('id="density"'), 'Schalter für Modus und Dichte fehlen');
+  assert.ok(html.includes('/dist/components.css'), 'lädt components.css nicht');
+  assert.ok(!/style="/.test(html.replace(/<style>[\s\S]*?<\/style>/, '')), 'Inline-Style im Specimen');
+});
+
+test('der Pill-Vertrag nennt jedes Token, das pill.css liest, und jede Rolle', () => {
+  const css = readFileSync(new URL('../src/components/pill/pill.css', import.meta.url), 'utf8');
+  const md = readFileSync(new URL('../src/components/pill/pill.contract.md', import.meta.url), 'utf8');
+  for (const t of new Set([...css.matchAll(/var\((--tl-[a-z0-9-]+)\)/g)].map((m) => m[1])))
+    assert.ok(md.includes('`' + t + '`'), `Vertrag nennt ${t} nicht`);
+  for (const k of Object.keys(PILL).filter((n) => !n.startsWith('category-')))
+    assert.ok(md.includes('`' + k + '`'), `Vertrag nennt Rolle ${k} nicht`);
+  for (const h of ['## Zustand', '## Aktionen', '## Tokens', '## Attribute', '## Konformität'])
+    assert.ok(md.includes(h), `Abschnitt ${h} fehlt`);
+});

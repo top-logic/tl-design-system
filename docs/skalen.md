@@ -1110,6 +1110,66 @@ Border-Rollen wurden auf die dunkelste noch ausreichende vorhandene Stufe angeho
 
 ---
 
+### Pill: Rolle statt Farbe
+
+**Der Befund.** Die Pill ist seit #29596 kein eigenes Control mehr: `TLText` zeichnet einen Wert als
+Kapsel, wenn das Modell ihm eine Farbe gibt (`<color token="support-warning"/>`, alternativ ein
+Hex-Literal) oder der View `appearance="pill"` setzt. Die Farbe kommt als `var(--support-warning)`
+oder Hexwert in die Custom Property `--tlPill-color`, und das Stylesheet mischt daraus per
+`color-mix` Fläche (16 %), Linie (40 %) und Text (72 %) gegen alte Tokens. Der Kontrast ist damit
+ein Nebenprodukt der Mischung, nicht eine Eigenschaft der Skala — und ein Tokenname, den das Theme
+nicht ausliefert, macht die Pille still farblos, was #29606 mit einem Register der ausgelieferten
+Tokens repariert hat. Gemessen: `status-*-text` auf der eigenen `subtle`-Fläche erreicht hell
+4,01 bis 4,20 — ein getönter Text auf getönter Fläche fiele durch das Gate.
+
+**Entschieden:**
+
+| Achse | Regel |
+|---|---|
+| Farbe | Eine **Rolle** aus geschlossener Liste: `neutral` (Default), `brand`, `error`, `warning`, `success`, `info`, `category-1` … `category-8`. Kein Tokenname, kein Literal, keine Mischung. |
+| Ableitung | Jede Rolle liest zwei Tokens — die getönte Fläche und ihre Linie: `neutral` `surface-interactive-selected`/`border-control`, `brand` `surface-brand-subtle`/`border-interactive`, die vier Bedeutungen `status-*-subtle`/`status-*-border`, die Kategorien `category-N-subtle`/`category-N-border`. |
+| Text | `text-primary` in jeder Rolle — die Pill ist ein kleiner getönter Streifen, und die Regel der Semantik gilt: *ein getönter Streifen trägt gewöhnlichen Text*. Die Farbe lebt in Fläche und Linie. |
+| Klassen | `.tl-pill`, Modifier `--brand`, `--error`, `--warning`, `--success`, `--info`, `--category-1` … `--category-8`; Elemente `__icon`, `__label`. Ohne Modifier neutral. |
+| Maße | Höhe `size-control-sm`, Innenabstand `space-xs`, Linie `border-width-sm`, Form `radius-full`. Im Fließtext erbt sie die Schriftgröße. |
+| Modell | Die Annotation nennt die Rolle, nicht die Farbe. Das Register aus #29606 schrumpft auf ein Enum; `support-info` als Token entfällt, weil `info` eine Rolle ist. |
+
+**Acht Kategorien ohne Bedeutung.** Kunden haben Werte, die sich unterscheiden sollen, ohne
+etwas zu bedeuten — Projektfarben, Sparten, Diagrammreihen. Das Paket liefert dafür acht
+Kategorien mit je zwei Rollen (`subtle`, `border`), gerechnet wie die Statusfarben: die Linie ist
+der hellste Wert, der auf `surface-base` und `surface-layer` 3,0 hält; die Fläche liegt hell bei
+L 0,955 und dunkel bei L 0,27 in OKLCH, mit `text-primary` darauf bei 13 bis 15. Die Farbtöne
+stehen zwischen den Bedeutungen: 2°, 56°, 123°, 186°, 238°, 285°, 311°, 337°.
+
+| Kategorie | Farbton | hell `subtle` / `border` | dunkel `subtle` / `border` |
+|---|---|---|---|
+| 1 | 2° | `red-5` / `red-33` | `red-73` / `red-46` |
+| 2 | 56° | `amber-5` / `amber-35` | `amber-73` / `amber-47` |
+| 3 | 123° | `green-6` / `green-37` | `green-73` / `green-48` |
+| 4 | 186° | `teal-5` / `teal-36` | `teal-73` / `teal-48` |
+| 5 | 238° | `blue-4` / `blue-35` | `blue-75` / `blue-48` |
+| 6 | 285° | `blue-7` / `blue-33` | `blue-73` / `blue-46` |
+| 7 | 311° | `magenta-5` / `magenta-33` | `magenta-73` / `magenta-46` |
+| 8 | 337° | `magenta-4` / `magenta-34` | `magenta-74` / `magenta-47` |
+
+**Das Gate wird für die Kategorien weicher, und das steht hier.** Dreizehn getönte Flächen
+(Marke, vier Bedeutungen, acht Kategorien) teilen sich 360°; im Mittel bleiben 27,7°, die 30° der
+Bedeutungen sind also nicht zu halten. Kategorien halten **20°** zueinander und zu jeder Bedeutung
+(`KATEGORIE_ABSTAND_MIN`). Das reicht, um zwei Pillen nebeneinander zu unterscheiden; es reicht
+nicht, damit eine Kategorie niemals an eine Bedeutung erinnert — Kategorie 1 liegt 26° neben dem
+Fehlerrot. Deshalb trägt eine Kategorie ihre Bedeutung nie in der Farbe, sondern im Text, und
+deshalb sind es Kategorien und keine „Farben“: Wer Rot meint, nimmt `error`.
+
+**Verworfen:** nur Rollen ohne Kategorien (jede Kundenfarbe wäre eine neue Rampe im Paket, und
+Welle 5 bräuchte für Diagramme trotzdem eine Palette); Kategorien mit eigener Textrolle (dritte
+Rolle je Kategorie, ohne Leser — der Text auf der Pill ist gewöhnlich, ein Diagramm beschriftet
+nicht in seiner Reihenfarbe); Literal als Fluchtweg (ein Wert außerhalb der Primitive ist genau
+die zweite Wahrheit, die das System abstellt).
+
+**Als Test:** `components.test.mjs` prüft je Rolle × Modus Text 4,5 auf der Fläche und Linie 3,0
+gegen `surface-base` und `surface-layer`; `tokens.test.mjs` prüft die Kategorien auf zwei Rollen,
+Text und Linie, und die 20°. `pill.css` darf nur die Tokens der Rollen lesen, kein `color-mix`,
+kein Literal; das Specimen zeigt jede Rolle auf beiden Flächen und im Fließtext.
+
 ## Befunde aus dem Specimen
 
 ### Inter trägt nur zwei Gewichte

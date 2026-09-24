@@ -186,3 +186,49 @@ test('die Fehlerfläche hat eine Rampe wie die Marke: hover und active je Modus,
       && lum(R.color.dark['status-error-surface']) > lum(R.color.dark['status-error-surface-active']),
     'dunkel: hover > base > active');
 });
+
+// Acht Kategorien ohne Bedeutung — für Werte, die sich nur unterscheiden sollen (Projektfarben,
+// Diagrammreihen). Eine Kategorie hat zwei Rollen: subtle (die getönte Fläche) und border (die
+// Linie); Text darauf ist gewöhnlicher Text. skalen.md „Pill: Rolle statt Farbe“.
+const KATEGORIEN = [1, 2, 3, 4, 5, 6, 7, 8];
+const BEDEUTUNGS_TINTS = ['surface-brand-subtle', 'status-error-subtle', 'status-warning-subtle',
+  'status-success-subtle', 'status-info-subtle'];
+/** 13 getönte Flächen auf 360° lassen keine 30° zu; Kategorien halten 20° zueinander und zu jeder Bedeutung. */
+const KATEGORIE_ABSTAND_MIN = 20;
+
+test('jede Kategorie trägt gewöhnlichen Text auf ihrer Fläche und zieht eine Linie mit 3,0 auf Grund und Layer', () => {
+  for (const m of MODES) for (const k of KATEGORIEN) {
+    const C = R.color[m];
+    const t = ratio(C['text-primary'], C[`category-${k}-subtle`]);
+    assert.ok(t >= 4.5, `${m}: text-primary auf category-${k}-subtle = ${t.toFixed(2)}`);
+    for (const g of ['surface-base', 'surface-layer']) {
+      const b = ratio(C[`category-${k}-border`], C[g]);
+      assert.ok(b >= 3.0, `${m}: category-${k}-border auf ${g} = ${b.toFixed(2)}`);
+    }
+  }
+});
+
+test('Kategorien trennen sich im Farbton voneinander und von jeder Bedeutung', () => {
+  for (const m of MODES) {
+    const tints = KATEGORIEN.map((k) => [`category-${k}-subtle`, R.color[m][`category-${k}-subtle`]]);
+    const bedeutung = BEDEUTUNGS_TINTS.map((n) => [n, R.color[m][n]]);
+    for (let i = 0; i < tints.length; i++) {
+      for (let j = i + 1; j < tints.length; j++) {
+        const d = farbtonAbstand(tints[i][1], tints[j][1]);
+        assert.ok(d >= KATEGORIE_ABSTAND_MIN, `${m}: ${tints[i][0]} ↔ ${tints[j][0]} = ${d.toFixed(1)}°`);
+      }
+      for (const [n, hex] of bedeutung) {
+        const d = farbtonAbstand(tints[i][1], hex);
+        assert.ok(d >= KATEGORIE_ABSTAND_MIN, `${m}: ${tints[i][0]} ↔ ${n} = ${d.toFixed(1)}°`);
+      }
+    }
+  }
+});
+
+test('eine Kategorie hat genau zwei Rollen: subtle und border', () => {
+  for (const m of MODES) {
+    const rollen = Object.keys(T.color[m]).filter((n) => n.startsWith('category-'));
+    assert.equal(rollen.length, 16, rollen.join(', '));
+    for (const n of rollen) assert.match(n, /^category-[1-8]-(subtle|border)$/, n);
+  }
+});

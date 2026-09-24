@@ -24,9 +24,11 @@ Jetzt:
 1. Sichtprüfung in der master-Docker-Instanz: Toolbar rahmenlos, Dialogfuß primary/secondary, kleine
    Tabellenzeilen-Icons, AppBar-Toolbar kollabiert bei Platzmangel zu Icons (Mechanik aus #29626), AppBar liest `surface-layer`,
    ein Löschen-Kommando mit `ButtonTone.DANGER` (heute kein Aufrufer — `setTone` einmal setzen).
-2. Danach die Pill — gegen Trac #29606 entwerfen: Farbe der Pill ist eine Rolle, kein Tokenname;
-   `--tlPill-color` von der Einfang-Liste holen. Neuer Branch `CWS/CWS_29617_design_system_welle_1` ist weg;
-   Pill läuft auf einem eigenen Welle-1-Branch (z. B. `CWS/CWS_29617_design_system_welle_1_pill`).
+2. **Pill, in Arbeit (24.09.).** Entschieden: Rolle statt Farbe, acht Kategorien ohne Bedeutung (`docs/skalen.md`
+   „Pill: Rolle statt Farbe“, Folie 33). Paketseite steht: 32 Primitive, 16 Kategorie-Rollen, `pill.css`, Vertrag,
+   Specimen, Gates 103/103. Engine-Seite folgt auf Branch `CWS/CWS_29617_design_system_welle_1_pill`:
+   `ValueColor` → Rolle, `ReactValueColor.COLOR` trägt den Rollennamen, `TLPill` rendert `tl-pill--<rolle>`,
+   `demo.tickets.model.xml` drei Rollen, alter Pill-Block und `--tlPill-color` fallen, `support-info`-Token fällt.
 
 Das Repo liegt jetzt unter `TopLogic/tl-design-system`; Wiki (Home, Übersicht, Anleitung Komponenten mit
 Claude, Regeldatei) ist der Einstieg für Bernhard, `docs/*.md` die gepflegte Quelle.

@@ -7,7 +7,7 @@ const P = JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.
 const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)));
 const REF = /^\{([a-z0-9-]+)\}$/;
 const KATEGORIEN = ['surface', 'text', 'icon', 'border', 'focus', 'shadow', 'space', 'radius',
-  'size', 'font', 'duration', 'easing', 'layer', 'status'];
+  'size', 'font', 'duration', 'easing', 'layer', 'status', 'category'];
 
 export const primitive = () => Object.assign({}, ...Object.values(P).filter((g) => typeof g === 'object'));
 

@@ -596,3 +596,19 @@ Der Befund dahinter: drei Erscheinungen, zwei kaum genutzte Größen, ein gedrü
 | Verworfen | Eichung je Welle gegen master — misst weiter die Datei |
 
 > Sprechnotiz: Das ist zugleich der Fertig-Nachweis je Komponente: Der Block fällt aus der Liste, wenn er aus der Datei gefallen ist.
+
+## 33 · Welle 1 · die Pill: Rolle statt Farbe
+
+**Die Farbe einer Pille ist eine Rolle, kein Tokenname und kein Literal.**
+
+| | |
+|---|---|
+| Rollen | `neutral` · `brand` · `error` `warning` `success` `info` · `category-1` … `category-8` |
+| Je Rolle | zwei Tokens: getönte Fläche und Linie; der Text ist `text-primary` — ein getönter Streifen trägt gewöhnlichen Text |
+| Kategorien | acht ohne Bedeutung, für Projektfarben und Diagrammreihen; Farbtöne zwischen den Bedeutungen, 20° Abstand (30° sind mit 13 Tönen nicht zu halten) |
+| Modell | die Annotation nennt die Rolle; das Token-Register aus #29606 wird ein Enum |
+| Verworfen | Tokenname oder Literal als Farbe, `color-mix` im Stylesheet, eigene Textrolle je Kategorie |
+
+Der Befund dahinter: `status-*-text` auf der eigenen `subtle`-Fläche erreicht hell 4,0 bis 4,2 — die Mischung im alten Stylesheet hatte Kontrast als Nebenprodukt.
+
+> Sprechnotiz: Kategorie 1 liegt 26° neben dem Fehlerrot. Darum heißen sie Kategorien: Wer Rot meint, nimmt `error`.

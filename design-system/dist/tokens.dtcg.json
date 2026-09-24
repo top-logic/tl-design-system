@@ -6,6 +6,10 @@
         "$type": "color",
         "$value": "#FEEFCF"
       },
+      "amber-5": {
+        "$type": "color",
+        "$value": "#FFECDF"
+      },
       "amber-20": {
         "$type": "color",
         "$value": "#EAB532"
@@ -18,17 +22,37 @@
         "$type": "color",
         "$value": "#B88A00"
       },
+      "amber-35": {
+        "$type": "color",
+        "$value": "#CF7C3B"
+      },
       "amber-44": {
         "$type": "color",
         "$value": "#936E00"
+      },
+      "amber-47": {
+        "$type": "color",
+        "$value": "#A45502"
+      },
+      "amber-73": {
+        "$type": "color",
+        "$value": "#391F0C"
       },
       "amber-76": {
         "$type": "color",
         "$value": "#281C02"
       },
+      "blue-4": {
+        "$type": "color",
+        "$value": "#E2F3FF"
+      },
       "blue-6": {
         "$type": "color",
         "$value": "#DFEBFF"
+      },
+      "blue-7": {
+        "$type": "color",
+        "$value": "#EEEEFF"
       },
       "blue-9": {
         "$type": "color",
@@ -46,9 +70,21 @@
         "$type": "color",
         "$value": "#5394FF"
       },
+      "blue-33": {
+        "$type": "color",
+        "$value": "#8C87E0"
+      },
+      "blue-35": {
+        "$type": "color",
+        "$value": "#2B99D5"
+      },
       "blue-43": {
         "$type": "color",
         "$value": "#2471EC"
+      },
+      "blue-46": {
+        "$type": "color",
+        "$value": "#6760B5"
       },
       "blue-49": {
         "$type": "color",
@@ -65,6 +101,10 @@
       "blue-69": {
         "$type": "color",
         "$value": "#1E2F4B"
+      },
+      "blue-73": {
+        "$type": "color",
+        "$value": "#24233E"
       },
       "blue-74": {
         "$type": "color",
@@ -186,6 +226,10 @@
         "$type": "color",
         "$value": "#DCF8E9"
       },
+      "green-6": {
+        "$type": "color",
+        "$value": "#EBF4DB"
+      },
       "green-24": {
         "$type": "color",
         "$value": "#60C99A"
@@ -198,17 +242,65 @@
         "$type": "color",
         "$value": "#36A376"
       },
+      "green-37": {
+        "$type": "color",
+        "$value": "#7F9A36"
+      },
       "green-46": {
         "$type": "color",
         "$value": "#008459"
+      },
+      "green-48": {
+        "$type": "color",
+        "$value": "#5B7400"
+      },
+      "green-73": {
+        "$type": "color",
+        "$value": "#222A0C"
       },
       "green-77": {
         "$type": "color",
         "$value": "#0C2319"
       },
+      "magenta-4": {
+        "$type": "color",
+        "$value": "#FFE9F8"
+      },
+      "magenta-5": {
+        "$type": "color",
+        "$value": "#F6EBFF"
+      },
+      "magenta-33": {
+        "$type": "color",
+        "$value": "#AF7DD0"
+      },
+      "magenta-34": {
+        "$type": "color",
+        "$value": "#C774B2"
+      },
+      "magenta-46": {
+        "$type": "color",
+        "$value": "#8756A6"
+      },
+      "magenta-47": {
+        "$type": "color",
+        "$value": "#9D4D8A"
+      },
+      "magenta-73": {
+        "$type": "color",
+        "$value": "#2E1F38"
+      },
+      "magenta-74": {
+        "$type": "color",
+        "$value": "#361C2F"
+      },
       "red-4": {
         "$type": "color",
         "$value": "#FFEBE8"
+      },
+      "red-5": {
+        "$type": "color",
+        "$value": "#FFEAEF"
       },
       "red-29": {
         "$type": "color",
@@ -217,6 +309,10 @@
       "red-32": {
         "$type": "color",
         "$value": "#FB594D"
+      },
+      "red-33": {
+        "$type": "color",
+        "$value": "#D77290"
       },
       "red-35": {
         "$type": "color",
@@ -230,6 +326,10 @@
         "$type": "color",
         "$value": "#CC2823"
       },
+      "red-46": {
+        "$type": "color",
+        "$value": "#AA4969"
+      },
       "red-51": {
         "$type": "color",
         "$value": "#B7000A"
@@ -238,9 +338,17 @@
         "$type": "color",
         "$value": "#8F0006"
       },
+      "red-73": {
+        "$type": "color",
+        "$value": "#3A1B24"
+      },
       "red-77": {
         "$type": "color",
         "$value": "#35110D"
+      },
+      "teal-5": {
+        "$type": "color",
+        "$value": "#D7F8F4"
       },
       "teal-6": {
         "$type": "color",
@@ -254,9 +362,29 @@
         "$type": "color",
         "$value": "#159FB6"
       },
+      "teal-36": {
+        "$type": "color",
+        "$value": "#00A398"
+      },
       "teal-45": {
         "$type": "color",
         "$value": "#007F92"
+      },
+      "teal-48": {
+        "$type": "color",
+        "$value": "#00786F"
+      },
+      "blue-48": {
+        "$type": "color",
+        "$value": "#0071A3"
+      },
+      "teal-73": {
+        "$type": "color",
+        "$value": "#002E2A"
+      },
+      "blue-75": {
+        "$type": "color",
+        "$value": "#092A3C"
       },
       "teal-75": {
         "$type": "color",
@@ -843,6 +971,70 @@
           "$type": "color",
           "$value": "{primitive.color.teal-6}"
         },
+        "category-1-subtle": {
+          "$type": "color",
+          "$value": "{primitive.color.red-5}"
+        },
+        "category-1-border": {
+          "$type": "color",
+          "$value": "{primitive.color.red-33}"
+        },
+        "category-2-subtle": {
+          "$type": "color",
+          "$value": "{primitive.color.amber-5}"
+        },
+        "category-2-border": {
+          "$type": "color",
+          "$value": "{primitive.color.amber-35}"
+        },
+        "category-3-subtle": {
+          "$type": "color",
+          "$value": "{primitive.color.green-6}"
+        },
+        "category-3-border": {
+          "$type": "color",
+          "$value": "{primitive.color.green-37}"
+        },
+        "category-4-subtle": {
+          "$type": "color",
+          "$value": "{primitive.color.teal-5}"
+        },
+        "category-4-border": {
+          "$type": "color",
+          "$value": "{primitive.color.teal-36}"
+        },
+        "category-5-subtle": {
+          "$type": "color",
+          "$value": "{primitive.color.blue-4}"
+        },
+        "category-5-border": {
+          "$type": "color",
+          "$value": "{primitive.color.blue-35}"
+        },
+        "category-6-subtle": {
+          "$type": "color",
+          "$value": "{primitive.color.blue-7}"
+        },
+        "category-6-border": {
+          "$type": "color",
+          "$value": "{primitive.color.blue-33}"
+        },
+        "category-7-subtle": {
+          "$type": "color",
+          "$value": "{primitive.color.magenta-5}"
+        },
+        "category-7-border": {
+          "$type": "color",
+          "$value": "{primitive.color.magenta-33}"
+        },
+        "category-8-subtle": {
+          "$type": "color",
+          "$value": "{primitive.color.magenta-4}"
+        },
+        "category-8-border": {
+          "$type": "color",
+          "$value": "{primitive.color.magenta-34}"
+        },
         "text-on-brand": {
           "$type": "color",
           "$value": "#FFFFFF",
@@ -1129,6 +1321,70 @@
         "status-info-subtle": {
           "$type": "color",
           "$value": "{primitive.color.teal-75}"
+        },
+        "category-1-subtle": {
+          "$type": "color",
+          "$value": "{primitive.color.red-73}"
+        },
+        "category-1-border": {
+          "$type": "color",
+          "$value": "{primitive.color.red-46}"
+        },
+        "category-2-subtle": {
+          "$type": "color",
+          "$value": "{primitive.color.amber-73}"
+        },
+        "category-2-border": {
+          "$type": "color",
+          "$value": "{primitive.color.amber-47}"
+        },
+        "category-3-subtle": {
+          "$type": "color",
+          "$value": "{primitive.color.green-73}"
+        },
+        "category-3-border": {
+          "$type": "color",
+          "$value": "{primitive.color.green-48}"
+        },
+        "category-4-subtle": {
+          "$type": "color",
+          "$value": "{primitive.color.teal-73}"
+        },
+        "category-4-border": {
+          "$type": "color",
+          "$value": "{primitive.color.teal-48}"
+        },
+        "category-5-subtle": {
+          "$type": "color",
+          "$value": "{primitive.color.blue-75}"
+        },
+        "category-5-border": {
+          "$type": "color",
+          "$value": "{primitive.color.blue-48}"
+        },
+        "category-6-subtle": {
+          "$type": "color",
+          "$value": "{primitive.color.blue-73}"
+        },
+        "category-6-border": {
+          "$type": "color",
+          "$value": "{primitive.color.blue-46}"
+        },
+        "category-7-subtle": {
+          "$type": "color",
+          "$value": "{primitive.color.magenta-73}"
+        },
+        "category-7-border": {
+          "$type": "color",
+          "$value": "{primitive.color.magenta-46}"
+        },
+        "category-8-subtle": {
+          "$type": "color",
+          "$value": "{primitive.color.magenta-74}"
+        },
+        "category-8-border": {
+          "$type": "color",
+          "$value": "{primitive.color.magenta-47}"
         },
         "text-on-brand": {
           "$type": "color",
