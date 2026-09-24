@@ -1,6 +1,6 @@
 # TopLogic Design System — Präsentationsfassung
 
-**Stand:** 2026-09-17 · Welle 0 · Ticket #29617
+**Stand:** 2026-09-24 · Welle 1 · Ticket #29617
 
 Vorlage für die PowerPoint, mit der die Kollegen das Design System kennenlernen: was sich ändert, wie es funktioniert, warum so. Kurz und prägnant, eine Botschaft je Folie. Entscheidungen und Belege stehen allein in [`skalen.md`](skalen.md).
 
@@ -22,11 +22,11 @@ Und dann trifft er eine Wahl. Sie wird plausibel aussehen, sie wird zum Nachbarn
 
 ## 2 · Warum ein Styleguide dafür nicht reicht
 
-**Der Ansatz folgt Polar „Orbit" — einem Design System, das für genau diese Lage gebaut wurde.**
+**Ein dokumentierter Wert ist eine Bitte. Ein Gate ist eine Zusage.**
 
-> *„Anything you put in a doc is a probability, not a guarantee."*
+> *„Anything you put in a doc is a probability, not a guarantee."* — Polar „Orbit“
 
-Ein dokumentierter Wert ist eine Bitte. Ob sie befolgt wird, hängt davon ab, ob jemand die Seite gelesen hat, ob sie im Kontextfenster lag, ob das Modell sie höher gewichtet als die Gegenbeispiele, die im Code direkt daneben stehen.
+Ob eine Regel aus dem Dokument befolgt wird, hängt davon ab, ob jemand die Seite gelesen hat, ob sie im Kontextfenster lag, ob das Modell sie höher gewichtet als die Gegenbeispiele direkt daneben im Code.
 
 **Die Umkehrung:** Nicht dokumentieren, was richtig ist — sondern dafür sorgen, dass alles andere gar nicht erst durchkommt.
 
@@ -36,73 +36,11 @@ Ein dokumentierter Wert ist eine Bitte. Ob sie befolgt wird, hängt davon ab, ob
 | Durchsetzung | Aufmerksamkeit | CI |
 | bei Abweichung | fällt vielleicht auf | bricht den Build |
 
-> Quelle: [polar.sh/blog/orbit-llm-safe-design-system](https://polar.sh/blog/orbit-llm-safe-design-system)
+> Sprechnotiz: Das nützt Menschen genauso wie Modellen. Niemand hat im entscheidenden Moment die Regelseite vor Augen — der Build schon.
 
 ---
 
-## 3 · Was daraus für TopLogic folgt
-
-**Leitplanken statt Empfehlungen — und das nützt Menschen genauso wie Modellen.**
-
-1. **Jede Skala braucht ein Gate.** Eine Regel, die nur im Dokument steht, wird bei der nächsten Komponente umgangen — nicht aus Nachlässigkeit, sondern weil niemand sie im entscheidenden Moment vor Augen hat.
-2. **Werte werden abgeleitet, nicht geschrieben.** Was gerechnet wird, kann nicht falsch abgeschrieben werden.
-3. **Keine Fremdpaletten, keine Fallbacks.** Jeder Design-Wert in TopLogic wird an einer Stelle definiert. Ein hartkodierter Wert ist eine Stelle, die auch ein Kunde mit eigenem Theme nicht erreicht.
-
-**Das Ergebnis ist kein Stilproblem weniger, sondern ein Qualitätsproblem weniger:** Kontrastverstöße, unlesbare Zustände und Oberflächen, die auf jedem Rechner anders aussehen, sind Folgen derselben Lücke.
-
-> Sprechnotiz: Stufe A legt die Skalen fest. Stufe B setzt sie in der Anwendung um.
-
----
-
-## 4 · Ausgangslage in Zahlen
-
-**Gemessen an den beiden React-Stylesheets, die TopLogic ausliefert.**
-
-| | Bestand |
-|---|---|
-| Schriftgrößen | 113 Deklarationen auf **17 verschiedenen Werten** |
-| Schriftgewichte | 44 Literale, dahinter faktisch **2 Schnitte** |
-| Radius | 4 Formen, dazu 2 Ausreißer |
-| Fokus | **5 Mechanismen** für dieselbe Sache |
-| Motion | 19 Übergänge, 13 Animationen, **0 Tokens** |
-| Barrierefreiheit | 1× `prefers-reduced-motion` bei 13 Animationen |
-
-> Sprechnotiz: Keine dieser Zahlen war vorher bekannt.
-
----
-
-## 5 · Das wiederkehrende Muster
-
-**Ein Token, mehrere Aufgaben — und die schwächste Anforderung gewinnt.**
-
-| Token | Aufgaben | Folge |
-|---|---|---|
-| `border-subtle` | trennt Tabellenzeilen **und** umrandet Eingabefelder | **kein** Eingabefeld erfüllte WCAG 1.4.11 |
-| `text-on-color` | Beschriftung auf heller **und** dunkler Fläche | strukturell unlösbar, kein Wert besteht beide |
-| `support-warning` | Text, Rahmen, Fläche, Akzent | als Text **2,27** statt 4,5 |
-
-> Sprechnotiz: Drei unabhängige Fehler, eine Ursache. Deshalb ist die Antwort eine Regel, kein
-> korrigierter Wert.
-
----
-
-## 6 · Was die automatische Prüfung fand
-
-**Zehn Kontrastverstöße, keiner davon vorher bekannt.**
-
-| Befund | gemessen | gefordert |
-|---|---|---|
-| `text-inverse` auf `background-inverse`, dunkel | **1,13** | 4,5 |
-| Feldumrandung `border-subtle`, beide Modi | 1,70 / 1,63 | 3,0 |
-| `support-warning` als Text, hell | 2,27 | 4,5 |
-| `text-placeholder` auf `field`, hell | 2,04 | 4,5 |
-| Snackbar-Erfolg, hartkodiertes `#fff` | 3,17 | 4,5 |
-
-**1,13 heißt: Weiß auf Fast-Weiß.** Der Text war unsichtbar, nicht nur schlecht lesbar.
-
----
-
-## 7 · Die eine Regel, die für jede Entscheidung gilt
+## 3 · Die eine Regel, die für jede Entscheidung gilt
 
 **Der Bestand ist kein Maßstab.**
 
@@ -110,88 +48,67 @@ Dass ein Wert 48-mal im Stylesheet steht, belegt nicht, dass er gut ist. Es bele
 
 **Der Ablauf ist deshalb immer derselbe:**
 
-| Schritt | Was passiert |
-|---|---|
-| 1. Inventar | auszählen, was tatsächlich im ausgelieferten CSS steht |
-| 2. Befund | das Muster benennen, nicht die Einzelwerte |
-| 3. Entscheidung | **gegen** den Befund, nicht aus ihm |
-| 4. Gate | die Regel maschinell prüfbar machen |
+1. **Inventar** — auszählen, was tatsächlich im ausgelieferten CSS steht
+2. **Befund** — das Muster benennen, nicht die Einzelwerte
+3. **Entscheidung** — *gegen* den Befund, nicht aus ihm
+4. **Gate** — die Regel maschinell prüfbar machen
 
 > Sprechnotiz: Die erste Fassung der Typo-Skala lief genau in diesen Fehler — 14 px stand 48-mal im CSS, also wurde 14 px zum Fließtext. Sie wurde verworfen und neu entschieden.
 
 ---
 
-## 8 · Überblick: was entschieden ist
+## 4 · Ausgangslage in drei Zahlen
 
-| Skala | Entscheidung |
+**Gemessen am ausgelieferten Stylesheet, nicht geschätzt.**
+
+| | |
 |---|---|
-| Marke | `#0B5ED7`, ausdrücklich vorläufig |
-| Grundfläche | `#FAFAFA` statt Weiß |
-| Neutrale | nach Anforderung gestuft, nicht nach gleichem Abstand |
-| Rahmen | vier Stufen, jede mit genau einer Aufgabe |
-| Semantik | vier Bedeutungen × vier Rollen |
-| Dark | zweite vollständige Palette, nichts wird geerbt |
-| Elevation | Fläche plus Schatten, drei Stufen |
-| Typo | sechs Größen, neun Klassen, zwei Familien |
-| Radius | zwei Stufen, zwei Formen |
-| Fokus | ein Ring, außen, nur bei Tastatur |
-| Motion | drei Dauern, drei Kurven, ein Schalter |
+| **17** | verschiedene Schriftgrößen — für zwei Arbeitsgrößen, die wir brauchen |
+| **5** | Mechanismen, einen Fokusrahmen zu zeichnen — für eine Sache |
+| **1,13** | Kontrast von Text auf Fläche im Dunkelmodus — Weiß auf Fast-Weiß, gefordert 4,5 |
+
+Dahinter ein einziges Muster: **ein Token, mehrere Aufgaben — und die schwächste Anforderung gewinnt.** Eine Linie, die Tabellenzeilen trennt, umrandet auch Eingabefelder. Kein einziges Feld erfüllte die Norm.
+
+> Sprechnotiz: Zehn Kontrastverstöße, keiner davon vorher bekannt. Drei unabhängige Fehler, eine Ursache — deshalb ist die Antwort eine Regel, kein korrigierter Wert.
 
 ---
 
-## 9 · Farbe: die Marke
+## 5 · Zwei Schichten — und die Stelle für Kundenprojekte
 
-**`#0B5ED7` — klarer als heute, ohne die Farbfamilie zu wechseln.**
+**Werte und Bedeutungen sind getrennt. Ein Wert steht genau einmal.**
 
-| | heute | neu |
+| Schicht | Beispiel | Regel |
 |---|---|---|
-| Chroma | 0,163 | **0,200** |
-| Kontrast als Linkfarbe | — | 5,84 auf Weiß, 5,59 auf `#FAFAFA` |
+| **Primitive** | `--tl-blue-49: #0B5ED7` | reine Werte, keine Rolle im Namen |
+| **Rollen** | `--tl-surface-brand: var(--tl-blue-49)` | Bedeutung, kein einziger Wert |
 
-* Hellere Blautöne fielen als Linkfarbe durch (4,49 und 4,19).
-* *Frisch wird ein Blau über Chroma, nicht über Helligkeit* — Chroma kostet keinen Kontrast, Helligkeit sofort.
-* **Vorläufig, und das kostet nichts:** Rampe, Beschriftung und Prüfung sind abgeleitet. Der Wechsel ist ein einziger Wert.
+Eine Klasse liest nur Rollen. Eine Rolle liest nur Primitive. Ein Wert in der Rollenschicht bricht den Build.
 
----
+**Das ist mehr als Ordnung — es ist die Eingriffsstelle für Kunden.** Wer seine Hausfarbe einsetzen will, überschreibt ein Primitiv; alle Rollen der Marke ziehen mit, ohne dass eine Klasse angefasst wird. Mehrere Themes in einer Anwendung, der Nutzer wählt — TopLogic bleibt daneben stehen.
 
-## 10 · Farbe: Grundfläche und Rahmen
-
-**Reines Weiß entfällt — `#FAFAFA` trägt eine Oberfläche, in der man stundenlang arbeitet.**
-
-Die Rahmen bekommen vier Stufen, weil eine nicht reichen kann:
-
-| Stufe | Verhältnis | Aufgabe |
-|---|---|---|
-| `border-separator` | ~1,5 | **trennt**, schuldet keinen Kontrast |
-| `border-control` | ~3,0 | **begrenzt ein Bedienelement** — WCAG-pflichtig |
-| `border-emphasis` | ~4,55 | **hebt hervor** |
-| `border-interactive` | ~5,6 | **trägt die Marke** — Fokus, aktiver Zustand |
-
-> Merksatz: *Eine Linie, die trennt, ist ein Separator. Eine Linie, die etwas umschließt, worauf der
-> Zeiger wirkt, ist ein Control-Rahmen.*
+> Sprechnotiz: Der erste Entwurf schrieb Hex-Werte direkt an die Rollen — und reproduzierte genau den Fehler, den er beseitigen sollte. Ein Test spielt den Kundentausch heute durch.
 
 ---
 
-## 11 · Farbe: Semantik
+## 6 · Farbe: Rolle statt Wert
 
-**Vier Bedeutungen — Fehler, Warnung, Erfolg, Info — mit je vier Rollen.**
+**Niemand schreibt eine Farbe. Man nennt, wofür sie ist.**
 
-| Rolle | Aufgabe | Zielkontrast |
-|---|---|---|
-| `text` | der Zustand als Text | 4,5 |
-| `border` | die Linie, die ihn trägt | 3,0 |
-| `surface` | gefüllte Fläche, Beschriftung **abgeleitet** | — |
-| `subtle` | getönter Hinweisstreifen | trägt gewöhnlichen Text |
+* **Marke** — ein Blau, klarer als heute, ausdrücklich vorläufig. Der Wechsel kostet einen Wert; Rampe, Beschriftung und Prüfung sind abgeleitet.
+* **Vier Bedeutungen** — Fehler, Warnung, Erfolg, Info — mit je vier Rollen: Text, Linie, Fläche, getönter Streifen. 16 Werte je Modus, alle gerechnet.
+* **Acht Kategorien ohne Bedeutung** — für Projektfarben, Diagrammreihen, Avatare. Wer Rot meint, nimmt `error`.
+* **Vier Rahmenstufen**, jede mit genau einer Aufgabe: trennen, begrenzen, hervorheben, Marke tragen.
+* **Beschriftung auf Flächen wird gerechnet, nie geschrieben.** Erfolg bekommt dunkle Schrift, weil das Weiß von heute die Norm verfehlte.
 
-**16 Werte je Modus, alle gerechnet.** Das korrigiert nebenbei die Snackbar: Erfolg bekommt dunkle Schrift, nicht das hartkodierte Weiß mit 3,17.
+> Merksatz: *Eine Linie, die trennt, ist ein Separator. Eine Linie, die etwas umschließt, worauf der Zeiger wirkt, ist ein Control-Rahmen.*
 
 ---
 
-## 12 · Dark und Elevation
+## 7 · Hell und dunkel: zwei Paletten, nichts wird geerbt
 
-**Dark ist eine zweite vollständige Palette. Nichts wird geerbt.**
+**Alle acht Dunkel-Verstöße waren Vererbungsfehler** — jemand überschrieb 36 Werte und übersah den siebenunddreißigsten.
 
-Grund: Alle acht Dunkel-Verstöße waren Vererbungsfehler — jemand überschrieb 36 Werte und übersah den siebenunddreißigsten.
+Deshalb ist Dunkel eine **zweite vollständige Palette**. Jede Rolle hat je Modus ihren Wert, und das Kontrast-Gate läuft über beide.
 
 **Elevation: Fläche plus Schatten.**
 
@@ -200,449 +117,161 @@ Grund: Alle acht Dunkel-Verstöße waren Vererbungsfehler — jemand überschrie
 | Höhe wird getragen von | dem **Rahmen** | der **Fläche** |
 | Schatten | nur was schwebt | nur was schwebt |
 
-**Schatten bekommt ausschließlich, was über der Oberfläche liegt** — Popover, Dialog, Toast. Der Bestand verletzt das vierfach; `--shadow-raised` liegt heute auf Tabellenzeilen. Eine Tabellenzeile schwebt nicht.
+> Sprechnotiz: Eine Tabellenzeile schwebt nicht. Heute trägt sie einen Schatten.
 
 ---
 
-## 13 · Typografie: die Entscheidung
+## 8 · Schrift, Maße, Dichte — ein Raster
 
-**Zwei Arbeitsgrößen, nicht drei. Untergrenze 12 px, ausnahmslos.**
+**Zwei Arbeitsgrößen statt siebzehn. Untergrenze 12 px, ausnahmslos.**
 
-| Token | px | Aufgabe |
+* **Schrift:** `label` 12 px, `body` 14 px, drei Überschriften, eine Display-Größe. Neun Klassen legen Familie, Größe, Gewicht und Zeilenhöhe zusammen fest — eine Größe allein ist keine Klasse.
+* **Abstände:** 4 · 8 · 12 · 16 · 24 · 32 · 48 px. Alles durch vier teilbar; Zeilenhöhen und Control-Höhen liegen auf demselben Raster.
+* **Dichte:** zwei Stufen. Eine Tabelle wird eng, indem Luft verschwindet — nicht indem Text schrumpft.
+* **Radius:** Was bedient wird, bekommt 4 px. Was umschließt, 8 px. Pille und Kreis sind Formen, keine Stufen.
+* **Einheiten:** Was mit der Schrift skaliert, steht in `rem`. Linien bleiben Pixel.
+
+> Sprechnotiz: 13 px fällt weg — der Unterschied zu 14 ist unsichtbar, kostet aber in jeder Komponente eine Entscheidung.
+
+---
+
+## 9 · Fokus und Bewegung: einer statt fünf
+
+**Fokus: ein Ring.** Zwei Pixel, zwei Pixel Abstand, nur bei Tastatur.
+
+* Der Abstand ist kein Detail: An der Kante wäre ein blauer Ring auf einer blauen Schaltfläche unsichtbar.
+* Wer klickt, weiß, wo er ist. Bisher zeigten 36 von 64 Stellen den Ring auch bei der Maus.
+* `outline: none` bricht den Build. 22 Stellen im Bestand hatten keinen Fokus mehr.
+
+**Bewegung: drei Dauern, drei Kurven, ein Schalter.**
+
+* Die Regel ist die Fläche, nicht die Wichtigkeit: je mehr Pixel sich bewegen, desto länger darf es dauern.
+* Was erscheint, bremst ab. Was verschwindet, beschleunigt weg.
+* Ein globaler Schalter für Nutzer, die weniger Bewegung wünschen — heute berücksichtigte das eine von 13 Animationen.
+
+---
+
+## 10 · Wie eine Komponente ins System kommt
+
+**Drei Komponenten, eine Regel: Rolle statt Wert.**
+
+| | vorher | nachher |
 |---|---|---|
-| `label` | 12 | Beschriftung, Spaltenkopf |
-| `body` | 14 | alles Gelesene |
-| `heading-sm/md/lg` | 16 / 20 / 24 | Abschnitt, Dialog, Seite |
-| `display` | 32 | Login, Leerbild, Deckblatt |
+| **Button** | drei Erscheinungen, gedrückt als Klasse, fünf Kontextregeln von außen, nichts für Löschen | vier Erscheinungen, eine Tönung `danger`; Zustände sind Attribute; der Container wählt |
+| **Pill** | eine Farbe aus dem Modell, im Stylesheet gemischt — Kontrast als Zufall | eine **Rolle** aus geschlossener Liste; zwei Tokens je Rolle, gewöhnlicher Text darauf |
+| **Avatar** | ein Farbwert aus dem Namen gerechnet, als Inline-Style, 9-px-Initialen | eine **Kategorie** aus dem Namen; dieselben Tokens wie die Pill, nichts unter 12 px |
 
-* **13 px fällt weg** — der Unterschied zu 14 ist unsichtbar, kostet aber in jeder Komponente eine Entscheidung. Dichter wird eine Tabelle über die **Dichte**, nicht über kleinere Schrift.
-* **Untergrenze 12 px** wegen BITV 2.0 und EN 301 549. Sieben Bestandswerte zwischen 9 und 11,52 px fallen darauf zusammen.
-* Alle Zeilenhöhen liegen auf dem **4-px-Raster** — Typografie rastet in dasselbe Raster wie Abstände und Control-Höhen.
+Jede Komponente geht denselben Weg: CSS ins Paket, Klassen umbenennen, Zustände auf Attribute, Specimen, Vertrag, Gate grün.
 
----
+**Fertig ist eine Komponente, wenn ihr alter Block im alten Stylesheet leer ist.** Nicht, wenn die neue aussieht wie die alte.
 
-## 14 · Typografie: Klassen statt Größen
-
-**Eine Größe ist keine Klasse.** Eine Klasse legt Familie, Größe, Gewicht, Zeilenhöhe, Laufweite und die Einsatzregel zusammen fest — sonst entscheidet jede Komponente das Gewicht neu, und genau so entstanden die 44 Literale.
-
-**Neun Klassen** aus sechs Größen und zwei Gewichten. Mehr Gewichte gibt es nicht: Inter liefert nur Regular und SemiBold.
-
-**Zahlen sind eine Eigenschaft, keine Klasse:** `tnum` und `zero` sind in Zahlenspalten **Pflicht**. Heute nutzt TopLogic `tabular-nums` genau zweimal — und nicht in der Datentabelle. Die Zahlenspalten fluchten also nicht, obwohl Inter das Merkmal mitbringt.
+> Sprechnotiz: Ein Avatar und eine Pill derselben Kategorie sehen gleich aus. Das ist kein Zufall, das ist die Palette.
 
 ---
 
-## 15 · Typografie: die Schriften
+## 11 · Die Gates: was den Build bricht
 
-| | Stack |
+**Die Regeln stehen nicht nur im Dokument — sie laufen als Tests, über hundert.**
+
+| Gate | bricht bei |
 |---|---|
-| Text | `'Inter', ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif` |
-| Code | `'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace` |
+| Schichten | einem Wert in der Rollenschicht, einem Primitiv ohne Leser |
+| Kontrast | jedem Paar Text/Fläche unter 4,5, jeder Linie unter 3,0 — hell **und** dunkel |
+| Farbton | zwei Bedeutungen, die sich zu ähnlich sehen |
+| Raster | einer Schriftgröße unter 12 px, einer Zeilenhöhe neben dem 4-px-Raster |
+| Klassen | jedem Literal, jedem `:focus` ohne `-visible`, jedem `outline: none` |
+| Erzeugtes | jedem Unterschied zwischen Quelle und ausgeliefertem CSS |
 
-**Beide lokal ausgeliefert.** TopLogic läuft in Installationen ohne Internetzugang — eine von außen nachgeladene Schrift ist ein Datenschutz- **und** ein Verfügbarkeitsproblem.
-
-Zwei Bestandsfehler fallen damit:
-
-* `font-family: 'Inter'` hatte **keinen Fallback**. Lädt Inter nicht, rendert TopLogic in Times.
-* `font-family-mono: monospace` ist keine Entscheidung, sondern der Verzicht darauf — auf Windows also Courier New. Für eine Plattform mit TL-Script, XML und Stacktraces zu wenig.
-
-**Der System-Font-Stack schied aus:** dieselbe Tabelle würde auf Windows, macOS und Linux verschieden breit. Ein System, das Maße als Tokens festlegt, verlöre seine Grundlage.
+> Sprechnotiz: Beim ersten Lauf widersprach das Inventar den von Hand gezählten Zahlen. Der Test dazu war grün und trotzdem falsch, weil er nur den Fall prüfte, den der Leser beherrschte. Deshalb sind alle Zahlen hier gemessen — und bleiben es.
 
 ---
 
-## 16 · Radius
+## 12 · Die Ratsche: Altlast wird abgeschnitten, nicht übersetzt
 
-**Zwei Stufen, zwei Formen — bewusst am zurückhaltenden Ende.**
+**Keine Aliase alter Namen, kein Übergang. Alte Namen mit neuen Werten wären der Ort, an den niemand will.**
 
-| Token | Wert | Gilt für |
-|---|---|---|
-| `radius-sm` | 4 px | Feld, Schaltfläche, Reiter, Zelle |
-| `radius-md` | 8 px | Karte, Dialog, Popover, Drawer |
-| `radius-full` | Pille | Badge, Zähler, Umschalter |
-| `radius-round` | 50 % | Avatar, Statuspunkt |
-
-**Die Regel ist die Rolle, nicht die Größe:** Was bedient wird, bekommt `sm`. Was umschließt, bekommt `md`. Dieselbe Form wie die Rahmenregel — und dasselbe Niveau wie Carbon und Fluent, weil TopLogic in Konzernen im Tagesbetrieb steht.
-
----
-
-## 17 · Fokus
-
-**Der unordentlichste Teil des Bestands: fünf Mechanismen für dieselbe Sache.**
-
-| Mechanismus | Stellen |
-|---|---|
-| `outline` | 29 |
-| Inset-`box-shadow` | 8 |
-| äußerer `box-shadow` (drei Breiten) | 7 |
-| `border-color` | 5 |
-| halbe Inset-Ringe | 5 |
-
-**Neu: ein Ring. `outline` 2 px solid, Offset 2 px, nur `:focus-visible`.**
-
-* Der **Offset** ist kein Detail: An der Kante wäre ein blauer Ring auf einer blauen Schaltfläche unsichtbar. Zwei Pixel Luft setzen ihn auf die Fläche dahinter.
-* **Nur Tastatur** — wer klickt, weiß, wo er ist. Bislang zeigten 36 von 64 Stellen den Ring auch bei der Maus.
-* **Offener Befund:** 22× `outline: none` ohne erkennbaren Ersatz — jeder ein Kandidat für einen vollständig fehlenden Fokus (WCAG 2.4.7).
-
----
-
-## 18 · Motion
-
-**Motion gab es schon — nur kein System: acht Dauern, vier Browser-Defaults, null Tokens.**
-
-| Dauer | Wert | Gilt für |
-|---|---|---|
-| `fast` | 100 ms | Hover, Aktiv, Fokus |
-| `base` | 150 ms | Normalfall |
-| `slow` | 250 ms | Popover, Dialog, Drawer |
-
-**Die Regel ist die Fläche, nicht die Wichtigkeit.** Je mehr Pixel sich bewegen, desto länger darf es dauern.
-
-Drei eigene Kurven statt `ease`: **was erscheint, bremst ab — was verschwindet, beschleunigt weg.**
-
-**Ein globaler Schalter für `prefers-reduced-motion`**, nicht je Komponente. Der Bestand zeigt, warum: 13 Animationen, davon sechs endlos laufend, und **eine** Stelle, die die Systemeinstellung berücksichtigt.
-
----
-
-## 19 · Abstände und Dichte
-
-**Die Abstandsskala hatte ein Loch — zwischen 8 und 16 px lag nichts.** Genau dort stehen heute **18 literale Abstände**: 12 px sechsmal, 6 px siebenmal, dazu 10 und 5 px.
-
-Neu: 4 · 8 · **12** · 16 · 24 · 32 · 48 px. Alle durch vier teilbar — Abstände, Zeilenhöhen und Control-Höhen liegen damit auf **einem** Raster.
-
-**Dichte: zwei Stufen. Die Schriftgröße bleibt in beiden gleich.**
-
-| | Standard | Kompakt |
-|---|---|---|
-| Control-Höhe | 32 px | 28 px |
-| Tabellenzeile | 36 px | 32 px |
-| Polsterung | 12 / 8 px | 8 / 4 px |
-| Schrift | 12 / 14 px | **12 / 14 px** |
-
-*Eine Tabelle wird eng, indem Luft verschwindet — nicht indem Text schrumpft.*
-
-**Der Bestand hatte schon drei Dichten** — je eine in Stack, Grid und Card, keine davon wirkt auf die anderen. Eine Maske mit allen dreien steht nach dem Umschalten in drei verschiedenen Dichten.
-
----
-
-## 20 · Eine Einheitenregel für alles
-
-**Was mit der Schrift skalieren soll, steht in `rem`. Linien stehen in `px`.**
-
-| | Einheit |
-|---|---|
-| Schriftgrößen, Abstände, Polsterung | `rem` |
-| Control- und Zeilenhöhen, Radius | `rem` |
-| Rahmenbreite, Fokusring und -offset | `px` |
-
-**Warum das zählt:** Wer die Browserschrift auf 20 px stellt, tut das, weil er es braucht. Eine in `px` festgelegte Oberfläche ignoriert das — die Schrift wächst, die Luft nicht, und es wird enger statt lesbarer.
-
-Umgekehrt soll eine 1-px-Trennlinie eine Linie bleiben und nicht bei großer Schrift zu 1,25 px werden, die der Bildschirm unsauber rastert.
-
-> Sprechnotiz: Jeder `rem`-Wert im System ist ein glattes Sechzehntel — bei Standardeinstellung also ein ganzes Pixel.
-
----
-
-## 21 · Die letzten beiden Skalen
-
-**Rahmenbreiten: zwei.** 1 px ist der Regelfall, 2 px markiert Aktives und Betontes. Die `1.5px` aus dem Bestand fällt ersatzlos — ein halbes Pixel rastert auf keinem Bildschirm sauber.
-
-**Und ein breiter Balken ist kein Rahmen:** Die `0.4rem` und `0.65rem` im Bestand sind farbige Akzentbalken an Karten und Hinweisen. Sie tragen eine Bedeutung, sie umranden nichts — und bekommen deshalb eine eigene Rolle.
-
-**Die Marke bekommt keine Stufen, sondern zwei fehlende Rollen:** `brand-subtle` und `brand-subtle-hover` für markig getönte Flächen — aktiver Navigationspunkt, ausgewählter Reiter, getönter Streifen.
-
-| gemessen | hell | dunkel |
-|---|---|---|
-| Text auf `brand-subtle` | 15,71 | 14,35 |
-| Linktext darauf | 4,86 | 5,29 |
-
-**Eine volle Rampe mit zehn Stufen schied aus.** Die Hälfte hätte keine Aufgabe — und ein Token ohne Aufgabe ist genau die Beliebigkeit, die das System abstellen soll.
-
----
-
-## 22 · Ein Befund, und ein falsches Maß
-
-**Marke und Info sahen gleich aus** — ein markig getönter Reiter und ein Info-Hinweis, hell wie dunkel nicht zu unterscheiden.
-
-**Zuerst war das Maß falsch gewählt.** Notiert stand ein Kontrastverhältnis von 1,06 — daraus lässt sich nichts schließen, denn **das WCAG-Verhältnis misst Helligkeit.** Zwei gleich helle Flächen kommen immer auf rund 1,0, auch blau gegen orange. Der Gegencheck machte es sichtbar: Ein deutlich anders aussehender türkiser Kandidat kam auf 1,02 — einen noch kleineren Wert.
-
-Das richtige Maß ist der **Farbtonabstand**:
-
-| | ΔH |
-|---|---|
-| Marke ↔ Info, vorher | **1,5°** |
-| Info ↔ Erfolg | 96,8° |
-| Marke ↔ Info, **jetzt** | **48,5°** |
-
-**Info wandert ins Türkise** und bleibt damit kühl, ohne mit der Marke zu kollidieren.
-
-**Und das Gate bekommt eine Regel mehr:** Getönte Flächen verschiedener Bedeutung müssen mindestens 30° im Farbton auseinanderliegen.
-
-> Sprechnotiz: Das war kein falscher Wert, sondern eine fehlende Prüfung — genau der Unterschied, um den es in diesem Projekt geht.
-
----
-
-## 23 · Icons — und ein Verstoß, der dabei auffiel
-
-**Icons sind Font-Glyphen: Ihre Größe ist eine `font-size`.** Ohne Regel ist ein Icon so groß wie der Text, neben dem es zufällig steht. 22 Deklarationen auf acht Werten — und drei Ladeanzeigen messen **14, 20 und 24 px**, weil keine der drei Komponenten von den anderen wusste.
-
-| Stufe | px | Gilt für |
-|---|---|---|
-| `sm` | 16 | Text daneben — der Regelfall |
-| `md` | 20 | kein Text daneben, das Icon ist das Bedienelement |
-| `lg` | 24 | nicht bedienbar, eine Aussage |
-| `glyph` | 12 | Richtungszeichen **im** Control (geschlossene Liste) |
-
-> *Ein Zeichen, das etwas benennt, ist ein Icon. Ein Zeichen, das eine Richtung anzeigt, ist ein Glyph.*
-
-**Der eigentliche Fund ist ein anderer:** `.tlTableView__treeToggle` ist **20 × 20 px** und unterschreitet damit die 24 CSS-Pixel aus **WCAG 2.5.8**. Zwei andere Umschalter mit derselben Aufgabe haben 24 px — drei Komponenten haben je für sich entschieden, und eine hat falsch entschieden.
-
-**Die Lösung ist kein Wert, sondern ein Mechanismus:** Die Trefferfläche bekommt kein Icon-Token, sondern eine **Control-Höhe** aus der Dichte. Die kleine liegt bei genau 24 px — solange eine Icon-Schaltfläche eine nimmt, kann sie die Norm nicht verfehlen.
-
-> Sprechnotiz: Der einzige Verstoß im Bestand ist genau der, der keine Control-Höhe nimmt.
-
-Die vier Stufen stehen als Klassen `.tl-icon-glyph|sm|md|lg` in `base.css`; `font-size` ist nur dort erlaubt.
-
----
-
-## 24 · Zwei Schichten — und die Stelle für Kundenprojekte
-
-**Der erste Entwurf schrieb Hex-Werte direkt an die Rollen — und reproduzierte genau den Befund, den er beseitigen sollte.**
-
-| Wert | Rollen, die ihn als Literal trugen |
-|---|---|
-| `#0B5ED7` | `border-interactive`, `focus-ring`, `surface-brand`, `text-link` |
-| `#FFFFFF` | `surface-layer`, `surface-layer-nested`, `surface-overlay` |
-
-Bei einem Markenwechsel wären vier Stellen nachzuziehen — und die vergessene fünfte wäre der Vererbungsfehler, der die acht Dunkel-Verstöße erzeugt hat.
-
-| Schicht | Beispiel | Regel |
-|---|---|---|
-| **1 · Primitive** | `--tl-blue-49: #0B5ED7` | reine Werte, **keine** Rolle im Namen |
-| **2 · Rollen** | `--tl-surface-brand: var(--tl-blue-49)` | Bedeutung, **kein einziger Wert** |
-
-**Das ist mehr als Ordnung — es ist die Eingriffsstelle für Kundenprojekte.** Wer seine Hausfarbe einsetzen will, überschreibt `--tl-blue-49`; alle vier markenbezogenen Rollen ziehen mit, ohne dass eine Klasse angefasst wird. Deshalb löst das erzeugte CSS die Referenzen **nicht** auf.
-
-> Sprechnotiz: Ein Test spielt genau diesen Tausch durch — das ist die Zusage an Kundenprojekte, in ausführbarer Form.
-
----
-
-## 24a · Themes: eine dritte Achse
-
-**Eine Anwendung, mehrere Themes, der Nutzer wählt — das TopLogic-Theme bleibt daneben stehen.**
-
-| Achse | Attribut am `html` | Werte |
-|---|---|---|
-| Modus | `data-tl-mode` | `light`, `dark` |
-| Dichte | `data-tl-density` | `normal`, `compact` |
-| **Theme** | **`data-tl-theme`** | `tl` ohne Attribut, sonst die Kennung des Kundenthemes |
-
-Ein Kundentheme ist eine erzeugte Datei unter `[data-tl-theme="acme"]`, aus `acme.primitives.json` gerechnet, mit Beschriftungen je Theme × Modus, nach `tokens.css` geladen. Kein Tausch, kein Ersatz: `:root` bleibt TopLogic.
-
-**Die Engine kann das schon.** `UIThemeService` führt heute vier Themes, speichert die Wahl je Person und folgt dem Betriebssystem — nur unter dem alten Attribut mit den alten Werten. Das Attribut wird `data-tl-theme`, die Werte kommen aus dem Paket.
-
-> Sprechnotiz: Die Spec vom 17.09. dachte den Kunden als Tausch auf `:root`. Das kann nicht umschalten. Entschieden am 24.09., Begründung in `docs/skalen.md` „Themes: eine dritte Achse“. Umsetzung mit `derive`.
-
----
-
-## 25 · Wie das geprüft wird
-
-**Die Regeln stehen nicht nur im Dokument — sie laufen als Tests.** 79 Stück, `node --test` im Paket.
-
-| Datei | Was sie durchsetzt |
-|---|---|
-| `src/primitives.json`, `src/tokens.json` | der entschiedene Soll-Zustand, zweischichtig |
-| `tools/generate.mjs` | erzeugt daraus `primitives.css`, `tokens.css`, `base.css`, `tokens.dtcg.json` |
-| `test/tokens.test.mjs` | Kontraste, Farbabstände, das 4-px-Raster, die 12-px-Untergrenze |
-| `test/layers.test.mjs` | kein Wert in der Rollenschicht, keine Primitive ohne Leser, geschlossene Kategorien, der Kundentausch |
-| `test/lint-css.test.mjs` | das Klassen-Gate: kein Literal, kein `:focus`, kein `outline: none`, nur Tokens |
-| `test/ratchet.test.mjs` | kein Block des alten Stylesheets darf wachsen; ein abgeschnittener wird gestrichen |
-| `test/dist.test.mjs` | `dist/` ist byte-identisch mit dem Erzeugnis aus `src/` |
-
-**Ein Beispiel dafür, warum das nötig ist:** Beim ersten Lauf widersprach das Inventar den von Hand gezählten Zahlen — 14 px kam auf 7 statt 48. Ursache war ein zu enger Leser der Theme-Konfiguration. **Der Test dazu war grün und trotzdem falsch**, weil er nur den Fall prüfte, den der Leser beherrschte.
-
-> Sprechnotiz: Deshalb sind die Zahlen hier gemessen und nicht geschätzt — und bleiben es, weil ein eigener Test sie gegen das echte Stylesheet hält.
-
----
-
-## 26 · Stufe A ist am Ziel
-
-**Alle elf Skalen sind entschieden und begründet.**
-
-| | |
-|---|---|
-| Farbe | Marke, Grundfläche, Neutrale, Semantik, Rahmen |
-| Struktur | Dark, Elevation, Radius, Abstände, Dichte |
-| Text und Verhalten | Typografie, Fokus, Motion |
-
-**Was offen bleibt, ist genau ein Punkt** — und er lässt sich nicht am Schreibtisch klären, sondern nur am Bild: die Abgrenzung von Marke und Info.
-
-> Sprechnotiz: Der Markenton selbst kann sich noch ändern, sobald die Tokens in Figma liegen. Das kostet nichts — Rampe, Beschriftung und Prüfung sind abgeleitet, der Wechsel ist ein Wert.
-
----
-
-## 27 · Die Skala am echten Material — und was dabei auffiel
-
-**Dieselben Fragmente aus der laufenden Anwendung, zweimal:** links das heutige Theme, rechts die Skala.
-
-Damit das geht, nimmt die Skala den Rückweg — das ausgelieferte Stylesheet kennt nur die heutigen Tokennamen. **Der Umweg ist die Probe:** Was sich nicht zurückführen lässt, ist eine Änderung am Stylesheet, keine an der Skala.
-
-**Der Befund:** Von den zwölf mehrdeutigen Tokens sind nur neun eine Wahl.
-
-| Natur | Anzahl | Was zu tun ist |
-|---|---|---|
-| Alternative | 9 | An jeder Stelle gilt genau eines. Die Regel entscheidet. |
-| **Aufteilung** | **3** | An derselben Stelle gelten **beide gleichzeitig** — hier ist nichts zu wählen. |
-
-Die drei sind die Umriss-Schaltfläche: Ein Token trägt heute ihre Linie **und** ihre Beschriftung. Mit `border-control` wird die Schrift grau, mit `surface-brand` verliert die Linie ihren Kontrast. **Beides ist falsch** — erst getrennte Tokens im Stylesheet lösen es.
-
-> Sprechnotiz: Das ist der Wert der Ansicht. Auf dem Papier sah der Eintrag aus wie die anderen elf. An der Fläche war in zwei Sekunden zu sehen, dass dort gar keine Entscheidung ansteht, sondern eine Aufgabe.
-
----
-
-## 28 · 131 Stellen, 0 offen
-
-**Die Abbildung entscheidet je Token. Bei den mehrdeutigen entscheidet erst die Stelle.**
-
-Das ausgelieferte CSS liest die zwölf mehrdeutigen Tokens an **131 Stellen**. Jede trägt jetzt eine Entscheidung, und ein Test hält fest, dass keine ohne bleibt.
-
-| | |
-|---|---|
-| 131 Lesestellen | **129 zugeordnet · 2 zweckfremd · 0 ohne Entscheidung** |
-| `border-subtle` | 51 trennen → `border-separator`, **14 werden bedient → `border-control`** |
-| Semantikfarben | 26 — allein die Eigenschaft entscheidet: `color`, `border`, `background` |
-
-**Der Einzelfund, der Stufe B am meisten spart:** Der Bestand baut die Umriss-Schaltfläche an 25 Stellen nicht mit `border`, sondern mit `box-shadow: inset 0 0 0 2px`. Damit wird die Aufteilung **mechanisch** — eine Ersetzungsregel statt 25 Einzelfallentscheidungen.
-
-**Dreimal war die Regel am Schreibtisch zu eng:** `border-subtle` kannte den umschließenden Rahmen um etwas *Unbedientes* nicht (Karte, Popover, Ladering). `button-danger` hatte keine Linie. `layer-accent` stand an keiner der Stellen, für die die Regel gemacht war.
-
-> Sprechnotiz: Zwei Stellen sind als zweckfremd vermerkt statt in die Regel gebogen. Für beide steht ein Vorschlag daneben, und der Test verlangt ihn. Eine Regel, die überall passt, hat meist aufgehört, etwas zu behaupten.
-
----
-
-## 29 · Der Schnitt
-
-**Der Rückweg ins alte Stylesheet war reparierbar — aber er führte an einen Ort, an den niemand will: alte Namen mit neuen Werten.**
-
-Die Prüfung vor der Ersetzung fand drei Lücken: Die Abbildung deckte nur die Farbschicht, 31 gelesene Maß-, Schatten- und Typo-Tokens hatten kein Ziel. Die gerechneten Beschriftungen existierten nicht als CSS. Und die Skala schrieb Attribute, die die Anwendung nicht setzt.
-
-**Entschieden:** Altlasten abschneiden, nicht übersetzen. Die Skalen bleiben, das Ziel wird ein eigenes Paket, die Namen werden neu.
+Das alte Stylesheet wird **je Block** gezählt. Kein Block darf wachsen. Ein abgeschnittener Block wird gestrichen — und ist damit der Fertig-Nachweis der Komponente.
 
 | Alt | Neu |
 |---|---|
 | `layer-01` | `--tl-surface-layer` |
 | `support-error` | `--tl-status-error-text` · `-border` · `-surface` · `-subtle` |
-| `button-primary` | `--tl-surface-brand` |
 | `.tlReactButton--primary` | `.tl-button--primary` |
 | `data-theme="dark"` | `data-tl-mode="dark"` |
 
-Englisch, kebab-case, Präfix `tl`, BEM für Klassen, geschlossene Kategorien für Tokens. Zustände als Attribute, nicht als Klassen.
+Englisch, kebab-case, Präfix `tl`. **Der Namensraum `--tl` gehört dem Paket:** Außerhalb wird darin nichts definiert.
 
-> Sprechnotiz: Was die Abbildung gefunden hat, ist nicht verloren — es steht als Arbeitsliste in `docs/migration/altlast.md`. Die Werkzeuge dahinter sind gelöscht.
+> Sprechnotiz: Wächst ein Block durch ein fremdes Ticket, wird er mit Vermerk gehoben — nicht die Datei. So bleibt sichtbar, wer was hinzugefügt hat.
 
 ---
 
-## 30 · Welle 0 steht
+## 13 · Was Kunden bekommen
 
-**Das Paket `@toplogic/design-system` liefert, was jede Klasse liest.**
+**Drei Stufen, vom Regelfall zur Ausnahme.**
 
-| | |
+| Stufe | Der Kunde liefert | Das Paket tut |
+|---|---|---|
+| **A · Primitive** | Hausfarbe, Grauton, Schrift, Radius — eine kleine JSON | rechnet alles Fehlende: Rampen, Dunkel, getönte Flächen, Beschriftungen; prüft jedes Paar |
+| **B · Rollen** | eigene Werte für einzelne Rollen — Radius auf 0, anderes Info | prüft danach erneut; der Kunde trägt die Rechnung |
+| **C · Komponenten** | eine eigene React-Komponente unter dem TopLogic-Namen | liefert Zustand, Aktionen, Tokens und Attribute als Vertrag mit Konformitätstest |
+
+**Was der Kunde schreibt, gilt. Was er nicht schreibt, wird gerechnet. Was gerechnet oder geschrieben wurde, wird geprüft.**
+
+> Sprechnotiz: Heute muss ein Kunde für eine andere Hausfarbe elf Stellen überschreiben — und die vergessene zwölfte ist der Fehler im Dunkelmodus.
+
+---
+
+## 14 · Der Weg: fünf Wellen
+
+**Kleinste Bausteine zuerst, das Gerüst zuletzt. Keine Welle beginnt, bevor die vorherige grün ist.**
+
+| Welle | Komponenten | Stand |
+|---|---|---|
+| 0 | Primitive, Rollen, Grundklassen | steht |
+| 1 | Button, Pill, Avatar, Progress, FontIcon | läuft |
+| 2 | Felder, Checkbox, Select, Formular | Formulare sind der Großteil der Oberfläche |
+| 3 | Tabelle, Baum, Menü, Toolbar, Reiter | Datendarstellung und Navigation |
+| 4 | Dialog, Fenster, Drawer, Snackbar, Shell | Gerüst und Overlays |
+| 5 | Kalender, Farbwahl, Medien, Dashboard | fachlich, zuletzt |
+
+Innerhalb einer Welle keine Reihenfolge — parallel ist möglich. Der Button ist die Vorlage für alle Muster.
+
+> Sprechnotiz: Nebenbei fallen Dinge, die niemand angefordert hat: ein Tree-Umschalter unter der Mindesttrefferfläche, 22 fehlende Fokusringe, der Schatten auf der Tabellenzeile.
+
+---
+
+## 15 · Was das für den Alltag heißt
+
+**Weniger Entscheidungen, mehr Sicherheit — für Menschen und Modelle.**
+
+* **Man wählt eine Rolle, keinen Wert.** `surface-brand`, `status-error-text`, `space-md`. Ob der Wert stimmt, ist nicht mehr die Frage der Komponente.
+* **Zustände sind Attribute.** `disabled`, `aria-pressed`, `aria-busy` — das DOM weiß es ohnehin, und die Barrierefreiheit ist mit drin.
+* **Ein Fehler bricht den Build, nicht das Review.** Wer ein Literal schreibt, erfährt es sofort.
+* **Specimen statt Suche.** Jede Komponente zeigt sich in allen Zuständen, hell und dunkel, in beiden Dichten — an einem Ort.
+* **Kunden erreichen jeden Wert an einer Stelle.** Was wir einmal entscheiden, gilt in jedem Theme.
+
+> Sprechnotiz: Das Ergebnis ist kein Stilproblem weniger, sondern ein Qualitätsproblem weniger. Kontrastverstöße, unlesbare Zustände und Oberflächen, die auf jedem Rechner anders aussehen, sind Folgen derselben Lücke.
+
+---
+
+## Hinweise für die PowerPoint
+
+| Folie | Bild |
 |---|---|
-| `primitives.css` | 125 Zeilen — Werte, die Stelle für Kundenprojekte |
-| `tokens.css` | 189 Zeilen — nur Referenzen, hell als Standard, `[data-tl-mode="dark"]`, `[data-tl-density="compact"]` |
-| `base.css` | Typografieklassen, Fokusring, Reduced Motion, Zahlenklasse, Druck |
-| `tokens.dtcg.json` | W3C-Format für Figma und Kundenwerkzeuge |
-| 81 Tests | Schichten, Kontrast, Maße, Farbton, Erzeugtes, Klassen-Gate, Ratsche, Namensraum |
+| 1 | Screenshot einer bestehenden Maske, darüber eingeblendet die 17 Schriftgrößen als Liste |
+| 2 | Zwei Spalten: Textseite eines Styleguides gegen eine rote CI-Meldung |
+| 3 | Die vier Schritte als Pfeilkette; das 14-px-Beispiel als Randnotiz |
+| 4 | Drei große Zahlen, darunter das Weiß-auf-Fast-Weiß-Beispiel als echtes Bild |
+| 5 | Zwei Kästen übereinander (Primitive, Rollen), ein Pfeil vom Kunden auf das Primitiv |
+| 6 | Specimen-Ausschnitt: Semantik-Streifen und die acht Kategorien als Pillen |
+| 7 | Dieselbe Karte hell und dunkel nebeneinander |
+| 8 | Die Typo-Probe aus dem Specimen (Grundklassen), daneben die Dichte-Umschaltung als Vorher/Nachher |
+| 9 | Fokusring auf blauer Schaltfläche mit und ohne Abstand |
+| 10 | Button-, Pill- und Avatar-Specimen als drei Kacheln; alt gegen neu |
+| 11 | Ausgabe eines roten Gates, daneben die grüne Zusammenfassung |
+| 12 | Die Blockliste der Ratsche mit einem gestrichenen Eintrag |
+| 13 | Dieselbe Demo-App im TopLogic-Theme und mit Kundenprimitiv nebeneinander |
+| 14 | Die fünf Wellen als Zeitstrahl ohne Datumsangaben, Welle 0 und 1 markiert |
+| 15 | Ein Zeilenausschnitt aus einer Komponente: nur Rollen, nur Attribute |
 
-**Das Klassen-Gate** bricht bei jedem Literal, jedem `:focus` ohne `-visible`, jedem `outline: none`, jedem `z-index` ohne Ebene. **Die Ratsche** zählt das alte Stylesheet je Block: keiner wächst, ein abgeschnittener wird gestrichen — Fremdzuwachs bleibt seinem Block und seinem Absender zugeordnet.
-
-Die Demo-App lädt die drei Dateien und setzt `data-tl-mode` und `data-tl-density` am `html`.
-
-**Wie es weitergeht — fünf Wellen, jede Komponente nach demselben Rhythmus:** CSS ins Paket, Klassen im TSX umbenennen, Zustände auf Attribute, Specimen, Vertrag, Gate grün, alter Block gelöscht.
-
-| Welle | Komponenten |
-|---|---|
-| 1 | Button, ToggleButton, Pill, Avatar, Progress, FontIcon |
-| 2 | Felder, Checkbox, BooleanChoice, DropdownSelect, FormField, FormGroup, FormLayout |
-| 3 | TableView, TreeView, Menu, Toolbar, TabBar, Breadcrumb |
-| 4 | Dialog, Window, Drawer, Snackbar, NoticeBar, Shell, Layoutcontainer |
-| 5 | Calendar, ColorInput, IconSelect, Medien, Dashboard |
-
-> Sprechnotiz: Eine Komponente ist fertig, wenn ihr alter Block leer ist. Nicht früher.
-
-## 31 · Der Namensraum
-
-**`--tl` gehört dem Paket. Außerhalb von `dist/` wird darin nichts definiert; gelesen werden darf, was das Paket definiert — eine Übergangsregel im alten Stylesheet liest Tokens, definiert sie aber nicht.**
-
-Der Anlass: Beim Nachziehen auf `master` wuchs das alte Stylesheet um 23 Zeilen — legitim, aus einem fremden Ticket. Dabei fielen vier Custom Properties mit unserem Präfix im Altbestand auf: `--tl-item-index`, `--tlGrid-gap`, `--tlPill-color`, `--tl-tt-padding`.
-
-| | |
-|---|---|
-| Regel | Jede Custom Property, die mit `--tl` beginnt, ist Design System |
-| Gate | Die Ratsche listet Fremdgut unter `foreignTl`; Neues bricht, Eingefangenes wird gestrichen |
-| Budget | Fremdzuwachs wird vermerkt und gehoben (6065 → 6088), nicht eingerechnet |
-
-> Sprechnotiz: Die Konvention ist im Team noch nicht bekannt. Die vier Namen werden in ihren Wellen eingefangen — als Token mit Kategorie oder unter anderem Namen.
-
-## 32 · Welle 1 · der Button — gemerged (!1649, 23.09.)
-
-**Vier Erscheinungen, eine Tönung, keine Größe — und kein Selektor von außen.**
-
-| | |
-|---|---|
-| Erscheinung | `primary` gefüllt · `secondary` Umriss (Default) · `ghost` ohne Rahmen · `link` |
-| Tönung | `danger` färbt die Erscheinung um, liest die Status-Rollen; nicht mit `link` |
-| Größe | aus der Dichte; nur die Icon-Schaltfläche kennt `sm` für Tabellenzeilen |
-| Zustände | `:disabled`, `aria-pressed`, `aria-busy="true"`, `:focus-visible` — Klassen dafür brechen das Gate |
-| Kontext | der Container wählt die Erscheinung; die AppBar ist keine Markenfläche mehr — umgesetzt mit Welle 1 als Übergangsregel im alten AppBar-Block, Welle 4 schreibt die Shell neu |
-| Kollaps | entscheidet die Toolbar nach ihrem Platz (#29626), nicht der Button und kein Breakpoint |
-| Umgesetzt | 320 Zeilen weniger im alten Stylesheet; Kontrasttest 22 Erscheinungen × 2 Modi grün; auf `master` seit 23.09. (!1649, drei Build-Nachbesserungen, zwei Merges von master) |
-
-Der Befund dahinter: drei Erscheinungen, zwei kaum genutzte Größen, ein gedrückter Zustand als Klasse, die Primary dupliziert, fünf Kontextblöcke mit Literalen, nichts für Destruktives.
-
-> Sprechnotiz: Warum Tönung statt fünfter Erscheinung — Löschen ist mal Umriss, mal gefüllt. Eine Erscheinung müsste beides sein: die nächste Dublette.
-
-> Sprechnotiz: `button.css` steht, das Gate verbietet Zustands-Modifier und fremde Modifier am Block. Entschieden: Danger füllt sich mit `status-error-surface`/`-active` beim Zeigen (statt `status-error-subtle`), `border-control` dunkel auf `gray-45`, alle vier `status-*-text` dunkel auf `surface-layer` angehoben (Fehler auf `red-32`, Warnung `amber-34`, Erfolg `green-36`, Info `teal-35`), dasselbe für die Linien (Fehler `red-42`, Warnung `amber-44`, Erfolg `green-46`, Info `teal-45`) — die Regel gilt jetzt für beide Flächen, als Test festgeschrieben. Alle Kontrastbefunde aus Task 3 sind entschieden.
-
-## 32a · Die Ratsche misst Blöcke
-
-**Ein Budget über der ganzen Datei kennt keinen Absender.**
-
-| | |
-|---|---|
-| Befund | dreimal in fünf Tagen Hebung für fremden Zuwachs: 5766 → 6692 → 7390 → 7405 (#29626, #29523, #29596, #29497, #29615) |
-| Entschieden | `ratchet.json` führt jeden Block `/* --- Name --- */` mit seinem Zeilenstand; kein Block wächst, ein abgeschnittener wird gestrichen |
-| Fremdzuwachs | hebt einen Block mit Ticketvermerk, nicht die Datei; neue Blöcke stehen unter `unlisted`, bis ihre Welle sie holt |
-| Verworfen | Eichung je Welle gegen master — misst weiter die Datei |
-
-> Sprechnotiz: Das ist zugleich der Fertig-Nachweis je Komponente: Der Block fällt aus der Liste, wenn er aus der Datei gefallen ist.
-
-## 33 · Welle 1 · die Pill: Rolle statt Farbe
-
-**Die Farbe einer Pille ist eine Rolle, kein Tokenname und kein Literal.**
-
-| | |
-|---|---|
-| Rollen | `neutral` · `brand` · `error` `warning` `success` `info` · `category-1` … `category-8` |
-| Je Rolle | zwei Tokens: getönte Fläche und Linie; der Text ist `text-primary` — ein getönter Streifen trägt gewöhnlichen Text |
-| Kategorien | acht ohne Bedeutung, für Projektfarben und Diagrammreihen; Farbtöne zwischen den Bedeutungen, 20° Abstand (30° sind mit 13 Tönen nicht zu halten) |
-| Modell | die Annotation nennt die Rolle; das Token-Register aus #29606 wird ein Enum |
-| Verworfen | Tokenname oder Literal als Farbe, `color-mix` im Stylesheet, eigene Textrolle je Kategorie |
-
-Der Befund dahinter: `status-*-text` auf der eigenen `subtle`-Fläche erreicht hell 4,0 bis 4,2 — die Mischung im alten Stylesheet hatte Kontrast als Nebenprodukt.
-
-> Sprechnotiz: Kategorie 1 liegt 26° neben dem Fehlerrot. Darum heißen sie Kategorien: Wer Rot meint, nimmt `error`.
-
-## 34 · Welle 1 · der Avatar: die Farbe ist eine Kategorie
-
-**Der Name bestimmt die Kategorie, nicht die Farbe.**
-
-| | |
-|---|---|
-| Farbe | `1 + hash(name) mod 8` → `tl-avatar--category-<n>`; Fläche und Linie sind die Tokens der Kategorie, Initialen `text-primary` |
-| Ohne Namen / mit Bild | die neutrale Rolle der Pill; das Bild füllt den Kreis, die Linie bleibt |
-| Größen | `size-avatar-sm/md/lg/xl` = 24/32/48/64 px, neu `size-9` = 4 rem; nicht an der Dichte |
-| Initialen | Typo-Klasse je Größe: `label-strong` · `body-strong` · `heading-md` · `heading-lg` — nichts unter 12 px |
-| Verworfen | `hsl()` aus dem Namen als Inline-Style, weiße Initialen auf gesättigter Fläche, Größen an der Dichte |
-
-Der Befund dahinter: Der alte Avatar hatte 9-px-Initialen und einen Farbwert, der weder Modus noch Kontrast kannte.
-
-> Sprechnotiz: Ein Avatar und eine Pill derselben Kategorie sehen gleich aus. Das ist kein Zufall, das ist die Palette.
+Specimen unter `node tools/serve.mjs` → `http://localhost:8137/`, Button, Pill und Avatar je mit Schalter für dunkel und kompakt.
