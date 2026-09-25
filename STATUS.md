@@ -2,7 +2,8 @@
 
 **Letzte Sitzung:** 2026-09-25 (`derive` fertig, Pill-PR offen, Zwei Wege entschieden) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
-`docs/superpowers/specs/2026-09-25-derive-design.md`
+`docs/superpowers/specs/2026-09-25-derive-design.md`,
+`docs/superpowers/specs/2026-09-25-ui-paket-design.md`
 
 ## Zuerst
 
@@ -27,8 +28,10 @@ der Verträge ein (Muss: Zustand, Aktionen, Stapel; Kann: Tokens, Attribute), gl
 mitbringt; wer das nicht will, geht headless über REST/OpenAPI. Kein Admin-Schalter, der das UI-System
 abschaltet; stattdessen ersetzt ein Kundenmodul benannte Ressourcen, und ein Theme darf ein UI-Paket
 benennen. Anlass: Mercedes-Benz mit MBUI, Gespräch mit Bernhard. Begründung in `docs/skalen.md` „Zwei
-Wege, kein dritter“, Folie 13b, Übersicht §2b. Spec `2026-09-25-ui-paket-design.md` steht noch aus;
-erster Engine-Punkt: ob ein Kundenmodul einen benannten Eintrag der `ClientResources` ersetzen kann.
+Wege, kein dritter“, Folie 13b, Übersicht §2b. Spec: `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
+(Kundenmodul, Ressourcen-Override, Verträge Muss/Kann, Harness, Referenzprojekt `examples/mui-adapter/`).
+Befund: `ClientResources.Config.getResources()` braucht `@Key(name)`, damit `config:operation="remove"` greift;
+`react-src` hat keine Test-Infrastruktur, der Harness bringt Vitest mit.
 
 **Entschieden (24.09.): Themes sind eine dritte Achse.** `data-tl-theme="<id>"` am `html` neben Modus und
 Dichte; ohne Attribut gilt TopLogic auf `:root`, ein Kundentheme ist eine mit `derive` erzeugte Datei unter
