@@ -66,6 +66,6 @@ Das Aussehen der React-Oberfläche kommt aus dem Paket `tl-design-system`
   lokal überschreiben. Befund in `docs/skalen.md` notieren, Wert dort entscheiden.
 - Ein Token fehlt (z. B. eine Rampe für Hover): in `tokens.json` anlegen, Beschriftungen auf
   Flächen unter `derived` (werden gerechnet). Neue Primitive aus dem OKLCH-Kern
-  (`tools/lib/color.mjs`, `markenRampe`), Namen aus `tools/lib/naming.mjs`.
+  (`tools/lib/color.mjs`, `markenRollen`), Namen aus `tools/lib/naming.mjs`.
 - Eine App braucht einen eigenen Look (Glas, Serifen, Hintergrundbild): App-Stylesheet über
   `css-class` am Element, nie neue Engine-Tokens dafür.

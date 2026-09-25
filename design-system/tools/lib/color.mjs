@@ -284,7 +284,7 @@ export const GRAU_TON = { warm: 70, cool: 250 };
  * WCAG-Leuchtdichte), führt derive nach.
  */
 export function grauRampe(temperatur, stufen) {
-  if (!(temperatur === 'neutral' || temperatur in GRAU_TON)) throw new Error(`Grau-Temperatur unbekannt: ${temperatur}`);
+  if (!(temperatur === 'neutral' || Object.hasOwn(GRAU_TON, temperatur))) throw new Error(`Grau-Temperatur unbekannt: ${temperatur}`);
   const C = temperatur === 'neutral' ? 0 : GRAU_CHROMA;
   const H = temperatur === 'neutral' ? 0 : (GRAU_TON[temperatur] * Math.PI) / 180;
   return Object.fromEntries(Object.entries(stufen).map(([n, hex]) => [n, oklchZuHex({ L: hexZuOklch(hex).L, C, H }).hex]));

@@ -102,6 +102,42 @@ test('eine Beschriftung, die niemand tragen kann, bricht mit Exit 3 ab', () => {
   });
 });
 
+test('ein geliefertes Grau macht die Beschriftung zum Befund, nicht zum Abbruch', () => {
+  // gray-0 ist der helle Kandidat, aus dem jede Beschriftung gewählt wird. Wer ihn liefert,
+  // liefert damit auch das Paar, das er verfehlt.
+  const r = derive(P, T, { theme: 'a', color: { gray: { 0: '#FAFAFA' } } });
+  assert.ok(r.befunde.length >= 1);
+  assert.ok(r.befunde.every((b) => b.geliefert), JSON.stringify(r.befunde.filter((b) => !b.geliefert)));
+});
+
+test('jede dokumentierte Eingabeform läuft durch', () => {
+  const toene = ['#B3261E', '#B36B1E', '#8AB31E', '#1EB35B', '#1EA8B3', '#1E5BB3', '#5B1EB3', '#B31E8A'];
+  const formen = {
+    Saat: { color: { brand: '#E8541E' } },
+    'Markenobjekt nur 49': { color: { brand: { 49: '#E8541E' } } },
+    Grautemperatur: { color: { gray: 'warm' } },
+    Grauobjekt: { color: { gray: { 0: '#FAFAFA' } } },
+    Kategorienobjekt: { color: { category: Object.fromEntries(toene.map((h, i) => [`category-${i + 1}`, h])) } },
+    Bedeutung: { color: { red: { 45: '#B00020' } } },
+    'nur Maße': { measure: { 'corner-1': '0' } },
+  };
+  for (const [name, rest] of Object.entries(formen))
+    assert.doesNotThrow(() => derive(P, T, { theme: 'form', ...rest }), name);
+});
+
+test('ein Hinweis behauptet keine Korrektur, die der Kunde überschrieben hat', () => {
+  // Das Markenobjekt liefert blue-49 selbst; markenRollen rechnet text-link zwar nach, setze()
+  // schreibt ihn aber nicht — dann darf auch der Hinweis nicht in der Datei stehen.
+  const r = derive(P, T, { theme: 'a', color: { brand: { 49: '#E8541E' } } });
+  assert.ok(!r.hinweise.some((h) => h.includes('text-link') && h.includes('nachgeführt')), r.hinweise.join(' | '));
+});
+
+test('eine gelieferte Stufe unter einer Kategorie bleibt nicht lautlos', () => {
+  // category-5-subtle ist {blue-4}: wer blue-4 liefert, kippt die Kategorie auf den Markenton.
+  const r = derive(P, T, { theme: 'a', color: { brand: { 49: '#E8541E', 4: '#FDEDE7' } } });
+  assert.ok(r.hinweise.some((h) => h.includes('category-5-subtle')), r.hinweise.join(' | '));
+});
+
 test('7 derive ist deterministisch', () => {
   assert.equal(derive(P, T, probe).css, ergebnis.css);
 });
