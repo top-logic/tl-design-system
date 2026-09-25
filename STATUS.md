@@ -31,7 +31,11 @@ benennen. Anlass: Mercedes-Benz mit MBUI, Gespräch mit Bernhard. Begründung in
 Wege, kein dritter“, Folie 13b, Übersicht §2b. Spec: `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
 (Kundenmodul, Ressourcen-Override, Verträge Muss/Kann, Harness, Referenzprojekt `examples/mui-adapter/`).
 Befund: `ClientResources.Config.getResources()` braucht `@Key(name)`, damit `config:operation="remove"` greift;
-`react-src` hat keine Test-Infrastruktur, der Harness bringt Vitest mit.
+`react-src` hat keine Test-Infrastruktur, der Harness bringt Vitest mit. Plan:
+`docs/superpowers/plans/2026-09-25-ui-paket.md` — 24 Tasks in fünf Gruppen (A Ressourcen-Override im
+Framework, B Harness in `react-src`, C 20 Verträge im Paket, D `examples/mui-adapter/`, E Theme benennt Paket);
+Framework-Branch `CWS/CWS_29617_design_system_ui_paket`, Verträge werden per `publish-to-worktree.mjs` nach
+`react-src/contracts/` kopiert, Fälle stehen als JSON-Block unter `## Konformität`.
 
 **Entschieden (24.09.): Themes sind eine dritte Achse.** `data-tl-theme="<id>"` am `html` neben Modus und
 Dichte; ohne Attribut gilt TopLogic auf `:root`, ein Kundentheme ist eine mit `derive` erzeugte Datei unter
@@ -248,4 +252,5 @@ Arbeitspakete als Gitea-Issues: https://git.top-logic.com/TopLogic/tl-design-sys
 Präsentation: `docs/praesentation.md` — 30 Folien. **Wird bei jeder Entscheidung mitgezogen.**
 Spec: `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`
 Plan Welle 0: `docs/superpowers/plans/2026-09-17-welle-0-paket.md`
+Plan UI-Paket: `docs/superpowers/plans/2026-09-25-ui-paket.md`
 Arbeitsliste Wellen 1–5: `docs/migration/altlast.md`

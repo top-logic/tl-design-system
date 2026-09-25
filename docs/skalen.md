@@ -847,7 +847,7 @@ Die Grenze liegt nicht zwischen flexibel und unflexibel, sondern zwischen „hat
 
 **Nicht verifiziert:** ob ein Kundenmodul über TypedConfiguration einen benannten Listeneintrag der `ClientResources` ersetzen oder entfernen kann — der erste Engine-Punkt der Umsetzung. Und wie vollständig der Headless-Weg ist: Der Skill `toplogic-react-frontend` (OpenAPI-Server über TL-Script, Dev-Proxy, Auth-Naht) belegt, dass er gegangen wurde; ob Rechte, Paging, Dateien und Ereignisse für eine echte Anwendung reichen, sagt nur, wer die Projekte gemacht hat.
 
-**Als Test:** jeder `*.contract.md` trägt die Abschnitte „Muss“ und „Kann“; ein Konformitätstest-Harness mountet eine registrierte Komponente mit dem Zustand aus dem Vertrag und prüft die Aktionen; unsere eigenen Controls bestehen ihn zuerst. Ein Referenzprojekt registriert `TLButton` und `TLDialog` auf MUI-Basis, folgt `data-tl-mode` und besteht die Verträge. Spec: `2026-09-25-ui-paket-design.md`.
+**Als Test:** jeder `*.contract.md` trägt die Abschnitte „Muss“ und „Kann“; ein Konformitätstest-Harness mountet eine registrierte Komponente mit dem Zustand aus dem Vertrag und prüft die Aktionen; unsere eigenen Controls bestehen ihn zuerst. Ein Referenzprojekt registriert `TLButton` und `TLDialog` auf MUI-Basis, folgt `data-tl-mode` und besteht die Verträge. Spec: `2026-09-25-ui-paket-design.md`; Plan: `docs/superpowers/plans/2026-09-25-ui-paket.md`.
 
 ### Graurampe: Temperatur statt Farbe
 
