@@ -18,6 +18,12 @@ const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)
 const probe = JSON.parse(readFileSync(new URL('./fixtures/probe.primitives.json', import.meta.url)));
 const R0 = resolve(P, T);
 const ergebnis = derive(P, T, probe);
+
+test('specimen/probe.theme.css ist byte-identisch mit dem Erzeugnis aus der Beispieldatei', () => {
+  const soll = derive(P, T, probe, 'probe.primitives.json').css;
+  assert.equal(readFileSync(new URL('../specimen/probe.theme.css', import.meta.url), 'utf8'), soll,
+    'specimen/probe.theme.css ist veraltet — node tools/derive.mjs test/fixtures/probe.primitives.json specimen/probe.theme.css');
+});
 const MODES = ['light', 'dark'];
 
 test('1 die Datei trägt genau die abweichenden Rollen, beide Blöcke dieselben Farbrollen, :root unberührt', () => {

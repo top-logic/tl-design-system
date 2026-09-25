@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="/dist/primitives.css">
 <link rel="stylesheet" href="/dist/tokens.css">
 <link rel="stylesheet" href="/dist/base.css">
+<link rel="stylesheet" href="/specimen/probe.theme.css">
 <style>
   .specimen { display: grid; gap: var(--tl-space-lg); padding: var(--tl-space-xl); max-width: 64rem; margin: 0 auto; }
   .specimen__bar { display: flex; gap: var(--tl-space-sm); align-items: center; }
@@ -33,6 +34,9 @@
     <span class="tl-type-heading-lg">Grundklassen</span>
     <label class="tl-type-label"><input type="checkbox" id="mode"> dunkel</label>
     <label class="tl-type-label"><input type="checkbox" id="density"> kompakt</label>
+    <label class="tl-type-label">Theme
+      <select id="theme" class="specimen__field"><option value="">TopLogic</option><option value="probe">probe</option></select>
+    </label>
     <a class="tl-type-label" href="/src/components/button/button.spec.html">Button →</a>
     <a class="tl-type-label" href="/src/components/pill/pill.spec.html">Pill →</a>
     <a class="tl-type-label" href="/src/components/avatar/avatar.spec.html">Avatar →</a>
@@ -86,6 +90,7 @@
   const html = document.documentElement;
   mode.onchange = () => html.dataset.tlMode = mode.checked ? 'dark' : 'light';
   density.onchange = () => html.dataset.tlDensity = density.checked ? 'compact' : 'normal';
+  theme.onchange = () => theme.value ? html.dataset.tlTheme = theme.value : delete html.dataset.tlTheme;
   const css = await (await fetch('/dist/tokens.css')).text();
   const names = [...new Set([...css.matchAll(/--tl-(surface-[a-z-]+|status-[a-z]+-surface|status-[a-z]+-subtle)(?=:)/g)].map((m) => m[1]))];
   swatches.innerHTML = names.map((n) => `<div title="${n}" class="specimen__swatch" style="background: var(--tl-${n})"></div>`).join('');
