@@ -347,40 +347,69 @@ export const MARKE_SUBTLE = {
 /**
  * Die Markenrollen beider Modi aus einer Saat. Die Schritte sind die dokumentierten
  * (HELL_HOVER_SCHRITT …); die Link-Regel bleibt: hell folgt der Link der Fläche, dunkel liegt er
- * eine Stufe über ihr. Text- und Linienrollen werden gegen die Gründe nachgeführt, damit ein
+ * eine Stufe über ihr — jetzt ausgehend vom NACHGEFÜHRTEN text-link, nicht von der ungeprüften
+ * Fläche, damit Reihenfolge und Kontrast von link-hover nie an einer eigenen, unabhängigen
+ * Rechnung vorbeirutschen. Text- und Linienrollen werden gegen die Gründe nachgeführt, damit ein
  * gerechneter Wert nie ein Paar verfehlt — die Fläche selbst bleibt die Marke des Kunden.
+ *
+ * Drei Randfälle bleiben nicht stumm, sondern werden zu Hinweisen: eine Saat, die den Gamut
+ * verlässt (bei() meldet geklemmt), eine Saat, deren Rampe im gewählten Modus auf einen einzigen
+ * Wert kollabiert (zu hell oder zu dunkel für drei unterscheidbare Stufen), und eine unbunte
+ * Saat, deren getönte Flächen sonst am zufälligen Restfarbton der Fließkomma-Rechnung hingen.
  */
 export function markenRollen(saatHex, gruende) {
   const { L, C, H } = hexZuOklch(saatHex);
-  const bei = (l, c = C) => oklchZuHex({ L: l, C: c, H }).hex;
   const hinweise = [];
-  const fuehre = (mode, rolle, hex, soll) => {
-    const r = aufKontrast(hex, gruende[mode], soll, mode === 'light' ? 'dunkler' : 'heller');
-    if (r.angepasst) hinweise.push(`${mode}: ${rolle} in der Helligkeit nachgeführt, damit ${soll} auf dem Grund hält (${hex} → ${r.hex})`);
+  const unbunt = C < 0.02;
+  if (unbunt) hinweise.push('die Marke ist unbunt; getönte Flächen bleiben grau');
+  const bei = (mode, rolle, l, c = C) => {
+    const r = oklchZuHex({ L: l, C: c, H });
+    if (r.geklemmt) hinweise.push(`${mode}: ${rolle} liegt außerhalb des Gamuts und wurde geklemmt`);
     return r.hex;
   };
+  const fuehre = (mode, rolle, hex, soll) => {
+    const r = aufKontrast(hex, gruende[mode], soll, mode === 'light' ? 'dunkler' : 'heller');
+    if (r.angepasst) {
+      const zahl = soll.toFixed(1).replace('.', ',');
+      hinweise.push(`${mode}: ${rolle} in der Helligkeit nachgeführt, damit ${zahl} auf dem Grund hält (${hex} → ${r.hex})`);
+    }
+    return r.hex;
+  };
+  const pruefeKollaps = (mode, rollen) => {
+    if (new Set(rollen).size < rollen.length) {
+      hinweise.push(`${mode}: surface-brand, -hover und -active fallen auf denselben Wert zusammen (Saat zu hell oder zu dunkel)`);
+    }
+  };
+  const subtleC = (mode, teil) => (unbunt ? 0 : MARKE_SUBTLE[mode][teil].C);
+
   const dunkelBasis = L + DUNKEL_GRUNDTON_SCHRITT;
   const light = {
     'surface-brand': saatHex.toUpperCase(),
-    'surface-brand-hover': bei(L - HELL_HOVER_SCHRITT),
-    'surface-brand-active': bei(L - HELL_ACTIVE_SCHRITT),
-    'surface-brand-subtle': bei(MARKE_SUBTLE.light.subtle.L, MARKE_SUBTLE.light.subtle.C),
-    'surface-brand-subtle-hover': bei(MARKE_SUBTLE.light.hover.L, MARKE_SUBTLE.light.hover.C),
+    'surface-brand-hover': bei('light', 'surface-brand-hover', L - HELL_HOVER_SCHRITT),
+    'surface-brand-active': bei('light', 'surface-brand-active', L - HELL_ACTIVE_SCHRITT),
+    'surface-brand-subtle': bei('light', 'surface-brand-subtle', MARKE_SUBTLE.light.subtle.L, subtleC('light', 'subtle')),
+    'surface-brand-subtle-hover': bei('light', 'surface-brand-subtle-hover', MARKE_SUBTLE.light.hover.L, subtleC('light', 'hover')),
   };
+  pruefeKollaps('light', [light['surface-brand'], light['surface-brand-hover'], light['surface-brand-active']]);
   light['text-link'] = fuehre('light', 'text-link', light['surface-brand'], 4.5);
-  light['text-link-hover'] = fuehre('light', 'text-link-hover', light['surface-brand-hover'], 4.5);
+  light['text-link-hover'] = fuehre('light', 'text-link-hover',
+    bei('light', 'text-link-hover', hexZuOklch(light['text-link']).L - HELL_HOVER_SCHRITT), 4.5);
   light['border-interactive'] = fuehre('light', 'border-interactive', light['surface-brand'], 3.0);
   light['focus-ring'] = fuehre('light', 'focus-ring', light['surface-brand'], 3.0);
+
   const dark = {
-    'surface-brand': bei(dunkelBasis),
-    'surface-brand-hover': bei(dunkelBasis + DUNKEL_SCHRITT),
-    'surface-brand-active': bei(dunkelBasis - DUNKEL_ACTIVE_SCHRITT),
-    'surface-brand-subtle': bei(MARKE_SUBTLE.dark.subtle.L, MARKE_SUBTLE.dark.subtle.C),
-    'surface-brand-subtle-hover': bei(MARKE_SUBTLE.dark.hover.L, MARKE_SUBTLE.dark.hover.C),
+    'surface-brand': bei('dark', 'surface-brand', dunkelBasis),
+    'surface-brand-hover': bei('dark', 'surface-brand-hover', dunkelBasis + DUNKEL_SCHRITT),
+    'surface-brand-active': bei('dark', 'surface-brand-active', dunkelBasis - DUNKEL_ACTIVE_SCHRITT),
+    'surface-brand-subtle': bei('dark', 'surface-brand-subtle', MARKE_SUBTLE.dark.subtle.L, subtleC('dark', 'subtle')),
+    'surface-brand-subtle-hover': bei('dark', 'surface-brand-subtle-hover', MARKE_SUBTLE.dark.hover.L, subtleC('dark', 'hover')),
   };
+  pruefeKollaps('dark', [dark['surface-brand'], dark['surface-brand-hover'], dark['surface-brand-active']]);
   dark['text-link'] = fuehre('dark', 'text-link', dark['surface-brand-hover'], 4.5);
-  dark['text-link-hover'] = fuehre('dark', 'text-link-hover', bei(dunkelBasis + 2 * DUNKEL_SCHRITT), 4.5);
+  dark['text-link-hover'] = fuehre('dark', 'text-link-hover',
+    bei('dark', 'text-link-hover', hexZuOklch(dark['text-link']).L + DUNKEL_SCHRITT), 4.5);
   dark['border-interactive'] = fuehre('dark', 'border-interactive', dark['surface-brand'], 3.0);
   dark['focus-ring'] = fuehre('dark', 'focus-ring', dark['surface-brand'], 3.0);
+
   return { light, dark, hinweise };
 }

@@ -130,11 +130,58 @@ test('markenRollen: eine helle Marke bekommt Textrollen, die auf dem Grund trage
   assert.equal(r.light['surface-brand'], '#F39C6B');
   for (const g of GRUENDE.light) assert.ok(ratio(r.light['text-link'], g) >= 4.5);
   for (const g of GRUENDE.light) assert.ok(ratio(r.light['focus-ring'], g) >= 3.0);
-  assert.ok(r.hinweise.some((h) => h.includes('text-link')));
+  assert.ok(r.hinweise.some((h) => h.includes('text-link in der Helligkeit')));
 });
 
 test('markenRollen: subtle liegt auf den Helligkeiten der TopLogic-Tönung', () => {
   const r = markenRollen('#0B5ED7', GRUENDE);
   assert.ok(Math.abs(hexZuOklch(r.light['surface-brand-subtle']).L - 0.937) < 0.01);
   assert.ok(Math.abs(hexZuOklch(r.dark['surface-brand-subtle']).L - 0.255) < 0.01);
+});
+
+test('markenRollen: alle neun Rollen sind in beiden Modi vorhanden', () => {
+  const r = markenRollen('#0B5ED7', GRUENDE);
+  const rollen = ['surface-brand', 'surface-brand-hover', 'surface-brand-active',
+    'surface-brand-subtle', 'surface-brand-subtle-hover', 'text-link', 'text-link-hover',
+    'border-interactive', 'focus-ring'];
+  for (const mode of ['light', 'dark']) for (const rolle of rollen) assert.ok(r[mode][rolle], `${mode}.${rolle}`);
+});
+
+test('markenRollen: im Dunkeln tragen text-link und focus-ring gegen beide Gründe', () => {
+  for (const saat of ['#F39C6B', '#1A1A40']) {
+    const r = markenRollen(saat, GRUENDE);
+    for (const g of GRUENDE.dark) {
+      assert.ok(ratio(r.dark['text-link'], g) >= 4.5, `${saat}: text-link gegen ${g}`);
+      assert.ok(ratio(r.dark['focus-ring'], g) >= 3.0, `${saat}: focus-ring gegen ${g}`);
+    }
+  }
+});
+
+test('markenRollen: text-link-hover bleibt in der richtigen Reihenfolge zu text-link', () => {
+  const L = (h) => hexZuOklch(h).L;
+  const hell = markenRollen('#F39C6B', GRUENDE);
+  assert.ok(L(hell.light['text-link-hover']) < L(hell.light['text-link']));
+  const dunkel = markenRollen('#1A1A40', GRUENDE);
+  assert.ok(L(dunkel.dark['text-link-hover']) > L(dunkel.dark['text-link']));
+});
+
+test('markenRollen: subtle behält die eigene Chroma und den Farbton der Saat', () => {
+  const r = markenRollen('#0B5ED7', GRUENDE);
+  const saat = hexZuOklch('#0B5ED7');
+  const subtle = hexZuOklch(r.light['surface-brand-subtle']);
+  assert.ok(Math.abs(subtle.C - 0.03) < 0.005);
+  const dH = Math.abs(((subtle.H - saat.H + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI);
+  assert.ok(dH < 0.05, `Farbtonabstand ${dH}`);
+});
+
+test('markenRollen: eine unbunte Saat bleibt bei subtle grau, mit Hinweis', () => {
+  const r = markenRollen('#808080', GRUENDE);
+  assert.ok(hexZuOklch(r.light['surface-brand-subtle']).C < 0.002);
+  assert.ok(hexZuOklch(r.dark['surface-brand-subtle']).C < 0.002);
+  assert.ok(r.hinweise.some((h) => h.includes('unbunt')));
+});
+
+test('markenRollen: eine zu helle Saat kollabiert im Dunkeln, mit Hinweis', () => {
+  const r = markenRollen('#F5F5F5', GRUENDE);
+  assert.ok(r.hinweise.some((h) => h.includes('zusammen')));
 });
