@@ -63,19 +63,25 @@ export function derive(P, T, json, quelle = 'input') {
   }
   const markenTon = grad(Rk.color.light['surface-brand']);
   const bedeutungen = ['error', 'warning', 'success', 'info'].map((s) => grad(Rk.color.light[`status-${s}-surface`]));
-  for (const b of bedeutungen) {
+  if (saat.brand) for (const b of bedeutungen) {
     const d = Math.abs(((markenTon - b) % 360 + 540) % 360 - 180);
     if (d < 20) hinweise.push(`die Marke liegt ${d.toFixed(0)}° neben einer Bedeutung; Stufe B entscheidet, ob die Bedeutung einen anderen Ton bekommt`);
   }
-  const eigene = saat.category ?? {};
-  const fehlende = KATEGORIEN.filter((k) => !(`category-${k}` in eigene));
-  const { toene, abstand } = kategorienVerteilen([markenTon, ...bedeutungen, ...Object.values(eigene).map(grad)], fehlende.length);
-  if (abstand < 20) hinweise.push(`die Kategorien halten nur ${abstand}° zueinander; der Kreis war mit dieser Marke voller als bei TopLogic`);
-  const toneJeKategorie = Object.fromEntries([...KATEGORIEN.map((k) => [k, eigene[`category-${k}`] ? grad(eigene[`category-${k}`]) : null])]);
-  fehlende.forEach((k, i) => { toneJeKategorie[k] = toene[i]; });
-  for (const k of KATEGORIEN) {
-    const r = kategorieRollen(toneJeKategorie[k], gruende);
-    for (const mode of MODES) { setze(mode, `category-${k}-subtle`, r[mode].subtle); setze(mode, `category-${k}-border`, r[mode].border); }
+  // Die Kategorien werden nur angefasst, wenn eine Farbe sie bewegt: die Marke blockiert einen
+  // Ton auf dem Kreis, das Kundengrau verschiebt die Gründe der Linien, eigene Kategorien setzen
+  // Töne fest. Rührt der Kunde keine Farbe an, bleiben die acht Kategorien die von TopLogic —
+  // sonst schriebe eine Datei, die nur einen Radius ändert, sechzehn Farbrollen um.
+  if (saat.brand || saat.gray || saat.category) {
+    const eigene = saat.category ?? {};
+    const fehlende = KATEGORIEN.filter((k) => !(`category-${k}` in eigene));
+    const { toene, abstand } = kategorienVerteilen([markenTon, ...bedeutungen, ...Object.values(eigene).map(grad)], fehlende.length);
+    if (abstand < 20) hinweise.push(`die Kategorien halten nur ${abstand}° zueinander; der Kreis war mit dieser Marke voller als bei TopLogic`);
+    const toneJeKategorie = Object.fromEntries([...KATEGORIEN.map((k) => [k, eigene[`category-${k}`] ? grad(eigene[`category-${k}`]) : null])]);
+    fehlende.forEach((k, i) => { toneJeKategorie[k] = toene[i]; });
+    for (const k of KATEGORIEN) {
+      const r = kategorieRollen(toneJeKategorie[k], gruende);
+      for (const mode of MODES) { setze(mode, `category-${k}-subtle`, r[mode].subtle); setze(mode, `category-${k}-border`, r[mode].border); }
+    }
   }
 
   // 4 Beschriftungen für jede Fläche neu, mit den Kandidaten des Kundengraus.
@@ -93,6 +99,10 @@ export function derive(P, T, json, quelle = 'input') {
   // Ein solcher Wert ist nicht geliefert; also führt derive ihn nach, mit derselben Mechanik, die
   // markenRollen und kategorieRollen schon benutzen. Damit gilt die Regel der Spec ohne Ausnahme:
   // ein Befund entsteht nur aus einem GELIEFERTEN Wert.
+  //
+  // Ein Durchgang genügt, weil die Vordergründe der Paarliste nie Hintergründe sind: eine Rolle,
+  // die hier bewegt wird, steht in keinem anderen Paar als Grund und kann deshalb kein schon
+  // geprüftes Paar wieder aufreißen. pairs.test.mjs hält diese Invariante fest.
   const paare = kontrastPaare(T);
   for (const mode of MODES) {
     const jeRolle = new Map();
@@ -112,7 +122,7 @@ export function derive(P, T, json, quelle = 'input') {
       }
       if (hex === vorher) continue;
       Rk.color[mode][rolle] = hex;
-      hinweise.push(`${mode}: ${rolle} auf dem geänderten Grund nachgeführt (${vorher} → ${hex})`);
+      hinweise.push(`${mode}: ${rolle} in der Helligkeit nachgeführt, damit es auf seinem Grund hält (${vorher} → ${hex})`);
     }
   }
 
@@ -158,8 +168,11 @@ function block(selector, eintraege) {
 }
 
 function css(theme, quelle, rollen, befunde, hinweise) {
-  const erster = { ...rollen.measure, ...rollen.light };
-  let out = HERKUNFT(theme, quelle, befunde.length);
+  // Reihenfolge wie in tokens.json: Farbrollen, dann Beschriftungen, dann Effekte (so liegen sie
+  // schon in rollen.light), die Maße zuletzt.
+  const erster = { ...rollen.light, ...rollen.measure };
+  // Ein Pfad, der */ enthaelt, wuerde den Kopfkommentar mittendrin schliessen.
+  let out = HERKUNFT(theme, String(quelle).replaceAll('*/', '* /'), befunde.length);
   out += block(`[data-tl-theme="${theme}"]`, erster);
   out += block(`[data-tl-theme="${theme}"][data-tl-mode="dark"]`, rollen.dark);
   if (befunde.length || hinweise.length) {

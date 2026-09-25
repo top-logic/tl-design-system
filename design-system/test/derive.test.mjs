@@ -33,7 +33,9 @@ test('2 jede gerechnete Rolle besteht die Paarliste in beiden Modi', () => {
   const Rk = ergebnis.ergebnis;
   for (const mode of MODES) for (const { fg, bg, soll } of kontrastPaare(T)) {
     const ist = ratio(werte(Rk, mode, fg), werte(Rk, mode, bg));
-    const geliefert = ergebnis.befunde.some((b) => b.mode === mode && b.fg === fg && b.bg === bg);
+    // Entschuldigt ist ein Paar nur, wenn sein Befund aus einem GELIEFERTEN Wert stammt —
+    // sonst entschuldigte sich die Liste der Befunde selbst.
+    const geliefert = ergebnis.befunde.some((b) => b.mode === mode && b.fg === fg && b.bg === bg && b.geliefert);
     assert.ok(ist >= soll || geliefert, `${mode}: ${fg} auf ${bg} = ${ist.toFixed(2)}`);
   }
 });
@@ -64,6 +66,31 @@ test('eine Saat mittlerer Helligkeit macht ihre Beschriftung zum Befund, nicht z
     assert.ok(b.every((x) => x.geliefert), `${brand}: die Saat ist geliefert, der Befund auch`);
     assert.ok(r.css.includes(`--tl-surface-brand: ${brand};`), `${brand}: die Fläche bleibt die Marke`);
   }
+});
+
+test('eine Datei ohne Farbe lässt jede Farbrolle in Ruhe', () => {
+  const r = derive(P, T, { theme: 'leer', measure: { 'corner-1': '0' } });
+  assert.deepEqual(r.rollen.light, {});
+  assert.deepEqual(r.rollen.dark, {});
+  assert.deepEqual(Object.keys(r.rollen.measure), ['radius-sm']);
+});
+
+test('ein Pfad mit */ schließt den Kopfkommentar nicht vorzeitig', () => {
+  const { css } = derive(P, T, probe, 'a*/b.json');
+  const kopf = css.slice(0, css.indexOf('*/') + 2);
+  assert.ok(kopf.includes('Do not edit') && kopf.includes('Findings:'), kopf);
+});
+
+test('eine Beschriftung, die niemand tragen kann, bricht mit Exit 3 ab', () => {
+  // Beide Kandidaten auf dasselbe mittlere Grau: keine Fläche trägt damit noch 4,5.
+  const Tk = structuredClone(T);
+  Tk.derived.candidates.light = '{gray-45}';
+  Tk.derived.candidates.dark = '{gray-45}';
+  assert.throws(() => derive(P, Tk, { theme: 'kaputt', color: { gray: 'warm' } }), (e) => {
+    assert.equal(e.code, 3);
+    assert.match(e.message, /text-on-/);
+    return true;
+  });
 });
 
 test('7 derive ist deterministisch', () => {

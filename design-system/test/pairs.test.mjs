@@ -23,3 +23,12 @@ test('jedes Paar der Liste trägt in beiden Modi im Paket', () => {
     assert.ok(ist >= soll, `${mode}: ${fg} auf ${bg} = ${ist.toFixed(2)}, gefordert ${soll}`);
   }
 });
+
+test('kein Grund der Paarliste ist anderswo ein Vordergrund', () => {
+  // Darauf steht der Nachführ-Durchgang von derive: eine Rolle, die dort in der Helligkeit bewegt
+  // wird, taucht in keinem anderen Paar als Grund auf und kann kein geprüftes Paar wieder
+  // aufreißen. Ein einziger Durchgang genügt deshalb — fällt die Invariante, fällt dieser Test.
+  const paare = kontrastPaare(T);
+  const vordergruende = new Set(paare.map((p) => p.fg));
+  for (const { bg } of paare) assert.ok(!vordergruende.has(bg), `${bg} ist Grund und Vordergrund zugleich`);
+});
