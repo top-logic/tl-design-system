@@ -183,3 +183,35 @@ function css(theme, quelle, rollen, befunde, hinweise) {
   }
   return out;
 }
+
+// CLI: node tools/derive.mjs <eingabe.json> [<ausgabe.css>] [--strict]
+import { readFileSync, writeFileSync } from 'node:fs';
+import { dirname, join, basename } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { ThemeEingabeFehler } from './lib/theme-input.mjs';
+
+if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+  const args = process.argv.slice(2);
+  const strict = args.includes('--strict');
+  const [eingabePfad, ausgabeArg] = args.filter((a) => !a.startsWith('--'));
+  if (!eingabePfad) { console.error('Aufruf: node tools/derive.mjs <theme>.primitives.json [<ausgabe>.css] [--strict]'); process.exit(2); }
+  const hier = dirname(fileURLToPath(import.meta.url));
+  const P = JSON.parse(readFileSync(join(hier, '../src/primitives.json'), 'utf8'));
+  const T = JSON.parse(readFileSync(join(hier, '../src/tokens.json'), 'utf8'));
+  let json;
+  try { json = JSON.parse(readFileSync(eingabePfad, 'utf8')); }
+  catch (e) { console.error(`${eingabePfad}: ${e.message}`); process.exit(2); }
+  let ergebnis;
+  try { ergebnis = derive(P, T, json, basename(eingabePfad)); }
+  catch (e) {
+    if (e instanceof ThemeEingabeFehler) { console.error(`${eingabePfad}: ${e.message}`); process.exit(2); }
+    if (e.code === 3) { console.error(`derive-Fehler: ${e.message}`); process.exit(3); }
+    throw e;
+  }
+  for (const b of ergebnis.befunde) console.log(`Befund  ${b.mode}: ${b.fg} auf ${b.bg} = ${b.ist.toFixed(2)}, gefordert ${b.soll}${b.vorschlag ? `, Vorschlag ${b.vorschlag}` : ''}`);
+  for (const h of ergebnis.hinweise) console.log(`Hinweis ${h}`);
+  if (strict && ergebnis.befunde.length) { console.error(`${ergebnis.befunde.length} Befund(e), --strict: nichts geschrieben`); process.exit(1); }
+  const ausgabe = ausgabeArg ?? join(dirname(eingabePfad), `${ergebnis.theme}.theme.css`);
+  writeFileSync(ausgabe, ergebnis.css);
+  console.log(`geschrieben: ${ausgabe}`);
+}

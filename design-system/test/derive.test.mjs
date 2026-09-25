@@ -3,7 +3,10 @@
 // gelieferter Wert unter AA reist als Befund mit.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { readFileSync, mkdtempSync, writeFileSync, existsSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { derive } from '../tools/derive.mjs';
 import { resolve } from '../tools/resolve.mjs';
 import { kontrastPaare, werte } from '../tools/lib/pairs.mjs';
@@ -106,4 +109,43 @@ test('der gelieferte Wert unter AA steht in der Datei und im Bericht, als gelief
   assert.equal(ergebnis.befunde.length, 2);
   assert.ok(ergebnis.befunde.every((x) => x.fg === 'status-error-text' && x.geliefert));
   assert.ok(ergebnis.css.includes('Findings: 2 pairs below its threshold'));
+});
+
+const CLI = new URL('../tools/derive.mjs', import.meta.url).pathname;
+const lauf = (json, ...args) => {
+  const dir = mkdtempSync(join(tmpdir(), 'derive-'));
+  const eingabe = join(dir, 'kunde.primitives.json');
+  writeFileSync(eingabe, JSON.stringify(json));
+  const r = spawnSync(process.execPath, [CLI, eingabe, ...args], { encoding: 'utf8' });
+  return { ...r, datei: join(dir, `${json.theme ?? 'x'}.theme.css`) };
+};
+
+test('4 ohne --strict: Exit 0, Datei da, Befund auf der Konsole; mit --strict: Exit 1, keine Datei', () => {
+  const ohne = lauf(probe);
+  assert.equal(ohne.status, 0, ohne.stderr);
+  assert.ok(existsSync(ohne.datei));
+  assert.match(ohne.stdout, /status-error-text/);
+  const mit = lauf(probe, '--strict');
+  assert.equal(mit.status, 1);
+  assert.ok(!existsSync(mit.datei));
+});
+
+test('6 ungültige Eingaben enden mit Exit 2 und Pfad', () => {
+  for (const [json, pfad] of [
+    [{ theme: 'tl', color: { brand: '#E8541E' } }, 'theme'],
+    [{ theme: 'acme', color: { brand: { 55: '#C9440F' } } }, 'color.brand.49'],
+    [{ theme: 'acme', color: { brand: 'orange' } }, 'color.brand'],
+    [{ theme: 'acme', farbe: {} }, 'farbe'],
+  ]) {
+    const r = lauf(json);
+    assert.equal(r.status, 2, JSON.stringify(json));
+    assert.match(r.stderr, new RegExp(pfad.replace(/\./g, '\\.')));
+    assert.ok(!existsSync(r.datei));
+  }
+});
+
+test('ohne Befund: Exit 0 und keine Findings im Kopf', () => {
+  const r = lauf({ theme: 'sauber', color: { brand: '#0B5ED7' } });
+  assert.equal(r.status, 0, r.stderr);
+  assert.match(readFileSync(r.datei, 'utf8'), /Findings: 0 pairs/);
 });
