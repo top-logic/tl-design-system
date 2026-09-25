@@ -142,6 +142,10 @@ Offen aus der Spec, nicht Teil von Welle 0:
 * `data-tl-theme` — dritte Achse für mehrere Themes je Anwendung: **Paketseite fertig** (`derive` schreibt
   je Theme eine Datei unter `[data-tl-theme="<id>"]`, das Gate läuft je Theme, das Specimen schaltet um),
   **Engine (`UIThemeService`) offen, Issue #16** — skalen.md „Themes: eine dritte Achse“
+* `derive`, Rest aus dem Abschluss-Review (25.09.), kein Fehlverhalten, nur Hinweise: (1) der Kollaps-Hinweis
+  „surface-brand, -hover und -active“ fällt bei geliefertem `blue-49` weg, weil die Suffixe keine Rollennamen sind;
+  (2) die 20°-Prüfung meldet auch achromatische Flächen (unbunte Marke) — Chroma < 0,02 ausnehmen;
+  (3) Wiki „Übersicht“ kennt Folie 13a und die Graurampe noch nicht (`wiki_write`)
 * Token-Mapper — Miniprojekt, Browserwerkzeug für Kunden-Styleguides
 * Figma-Push aus `tokens.dtcg.json`
 * Maven-Wrapper für das Paket; bis dahin kopiert `tools/publish-to-worktree.mjs`
