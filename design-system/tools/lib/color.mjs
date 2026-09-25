@@ -1,5 +1,5 @@
 /**
- * Leitet die Marken-Primitives (Button und Link, beide Modi) aus einer einzigen Grundfarbe ab.
+ * Rechnet Rampen, Kategorien und Beschriftungen in OKLCH.
  *
  * Gerechnet wird in OKLCH, nicht in HSL. HSL-Rampen sind perzeptuell ungleichmäßig: derselbe
  * Schritt in L (HSL) macht Gelb kaum dunkler und Blau stark dunkler, weil HSL keine
@@ -236,163 +236,6 @@ export function beschriftungAbleiten(flaecheHex, { dunklerKandidat, hellerKandid
 }
 
 /**
- * Berechnet die Marken-Primitives für beide Modi aus einer Grundfarbe.
- *
- * `kandidaten` sind die zwei Werte, zwischen denen beschriftungAbleiten() für die Beschriftung
- * von button-primary (text-on-brand/icon-on-brand) entscheidet — { dunklerKandidat,
- * hellerKandidat }, beide als Hex. Die Regel verlangt ausdrücklich, dass das die Werte sind, die
- * tokens.json bereits führt (heute: tokens.light['text-primary'] und '#FFFFFF'); dieses Modul
- * liest tokens.json selbst nicht, deshalb übergibt der Aufrufer sie. Für andere Flächen
- * (button-danger, layer-accent) ruft der Aufrufer beschriftungAbleiten() selbst auf — die
- * hängen nicht an der Marke, gehören deshalb nicht in diese Funktion.
- *
- * Rückgabeform: { light: {…}, dark: {…} }, je mit den Schlüsseln
- * brand-primary, brand-primary-hover, brand-primary-active, brand-link, brand-link-hover,
- * brand-text-on-brand. Die ersten fünf sind { hex, reduziert, geklemmt, kollabiert }:
- *   - reduziert: die Chroma wurde gesenkt, um diese Stufe in sRGB darstellen zu können — normal
- *     und informativ, kein Fehler (siehe oklchZuHex()).
- *   - geklemmt: echter Fehlerfall — selbst vollständig entsättigt liegt die Stufe außerhalb des
- *     Gamuts (nur möglich, wenn L selbst außerhalb 0…1 liegt). Sollte in der Praxis nicht
- *     vorkommen; wenn doch, ist das ein Fehler in der Ableitung und muss auffallen.
- *   - kollabiert: dieser Wert ist (als Hex) identisch mit mindestens einem anderen Wert
- *     DERSELBEN Rampe (light oder dark), UND mindestens einer der beiden wurde reduziert oder
- *     geklemmt — die Rampe hat an dieser Stelle ihre Abstufung verloren. Das wird eigenständig
- *     markiert, weil es schwerer wiegt als eine einzelne Chroma-Reduktion: zwei Stufen, die sich
- *     nicht mehr unterscheiden, sind für die Ableitung nicht mehr nutzbar, auch wenn jede für
- *     sich genommen ein gültiger, im Gamut liegender Hexwert ist.
- * `brand-text-on-brand` ist { hex, verhaeltnis, kandidat } — siehe beschriftungAbleiten().
- *
- * Link-Regel: im hellen Modus folgt der Link exakt der Marke (link = primary, link-hover = hover
- * — wie im heutigen Bestand). Im dunklen Modus liegt der Link eine Stufe über dem Button: er
- * teilt sich den hover-Ton, und link-hover geht einen Schritt weiter als der Button-hover — der
- * Link hellt im Dunkeln also durchgehend auf, unabhängig davon, dass 'active' das nicht mehr tut.
- */
-export function markenRampe(grundfarbeHex, kandidaten) {
-  const { L, C, H } = hexZuOklch(grundfarbeHex);
-  const bei = (l) => oklchZuHex({ L: l, C, H });
-
-  const hellPrimary = { hex: grundfarbeHex.toUpperCase(), reduziert: false, geklemmt: false };
-  const hellHover = bei(L - HELL_HOVER_SCHRITT);
-  const hellActive = bei(L - HELL_ACTIVE_SCHRITT);
-
-  const dunkelBasis = L + DUNKEL_GRUNDTON_SCHRITT;
-  const dunkelPrimary = bei(dunkelBasis);
-  const dunkelHover = bei(dunkelBasis + DUNKEL_SCHRITT);
-  const dunkelActive = bei(dunkelBasis - DUNKEL_ACTIVE_SCHRITT);
-  const dunkelLink = dunkelHover;
-  const dunkelLinkHover = bei(dunkelBasis + 2 * DUNKEL_SCHRITT);
-
-  const light = mitKollisionen({
-    // Im hellen Modus ist brand-link IMMER = brand-primary und brand-link-hover IMMER =
-    // brand-primary-hover — das ist die Link-Regel selbst (siehe oben), keine Kollision, die
-    // beim Klemmen entstanden wäre. Deshalb von der Kollisionsprüfung ausgenommen.
-    'brand-primary': hellPrimary,
-    'brand-primary-hover': hellHover,
-    'brand-primary-active': hellActive,
-    'brand-link': hellPrimary,
-    'brand-link-hover': hellHover,
-  }, [['brand-primary', 'brand-link'], ['brand-primary-hover', 'brand-link-hover']]);
-
-  const dark = mitKollisionen({
-    // Im dunklen Modus ist brand-link IMMER = brand-primary-hover (die Link-Regel: "eine Stufe
-    // heller als der Button") — ebenfalls Design, keine Kollision.
-    'brand-primary': dunkelPrimary,
-    'brand-primary-hover': dunkelHover,
-    'brand-primary-active': dunkelActive,
-    'brand-link': dunkelLink,
-    'brand-link-hover': dunkelLinkHover,
-  }, [['brand-primary-hover', 'brand-link']]);
-
-  // Die Beschriftung gehört nicht zur Chroma-Gamut-Maschinerie von mitKollisionen() (sie ist eine
-  // Wahl zwischen zwei festen Kandidaten, kein reduzierter/geklemmter Farbpunkt) — deshalb erst
-  // danach ergänzt, gegen die jeweils schon fertige (ggf. reduzierte) Fläche des Modus.
-  light['brand-text-on-brand'] = beschriftungAbleiten(light['brand-primary'].hex, kandidaten);
-  dark['brand-text-on-brand'] = beschriftungAbleiten(dark['brand-primary'].hex, kandidaten);
-
-  return { light, dark };
-}
-
-/**
- * Markiert jeden Eintrag einer Rampe mit `kollabiert`, wenn sein Hex mit dem eines anderen
- * Eintrags DERSELBEN Rampe übereinstimmt UND mindestens einer der beiden reduziert oder
- * geklemmt wurde — reiner Zufall bei zwei eigentlich verschiedenen, aber beide unverändert im
- * Gamut liegenden Werten wäre keine Kollision, sondern nur eine sehr feine Rundung.
- *
- * `designGleich` nennt die Paare, die per Konstruktion immer denselben Wert tragen (die
- * Link-Regel) — die sind KEINE Kollision, egal was mit ihnen passiert ist, und werden deshalb
- * von der Prüfung ausgenommen. Ohne diese Ausnahme würde z. B. brand-link im dunklen Modus
- * jedes Mal fälschlich als "kollabiert" gemeldet, wenn brand-primary-hover reduziert wird —
- * nicht weil die Rampe ihre Abstufung verloren hätte, sondern weil beide von Anfang an denselben
- * Ton tragen sollen.
- */
-function mitKollisionen(eintraege, designGleich) {
-  const namen = Object.keys(eintraege);
-  const istDesignGleich = (a, b) => designGleich.some(
-    ([x, y]) => (x === a && y === b) || (x === b && y === a));
-  const veraendert = (eintrag) => eintrag.reduziert || eintrag.geklemmt;
-  const ergebnis = {};
-  for (const name of namen) {
-    const eigener = eintraege[name];
-    const kollabiert = namen.some((anderer) => anderer !== name
-      && !istDesignGleich(name, anderer)
-      && eintraege[anderer].hex === eigener.hex
-      && (veraendert(eigener) || veraendert(eintraege[anderer])));
-    ergebnis[name] = { ...eigener, kollabiert };
-  }
-  return ergebnis;
-}
-
-/** Reduziert eine Rampe (mit Diagnose-Feldern) auf die reinen Hexwerte — für alles, was nur den
- *  darstellbaren Farbwert braucht, nicht seine Herkunft. */
-export function nurHex(rampeModus) {
-  return Object.fromEntries(Object.entries(rampeModus).map(([name, eintrag]) => [name, eintrag.hex]));
-}
-
-/**
- * Trägt eine Marken-Rampe in die Tokens EINES Modus ein — als neues Objekt, das gegebene bleibt
- * unverändert. Jedes Token, das heute an der Marke hängt, wird ersetzt; welche das sind, ist in
- * dieser Liste sichtbar gehalten, statt über den Aufrufer verstreut zu sein.
- *
- * text-on-brand und icon-on-brand bekommen denselben abgeleiteten Wert (brand-text-on-brand) —
- * beide sind Beschriftung auf derselben Fläche (button-primary/-hover/-active, die die Marke
- * teilen), dieselbe Kontrastfrage gilt für beide. Andere Flächen (button-danger, layer-accent)
- * bekommen ihre Beschriftung NICHT hier, sondern über einen eigenen Aufruf von
- * beschriftungAbleiten() beim Aufrufer — sie hängen nicht an der Marke.
- *
- * text-on-color/icon-on-color werden HIER ebenfalls auf denselben Wert gesetzt — nicht, weil sie
- * noch in REQUIREMENTS vorkämen (tun sie seit Korrekturrunde 5 nicht mehr), sondern weil die
- * echte tlReactControls.css an einigen wenigen, keiner der drei neuen Rollen eindeutig
- * zuzuordnenden Stellen ausschließlich diese beiden liest (siehe index.html, Kommentar über der
- * Zielzustand-Bindung, und task-7-brand-report.md). Ohne diese Zeile bliebe --text-on-color beim
- * statischen Wert aus tokens.json stehen, während der Rest der Bühne dem Regler folgt — genau
- * das Auseinanderlaufen, das in Korrekturrunde 6 aufgefallen ist.
- */
-export function rampeAnwenden(tokens, rampeModus) {
-  const { 'brand-primary': primary, 'brand-primary-hover': hover, 'brand-primary-active': active,
-    'brand-link': link, 'brand-link-hover': linkHover, 'brand-text-on-brand': beschriftung }
-    = nurHex(rampeModus);
-
-  return {
-    ...tokens,
-    'button-primary': primary,
-    'button-secondary': primary,
-    'border-interactive': primary,
-    focus: primary,
-    interactive: primary,
-    'button-primary-hover': hover,
-    'button-secondary-hover': hover,
-    'button-primary-active': active,
-    'button-secondary-active': active,
-    'link-primary': link,
-    'link-primary-hover': linkHover,
-    'text-on-brand': beschriftung,
-    'icon-on-brand': beschriftung,
-    'text-on-color': beschriftung,
-    'icon-on-color': beschriftung,
-  };
-}
-
-/**
  * Abstand zweier Farben im Farbton, in Grad (0 bis 180).
  *
  * Für getönte Flächen ist das WCAG-Kontrastverhältnis das falsche Maß: Es
@@ -408,3 +251,24 @@ export function farbtonAbstand(hexA, hexB) {
 
 /** Ab diesem Farbtonabstand lesen sich zwei getönte Flächen als verschieden. */
 export const FARBTON_ABSTAND_MIN = 30;
+
+/** Schrittweite in L, mit der aufKontrast() einen Wert nachführt. */
+export const KONTRAST_SCHRITT = 0.005;
+
+/**
+ * Führt einen Wert in L nach, bis er gegen jeden Grund das geforderte Verhältnis erreicht.
+ * Farbton und Chroma bleiben; das ist dieselbe Regel wie bei oklchZuHex(): L und H sind die
+ * Aussage, C die Stellschraube — hier ist L die Stellschraube, weil Kontrast Helligkeit ist.
+ * Ein Wert, der schon trägt, kommt unverändert zurück (angepasst: false).
+ */
+export function aufKontrast(hex, gruende, soll, richtung) {
+  const { L, C, H } = hexZuOklch(hex);
+  const traegt = (h) => gruende.every((g) => ratio(h, g) >= soll);
+  if (traegt(hex)) return { hex: hex.toUpperCase(), angepasst: false, L };
+  const schritt = richtung === 'dunkler' ? -KONTRAST_SCHRITT : KONTRAST_SCHRITT;
+  for (let l = L + schritt; l > 0 && l < 1; l += schritt) {
+    const { hex: probe } = oklchZuHex({ L: l, C, H });
+    if (traegt(probe)) return { hex: probe, angepasst: true, L: l };
+  }
+  throw new Error(`${hex} erreicht ${soll} gegen ${gruende.join(', ')} in keiner Helligkeit`);
+}
