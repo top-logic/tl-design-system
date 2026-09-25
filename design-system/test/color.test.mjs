@@ -1,7 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { hexZuOklch, oklchZuHex, beschriftungAbleiten, farbtonAbstand, aufKontrast } from '../tools/lib/color.mjs';
+import { readFileSync } from 'node:fs';
+import { hexZuOklch, oklchZuHex, beschriftungAbleiten, farbtonAbstand, aufKontrast, grauRampe, GRAU_CHROMA } from '../tools/lib/color.mjs';
 import { ratio } from '../tools/lib/contrast.mjs';
+
+const P = JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.url)));
+const GRAU = Object.fromEntries(Object.entries(P.color).filter(([n]) => n.startsWith('gray-')));
+const grad = (H) => ((H * 180) / Math.PI + 360) % 360;
 
 test('Hex → OKLCH → Hex ist verlustfrei bis auf Rundung', () => {
   for (const hex of ['#0B5ED7', '#FAFAFA', '#16181B', '#D7352D'])
@@ -37,4 +42,21 @@ test('aufKontrast lässt einen Wert, der schon trägt, unverändert', () => {
 test('aufKontrast hebt L im dunklen Modus', () => {
   const r = aufKontrast('#3A2A1A', ['#16181B'], 3.0, 'heller');
   assert.ok(r.angepasst && ratio(r.hex, '#16181B') >= 3.0);
+});
+
+test('grauRampe hält jede Helligkeit der TopLogic-Rampe auf 0,01 genau', () => {
+  for (const temperatur of ['warm', 'neutral', 'cool']) {
+    const r = grauRampe(temperatur, GRAU);
+    assert.deepEqual(Object.keys(r), Object.keys(GRAU));
+    for (const n of Object.keys(GRAU))
+      assert.ok(Math.abs(hexZuOklch(r[n]).L - hexZuOklch(GRAU[n]).L) < 0.01, `${temperatur} ${n}`);
+  }
+});
+
+test('neutral trägt keine Chroma, warm liegt bei 70°, cool bei 250°', () => {
+  assert.ok(hexZuOklch(grauRampe('neutral', GRAU)['gray-45']).C < 0.002);
+  const warm = hexZuOklch(grauRampe('warm', GRAU)['gray-45']);
+  const cool = hexZuOklch(grauRampe('cool', GRAU)['gray-45']);
+  assert.ok(Math.abs(grad(warm.H) - 70) < 3 && Math.abs(warm.C - GRAU_CHROMA) < 0.002);
+  assert.ok(Math.abs(grad(cool.H) - 250) < 3);
 });

@@ -272,3 +272,19 @@ export function aufKontrast(hex, gruende, soll, richtung) {
   }
   throw new Error(`${hex} erreicht ${soll} gegen ${gruende.join(', ')} in keiner Helligkeit`);
 }
+
+/** Chroma eines temperierten Graus — so viel, wie unser heutiges kühles Grau trägt. */
+export const GRAU_CHROMA = 0.008;
+/** Farbton je Temperatur in Grad: warm ein gelbliches, cool ein bläuliches Grau. */
+export const GRAU_TON = { warm: 70, cool: 250 };
+
+/**
+ * Eine Graurampe auf den Helligkeiten der TopLogic-Rampe. Nur der Farbton wechselt, nie L —
+ * deshalb hält jedes Kontrastpaar, das mit unserem Grau hält, auch mit diesem.
+ */
+export function grauRampe(temperatur, stufen) {
+  if (!(temperatur === 'neutral' || temperatur in GRAU_TON)) throw new Error(`Grau-Temperatur unbekannt: ${temperatur}`);
+  const C = temperatur === 'neutral' ? 0 : GRAU_CHROMA;
+  const H = temperatur === 'neutral' ? 0 : (GRAU_TON[temperatur] * Math.PI) / 180;
+  return Object.fromEntries(Object.entries(stufen).map(([n, hex]) => [n, oklchZuHex({ L: hexZuOklch(hex).L, C, H }).hex]));
+}
