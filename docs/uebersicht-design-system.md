@@ -42,14 +42,19 @@ Ein eigenes npm-Paket ohne Abhängigkeiten, gebaut mit `node`, dessen Ausgabe To
 
 **Zwei Schichten, und warum das mehr als Ordnung ist.** Der erste Entwurf schrieb Hex-Werte direkt an
 die Rollen und reproduzierte damit den Befund: `#0B5ED7` stand viermal, ein Markenwechsel hätte vier
-Stellen gebraucht und die vergessene fünfte wäre der Fehler gewesen. Jetzt überschreibt ein Kunde
-`--tl-blue-49`, und alle Markenrollen ziehen mit. Ein Test spielt genau diesen Tausch durch.
+Stellen gebraucht und die vergessene fünfte wäre der Fehler gewesen. Jetzt schreibt ein Kunde seine
+Hausfarbe in eine JSON, `derive` rechnet daraus alle Markenrollen, und ein Test spielt genau diesen
+Tausch durch.
 
 **Der Kundenvertrag in drei Stufen**
 
-- **A · Primitive.** Der Kunde liefert Hausfarbe, Grau-Temperatur, Schrift, Radius. Ein Werkzeug
-  rechnet die Rampen, Beschriftungen auf Flächen werden immer abgeleitet, das Kontrast-Gate prüft
-  das Ergebnis.
+- **A · Primitive.** Der Kunde liefert Hausfarbe, Grau-Temperatur (`warm`, `neutral`, `cool`), Schrift,
+  Radius in einer JSON. `node tools/derive.mjs acme.primitives.json` rechnet Hover, Active, Dunkelmodus,
+  acht Kategorien, die der Marke ausweichen, und die Beschriftungen — und schreibt `acme.theme.css`:
+  nur die Rollen, die von TopLogic abweichen, unter `[data-tl-theme="acme"]`. Was wir rechnen, erfüllt
+  WCAG immer, notfalls um einen Helligkeitsschritt nachgeführt, mit Hinweis. Was der Kunde liefert,
+  gilt, auch unter WCAG: der Befund steht im Bericht und im Dateikopf, `--strict` macht ihn zum
+  Fehler. Gebaut seit 25.09.; die Engine setzt `data-tl-theme` noch nicht (Issue #16).
 - **B · Rollen.** Ein `customer.tokens.css` nach unserem `tokens.css`. Der Kunde trägt die Rechnung
   selbst, das Gate prüft trotzdem.
 - **C · Eigene Komponenten.** Je Komponente ein Vertrag (`button.contract.md`): Zustand vom Server,
@@ -78,7 +83,7 @@ Das Design System besteht aus drei Dingen, und nur eines davon ist Gestaltung:
 
 **Warum acht genug sind.** Eine Kategorie ist ein Farbtopf, in den die Anwendung ihre eigenen Werte legt: Ein Enum `Fachbereich` mit zwölf Werten bekommt je Wert `<color role="category-N"/>`, und bei acht Töpfen teilen sich einige Werte einen. Das ist in Ordnung, weil auf der Pille der Name steht — man liest „Vertrieb“, nicht „blau“. Zwölf oder zwanzig Töpfe würden das Auge überfordern und beim nächsten Kunden wieder nicht reichen. Darum darf Farbe nie das Einzige sein, woran man einen Wert erkennt (WCAG 1.4.1); sie hilft beim Wiedererkennen, sie identifiziert nicht. Pill, Avatar und die Diagramme der Welle 5 lesen dieselben acht Töpfe, ein Wert sieht überall gleich aus.
 
-**Und wenn ein Kunde eine eigene Marke mitbringt?** Dann wandert der Punkt „Marke“ auf dem Kreis, und das Tool der Stufe A (`tl-ds derive`) muss die acht Kategorien um ihn herum neu verteilen — die vier Bedeutungen bleiben, wo sie sind, weil Rot, Gelb, Grün und Cyan ihre Bedeutung aus dem Farbton beziehen. Das Gate prüft danach dieselben Abstände wie bei uns. Eine Marke, die auf einer Bedeutung liegt (ein rotes Logo), meldet das Gate; der Kunde entscheidet dann in Stufe B, ob seine Fehlerfarbe ein anderes Rot wird. Das steht als Anforderung an `derive` in `skalen.md`, gebaut ist es noch nicht.
+**Und wenn ein Kunde eine eigene Marke mitbringt?** Dann wandert der Punkt „Marke“ auf dem Kreis, und das Tool der Stufe A (`tl-ds derive`) muss die acht Kategorien um ihn herum neu verteilen — die vier Bedeutungen bleiben, wo sie sind, weil Rot, Gelb, Grün und Cyan ihre Bedeutung aus dem Farbton beziehen. Das Gate prüft danach dieselben Abstände wie bei uns. Eine Marke, die auf einer Bedeutung liegt (ein rotes Logo), meldet das Gate; der Kunde entscheidet dann in Stufe B, ob seine Fehlerfarbe ein anderes Rot wird. So gebaut in `derive` (25.09.): die Lücken zwischen den festen Tönen bekommen reihum den nächsten Punkt, immer die Lücke mit dem größten verbleibenden Abstand; reicht der Kreis nicht für 20°, sinkt der Abstand in 2°-Schritten, und das steht als Hinweis im Bericht. Das Grau bleibt dabei auf unseren 28 Helligkeiten und wechselt nur den Ton — warm 70°, kühl 250°, neutral ohne Chroma.
 
 **Dynamisch heißt: eine Rolle wählen.** `x -> if($x.overdue, 'error', 'category-3')` ist dynamisch und bleibt im Vokabular. Ein Ausdruck, der einen Hex-Wert liefert, verlässt es — und mit ihm Dunkelmodus, Kontrast und Kundenstufe A, die den Wert nie zu sehen bekommt.
 
