@@ -56,6 +56,16 @@ test('5 warm liegt auf den Helligkeiten von TopLogic-Grau; neutral trägt keine 
   assert.ok(hexZuOklch(neutral.ergebnis.color.light['text-secondary']).C < 0.002);
 });
 
+test('eine Saat mittlerer Helligkeit macht ihre Beschriftung zum Befund, nicht zum Abbruch', () => {
+  for (const brand of ['#808080', '#1A7F37']) {
+    const r = derive(P, T, { theme: 'mittel', color: { brand } });
+    const b = r.befunde.filter((x) => x.fg.startsWith('text-on-brand'));
+    assert.ok(b.length >= 1, `${brand}: kein Befund auf einer Markenfläche`);
+    assert.ok(b.every((x) => x.geliefert), `${brand}: die Saat ist geliefert, der Befund auch`);
+    assert.ok(r.css.includes(`--tl-surface-brand: ${brand};`), `${brand}: die Fläche bleibt die Marke`);
+  }
+});
+
 test('7 derive ist deterministisch', () => {
   assert.equal(derive(P, T, probe).css, ergebnis.css);
 });
