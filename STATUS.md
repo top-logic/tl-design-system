@@ -97,9 +97,16 @@ Klassen statt einer Stufe (altlast.md „Icon“).
 **Worktree:** `~/git/tl8-wt-29584` steht derzeit auf `CWS/CWS_29617_design_system_welle_1_avatar`; die Ratsche
 ist gegen diesen Stand kalibriert. Vor Pill-Arbeit erst zurück auf den Pill-Branch wechseln.
 
+**PR-Stand 25.09. mittags:** !1618 (doppeltes React) gemerged, Branch gelöscht. !1694 (Pill): Bernhard hat am
+25.09. 07:41 approved („Na gut – wir werden sehen wo's hinführt“), das Approval gilt seit dem `messages_en`-Commit
+`c637a17e7e` als stale; Build 16232 grün; Merge braucht Bernhards erneutes Approval (Klassifikator lehnt den Merge
+ohne ab). !1695 (Avatar): Bernhards Review „erster Enum-Wert ist der Default“ beantwortet mit `81f80b3f0e`
+(`MEDIUM` vorn, `@FormattedDefault` weg, `messages_en` neu erzeugt — Build 16225 war daran gescheitert);
+Merge-Reihenfolge im PR vorgeschlagen: erst !1694, dann !1695 auf master rebasen.
+
 Jetzt:
 
-1. PR !1694 abwarten (Reviewer Bernhard, Request-changes beantwortet); dann !1695 (Avatar + Progress + Icon) auf master
+1. Bernhards erneutes Approval auf !1694 abwarten, dann mergen; dann !1695 (Avatar + Progress + Icon) auf master
    rebasen, Basis umstellen, Docker-Instanz sichtprüfen (Kommentarköpfe, Bild-Demo `xl`, Fortschrittsbalken in
    Objektliste und Long-Job-Demo, unbestimmt mit und ohne Reduced Motion); nach dem Merge Worktree auf `master`, Branch löschen, Ratsche
    gegen master prüfen, Pill-Absatz in altlast.md als gemerged markieren.
