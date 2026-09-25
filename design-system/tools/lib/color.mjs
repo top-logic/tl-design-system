@@ -288,3 +288,53 @@ export function grauRampe(temperatur, stufen) {
   const H = temperatur === 'neutral' ? 0 : (GRAU_TON[temperatur] * Math.PI) / 180;
   return Object.fromEntries(Object.entries(stufen).map(([n, hex]) => [n, oklchZuHex({ L: hexZuOklch(hex).L, C, H }).hex]));
 }
+
+const grad = (rad) => ((rad * 180) / Math.PI + 360) % 360;
+const rad = (g) => (g * Math.PI) / 180;
+
+/**
+ * Verteilt `anzahl` Farbtöne auf dem Kreis so, dass jeder mindestens `mindest` Grad zu jedem
+ * blockierten Ton und zu jedem anderen hält. Verfahren: die Lücken zwischen den blockierten
+ * Tönen bekommen reihum den nächsten Punkt, immer die Lücke, in der der Abstand danach am
+ * größten bleibt. Reicht der Kreis nicht, sinkt der Mindestabstand in Schritten von 2°.
+ */
+export function kategorienVerteilen(blockiert, anzahl = 8, mindest = 20) {
+  const feste = [...new Set(blockiert.map((g) => ((g % 360) + 360) % 360))].sort((a, b) => a - b);
+  for (let abstand = mindest; abstand > 0; abstand -= 2) {
+    const luecken = feste.map((von, i) => {
+      const bis = i + 1 < feste.length ? feste[i + 1] : feste[0] + 360;
+      return { von, breite: bis - von, punkte: 0 };
+    });
+    for (let n = 0; n < anzahl; n++) {
+      let beste = null;
+      for (const l of luecken) {
+        const spanne = l.breite / (l.punkte + 2);
+        if (spanne >= abstand && (!beste || spanne > beste.breite / (beste.punkte + 2))) beste = l;
+      }
+      if (!beste) break;
+      beste.punkte++;
+    }
+    const gesetzt = luecken.reduce((s, l) => s + l.punkte, 0);
+    if (gesetzt < anzahl) continue;
+    const toene = luecken.flatMap((l) => Array.from({ length: l.punkte },
+      (_, k) => Math.round((l.von + (l.breite * (k + 1)) / (l.punkte + 1)) % 360)));
+    return { toene, abstand };
+  }
+  throw new Error(`${anzahl} Kategorien finden keinen Platz`);
+}
+
+export const KATEGORIE_SUBTLE = { light: { L: 0.955, C: 0.03 }, dark: { L: 0.27, C: 0.05 } };
+export const KATEGORIE_BORDER_CHROMA = 0.13;
+
+/** Eine Kategorie aus einem Farbton: getönte Fläche und Linie je Modus, Linie der hellste
+ *  (hell) bzw. dunkelste (dunkel) Wert mit 3,0 auf beiden Gründen. */
+export function kategorieRollen(tonGrad, gruende) {
+  const H = rad(tonGrad);
+  const subtle = (m) => oklchZuHex({ ...KATEGORIE_SUBTLE[m], H }).hex;
+  const border = (m) => aufKontrast(oklchZuHex({ L: m === 'light' ? 0.75 : 0.45, C: KATEGORIE_BORDER_CHROMA, H }).hex,
+    gruende[m], 3.0, m === 'light' ? 'dunkler' : 'heller').hex;
+  return {
+    light: { subtle: subtle('light'), border: border('light') },
+    dark: { subtle: subtle('dark'), border: border('dark') },
+  };
+}

@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { hexZuOklch, oklchZuHex, beschriftungAbleiten, farbtonAbstand, aufKontrast, grauRampe, GRAU_CHROMA } from '../tools/lib/color.mjs';
+import { hexZuOklch, oklchZuHex, beschriftungAbleiten, farbtonAbstand, aufKontrast, grauRampe, GRAU_CHROMA, kategorienVerteilen, kategorieRollen } from '../tools/lib/color.mjs';
 import { ratio } from '../tools/lib/contrast.mjs';
 
 const P = JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.url)));
@@ -59,4 +59,31 @@ test('neutral trägt keine Chroma, warm liegt bei 70°, cool bei 250°', () => {
   const cool = hexZuOklch(grauRampe('cool', GRAU)['gray-45']);
   assert.ok(Math.abs(grad(warm.H) - 70) < 3 && Math.abs(warm.C - GRAU_CHROMA) < 0.002);
   assert.ok(Math.abs(grad(cool.H) - 250) < 3);
+});
+
+test('acht Kategorien um die TopLogic-Marke halten 20° zu allem, was blockiert ist, und zueinander', () => {
+  const blockiert = [260, 28, 85, 162, 213];
+  const { toene, abstand } = kategorienVerteilen(blockiert);
+  assert.equal(toene.length, 8);
+  assert.equal(abstand, 20);
+  const d = (a, b) => Math.abs(((a - b) % 360 + 540) % 360 - 180);
+  for (const t of toene) for (const b of blockiert) assert.ok(d(t, b) >= 20, `${t} ↔ ${b}`);
+  for (let i = 0; i < 8; i++) for (let j = i + 1; j < 8; j++) assert.ok(d(toene[i], toene[j]) >= 20);
+});
+
+test('eine Marke auf einer Bedeutung blockiert nur einen Ton, die Verteilung bleibt bei 20°', () => {
+  const { abstand } = kategorienVerteilen([30, 28, 85, 162, 213]);
+  assert.equal(abstand, 20);
+});
+
+test('die Verteilung ist deterministisch', () => {
+  assert.deepEqual(kategorienVerteilen([120, 28, 85, 162, 213]), kategorienVerteilen([120, 28, 85, 162, 213]));
+});
+
+test('kategorieRollen liefert subtle mit Text 4,5 und border mit 3,0 auf beiden Gründen, je Modus', () => {
+  const gruende = { light: ['#FAFAFA', '#FFFFFF'], dark: ['#16181B', '#1B1D21'] };
+  const r = kategorieRollen(300, gruende);
+  assert.ok(ratio('#1B1D21', r.light.subtle) >= 4.5 && ratio('#F0F3F9', r.dark.subtle) >= 4.5);
+  for (const g of gruende.light) assert.ok(ratio(r.light.border, g) >= 3.0);
+  for (const g of gruende.dark) assert.ok(ratio(r.dark.border, g) >= 3.0);
 });
