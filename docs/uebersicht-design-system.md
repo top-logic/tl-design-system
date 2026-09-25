@@ -103,7 +103,7 @@ es und lässt es nur schrumpfen.
 | Welle | Komponenten | Stand |
 |---|---|---|
 | 0 | Paket, `primitives.css`, `tokens.css`, `base.css`, DTCG, Gates, Einbindung in die Demo-App, `data-tl-mode` und `data-tl-density` am `html` | gemerged, PR !1641 |
-| 1 | Button, ToggleButton, Pill, Avatar, Progress, FontIcon | Button fertig, PR offen |
+| 1 | Button, ToggleButton, Pill, Avatar, Progress, FontIcon | Button gemerged (!1649); Pill !1694 und Avatar/Progress/Icon !1695 im Review |
 | 2 | Felder, Checkbox, BooleanChoice, DropdownSelect, FormField, FormGroup, FormLayout, dazu Chips, Segmented, Slider, Switch | geplant |
 | 3 | TableView, TreeView, Menu, Toolbar, TabBar, Breadcrumb, Tooltip | geplant |
 | 4 | Dialog, Window, Drawer, Snackbar, NoticeBar, Shell, Layoutcontainer, Übergangszustände | geplant |
