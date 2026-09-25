@@ -145,7 +145,7 @@ Offen aus der Spec, nicht Teil von Welle 0:
 * `derive`, Rest aus dem Abschluss-Review (25.09.), kein Fehlverhalten, nur Hinweise: (1) der Kollaps-Hinweis
   „surface-brand, -hover und -active“ fällt bei geliefertem `blue-49` weg, weil die Suffixe keine Rollennamen sind;
   (2) die 20°-Prüfung meldet auch achromatische Flächen (unbunte Marke) — Chroma < 0,02 ausnehmen;
-  (3) Wiki „Übersicht“ kennt Folie 13a und die Graurampe noch nicht (`wiki_write`)
+  (3) Wiki „Übersicht“ nachgezogen am 25.09. (Stufe A gebaut, derive, Graurampe)
 * Token-Mapper — Miniprojekt, Browserwerkzeug für Kunden-Styleguides
 * Figma-Push aus `tokens.dtcg.json`
 * Maven-Wrapper für das Paket; bis dahin kopiert `tools/publish-to-worktree.mjs`
