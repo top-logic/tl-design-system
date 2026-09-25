@@ -69,6 +69,7 @@ test('acht Kategorien um die TopLogic-Marke halten 20° zu allem, was blockiert 
   const d = (a, b) => Math.abs(((a - b) % 360 + 540) % 360 - 180);
   for (const t of toene) for (const b of blockiert) assert.ok(d(t, b) >= 20, `${t} ↔ ${b}`);
   for (let i = 0; i < 8; i++) for (let j = i + 1; j < 8; j++) assert.ok(d(toene[i], toene[j]) >= 20);
+  for (const t of toene) assert.ok(t >= 0 && t < 360, `${t} außerhalb [0, 360)`);
 });
 
 test('eine Marke auf einer Bedeutung blockiert nur einen Ton, die Verteilung bleibt bei 20°', () => {
@@ -78,6 +79,28 @@ test('eine Marke auf einer Bedeutung blockiert nur einen Ton, die Verteilung ble
 
 test('die Verteilung ist deterministisch', () => {
   assert.deepEqual(kategorienVerteilen([120, 28, 85, 162, 213]), kategorienVerteilen([120, 28, 85, 162, 213]));
+});
+
+test('kategorienVerteilen mit anzahl 0 liefert keine Töne und behält den Mindestabstand', () => {
+  assert.deepEqual(kategorienVerteilen([260, 28, 85, 162, 213], 0), { toene: [], abstand: 20 });
+});
+
+test('gebrochene blockierte Töne runden den Mindestabstand nicht weg', () => {
+  const blockiert = [0.5, 60.5, 120.5, 180.5, 240.5, 300.5];
+  const { toene, abstand } = kategorienVerteilen(blockiert);
+  assert.equal(abstand, 20);
+  const d = (a, b) => Math.abs(((a - b) % 360 + 540) % 360 - 180);
+  for (const t of toene) for (const b of blockiert) assert.ok(d(t, b) >= 20, `${t} ↔ ${b}`);
+  for (let i = 0; i < toene.length; i++) for (let j = i + 1; j < toene.length; j++) assert.ok(d(toene[i], toene[j]) >= 20);
+});
+
+test('ein leerer Kreis (kein blockierter Ton) ist selbst eine Lücke', () => {
+  const { toene, abstand } = kategorienVerteilen([]);
+  assert.equal(toene.length, 8);
+  assert.equal(abstand, 20);
+  const d = (a, b) => Math.abs(((a - b) % 360 + 540) % 360 - 180);
+  for (const t of toene) assert.ok(t >= 0 && t < 360, `${t} außerhalb [0, 360)`);
+  for (let i = 0; i < 8; i++) for (let j = i + 1; j < 8; j++) assert.ok(d(toene[i], toene[j]) >= 20);
 });
 
 test('kategorieRollen liefert subtle mit Text 4,5 und border mit 3,0 auf beiden Gründen, je Modus', () => {

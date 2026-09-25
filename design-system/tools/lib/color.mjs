@@ -289,7 +289,6 @@ export function grauRampe(temperatur, stufen) {
   return Object.fromEntries(Object.entries(stufen).map(([n, hex]) => [n, oklchZuHex({ L: hexZuOklch(hex).L, C, H }).hex]));
 }
 
-const grad = (rad) => ((rad * 180) / Math.PI + 360) % 360;
 const rad = (g) => (g * Math.PI) / 180;
 
 /**
@@ -301,7 +300,7 @@ const rad = (g) => (g * Math.PI) / 180;
 export function kategorienVerteilen(blockiert, anzahl = 8, mindest = 20) {
   const feste = [...new Set(blockiert.map((g) => ((g % 360) + 360) % 360))].sort((a, b) => a - b);
   for (let abstand = mindest; abstand > 0; abstand -= 2) {
-    const luecken = feste.map((von, i) => {
+    const luecken = feste.length === 0 ? [{ von: 0, breite: 360, punkte: 0 }] : feste.map((von, i) => {
       const bis = i + 1 < feste.length ? feste[i + 1] : feste[0] + 360;
       return { von, breite: bis - von, punkte: 0 };
     });
@@ -317,7 +316,7 @@ export function kategorienVerteilen(blockiert, anzahl = 8, mindest = 20) {
     const gesetzt = luecken.reduce((s, l) => s + l.punkte, 0);
     if (gesetzt < anzahl) continue;
     const toene = luecken.flatMap((l) => Array.from({ length: l.punkte },
-      (_, k) => Math.round((l.von + (l.breite * (k + 1)) / (l.punkte + 1)) % 360)));
+      (_, k) => (l.von + (l.breite * (k + 1)) / (l.punkte + 1)) % 360));
     return { toene, abstand };
   }
   throw new Error(`${anzahl} Kategorien finden keinen Platz`);
