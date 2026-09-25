@@ -736,6 +736,30 @@ Die Primitivnamen werden **abgeleitet, nicht vergeben** (`design-system/tools/li
 
 **Vier Regeln setzt das Gate durch:** kein Hex in der Rollenschicht, jede Referenz zeigt auf ein vorhandenes Primitiv, kein Primitiv steht ungenutzt herum, und kein Primitivname enthält ein Rollenwort. Dazu ein Test, der einen Kundentausch durchspielt und prüft, dass alle vier markenbezogenen Rollen mitziehen.
 
+### Kategorien folgen der Marke: eine Anforderung an `derive`
+
+Die acht Kategorien liegen heute als feste Farbtöne in `primitives.json` (2°, 56°, 123°, 186°, 238°,
+285°, 311°, 337°), gerechnet um unsere Marke bei 260° und die vier Bedeutungen bei 28°, 85°, 162°,
+213°. Bringt ein Kunde in Stufe A eine eigene Marke mit, wandert ihr Punkt auf dem Kreis — ein
+orangefarbenes Logo läge bei 56° auf Kategorie 2, und das Gate schlüge an, obwohl der Kunde nichts
+falsch gemacht hat.
+
+**Entschieden:** `tl-ds derive` verteilt die acht Kategorien um die Kundenmarke neu, nach derselben
+Regel wie bei uns — mindestens 20° zueinander, zur Marke und zu jeder Bedeutung, Fläche und Linie auf
+denselben Helligkeiten (`subtle` L 0,955 hell / 0,27 dunkel, `border` der hellste Wert mit 3,0 auf
+beiden Gründen). Die vier Bedeutungen bleiben, wo sie sind: Rot, Gelb, Grün und Cyan beziehen ihre
+Bedeutung aus dem Farbton, sie folgen keiner Marke. Liegt die Marke selbst näher als 20° an einer
+Bedeutung (ein rotes Logo), meldet `derive` das als Befund und rechnet trotzdem; der Kunde entscheidet
+in Stufe B, ob seine Fehlerfarbe ein anderes Rot wird. Der Test `tokens.test.mjs` „Kategorien trennen
+sich“ läuft dann über die erzeugten Primitive genauso wie über unsere.
+
+**Verworfen:** Kategorien als feste Werte auch für Kunden (kollidieren mit jeder Marke, die nicht
+blau ist); Kategorien aus der Marke ableiten (acht Abstufungen einer Hausfarbe sind nicht
+unterscheidbar — die Kategorien müssen den ganzen Kreis nutzen, gerade weil die Marke einen Ton
+davon besetzt).
+
+Bild: `docs/bilder/farbkreis-13.svg` — die dreizehn Punkte mit ihren Abständen.
+
 ### Themes: eine dritte Achse, nicht ein Tausch
 
 **Entschieden (24.09.): Ein Theme ist ein Attribut am `html`, `data-tl-theme="<id>"`, neben `data-tl-mode` und `data-tl-density`. Mehrere Themes stehen in einer Anwendung nebeneinander, der Nutzer wählt.**

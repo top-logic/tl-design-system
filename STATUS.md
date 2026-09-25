@@ -125,7 +125,8 @@ gelöscht. Der Button ist die Vorlage. Arbeitsliste: `docs/migration/altlast.md`
 
 Offen aus der Spec, nicht Teil von Welle 0:
 
-* `tl-ds derive` — Kundenstufe A, die Ableitung einer Palette aus Hausfarbe und Grauwahl; muss die
+* `tl-ds derive` — Kundenstufe A, die Ableitung einer Palette aus Hausfarbe und Grauwahl; verteilt die acht
+  Kategorien um die Kundenmarke neu (skalen.md „Kategorien folgen der Marke“); muss die
   Beschriftungen mitrechnen und nach `tokens.css` laden — siehe skalen.md „Zwei Schichten“
 * `data-tl-theme` — dritte Achse für mehrere Themes je Anwendung; `derive` schreibt je Theme eine Datei
   unter `[data-tl-theme="<id>"]`, das Gate läuft je Theme, `UIThemeService` setzt das Attribut — Issue #16,
