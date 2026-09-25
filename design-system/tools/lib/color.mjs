@@ -367,8 +367,8 @@ export function markenRollen(saatHex, gruende) {
     if (r.geklemmt) hinweise.push(`${mode}: ${rolle} liegt außerhalb des Gamuts und wurde geklemmt`);
     return r.hex;
   };
-  const fuehre = (mode, rolle, hex, soll) => {
-    const r = aufKontrast(hex, gruende[mode], soll, mode === 'light' ? 'dunkler' : 'heller');
+  const fuehre = (mode, rolle, hex, soll, zusatz = []) => {
+    const r = aufKontrast(hex, [...gruende[mode], ...zusatz], soll, mode === 'light' ? 'dunkler' : 'heller');
     if (r.angepasst) {
       const zahl = soll.toFixed(1).replace('.', ',');
       hinweise.push(`${mode}: ${rolle} in der Helligkeit nachgeführt, damit ${zahl} auf dem Grund hält (${hex} → ${r.hex})`);
@@ -391,7 +391,10 @@ export function markenRollen(saatHex, gruende) {
     'surface-brand-subtle-hover': bei('light', 'surface-brand-subtle-hover', MARKE_SUBTLE.light.hover.L, subtleC('light', 'hover')),
   };
   pruefeKollaps('light', [light['surface-brand'], light['surface-brand-hover'], light['surface-brand-active']]);
-  light['text-link'] = fuehre('light', 'text-link', light['surface-brand'], 4.5);
+  // Die getönte Markenfläche ist selbst ein Grund: die Paarliste verlangt text-link auf
+  // surface-brand-subtle. Deshalb wird sie erst gerechnet und dann mitgeführt — sonst reicht
+  // eine Marke, deren Tönung dicht an ihrem Link liegt, um ein gerechnetes Paar zu verfehlen.
+  light['text-link'] = fuehre('light', 'text-link', light['surface-brand'], 4.5, [light['surface-brand-subtle']]);
   light['text-link-hover'] = fuehre('light', 'text-link-hover',
     bei('light', 'text-link-hover', hexZuOklch(light['text-link']).L - HELL_HOVER_SCHRITT), 4.5);
   light['border-interactive'] = fuehre('light', 'border-interactive', light['surface-brand'], 3.0);
@@ -405,7 +408,7 @@ export function markenRollen(saatHex, gruende) {
     'surface-brand-subtle-hover': bei('dark', 'surface-brand-subtle-hover', MARKE_SUBTLE.dark.hover.L, subtleC('dark', 'hover')),
   };
   pruefeKollaps('dark', [dark['surface-brand'], dark['surface-brand-hover'], dark['surface-brand-active']]);
-  dark['text-link'] = fuehre('dark', 'text-link', dark['surface-brand-hover'], 4.5);
+  dark['text-link'] = fuehre('dark', 'text-link', dark['surface-brand-hover'], 4.5, [dark['surface-brand-subtle']]);
   dark['text-link-hover'] = fuehre('dark', 'text-link-hover',
     bei('dark', 'text-link-hover', hexZuOklch(dark['text-link']).L + DUNKEL_SCHRITT), 4.5);
   dark['border-interactive'] = fuehre('dark', 'border-interactive', dark['surface-brand'], 3.0);
