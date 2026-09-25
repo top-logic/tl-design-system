@@ -22,6 +22,7 @@ Alle in `design-system/`, alle mit `node` ohne Abhängigkeiten:
 | `node tools/inventory.mjs` | Zählt das alte `tlReactControls.css` im Worktree je Block (Ratsche). Budget in `test/ratchet.json` unter `blocks`: kein Block wächst, ein abgeschnittener wird gestrichen, Fremdzuwachs hebt seinen Block mit Ticketvermerk. |
 | `node tools/publish-to-worktree.mjs` | Kopiert `dist/` in den Worktree, bis das Paket einen Maven-Wrapper hat. |
 | `node tools/serve.mjs` | Specimen auf `http://localhost:8137/` |
+| `tools/check-messages-en.sh` | **Push-Gate für den Worktree.** Erzeugt `messages_en.properties` aus dem JavaDoc für jedes Modul mit Java-Änderungen und schlägt fehl, wenn ein Diff bleibt. Jenkins scheitert sonst mit „Files have been changed during build“. Vor **jedem** Push in den Worktree aufrufen — auch nach reinen JavaDoc-Änderungen. |
 
 Der Worktree liegt unter `~/git/tl8-wt-29584` (oder `TL_WORKTREE`). Welle 0 ist auf `master`; jede weitere
 Welle arbeitet auf einem eigenen Branch `CWS/CWS_29617_design_system_welle_<n>` (Trac #29617).
@@ -65,6 +66,10 @@ Schätz-Regel des ADHD-Skills. Pläne gliedern sich nach Reihenfolge und Fertig-
 Änderungen an `docs/skalen.md` ziehen `docs/praesentation.md` und `STATUS.md` mit.
 
 Jedes Arbeitspaket endet committet (Präfix `Ticket #29617:`), nichts Halbfertiges bleibt liegen.
+
+**`messages_en.properties` wird nie von Hand geschrieben.** JavaDoc schreiben, `tools/check-messages-en.sh`
+laufen lassen, den erzeugten Diff committen, Deutsch nachziehen. Das gilt auch für den JavaDoc der Klasse
+selbst (`<Klasse>.tooltip`). Vier Jenkins-Builds sind daran gescheitert (19.–25.09.2026).
 
 ## Parallele Sitzungen
 
