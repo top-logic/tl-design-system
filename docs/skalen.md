@@ -1166,8 +1166,8 @@ Tokens repariert hat. Gemessen: `status-*-text` auf der eigenen `subtle`-Fläche
 | Maße | Höhe `size-control-sm`, Innenabstand `space-xs`, Linie `border-width-sm`, Form `radius-full`. Im Fließtext erbt sie die Schriftgröße. |
 | Modell | Die Annotation nennt die Rolle, nicht die Farbe. Das Register aus #29606 schrumpft auf ein Enum; `support-info` als Token entfällt, weil `info` eine Rolle ist. |
 
-**Acht Kategorien ohne Bedeutung.** Kunden haben Werte, die sich unterscheiden sollen, ohne
-etwas zu bedeuten — Projektfarben, Sparten, Diagrammreihen. Das Paket liefert dafür acht
+**Acht Kategorien, deren Bedeutung die Anwendung festlegt.** Kunden haben Werte, die sich unterscheiden
+sollen, ohne dass die Farbe etwas bedeutet — Projektfarben, Sparten, Diagrammreihen. Das Paket liefert dafür acht
 Kategorien mit je zwei Rollen (`subtle`, `border`), gerechnet wie die Statusfarben: die Linie ist
 der hellste Wert, der auf `surface-base` und `surface-layer` 3,0 hält; die Fläche liegt hell bei
 L 0,955 und dunkel bei L 0,27 in OKLCH, mit `text-primary` darauf bei 13 bis 15. Die Farbtöne

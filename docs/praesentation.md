@@ -96,7 +96,7 @@ Eine Klasse liest nur Rollen. Eine Rolle liest nur Primitive. Ein Wert in der Ro
 
 * **Marke** — ein Blau, klarer als heute, ausdrücklich vorläufig. Der Wechsel kostet einen Wert; Rampe, Beschriftung und Prüfung sind abgeleitet.
 * **Vier Bedeutungen** — Fehler, Warnung, Erfolg, Info — mit je vier Rollen: Text, Linie, Fläche, getönter Streifen. 16 Werte je Modus, alle gerechnet.
-* **Acht Kategorien ohne Bedeutung** — für Projektfarben, Diagrammreihen, Avatare. Wer Rot meint, nimmt `error`.
+* **Acht Kategorien, deren Bedeutung die Anwendung festlegt** — Projektfarben, Diagrammreihen, Avatare. Die Farbe selbst sagt nichts; wer Rot meint, nimmt `error`.
 * **Vier Rahmenstufen**, jede mit genau einer Aufgabe: trennen, begrenzen, hervorheben, Marke tragen.
 * **Beschriftung auf Flächen wird gerechnet, nie geschrieben.** Erfolg bekommt dunkle Schrift, weil das Weiß von heute die Norm verfehlte.
 
