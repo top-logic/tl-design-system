@@ -800,6 +800,53 @@ Die Spec vom 17.09. kennt den Kunden nur als Tausch: `customer.primitives.css` n
 
 **Was dadurch offen wird:** Spec §2 „Wurzel" nennt zwei Attribute und §3 Stufe A eine Datei auf `:root`; §3 Stufe A ist mit der Spec vom 25.09. fortgeschrieben, §2 folgt mit der Engine-Welle. Issue #13 (Kunden-Theming ohne Issue) ist damit für den Scope-Teil beantwortet.
 
+### Zwei Wege, kein dritter: Shell oder Headless
+
+**Entschieden (25.09.): Wer TopLogic 8 als Shell nutzt, hält den Draht-Teil unserer Verträge ein — gleich, welche Komponentenbibliothek er mitbringt. Wer das nicht will, bindet sein eigenes Frontend headless über die REST-/OpenAPI-Schnittstelle an. Einen dritten Weg gibt es nicht, und einen Schalter, der das UI-System abschaltet, gibt es nicht.**
+
+**Der Anlass.** Ein Kunde wie Mercedes-Benz bringt MBUI mit (Material-basiert), eigene React-Komponenten und eigene Styles. Die naheliegende Idee: eine Option in den Admin-Einstellungen, die das tl-UI-System abschaltet, wenn der Kunde „alles“ selbst mitbringt; was dann nicht läuft, ist sein Risiko.
+
+**Der Befund in der Engine.** Der Server schickt `{ module: 'TLButton', state: { label, disabled, … } }`; `TLChild` holt die Komponente aus der Registry (`registry.ts`: eine Map, der letzte `register` gewinnt); Aktionen gehen über `sendCommand` zurück. `controls-entry.ts` registriert 77 Controls, darunter Grid, Stack, Deck, Dialog-Manager, Sidebar — Container, nicht nur Blätter. Tastatur, Fokusfalle, Dialog-Stapel und Drag & Drop leben in der Bridge; die Skript-Aufzeichnung (`ReactOptionByLabelNaming`, `ModelResolver`) liest unser DOM. Skripte und Stylesheets sind eine benannte Liste mit `requires` in `tl-layout-react.conf.config.xml`.
+
+**Warum kein Schalter:**
+
+* Er schaltet die falsche Schicht ab. Ein Schalter kann CSS weglassen; der Draht — Zustand rein, Kommando raus, Stapel bedienen — bleibt, weil der Server die Oberfläche treibt.
+* Er wäre erst bei 77 von 77 ersetzten Controls wahr. Vorher steht jedes nicht ersetzte Control nackt da, und das Layout-System gehört zu den 77.
+* „Aus“ ist kein garantierbarer Zustand. Eine Update-Garantie braucht etwas, wogegen man prüfen kann, und das ist ein Vertrag.
+
+**Der Vertrag hat zwei Hälften.** Bisher listet `*.contract.md` vier Dinge gleichrangig. Ab jetzt sind sie geteilt:
+
+| | Inhalt | Wer es braucht |
+|---|---|---|
+| **Muss** | Zustand vom Server, Aktionen zurück; für Dialoge und Overlays der Stapel der Bridge | jeder, der die Komponente unter dem TopLogic-Namen registriert |
+| **Kann** | Tokens, damit sie ins Bild passt; Attribute für Tastatur und Fokus; Attribute, die die Skript-Aufzeichnung liest | wer Mischbetrieb, Dichte oder aufgezeichnete Tests will |
+
+Der Konformitätstest prüft nur das Muss, und er ist das Werkzeug des Kunden, nicht unser Gate: Er läuft vor seinem Deploy und zeigt, was ein Framework-Update gebrochen hat. TopLogic garantiert die Bridge — Registry, Kommandokanal, Ereignisse — und dass der Zustand so kommt, wie der Vertrag sagt. Nicht das Aussehen, nicht die Aufzeichnung ohne die Kann-Attribute.
+
+**Die zwei Wege:**
+
+| | Shell | Headless |
+|---|---|---|
+| Schnittstelle | Control-Protokoll: Registry, Zustand, Kommandos | REST / OpenAPI |
+| Der Kunde bringt | Komponenten, die das Muss erfüllen — MBUI, MUI, was er will | das ganze Frontend |
+| TopLogic liefert | Layouts, Formulare, Dialoge, Validierung, Rechte, Skript-Tests, Theming | Daten, Modell, Rechte, TL-Script-Logik |
+| Garantie beim Update | Vertrag bleibt stabil; der Konformitätstest zeigt Brüche vor dem Deploy | API bleibt stabil; die UI ist nicht unser Thema |
+
+Die Grenze liegt nicht zwischen flexibel und unflexibel, sondern zwischen „hat einen Vertrag“ und „hat keinen“. Die Einschränkung im Shell-Weg ist klein: Sie betrifft den Draht, nicht Aussehen, CSS oder Bibliothek. Wer sich an ihr stört, stört sich daran, dass der Server die UI treibt — und genau das ist die Leistung des Shell-Wegs. Wer das nicht will, ist auf dem Headless-Weg richtig.
+
+**Was das für Stufe C heißt:**
+
+* Stufe C ist der Shell-Weg mit fremder Bibliothek. Sie steht auf Stufe A oder B: Was der Kunde nicht ersetzt, bleibt TopLogic und sieht über seine Tokens trotzdem nach ihm aus. Mischbetrieb ist der Normalfall, nicht die Ausnahme.
+* Paket statt Schalter. Das Kundenmodul deklariert seine Skripte und Stylesheets in seiner `config.xml` und ersetzt benannte Einträge unserer Liste — `tl-design-system-components`, wenn nichts mehr davon gelesen wird. `tokens.css` und `base.css` bleiben, solange ein TopLogic-Control im Baum steht.
+* Ein Theme darf ein UI-Paket benennen. `UIThemeService` kennt Themes; die Wahl im Admin lädt die Seite mit dem anderen Bundle. Damit lässt sich während einer Migration zwischen TopLogic und Kundenpaket wechseln, ohne dass „aus“ je ein Zustand ist.
+* Für Material: React kommt aus `tl-react-bridge`, MUI und Emotion bündelt der Kunde (!1618 zeigt, was ein zweites React anrichtet). Ein Adapter füttert `createTheme` aus unseren Rollen, als Hex je Modus zur Bauzeit, weil MUI `contrastText` selbst rechnet. Dichte kennt MUI nicht; das bleibt beim Kunden.
+
+**Verworfen:** der Admin-Schalter (falsche Schicht, erst bei 77/77 wahr, kein prüfbarer Zustand); Shell ohne Draht als geduldeter dritter Weg (nicht garantierbar, nicht testbar, jedes Update ein Blindflug); ein Java-Port des Konformitätstests (der Vertrag ist ein Client-Vertrag und wird im Client geprüft).
+
+**Nicht verifiziert:** ob ein Kundenmodul über TypedConfiguration einen benannten Listeneintrag der `ClientResources` ersetzen oder entfernen kann — der erste Engine-Punkt der Umsetzung. Und wie vollständig der Headless-Weg ist: Der Skill `toplogic-react-frontend` (OpenAPI-Server über TL-Script, Dev-Proxy, Auth-Naht) belegt, dass er gegangen wurde; ob Rechte, Paging, Dateien und Ereignisse für eine echte Anwendung reichen, sagt nur, wer die Projekte gemacht hat.
+
+**Als Test:** jeder `*.contract.md` trägt die Abschnitte „Muss“ und „Kann“; ein Konformitätstest-Harness mountet eine registrierte Komponente mit dem Zustand aus dem Vertrag und prüft die Aktionen; unsere eigenen Controls bestehen ihn zuerst. Ein Referenzprojekt registriert `TLButton` und `TLDialog` auf MUI-Basis, folgt `data-tl-mode` und besteht die Verträge. Spec folgt: `2026-09-25-ui-paket-design.md`.
+
 ### Graurampe: Temperatur statt Farbe
 
 Unser Grau ist ein kühles Grau: 28 Stufen mit Chroma 0,008 bei etwa 260°. Ein Kunde wählt in Stufe A

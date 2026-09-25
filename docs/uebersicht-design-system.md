@@ -57,8 +57,10 @@ Tausch durch.
   Fehler. Gebaut seit 25.09.; die Engine setzt `data-tl-theme` noch nicht (Issue #16).
 - **B · Rollen.** Ein `customer.tokens.css` nach unserem `tokens.css`. Der Kunde trägt die Rechnung
   selbst, das Gate prüft trotzdem.
-- **C · Eigene Komponenten.** Je Komponente ein Vertrag (`button.contract.md`): Zustand vom Server,
-  Aktionen, Tokens, Attribute für Tastatur und Fokus. TopLogic garantiert Funktion, nicht Aussehen.
+- **C · Eigene Komponenten.** Je Komponente ein Vertrag (`button.contract.md`) in zwei Hälften: **Muss**
+  (Zustand vom Server, Aktionen zurück) und **Kann** (Tokens, Attribute für Tastatur, Fokus und
+  Skript-Aufzeichnung). TopLogic garantiert Funktion, nicht Aussehen; der Konformitätstest prüft das Muss
+  und ist das Werkzeug des Kunden vor seinem Deploy.
 
 In allen Stufen gilt: Der Kunde fasst kein TopLogic-CSS an. Er legt Dateien daneben, und ein Update
 ändert seine Dateien nicht.
@@ -86,6 +88,25 @@ Das Design System besteht aus drei Dingen, und nur eines davon ist Gestaltung:
 **Und wenn ein Kunde eine eigene Marke mitbringt?** Dann wandert der Punkt „Marke“ auf dem Kreis, und das Tool der Stufe A (`tl-ds derive`) muss die acht Kategorien um ihn herum neu verteilen — die vier Bedeutungen bleiben, wo sie sind, weil Rot, Gelb, Grün und Cyan ihre Bedeutung aus dem Farbton beziehen. Das Gate prüft danach dieselben Abstände wie bei uns. Eine Marke, die auf einer Bedeutung liegt (ein rotes Logo), meldet das Gate; der Kunde entscheidet dann in Stufe B, ob seine Fehlerfarbe ein anderes Rot wird. So gebaut in `derive` (25.09.): die Lücken zwischen den festen Tönen bekommen reihum den nächsten Punkt, immer die Lücke mit dem größten verbleibenden Abstand; reicht der Kreis nicht für 20°, sinkt der Abstand in 2°-Schritten, und das steht als Hinweis im Bericht. Das Grau bleibt dabei auf unseren 28 Helligkeiten und wechselt nur den Ton — warm 70°, kühl 250°, neutral ohne Chroma.
 
 **Dynamisch heißt: eine Rolle wählen.** `x -> if($x.overdue, 'error', 'category-3')` ist dynamisch und bleibt im Vokabular. Ein Ausdruck, der einen Hex-Wert liefert, verlässt es — und mit ihm Dunkelmodus, Kontrast und Kundenstufe A, die den Wert nie zu sehen bekommt.
+
+## 2b · Zwei Wege, kein dritter
+
+Ein Kunde, der TopLogic 8 als **Shell** nutzt, hält den Draht-Teil der Verträge ein — gleich, ob er
+unsere Komponenten nimmt oder MBUI, MUI oder eine eigene Bibliothek mitbringt. Der Draht ist klein:
+welcher Zustand kommt, welche Kommandos zurückgehen, wie Dialoge den Stapel bedienen. Aussehen, CSS
+und Bibliothek sind frei. Dafür bekommt er Layouts, Formulare, Dialoge, Validierung, Rechte,
+Skript-Tests und Theming vom Server, und ein Framework-Update ist prüfbar: Der Konformitätstest zeigt
+Brüche, bevor er ausliefert.
+
+Wer sich daran nicht halten will, weil seine Konventionen abweichen oder die Pflege ihm zu viel ist,
+bringt sein eigenes Frontend mit und bindet es **headless** über REST/OpenAPI an. Dann ist die UI
+nicht unser Thema, und die API ist der Vertrag.
+
+Einen dritten Weg — Shell nutzen, Draht ignorieren — gibt es nicht, und einen Schalter, der das
+UI-System abschaltet, gibt es nicht: Er schaltete die falsche Schicht ab, wäre erst bei 77 von 77
+ersetzten Controls wahr und ließe keinen Zustand übrig, den wir garantieren könnten. Die Grenze liegt
+nicht zwischen flexibel und unflexibel, sondern zwischen „hat einen Vertrag“ und „hat keinen“.
+Begründung in `docs/skalen.md` „Zwei Wege, kein dritter“.
 
 ## 3 · Die Regeln
 

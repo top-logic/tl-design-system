@@ -1,6 +1,6 @@
 # Stand
 
-**Letzte Sitzung:** 2026-09-25 (`derive` fertig, Pill-PR offen) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-09-25 (`derive` fertig, Pill-PR offen, Zwei Wege entschieden) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`
 
@@ -21,6 +21,14 @@ Blöcke `/* --- Name --- */` mit seinem Zeilenstand; kein Block wächst, ein abg
 neue Blöcke von außen stehen unter `unlisted` in `node tools/inventory.mjs`, bis ihre Welle sie holt.
 Fremdzuwachs hebt einen Block mit Ticketvermerk, nicht die Datei. Begründung in `docs/skalen.md` „Die
 Ratsche misst Blöcke“, Folie 32a.
+
+**Entschieden (25.09.): Zwei Wege, kein dritter.** Wer TopLogic als Shell nutzt, hält den Draht-Teil
+der Verträge ein (Muss: Zustand, Aktionen, Stapel; Kann: Tokens, Attribute), gleich welche Bibliothek er
+mitbringt; wer das nicht will, geht headless über REST/OpenAPI. Kein Admin-Schalter, der das UI-System
+abschaltet; stattdessen ersetzt ein Kundenmodul benannte Ressourcen, und ein Theme darf ein UI-Paket
+benennen. Anlass: Mercedes-Benz mit MBUI, Gespräch mit Bernhard. Begründung in `docs/skalen.md` „Zwei
+Wege, kein dritter“, Folie 13b, Übersicht §2b. Spec `2026-09-25-ui-paket-design.md` steht noch aus;
+erster Engine-Punkt: ob ein Kundenmodul einen benannten Eintrag der `ClientResources` ersetzen kann.
 
 **Entschieden (24.09.): Themes sind eine dritte Achse.** `data-tl-theme="<id>"` am `html` neben Modus und
 Dichte; ohne Attribut gilt TopLogic auf `:root`, ein Kundentheme ist eine mit `derive` erzeugte Datei unter

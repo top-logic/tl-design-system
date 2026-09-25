@@ -180,6 +180,13 @@ und ein **Konformitätstest je Vertrag**, den eine Kundenkomponente bestehen kan
 garantiert dann Funktion, nicht Aussehen. Mischbetrieb bleibt möglich, indem der Kunde seine
 Tokens über Stufe B auf unsere übersetzt.
 
+> **Fortgeschrieben 25.09.:** Der Vertrag ist geteilt in **Muss** (Zustand, Aktionen, Stapel) und
+> **Kann** (Tokens, Attribute für Tastatur, Fokus und Skript-Aufzeichnung); der Konformitätstest prüft
+> das Muss und ist das Werkzeug des Kunden. Stufe C ist der Shell-Weg mit fremder Bibliothek und steht
+> auf A oder B; ein Kundenmodul ersetzt benannte Ressourcen statt eines Schalters. Wer den Draht nicht
+> will, geht headless über REST/OpenAPI. Begründung: `docs/skalen.md` „Zwei Wege, kein dritter“; Spec
+> folgt als `2026-09-25-ui-paket-design.md`.
+
 ### Miniprojekt, abtrennbar: Token-Mapper
 
 Ein Browserwerkzeug im Repo: Import der Kunden-Tokens (DTCG-JSON, CSS-Variablen oder

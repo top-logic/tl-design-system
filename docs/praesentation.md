@@ -231,6 +231,22 @@ Der Kunde schreibt eine JSON: seine Farbe, warm oder kühl, seine Schrift. `deri
 
 ---
 
+## 13b · Zwei Wege, kein dritter
+
+**Shell oder Headless.** Wer TopLogic als Shell nutzt, hält den Draht ein: Zustand rein, Kommando raus — gleich, welche Komponentenbibliothek er mitbringt. Wer das nicht will, bringt sein eigenes Frontend mit und bindet es headless über REST/OpenAPI an.
+
+| | Shell | Headless |
+|---|---|---|
+| Der Kunde bringt | Komponenten, die den Vertrag erfüllen — MBUI, MUI, was er will | das ganze Frontend |
+| TopLogic liefert | Layouts, Formulare, Dialoge, Rechte, Tests, Theming | Daten, Modell, Rechte, Logik |
+| Beim Update | der Konformitätstest zeigt Brüche vor dem Deploy | die API bleibt stabil |
+
+**Die Einschränkung ist klein: der Draht, nicht das Aussehen. Es gibt keinen Schalter, der das UI-System abschaltet — „aus“ ist kein Zustand, den wir garantieren können.**
+
+> Sprechnotiz: Die Grenze liegt nicht zwischen flexibel und unflexibel, sondern zwischen „hat einen Vertrag“ und „hat keinen“.
+
+---
+
 ## 14 · Der Weg: fünf Wellen
 
 **Kleinste Bausteine zuerst, das Gerüst zuletzt. Keine Welle beginnt, bevor die vorherige grün ist.**
@@ -281,6 +297,7 @@ Innerhalb einer Welle keine Reihenfolge — parallel ist möglich. Der Button is
 | 11 | Ausgabe eines roten Gates, daneben die grüne Zusammenfassung |
 | 12 | Die Blockliste der Ratsche mit einem gestrichenen Eintrag |
 | 13 | Dieselbe Demo-App im TopLogic-Theme und mit Kundenprimitiv nebeneinander |
+| 13b | Zwei Spalten „Shell“ und „Headless“: links TopLogic-Layout mit fremden Komponenten darin, rechts ein fremdes Frontend mit einem Pfeil auf die API; kein Schalter dazwischen |
 | 14 | Die fünf Wellen als Zeitstrahl ohne Datumsangaben, Welle 0 und 1 markiert |
 | 15 | Ein Zeilenausschnitt aus einer Komponente: nur Rollen, nur Attribute |
 
