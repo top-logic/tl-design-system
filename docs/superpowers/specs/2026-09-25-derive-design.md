@@ -59,14 +59,15 @@ Alles in `design-system/tools/lib/`, ohne Abhängigkeiten, OKLCH wie bisher.
 
 | Schritt | Funktion | Was sie tut |
 |---|---|---|
-| Marke | `markenRampe` (bestehend, umbenannt) | Aus der Saat die Stufen für `surface-brand`, `-hover`, `-active`, `-subtle`, `-subtle-hover`, `text-link`, `-hover`, `border-interactive`, `focus-ring`, beide Modi. Die Regeln (Hover-, Active-, Dunkel-Schritte, Link-Regel) bleiben, wie in `color.mjs` dokumentiert. |
+| Marke | `markenRollen(saatHex, gruende)` (neu) | Aus der Saat die Stufen für `surface-brand`, `-hover`, `-active`, `-subtle`, `-subtle-hover`, `text-link`, `-hover`, `border-interactive`, `focus-ring`, beide Modi. Die Regeln (Hover-, Active-, Dunkel-Schritte, Link-Regel) bleiben, wie in `color.mjs` dokumentiert. |
 | Grau | `grauRampe(temperatur, stufen)` (neu) | Für jede der 28 Stufen: L aus unserer Rampe, H = 70° (warm) oder 250° (cool), C = 0,008 konstant, bei `neutral` C = 0 und kein Ton. |
-| Kategorien | `kategorienVerteilen(markenTon, bedeutungsToene)` (neu) | Acht Farbtöne auf dem Kreis, mindestens 20° zueinander, zur Marke und zu jeder der vier Bedeutungen (Rot, Gelb, Grün, Cyan bleiben fest). Je Ton `subtle` auf L 0,955 hell / 0,27 dunkel, `border` als hellster Wert mit 3,0 auf `surface-base` und `surface-layer`. Findet der Kreis keine acht Plätze mit 20°, wird der Abstand schrittweise gesenkt und das gemeldet. |
+| Kategorien | `kategorienVerteilen(blockiert, anzahl, mindest)` und `kategorieRollen(tonGrad, gruende)` (neu) | Acht Farbtöne auf dem Kreis, mindestens 20° zueinander, zur Marke und zu jeder der vier Bedeutungen (Rot, Gelb, Grün, Cyan bleiben fest). Je Ton `subtle` auf L 0,955 hell / 0,27 dunkel, `border` als hellster Wert mit 3,0 auf `surface-base` und `surface-layer`. Findet der Kreis keine acht Plätze mit 20°, wird der Abstand schrittweise gesenkt und das gemeldet. |
 | Beschriftungen | `beschriftungAbleiten` (bestehend) | Für jede `derived`-Rolle aus `tokens.json`, deren Fläche sich ändert, mit denselben Kandidaten wie dort. |
 | Nachführen | `aufKontrast` (bestehend) | Zum Schluss, über Marke, Grau, Kategorien und Beschriftungen hinweg: jede **gerechnete** Farbrolle, die ein Paar der Paarliste noch verfehlt, wird um den kleinsten Helligkeitsschritt geschoben, bis es hält; jede Verschiebung ist ein Hinweis. **Gelieferte Werte werden nie geschoben** — sie bleiben stehen und werden zum Befund. Ein Durchgang genügt: kein Vordergrund der Paarliste ist anderswo Grund (`pairs.test.mjs` hält das fest). |
 
-Die drei Altnamen in `color.mjs` (`markenRampe`, `rampeAnwenden`, `nurHex`) werden vorher auf die
-heutigen Rollennamen gebracht; das war ein offener Punkt in `STATUS.md`.
+Die drei Altnamen in `color.mjs` (`markenRampe`, `rampeAnwenden`, `nurHex`) sind entfernt — sie
+hatten keinen Aufrufer mehr; `markenRollen` ersetzt sie. Damit ist der Offenpunkt aus `STATUS.md`
+erledigt.
 
 ## Ausgabe
 
@@ -91,6 +92,7 @@ Eine Datei `<theme>.theme.css`, Pfad als zweites Argument, Standard neben der JS
 
 /* Report
    finding  light: status-error-text on surface-base = 2.77, required 4.5, suggestion #C4484C
+   finding  light: status-error-text on surface-layer = 2.89, required 4.5, suggestion #C94D50
    note     light: text-link in der Helligkeit nachgeführt, damit 4,5 auf dem Grund hält (#E8541E → #BE3B00)
 */
 ```
@@ -100,8 +102,11 @@ Regeln:
 * **Beide Blöcke tragen dieselben Farbrollen:** eine Rolle, die in einem Modus abweicht, steht in
   beiden, sonst gälte ihr heller Wert auch im Dunkeln. Der erste Block ordnet Farbrollen zuerst,
   Maß-Rollen zuletzt.
-* Farbrollen werden nur angefasst, wenn die Eingabe Farbe anfasst (`color.brand`, `color.gray`,
-  `color.category`); eine Datei mit nur `font` oder `measure` schreibt keine Farbrolle.
+* Die **Kategorien** werden nur neu verteilt, wenn die Eingabe `color.brand`, `color.gray` oder
+  `color.category` trägt; eine gelieferte Bedeutungsfamilie (`color.red` …) zieht ihre Farbrollen
+  sehr wohl nach, ohne die Kategorien zu bewegen. Eine Datei mit nur `font` oder `measure` schreibt
+  keine Farbrolle.
+* Effektrollen (Schatten, Scrim) stehen wie Farbrollen in beiden Blöcken, sobald sie abweichen.
 * Nur Rollen, deren Wert von TopLogic abweicht. Was der Kunde nicht anfasst, fehlt und fällt über
   die Kaskade auf `:root` zurück. Kein `var()`, nur Werte.
 * Welche Rollen betroffen sind, liest `derive` aus `tokens.json`: jede Rolle, die eine geänderte

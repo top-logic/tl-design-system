@@ -184,7 +184,7 @@ Tokens über Stufe B auf unsere übersetzt.
 
 Ein Browserwerkzeug im Repo: Import der Kunden-Tokens (DTCG-JSON, CSS-Variablen oder
 Figma-Export), visuelle Zuordnung seiner Stufen auf unsere Rollen mit Live-Kontrastanzeige, Export
-der fertigen `customer.primitives.json`. Macht bestehende Kunden-Styleguides schnell anschließbar.
+der fertigen `<theme>.primitives.json`. Macht bestehende Kunden-Styleguides schnell anschließbar.
 Grob; wird ausgearbeitet, sobald `derive` steht.
 
 ## 4 · Migration der Komponenten

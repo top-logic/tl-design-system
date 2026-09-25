@@ -280,7 +280,8 @@ export const GRAU_TON = { warm: 70, cool: 250 };
 
 /**
  * Eine Graurampe auf den Helligkeiten der TopLogic-Rampe. Nur der Farbton wechselt, nie L —
- * deshalb hält jedes Kontrastpaar, das mit unserem Grau hält, auch mit diesem.
+ * jede Helligkeit der TopLogic-Rampe bleibt; was ein Paar dennoch verfehlt (OKLCH-L ist nicht
+ * WCAG-Leuchtdichte), führt derive nach.
  */
 export function grauRampe(temperatur, stufen) {
   if (!(temperatur === 'neutral' || temperatur in GRAU_TON)) throw new Error(`Grau-Temperatur unbekannt: ${temperatur}`);

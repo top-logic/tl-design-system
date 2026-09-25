@@ -728,9 +728,11 @@ Die Skala hat deshalb zwei Schichten:
 
 70 Farb- und 30 Maß-Primitive tragen 80 Rollen je Modus.
 
-**Warum das mehr ist als Ordnung: Es ist die Eingriffsstelle für Kundenprojekte.** Ein Kunde, der seine Hausfarbe einsetzen will, überschreibt `--tl-blue-49` — und `surface-brand`, `text-link`, `focus-ring` und `border-interactive` ziehen mit, ohne dass eine Klasse angefasst wird. Deshalb **löst das erzeugte CSS die Referenzen nicht auf**: Dort steht `var(--tl-blue-49)`, nicht `#0B5ED7`. Aufgelöst wird nur zum Rechnen, wo Kontraste echte Werte brauchen. (Der Kunde **schreibt** seine Hausfarbe als Primitive in seine JSON; was `derive` daraus erzeugt, sind Rollen mit Werten — siehe „Themes: eine dritte Achse“, Korrektur vom 25.09.)
+**Warum das mehr ist als Ordnung: Es ist die Eingriffsstelle für Kundenprojekte.** Ein Kunde, der seine Hausfarbe einsetzen will, schreibt sie als Primitive in seine JSON — `derive` rechnet daraus die Rollen (`surface-brand`, `text-link`, `focus-ring`, `border-interactive` und was daran hängt) und schreibt sie als Werte in seine Theme-Datei. Keine Klasse wird angefasst, und keine Rolle wird vergessen, weil die Referenzen sagen, welche mitziehen muss.
 
-**Eine Ausnahme, benannt:** Die Beschriftungen auf Flächen (`--tl-text-on-*`, `--tl-icon-on-*`) stehen als gerechnete Hex-Werte in `tokens.css`. Überschreibt ein Kunde nur `--tl-blue-49`, folgt `surface-brand`, die Beschriftung darauf aber nicht — auf einer hellen Hausfarbe wäre Weiß unlesbar. Deshalb rechnet `derive` (Kundenstufe A) die Beschriftungen mit und schreibt sie in eine Datei, die **nach** `tokens.css` geladen wird. Die Ladereihenfolge ist Teil des Kundenvertrags, nicht Kosmetik.
+Im Paket selbst **löst das erzeugte CSS die Referenzen nicht auf**: In `tokens.css` steht `var(--tl-blue-49)`, nicht `#0B5ED7`, weil die Primitivschicht der Ort der Werte ist und die Rollenschicht nur auf sie zeigt — eine Datei, zwei Schichten, an einer Stelle geändert. Aufgelöst wird nur zum Rechnen, wo Kontraste echte Werte brauchen.
+
+**Eine Ausnahme, benannt:** Die Beschriftungen auf Flächen (`--tl-text-on-*`, `--tl-icon-on-*`) stehen als gerechnete Hex-Werte in `tokens.css`. Ändert ein Kunde nur den Markenton, folgt `surface-brand` über die Referenz, die Beschriftung darauf aber nicht — auf einer hellen Hausfarbe wäre Weiß unlesbar. Deshalb rechnet `derive` (Kundenstufe A) die Beschriftungen mit und schreibt sie in eine Datei, die **nach** `tokens.css` geladen wird. Die Ladereihenfolge ist Teil des Kundenvertrags, nicht Kosmetik.
 
 Die Primitivnamen werden **abgeleitet, nicht vergeben** (`design-system/tools/lib/naming.mjs`): Familie aus dem Farbton, Stufe aus der Helligkeit, wobei eine höhere Stufe dunkler ist. Kollidieren zwei Werte auf derselben Stufe, rückt der zweite auf — sonst hinge die Zuordnung an der Reihenfolge, in der die Werte hereinkommen.
 
@@ -817,9 +819,10 @@ steht als Hinweis im Bericht. Gelieferte Werte werden nie geschoben — sie blei
 zum Befund. So gilt die Regel ohne Ausnahme: ein Befund entsteht nur aus einem gelieferten Wert,
 ein verfehltes Paar aus einem gerechneten ist ein Fehler in `derive` (Exit 3).
 
-**Verworfen:** Grau als eigener Hex (Stufe B kann das weiterhin); Grau in Richtung der Marke (ein
-orangefarbenes Grau ist ein warmes Grau, aber ein grünes Grau ist kein Grau mehr) — darum feste
-Töne, 70° und 250°, statt „Markenton und Gegenton“.
+**Verworfen:** eine Graurampe aus einer einzelnen Kundenfarbe rechnen (wer sein Grau selbst kennt,
+liefert in Stufe A ein Objekt Stufe → Hex, und das bleibt unverändert stehen); Grau in Richtung der
+Marke (ein orangefarbenes Grau ist ein warmes Grau, aber ein grünes Grau ist kein Grau mehr) —
+darum feste Töne, 70° und 250°, statt „Markenton und Gegenton“.
 
 ### Abstände: sieben Stufen, und eine fehlte
 

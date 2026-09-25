@@ -11,8 +11,10 @@ wurde am 23.09. gemerged (Merge-Commit `0fa0085060`). Der Weg dahin: drei Build-
 (`1041fb64d4` Token-Audit kennt `tokens.css`, `64f5c32b33` Resource-Keys, `2900f5ded1` der Build erzeugt
 `messages_en.properties` aus dem JavaDoc) und zwei Merges von master (`9c3d023936`: #29626 kollabierende
 Toolbar übernimmt den Kollaps zum Icon, `collapseToIcon`/`AppShellContext` gestrichen; `b88ac7dbb1`: #29497
-Bridge-Tooltips, #29596 `rootClassName`, Audit-Tests im master-Stand). Worktree steht auf `master`, der
-Welle-1-Branch ist gelöscht. Ratsche: 79 Blöcke, Summe 7404 Zeilen — alles Fremdzuwachs seit 5766.
+Bridge-Tooltips, #29596 `rootClassName`, Audit-Tests im master-Stand). Der Worktree stand danach auf `master`, der
+Branch dieses Merges ist gelöscht. Ratsche damals: 79 Blöcke, Summe 7404 Zeilen — alles Fremdzuwachs seit 5766.
+Seither ist der Worktree weitergezogen: er steht auf `CWS/CWS_29617_design_system_welle_1_avatar`, und die
+Ratsche ist gegen diesen Stand kalibriert (siehe unten, vor „Jetzt“).
 
 **Entschieden (24.09.): die Ratsche misst Blöcke.** `test/ratchet.json` führt unter `blocks` jeden der 79
 Blöcke `/* --- Name --- */` mit seinem Zeilenstand; kein Block wächst, ein abgeschnittener wird gestrichen,
