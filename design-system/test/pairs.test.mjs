@@ -1,0 +1,25 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { kontrastPaare, werte } from '../tools/lib/pairs.mjs';
+import { resolve } from '../tools/resolve.mjs';
+import { ratio } from '../tools/lib/contrast.mjs';
+
+const P = JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.url)));
+const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)));
+const R = resolve(P, T);
+
+test('die Paarliste nennt jede Rolle, die tokens.test prüft, und nur vorhandene Rollen', () => {
+  const paare = kontrastPaare(T);
+  const namen = new Set(paare.flatMap((p) => [p.fg, p.bg]));
+  for (const n of ['text-primary', 'text-link', 'focus-ring', 'status-error-text', 'category-1-border', 'text-on-brand'])
+    assert.ok(namen.has(n), n);
+  for (const n of namen) assert.ok(n in T.color.light || n in T.derived.light, `${n} unbekannt`);
+});
+
+test('jedes Paar der Liste trägt in beiden Modi im Paket', () => {
+  for (const mode of ['light', 'dark']) for (const { fg, bg, soll } of kontrastPaare(T)) {
+    const ist = ratio(werte(R, mode, fg), werte(R, mode, bg));
+    assert.ok(ist >= soll, `${mode}: ${fg} auf ${bg} = ${ist.toFixed(2)}, gefordert ${soll}`);
+  }
+});
