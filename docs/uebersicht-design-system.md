@@ -58,6 +58,24 @@ Stellen gebraucht und die vergessene fünfte wäre der Fehler gewesen. Jetzt üb
 In allen Stufen gilt: Der Kunde fasst kein TopLogic-CSS an. Er legt Dateien daneben, und ein Update
 ändert seine Dateien nicht.
 
+## 2a · Das Vokabular ist der Vertrag, nicht das Design
+
+Das Design System besteht aus drei Dingen, und nur eines davon ist Gestaltung:
+
+| | Was es ist | Wer es ändert |
+|---|---|---|
+| **Werte** | Primitive: `blue-49: #0B5ED7`, `size-4: 1rem` | der Kunde (Stufe A), oder Stufe B für einzelne Rollen |
+| **Vokabular** | Rollen: `surface-brand`, `status-error-text`, `category-3`; Zustände: `aria-pressed`, `aria-busy`; Erscheinungen: `primary`, `ghost` | TopLogic, als Entscheidung mit Gate |
+| **Komponenten** | `tl-button`, `tl-pill`, `tl-avatar` — lesen Rollen, kennen keine Werte | TopLogic; oder der Kunde (Stufe C) gegen denselben Vertrag |
+
+**Das Vokabular ist die Schnittstelle zwischen Engine und Paket.** Die Engine sagt „dieser Wert trägt die Rolle `warning`“, „dieser Button ist `ghost`“, „dieser Balken ist `aria-busy`“ — und nichts über Farben oder Pixel. Das Paket sagt, wie `warning` aussieht, hell und dunkel, und beweist es im Gate. Ein Kundendesign (Stufe A, B oder ein ganz eigenes Paket) **implementiert dasselbe Vokabular mit anderen Werten** — genau wie eine Kundenkomponente in Stufe C denselben Zustandsvertrag mit anderem Markup implementiert. Deshalb ist die Frage „Design System *für* TopLogic oder das *einzige mögliche*?“ falsch gestellt: Das Vokabular ist für TopLogic; das Design ist austauschbar.
+
+**Warum das Vokabular geschlossen ist und im Code steht.** Eine Rolle ist nur dann eine Zusage, wenn jemand sie einlöst: das Paket mit zwei Tokens je Modus, das Gate mit dem Kontrastbeweis, die Komponenten mit der Abbildung Rolle → Klasse, das Specimen und die Doku. Eine Rolle, die eine Anwendung per Konfiguration hinzufügt, hat nichts davon — sie ist ein Wort ohne Deckung, und in der Oberfläche eine Farbe, die keinem Modus folgt und durch kein Gate ging. Das ist die *zweite Wahrheit*, die das Design System abstellt (§1). Deshalb stehen Rollen als Enum in der Engine und als Tokens im Paket, und ein Test hält beide Listen deckungsgleich. Eine neue Rolle ist eine Entscheidung von TopLogic: Tokens, Gate, Specimen, Vertrag — an einer Stelle, für alle Leser zugleich.
+
+**Die acht Kategorien sind gerechnet, nicht gewählt.** Dreizehn getönte Flächen (Marke, vier Bedeutungen, acht Kategorien) teilen sich 360° Farbton; die Kategorien halten 20° zueinander und zu jeder Bedeutung, damit keine an Fehlerrot oder Erfolgsgrün erinnert. Eine neunte hat keinen Platz mehr. Wer mehr als acht Werte unterscheiden muss, unterscheidet sie im Text — das gilt für jede endliche Palette, auch für zwölf. Pill und Avatar lesen dieselben acht, die Diagramme der Welle 5 auch: Ein Projekt sieht als Pille, als Avatar-Initiale und als Diagrammreihe gleich aus.
+
+**Dynamisch heißt: eine Rolle wählen.** `x -> if($x.overdue, 'error', 'category-3')` ist dynamisch und bleibt im Vokabular. Ein Ausdruck, der einen Hex-Wert liefert, verlässt es — und mit ihm Dunkelmodus, Kontrast und Kundenstufe A, die den Wert nie zu sehen bekommt.
+
 ## 3 · Die Regeln
 
 | Regel | Was sie konkret heißt |
@@ -121,7 +139,7 @@ Beide Systeme koexistieren, bis die letzte Welle durch ist: die alte XML-Tokenko
 | Text-Varianten, Ton, Pille, neue Theme-Tokens (#29596, Phase 2) | `variant` auf `.tl-type-*` abbilden, `tone` auf `--tl-text-*` und `--tl-status-*-text`, `appearance=pill` auf die Pill der Welle 1. Von den fünf neuen Tokens nur eine Display-Schrift als Primitive; Blur, Glow, Hintergrundbild bleiben App-CSS über `css-class`. Reihenfolge: nach Welle 1. |
 | Chips, Segmented, Slider, Switch (Phase 4) | Das sind Komponenten der Welle 2. Im Paket bauen, nicht in `tlReactControls.css`. |
 | Übergangs-Zustandsklassen (Phase 6) | `data-tl-state="opening|closing"` statt Klassen, Dauern und Kurven aus den Motion-Tokens. Mit Welle 4. |
-| `<color token>` validieren (#29606) | Der `DesignTokenService` als Naht ist richtig. Bitte vokabular-neutral bauen (Art plus Namen aus einem Provider), damit die Pill in Welle 1 unsere Rollen anbietet statt `support-*`. Kein neues `support-info`, `status-info-*` existiert bereits. Sonst landet das alte Vokabular in Kundenmodellen, und jede Welle, die ein altes Token löscht, bricht sie. |
+| `<color token>` validieren (#29606) | **Überholt am 24.09. durch „Rolle statt Farbe“** (Welle 1, Pill, PR !1694): Eine Konfiguration benennt kein Token mehr, sondern eine Rolle aus dem Vokabular (§2a). Das Token-Register fällt mit seinem letzten Leser; die Rollen bietet das Enum `ValueColor` im Modell-Editor an. Begründung: `docs/skalen.md` „Pill: Rolle statt Farbe“. |
 | Namensraum `--tl` | `--tl-item-index` und `--tlGrid-gap` aus #29597 stehen auf der Einfang-Liste; sie werden in Welle 4 zu Tokens oder umbenannt. Neues bitte ohne `--tl`-Präfix, sonst schlägt die Ratsche an. |
 
 ## 6 · Wo alles liegt
