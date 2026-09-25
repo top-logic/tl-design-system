@@ -149,3 +149,23 @@ test('ohne Befund: Exit 0 und keine Findings im Kopf', () => {
   assert.equal(r.status, 0, r.stderr);
   assert.match(readFileSync(r.datei, 'utf8'), /Findings: 0 pairs/);
 });
+
+test('eine unschreibbare Ausgabe endet mit Exit 2, nichts geschrieben', () => {
+  const json = { theme: 'sauber', color: { brand: '#0B5ED7' } };
+  const dir = mkdtempSync(join(tmpdir(), 'derive-'));
+  const eingabe = join(dir, 'kunde.primitives.json');
+  writeFileSync(eingabe, JSON.stringify(json));
+  const ausgabe = join(dir, 'does-not-exist', 'out.css');
+  const r = spawnSync(process.execPath, [CLI, eingabe, ausgabe], { encoding: 'utf8' });
+  assert.equal(r.status, 2, r.stderr);
+  assert.match(r.stderr, /does-not-exist[/\\]out\.css/);
+  assert.ok(!existsSync(ausgabe));
+});
+
+test('eine unbekannte Option endet mit Exit 2, Aufruf auf der Konsole, nichts geschrieben', () => {
+  const r = lauf(probe, '--stric');
+  assert.equal(r.status, 2, r.stderr);
+  assert.match(r.stderr, /unbekannte Option: --stric/);
+  assert.match(r.stderr, /Aufruf: node tools\/derive\.mjs/);
+  assert.ok(!existsSync(r.datei));
+});

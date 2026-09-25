@@ -1,11 +1,14 @@
 // tl-ds derive: ein Kundentheme aus einer Primitivdatei. Rechnet, was fehlt; lässt, was geliefert
 // ist; schreibt nur Rollen, die von TopLogic abweichen; meldet, was ein Paar verfehlt.
 // Spec: docs/superpowers/specs/2026-09-25-derive-design.md
+import { readFileSync, writeFileSync } from 'node:fs';
+import { dirname, join, basename } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { resolve, primitives } from './resolve.mjs';
 import { grauRampe, kategorienVerteilen, kategorieRollen, markenRollen, beschriftungAbleiten, hexZuOklch, aufKontrast }
   from './lib/color.mjs';
 import { kontrastPaare, werte } from './lib/pairs.mjs';
-import { leseThemeEingabe } from './lib/theme-input.mjs';
+import { leseThemeEingabe, ThemeEingabeFehler } from './lib/theme-input.mjs';
 import { ratio } from './lib/contrast.mjs';
 
 const REF = /^\{([a-z0-9-]+)\}$/;
@@ -184,17 +187,19 @@ function css(theme, quelle, rollen, befunde, hinweise) {
   return out;
 }
 
-// CLI: node tools/derive.mjs <eingabe.json> [<ausgabe.css>] [--strict]
-import { readFileSync, writeFileSync } from 'node:fs';
-import { dirname, join, basename } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { ThemeEingabeFehler } from './lib/theme-input.mjs';
+// Aufruf: node tools/derive.mjs <eingabe.json> [<ausgabe.css>] [--strict]
+const AUFRUF = 'Aufruf: node tools/derive.mjs <theme>.primitives.json [<ausgabe>.css] [--strict]';
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const args = process.argv.slice(2);
+  for (const a of args) if (a.startsWith('--') && a !== '--strict') {
+    console.error(`unbekannte Option: ${a}`);
+    console.error(AUFRUF);
+    process.exit(2);
+  }
   const strict = args.includes('--strict');
   const [eingabePfad, ausgabeArg] = args.filter((a) => !a.startsWith('--'));
-  if (!eingabePfad) { console.error('Aufruf: node tools/derive.mjs <theme>.primitives.json [<ausgabe>.css] [--strict]'); process.exit(2); }
+  if (!eingabePfad) { console.error(AUFRUF); process.exit(2); }
   const hier = dirname(fileURLToPath(import.meta.url));
   const P = JSON.parse(readFileSync(join(hier, '../src/primitives.json'), 'utf8'));
   const T = JSON.parse(readFileSync(join(hier, '../src/tokens.json'), 'utf8'));
@@ -212,6 +217,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   for (const h of ergebnis.hinweise) console.log(`Hinweis ${h}`);
   if (strict && ergebnis.befunde.length) { console.error(`${ergebnis.befunde.length} Befund(e), --strict: nichts geschrieben`); process.exit(1); }
   const ausgabe = ausgabeArg ?? join(dirname(eingabePfad), `${ergebnis.theme}.theme.css`);
-  writeFileSync(ausgabe, ergebnis.css);
+  try { writeFileSync(ausgabe, ergebnis.css); }
+  catch (e) { console.error(`${ausgabe}: ${e.message}`); process.exit(2); }
   console.log(`geschrieben: ${ausgabe}`);
 }
