@@ -728,7 +728,7 @@ Die Skala hat deshalb zwei Schichten:
 
 70 Farb- und 30 Maß-Primitive tragen 80 Rollen je Modus.
 
-**Warum das mehr ist als Ordnung: Es ist die Eingriffsstelle für Kundenprojekte.** Ein Kunde, der seine Hausfarbe einsetzen will, überschreibt `--tl-blue-49` — und `surface-brand`, `text-link`, `focus-ring` und `border-interactive` ziehen mit, ohne dass eine Klasse angefasst wird. Deshalb **löst das erzeugte CSS die Referenzen nicht auf**: Dort steht `var(--tl-blue-49)`, nicht `#0B5ED7`. Aufgelöst wird nur zum Rechnen, wo Kontraste echte Werte brauchen.
+**Warum das mehr ist als Ordnung: Es ist die Eingriffsstelle für Kundenprojekte.** Ein Kunde, der seine Hausfarbe einsetzen will, überschreibt `--tl-blue-49` — und `surface-brand`, `text-link`, `focus-ring` und `border-interactive` ziehen mit, ohne dass eine Klasse angefasst wird. Deshalb **löst das erzeugte CSS die Referenzen nicht auf**: Dort steht `var(--tl-blue-49)`, nicht `#0B5ED7`. Aufgelöst wird nur zum Rechnen, wo Kontraste echte Werte brauchen. (Der Kunde **schreibt** seine Hausfarbe als Primitive in seine JSON; was `derive` daraus erzeugt, sind Rollen mit Werten — siehe „Themes: eine dritte Achse“, Korrektur vom 25.09.)
 
 **Eine Ausnahme, benannt:** Die Beschriftungen auf Flächen (`--tl-text-on-*`, `--tl-icon-on-*`) stehen als gerechnete Hex-Werte in `tokens.css`. Überschreibt ein Kunde nur `--tl-blue-49`, folgt `surface-brand`, die Beschriftung darauf aber nicht — auf einer hellen Hausfarbe wäre Weiß unlesbar. Deshalb rechnet `derive` (Kundenstufe A) die Beschriftungen mit und schreibt sie in eine Datei, die **nach** `tokens.css` geladen wird. Die Ladereihenfolge ist Teil des Kundenvertrags, nicht Kosmetik.
 
@@ -753,6 +753,13 @@ Bedeutung (ein rotes Logo), meldet `derive` das als Befund und rechnet trotzdem;
 in Stufe B, ob seine Fehlerfarbe ein anderes Rot wird. Der Test `tokens.test.mjs` „Kategorien trennen
 sich“ läuft dann über die erzeugten Primitive genauso wie über unsere.
 
+**Wie verteilt wird:** Die Lücken zwischen den festen Tönen (Marke, vier Bedeutungen, gelieferte
+Kategorien) bekommen reihum den nächsten Punkt, immer die Lücke, in der der Abstand danach am
+größten bleibt; die Punkte einer Lücke liegen gleichmäßig. Reicht der Kreis nicht für 20°, sinkt
+der Abstand in 2°-Schritten, und das steht als Hinweis im Bericht. Neu verteilt wird nur, wenn die
+Eingabe Farbe anfasst: `color.brand`, `color.gray` oder `color.category`. Eine Datei, die
+ausschließlich `font` oder `measure` ändert, lässt jede Farbrolle in Ruhe.
+
 **Verworfen:** Kategorien als feste Werte auch für Kunden (kollidieren mit jeder Marke, die nicht
 blau ist); Kategorien aus der Marke ableiten (acht Abstufungen einer Hausfarbe sind nicht
 unterscheidbar — die Kategorien müssen den ganzen Kreis nutzen, gerade weil die Marke einen Ton
@@ -775,19 +782,44 @@ Die Spec vom 17.09. kennt den Kunden nur als Tausch: `customer.primitives.css` n
 | | |
 |---|---|
 | Achse | `data-tl-theme="<id>"` am `html`. Ohne Attribut gilt das TopLogic-Theme; es steht auf `:root`. |
-| Kundentheme | eine erzeugte Datei je Theme, Selektoren `[data-tl-theme="acme"]` und `[data-tl-theme="acme"][data-tl-mode="dark"]`, geladen nach `tokens.css`. `derive` schreibt sie aus `acme.primitives.json`. |
+| Kundentheme | eine erzeugte Datei je Theme, `<id>.theme.css`, Selektoren `[data-tl-theme="acme"]` und `[data-tl-theme="acme"][data-tl-mode="dark"]`, geladen nach `tokens.css`. Sie trägt **Rollen mit Werten**, nur die, die von TopLogic abweichen; beide Blöcke dieselben Farbrollen. `derive` schreibt sie aus `acme.primitives.json`. |
 | Beschriftungen | `--tl-text-on-*` und `--tl-icon-on-*` werden je Theme × Modus gerechnet; darum sind sie die Datei, nicht der Kunde. |
-| Gate | Kontrast, Schichten und Namensraum laufen je Theme, mit derselben Paarliste wie für `tl`. Ein Kundentheme, das ein Paar verfehlt, wird nicht erzeugt. |
+| Gate | Die Paarliste (`tools/lib/pairs.mjs`) läuft über das Ergebnis. Gerechnete Werte bestehen sie immer, notfalls durch Nachführung in der Helligkeit, mit Hinweis; gelieferte dürfen sie verfehlen, der Befund steht im Bericht und im Dateikopf, `--strict` macht ihn zum Fehler. |
 | Engine | `UIThemeService` setzt künftig `data-tl-theme` statt `data-theme` und behält Nutzerwahl, Vererbung und Systemfolge. Vererbung wird zur Frage an `derive`, nicht an CSS: Was das Kundentheme nicht setzt, bleibt beim Wert von `:root`, weil die Kaskade es so löst. |
 | Ort der Definition | im Paket als JSON, nicht in XML. Die XML-Tokenkonfiguration entfällt mit den Wellen (Spec §4). Wie die Engine die Liste der verfügbaren Themes erfährt, entscheidet die Welle, die `derive` bringt. |
 
-**Warum ein Attribut:** Zustände sind Attribute, nicht Klassen — das gilt bereits für Modus und Dichte. Ein Theme ist ein Zustand der Seite. Die Klassen bleiben unberührt; keine liest ein Theme, jede liest Rollen. Das ist derselbe Grund, aus dem das erzeugte CSS Referenzen nicht auflöst: Der Eingriff bleibt in der Primitivschicht, nur jetzt unter einem Selektor statt auf `:root`.
+**Warum ein Attribut:** Zustände sind Attribute, nicht Klassen — das gilt bereits für Modus und Dichte. Ein Theme ist ein Zustand der Seite. Die Klassen bleiben unberührt; keine liest ein Theme, jede liest Rollen — der Eingriff steht unter einem Selektor statt auf `:root`. (Dass er die Rollen trägt und nicht die Primitive, ist die Korrektur vom 25.09. weiter unten.)
 
 **Verworfen:** ein Kundentheme, das TopLogic ersetzt (die Spec-Fassung: kann nicht umschalten, und eine Kundeninstallation verliert die Referenz, wie TopLogic aussieht); ein Theme je Datei-Ladereihenfolge (welches CSS zuletzt geladen wird, ist kein Nutzerzustand); Themes als Klassen am `body` (bricht die Attributregel und die Vor-dem-ersten-Paint-Logik, die `UIThemeService` schon am `html` setzt); Rollen je Theme in `tokens.json` (jedes Kundentheme wäre eine Änderung am Paket — genau das schließt der Kundenvertrag aus).
 
-**Als Test, sobald `derive` steht:** ein Test erzeugt aus einer zweiten Primitivdatei ein Theme `probe`, prüft, dass der Selektor `[data-tl-theme="probe"]` genau die überschriebenen Primitiven und die gerechneten Beschriftungen trägt, dass jede Rolle unter `probe` × hell und `probe` × dunkel die Paarliste besteht, und dass `:root` unverändert ist. Der bestehende Tausch-Test bleibt und wird zum Test des Falls „ohne Attribut".
+**Korrektur (25.09.): Rollen statt Primitive, Befund statt Verbot.** Die Familie `blue` trägt die Marke und die Kategorien 5 und 6 zugleich — eine Familie ist keine Rolle, und `derive` kann keine „Markenfamilie“ ersetzen. Rollennamen sind der Vertrag, Stufennamen sind intern: eine Rollen-Datei überlebt jede Umnummerierung, eine Primitiv-Datei verlöre die Marke lautlos. Und ein Kunde mit eigenem Styleguide bekommt seinen Styleguide, mit Hinweis: Was er schreibt, gilt; nur was wir rechnen, muss die Paarliste bestehen. Verworfen bleibt, was oben verworfen ist. Spec: `2026-09-25-derive-design.md`.
 
-**Was dadurch offen wird:** Spec §2 „Wurzel" nennt zwei Attribute und §3 Stufe A eine Datei auf `:root`; beides wird mit `derive` fortgeschrieben. Issue #13 (Kunden-Theming ohne Issue) ist damit für den Scope-Teil beantwortet.
+**Als Test (`derive.test.mjs`):** aus `test/fixtures/probe.primitives.json` entsteht das Theme `probe`; geprüft wird, dass die Datei genau die abweichenden Rollen trägt, beide Blöcke dieselben Farbrollen, `:root` und `dist/` unberührt, jede gerechnete Rolle die Paarliste besteht, die Kategorien 20° halten, der gelieferte Wert unter AA in Datei und Bericht steht und `--strict` ihn ablehnt. Der bestehende Tausch-Test bleibt und wird zum Test des Falls „ohne Attribut".
+
+**Was dadurch offen wird:** Spec §2 „Wurzel" nennt zwei Attribute und §3 Stufe A eine Datei auf `:root`; §3 Stufe A ist mit der Spec vom 25.09. fortgeschrieben, §2 folgt mit der Engine-Welle. Issue #13 (Kunden-Theming ohne Issue) ist damit für den Scope-Teil beantwortet.
+
+### Graurampe: Temperatur statt Farbe
+
+Unser Grau ist ein kühles Grau: 28 Stufen mit Chroma 0,008 bei etwa 260°. Ein Kunde wählt in Stufe A
+keine Graufarbe, sondern eine Temperatur — `warm` (70°), `neutral` (Chroma 0), `cool` (250°).
+`derive` behält jede Helligkeit der TopLogic-Rampe und ändert nur den Ton.
+
+**Warum:** jedes Kontrastpaar ist über Helligkeit gerechnet; ein Grau mit eigener Helligkeit oder
+eigener Chroma kippt Text auf Flächen, und niemand will diese 28 Entscheidungen treffen. Die
+Temperatur lässt die Helligkeiten stehen — aber sie hält deshalb nicht von selbst jedes Paar: OKLCH-
+Helligkeit ist nicht die Leuchtdichte, die WCAG rechnet. Unser eigenes Paar `status-warning-text` auf
+`surface-base` steht bei 4,500011; jede Temperatur schiebt es darunter.
+
+**Deshalb der Nachführ-Pass:** Nachdem Marke, Grau, Kategorien und Beschriftungen gerechnet sind,
+geht `derive` die Paarliste durch und schiebt jede **gerechnete** Farbrolle, die ihr Paar noch
+verfehlt, mit `aufKontrast` um den kleinsten Helligkeitsschritt, bis es hält; jede Verschiebung
+steht als Hinweis im Bericht. Gelieferte Werte werden nie geschoben — sie bleiben stehen und werden
+zum Befund. So gilt die Regel ohne Ausnahme: ein Befund entsteht nur aus einem gelieferten Wert,
+ein verfehltes Paar aus einem gerechneten ist ein Fehler in `derive` (Exit 3).
+
+**Verworfen:** Grau als eigener Hex (Stufe B kann das weiterhin); Grau in Richtung der Marke (ein
+orangefarbenes Grau ist ein warmes Grau, aber ein grünes Grau ist kein Grau mehr) — darum feste
+Töne, 70° und 250°, statt „Markenton und Gegenton“.
 
 ### Abstände: sieben Stufen, und eine fehlte
 

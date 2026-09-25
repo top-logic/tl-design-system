@@ -221,6 +221,16 @@ Englisch, kebab-case, Präfix `tl`. **Der Namensraum `--tl` gehört dem Paket:**
 
 ---
 
+## 13a · Eine Hausfarbe, ein Befehl, ein Theme
+
+Der Kunde schreibt eine JSON: seine Farbe, warm oder kühl, seine Schrift. `derive` rechnet den Rest — Hover, Dunkelmodus, acht Kategorien, die seiner Marke ausweichen, Beschriftungen, die lesbar bleiben. Heraus kommt eine Datei, die neben TopLogic steht und beim Update bleibt. Bringt er einen eigenen Styleguide mit, gilt der Styleguide; was unter WCAG liegt, steht als Hinweis in der Datei, nicht als Verbot.
+
+**Was wir rechnen, erfüllt WCAG immer — notfalls schiebt `derive` den Wert um einen Helligkeitsschritt nach und sagt es. Was der Kunde liefert, wird gemeldet, nicht blockiert.**
+
+> Sprechnotiz: `node tools/derive.mjs acme.primitives.json` — eine Datei rein, ein Theme raus, der Bericht steht im Dateikopf.
+
+---
+
 ## 14 · Der Weg: fünf Wellen
 
 **Kleinste Bausteine zuerst, das Gerüst zuletzt. Keine Welle beginnt, bevor die vorherige grün ist.**

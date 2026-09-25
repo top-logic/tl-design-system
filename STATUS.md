@@ -1,7 +1,8 @@
 # Stand
 
-**Letzte Sitzung:** 2026-09-24 (Pill-PR offen) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
-**Spec:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`
+**Letzte Sitzung:** 2026-09-25 (`derive` fertig, Pill-PR offen) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
+`docs/superpowers/specs/2026-09-25-derive-design.md`
 
 ## Zuerst
 
@@ -25,6 +26,14 @@ Dichte; ohne Attribut gilt TopLogic auf `:root`, ein Kundentheme ist eine mit `d
 Vererbung und Systemfolge und setzt künftig `data-tl-theme` statt `data-theme`. Die Spec-Fassung „Kunde
 tauscht auf `:root`“ ist damit überholt und wird mit `derive` fortgeschrieben. Begründung in `docs/skalen.md`
 „Themes: eine dritte Achse“, Folie 24a, Issue #16.
+
+**Seit 25.09. gebaut: `tools/derive.mjs`, Spec `2026-09-25-derive-design.md`; die Datei trägt Rollen, nicht
+Primitive, und meldet statt zu verbieten.** Aufgaben 1–10 stehen auf `main`, ab `89e1fb5` bis `HEAD`:
+Grau als Temperatur (70°/250°, Chroma 0,008), Kategorien um die Kundenmarke, Beschriftungen gerechnet,
+ein Nachführ-Pass schiebt jede gerechnete Rolle, die ein Paar noch verfehlt, um den kleinsten
+Helligkeitsschritt (Hinweis im Bericht) — Befunde entstehen nur aus gelieferten Werten, `--strict` macht
+sie zum Fehler. Beispiel und Gate: `test/fixtures/probe.primitives.json` → `specimen/probe.theme.css`,
+zwei Befunde aus der gelieferten Rotstufe, im Specimen über `data-tl-theme` umschaltbar.
 
 **Sichtprüfung erledigt (24.09., Pill-PR-Instanz, hell und dunkel).** Kein Eclipse nötig. Jenkins baut je PR
 eine Docker-Instanz (`Docker_Git_Java17`, Kontext = Branchname mit `_`); sie ist **nur intern** erreichbar,
@@ -83,6 +92,9 @@ ist die Rolle“ (`docs/skalen.md`) — `<theme-icon size="sm|md|lg|glyph">`, De
 7256, Gates 118/118. Offen für Welle 2–4: Menü, Toolbar, Sidebar, Reiter, Select geben `ThemeIcon` eigene
 Klassen statt einer Stufe (altlast.md „Icon“).
 
+**Worktree:** `~/git/tl8-wt-29584` steht derzeit auf `CWS/CWS_29617_design_system_welle_1_avatar`; die Ratsche
+ist gegen diesen Stand kalibriert. Vor Pill-Arbeit erst zurück auf den Pill-Branch wechseln.
+
 Jetzt:
 
 1. PR !1694 abwarten (Reviewer Bernhard, Request-changes beantwortet); dann !1695 (Avatar + Progress + Icon) auf master
@@ -125,19 +137,14 @@ gelöscht. Der Button ist die Vorlage. Arbeitsliste: `docs/migration/altlast.md`
 
 Offen aus der Spec, nicht Teil von Welle 0:
 
-* `tl-ds derive` — Kundenstufe A, die Ableitung einer Palette aus Hausfarbe und Grauwahl; verteilt die acht
-  Kategorien um die Kundenmarke neu (skalen.md „Kategorien folgen der Marke“); muss die
-  Beschriftungen mitrechnen und nach `tokens.css` laden — siehe skalen.md „Zwei Schichten“
-* `data-tl-theme` — dritte Achse für mehrere Themes je Anwendung; `derive` schreibt je Theme eine Datei
-  unter `[data-tl-theme="<id>"]`, das Gate läuft je Theme, `UIThemeService` setzt das Attribut — Issue #16,
-  skalen.md „Themes: eine dritte Achse“
+* `data-tl-theme` — dritte Achse für mehrere Themes je Anwendung: **Paketseite fertig** (`derive` schreibt
+  je Theme eine Datei unter `[data-tl-theme="<id>"]`, das Gate läuft je Theme, das Specimen schaltet um),
+  **Engine (`UIThemeService`) offen, Issue #16** — skalen.md „Themes: eine dritte Achse“
 * Token-Mapper — Miniprojekt, Browserwerkzeug für Kunden-Styleguides
 * Figma-Push aus `tokens.dtcg.json`
 * Maven-Wrapper für das Paket; bis dahin kopiert `tools/publish-to-worktree.mjs`
 * TSX-Lint-Regel (kein Hex, kein `style={{ color }}`, nur `tl-`-Klassen)
 * Prüfung in der laufenden Demo-App (Browser); bisher ist nur das Specimen im Browser geprüft
-* `tools/lib/color.mjs`: `markenRampe`, `rampeAnwenden`, `nurHex` tragen noch alte Rollennamen;
-  vor `derive` umbenennen
 * Spec §5 `overflow: hidden` an Behältern mit fokussierbaren Kindern ist statisch nicht prüfbar —
   wird ein DOM-Test im Specimen, kein Klassen-Gate
 

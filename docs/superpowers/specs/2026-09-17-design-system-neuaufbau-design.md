@@ -135,10 +135,11 @@ Ein Update des Pakets ändert seine Dateien nicht.**
 
 ### Stufe A — Regelfall: Primitive
 
-Der Kunde liefert `customer.primitives.json` mit dem, was er ändern will: Hausfarbe,
-Grau-Temperatur, Schrift, Radius-Grundwert. `tl-ds derive` rechnet daraus alles Fehlende — Rampen
-für Hover, Active, Dunkel, getönte Flächen, Beschriftungen — und schreibt
-`customer.primitives.css`. Geladen **nach** `primitives.css`.
+Der Kunde liefert `<theme>.primitives.json` mit dem, was er ändern will: Hausfarbe, Grau-Temperatur,
+Schrift, Radius-Grundwert. `tl-ds derive` rechnet daraus alles Fehlende — Rampen für Hover, Active,
+Dunkel, getönte Flächen, Kategorien, Beschriftungen — und schreibt `<theme>.theme.css`: Rollen mit
+Werten unter `[data-tl-theme="<theme>"]`, geladen **nach** `tokens.css`. Ausgearbeitet in
+`2026-09-25-derive-design.md`.
 
 **Was der Kunde schreibt, gilt. Was er nicht schreibt, wird gerechnet. Was gerechnet oder
 geschrieben wurde, wird geprüft.**
@@ -151,7 +152,7 @@ geschrieben wurde, wird geprüft.**
   will, setzt sie in Stufe B ausdrücklich.
 
 Das Kontrast-Gate läuft über den gelieferten Werten und meldet jedes verfehlte Paar mit Verhältnis
-und Vorschlag.
+und Vorschlag. Es meldet, es verbietet nicht; `--strict` verbietet.
 
 `derive` ist die eigentliche Neuentwicklung dieser Stufe. Der OKLCH-Kern aus `brand.mjs` bleibt;
 neu ist die Ableitung der ganzen Palette aus Hausfarbe plus Grauwahl. Ohne `derive` ist Stufe A
