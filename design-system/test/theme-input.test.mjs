@@ -34,3 +34,23 @@ test('Fehler tragen den Pfad', () => {
   fehler({ theme: 'acme', color: { brand: '#E8541E', category: { 'category-9': '#B00020' } } }, 'color.category.category-9');
   fehler({ theme: 'acme', measure: { 'corner-9': '0' } }, 'measure.corner-9');
 });
+
+test('Prototypkette wird nicht als Stufe akzeptiert', () => {
+  fehler({ theme: 'acme', measure: { toString: '0' } }, 'measure.toString');
+});
+
+test('Wurzel muss ein Objekt sein', () => {
+  fehler(null, '');
+  fehler([], '');
+  fehler('x', '');
+});
+
+test('color darf kein Objekt-Nichtwert sein', () => {
+  fehler({ theme: 'acme', color: null }, 'color');
+});
+
+test('color.gray als Objekt landet unter geliefert, saat.gray bleibt aus', () => {
+  const e = leseThemeEingabe({ theme: 'acme', color: { brand: '#e8541e', gray: { 3: '#eeeeee' } } }, P, T);
+  assert.equal(e.geliefert['gray-3'], '#EEEEEE');
+  assert.equal(e.saat.gray, undefined);
+});

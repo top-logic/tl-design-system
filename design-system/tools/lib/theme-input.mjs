@@ -34,7 +34,7 @@ export function leseThemeEingabe(json, P, T) {
   const stufen = (pfad, familie, v) => {
     for (const [stufe, wert] of Object.entries(objekt(pfad, v))) {
       const name = `${familie}-${stufe}`;
-      if (!(name in P.color)) throw new ThemeEingabeFehler(`${pfad}.${stufe}`, `Stufe ${name} gibt es nicht`);
+      if (!Object.hasOwn(P.color, name)) throw new ThemeEingabeFehler(`${pfad}.${stufe}`, `Stufe ${name} gibt es nicht`);
       geliefert[name] = hex(`${pfad}.${stufe}`, wert);
     }
   };
@@ -64,7 +64,7 @@ export function leseThemeEingabe(json, P, T) {
   }
   for (const f of FAMILIEN.slice(1)) if (wurzel[f] !== undefined) {
     for (const [stufe, wert] of Object.entries(objekt(f, wurzel[f]))) {
-      if (!(stufe in P[f])) throw new ThemeEingabeFehler(`${f}.${stufe}`, `Stufe gibt es nicht in ${f}`);
+      if (!Object.hasOwn(P[f], stufe)) throw new ThemeEingabeFehler(`${f}.${stufe}`, `Stufe gibt es nicht in ${f}`);
       if (typeof wert !== 'string' && typeof wert !== 'number') throw new ThemeEingabeFehler(`${f}.${stufe}`, 'ein Wert erwartet');
       geliefert[stufe] = String(wert);
     }
