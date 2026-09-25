@@ -1,8 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { hexZuOklch, oklchZuHex, beschriftungAbleiten, farbtonAbstand, aufKontrast, grauRampe, GRAU_CHROMA, kategorienVerteilen, kategorieRollen } from '../tools/lib/color.mjs';
+import { hexZuOklch, oklchZuHex, beschriftungAbleiten, farbtonAbstand, aufKontrast, grauRampe, GRAU_CHROMA, kategorienVerteilen, kategorieRollen, markenRollen } from '../tools/lib/color.mjs';
 import { ratio } from '../tools/lib/contrast.mjs';
+
+const GRUENDE = { light: ['#FAFAFA', '#FFFFFF'], dark: ['#16181B', '#1B1D21'] };
 
 const P = JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.url)));
 const GRAU = Object.fromEntries(Object.entries(P.color).filter(([n]) => n.startsWith('gray-')));
@@ -109,4 +111,30 @@ test('kategorieRollen liefert subtle mit Text 4,5 und border mit 3,0 auf beiden 
   assert.ok(ratio('#1B1D21', r.light.subtle) >= 4.5 && ratio('#F0F3F9', r.dark.subtle) >= 4.5);
   for (const g of gruende.light) assert.ok(ratio(r.light.border, g) >= 3.0);
   for (const g of gruende.dark) assert.ok(ratio(r.dark.border, g) >= 3.0);
+});
+
+test('markenRollen: die Saat ist surface-brand hell, hover und active dunkler, im Dunkeln heller', () => {
+  const r = markenRollen('#0B5ED7', GRUENDE);
+  assert.equal(r.light['surface-brand'], '#0B5ED7');
+  const L = (h) => hexZuOklch(h).L;
+  assert.ok(L(r.light['surface-brand-hover']) < L(r.light['surface-brand']));
+  assert.ok(L(r.light['surface-brand-active']) < L(r.light['surface-brand-hover']));
+  assert.ok(L(r.dark['surface-brand']) > L(r.light['surface-brand']));
+  assert.ok(L(r.dark['surface-brand-hover']) > L(r.dark['surface-brand']));
+  assert.ok(L(r.dark['surface-brand-active']) < L(r.dark['surface-brand']));
+  assert.equal(r.hinweise.length, 0);
+});
+
+test('markenRollen: eine helle Marke bekommt Textrollen, die auf dem Grund tragen, mit Hinweis', () => {
+  const r = markenRollen('#F39C6B', GRUENDE);
+  assert.equal(r.light['surface-brand'], '#F39C6B');
+  for (const g of GRUENDE.light) assert.ok(ratio(r.light['text-link'], g) >= 4.5);
+  for (const g of GRUENDE.light) assert.ok(ratio(r.light['focus-ring'], g) >= 3.0);
+  assert.ok(r.hinweise.some((h) => h.includes('text-link')));
+});
+
+test('markenRollen: subtle liegt auf den Helligkeiten der TopLogic-Tönung', () => {
+  const r = markenRollen('#0B5ED7', GRUENDE);
+  assert.ok(Math.abs(hexZuOklch(r.light['surface-brand-subtle']).L - 0.937) < 0.01);
+  assert.ok(Math.abs(hexZuOklch(r.dark['surface-brand-subtle']).L - 0.255) < 0.01);
 });

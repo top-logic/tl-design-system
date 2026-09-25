@@ -337,3 +337,50 @@ export function kategorieRollen(tonGrad, gruende) {
     dark: { subtle: subtle('dark'), border: border('dark') },
   };
 }
+
+/** Helligkeit und Chroma der getönten Markenflächen, aus der TopLogic-Palette gelesen. */
+export const MARKE_SUBTLE = {
+  light: { subtle: { L: 0.937, C: 0.03 }, hover: { L: 0.905, C: 0.046 } },
+  dark: { subtle: { L: 0.255, C: 0.044 }, hover: { L: 0.305, C: 0.056 } },
+};
+
+/**
+ * Die Markenrollen beider Modi aus einer Saat. Die Schritte sind die dokumentierten
+ * (HELL_HOVER_SCHRITT …); die Link-Regel bleibt: hell folgt der Link der Fläche, dunkel liegt er
+ * eine Stufe über ihr. Text- und Linienrollen werden gegen die Gründe nachgeführt, damit ein
+ * gerechneter Wert nie ein Paar verfehlt — die Fläche selbst bleibt die Marke des Kunden.
+ */
+export function markenRollen(saatHex, gruende) {
+  const { L, C, H } = hexZuOklch(saatHex);
+  const bei = (l, c = C) => oklchZuHex({ L: l, C: c, H }).hex;
+  const hinweise = [];
+  const fuehre = (mode, rolle, hex, soll) => {
+    const r = aufKontrast(hex, gruende[mode], soll, mode === 'light' ? 'dunkler' : 'heller');
+    if (r.angepasst) hinweise.push(`${mode}: ${rolle} in der Helligkeit nachgeführt, damit ${soll} auf dem Grund hält (${hex} → ${r.hex})`);
+    return r.hex;
+  };
+  const dunkelBasis = L + DUNKEL_GRUNDTON_SCHRITT;
+  const light = {
+    'surface-brand': saatHex.toUpperCase(),
+    'surface-brand-hover': bei(L - HELL_HOVER_SCHRITT),
+    'surface-brand-active': bei(L - HELL_ACTIVE_SCHRITT),
+    'surface-brand-subtle': bei(MARKE_SUBTLE.light.subtle.L, MARKE_SUBTLE.light.subtle.C),
+    'surface-brand-subtle-hover': bei(MARKE_SUBTLE.light.hover.L, MARKE_SUBTLE.light.hover.C),
+  };
+  light['text-link'] = fuehre('light', 'text-link', light['surface-brand'], 4.5);
+  light['text-link-hover'] = fuehre('light', 'text-link-hover', light['surface-brand-hover'], 4.5);
+  light['border-interactive'] = fuehre('light', 'border-interactive', light['surface-brand'], 3.0);
+  light['focus-ring'] = fuehre('light', 'focus-ring', light['surface-brand'], 3.0);
+  const dark = {
+    'surface-brand': bei(dunkelBasis),
+    'surface-brand-hover': bei(dunkelBasis + DUNKEL_SCHRITT),
+    'surface-brand-active': bei(dunkelBasis - DUNKEL_ACTIVE_SCHRITT),
+    'surface-brand-subtle': bei(MARKE_SUBTLE.dark.subtle.L, MARKE_SUBTLE.dark.subtle.C),
+    'surface-brand-subtle-hover': bei(MARKE_SUBTLE.dark.hover.L, MARKE_SUBTLE.dark.hover.C),
+  };
+  dark['text-link'] = fuehre('dark', 'text-link', dark['surface-brand-hover'], 4.5);
+  dark['text-link-hover'] = fuehre('dark', 'text-link-hover', bei(dunkelBasis + 2 * DUNKEL_SCHRITT), 4.5);
+  dark['border-interactive'] = fuehre('dark', 'border-interactive', dark['surface-brand'], 3.0);
+  dark['focus-ring'] = fuehre('dark', 'focus-ring', dark['surface-brand'], 3.0);
+  return { light, dark, hinweise };
+}
