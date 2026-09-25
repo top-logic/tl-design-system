@@ -231,19 +231,22 @@ Der Kunde schreibt eine JSON: seine Farbe, warm oder kühl, seine Schrift. `deri
 
 ---
 
-## 13b · Zwei Wege, kein dritter
+## 13b · Drei Kacheln: was der Kunde mitbringt, entscheidet
 
-**Shell oder Headless.** Wer TopLogic als Shell nutzt, hält den Draht ein: Zustand rein, Kommando raus — gleich, welche Komponentenbibliothek er mitbringt. Wer das nicht will, bringt sein eigenes Frontend mit und bindet es headless über REST/OpenAPI an.
+**Drei Wege, wie bei einer Preistafel. Komplexität steigt von links nach rechts, Garantie sinkt von links nach rechts, und jede Kachel hat genau einen Vertrag.**
 
-| | Shell | Headless |
-|---|---|---|
-| Der Kunde bringt | Komponenten, die den Vertrag erfüllen — MBUI, MUI, was er will | das ganze Frontend |
-| TopLogic liefert | Layouts, Formulare, Dialoge, Rechte, Tests, Theming | Daten, Modell, Rechte, Logik |
-| Beim Update | der Konformitätstest zeigt Brüche vor dem Deploy | die API bleibt stabil |
+| | **TopLogic mit eigener Marke** | **TopLogic mit eigenen Komponenten** | **Eigenes Frontend, headless** |
+|---|---|---|---|
+| Der Kunde bringt | seine Marke: eine JSON | seine Komponentenbibliothek — MBUI, MUI, was er will | sein Frontend |
+| Oberfläche | TopLogic | TopLogic, Komponenten vom Kunden | vom Kunden |
+| Wir garantieren | alles: Aussehen, Funktion, Gate | Funktion über den Vertrag; Aussehen ist seins | die API |
+| Komplexität beim Kunden | klein | mittel | groß |
 
-**Die Einschränkung ist klein: der Draht, nicht das Aussehen. Es gibt keinen Schalter, der das UI-System abschaltet — „aus“ ist kein Zustand, den wir garantieren können.**
+**Wähle die Kachel nach dem, was du mitbringst, nicht nach dem, was du willst.** Nichts oder eine Marke: links. Eine Komponentenbibliothek: Mitte. Ein Frontend-Team mit eigenem Stack: rechts. Links ist der Regelfall.
 
-> Sprechnotiz: Die Grenze liegt nicht zwischen flexibel und unflexibel, sondern zwischen „hat einen Vertrag“ und „hat keinen“.
+Einen vierten Weg gibt es nicht: Shell nutzen und den Draht ignorieren. Und es gibt keinen Schalter, der das UI-System abschaltet — „aus“ ist kein Zustand, den wir garantieren können.
+
+> Sprechnotiz: Links ist nicht „wie ausgeliefert“ — Hausfarbe, Grau und Schrift über `derive` gehören zur kleinsten Stufe. Rechts ist keine Sackgasse — die Garantie endet an der API, sie fehlt nicht. Die Grenze liegt zwischen „hat einen Vertrag“ und „hat keinen“.
 
 ---
 
@@ -297,7 +300,7 @@ Innerhalb einer Welle keine Reihenfolge — parallel ist möglich. Der Button is
 | 11 | Ausgabe eines roten Gates, daneben die grüne Zusammenfassung |
 | 12 | Die Blockliste der Ratsche mit einem gestrichenen Eintrag |
 | 13 | Dieselbe Demo-App im TopLogic-Theme und mit Kundenprimitiv nebeneinander |
-| 13b | Zwei Spalten „Shell“ und „Headless“: links TopLogic-Layout mit fremden Komponenten darin, rechts ein fremdes Frontend mit einem Pfeil auf die API; kein Schalter dazwischen |
+| 13b | Drei Kacheln wie eine Preistafel: links TopLogic-Maske mit Kundenfarbe, Mitte TopLogic-Layout mit fremden Komponenten darin, rechts ein fremdes Frontend mit Pfeil auf die API; darunter die Regel „nach dem, was du mitbringst“ |
 | 14 | Die fünf Wellen als Zeitstrahl ohne Datumsangaben, Welle 0 und 1 markiert |
 | 15 | Ein Zeilenausschnitt aus einer Komponente: nur Rollen, nur Attribute |
 

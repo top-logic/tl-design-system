@@ -89,20 +89,30 @@ Das Design System besteht aus drei Dingen, und nur eines davon ist Gestaltung:
 
 **Dynamisch heißt: eine Rolle wählen.** `x -> if($x.overdue, 'error', 'category-3')` ist dynamisch und bleibt im Vokabular. Ein Ausdruck, der einen Hex-Wert liefert, verlässt es — und mit ihm Dunkelmodus, Kontrast und Kundenstufe A, die den Wert nie zu sehen bekommt.
 
-## 2b · Zwei Wege, kein dritter
+## 2b · Drei Kacheln, und was der Kunde mitbringt, entscheidet
 
-Ein Kunde, der TopLogic 8 als **Shell** nutzt, hält den Draht-Teil der Verträge ein — gleich, ob er
-unsere Komponenten nimmt oder MBUI, MUI oder eine eigene Bibliothek mitbringt. Der Draht ist klein:
-welcher Zustand kommt, welche Kommandos zurückgehen, wie Dialoge den Stapel bedienen. Aussehen, CSS
-und Bibliothek sind frei. Dafür bekommt er Layouts, Formulare, Dialoge, Validierung, Rechte,
+| | **TopLogic mit eigener Marke** | **TopLogic mit eigenen Komponenten** | **Eigenes Frontend, headless** |
+|---|---|---|---|
+| Der Kunde bringt | seine Marke: eine JSON (Stufe A, B) | seine Komponentenbibliothek — MBUI, MUI, was er will (Stufe C) | sein Frontend |
+| Oberfläche | TopLogic | TopLogic, Komponenten vom Kunden | vom Kunden, über REST/OpenAPI |
+| Wir garantieren | alles: Aussehen, Funktion, Gate | Funktion über den Vertrag; Aussehen ist seins | die API |
+| Komplexität beim Kunden | klein | mittel | groß |
+
+Komplexität steigt von links nach rechts, Garantie sinkt von links nach rechts, und jede Kachel hat
+genau einen Vertrag. Die Kachel wählt, was der Kunde mitbringt, nicht, was er will: nichts oder eine
+Marke, dann links; eine Komponentenbibliothek, dann Mitte; ein Frontend-Team mit eigenem Stack, dann
+rechts. Links ist der Regelfall.
+
+**Die Mitte ist der Shell-Weg mit fremder Bibliothek.** Der Kunde hält den Draht-Teil der Verträge
+ein: welcher Zustand kommt, welche Kommandos zurückgehen, wie Dialoge den Stapel bedienen. Aussehen,
+CSS und Bibliothek sind frei. Dafür bekommt er Layouts, Formulare, Dialoge, Validierung, Rechte,
 Skript-Tests und Theming vom Server, und ein Framework-Update ist prüfbar: Der Konformitätstest zeigt
 Brüche, bevor er ausliefert.
 
-Wer sich daran nicht halten will, weil seine Konventionen abweichen oder die Pflege ihm zu viel ist,
-bringt sein eigenes Frontend mit und bindet es **headless** über REST/OpenAPI an. Dann ist die UI
-nicht unser Thema, und die API ist der Vertrag.
+**Rechts endet die Garantie an der API, sie fehlt nicht.** Wer seine Konventionen behalten will,
+bringt sein Frontend mit; die UI ist dann nicht unser Thema, und die API ist der Vertrag.
 
-Einen dritten Weg — Shell nutzen, Draht ignorieren — gibt es nicht, und einen Schalter, der das
+Einen vierten Weg — Shell nutzen, Draht ignorieren — gibt es nicht, und einen Schalter, der das
 UI-System abschaltet, gibt es nicht: Er schaltete die falsche Schicht ab, wäre erst bei 77 von 77
 ersetzten Controls wahr und ließe keinen Zustand übrig, den wir garantieren könnten. Die Grenze liegt
 nicht zwischen flexibel und unflexibel, sondern zwischen „hat einen Vertrag“ und „hat keinen“.
