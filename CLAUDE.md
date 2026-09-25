@@ -72,3 +72,18 @@ Unter `.claude/worktrees/<name>/` können weitere Claude-Instanzen auf eigenen B
 (eigener Memory-Ordner, eigene STATUS-Commits). Diese Verzeichnisse nicht anfassen, nicht
 mergen, nicht löschen — der Abgleich läuft über `git merge` des jeweiligen Branches nach `main`,
 wenn Hendrik es sagt. `STATUS.md` auf `main` gehört der Sitzung, die dort arbeitet.
+
+## Modelle
+
+Fable orchestriert, Opus und Sonnet arbeiten zu. Entscheidungen brauchen den Sitzungskontext,
+und der liegt nur im Orchestrator; Handwerk ist abgrenzbar und darf leer starten.
+
+| Aufgabe | Modell | Wie |
+|---|---|---|
+| Entscheiden, Spec, `docs/skalen.md`, Review-Antworten, `derive`-Design | Fable | Orchestrator selbst |
+| Java-Migration im Worktree, Ratsche, Tests, Tickets | Opus | Subagent `model: opus` |
+| Umbenennen nach `altlast.md`, Bildexport, Wiki-Spiegelung, Suche | Sonnet | Subagent `model: sonnet` |
+
+Ein Fork erbt das Orchestrator-Modell; für ein anderes Modell einen frischen Agenten mit
+vollständigem Auftrag starten. Reine Umsetzungssitzungen mit fertigem Plan dürfen mit Opus
+orchestrieren; sobald eine Entscheidung ansteht, `/model fable`.
