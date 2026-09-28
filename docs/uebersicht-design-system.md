@@ -118,6 +118,17 @@ ersetzten Controls wahr und ließe keinen Zustand übrig, den wir garantieren k�
 nicht zwischen flexibel und unflexibel, sondern zwischen „hat einen Vertrag“ und „hat keinen“.
 Begründung in `docs/skalen.md` „Zwei Wege, kein dritter“.
 
+**Der Vertrag der Mitte hat zwei Hälften (28.09., abgestimmt auf #29643).** Der Zustand ist die
+msgbuf-Nachricht in `state.proto` — eine Quelle für Java und TypeScript, `TestControlStateSchema` prüft,
+dass der Server nur sendet, was deklariert ist. Die Ersetzung läuft über `replace()` und
+`registerRootWrapper()`. Was Proto nicht sagen kann, trägt der Vertrag des Pakets: welche Kommandos ein
+Auslöser sendet und was bei `disabled` schweigt (Konformitätsfälle, vom Harness ausgeführt), welche Rollen
+eine Ersatzkomponente liest, damit sie ins Bild passt, und welche Attribute Tastatur, Fokus und
+Skript-Aufzeichnung brauchen. Der Harness prüft die Kundenseite; beides zusammen ist die Update-Garantie.
+Die Marke fließt in eine Richtung — `derive` → Rollen → fremde Bibliothek (`roles-to-mui`), nie
+umgekehrt —, damit Paarliste und Gate auch für die fremde Bibliothek gelten. Das Referenzprojekt lebt im
+Framework neben `demo.react.corporate`. Begründung in `docs/skalen.md` „Ein Vertrag, zwei Hälften“.
+
 ## 3 · Die Regeln
 
 | Regel | Was sie konkret heißt |

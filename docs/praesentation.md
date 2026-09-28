@@ -248,6 +248,10 @@ Einen vierten Weg gibt es nicht: Shell nutzen und den Draht ignorieren. Und es g
 
 > Sprechnotiz: Links ist nicht „wie ausgeliefert“ — Hausfarbe, Grau und Schrift über `derive` gehören zur kleinsten Stufe. Rechts ist keine Sackgasse — die Garantie endet an der API, sie fehlt nicht. Die Grenze liegt zwischen „hat einen Vertrag“ und „hat keinen“.
 
+**Der Vertrag der Mitte hat zwei Hälften, und beide sind prüfbar.** Der Zustand kommt typisiert vom Server (`state.proto`, ein Schema für Java und TypeScript, der Build prüft es). Was die Komponente zurückschickt und was sie lesen soll, damit sie ins Bild passt, steht im Vertrag des Pakets, und ein Konformitätstest führt es aus — vor jedem Deploy des Kunden. Die Marke fließt in eine Richtung: von `derive` in die Rollen, von den Rollen in die fremde Bibliothek. Nie umgekehrt.
+
+> Sprechnotiz: Das ist die Abstimmung mit Bernhards #29643 (Ersetzung, Zustandsschema, Beispielmodul) — wir übernehmen seine Mechanik, das Paket bleibt die Quelle der Werte.
+
 ---
 
 ## 14 · Der Weg: fünf Wellen
