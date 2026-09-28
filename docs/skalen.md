@@ -1364,6 +1364,8 @@ das Kontrast-Gate der Kategorien deckt den Avatar mit ab, und die Farbe wechselt
 auf gesättigter Fläche (`text-on-*` je Kategorie wäre eine dritte Rolle ohne weiteren Leser);
 Größen an der Dichte (ein Avatar in einer kompakten Tabelle ist `sm`, nicht ein geschrumpftes `md`).
 
+**Zwei Namensräume für die Größen (entschieden 28.09., Review !1695).** Was jemand tippt — `size="…"` in der View, `@Name` am Java-Enum — sind ganze Wörter: `small | medium | large | x-large`; `medium` ist der Name der mittleren Stufe, „Default“ ist kein Name, sondern das fehlende Attribut. Was das Paket erzeugt — Klassen und Tokens — behält die Skalenkürzel `sm/md/lg/xl`, konsistent mit `space-sm` und `radius-sm`; das TSX bildet `x-large → xl` je Control ab. Der JavaDoc nennt keine Pixel, sondern die Rolle der Stufe; die Pixel stehen in `primitives.json`. Verworfen: ganze Wörter im Paket (bricht die Skalennamen), Kürzel extern (unlesbar in der View, Bernhards Einwand ist berechtigt).
+
 **Als Test:** `components.test.mjs` prüft je Rolle × Modus Initialen 4,5 und Linie 3,0 gegen
 `surface-base` und `surface-layer`; die vier Größen sind genau `size-6/7/8/9` und stehen nicht in
 der Dichte; `avatar.css` liest nur die Tokens der Rollen und `size-avatar-*`, keine Schriftregel,
@@ -1421,6 +1423,8 @@ Icon trägt eine Stufe — `<theme-icon>` ist so groß wie der Text, neben dem e
 **Nicht in dieser Welle:** Menü, Toolbar, Sidebar, Reiter und Select geben `ThemeIcon` eine eigene Klasse
 statt einer Stufe; sie bekommen `tl-icon-sm|md` in Welle 2 bis 4. Bis dahin fehlt einem Bild-Icon dort
 das 1-em-Maß — sichtbar nur bei `theme:`-Bildern, nicht bei Font-Glyphen.
+
+**Namen:** extern `small | medium | large | glyph`, im Paket `tl-icon-sm/md/lg/glyph` — siehe „Zwei Namensräume für die Größen“ beim Avatar.
 
 **Als Test:** `components.test.mjs` prüft, dass die vier Klassen in `base.css` stehen und `size-icon-*`
 lesen, dass `components.css` keine `font-size` enthält, und dass Specimen und Vertrag die vier Stufen,
