@@ -8,7 +8,8 @@
 ## Zuerst
 
 **Entschieden (28.09.): eine Linie, drei Stränge.** Plan `docs/superpowers/plans/2026-09-28-konsolidierung.md`.
-Strang 0 schließt Welle 1 (!1694 mergen — Bernhards Approval vom 25.09. 13:24 gilt, Jenkins grün; !1695 hat
+Strang 0 schließt Welle 1 (**!1694 gemerged am 28.09.**, Merge-Commit `c38ad05ddd`, Pill-Branch gelöscht; !1695
+steht jetzt auf Basis `master` und ist mergeable; !1695 hat
 Request Changes mit drei Punkten: px im JavaDoc von `IconSize`, `lg` unlesbar, `size="xl"` in der Bild-Demo —
 Entscheidung mit Hendrik 28.09.: zwei Namensräume — extern ganze Wörter `small|medium|large|x-large`, im Paket die Skalenkürzel; Umsetzung in Task 2 des Plans, noch nicht begonnen). Strang 1
 verschmilzt das UI-Paket mit Bernhards #29643/!1698 und #29650. Strang 2 ist Welle 2. Nichts Neues, bis ein
