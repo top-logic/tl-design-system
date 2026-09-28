@@ -11,7 +11,7 @@
 Strang 0 schließt Welle 1 (**!1694 gemerged am 28.09.**, Merge-Commit `c38ad05ddd`, Pill-Branch gelöscht; !1695
 steht jetzt auf Basis `master` und ist mergeable; !1695 hat
 Request Changes mit drei Punkten: px im JavaDoc von `IconSize`, `lg` unlesbar, `size="xl"` in der Bild-Demo —
-Entscheidung mit Hendrik 28.09.: zwei Namensräume — extern ganze Wörter `small|medium|large|x-large`, im Paket die Skalenkürzel; Umsetzung in Task 2 des Plans, noch nicht begonnen). Strang 1
+**umgesetzt 28.09.**: zwei Namensräume — extern ganze Wörter `small|medium|large|x-large` bzw. `small|medium|large|glyph`, im Paket die Skalenkürzel, TSX bildet ab; Commits `01adf297bf..24ff522d42`, Verträge `db443ab`; Antwort im PR, Review bei Bernhard erneut angefordert. Offen: Sichtprüfung auf der Docker-Instanz, Merge, Welle-1-Abschluss). Strang 1
 verschmilzt das UI-Paket mit Bernhards #29643/!1698 und #29650. Strang 2 ist Welle 2. Nichts Neues, bis ein
 Faden geschlossen ist.
 
