@@ -869,7 +869,7 @@ Die Grenze liegt nicht zwischen flexibel und unflexibel, sondern zwischen „hat
 
 **Nicht verifiziert:** ob msgbuf 1.2.3 (TypeScript-Ziel) erscheint, bevor Welle 2 die Verträge braucht — !1698 baut bis dahin nicht; ob `TestControlStateSchema` mit `colorRole` aus !1694 zusammenläuft (Bernhards eigener Probe-Merge meldet den Schlüssel als undeklariert; wer zweiter landet, löst es).
 
-**Als Test:** `components.test.mjs` prüft je `*.contract.md`, dass `### Zustand` genau eine Proto-Nachricht nennt und keine eigene Schlüsseltabelle führt; der Harness liest das Schema aus `control-state.ts` und die Fälle aus `## Konformität`; `TestControlStateSchema` bleibt Bernhards Gate für den Server. Plan: `docs/superpowers/plans/2026-09-28-konsolidierung.md`, Strang 1.
+**Als Test:** `contracts.test.mjs` prüft je `*.contract.md`, dass `### Zustand` genau eine Proto-Nachricht nennt und keine eigene Schlüsseltabelle führt, gegen eine Kopie von `state.proto` unter `test/fixtures/` (erzeugt, byte-identisch zum Worktree, solange !1698 dort ausgecheckt ist; sonst übersprungen mit Hinweis); geplante Nachrichten ohne Draft in `state.proto` stehen auf einer Liste, die nur schrumpfen darf; der Harness liest das Schema aus `control-state.ts` und die Fälle aus `## Konformität`; `TestControlStateSchema` bleibt Bernhards Gate für den Server. Plan: `docs/superpowers/plans/2026-09-28-konsolidierung.md`, Strang 1.
 
 ### Graurampe: Temperatur statt Farbe
 
