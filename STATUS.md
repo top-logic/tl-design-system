@@ -22,9 +22,11 @@ darauf umgeschrieben: `### Zustand` verweist auf die Proto-Nachricht, der Harnes
 Framework. Widerspruch an zwei Stellen, mit Beweis in seinem Code: sein Beispiel-Stylesheet ist „independent
 of the TopLogic theme tokens“ (kein Dunkelmodus, kein Gate, `outline: none`), und #29662 dreht die
 Theme-Richtung um — `derive` bleibt die Quelle, `roles-to-mui` rechnet das MUI-Theme aus den Rollen.
-Begründung `docs/skalen.md` „Ein Vertrag, zwei Hälften“, Folie 13b, Übersicht §2b. Strang 1 läuft: Beweis-Commits
-auf Branch `CWS/CWS_29617_corporate_reads_roles` (von Bernhards Branch), dann Trac-Kommentar in #29650, dann
-Plan UI-Paket umschreiben, dann Gruppe A (`@Key`) ausführen. Gruppen B/C/E warten auf den Merge von !1698
+Begründung `docs/skalen.md` „Ein Vertrag, zwei Hälften“, Folie 13b, Übersicht §2b. Strang 1, Stand 28.09. vormittags: Beweis-Commits
+liegen als PR [!1705](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1705) auf Bernhards Branch (Bernhard
+Reviewer); Kommentare in #29662 (Gegenvorschlag: MUI-Theme als Eingabe für `derive`) und #29650 (Abstimmung)
+gepostet — Rücksprache mit Bernhard erwartet; Wiki „Übersicht“ §2b nachgezogen. Läuft: Plan UI-Paket
+umschreiben (Task 9), danach Gruppe A (`@Key`). Gruppen B/C/E warten auf den Merge von !1698
 (blockiert auf msgbuf 1.2.3).
 
 **Welle 1 (Button) ist auf `master`.** PR [!1649](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1649)
