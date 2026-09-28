@@ -153,6 +153,14 @@ einer Liste, die schrumpft und nicht wächst (Ratsche): Landet eine Nachricht, w
 neuer Vertrag braucht eine Nachricht, die es gibt. Wo ein Draft hinter dem Paket liegt, folgt die
 Nachricht dem Paket — `TextState.color` wird `colorRole`, wie !1694 es festgelegt hat.
 
+**Größen: zwei Namensräume** (entschieden 28.09.). Extern — XML `size="…"`, Java-Enum `@Name` und damit
+die Proto-Nachricht — stehen ganze Wörter: `AvatarState.Size` `small | medium | large | x-large`,
+`IconState.Size` `small | medium | large | glyph`. `medium` ist der Name der mittleren Stufe; „default“
+ist kein Name (Bernhards Draft nennt `default`, wir schlagen `medium` vor). Im Paket bleiben die
+Skalenkürzel: `tl-avatar--sm/lg/xl`, `tl-icon-sm/md/lg/glyph`; das TSX bildet ab (`x-large → xl`). Ein
+Konformitätsfall sendet den externen Namen und erwartet die Paketklasse. Für `IconState` gibt es
+keinen Draft; der Plan trägt einen Vorschlag (`size`, `image`), als Vorschlag markiert.
+
 Der Test `components.test.mjs` prüft heute die alten Überschriften; er wird mit der Umstellung auf
 `## Muss`, `## Kann`, die sechs `###` und `## Konformität` geändert. Die Token-Prüfung (jedes
 `var(--tl-…)` im CSS steht im Vertrag) bleibt und zieht in den Kann-Teil.
@@ -250,13 +258,16 @@ sein Werkzeug, nicht unser Gate: Ein roter Harness beim Kunden bricht keinen Top
 in der echten Demo lauffähig. Ein zweites Referenzprojekt im Design-System-Repo (`examples/mui-adapter/`,
 Stand 25.09.) entfällt: dieselbe Sache zweimal, und außerhalb des Builds die schwächere.
 
-**Im Paket bleibt `design-system/tools/roles-to-mui.mjs`,** weil es `dist/` liest. MUI rechnet
-`contrastText` und Hover-Töne selbst aus Hexwerten und kann mit `var(--tl-…)` nichts anfangen; das
-Werkzeug schreibt die Rollen deshalb zur Bauzeit als Werte je Modus nach `dist/roles.generated.json`
-(`{ light, dark }`, gelesen aus `dist/primitives.css` und `dist/tokens.css`), für ein Kundentheme aus
-`derive` zusätzlich aus dessen `<theme>.theme.css`. Ein Werkzeug des Pakets wie `derive`: kein npm,
-keine Abhängigkeit, Test in `design-system/test/`, Erzeugnis byte-identisch gehalten, nie von Hand
-geändert.
+**Im Paket bleibt `design-system/tools/roles-to-mui.mjs`,** weil es aus dem Erzeugnis des Pakets
+rechnet. MUI rechnet `contrastText` und Hover-Töne selbst aus Hexwerten und kann mit `var(--tl-…)`
+nichts anfangen; das Werkzeug löst die Rollen deshalb zur Bauzeit als Werte je Modus auf
+(`{ light, dark }`, aus `primitives.css` und `tokens.css`). `dist/` ist vollständig erzeugt und wird
+vom Byte-Identitäts-Test gehalten: Für das TopLogic-Theme ruft `generate.mjs` den Schreiber aus
+`roles-to-mui.mjs` und erzeugt `dist/roles.generated.json` wie jede andere Datei in `dist/`. Für ein
+Kundentheme aus `derive` schreibt `node tools/roles-to-mui.mjs <theme>.theme.css [<ausgabe>.json]` die
+Datei **neben** die Theme-Datei (Default `<theme>.roles.json`), nie nach `dist/`. Ein Werkzeug des
+Pakets wie `derive`: kein npm, keine Abhängigkeit, Test in `design-system/test/`, Erzeugnis nie von
+Hand geändert.
 
 **Die Theme-Richtung ist fest:** Hausfarbe und Grauwahl → `derive` → Rollen → `roles-to-mui.mjs`
 (Hex je Modus) → `createTheme`. Nie umgekehrt: Ein MUI-Theme als Quelle der TL-Tokens (#29662) hebelt
@@ -293,9 +304,9 @@ Zwei Themes, hell und dunkel, umgeschaltet nach `data-tl-mode` am `html`; ein Di
    auf die Nachricht, `components.test.mjs` nachgezogen, dann die neuen Verträge der Tabelle in §4.
    Fertig: jeder Vertrag der Tabelle existiert, nennt eine Nachricht in `state.proto` oder eine
    geplante, und jedes unserer Controls besteht seinen.
-4. **Werkzeug im Paket.** `tools/roles-to-mui.mjs` nach §6. Fertig: `dist/roles.generated.json` ist
-   byte-identisch mit dem Erzeugnis aus `dist/`, ein `derive`-Theme lässt sich lesen, `node --test`
-   grün. Das Beispiel — Material-Button und -Dialog im TopLogic-Layout, hell und dunkel — baut
+4. **Werkzeug im Paket.** `tools/roles-to-mui.mjs` nach §6, von `generate.mjs` aufgerufen. Fertig:
+   `dist/roles.generated.json` ist Teil von `dist/` und vom Byte-Identitäts-Test gehalten, ein
+   `derive`-Theme ergibt `<theme>.roles.json` neben sich, `node --test` grün. Das Beispiel — Material-Button und -Dialog im TopLogic-Layout, hell und dunkel — baut
    #29661 im Framework auf diesem Erzeugnis.
 5. **Theme benennt Paket.** `ui-package` an `UITheme.Config`, Reload beim Wechsel. Fertig: eine
    Person wählt „mbui“ und sieht nach dem Reload das Kundenbundle; wählt sie „default“, TopLogic.
@@ -329,12 +340,14 @@ Design-System-Repo.
   Schlüsseltabelle, und die Nachricht steht in `test/fixtures/state.proto` oder in der Liste
   geplanter Nachrichten; die Liste wächst nicht, und eine gelandete Nachricht muss aus ihr heraus.
   `test/fixtures/state.proto` ist byte-identisch mit dem Worktree (`publish-to-worktree.mjs` holt sie
-  zurück). Kein Token im Muss-Teil: Der Draht kennt keine Farben.
+  zurück); fehlt `state.proto` im Worktree (master vor !1698), wird dieser Test mit Hinweis
+  übersprungen, und `node --test` bleibt grün. Kein Token im Muss-Teil: Der Draht kennt keine Farben.
 * `components.test.mjs`: die neuen Überschriften; jedes `var(--tl-…)` im CSS der Komponente steht im
   Kann-Teil.
-* `roles-to-mui.test.mjs`: Referenzen je Modus aufgelöst, dunkel erbt, ein `derive`-Theme überschreibt;
-  `dist/roles.generated.json` ist byte-identisch mit dem, was `tools/roles-to-mui.mjs` aus `dist/`
-  erzeugt.
+* `roles-to-mui.test.mjs`: Referenzen je Modus aufgelöst, dunkel erbt, ein `derive`-Theme überschreibt,
+  `generate()` liefert `roles.generated.json` aus seinem eigenen Erzeugnis.
+* `dist.test.mjs`: `dist/` ist byte-identisch mit dem Erzeugnis aus `src/` — jetzt einschließlich
+  `dist/roles.generated.json`.
 
 **Im Framework (Vitest in `react-src`, Java-Tests im Modul):**
 
