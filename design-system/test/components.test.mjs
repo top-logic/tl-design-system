@@ -192,6 +192,8 @@ const AVATAR = {
   ...Object.fromEntries([1, 2, 3, 4, 5, 6, 7, 8].map((k) => [`category-${k}`, PILL[`category-${k}`]])),
 };
 const AVATAR_SIZES = { sm: 'size-6', md: 'size-7', lg: 'size-8', xl: 'size-9' };
+// Externe Namen (XML, Java, Zustand) → Skalenkürzel der Klasse. skalen.md „Zwei Namensräume für die Größen“.
+const AVATAR_SIZE_NAMES = { small: 'sm', medium: 'md', large: 'lg', 'x-large': 'xl' };
 
 for (const mode of ['light', 'dark']) {
   const C = { ...R.color[mode], ...R.derived[mode] };
@@ -249,7 +251,11 @@ test('der Avatar-Vertrag nennt jedes Token, das avatar.css liest, jede Größe u
   const md = readFileSync(new URL('../src/components/avatar/avatar.contract.md', import.meta.url), 'utf8');
   for (const t of new Set([...css.matchAll(/var\((--tl-[a-z0-9-]+)\)/g)].map((m) => m[1])))
     assert.ok(md.includes('`' + t + '`'), `Vertrag nennt ${t} nicht`);
-  for (const s of ['sm', 'md', 'lg', 'xl']) assert.ok(md.includes('`' + s + '`'), `Vertrag nennt Größe ${s} nicht`);
+  // Extern Wörter, im CSS die Skalenkürzel; der Vertrag nennt beide und die Abbildung. medium hat keinen Modifier.
+  for (const [wort, kuerzel] of Object.entries(AVATAR_SIZE_NAMES)) {
+    assert.ok(md.includes('`' + wort + '`'), `Vertrag nennt Größe ${wort} nicht`);
+    if (kuerzel !== 'md') assert.ok(md.includes('`' + wort + '` → `tl-avatar--' + kuerzel + '`'), `Vertrag bildet ${wort} nicht auf tl-avatar--${kuerzel} ab`);
+  }
   for (const a of ['role="img"', 'aria-label', 'aria-hidden', 'alt']) assert.ok(md.includes(a), `Vertrag nennt ${a} nicht`);
   for (const h of ['## Zustand', '## Aktionen', '## Tokens', '## Attribute', '## Konformität'])
     assert.ok(md.includes(h), `Abschnitt ${h} fehlt`);
@@ -317,6 +323,8 @@ test('der Progress-Vertrag nennt jedes Token, das progress.css liest, die Custom
 // --- Icon --------------------------------------------------------------------------------------
 // Das Icon hat kein eigenes Stylesheet: die vier Stufen stehen in base.css. skalen.md „Icons“.
 const ICON_SIZES = { sm: 'size-4', md: 'size-5', lg: 'size-6', glyph: 'size-3' };
+// Externe Namen (XML, Java, Zustand) → Skalenkürzel der Klasse. skalen.md „Zwei Namensräume für die Größen“.
+const ICON_SIZE_NAMES = { small: 'sm', medium: 'md', large: 'lg', glyph: 'glyph' };
 
 test('die vier Icon-Stufen stehen als Klassen in base.css, font-size nur dort, und lesen size-icon-*', () => {
   const base = readFileSync(new URL('../dist/base.css', import.meta.url), 'utf8');
@@ -343,6 +351,8 @@ test('der Icon-Vertrag nennt die vier Klassen, die vier Tokens und die Attribute
     assert.ok(md.includes(`.tl-icon-${s}`), `Vertrag nennt .tl-icon-${s} nicht`);
     assert.ok(md.includes(`--tl-size-icon-${s}`), `Vertrag nennt --tl-size-icon-${s} nicht`);
   }
+  for (const [wort, kuerzel] of Object.entries(ICON_SIZE_NAMES))
+    assert.ok(md.includes('`' + wort + '` → `.tl-icon-' + kuerzel + '`'), `Vertrag bildet ${wort} nicht auf .tl-icon-${kuerzel} ab`);
   for (const a of ['role="img"', 'aria-label', 'aria-hidden', 'alt=""']) assert.ok(md.includes(a), `Vertrag nennt ${a} nicht`);
   for (const h of ['## Zustand', '## Aktionen', '## Tokens', '## Attribute', '## Konformität']) assert.ok(md.includes(h), `Abschnitt ${h} fehlt`);
 });

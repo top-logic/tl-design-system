@@ -15,8 +15,12 @@ dieselbe Klasse quadratisch — keine Breite inline.
 | Schlüssel | Typ | Bedeutung |
 |---|---|---|
 | `image` | string | Kodiertes ThemeImage: `css:<klassen>`, `colored:<klassen>`, ein Pfad oder `theme:<name>`; `none` zeichnet nichts. |
-| `size` | `sm` \| `md` \| `lg` \| `glyph`, optional | Die Stufe nach Rolle: `sm` steht neben Text (Default), `md` ist selbst das Bedienelement, `lg` ist eine Aussage, `glyph` ein Richtungszeichen im Control. |
+| `size` | `small` \| `medium` \| `large` \| `glyph`, optional | Die Stufe nach Rolle: `small` steht neben Text (Default), `medium` ist selbst das Bedienelement, `large` ist eine Aussage, `glyph` ein Richtungszeichen im Control. |
 | `tooltip` | string, optional | Der Text, der das Icon benennt. Ohne ihn ist das Icon Dekoration. |
+
+Die Größennamen im Zustand sind Wörter; die Klassen des Pakets tragen die Kürzel der Skala
+(`small` → `.tl-icon-sm`, `medium` → `.tl-icon-md`, `large` → `.tl-icon-lg`, `glyph` → `.tl-icon-glyph`).
+Die Komponente bildet das eine auf das andere ab.
 
 ## Aktionen
 
@@ -39,5 +43,5 @@ Farbe: `currentColor` — das Icon erbt die Farbe seines Textes, eine eigene Ico
 ## Konformität
 
 Eine Komponente besteht den Vertrag, wenn sie im Specimen-Harness des Pakets je Stufe genau eine der
-vier Klassen trägt, ohne `size` die Klasse `tl-icon-sm`, mit `tooltip` `role="img"` und sonst
+vier Klassen trägt, ohne `size` die Klasse `tl-icon-sm` (die Stufe `small`), mit `tooltip` `role="img"` und sonst
 `aria-hidden`, kein `style`-Attribut setzt und im Klassen-Gate keine Klasse ohne `tl-`-Präfix hinterlässt.

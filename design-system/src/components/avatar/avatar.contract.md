@@ -10,11 +10,15 @@ die Tokens.
 | Schlüssel | Typ | Bedeutung |
 |---|---|---|
 | `name` | string \| null | Anzeigename dessen, was der Avatar vertritt. Aus ihm kommen die Initialen (höchstens zwei Zeichen) und die Kategorie. `null`: ein Avatar ohne Namen, neutral und leer. |
-| `size` | `sm` \| `md` \| `lg` \| `xl`, optional | Durchmesser; fehlt er, `md`. |
+| `size` | `small` \| `medium` \| `large` \| `x-large`, optional | Durchmesser; fehlt er, `medium`. |
 | `url` / `hasData` / `dataRevision` | siehe `ImageSource` | Das Bild. Gibt es eines, zeigt der Avatar es statt der Initialen. |
 
 Die Kategorie ist **keine Eingabe**: die Komponente rechnet sie aus dem Namen (`1 + hash(name) mod 8`),
 und derselbe Name ergibt überall dieselbe Kategorie. Ein Farbwert erreicht die Komponente nie.
+
+Die Größennamen im Zustand sind Wörter; die Klassen des Pakets tragen die Kürzel der Skala
+(`small` → `tl-avatar--sm`, `large` → `tl-avatar--lg`, `x-large` → `tl-avatar--xl`, `medium` ohne
+Modifier). Die Komponente bildet das eine auf das andere ab.
 
 ## Aktionen
 
@@ -38,8 +42,8 @@ Maße: `--tl-size-avatar-sm` (24 px), `--tl-size-avatar-md` (32 px), `--tl-size-
 `--tl-size-avatar-xl` (64 px); Linie `--tl-border-width-sm`; Form `--tl-radius-round`. Die Größen
 folgen nicht der Dichte: ein Avatar ist kein Bedienelement.
 
-Typo der Initialen, von außen gesetzt wie beim Button, je Größe: `sm` `.tl-type-label-strong`,
-`md` `.tl-type-body-strong`, `lg` `.tl-type-heading-md`, `xl` `.tl-type-heading-lg`. Keine Größe
+Typo der Initialen, von außen gesetzt wie beim Button, je Größe: `small` `.tl-type-label-strong`,
+`medium` `.tl-type-body-strong`, `large` `.tl-type-heading-md`, `x-large` `.tl-type-heading-lg`. Keine Größe
 unterschreitet 12 px.
 
 ## Attribute
@@ -54,6 +58,6 @@ unterschreitet 12 px.
 ## Konformität
 
 Eine Komponente besteht den Vertrag, wenn sie im Specimen-Harness des Pakets für jeden Namen die
-Klasse `tl-avatar--category-<n>` seines Hashes trägt, für jede Größe außer `md` den Modifier, ohne
+Klasse `tl-avatar--category-<n>` seines Hashes trägt, für jede Größe außer `medium` den Modifier ihres Kürzels, ohne
 Namen und ohne Bild die neutrale Fläche zeigt, mit Bild das `__image` rendert, kein `style`-Attribut
 setzt und im Klassen-Gate keine Klasse ohne `tl-`-Präfix hinterlässt.
