@@ -29,7 +29,8 @@ gepostet — Rücksprache mit Bernhard erwartet; Wiki „Übersicht“ §2b nach
 `0c359e1`). **Gruppe A ist fertig:** Branch `CWS/CWS_29617_design_system_ui_paket` von master, `@Key` an
 `ClientResources.Config.getResources()`, `TestClientResources` 4/4 (Override, Remove, Kundenskript nach unserem,
 `requires` auf entfernten Eintrag ist ein Fehler), Modul 395/395, `messages_en` erzeugt, Review Approved
-(`d3c33be37f..532e5f1895`, gepusht, noch kein PR). Ledger `.superpowers/sdd/2026-09-25-ui-paket/progress.md`.
+(`d3c33be37f..532e5f1895`); PR [!1710](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1710) auf master,
+Bernhard Reviewer (Request gesetzt). Ledger `.superpowers/sdd/2026-09-25-ui-paket/progress.md`.
 Gruppen B, C, E warten auf den Merge von !1698 (msgbuf 1.2.3). Gruppen B/C/E warten auf den Merge von !1698
 (blockiert auf msgbuf 1.2.3).
 
