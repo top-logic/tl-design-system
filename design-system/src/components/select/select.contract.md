@@ -64,7 +64,7 @@ Der Fokus bleibt an der Wurzel bzw. am Suchfeld; die Hervorhebung wandert über
 | `Escape` | — | schließt, der Fokus kehrt zur Wurzel zurück |
 | `Tab` | verlässt das Feld | schließt und verlässt das Feld |
 | `Backspace` | — | im leeren Suchfeld bei `multiSelect`: entfernt den letzten Chip |
-| Tippen | — | filtert die Optionen im Suchfeld; Treffer im Label als `tl-type-body-strong` |
+| Tippen | — | filtert die Optionen im Suchfeld; der Treffer im Label nimmt die kräftige Variante der Typo-Klasse seines Trägers: `tl-type-body-strong` in einem schlichten Label, `tl-type-label-strong` in einer Pill |
 
 ## Tokens
 
@@ -100,7 +100,7 @@ halten am Gate 4,5 auf `surface-overlay`.
 | `role="listbox"` | an `tl-select__list`. |
 | `role="option"` | an jeder `tl-select__option`. |
 | `aria-selected` | `"true"` nur an gewählten Optionen — gewählt, nicht hervorgehoben. |
-| `data-tl-state="highlighted"` | an der hervorgehobenen Option (Tastatur oder Zeiger). |
+| `data-tl-state="highlighted"` | an der hervorgehobenen Option (Tastatur oder Zeiger). Der Indikator ist die Akzentlinie (`--tl-border-interactive`, Gate 3,0 auf `surface-overlay` und `surface-interactive-selected`); die Tönung ist ein Zusatz, weil `--tl-surface-interactive-selected` auf `surface-layer` abgestimmt ist, nicht auf die gehobene Overlay-Fläche. |
 | `data-tl-state="dragging"` | am Chip, der gerade gezogen wird. |
 | `data-tl-state="drop-before"` / `"drop-after"` | am Chip, vor bzw. hinter dem der gezogene landet. |
 | `aria-invalid="true"` | `hasError`, an der Wurzel. Das CSS von `tl-field` liest es selbst. |
@@ -143,7 +143,7 @@ kommen aus dem Theme.
 
 Eine Komponente besteht den Vertrag, wenn sie im Specimen-Harness des Pakets für jeden Zustand oben
 das jeweilige Attribut trägt, die Hervorhebung allein über `data-tl-state` und `aria-activedescendant`
-und die Wahl allein über `aria-selected` ausdrückt, die Tastatur wie oben bedient, der Fehler die
+und die Wahl allein über `aria-selected` ausdrückt, die Tastatur wie oben bedient, den Treffer in der kräftigen Variante der Typo-Klasse seines Trägers zeigt, der Fehler die
 Warnung verdrängt, bei `editable: false` kein Combobox rendert und im Klassen-Gate keine Klasse ohne
 `tl`-Präfix hinterlässt. Der Test dazu folgt mit der ersten Kundenkomponente; bis dahin gilt dieser
 Text.

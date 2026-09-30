@@ -46,6 +46,8 @@ export function kontrastPaare(T) {
     paar('status-warning-border', bg, 3.0);
   }
   paar('text-secondary', 'surface-overlay', 4.5); // Popup-Status des Select
+  // Hervorhebung im Select-Popup und Link im Status
+  paar('border-interactive', 'surface-overlay', 3.0); paar('border-interactive', 'surface-interactive-selected', 3.0); paar('text-link', 'surface-overlay', 4.5);
   paar('text-primary', 'surface-field', 4.5); paar('icon-secondary', 'surface-field', 3.0); // Schalterknopf
   paar('border-interactive', 'surface-brand-subtle', 3.0); // gewählter Chip, gewähltes Segment
   for (const bg of GRUENDE_FOKUS) paar('focus-ring', bg, 3.0);

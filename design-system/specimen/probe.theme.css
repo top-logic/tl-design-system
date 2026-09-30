@@ -29,7 +29,7 @@
   --tl-border-separator: #C7C3BE;
   --tl-border-control: #8E8A86;
   --tl-border-emphasis: #75716D;
-  --tl-border-interactive: #E8541E;
+  --tl-border-interactive: #E6521C;
   --tl-border-disabled: #C7C3BE;
   --tl-focus-ring: #E8541E;
   --tl-status-error-text: #F07070;
@@ -130,5 +130,6 @@
    finding  light: status-error-text on surface-overlay = 2.89, required 4.5, suggestion #C94D50
    note     light: text-link in der Helligkeit nachgeführt, damit 4,5 auf dem Grund hält (#E8541E → #BE3B00)
    note     die Marke liegt 10° neben einer Bedeutung; Stufe B entscheidet, ob die Bedeutung einen anderen Ton bekommt
+   note     light: border-interactive in der Helligkeit nachgeführt, damit es auf seinem Grund hält (#E8541E → #E6521C)
    note     light: status-warning-text in der Helligkeit nachgeführt, damit es auf seinem Grund hält (#936E00 → #916D00)
 */
