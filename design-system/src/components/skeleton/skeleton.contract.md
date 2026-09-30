@@ -25,6 +25,8 @@ Keine.
 | Form | `--tl-radius-sm`, Mindesthöhe `--tl-size-icon-sm` |
 | Puls | `--tl-duration-loop`, `--tl-easing-standard`, endlos, `alternate` zwischen Deckkraft 1 und 0,5 |
 
+Auf gehobenen Flächen (`surface-overlay`, dunkel) ist der Platzhalter kaum sichtbar, weil `surface-interactive-selected` für Panels abgestimmt ist; eigene Rollen für gehobene Flächen kommen mit Welle 3 (Menü).
+
 Ohne Bewegung (Reduced-Motion) beendet der globale Schalter aus `base.css` die Animation nach einem Durchlauf;
 die Ruhelage ist Deckkraft 1, weil kein Fill-Mode gesetzt ist.
 

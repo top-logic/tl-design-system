@@ -31,10 +31,11 @@ Keine. Ein Badge ist Anzeige.
 | Attribut | Wann |
 |---|---|
 | `tl-badge` | immer; es gibt keine Modifier |
-| `aria-label` | wenn das Badge allein an einem Icon steht: sagt, was gezählt wird („3 neue Meldungen“) |
+| `role="img"` und `aria-label` | wenn das Badge allein an einem Icon steht: der Name sagt, was gezählt wird („3 neue Meldungen“); ein `aria-label` an einem `<span>` ohne Rolle wird ignoriert |
+| nichts | wenn es Teil eines beschrifteten Reiters ist: die Zahl ist dann sichtbarer Text und Inhalt, weder `aria-hidden` noch eigener Name |
 
 ## Konformität
 
 Ein Badge besteht den Vertrag, wenn es die Schrift über `tl-type-label-strong tl-nums` bekommt, allein an einem
-Icon einen `aria-label` trägt, der das Gezählte nennt, und im Klassen-Gate keine Klasse ohne `tl-`-Präfix
+Icon `role="img"` mit einem `aria-label` trägt, der das Gezählte nennt (im beschrifteten Reiter bleibt die Zahl schlichter Text), und im Klassen-Gate keine Klasse ohne `tl-`-Präfix
 hinterlässt.

@@ -41,6 +41,7 @@ test('Skeleton: vertiefte Fläche, Puls über duration-loop, keine eigene Reduce
 for (const name of ['alert', 'badge', 'divider', 'skeleton']) {
   test(`${name}: Specimen und Vertrag`, () => {
     assert.deepEqual(specimenProblems(readComponent(name, `${name}.spec.html`)), []);
+    if (name === 'badge') assert.ok(readComponent(name, 'badge.spec.html').includes('role="img"'), 'Badge mit aria-label braucht role="img"');
     const css = readComponent(name, `${name}.css`);
     const md = readComponent(name, `${name}.contract.md`);
     assert.deepEqual(missingInContract(md, [...varsOf(css), `tl-${name}`]), []);

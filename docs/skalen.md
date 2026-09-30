@@ -1507,7 +1507,7 @@ Browser-Standard, der Link im Lesemodus Browser-Blau (1,29:1).
 messen dunkel 1,13 / 1,01. Im Select-Popup trägt die Akzentlinie (`border-interactive`, 4,53) die
 Hervorhebung, die Tönung ist nur ein Zusatz; die Paarliste hält die Linie mit 3,0 auf `surface-overlay`
 und `surface-interactive-selected`. Menü und Dialog brauchen eigene Rollen für Zeigen und Auswahl auf
-gehobenen Flächen — Entscheidung mit dem Menü.
+gehobenen Flächen — Entscheidung mit dem Menü. Zweiter Leser dieser Entscheidung ist der Skeleton: `surface-interactive-selected` ist auf dunklem `surface-overlay` kaum sichtbar (1,01).
 
 ## Befunde aus dem Specimen
 
