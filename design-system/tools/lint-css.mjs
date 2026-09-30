@@ -82,6 +82,7 @@ const MODIFIERS = {
   'tl-segmented': new Set([]),
   'tl-chip-group': new Set([]),
   'tl-chip': new Set([]),
+  'tl-select': new Set([]),
 };
 
 export function knownVariables(css) {
