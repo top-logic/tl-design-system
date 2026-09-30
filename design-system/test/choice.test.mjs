@@ -1,0 +1,68 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { readComponent, colorVarsOf, declarationsOf, specimenProblems, missingInContract, varsOf } from './lib/component.mjs';
+
+const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)));
+const css = readComponent('choice', 'choice.css');
+
+test('drei Maße der Auswahl sind Tokens der Skala und folgen nicht der Dichte', () => {
+  assert.equal(T.measure['size-choice'], '{size-4}');
+  assert.equal(T.measure['size-switch'], '{size-7}');
+  assert.equal(T.measure['size-switch-knob'], '{size-3}');
+  for (const d of Object.values(T.density)) for (const k of ['size-choice', 'size-switch', 'size-switch-knob']) assert.ok(!(k in d), k);
+});
+
+test('choice.css liest genau diese Farbrollen', () => {
+  assert.deepEqual(colorVarsOf(css), [
+    'border-control', 'border-disabled', 'border-emphasis', 'border-interactive', 'icon-secondary',
+    'status-error-border', 'status-warning-border', 'surface-brand', 'surface-brand-subtle',
+    'surface-disabled', 'surface-field', 'surface-interactive-hover', 'text-disabled', 'text-on-brand', 'text-primary',
+  ]);
+});
+
+test('Kästchen und Kreis zeichnen sich selbst, ohne Bild und ohne accent-color', () => {
+  assert.match(declarationsOf(css, '.tl-checkbox') ?? '', /appearance:\s*none/);
+  assert.doesNotMatch(css, /accent-color|url\(/);
+  assert.match(declarationsOf(css, '.tl-checkbox:checked') ?? '', /surface-brand/);
+  assert.ok(declarationsOf(css, '.tl-checkbox:indeterminate'), 'gemischter Zustand fehlt');
+  assert.ok(declarationsOf(css, '.tl-radio:checked::after'), 'Punkt des Radio fehlt');
+});
+
+test('gewählt ist ein Attribut: aria-checked am Segment, aria-pressed am Chip', () => {
+  assert.match(declarationsOf(css, '.tl-segmented__segment[aria-checked="true"]') ?? '', /surface-brand-subtle/);
+  assert.match(declarationsOf(css, '.tl-segmented__segment[aria-pressed="true"]') ?? '', /surface-brand-subtle/);
+  assert.match(declarationsOf(css, '.tl-chip[aria-pressed="true"]') ?? '', /border-interactive/);
+  assert.doesNotMatch(css, /__marker|--selected/);
+});
+
+test('Fehler an Gruppen: aria-invalid an radiogroup, data-tl-state an group', () => {
+  assert.ok(declarationsOf(css, '.tl-choice-group[aria-invalid="true"] .tl-radio'), 'radiogroup-Fehler fehlt');
+  assert.ok(declarationsOf(css, '.tl-segmented[aria-invalid="true"]'), 'Segmente als radiogroup');
+  assert.ok(declarationsOf(css, '.tl-chip-group[data-tl-state~="error"] .tl-chip'), 'Chip-Gruppe (role=group) fehlt');
+  // Ohne Kommentare vergleichen; je Block steht die Warnung vor dem Fehler, damit der Fehler gewinnt.
+  const regeln = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  for (const b of ['.tl-checkbox', '.tl-choice-group', '.tl-segmented', '.tl-chip-group'])
+    assert.ok(regeln.indexOf(`${b}[data-tl-state~="warning"]`) < regeln.indexOf(`${b}[aria-invalid="true"]`),
+      `${b}: Warnung muss vor dem Fehler stehen, damit der Fehler gewinnt`);
+});
+
+test('die Trefferfläche ist eine Control-Höhe und folgt der Dichte', () => {
+  assert.match(declarationsOf(css, '.tl-choice') ?? '', /min-height:\s*var\(--tl-size-control\)/);
+});
+
+test('das Auswahl-Specimen zeigt jede Form in jedem Zustand', () => {
+  const html = readComponent('choice', 'choice.spec.html');
+  assert.deepEqual(specimenProblems(html), []);
+  for (const s of ['tl-checkbox', 'tl-checkbox--switch', 'role="switch"', 'tl-radio', 'role="radiogroup"', 'checked',
+    'indeterminate', 'aria-invalid="true"', 'data-tl-state="warning"', 'disabled', 'tl-segmented', 'aria-checked="true"',
+    'tl-chip', 'aria-pressed="true"', 'data-tl-state="error"'])
+    assert.ok(html.includes(s), `Specimen zeigt ${s} nicht`);
+});
+
+test('der Auswahl-Vertrag nennt jedes Token, jede Klasse und jedes Attribut', () => {
+  const md = readComponent('choice', 'choice.contract.md');
+  const names = [...varsOf(css), 'tl-checkbox', 'tl-checkbox--switch', 'tl-radio', 'tl-choice', 'tl-choice-group',
+    'tl-segmented', 'tl-chip', 'aria-checked', 'aria-pressed', 'aria-invalid', 'data-tl-state', 'role="switch"', 'role="radiogroup"'];
+  assert.deepEqual(missingInContract(md, names), []);
+});

@@ -12,6 +12,6 @@ const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=
 createServer(async (req, res) => {
   const p = normalize(decodeURIComponent(new URL(req.url, 'http://x').pathname));
   const file = p.startsWith('/fonts/') ? join(FONTS, p.slice(7)) : join(ROOT, p === '/' ? 'specimen/index.html' : p);
-  try { res.writeHead(200, { 'content-type': TYPES[extname(file)] ?? 'application/octet-stream' }); res.end(await readFile(file)); }
+  try { const data = await readFile(file); res.writeHead(200, { 'content-type': TYPES[extname(file)] ?? 'application/octet-stream' }); res.end(data); }
   catch { res.writeHead(404).end(`Nicht gefunden: ${p}`); }
 }).listen(PORT, () => console.log(`Specimen: http://localhost:${PORT}/`));

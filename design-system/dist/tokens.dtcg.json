@@ -1615,6 +1615,18 @@
         "$type": "dimension",
         "$value": "{primitive.measure.size-2}"
       },
+      "size-choice": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-4}"
+      },
+      "size-switch": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-7}"
+      },
+      "size-switch-knob": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-3}"
+      },
       "border-width-sm": {
         "$type": "dimension",
         "$value": "{primitive.measure.line-1}"

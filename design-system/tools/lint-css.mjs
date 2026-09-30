@@ -75,6 +75,13 @@ const MODIFIERS = {
   'tl-field': new Set(['multiline']), // Fehler, Warnung, Schreibschutz sind Attribute bzw. ein anderes Element.
   'tl-field-group': new Set([]),
   'tl-field-value': new Set([]),
+  'tl-checkbox': new Set(['switch']),
+  'tl-radio': new Set([]),
+  'tl-choice': new Set([]),
+  'tl-choice-group': new Set([]),
+  'tl-segmented': new Set([]),
+  'tl-chip-group': new Set([]),
+  'tl-chip': new Set([]),
 };
 
 export function knownVariables(css) {

@@ -1,0 +1,102 @@
+# Vertrag: Auswahl
+
+Eine Kundenkomponente, die unter einem der TopLogic-Namen `TLCheckbox`, `TLBooleanChoice`,
+`TLSegmentedChoice` oder `TLOptionChips` registriert ist (Stufe C der Spec), bekommt vom Server den
+Zustand unten, löst die genannten Aktionen aus und trägt die genannten Attribute. TopLogic garantiert
+dann Funktion, Tastatur und Fokus — nicht das Aussehen. Wer ins Bild passen will, liest die Tokens.
+Checkbox, Radio und Schalter zeichnen sich selbst (`appearance: none`); gewählt ist, was das Attribut
+sagt, nie eine Klasse.
+
+## Zustand
+
+Vom Server über `useTLState()`. Die Basisschlüssel aus `ReactFormFieldControl` — `value`, `editable`,
+`mandatory`, `hasError`, `hasWarnings`, `label`, `hidden` und die übrigen — stehen im Vertrag des
+Feldes (`field.contract.md`, Abschnitt Zustand) und gelten hier unverändert. Zusätze je Control:
+
+| Control | Schlüssel | Typ | Bedeutung |
+|---|---|---|---|
+| `TLCheckbox` (`ReactCheckboxControl`) | `value` | boolean oder `null` | Angekreuzt, nicht angekreuzt; `null` nur bei `triState`: kein Wert. |
+| `TLCheckbox` | `triState` | boolean, optional | Das Kästchen hat einen dritten Zustand „kein Wert“: gemischt dargestellt, Klick läuft angekreuzt → nicht angekreuzt → kein Wert. Fehlt er, gilt zweiwertig. |
+| `TLCheckbox` | `display` | string, optional | Die Form: `switch` für den Schalter, `tl-checkbox--switch`. Fehlt er, ist es das Kästchen. Mit `triState` nie `switch` — ein Schalter hat keine dritte Stellung. |
+| `TLBooleanChoice` (`ReactBooleanChoiceControl`) | `presentation` | string | `radio`: zwei oder drei `tl-radio` in einer `tl-choice-group`; `select`: ein `tl-field`. |
+| `TLBooleanChoice` | `options` | Liste | Die angebotenen Werte, je `value` (boolean oder `null` für „kein Wert“) und `label`. |
+| `TLSegmentedChoice`, `TLOptionChips` (`ReactDropdownSelectControl`) | `display` | string | `segmented` bzw. `chips`: welche Form die Auswahl hat. |
+| `TLSegmentedChoice`, `TLOptionChips` | `options` | Liste | Jede Option als Deskriptor: `value` (Id), `label`, optional `image` (kodiertes ThemeImage), `colorRole`, `link`. |
+| `TLSegmentedChoice`, `TLOptionChips` | `value` | Liste | Die gewählten Optionen als Deskriptoren. |
+| `TLSegmentedChoice`, `TLOptionChips` | `multiSelect` | boolean | Mehrfachwahl: `role="group"` mit `aria-pressed`. Sonst Einfachwahl: `role="radiogroup"` mit `aria-checked`. |
+| `TLSegmentedChoice`, `TLOptionChips` | `optionsLoaded` | boolean | Ob die Optionsliste des Clients aktuell ist; diese Formen bekommen sie sofort. |
+| `TLSegmentedChoice`, `TLOptionChips` | `customOrder` | boolean | Die Wahl behält ihre Reihenfolge, statt sortiert zu werden. |
+| `TLSegmentedChoice`, `TLOptionChips` | `emptyOptionLabel` | string | Beschriftung für „nichts gewählt“. |
+
+## Aktionen
+
+| Auslöser | Aktion |
+|---|---|
+| Klick auf Kästchen oder Schalter | `sendCommand('valueChanged', { value })`, `value` boolean oder bei `triState` `null`. |
+| Wahl eines Radio (`TLBooleanChoice`) | `sendCommand('valueChanged', { value })`, `value` der Option (boolean oder `null`). |
+| Wahl eines Segments oder Chips | `sendCommand('valueChanged', { value })`, `value` die Liste der gewählten Options-Ids. |
+| Link einer Option im Lesewert | `sendCommand('goto', { option })`, nur bei `editable: false` und `link` im Deskriptor. |
+
+## Tokens
+
+| Teil | Token |
+|---|---|
+| Kästchen, Kreis | Maß `--tl-size-choice` (folgt nicht der Dichte); Ecke `--tl-radius-sm` bzw. `--tl-radius-round` |
+| Rand | `--tl-border-control`, Breite `--tl-border-width-sm`; beim Zeigen `--tl-border-emphasis` |
+| Fläche | `--tl-surface-field` |
+| Angekreuzt, gemischt, gewähltes Radio | Fläche und Rand `--tl-surface-brand`; Haken, Strich, Punkt `--tl-text-on-brand`, Strichstärke `--tl-border-width-md` |
+| Schalter | Spur `--tl-size-switch` × `--tl-size-choice`, Ecke `--tl-radius-full`; Knopf `--tl-size-switch-knob`, rund `--tl-radius-round`, aus `--tl-icon-secondary`, an `--tl-text-on-brand`; Bewegung `--tl-duration-fast`, `--tl-easing-standard` (Reduced Motion über den globalen Schalter) |
+| Trefferfläche `tl-choice` | Höhe `--tl-size-control` (folgt der Dichte), als `min-height`; Abstand zum Label `--tl-space-xs`; Text `--tl-text-primary` |
+| Gruppe `tl-choice-group` | Abstand `--tl-space-control-gap` |
+| Segmente | Rahmen `--tl-border-control`, `--tl-radius-sm`, `--tl-surface-field`; Segment `--tl-size-control` abzüglich 2 × `--tl-border-width-sm`, Innenabstand `--tl-space-control-x`, Text `--tl-text-primary`; beim Zeigen `--tl-surface-interactive-hover` |
+| Chips | Höhe `--tl-size-control-sm`, Innenabstand `--tl-space-sm`, Lücke `--tl-space-2xs`, Ecke `--tl-radius-full`; Gruppe `--tl-space-xs`; beim Zeigen `--tl-surface-interactive-hover` |
+| Gewähltes Segment, gewählter Chip | Fläche `--tl-surface-brand-subtle`, Rand `--tl-border-interactive` |
+| Fehler | Rand `--tl-status-error-border` |
+| Warnung | Rand `--tl-status-warning-border` |
+| deaktiviert (vom Kontrast-Gate ausgenommen) | Fläche `--tl-surface-disabled`, Text `--tl-text-disabled`, Rand `--tl-border-disabled`; angekreuzt deaktiviert: Fläche `--tl-border-disabled` |
+
+Schrift: Klasse `.tl-type-body` am `tl-choice`, `.tl-type-label` an Segment und Chip, von außen
+gesetzt; die Auswahl hat keine Schriftregel.
+
+## Attribute
+
+| Attribut | Wann |
+|---|---|
+| `:checked` | `value: true` an Kästchen, Schalter, Radio — der native Zustand des `input`, kein Attribut von Hand. |
+| `:indeterminate` + `aria-checked="mixed"` | `triState` und `value: null`. `indeterminate` ist eine Eigenschaft des `input` (kein HTML-Attribut); `aria-checked="mixed"` sagt es dem Screenreader. |
+| `role="switch"` + `aria-checked` | `display: switch`; am `input type="checkbox"` mit `tl-checkbox tl-checkbox--switch`. |
+| `role="radiogroup"` | an der `tl-choice-group` der Radios (`TLBooleanChoice`) und an `tl-segmented` bei Einfachwahl. |
+| `role="group"` | an `tl-chip-group` und an `tl-segmented` bei `multiSelect`. |
+| `aria-checked` | am Segment (`role="radio"`) bei Einfachwahl: `"true"` für das gewählte. |
+| `aria-pressed` | am Segment bei Mehrfachwahl und an jedem Chip: `"true"` für die gewählten. |
+| `aria-invalid="true"` | `hasError`, wo ARIA es erlaubt: am Kästchen, am Schalter, an der `role="radiogroup"` (Radios, Segmente mit Einfachwahl). Das CSS liest es selbst. |
+| `data-tl-state="error"` | `hasError` an einer `role="group"` (Chips, Segmente mit Mehrfachwahl) — dort erlaubt ARIA `aria-invalid` nicht. |
+| `data-tl-state="warning"` | `hasWarnings && !hasError`, am Kästchen, an der Radiogruppe, an `tl-segmented`, an `tl-chip-group`. Der Fehler verdrängt die Warnung. |
+| `tabIndex` | roving in Segmenten mit Einfachwahl: nur das gewählte (ohne Wahl das erste) hat `0`, die übrigen `-1`; Pfeiltasten wechseln die Wahl. Bei Mehrfachwahl und an Chips ist jedes Element erreichbar. |
+| `disabled` | heute setzt es kein Zustand des Formularmodells (es gibt keinen Schlüssel `disabled`); die Regeln `:disabled` stehen für Kundenmodule und spätere Zustände. |
+| `:focus-visible` | den Ring liefert `base.css`; die Auswahl setzt und entfernt keinen Fokusstil. |
+
+Bei `editable: false` rendern `TLBooleanChoice`, `TLSegmentedChoice` und `TLOptionChips` den
+Lesewert (`tl-field-value`, siehe `field.contract.md`), Optionen mit `link` als Link. `TLCheckbox`
+zeigt heute ein deaktiviertes Kästchen.
+
+Klassen:
+
+| Klasse | Element |
+|---|---|
+| `tl-checkbox` | das `input type="checkbox"` |
+| `tl-checkbox--switch` | dasselbe `input` bei `display: switch`, mit `role="switch"` |
+| `tl-radio` | das `input type="radio"` |
+| `tl-choice` | das `label` um `input` und Text — Trefferfläche |
+| `tl-choice-group` | die Gruppe mehrerer `tl-choice`; bei Radios mit `role="radiogroup"` |
+| `tl-segmented` | die Leiste der Segmente, `role="radiogroup"` oder `role="group"` |
+| `tl-segmented__segment` | `button type="button"` je Option |
+| `tl-chip-group` | die Wolke der Chips, `role="group"` |
+| `tl-chip` | `button type="button"` je Option, mit `aria-pressed` |
+
+## Konformität
+
+Eine Komponente besteht den Vertrag, wenn sie im Specimen-Harness des Pakets für jeden Zustand oben
+das jeweilige Attribut trägt, Gewählt allein über `:checked`, `aria-checked` oder `aria-pressed`
+ausdrückt, der Fehler die Warnung verdrängt und im Klassen-Gate keine Klasse ohne `tl`-Präfix
+hinterlässt. Der Test dazu folgt mit der ersten Kundenkomponente; bis dahin gilt dieser Text.
