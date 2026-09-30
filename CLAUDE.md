@@ -71,6 +71,13 @@ Schätz-Regel des ADHD-Skills. Pläne gliedern sich nach Reihenfolge und Fertig-
 
 Jedes Arbeitspaket endet committet (Präfix `Ticket #29617:`), nichts Halbfertiges bleibt liegen.
 
+**Kein Plan geht ohne Plan-Review in die Ausführung.** Die Selbstprüfung des Autors (`writing-plans`) prüft
+gegen die Spec; sie findet nicht, was am Code scheitert. Vor dem Start der SDD prüft ein **frischer Agent**
+(Opus, oder Fable selbst, wenn Opus geplant hat) jeden Plan gegen die Gates: jedes geplante CSS gegen
+`tools/lint-css.mjs` und die bestehenden Komponenten, jede Regex und jeden Parser gegen ein echtes Beispiel,
+jede Behauptung „dieser Test scheitert“ gegen die Datei, die den Test wirklich enthält. Anlass 30.09.: sechs
+Fehler im Plan der Welle 2, zwei davon Gate-Brüche, alle erst beim Fremd-Review gefunden.
+
 **`messages_en.properties` wird nie von Hand geschrieben.** JavaDoc schreiben, `tools/check-messages-en.sh`
 laufen lassen, den erzeugten Diff committen, Deutsch nachziehen. Das gilt auch für den JavaDoc der Klasse
 selbst (`<Klasse>.tooltip`). Vier Jenkins-Builds sind daran gescheitert (19.–25.09.2026).
