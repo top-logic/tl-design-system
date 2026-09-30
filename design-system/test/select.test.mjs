@@ -56,3 +56,11 @@ test('der Abstand unter dem Suchfeld sitzt an seiner Gruppe, nicht am Feld', () 
   assert.match(declarationsOf(css, '.tl-select__search-group') ?? '', /margin-bottom/);
   assert.equal(declarationsOf(css, '.tl-select__search'), null);
 });
+
+test('Entfernen und Löschen haben eine Trefferfläche von size-control-sm im Quadrat (WCAG 2.5.8)', () => {
+  for (const s of ['.tl-select__chip-remove', '.tl-select__clear']) {
+    const d = declarationsOf(css, s) ?? '';
+    assert.match(d, /min-inline-size:\s*var\(--tl-size-control-sm\)/, s);
+    assert.match(d, /min-block-size:\s*var\(--tl-size-control-sm\)/, s);
+  }
+});

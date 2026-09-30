@@ -155,3 +155,13 @@ test('ein Zustand als Modifier des Feldes bricht das Gate — als Zustandswort o
       .some((v) => v.includes('kein Modifier von tl-field')), m);
   assert.deepEqual(lint('.tl-pill--error { color: var(--tl-text-primary); }', { known, file: 'x.css' }), [], 'Bedeutung an der Pill bleibt erlaubt');
 });
+
+test('ein Zustand als Element-Modifier ist ein Verstoß — auch Fehler und Warnung', () => {
+  for (const c of ['tl-x__y--selected', 'tl-x__y--error', 'tl-form-field__message--warning']) {
+    const v = lint(`.${c} { color: var(--tl-text-primary); }`, { known, file: 'x.css' });
+    assert.equal(v.length, 1, v.join('\n'));
+    assert.match(v[0], /Zustand als Element-Modifier/);
+  }
+  assert.deepEqual(lint('.tl-alert--error { color: var(--tl-text-primary); }', { known, file: 'x.css' }), []);
+  assert.deepEqual(lint('.tl-button__icon--large { }', { known, file: 'x.css' }), []);
+});

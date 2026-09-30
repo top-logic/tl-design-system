@@ -449,6 +449,10 @@
 
 .tl-segmented__segment {
   flex: 1 1 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tl-space-2xs);
   min-width: 0;
   min-height: calc(var(--tl-size-control) - 2 * var(--tl-border-width-sm));
   padding: 0 var(--tl-space-control-x);
@@ -457,6 +461,21 @@
   background: transparent;
   color: var(--tl-text-primary);
   cursor: pointer;
+}
+
+/* Das Label endet mit Ellipse. text-overflow wirkt nicht über einen Flex-Container auf seine Kinder,
+   darum trägt das Label ein eigenes Element; die Pill einer Option mit Farbrolle darf schrumpfen. */
+.tl-segmented__label,
+.tl-chip__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tl-segmented__segment > .tl-pill,
+.tl-chip > .tl-pill {
+  min-width: 0;
 }
 
 .tl-segmented__segment:where(:not(:disabled)):hover {
@@ -497,6 +516,8 @@
   display: inline-flex;
   align-items: center;
   gap: var(--tl-space-2xs);
+  min-width: 0;
+  max-width: 100%;
   min-height: var(--tl-size-control-sm);
   padding: 0 var(--tl-space-sm);
   border: var(--tl-border-width-sm) solid var(--tl-border-control);
@@ -1177,10 +1198,15 @@ a.tl-field-value:hover {
   min-width: 0;
 }
 
+/* Die Trefferfläche ist mindestens size-control-sm im Quadrat (WCAG 2.5.8, 24 × 24 px), auch wenn das
+   Icon kleiner ist. */
 .tl-select__chip-remove,
 .tl-select__clear {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-inline-size: var(--tl-size-control-sm);
+  min-block-size: var(--tl-size-control-sm);
   padding: 0;
   border: 0;
   border-radius: var(--tl-radius-sm);
@@ -1276,8 +1302,8 @@ a.tl-field-value:hover {
 /* Die Hervorhebung ist die Tastaturposition (aria-activedescendant), nicht die Wahl: Fläche und
    Akzentlinie. Die Akzentlinie ist der Indikator, die Tönung nur ein Zusatz: surface-interactive-selected
    ist auf surface-layer abgestimmt, nicht auf die gehobene Overlay-Fläche; gehobene Flächen bekommen
-   ihre eigenen Rollen in Welle 3. Gewählt ist aria-selected; das Control zeigt es mit einem Haken-Icon,
-   ohne eigene Regel. */
+   ihre eigenen Rollen in Welle 3. Die Liste führt nur ungewählte Optionen; Gewähltes steht als Wert
+   oder Chip in der Wurzel. */
 .tl-select__option[data-tl-state~="highlighted"] {
   background: var(--tl-surface-interactive-selected);
   box-shadow: inset var(--tl-border-width-accent) 0 0 0 var(--tl-border-interactive);

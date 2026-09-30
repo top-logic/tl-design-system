@@ -49,7 +49,7 @@ Feldes (`field.contract.md`, Abschnitt Zustand) und gelten hier unverändert. Zu
 | Trefferfläche `tl-choice` | Höhe `--tl-size-control` (folgt der Dichte), als `min-height`; Abstand zum Label `--tl-space-xs`; Text `--tl-text-primary` |
 | Gruppe `tl-choice-group` | Abstand `--tl-space-control-gap` |
 | Segmente | Rahmen `--tl-border-control`, `--tl-radius-sm`, `--tl-surface-field`; Segment `--tl-size-control` abzüglich 2 × `--tl-border-width-sm`, Innenabstand `--tl-space-control-x`, Text `--tl-text-primary`; beim Zeigen `--tl-surface-interactive-hover` |
-| Chips | Höhe `--tl-size-control-sm`, Innenabstand `--tl-space-sm`, Lücke `--tl-space-2xs`, Ecke `--tl-radius-full`; Gruppe `--tl-space-xs`; beim Zeigen `--tl-surface-interactive-hover` |
+| Chips | Höhe `--tl-size-control-sm`, Innenabstand `--tl-space-sm`, Lücke `--tl-space-2xs` (auch im Segment zwischen Bild und Label), Ecke `--tl-radius-full`; Gruppe `--tl-space-xs`; beim Zeigen `--tl-surface-interactive-hover` |
 | Gewähltes Segment | Fläche `--tl-surface-brand-subtle`, Rand `--tl-border-interactive` |
 | Gewählter Chip | wie angekreuzt: Fläche und Rand `--tl-surface-brand`, Text `--tl-text-on-brand`; beim Zeigen `--tl-surface-brand-hover` |
 | Fehler | Rand `--tl-status-error-border` |
@@ -101,8 +101,10 @@ Klassen:
 | `tl-choice-group` | die Gruppe mehrerer `tl-choice`; bei Radios mit `role="radiogroup"` |
 | `tl-segmented` | die Leiste der Segmente, `role="radiogroup"` oder `role="group"` |
 | `tl-segmented__segment` | `button type="button"` je Option |
+| `tl-segmented__label` | `span` um das Label im Segment; endet mit Ellipse |
 | `tl-chip-group` | die Wolke der Chips, `role="group"` |
 | `tl-chip` | `button type="button"` je Option, mit `aria-pressed` |
+| `tl-chip__label` | `span` um das Label im Chip; endet mit Ellipse |
 
 ## Konformität
 

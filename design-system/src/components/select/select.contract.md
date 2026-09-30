@@ -74,7 +74,7 @@ Der Fokus bleibt an der Wurzel bzw. am Suchfeld; die Hervorhebung wandert über
 | Höhe | `--tl-size-control`, Chips `--tl-size-control-sm`: Innenabstand oben und unten (`--tl-size-control` − `--tl-size-control-sm`) / 2 − `--tl-border-width-sm`, damit eine Chip-Reihe das Feld nicht über `--tl-size-control` wachsen lässt |
 | Werte, Chips, Knöpfe | Lücke `--tl-space-2xs`; Einzelwert `--tl-space-xs` |
 | Platzhalter | `--tl-text-placeholder` |
-| Entfernen, Löschen | Farbe `--tl-icon-secondary`, Ecke `--tl-radius-sm`; beim Zeigen `--tl-surface-interactive-hover` |
+| Entfernen, Löschen | Farbe `--tl-icon-secondary`, Ecke `--tl-radius-sm`; beim Zeigen `--tl-surface-interactive-hover`; Trefferfläche mindestens `--tl-size-control-sm` im Quadrat (WCAG 2.5.8) |
 | Ziehgriff, Pfeil | `--tl-icon-secondary` |
 | Einfügemarke beim Ziehen | Linie `--tl-border-width-accent` in `--tl-border-interactive` |
 | Popup | Fläche `--tl-surface-overlay`, Schatten `--tl-shadow-popover`, Ebene `--tl-layer-popover`, Ecke `--tl-radius-md`, Rand `--tl-border-width-sm` in `--tl-border-separator`, Innenabstand `--tl-space-xs`, Text `--tl-text-primary` |
@@ -138,8 +138,9 @@ Klassen:
 | `tl-select__option` | eine Option, `role="option"` |
 | `tl-select__status` | Laden, keine Treffer, Ladefehler |
 
-Symbole (Pfeil, Löschen, Entfernen, Suche, Ziehgriff) sind `ThemeIcon` in `tl-icon-sm`; die Namen
-kommen aus dem Theme.
+Symbole (Pfeil, Löschen, Entfernen, Suche, Ziehgriff) sind `ThemeIcon` in `tl-icon-sm`. Das Control
+setzt feste ThemeImages (`css:fa-solid fa-chevron-down` / `fa-chevron-up`, `fa-xmark`,
+`fa-magnifying-glass`, `fa-grip-vertical`), wie `TLValueList` — sie kommen nicht aus dem Theme.
 
 ## Konformität
 

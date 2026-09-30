@@ -56,10 +56,15 @@
   min-width: 0;
 }
 
+/* Die Trefferfläche ist mindestens size-control-sm im Quadrat (WCAG 2.5.8, 24 × 24 px), auch wenn das
+   Icon kleiner ist. */
 .tl-select__chip-remove,
 .tl-select__clear {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-inline-size: var(--tl-size-control-sm);
+  min-block-size: var(--tl-size-control-sm);
   padding: 0;
   border: 0;
   border-radius: var(--tl-radius-sm);
@@ -155,8 +160,8 @@
 /* Die Hervorhebung ist die Tastaturposition (aria-activedescendant), nicht die Wahl: Fläche und
    Akzentlinie. Die Akzentlinie ist der Indikator, die Tönung nur ein Zusatz: surface-interactive-selected
    ist auf surface-layer abgestimmt, nicht auf die gehobene Overlay-Fläche; gehobene Flächen bekommen
-   ihre eigenen Rollen in Welle 3. Gewählt ist aria-selected; das Control zeigt es mit einem Haken-Icon,
-   ohne eigene Regel. */
+   ihre eigenen Rollen in Welle 3. Die Liste führt nur ungewählte Optionen; Gewähltes steht als Wert
+   oder Chip in der Wurzel. */
 .tl-select__option[data-tl-state~="highlighted"] {
   background: var(--tl-surface-interactive-selected);
   box-shadow: inset var(--tl-border-width-accent) 0 0 0 var(--tl-border-interactive);

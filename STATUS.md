@@ -193,8 +193,9 @@ spätere Wellen: `surface-overlay` ins Kontrast-Gate (Welle 4), Icon-Schrift im 
 `dist/tokens.css`, `dist/base.css` und `dist/tokens.dtcg.json`. `cd design-system && node --test`
 ist das Gate — **224 Tests, alle grün**. `node tools/lint-css.mjs` ist das Klassen-Gate,
 `test/ratchet.json` das Budget des alten Stylesheets (5994 Zeilen nach Welle 2, davor 7252; Fremdzuwachs aus master hebt einen
-Block mit Ticketvermerk, die Summe darf sonst nur sinken) und die Einfang-Liste `foreignTl` der vier fremden
-`--tl`-Namen im Altbestand.
+Block mit Ticketvermerk, die Summe darf sonst nur sinken) und die Einfang-Liste `foreignTl` der sechs fremden
+`--tl`-Namen im Altbestand (`--tl-item-index`, `--tl-toolbar-shrink-priority`, `--tl-toolbar-trigger-size`,
+`--tl-tt-padding`, `--tlGrid-gap`, `--tlText-tone`).
 
 Die Demo-App lädt die drei Dateien als `ClientResources` und setzt `data-tl-mode` und
 `data-tl-density` am `html`. Das ist mit PR !1641 auf `master` (Commits `2a8ac53c8`, `fa851a4ef`, Merge `59404c7f`); verifiziert wurden

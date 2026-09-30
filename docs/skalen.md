@@ -230,7 +230,8 @@ Die Neutralen tragen ein sehr geringes Chroma (0,008) im Farbton der Marke. Sie 
 nicht farbig, binden die Skala aber an die Marke statt daneben zu stehen.
 
 **Das Gate prüft künftig `border-control` gegen den Grund**, nicht `border-separator` — ein
-Separator, der 3,0 erfüllen müsste, wäre keiner mehr.
+Separator, der 3,0 erfüllen müsste, wäre keiner mehr. (Seit 30.09. prüft es `border-control` gegen
+fünf Feldgründe, siehe unten.)
 
 Dunkel angehoben, als der Button auf `surface-layer` gemessen wurde: dort erreichte `gray-49` nur
 2,88.
@@ -277,7 +278,7 @@ ist der hellste Wert, der ihre Anforderung noch erfüllt.
 |---|---|---|---|---|
 | `text-primary` | `#1B1D21` | `#F0F3F9` | 16,0 | Grund |
 | `text-secondary` | `#54565B` | `#A0A3A8` | 7,0 | Grund |
-| `text-helper` | `#676A6F` | `#93969B` | 5,2 | Grund |
+| `text-helper` | `#676A6F` | `#93969B` | 4,5 auf vier Flächen (Grund 5,2) | `surface-base`, `surface-layer`, `surface-layer-nested`, `surface-overlay` |
 | `text-placeholder` | `#6B6E73` | `#8E9196` | 4,6 | **`surface-field`**, nicht Grund |
 | `border-emphasis` | `#6F7277` | `#7F8286` | 4,6 | Grund |
 | `border-control` | `#888B90` | `#75787D` | 3,0 | alle fünf Feldgründe (knappstes Paar hell `surface-field` 3,10, dunkel `surface-overlay` 3,04) |
@@ -401,7 +402,8 @@ Verschiebung, die alle fünf trägt: `status-error-border` hell von `red-32` auf
 Doppelrolle), dunkel von `red-42` auf die neue Stufe `red-41` (`#DC3B32`); `status-warning-border` hell
 von `amber-34` auf die neue Stufe `amber-36` (`#B28600` — `stufe()` ergibt 35, `amber-35` ist belegt,
 darum rückt sie auf), dunkel von `amber-44` auf die neue Stufe `amber-43` (`#98720C`). Erfolg und Info
-bleiben, bis ein Feld sie als Rand trägt.
+bleiben, bis ein Feld sie als Rand trägt. Nebenwirkung in `derive`: Ein Kunde, der nur `red-42` liefert,
+bekommt dunkel `red-41` gerechnet — kein Befund, denn Gerechnetes hält die Paarliste.
 
 **Die Regel, wann welche Rolle gilt:**
 

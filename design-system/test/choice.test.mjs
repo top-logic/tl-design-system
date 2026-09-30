@@ -88,6 +88,17 @@ test('Deaktiviert schlägt Fehler und Warnung, und Deaktiviertes zeigt kein Zeig
   assert.doesNotMatch(regeln, /(checkbox|radio|segment|chip):hover/, 'ungeschütztes :hover');
 });
 
+test('Segment- und Chip-Label enden mit Ellipse, in einem eigenen Element', () => {
+  for (const s of ['.tl-segmented__label', '.tl-chip__label']) {
+    const d = declarationsOf(css, s) ?? '';
+    assert.match(d, /overflow:\s*hidden/, s);
+    assert.match(d, /text-overflow:\s*ellipsis/, s);
+    assert.match(d, /white-space:\s*nowrap/, s);
+  }
+  assert.match(declarationsOf(css, '.tl-chip') ?? '', /min-width:\s*0/);
+  assert.match(declarationsOf(css, '.tl-segmented__segment') ?? '', /min-width:\s*0/);
+});
+
 test('die Trefferfläche ist eine Control-Höhe und folgt der Dichte', () => {
   assert.match(declarationsOf(css, '.tl-choice') ?? '', /min-height:\s*var\(--tl-size-control\)/);
 });
@@ -104,6 +115,6 @@ test('das Auswahl-Specimen zeigt jede Form in jedem Zustand', () => {
 test('der Auswahl-Vertrag nennt jedes Token, jede Klasse und jedes Attribut', () => {
   const md = readComponent('choice', 'choice.contract.md');
   const names = [...varsOf(css), 'tl-checkbox', 'tl-checkbox--switch', 'tl-radio', 'tl-choice', 'tl-choice-group',
-    'tl-segmented', 'tl-chip', 'aria-checked', 'aria-pressed', 'aria-invalid', 'data-tl-state', 'role="switch"', 'role="radiogroup"'];
+    'tl-segmented', 'tl-segmented__label', 'tl-chip', 'tl-chip__label', 'aria-checked', 'aria-pressed', 'aria-invalid', 'data-tl-state', 'role="switch"', 'role="radiogroup"'];
   assert.deepEqual(missingInContract(md, names), []);
 });

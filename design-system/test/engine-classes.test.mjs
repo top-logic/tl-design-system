@@ -19,10 +19,20 @@ function* files(dir) {
   }
 }
 
-test('keine alte Formular-Klasse in react-src und tlReactControls.css', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+// Jedes Modul mit react-src: die Satelliten (Demo, Kundenmodule im Worktree) nutzen die Controls
+// ebenso und dürfen keine alte Klasse behalten.
+function* reactSources() {
+  for (const d of readdirSync(WT)) {
+    if (!d.startsWith('com.top_logic.')) continue;
+    const src = join(WT, d, 'react-src');
+    if (existsSync(src) && statSync(src).isDirectory()) yield* files(src);
+  }
+}
+
+test('keine alte Formular-Klasse in react-src eines Moduls und in tlReactControls.css', { skip: !existsSync(M) && 'kein Worktree' }, () => {
   const hits = [];
-  for (const p of [...files(join(M, 'react-src')), join(M, 'src/main/webapp/style/tlReactControls.css')]) {
-    readFileSync(p, 'utf8').split('\n').forEach((line, i) => { if (ALT.test(line)) hits.push(`${p.slice(M.length + 1)}:${i + 1}`); });
+  for (const p of [...reactSources(), join(M, 'src/main/webapp/style/tlReactControls.css')]) {
+    readFileSync(p, 'utf8').split('\n').forEach((line, i) => { if (ALT.test(line)) hits.push(`${p.slice(WT.length + 1)}:${i + 1}`); });
   }
   assert.deepEqual(hits, []);
 });

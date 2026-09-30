@@ -173,6 +173,10 @@
 
 .tl-segmented__segment {
   flex: 1 1 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--tl-space-2xs);
   min-width: 0;
   min-height: calc(var(--tl-size-control) - 2 * var(--tl-border-width-sm));
   padding: 0 var(--tl-space-control-x);
@@ -181,6 +185,21 @@
   background: transparent;
   color: var(--tl-text-primary);
   cursor: pointer;
+}
+
+/* Das Label endet mit Ellipse. text-overflow wirkt nicht über einen Flex-Container auf seine Kinder,
+   darum trägt das Label ein eigenes Element; die Pill einer Option mit Farbrolle darf schrumpfen. */
+.tl-segmented__label,
+.tl-chip__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tl-segmented__segment > .tl-pill,
+.tl-chip > .tl-pill {
+  min-width: 0;
 }
 
 .tl-segmented__segment:where(:not(:disabled)):hover {
@@ -221,6 +240,8 @@
   display: inline-flex;
   align-items: center;
   gap: var(--tl-space-2xs);
+  min-width: 0;
+  max-width: 100%;
   min-height: var(--tl-size-control-sm);
   padding: 0 var(--tl-space-sm);
   border: var(--tl-border-width-sm) solid var(--tl-border-control);

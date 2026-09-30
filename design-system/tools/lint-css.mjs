@@ -65,6 +65,9 @@ const EASING_WORDS = /\b(ease-in-out|ease-in|ease-out|ease|linear)\b/;
 const CLASS_ATTR_SELECTOR = /\[class[*^~]=/;
 // Punkt 10: Zustände sind Attribute (:disabled, [aria-pressed], [aria-busy], :focus-visible), nie Klassen.
 const STATE_MODIFIER = /--(active|disabled|loading|hover|focus|focused|pressed|selected|open|closed|checked|busy|invalid|dirty|immutable|readonly|dragover|dragging|highlighted|collapsed)$/;
+// Punkt 10a: Am Element ist jeder Zustand ein Attribut — auch Fehler und Warnung, die ein Block (tl-alert,
+// tl-pill) als Bedeutung trägt. tl-x__y--error ist ein Zustand, der sich als Modifier tarnt.
+const ELEMENT_STATE_MODIFIER = /^tl-[a-z0-9-]+__[a-z0-9-]+--(active|disabled|loading|hover|focus|focused|pressed|selected|open|closed|checked|busy|invalid|dirty|error|warning|immutable|readonly|dragover|dragging|highlighted|collapsed)$/;
 // Punkt 11: Die Modifier eines Blocks sind entschieden (docs/skalen.md), nicht gewachsen.
 const KATEGORIEN = [1, 2, 3, 4, 5, 6, 7, 8].map((k) => `category-${k}`);
 const MODIFIERS = {
@@ -122,7 +125,8 @@ export function lint(css, { known, file }) {
     for (const cls of sel2.matchAll(/\.([A-Za-z0-9_-]+)/g))
       if (!BEM.test(cls[1])) out.push(`${file}:${d.line} .${cls[1]} — kein tl-Präfix oder kein BEM (block__element--modifier)`);
     for (const cls of sel2.matchAll(/\.([A-Za-z0-9_-]+)/g)) {
-      if (STATE_MODIFIER.test(cls[1])) out.push(`${file}:${d.line} .${cls[1]} — Zustand als Modifier; Zustände sind Attribute`);
+      if (ELEMENT_STATE_MODIFIER.test(cls[1])) out.push(`${file}:${d.line} .${cls[1]} — Zustand als Element-Modifier; Zustände sind Attribute`);
+      else if (STATE_MODIFIER.test(cls[1])) out.push(`${file}:${d.line} .${cls[1]} — Zustand als Modifier; Zustände sind Attribute`);
       const m = /^(tl-[a-z0-9-]+?)--([a-z0-9-]+)$/.exec(cls[1]);
       if (m && MODIFIERS[m[1]] && !MODIFIERS[m[1]].has(m[2]))
         out.push(`${file}:${d.line} .${cls[1]} — kein Modifier von ${m[1]}; erlaubt: ${[...MODIFIERS[m[1]]].join(', ')}`);

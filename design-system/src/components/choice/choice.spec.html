@@ -19,6 +19,8 @@
     border-radius: var(--tl-radius-md); padding: var(--tl-space-md); display: grid; gap: var(--tl-space-sm); }
   .specimen__row { display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: var(--tl-space-sm); align-items: center; }
   .specimen__wrap { display: flex; flex-wrap: wrap; gap: var(--tl-space-md); }
+  /* 160 px: ein langes Label in Segment und Chip endet mit Ellipse. */
+  .specimen__narrow { width: 10rem; display: grid; gap: var(--tl-space-xs); }
   .specimen__row > .tl-type-label:first-child { color: var(--tl-text-secondary); }
 </style>
 </head>
@@ -104,52 +106,64 @@
     <div class="specimen__row">
       <span class="tl-type-label">Segmente, Einfachwahl</span>
       <div class="tl-segmented" role="radiogroup" aria-label="Ansicht">
-        <button type="button" role="radio" aria-checked="true" class="tl-segmented__segment tl-type-label">Liste</button>
-        <button type="button" role="radio" aria-checked="false" tabindex="-1" class="tl-segmented__segment tl-type-label">Kacheln</button>
-        <button type="button" role="radio" aria-checked="false" tabindex="-1" class="tl-segmented__segment tl-type-label">Tabelle</button>
+        <button type="button" role="radio" aria-checked="true" class="tl-segmented__segment tl-type-label"><span class="tl-segmented__label">Liste</span></button>
+        <button type="button" role="radio" aria-checked="false" tabindex="-1" class="tl-segmented__segment tl-type-label"><span class="tl-segmented__label">Kacheln</span></button>
+        <button type="button" role="radio" aria-checked="false" tabindex="-1" class="tl-segmented__segment tl-type-label"><span class="tl-segmented__label">Tabelle</span></button>
       </div>
     </div>
     <div class="specimen__row">
       <span class="tl-type-label">Segmente, Mehrfachwahl</span>
       <div class="tl-segmented" role="group" aria-label="Filter">
-        <button type="button" aria-pressed="true" class="tl-segmented__segment tl-type-label">offen</button>
-        <button type="button" aria-pressed="false" class="tl-segmented__segment tl-type-label">erledigt</button>
-        <button type="button" aria-pressed="false" class="tl-segmented__segment tl-type-label" disabled>archiviert</button>
+        <button type="button" aria-pressed="true" class="tl-segmented__segment tl-type-label"><span class="tl-segmented__label">offen</span></button>
+        <button type="button" aria-pressed="false" class="tl-segmented__segment tl-type-label"><span class="tl-segmented__label">erledigt</span></button>
+        <button type="button" aria-pressed="false" class="tl-segmented__segment tl-type-label" disabled><span class="tl-segmented__label">archiviert</span></button>
       </div>
     </div>
     <div class="specimen__row">
       <span class="tl-type-label">Segmente, Fehler / Warnung</span>
       <div class="specimen__wrap">
         <div class="tl-segmented" role="radiogroup" aria-label="Ansicht mit Fehler" aria-invalid="true">
-          <button type="button" role="radio" aria-checked="false" class="tl-segmented__segment tl-type-label">Liste</button>
-          <button type="button" role="radio" aria-checked="false" tabindex="-1" class="tl-segmented__segment tl-type-label">Kacheln</button>
+          <button type="button" role="radio" aria-checked="false" class="tl-segmented__segment tl-type-label"><span class="tl-segmented__label">Liste</span></button>
+          <button type="button" role="radio" aria-checked="false" tabindex="-1" class="tl-segmented__segment tl-type-label"><span class="tl-segmented__label">Kacheln</span></button>
         </div>
         <div class="tl-segmented" role="group" aria-label="Filter mit Warnung" data-tl-state="warning">
-          <button type="button" aria-pressed="true" class="tl-segmented__segment tl-type-label">offen</button>
-          <button type="button" aria-pressed="false" class="tl-segmented__segment tl-type-label">erledigt</button>
+          <button type="button" aria-pressed="true" class="tl-segmented__segment tl-type-label"><span class="tl-segmented__label">offen</span></button>
+          <button type="button" aria-pressed="false" class="tl-segmented__segment tl-type-label"><span class="tl-segmented__label">erledigt</span></button>
         </div>
       </div>
     </div>
     <div class="specimen__row">
       <span class="tl-type-label">Chips, role="group"</span>
       <div class="tl-chip-group" role="group" aria-label="Tags">
-        <button type="button" aria-pressed="true" class="tl-chip tl-type-label">gewählt</button>
-        <button type="button" aria-pressed="false" class="tl-chip tl-type-label">frei</button>
-        <button type="button" aria-pressed="false" class="tl-chip tl-type-label" disabled>deaktiviert</button>
-        <button type="button" aria-pressed="true" class="tl-chip tl-type-label" disabled>gewählt, deaktiviert</button>
+        <button type="button" aria-pressed="true" class="tl-chip tl-type-label"><span class="tl-chip__label">gewählt</span></button>
+        <button type="button" aria-pressed="false" class="tl-chip tl-type-label"><span class="tl-chip__label">frei</span></button>
+        <button type="button" aria-pressed="false" class="tl-chip tl-type-label" disabled><span class="tl-chip__label">deaktiviert</span></button>
+        <button type="button" aria-pressed="true" class="tl-chip tl-type-label" disabled><span class="tl-chip__label">gewählt, deaktiviert</span></button>
       </div>
     </div>
     <div class="specimen__row">
       <span class="tl-type-label">Chips, Fehler / Warnung</span>
       <div class="specimen__wrap">
         <div class="tl-chip-group" role="group" aria-label="Tags mit Fehler" data-tl-state="error">
-          <button type="button" aria-pressed="true" class="tl-chip tl-type-label">gewählt</button>
-          <button type="button" aria-pressed="false" class="tl-chip tl-type-label">frei</button>
-          <button type="button" aria-pressed="false" class="tl-chip tl-type-label" disabled>deaktiviert</button>
+          <button type="button" aria-pressed="true" class="tl-chip tl-type-label"><span class="tl-chip__label">gewählt</span></button>
+          <button type="button" aria-pressed="false" class="tl-chip tl-type-label"><span class="tl-chip__label">frei</span></button>
+          <button type="button" aria-pressed="false" class="tl-chip tl-type-label" disabled><span class="tl-chip__label">deaktiviert</span></button>
         </div>
         <div class="tl-chip-group" role="group" aria-label="Tags mit Warnung" data-tl-state="warning">
-          <button type="button" aria-pressed="true" class="tl-chip tl-type-label">gewählt</button>
-          <button type="button" aria-pressed="false" class="tl-chip tl-type-label">frei</button>
+          <button type="button" aria-pressed="true" class="tl-chip tl-type-label"><span class="tl-chip__label">gewählt</span></button>
+          <button type="button" aria-pressed="false" class="tl-chip tl-type-label"><span class="tl-chip__label">frei</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="specimen__row">
+      <span class="tl-type-label">langes Label, 160 px</span>
+      <div class="specimen__narrow">
+        <div class="tl-segmented" role="radiogroup" aria-label="Lang">
+          <button type="button" role="radio" aria-checked="true" class="tl-segmented__segment tl-type-label"><span class="tl-segmented__label">Eine sehr lange Option</span></button>
+          <button type="button" role="radio" aria-checked="false" tabindex="-1" class="tl-segmented__segment tl-type-label"><span class="tl-segmented__label">Noch eine lange</span></button>
+        </div>
+        <div class="tl-chip-group" role="group" aria-label="Lang">
+          <button type="button" aria-pressed="true" class="tl-chip tl-type-label"><span class="tl-chip__label">Ein sehr langes Schlagwort im Chip</span></button>
         </div>
       </div>
     </div>
