@@ -214,7 +214,7 @@ weil der schwächere gewann, erfüllte kein Eingabefeld in TopLogic die Norm, he
 | Stufe | hell | dunkel | hell / dunkel | Regel |
 |---|---|---|---|---|
 | `border-separator` | `#C1C4C9` | `#34383C` | 1,68 / 1,51 | **Trennt**, begrenzt nicht. Tabellenzeilen, Abgrenzungen. Schuldet keinen Kontrast. |
-| `border-control` | `#8C8F94` | `#6F7277` | 3,11 / 3,68 | **Begrenzt ein Bedienelement.** Eingabefelder, Auswahlfelder, Schaltflächen mit Umriss. |
+| `border-control` | `#888B90` | `#75787D` | 3,28 / 4,01 | **Begrenzt ein Bedienelement.** Eingabefelder, Auswahlfelder, Schaltflächen mit Umriss. |
 | `border-emphasis` | `#6F7277` | `#7F8286` | 4,63 / 4,61 | **Hebt hervor.** Ausgewählte Zeile, betonte Abgrenzung. |
 | `border-interactive` | `#0B5ED7` | `#5394FF` | 5,59 / 5,97 | **Trägt die Marke.** Fokus, aktiver Zustand. |
 
@@ -234,6 +234,22 @@ Separator, der 3,0 erfüllen müsste, wäre keiner mehr.
 
 Dunkel angehoben, als der Button auf `surface-layer` gemessen wurde: dort erreichte `gray-49` nur
 2,88.
+
+**Nachgezogen 30.09. (Welle 2):** Das Gate prüfte `border-control` gegen den Grund, nicht gegen die
+Feldfläche und nicht im Dialog. Gemessen verfehlte er hell auf `surface-field` (2,94) und dunkel auf
+`surface-overlay` (2,79). Jetzt prüft die Paarliste jeden Rand eines Felds gegen fünf Gründe —
+Feldfläche, Grund, Panel, verschachteltes Panel, Dialog —, und `border-control`, `status-error-border`,
+`status-warning-border` sind je um die kleinste Stufe verschoben, die alle fünf trägt. Mitgemessen,
+aber nicht in die Paarliste genommen: `surface-brand` auf `surface-overlay` hält hell 5,84 und dunkel
+4,53 — der angekreuzte Kasten und der Primär-Button im Dialog heben sich also auch dort ab. Ob
+`surface-overlay` grundsätzlich ins Kontrast-Gate gehört, bleibt die offene Frage für Welle 4 (Dialog).
+
+`border-control` geht hell von `gray-35` auf das vorhandene `gray-36` (`#888B90`; knappstes Paar
+3,10 auf `surface-field`), dunkel von `gray-45` auf die neue Stufe `gray-43` (`#75787D`; knappstes Paar
+3,04 auf `surface-overlay`). `gray-35` hat damit keinen Leser mehr und ist aus `primitives.json`
+entfernt. Dunkel liegen `border-control` und `border-emphasis` (`gray-39`) jetzt nur noch 1,15
+auseinander; die Ordnung bleibt — Hervorhebung heller als Control-Rahmen —, `border-emphasis`
+bleibt unverändert.
 
 ### Neutrale: nach Anforderung gestuft, nicht nach gleichem Abstand
 
@@ -264,7 +280,7 @@ ist der hellste Wert, der ihre Anforderung noch erfüllt.
 | `text-helper` | `#676A6F` | `#888B90` | 5,2 | Grund |
 | `text-placeholder` | `#6B6E73` | `#8E9196` | 4,6 | **`surface-field`**, nicht Grund |
 | `border-emphasis` | `#6F7277` | `#7F8286` | 4,6 | Grund |
-| `border-control` | `#8C8F94` | `#6F7277` | 3,68 | Grund |
+| `border-control` | `#888B90` | `#75787D` | 3,0 | alle fünf Feldgründe (knappstes Paar hell `surface-field` 3,10, dunkel `surface-overlay` 3,04) |
 | `border-separator` | `#C1C4C9` | `#34383C` | — | trennt nur |
 
 `text-placeholder` und `border-emphasis` landen im hellen Modus dicht beieinander. Das sind
@@ -332,11 +348,11 @@ Vier Bedeutungen — Fehler, Warnung, Erfolg, Info — mit je vier Rollen.
 | | Rolle | hell | dunkel | Prüfung |
 |---|---|---|---|---|
 | **Fehler** | `text` | `#D7352D` | `#FB594D` | hell 4,53 auf Grund; dunkel 5,62 auf Grund, 5,17 auf Layer |
-| | `border` | `#FB594D` | `#D7352D` | hell 3,03 auf Grund; dunkel 3,76 auf Grund, 3,46 auf Layer |
+| | `border` | `#F14F43` | `#DC3B32` | alle fünf Feldgründe: hell 3,39 auf Grund, 3,20 auf Feld; dunkel 3,99 auf Grund, 3,03 im Dialog |
 | | `surface` | `#CC2823` | `#F14F43` | Beschriftung weiß 5,39 / dunkel 4,77 |
 | | `subtle` | `#FFEBE8` | `#35110D` | Text darauf 14,71 / 15,27 |
 | **Warnung** | `text` | `#936E00` | `#B88A00` | hell 4,50 auf Grund; dunkel 5,65 auf Grund, 5,20 auf Layer |
-| | `border` | `#B88A00` | `#936E00` | hell 3,01 auf Grund; dunkel 3,79 auf Grund, 3,48 auf Layer |
+| | `border` | `#B28600` | `#98720C` | alle fünf Feldgründe: hell 3,19 auf Grund, 3,02 auf Feld; dunkel 4,02 auf Grund, 3,05 im Dialog |
 | | `surface` | `#D9A514` | `#EAB532` | Beschriftung dunkel 7,51 / 8,96 |
 | | `subtle` | `#FEEFCF` | `#281C02` | 14,84 / 15,03 |
 | **Erfolg** | `text` | `#008459` | `#36A376` | hell 4,53 auf Grund; dunkel 5,64 auf Grund, 5,19 auf Layer |
@@ -362,6 +378,16 @@ nötig. Die vier nun ungelesenen Primitive (`red-37`, `amber-40`, `green-41`, `t
 `amber-49` auf `amber-44`, `status-success-border` von `green-51` auf `green-46`,
 `status-info-border` von `teal-51` auf `teal-45`; die vier nun ungelesenen Primitive (`red-47`,
 `amber-49`, `green-51`, `teal-51`) sind ebenfalls aus `primitives.json` entfernt.
+
+**Nachgezogen 30.09. (Welle 2), Fehler und Warnung:** Ihre Linien umranden ein Feld und schulden 3,0
+auf denselben fünf Gründen wie `border-control` (siehe „Rahmen: vier Stufen“). Gemessen verfehlten sie
+hell auf `surface-field` (2,86 / 2,85) und dunkel auf `surface-overlay` (2,85 / 2,87). Je die kleinste
+Verschiebung, die alle fünf trägt: `status-error-border` hell von `red-32` auf das vorhandene `red-35`
+(`#F14F43` — dunkel ist `red-35` `status-error-surface`, aber in einem anderen Modus, also keine
+Doppelrolle), dunkel von `red-42` auf die neue Stufe `red-41` (`#DC3B32`); `status-warning-border` hell
+von `amber-34` auf die neue Stufe `amber-36` (`#B28600` — `stufe()` ergibt 35, `amber-35` ist belegt,
+darum rückt sie auf), dunkel von `amber-44` auf die neue Stufe `amber-43` (`#98720C`). Erfolg und Info
+bleiben, bis ein Feld sie als Rand trägt.
 
 **Die Regel, wann welche Rolle gilt:**
 

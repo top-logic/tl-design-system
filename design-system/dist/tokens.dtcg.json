@@ -26,6 +26,14 @@
         "$type": "color",
         "$value": "#CF7C3B"
       },
+      "amber-36": {
+        "$type": "color",
+        "$value": "#B28600"
+      },
+      "amber-43": {
+        "$type": "color",
+        "$value": "#98720C"
+      },
       "amber-44": {
         "$type": "color",
         "$value": "#936E00"
@@ -150,10 +158,6 @@
         "$type": "color",
         "$value": "#8E9196"
       },
-      "gray-35": {
-        "$type": "color",
-        "$value": "#8C8F94"
-      },
       "gray-36": {
         "$type": "color",
         "$value": "#888B90"
@@ -161,6 +165,10 @@
       "gray-39": {
         "$type": "color",
         "$value": "#7F8286"
+      },
+      "gray-43": {
+        "$type": "color",
+        "$value": "#75787D"
       },
       "gray-45": {
         "$type": "color",
@@ -317,6 +325,10 @@
       "red-35": {
         "$type": "color",
         "$value": "#F14F43"
+      },
+      "red-41": {
+        "$type": "color",
+        "$value": "#DC3B32"
       },
       "red-42": {
         "$type": "color",
@@ -895,7 +907,7 @@
         },
         "border-control": {
           "$type": "color",
-          "$value": "{primitive.color.gray-35}"
+          "$value": "{primitive.color.gray-36}"
         },
         "border-emphasis": {
           "$type": "color",
@@ -919,7 +931,7 @@
         },
         "status-error-border": {
           "$type": "color",
-          "$value": "{primitive.color.red-32}"
+          "$value": "{primitive.color.red-35}"
         },
         "status-error-surface": {
           "$type": "color",
@@ -943,7 +955,7 @@
         },
         "status-warning-border": {
           "$type": "color",
-          "$value": "{primitive.color.amber-34}"
+          "$value": "{primitive.color.amber-36}"
         },
         "status-warning-surface": {
           "$type": "color",
@@ -1246,7 +1258,7 @@
         },
         "border-control": {
           "$type": "color",
-          "$value": "{primitive.color.gray-45}"
+          "$value": "{primitive.color.gray-43}"
         },
         "border-emphasis": {
           "$type": "color",
@@ -1270,7 +1282,7 @@
         },
         "status-error-border": {
           "$type": "color",
-          "$value": "{primitive.color.red-42}"
+          "$value": "{primitive.color.red-41}"
         },
         "status-error-surface": {
           "$type": "color",
@@ -1294,7 +1306,7 @@
         },
         "status-warning-border": {
           "$type": "color",
-          "$value": "{primitive.color.amber-44}"
+          "$value": "{primitive.color.amber-43}"
         },
         "status-warning-surface": {
           "$type": "color",

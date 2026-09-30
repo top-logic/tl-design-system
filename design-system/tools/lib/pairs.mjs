@@ -4,6 +4,9 @@ const GRUENDE_TEXT = ['surface-layer', 'surface-layer-nested', 'surface-overlay'
   'surface-interactive-hover', 'surface-interactive-selected', 'surface-interactive-active'];
 const GRUENDE_FOKUS = ['surface-base', 'surface-layer', 'surface-layer-nested', 'surface-overlay',
   'surface-field', 'surface-brand-subtle'];
+// Wo ein Feld liegt: auf dem Grund, auf Panels, verschachtelt, im Dialog — und seine eigene Fläche,
+// denn der Rand grenzt beides ab (WCAG 1.4.11, „angrenzende Farben“).
+const GRUENDE_FELD = ['surface-field', 'surface-base', 'surface-layer', 'surface-layer-nested', 'surface-overlay'];
 const STATUS = ['error', 'warning', 'success', 'info'];
 const KATEGORIEN = [1, 2, 3, 4, 5, 6, 7, 8];
 
@@ -14,7 +17,7 @@ export function kontrastPaare(T) {
   paar('text-helper', 'surface-base', 5.2); paar('text-placeholder', 'surface-field', 4.6);
   paar('text-link', 'surface-base', 4.5); paar('text-link-hover', 'surface-base', 4.5);
   paar('icon-primary', 'surface-base', 3.0); paar('icon-secondary', 'surface-base', 3.0);
-  paar('border-emphasis', 'surface-base', 4.6); paar('border-control', 'surface-base', 3.0);
+  paar('border-emphasis', 'surface-base', 4.6);
   paar('border-interactive', 'surface-base', 3.0); paar('focus-ring', 'surface-base', 3.0);
   paar('text-link', 'surface-brand-subtle', 4.5); paar('text-primary', 'surface-brand-subtle', 4.5);
   for (const bg of GRUENDE_TEXT) paar('text-primary', bg, 4.5);
@@ -24,6 +27,13 @@ export function kontrastPaare(T) {
     }
     paar('text-primary', `status-${s}-subtle`, 4.5);
   }
+  for (const bg of GRUENDE_FELD) {
+    paar('border-control', bg, 3.0);
+    paar('status-error-border', bg, 3.0);
+    paar('status-warning-border', bg, 3.0);
+  }
+  paar('text-primary', 'surface-field', 4.5); paar('icon-secondary', 'surface-field', 3.0); // Schalterknopf
+  paar('border-interactive', 'surface-brand-subtle', 3.0); // gewählter Chip, gewähltes Segment
   for (const bg of GRUENDE_FOKUS) paar('focus-ring', bg, 3.0);
   for (const k of KATEGORIEN) {
     paar('text-primary', `category-${k}-subtle`, 4.5);
