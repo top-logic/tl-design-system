@@ -471,6 +471,20 @@
           "unit": "rem"
         }
       },
+      "size-10": {
+        "$type": "dimension",
+        "$value": {
+          "value": 6,
+          "unit": "rem"
+        }
+      },
+      "size-11": {
+        "$type": "dimension",
+        "$value": {
+          "value": 10,
+          "unit": "rem"
+        }
+      },
       "text-1": {
         "$type": "dimension",
         "$value": {
@@ -1618,6 +1632,18 @@
       "size-progress": {
         "$type": "dimension",
         "$value": "{primitive.measure.size-2}"
+      },
+      "size-indicator": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-2}"
+      },
+      "size-field-label-min": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-10}"
+      },
+      "size-field-label-max": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-11}"
       },
       "size-choice": {
         "$type": "dimension",

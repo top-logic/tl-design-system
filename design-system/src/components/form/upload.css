@@ -1,0 +1,32 @@
+/* Upload — docs/skalen.md „Formulare: ein Feldrahmen, Zustände als Attribute“, Spec Welle 2 §6.
+   Der Upload-Knopf ist ein tl-button; hier liegt nur die Hülle darum (tl-upload) und die Drop-Zone des
+   Datei-Feldes (tl-file-upload). Dragover ist ein Attribut an der Drop-Zone. Die Markierung ist
+   gestrichelt in der Markenlinie und kein Fokusring: sie zeigt, wohin die Datei fällt, nicht, wo die
+   Tastatur steht. */
+
+.tl-upload {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tl-space-control-gap);
+}
+
+.tl-file-upload {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tl-space-xs);
+  min-width: 0;
+  border-radius: var(--tl-radius-sm);
+}
+
+.tl-file-upload[data-tl-state~="dragover"] {
+  outline: var(--tl-border-width-md) dashed var(--tl-border-interactive);
+  outline-offset: var(--tl-focus-offset);
+}
+
+.tl-file-upload__status {
+  color: var(--tl-text-secondary);
+}
+
+.tl-file-upload__status[role="alert"] {
+  color: var(--tl-status-error-text);
+}

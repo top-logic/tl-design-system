@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="de" data-tl-mode="light" data-tl-density="normal">
+<head>
+<meta charset="utf-8">
+<title>TopLogic Design System — Formular</title>
+<link rel="stylesheet" href="/fonts/style/interFonts.css">
+<link rel="stylesheet" href="/fonts/style/bootstrap-icons.css">
+<link rel="stylesheet" href="/dist/primitives.css">
+<link rel="stylesheet" href="/dist/tokens.css">
+<link rel="stylesheet" href="/dist/base.css">
+<link rel="stylesheet" href="/dist/components.css">
+<style>
+  .specimen { display: grid; gap: var(--tl-space-lg); padding: var(--tl-space-xl); max-width: 64rem; margin: 0 auto; }
+  .specimen__bar { display: flex; gap: var(--tl-space-sm); align-items: center; }
+  .specimen__panel { background: var(--tl-surface-layer); border: var(--tl-border-width-sm) solid var(--tl-border-separator);
+    border-radius: var(--tl-radius-md); padding: var(--tl-space-md); display: grid; gap: var(--tl-space-md); }
+  .specimen__base { padding: var(--tl-space-md); display: grid; gap: var(--tl-space-md); }
+  .specimen__overlay { background: var(--tl-surface-overlay); box-shadow: var(--tl-shadow-popover);
+    border-radius: var(--tl-radius-md); padding: var(--tl-space-md); display: grid; gap: var(--tl-space-md); }
+  /* Die Spaltenzahl von tl-form-layout setzt im Control ein Inline-Stil (Daten); im Specimen steht sie hier. */
+  .specimen__grid { grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); }
+  .specimen__row { display: flex; gap: var(--tl-space-sm); align-items: center; flex-wrap: wrap; }
+  .specimen__note { color: var(--tl-text-secondary); }
+</style>
+</head>
+<body>
+<main class="specimen">
+  <div class="specimen__bar">
+    <a class="tl-type-label" href="/">← Grundklassen</a>
+    <span class="tl-type-heading-lg">Formular</span>
+    <label class="tl-type-label"><input type="checkbox" id="mode"> dunkel</label>
+    <label class="tl-type-label"><input type="checkbox" id="density"> kompakt</label>
+  </div>
+
+  <!-- Der Inhalt steht einmal in der Vorlage; das Skript setzt ihn auf jede Fläche und macht die Ids je Fläche
+       eindeutig, damit for, aria-describedby und aria-controls auf ihr eigenes Gegenstück zeigen. -->
+  <template id="content">
+    <div class="tl-form-layout specimen__grid">
+
+      <div class="tl-form-field tl-form-field--side">
+        <label class="tl-form-field__label tl-type-label" for="f-plain">
+          <span class="tl-form-field__label-text">Name</span>
+        </label>
+        <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="f-plain" value="Anna Berger"></div>
+      </div>
+
+      <div class="tl-form-field tl-form-field--side">
+        <label class="tl-form-field__label tl-type-label" for="f-required">
+          <span class="tl-form-field__label-text">Kostenstelle</span>
+          <span class="tl-form-field__required" aria-hidden="true">*</span>
+        </label>
+        <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="f-required" aria-required="true" placeholder="Pflichtfeld"></div>
+      </div>
+
+      <div class="tl-form-field tl-form-field--side">
+        <label class="tl-form-field__label tl-type-label" for="f-help">
+          <span class="tl-form-field__label-text">Kürzel</span>
+          <button type="button" class="tl-button tl-button--ghost tl-button--sm" aria-label="Hilfe zu Kürzel"><i class="tl-icon-sm bi bi-question-circle" aria-hidden="true"></i></button>
+        </label>
+        <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="f-help" value="ABE" aria-describedby="f-help-text"></div>
+        <div class="tl-form-field__help-text tl-type-label" id="f-help-text">Drei Buchstaben, eindeutig je Mandant.</div>
+      </div>
+
+      <div class="tl-form-field tl-form-field--side">
+        <label class="tl-form-field__label tl-type-label" for="f-error">
+          <span class="tl-form-field__label-text">E-Mail</span>
+        </label>
+        <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="f-error" value="anna.berger@" aria-invalid="true" aria-describedby="f-error-msg"></div>
+        <div class="tl-form-field__message tl-type-label" id="f-error-msg" role="alert">
+          <i class="tl-icon-sm bi bi-exclamation-circle" aria-hidden="true"></i>
+          <span>Keine gültige Adresse.</span>
+        </div>
+      </div>
+
+      <div class="tl-form-field tl-form-field--side">
+        <label class="tl-form-field__label tl-type-label" for="f-warning">
+          <span class="tl-form-field__label-text">Telefon</span>
+        </label>
+        <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="f-warning" value="12345" data-tl-state="warning" aria-describedby="f-warning-msg"></div>
+        <div class="tl-form-field__message tl-type-label" id="f-warning-msg" aria-live="polite">
+          <i class="tl-icon-sm bi bi-exclamation-triangle" aria-hidden="true"></i>
+          <span>Ohne Vorwahl, möglicherweise unvollständig.</span>
+        </div>
+      </div>
+
+      <div class="tl-form-field tl-form-field--side" data-tl-state="dirty">
+        <label class="tl-form-field__label tl-type-label" for="f-dirty">
+          <span class="tl-form-field__label-text">Abteilung</span>
+          <span class="tl-form-field__dirty" role="img" aria-label="Geändert"></span>
+        </label>
+        <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="f-dirty" value="Entwicklung"></div>
+      </div>
+
+      <div class="tl-form-field tl-form-field--top">
+        <label class="tl-form-field__label tl-type-label" for="f-top">
+          <span class="tl-form-field__label-text">Bemerkung, Label oben</span>
+        </label>
+        <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="f-top" value="Text"></div>
+      </div>
+
+      <div class="tl-form-field tl-form-field--after">
+        <label class="tl-form-field__label tl-type-label" for="f-after">
+          <span class="tl-form-field__label-text">Aktiv, Label nach dem Kästchen</span>
+        </label>
+        <div class="tl-form-field__input"><input type="checkbox" class="tl-checkbox" id="f-after" checked></div>
+      </div>
+
+      <div class="tl-form-field tl-form-field--hidden">
+        <label class="tl-form-field__label tl-type-label tl-visually-hidden" for="f-hidden">
+          <span class="tl-form-field__label-text">Suche</span>
+        </label>
+        <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="f-hidden" placeholder="Label unsichtbar, nur für Screenreader"></div>
+      </div>
+
+      <div class="tl-form-field tl-form-field--side tl-form-field--full">
+        <label class="tl-form-field__label tl-type-label" for="f-full">
+          <span class="tl-form-field__label-text">Volle Zeile</span>
+        </label>
+        <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="f-full" value="Geht über alle Spalten"></div>
+      </div>
+
+      <div class="tl-form-group tl-form-group--outlined tl-form-group--full">
+        <div class="tl-form-group__header">
+          <button type="button" class="tl-form-group__toggle" aria-expanded="true" aria-controls="g-open-body" aria-label="Adresse einklappen"><i class="tl-icon-sm bi bi-chevron-down" aria-hidden="true"></i></button>
+          <span class="tl-form-group__title tl-type-heading-sm">Adresse, offen</span>
+          <div class="tl-form-group__actions"><button type="button" class="tl-button tl-button--ghost tl-button--sm">Bearbeiten</button></div>
+        </div>
+        <div class="tl-form-group__body" id="g-open-body">
+          <div class="tl-form-layout specimen__grid">
+            <div class="tl-form-field tl-form-field--side">
+              <label class="tl-form-field__label tl-type-label" for="g-street"><span class="tl-form-field__label-text">Straße</span></label>
+              <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="g-street" value="Hauptstraße 1"></div>
+            </div>
+            <div class="tl-form-field tl-form-field--side">
+              <label class="tl-form-field__label tl-type-label" for="g-city"><span class="tl-form-field__label-text">Ort</span></label>
+              <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="g-city" value="Stuttgart"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-form-group tl-form-group--outlined tl-form-group--full">
+        <div class="tl-form-group__header">
+          <button type="button" class="tl-form-group__toggle" aria-expanded="false" aria-controls="g-closed-body" aria-label="Konto ausklappen"><i class="tl-icon-sm bi bi-chevron-right" aria-hidden="true"></i></button>
+          <span class="tl-form-group__title tl-type-heading-sm">Konto, eingeklappt</span>
+        </div>
+        <div class="tl-form-group__body" id="g-closed-body" hidden>
+          <div class="tl-form-field tl-form-field--side">
+            <label class="tl-form-field__label tl-type-label" for="g-iban"><span class="tl-form-field__label-text">IBAN</span></label>
+            <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="g-iban"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-form-group tl-form-group--separator tl-form-group--full">
+        <div class="tl-form-group__header">
+          <span class="tl-form-group__title tl-type-heading-sm">Kontakt, Trennlinie</span>
+        </div>
+        <div class="tl-form-group__body">
+          <div class="tl-form-field tl-form-field--side">
+            <label class="tl-form-field__label tl-type-label" for="g-mail"><span class="tl-form-field__label-text">E-Mail</span></label>
+            <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="g-mail" value="anna@example.org"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tl-field-list">
+        <h3 class="tl-field-list__title tl-type-heading-sm">Feldliste</h3>
+        <div class="tl-field-list__fields">
+          <div class="tl-field-list__item tl-form-field tl-form-field--top">
+            <label class="tl-form-field__label tl-type-label" for="l-one"><span class="tl-form-field__label-text">Erstes Feld</span></label>
+            <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="l-one" value="Eins"></div>
+          </div>
+          <div class="tl-field-list__item tl-form-field tl-form-field--top">
+            <label class="tl-form-field__label tl-type-label" for="l-two"><span class="tl-form-field__label-text">Zweites Feld</span></label>
+            <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="l-two" value="Zwei"></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="tl-form-layout__empty tl-type-body">Kein Modell, leeres Formular</p>
+    </div>
+
+    <p class="tl-type-heading-sm">Upload</p>
+    <div class="specimen__row">
+      <span class="tl-upload">
+        <input type="file" hidden>
+        <button type="button" class="tl-button tl-button--secondary"><span class="tl-button__label">Datei wählen</span></button>
+      </span>
+      <span class="tl-upload">
+        <input type="file" hidden>
+        <button type="button" class="tl-button tl-button--secondary" aria-busy="true" disabled><span class="tl-button__label">Lädt hoch…</span></button>
+      </span>
+    </div>
+    <div class="specimen__row">
+      <div class="tl-file-upload">
+        <input type="file" hidden>
+        <button type="button" class="tl-button tl-button--secondary"><i class="tl-button__icon tl-icon-sm bi bi-upload" aria-hidden="true"></i><span class="tl-button__label">Datei wählen</span></button>
+      </div>
+      <div class="tl-file-upload" data-tl-state="dragover">
+        <input type="file" hidden>
+        <button type="button" class="tl-button tl-button--secondary"><i class="tl-button__icon tl-icon-sm bi bi-upload" aria-hidden="true"></i><span class="tl-button__label">Datei wählen</span></button>
+        <span class="tl-file-upload__status tl-type-label">Hier ablegen</span>
+      </div>
+      <div class="tl-file-upload">
+        <input type="file" hidden>
+        <button type="button" class="tl-button tl-button--secondary" aria-busy="true" disabled><i class="tl-button__icon tl-icon-sm bi bi-upload" aria-hidden="true"></i><span class="tl-button__label">Lädt hoch…</span></button>
+      </div>
+      <div class="tl-file-upload">
+        <input type="file" hidden>
+        <button type="button" class="tl-button tl-button--secondary"><i class="tl-button__icon tl-icon-sm bi bi-upload" aria-hidden="true"></i><span class="tl-button__label">Datei wählen</span></button>
+        <span class="tl-file-upload__status tl-type-label" role="alert">Die Datei ist zu groß.</span>
+      </div>
+    </div>
+  </template>
+
+  <section class="specimen__panel" id="on-layer"><p class="tl-type-heading-sm">Auf surface-layer</p></section>
+  <section class="specimen__base" id="on-base"><p class="tl-type-heading-sm">Auf surface-base</p></section>
+  <section class="specimen__overlay" id="on-overlay"><p class="tl-type-heading-sm">Auf surface-overlay</p></section>
+</main>
+<script>
+  const tpl = document.getElementById('content');
+  const refs = ['for', 'aria-describedby', 'aria-controls'];
+  for (const id of ['on-layer', 'on-base', 'on-overlay']) {
+    const part = tpl.content.cloneNode(true);
+    for (const el of part.querySelectorAll('[id]')) el.id += '-' + id;
+    for (const el of part.querySelectorAll('[for], [aria-describedby], [aria-controls]'))
+      for (const a of refs) if (el.hasAttribute(a)) el.setAttribute(a, el.getAttribute(a) + '-' + id);
+    document.getElementById(id).append(part);
+  }
+  const html = document.documentElement;
+  document.getElementById('mode').addEventListener('change', (e) => html.setAttribute('data-tl-mode', e.target.checked ? 'dark' : 'light'));
+  document.getElementById('density').addEventListener('change', (e) => html.setAttribute('data-tl-density', e.target.checked ? 'compact' : 'normal'));
+  // Einklappen im Specimen: der Knopf schaltet aria-expanded und hidden am Körper.
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest('.tl-form-group__toggle');
+    if (!t) return;
+    const open = t.getAttribute('aria-expanded') !== 'true';
+    t.setAttribute('aria-expanded', String(open));
+    document.getElementById(t.getAttribute('aria-controls')).hidden = !open;
+    t.querySelector('i').className = 'tl-icon-sm bi bi-chevron-' + (open ? 'down' : 'right');
+  });
+</script>
+</body>
+</html>

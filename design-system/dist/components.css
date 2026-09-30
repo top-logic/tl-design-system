@@ -580,6 +580,252 @@ a.tl-field-value:hover {
   color: var(--tl-text-link-hover);
 }
 
+/* --- form/form.css --- */
+/* Formular — docs/skalen.md „Formulare: ein Feldrahmen, Zustände als Attribute“, Spec Welle 2 §6.
+   Der Feldrahmen (tl-form-field) legt Label, Eingabe und Meldungen in ein Raster; die Label-Lage ist
+   ein Modifier (side, top, after, hidden), weil sie eine Form ist, kein Zustand. Geändert ist
+   data-tl-state="dirty", eingeklappt das Attribut hidden am Körper der Gruppe (aria-expanded am Knopf
+   sagt es Screenreadern). Die Spalte der Labels kommt aus Tokens, nicht aus einem Literal; die
+   Spaltenzahl von tl-form-layout setzt das Control inline, denn sie ist Datenwert. Der Rahmen einer
+   umrandeten Gruppe ist border-control: er begrenzt ein Bedienfeld. */
+
+.tl-form-field {
+  display: grid;
+  gap: var(--tl-space-2xs);
+  min-width: 0;
+}
+
+.tl-form-field--side {
+  grid-template-columns: minmax(var(--tl-size-field-label-min), var(--tl-size-field-label-max)) minmax(0, 1fr);
+  column-gap: var(--tl-space-sm);
+  align-items: start;
+}
+
+.tl-form-field--side > .tl-form-field__message,
+.tl-form-field--side > .tl-form-field__help-text {
+  grid-column: 2;
+}
+
+.tl-form-field--after {
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--tl-space-xs);
+  align-items: center;
+}
+
+.tl-form-field--after > .tl-form-field__input {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.tl-form-field--after > .tl-form-field__label {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.tl-form-field--full {
+  grid-column: 1 / -1;
+}
+
+.tl-form-field__label {
+  display: flex;
+  align-items: center;
+  gap: var(--tl-space-2xs);
+  min-height: var(--tl-size-control);
+  min-width: 0;
+  color: var(--tl-text-secondary);
+}
+
+.tl-form-field--top > .tl-form-field__label {
+  min-height: 0;
+}
+
+.tl-form-field__label-text {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tl-form-field__required {
+  color: var(--tl-status-error-text);
+}
+
+.tl-form-field__dirty {
+  display: none;
+  width: var(--tl-size-indicator);
+  height: var(--tl-size-indicator);
+  border-radius: var(--tl-radius-round);
+  background: var(--tl-surface-brand);
+}
+
+.tl-form-field[data-tl-state~="dirty"] .tl-form-field__dirty {
+  display: inline-block;
+}
+
+.tl-form-field__input {
+  min-width: 0;
+}
+
+.tl-form-field__message {
+  display: flex;
+  align-items: start;
+  gap: var(--tl-space-2xs);
+}
+
+/* Die Warnung steht vor dem Fehler: bei gleicher Spezifität gewinnt die spätere Regel, und der Fehler
+   muss die Warnung verdrängen. */
+.tl-form-field__message[aria-live="polite"] {
+  color: var(--tl-status-warning-text);
+}
+
+.tl-form-field__message[role="alert"] {
+  color: var(--tl-status-error-text);
+}
+
+.tl-form-field__help-text {
+  color: var(--tl-text-helper);
+}
+
+/* --- Gruppe ------------------------------------------------------------------------ */
+
+.tl-form-group {
+  display: grid;
+  gap: var(--tl-space-sm);
+  min-width: 0;
+}
+
+.tl-form-group--separator {
+  padding-top: var(--tl-space-sm);
+  border-top: var(--tl-border-width-sm) solid var(--tl-border-separator);
+}
+
+.tl-form-group--outlined {
+  padding: var(--tl-space-md);
+  border: var(--tl-border-width-sm) solid var(--tl-border-control);
+  border-radius: var(--tl-radius-md);
+}
+
+.tl-form-group--full {
+  grid-column: 1 / -1;
+}
+
+.tl-form-group__header {
+  display: flex;
+  align-items: center;
+  gap: var(--tl-space-xs);
+  min-height: var(--tl-size-control);
+  color: var(--tl-text-primary);
+}
+
+.tl-form-group__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--tl-size-control);
+  height: var(--tl-size-control);
+  padding: 0;
+  border: 0;
+  border-radius: var(--tl-radius-sm);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* Kein Zeigen auf Deaktiviertem; :where hält die Spezifität niedrig. */
+.tl-form-group__toggle:where(:not(:disabled)):hover {
+  background: var(--tl-surface-interactive-hover);
+}
+
+.tl-form-group__title {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tl-form-group__actions {
+  display: flex;
+  gap: var(--tl-space-2xs);
+}
+
+.tl-form-group__body[hidden] {
+  display: none;
+}
+
+/* --- Layout und Feldliste ---------------------------------------------------------- */
+
+.tl-form-layout {
+  display: grid;
+  gap: var(--tl-space-md);
+  min-width: 0;
+}
+
+.tl-form-layout__empty {
+  color: var(--tl-text-secondary);
+}
+
+/* Ein Formular, das eine füllende Region trägt, ist eine Spalte: das füllende Kind nimmt die Höhe, die
+   das Formular bekommt, jedes andere Kind behält die Höhe seines Inhalts. Das füllende Kind trägt die
+   Füllklasse der Engine (tlFill, Welle 3/4); das Klassen-Gate lässt sie nicht in einem Selektor zu, darum
+   gilt die Regel für alle Kinder — und :where gibt ihr die Spezifität null, sodass die Füllregel der
+   Engine das Schrumpfverbot für das füllende Kind aufhebt. */
+.tl-form-layout--fill {
+  display: flex;
+  flex-direction: column;
+}
+
+:where(.tl-form-layout--fill > *) {
+  flex-shrink: 0;
+}
+
+.tl-field-list {
+  display: grid;
+  gap: var(--tl-space-sm);
+}
+
+.tl-field-list__title {
+  margin: 0;
+  padding-bottom: var(--tl-space-xs);
+  border-bottom: var(--tl-border-width-sm) solid var(--tl-border-separator);
+  color: var(--tl-text-primary);
+}
+
+.tl-field-list__fields {
+  display: grid;
+  gap: var(--tl-space-sm);
+}
+
+/* --- form/upload.css --- */
+/* Upload — docs/skalen.md „Formulare: ein Feldrahmen, Zustände als Attribute“, Spec Welle 2 §6.
+   Der Upload-Knopf ist ein tl-button; hier liegt nur die Hülle darum (tl-upload) und die Drop-Zone des
+   Datei-Feldes (tl-file-upload). Dragover ist ein Attribut an der Drop-Zone. Die Markierung ist
+   gestrichelt in der Markenlinie und kein Fokusring: sie zeigt, wohin die Datei fällt, nicht, wo die
+   Tastatur steht. */
+
+.tl-upload {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tl-space-control-gap);
+}
+
+.tl-file-upload {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tl-space-xs);
+  min-width: 0;
+  border-radius: var(--tl-radius-sm);
+}
+
+.tl-file-upload[data-tl-state~="dragover"] {
+  outline: var(--tl-border-width-md) dashed var(--tl-border-interactive);
+  outline-offset: var(--tl-focus-offset);
+}
+
+.tl-file-upload__status {
+  color: var(--tl-text-secondary);
+}
+
+.tl-file-upload__status[role="alert"] {
+  color: var(--tl-status-error-text);
+}
+
 /* --- pill/pill.css --- */
 /* Pill — docs/skalen.md „Pill: Rolle statt Farbe“.
    Ein Wert, der sich von anderen abheben soll, als getönte Kapsel. Die Farbe ist eine Rolle aus

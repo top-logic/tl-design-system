@@ -35,6 +35,9 @@
   --tl-size-avatar-lg: var(--tl-size-8);
   --tl-size-avatar-xl: var(--tl-size-9);
   --tl-size-progress: var(--tl-size-2);
+  --tl-size-indicator: var(--tl-size-2);
+  --tl-size-field-label-min: var(--tl-size-10);
+  --tl-size-field-label-max: var(--tl-size-11);
   --tl-size-choice: var(--tl-size-4);
   --tl-size-switch: var(--tl-size-7);
   --tl-size-switch-knob: var(--tl-size-3);
