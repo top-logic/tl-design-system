@@ -11,5 +11,5 @@ eclipse-ws/
 # Claude-Code-Sitzungsdaten: lokale Rechte und Worktrees paralleler Instanzen.
 .claude/
 
-# tl-engine-7-Klon fuer die Wellen -- liegt im Projekt, damit die Sandbox ihn sieht.
-engine/
+# tl-engine-7-Worktrees und ihr Hauptrepo -- liegen im Projekt, damit die Sandbox sie sieht.
+_Working-Tree/

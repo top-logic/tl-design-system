@@ -137,7 +137,7 @@ ist die Rolle“ (`docs/skalen.md`) — `<theme-icon size="sm|md|lg|glyph">`, De
 7256, Gates 118/118. Offen für Welle 2–4: Menü, Toolbar, Sidebar, Reiter, Select geben `ThemeIcon` eigene
 Klassen statt einer Stufe (altlast.md „Icon“).
 
-**Worktree (Umzug 30.09.):** Die Werkzeuge erwarten den Engine-Klon jetzt unter `engine/` im Projektordner, weil die Sandbox `~/git` nicht sieht. Hendrik zieht ihn von Hand um (eigener Klon, kein `git worktree`). Der alte `~/git/tl8-wt-29584` stand auf `CWS/CWS_29617_design_system_welle_1_avatar`; die Ratsche
+**Worktree (Umzug 30.09.):** Die Worktrees liegen jetzt unter `_Working-Tree/` im Projektordner, die Werkzeuge erwarten `_Working-Tree/tl8-wt-29584`, weil die Sandbox `~/git` nicht sieht. Das Hauptrepo `TopLogic 8 (NewUI)` zieht nach, dann `git worktree repair`. Der alte `~/git/tl8-wt-29584` stand auf `CWS/CWS_29617_design_system_welle_1_avatar`; die Ratsche
 ist gegen diesen Stand kalibriert. Vor Pill-Arbeit erst zurück auf den Pill-Branch wechseln.
 
 **PR-Stand 25.09. mittags:** !1618 (doppeltes React) gemerged, Branch gelöscht. !1694 (Pill): Bernhard hat am

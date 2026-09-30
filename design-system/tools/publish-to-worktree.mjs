@@ -4,7 +4,7 @@ import { copyFileSync, mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const dest = join(process.env.TL_WORKTREE ?? fileURLToPath(new URL('../../engine', import.meta.url)),
+const dest = join(process.env.TL_WORKTREE ?? fileURLToPath(new URL('../../_Working-Tree/tl8-wt-29584', import.meta.url)),
   'com.top_logic.layout.react/src/main/webapp/style/tl-design-system');
 mkdirSync(dest, { recursive: true });
 for (const f of ['primitives.css', 'tokens.css', 'base.css', 'components.css']) {

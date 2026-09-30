@@ -25,9 +25,8 @@ Alle in `design-system/`, alle mit `node` ohne Abhängigkeiten:
 | `node tools/derive.mjs <theme>.primitives.json [<ausgabe>.css] [--strict]` | **Kundenstufe A.** Rechnet aus Hausfarbe und Grauwahl ein Theme und schreibt `<theme>.theme.css` mit Rollen unter `[data-tl-theme]`. Gerechnetes hält die Paarliste, Geliefertes darf sie verfehlen (Befund im Kopf). Beispiel: `test/fixtures/probe.primitives.json` → `specimen/probe.theme.css`. |
 | `tools/check-messages-en.sh` | **Push-Gate für den Worktree.** Erzeugt `messages_en.properties` aus dem JavaDoc für jedes Modul mit Java-Änderungen und schlägt fehl, wenn ein Diff bleibt. Jenkins scheitert sonst mit „Files have been changed during build“. Vor **jedem** Push in den Worktree aufrufen — auch nach reinen JavaDoc-Änderungen. |
 
-Der Engine-Klon liegt unter `engine/` im Projektordner (ignoriert; oder `TL_WORKTREE`). Er muss dort liegen:
-die Sandbox sieht nur den Projektordner und `~/.m2`, nicht `~/git`. Ein `git worktree` reicht nicht, weil sein
-`.git` auf das Hauptrepo außerhalb zeigt — es ist ein eigener Klon. Welle 0 ist auf `master`; jede weitere
+Der Worktree liegt unter `_Working-Tree/tl8-wt-29584` im Projektordner (ignoriert; oder `TL_WORKTREE`), das
+Hauptrepo daneben. Beides muss dort liegen: die Sandbox sieht nur den Projektordner und `~/.m2`, nicht `~/git`. Welle 0 ist auf `master`; jede weitere
 Welle arbeitet auf einem eigenen Branch `CWS/CWS_29617_design_system_welle_<n>` (Trac #29617).
 
 ## Die zwei Schichten

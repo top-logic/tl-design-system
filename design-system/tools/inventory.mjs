@@ -123,7 +123,7 @@ export function measure(css) {
 if (import.meta.url === `file://${process.argv[1]}`) {
 
   const pfad = process.argv[2] ?? join(
-    process.env.TL_WORKTREE ?? fileURLToPath(new URL('../../engine', import.meta.url)),
+    process.env.TL_WORKTREE ?? fileURLToPath(new URL('../../_Working-Tree/tl8-wt-29584', import.meta.url)),
     'com.top_logic.layout.react/src/main/webapp/style/tlReactControls.css',
   );
   const css = readFileSync(pfad, 'utf8');
