@@ -221,6 +221,10 @@ Stylesheet je Block; kein Block darf wachsen, ein leerer fällt aus dem Budget.
 Welle beginnt, bevor die vorherige grün ist**, damit Muster aus Welle 1 nicht in Welle 3 neu
 erfunden werden.
 
+*Fortgeschrieben 30.09.:* **Keine Welle wird gemergt, bevor die vorherige gemergt ist**; gebaut wird
+gestapelt auf dem Branch der vorigen Welle, je Welle ein PR. Begründung `docs/skalen.md` „Wellen
+überlappen, gemergt wird der Reihe nach“.
+
 Mitfallend, ohne eigenes Ticket: der 20-px-Tree-Toggle (WCAG 2.5.8), die 22 `outline: none`,
 `shadow-raised`, die Kalender-Hexfarben, die Debug-Farben am Drag-Marker, `z-index:
 9999999999999999`.
