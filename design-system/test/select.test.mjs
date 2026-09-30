@@ -47,6 +47,12 @@ test('der Select-Vertrag nennt Tokens, Klassen, Attribute und die Tastatur', () 
   const md = readComponent('select', 'select.contract.md');
   const names = [...varsOf(css), 'tl-select', 'tl-field', 'role="combobox"', 'aria-expanded', 'aria-activedescendant',
     'aria-selected', 'role="listbox"', 'role="option"', 'data-tl-state', 'aria-invalid', 'colorRole',
-    'ArrowDown', 'ArrowUp', 'Enter', 'Escape', 'Backspace', 'valueChanged', 'loadOptions', 'goto'];
+    'ArrowDown', 'ArrowUp', 'Enter', 'Escape', 'Backspace', 'valueChanged', 'loadOptions', 'goto',
+    'tl-select__search-group'];
   assert.deepEqual(missingInContract(md, names), []);
+});
+
+test('der Abstand unter dem Suchfeld sitzt an seiner Gruppe, nicht am Feld', () => {
+  assert.match(declarationsOf(css, '.tl-select__search-group') ?? '', /margin-bottom/);
+  assert.equal(declarationsOf(css, '.tl-select__search'), null);
 });

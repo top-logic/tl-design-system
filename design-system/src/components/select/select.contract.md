@@ -131,6 +131,7 @@ Klassen:
 | `tl-select__clear` | `button type="button"`, leert die Wahl |
 | `tl-select__arrow` | das Pfeil-Icon |
 | `tl-select__popup` | das schwebende Popup |
+| `tl-select__search-group` | `span.tl-field-group` um Lupe und Suchfeld; trägt den Abstand zur Liste |
 | `tl-select__search` | das Suchfeld, zusammen mit `tl-field` |
 | `tl-select__list` | die Liste, `role="listbox"` |
 | `tl-select__option` | eine Option, `role="option"` |
