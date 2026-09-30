@@ -154,6 +154,10 @@
         "$type": "color",
         "$value": "#A0A3A8"
       },
+      "gray-33": {
+        "$type": "color",
+        "$value": "#93969B"
+      },
       "gray-34": {
         "$type": "color",
         "$value": "#8E9196"
@@ -1240,7 +1244,7 @@
         },
         "text-helper": {
           "$type": "color",
-          "$value": "{primitive.color.gray-36}"
+          "$value": "{primitive.color.gray-33}"
         },
         "text-placeholder": {
           "$type": "color",

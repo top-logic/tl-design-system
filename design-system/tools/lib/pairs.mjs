@@ -45,6 +45,10 @@ export function kontrastPaare(T) {
     paar('status-error-border', bg, 3.0);
     paar('status-warning-border', bg, 3.0);
   }
+  // Hilfe- und Nebentext stehen auch im Panel und im Dialog.
+  for (const bg of ['surface-base', 'surface-layer', 'surface-layer-nested', 'surface-overlay']) {
+    paar('text-helper', bg, 4.5); paar('text-secondary', bg, 4.5);
+  }
   paar('text-secondary', 'surface-overlay', 4.5); // Popup-Status des Select
   // Hervorhebung im Select-Popup und Link im Status
   paar('border-interactive', 'surface-overlay', 3.0); paar('border-interactive', 'surface-interactive-selected', 3.0); paar('text-link', 'surface-overlay', 4.5);

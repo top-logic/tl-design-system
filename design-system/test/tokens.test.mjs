@@ -42,6 +42,15 @@ test('Text steht auf jeder Fläche, auf der er liegen kann', () => {
   }
 });
 
+// Nicht in kontrastPaare: surface-brand ist dort Grund für text-on-brand, und die Paarliste verbietet
+// eine Rolle, die zugleich Grund und Vordergrund ist (derive führt in einem Durchgang nach).
+test('die Marke hebt sich von jedem Grund ab, auf dem sie als Punkt oder Kästchen liegt', () => {
+  for (const m of MODES) for (const bg of ['surface-base', 'surface-layer', 'surface-layer-nested', 'surface-overlay']) {
+    const ist = ratio(R.color[m]['surface-brand'], R.color[m][bg]);
+    assert.ok(ist >= 3.0, `${m}: surface-brand auf ${bg} = ${ist.toFixed(2)}, gefordert 3,0`);
+  }
+});
+
 test('border-separator trennt nur und schuldet keinen Kontrast', () => {
   for (const m of MODES) {
     const ist = ratio(R.color[m]['border-separator'], R.color[m]['surface-base']);

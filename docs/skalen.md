@@ -277,7 +277,7 @@ ist der hellste Wert, der ihre Anforderung noch erfüllt.
 |---|---|---|---|---|
 | `text-primary` | `#1B1D21` | `#F0F3F9` | 16,0 | Grund |
 | `text-secondary` | `#54565B` | `#A0A3A8` | 7,0 | Grund |
-| `text-helper` | `#676A6F` | `#888B90` | 5,2 | Grund |
+| `text-helper` | `#676A6F` | `#93969B` | 5,2 | Grund |
 | `text-placeholder` | `#6B6E73` | `#8E9196` | 4,6 | **`surface-field`**, nicht Grund |
 | `border-emphasis` | `#6F7277` | `#7F8286` | 4,6 | Grund |
 | `border-control` | `#888B90` | `#75787D` | 3,0 | alle fünf Feldgründe (knappstes Paar hell `surface-field` 3,10, dunkel `surface-overlay` 3,04) |
@@ -286,6 +286,8 @@ ist der hellste Wert, der ihre Anforderung noch erfüllt.
 `text-placeholder` und `border-emphasis` landen im hellen Modus dicht beieinander. Das sind
 trotzdem zwei Tokens: Sie messen gegen **verschiedene** Flächen und würden auseinanderlaufen,
 sobald sich eine davon ändert.
+
+**Nachgezogen 30.09. (Welle 2, Formular):** Hilfetext steht unter einem Feld auch im Dialog; dunkel hielt `gray-36` dort 3,94 (verschachtelt 4,40). Jetzt gelten für `text-helper` und `text-secondary` dieselben vier Flächen wie für `text-primary`, und `surface-brand` schuldet dort 3,0 (Punkt, Kästchen). `text-helper` dunkel liest `gray-33` (`#93969B`; 5,99 / 5,52 / 5,06 / 4,54); `gray-36` bleibt für `border-control` hell. Die Marke als Vordergrund (Punkt, Kästchen) prüft ein eigener Test im Paket, nicht die Paarliste — für Kundenthemes bleibt diese Prüfung im derive-Bericht offen.
 
 #### Flächen
 
