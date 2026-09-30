@@ -21,6 +21,8 @@
   .specimen__row > .tl-type-label:first-child { color: var(--tl-text-secondary); }
   /* 120 px: die schmale Tabellenzelle, in der die Pill heute hart abgeschnitten wird. */
   .specimen__cell { width: 7.5rem; }
+  /* 320 px: ein langer Absatz im mehrzeiligen Lesewert muss umbrechen, nicht in einer Ellipse enden. */
+  .specimen__cell--wide { width: 20rem; }
 </style>
 </head>
 <body>
@@ -81,6 +83,10 @@
     <div class="specimen__row">
       <span class="tl-type-label">Lesewert mehrzeilig</span>
       <div class="tl-field-value tl-field-value--multiline tl-type-body"><span class="tl-field-value__text">Erste Zeile</span><span class="tl-field-value__text">&nbsp;</span><span class="tl-field-value__text">Dritte Zeile nach einer Leerzeile</span></div>
+    </div>
+    <div class="specimen__row">
+      <span class="tl-type-label">Lesewert mehrzeilig, langer Absatz, 320 px</span>
+      <div class="specimen__cell--wide"><div class="tl-field-value tl-field-value--multiline tl-type-body"><span class="tl-field-value__text">Ein langer Absatz im schreibgeschützten Feld: Er steht in einer Zelle von zwanzig rem Breite und muss dort umbrechen, statt nach der ersten Zeile mit einer Ellipse zu enden. Auch ein überlanges Wort wie Donaudampfschifffahrtsgesellschaftskapitänsmütze bricht notfalls mitten im Wort.</span></div></div>
     </div>
     <div class="specimen__row">
       <span class="tl-type-label">schmale Zelle, 120 px</span>

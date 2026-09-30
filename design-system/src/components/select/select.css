@@ -12,6 +12,10 @@
   display: flex;
   align-items: center;
   gap: var(--tl-space-xs);
+  /* Ein Chip, eine Pill ist size-control-sm hoch, das Feld bleibt size-control: der Innenabstand oben
+     und unten ist die halbe Differenz, abzüglich des Randes. Bricht die Wahl in eine zweite Reihe um,
+     wächst das Feld um eine Chip-Reihe. */
+  padding-block: calc((var(--tl-size-control) - var(--tl-size-control-sm)) / 2 - var(--tl-border-width-sm));
   cursor: pointer;
 }
 .tl-select[hidden] { display: none; }

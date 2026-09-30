@@ -81,6 +81,7 @@ Es gibt im Formular keinen Schlüssel `disabled`: ein Feld ist bearbeitbar oder 
 | Label-Spalte der Seitenlage | `--tl-size-field-label-min` bis `--tl-size-field-label-max` als `minmax(…)`, danach die Eingabe `minmax(0, 1fr)` |
 | Abstände | `--tl-space-2xs` (Raster im Feld, Gruppen der Meldung), `--tl-space-xs`, `--tl-space-sm` (Spaltenabstand, Gruppen, Feldliste), `--tl-space-md` (Layout, Innenabstand der umrandeten Gruppe) |
 | Höhe von Beschriftung und Kopfzeile | `--tl-size-control` (folgt der Dichte) |
+| Lesewert im Feld | Mindesthöhe `--tl-size-control`: die Zeile springt nicht zwischen bearbeitbar und schreibgeschützt |
 | Beschriftung | Text `--tl-text-secondary`; Pflichtstern `--tl-status-error-text` |
 | Geändert-Punkt | Größe `--tl-size-indicator`, Form `--tl-radius-round`, Fläche `--tl-surface-brand` |
 | Fehler / Warnung | Text `--tl-status-error-text` / `--tl-status-warning-text` |

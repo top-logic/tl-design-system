@@ -70,7 +70,8 @@ Der Fokus bleibt an der Wurzel bzw. am Suchfeld; die Hervorhebung wandert über
 
 | Teil | Token |
 |---|---|
-| Wurzel | Rahmen aus `tl-field` (`field.contract.md`); Abstand der Teile `--tl-space-xs` |
+| Wurzel | Rahmen aus `tl-field` (`field.contract.md`); Abstand der Teile `--tl-space-xs`; `--tl-space-control-y` liest sie nicht (nur mehrzeilig, im `tl-field--multiline`) |
+| Höhe | `--tl-size-control`, Chips `--tl-size-control-sm`: Innenabstand oben und unten (`--tl-size-control` − `--tl-size-control-sm`) / 2 − `--tl-border-width-sm`, damit eine Chip-Reihe das Feld nicht über `--tl-size-control` wachsen lässt |
 | Werte, Chips, Knöpfe | Lücke `--tl-space-2xs`; Einzelwert `--tl-space-xs` |
 | Platzhalter | `--tl-text-placeholder` |
 | Entfernen, Löschen | Farbe `--tl-icon-secondary`, Ecke `--tl-radius-sm`; beim Zeigen `--tl-surface-interactive-hover` |

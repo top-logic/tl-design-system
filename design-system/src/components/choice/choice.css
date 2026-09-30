@@ -29,10 +29,10 @@
   border-radius: var(--tl-radius-round);
 }
 
-/* Kein Zeigen auf Deaktiviertem. :where hält die Spezifität bei (0,2,0), damit Angekreuzt, Fehler und
-   Warnung weiter über dem Zeigen stehen. */
-.tl-checkbox:where(:not(:disabled)):hover,
-.tl-radio:where(:not(:disabled)):hover {
+/* Kein Zeigen auf Deaktiviertem und Schreibgeschütztem. :where hält die Spezifität bei (0,2,0), damit
+   Angekreuzt, Fehler und Warnung weiter über dem Zeigen stehen. */
+.tl-checkbox:where(:not(:disabled):not([aria-readonly="true"])):hover,
+.tl-radio:where(:not(:disabled):not([aria-readonly="true"])):hover {
   border-color: var(--tl-border-emphasis);
 }
 
@@ -122,6 +122,14 @@
   background: var(--tl-border-disabled);
 }
 
+/* Schreibgeschützt ist nicht deaktiviert: das Kästchen trägt aria-readonly statt disabled, die Engine
+   blockiert die Änderung. Die Füllung bleibt die Marke und hält ihren Kontrast; nur der Zeiger sagt,
+   dass hier nichts zu klicken ist. */
+.tl-checkbox[aria-readonly="true"],
+.tl-radio[aria-readonly="true"] {
+  cursor: default;
+}
+
 /* --- Label und Gruppe ------------------------------------------------------------ */
 
 .tl-choice {
@@ -137,6 +145,10 @@
 .tl-choice:has(:disabled) {
   color: var(--tl-text-disabled);
   cursor: not-allowed;
+}
+
+.tl-choice:has([aria-readonly="true"]) {
+  cursor: default;
 }
 
 .tl-choice-group {
@@ -223,18 +235,26 @@
   background: var(--tl-surface-interactive-hover);
 }
 
+/* Gewählt sieht aus wie angekreuzt: die Marke als Fläche, die Beschriftung auf der Marke. */
 .tl-chip[aria-pressed="true"] {
-  border-color: var(--tl-border-interactive);
-  background: var(--tl-surface-brand-subtle);
+  border-color: var(--tl-surface-brand);
+  background: var(--tl-surface-brand);
+  color: var(--tl-text-on-brand);
 }
 
-/* Warnung vor Fehler: der Fehler steht später und gewinnt. Deaktivierte Chips bleiben ohne Prüfzustand. */
-.tl-chip-group[data-tl-state~="warning"] .tl-chip:not(:disabled) {
+.tl-chip[aria-pressed="true"]:where(:not(:disabled)):hover {
+  border-color: var(--tl-surface-brand-hover);
+  background: var(--tl-surface-brand-hover);
+}
+
+/* Warnung vor Fehler: der Fehler steht später und gewinnt. Den Prüfzustand zeigen nur ungewählte,
+   nicht deaktivierte Chips — ein gewählter trägt die Marke, ein deaktivierter keinen Prüfzustand.
+   role="group" erlaubt kein aria-invalid; der Fehler steht in data-tl-state. */
+.tl-chip-group[data-tl-state~="warning"] .tl-chip:not(:disabled):not([aria-pressed="true"]) {
   border-color: var(--tl-status-warning-border);
 }
 
-.tl-chip-group[aria-invalid="true"] .tl-chip:not(:disabled),
-.tl-chip-group[data-tl-state~="error"] .tl-chip:not(:disabled) {
+.tl-chip-group[data-tl-state~="error"] .tl-chip:not(:disabled):not([aria-pressed="true"]) {
   border-color: var(--tl-status-error-border);
 }
 
@@ -243,4 +263,11 @@
   background: var(--tl-surface-disabled);
   color: var(--tl-text-disabled);
   cursor: not-allowed;
+}
+
+/* Deaktiviert und gewählt: wie .tl-checkbox:disabled:checked. */
+.tl-chip:disabled[aria-pressed="true"] {
+  border-color: var(--tl-border-disabled);
+  background: var(--tl-border-disabled);
+  color: var(--tl-text-disabled);
 }

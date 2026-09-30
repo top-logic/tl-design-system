@@ -13,7 +13,10 @@
   min-width: 0;
   min-height: var(--tl-size-control);
   margin: 0;
-  padding: var(--tl-space-control-y) var(--tl-space-control-x);
+  /* Kein Innenabstand oben und unten: die Höhe ist size-control, der Text steht in ihrer Mitte. Ein
+     Innenabstand darüber würde das Feld über size-control wachsen lassen, sobald ein Kind (Chip,
+     Pill) höher ist als eine Textzeile. */
+  padding: 0 var(--tl-space-control-x);
   border: var(--tl-border-width-sm) solid var(--tl-border-control);
   border-radius: var(--tl-radius-sm);
   background: var(--tl-surface-field);
@@ -47,7 +50,9 @@
   cursor: not-allowed;
 }
 
+/* Mehrzeilig wächst das Feld mit den Zeilen; hier trägt es den Innenabstand oben und unten. */
 .tl-field--multiline {
+  padding-block: var(--tl-space-control-y);
   resize: vertical;
 }
 
@@ -124,12 +129,19 @@
   white-space: nowrap;
 }
 
-/* Mehrzeiliger Lesewert: eine Zeile je __text, untereinander. In der Tabellenzelle stellt die Engine
-   ihn wieder in eine Reihe. */
+/* Mehrzeiliger Lesewert: eine Zeile je __text, untereinander, und jede Zeile bricht um — ein langer
+   Absatz endet nicht in einer Ellipse. In der Tabellenzelle stellt die Engine ihn wieder in eine Reihe
+   ohne Umbruch. */
 .tl-field-value--multiline {
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: stretch;
+  white-space: pre-wrap;
+}
+
+.tl-field-value--multiline > .tl-field-value__text {
+  white-space: inherit;
+  overflow-wrap: anywhere;
 }
 
 /* Farbe allein kennzeichnet keinen Link (WCAG 1.4.1): der Link-Lesewert ist unterstrichen. */

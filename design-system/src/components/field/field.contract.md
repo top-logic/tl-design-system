@@ -55,8 +55,8 @@ Zusätze je Control:
 
 | Teil | Token |
 |---|---|
-| Höhe | `--tl-size-control` (folgt der Dichte), als `min-height` |
-| Innenabstand | `--tl-space-control-y` / `--tl-space-control-x` |
+| Höhe | `--tl-size-control` (folgt der Dichte), als `min-height`; einzeilig ohne Innenabstand oben und unten, der Text steht in der Mitte |
+| Innenabstand | seitlich `--tl-space-control-x`; oben und unten `--tl-space-control-y` nur mehrzeilig (`tl-field--multiline`) |
 | Ecke | `--tl-radius-sm` |
 | Fläche | `--tl-surface-field` |
 | Rand | `--tl-border-control`, Breite `--tl-border-width-sm` |
@@ -88,7 +88,8 @@ Rand-Rollen halten am Gate 3,0 auf `surface-field` und jeder umgebenden Fläche 
 Bei `editable: false` rendert kein Eingabefeld, sondern der Lesewert: ein `span` (als Link ein `a`)
 mit `tl-field-value`, der Text darin in `tl-field-value__text`. Ein mehrzeiliger Text rendert ein
 `div` mit `tl-field-value tl-field-value--multiline` und je Zeile ein `tl-field-value__text`; eine
-leere Zeile behält ihre Höhe. Ein Link-Lesewert ist unterstrichen — Farbe allein kennzeichnet keinen
+leere Zeile behält ihre Höhe. Mehrzeilig bricht jede Zeile um, statt mit Ellipse zu enden; in der
+Tabellenzelle stellt die Engine die Zeilen in eine Reihe ohne Umbruch. Ein Link-Lesewert ist unterstrichen — Farbe allein kennzeichnet keinen
 Link.
 
 Die Feldgruppe hat **einen** Endplatz: solange Text steht und `clearable` gilt, ersetzt der

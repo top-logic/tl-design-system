@@ -89,6 +89,12 @@
   min-width: 0;
 }
 
+/* Der Lesewert steht so hoch wie ein Feld: eine Zeile im Formular springt nicht, wenn sie von
+   bearbeitbar zu schreibgeschützt wechselt. */
+.tl-form-field__input > .tl-field-value {
+  min-height: var(--tl-size-control);
+}
+
 .tl-form-field__message {
   display: flex;
   align-items: start;

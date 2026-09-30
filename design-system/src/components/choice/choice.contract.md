@@ -50,10 +50,11 @@ Feldes (`field.contract.md`, Abschnitt Zustand) und gelten hier unverändert. Zu
 | Gruppe `tl-choice-group` | Abstand `--tl-space-control-gap` |
 | Segmente | Rahmen `--tl-border-control`, `--tl-radius-sm`, `--tl-surface-field`; Segment `--tl-size-control` abzüglich 2 × `--tl-border-width-sm`, Innenabstand `--tl-space-control-x`, Text `--tl-text-primary`; beim Zeigen `--tl-surface-interactive-hover` |
 | Chips | Höhe `--tl-size-control-sm`, Innenabstand `--tl-space-sm`, Lücke `--tl-space-2xs`, Ecke `--tl-radius-full`; Gruppe `--tl-space-xs`; beim Zeigen `--tl-surface-interactive-hover` |
-| Gewähltes Segment, gewählter Chip | Fläche `--tl-surface-brand-subtle`, Rand `--tl-border-interactive` |
+| Gewähltes Segment | Fläche `--tl-surface-brand-subtle`, Rand `--tl-border-interactive` |
+| Gewählter Chip | wie angekreuzt: Fläche und Rand `--tl-surface-brand`, Text `--tl-text-on-brand`; beim Zeigen `--tl-surface-brand-hover` |
 | Fehler | Rand `--tl-status-error-border` |
 | Warnung | Rand `--tl-status-warning-border` |
-| deaktiviert (vom Kontrast-Gate ausgenommen) | Fläche `--tl-surface-disabled`, Text `--tl-text-disabled`, Rand `--tl-border-disabled`; angekreuzt deaktiviert: Fläche `--tl-border-disabled` |
+| deaktiviert (vom Kontrast-Gate ausgenommen) | Fläche `--tl-surface-disabled`, Text `--tl-text-disabled`, Rand `--tl-border-disabled`; angekreuzt deaktiviert und gewählter Chip deaktiviert: Fläche `--tl-border-disabled` |
 
 Schrift: Klasse `.tl-type-body` am `tl-choice`, `.tl-type-label` an Segment und Chip, von außen
 gesetzt; die Auswahl hat keine Schriftregel.
@@ -70,11 +71,12 @@ gesetzt; die Auswahl hat keine Schriftregel.
 | `aria-checked` | am Segment (`role="radio"`) bei Einfachwahl: `"true"` für das gewählte. |
 | `aria-pressed` | am Segment bei Mehrfachwahl und an jedem Chip: `"true"` für die gewählten. |
 | `aria-invalid="true"` | `hasError`, wo ARIA es erlaubt: am Kästchen, am Schalter, an der `role="radiogroup"` (Radios, Segmente mit Einfachwahl). Das CSS liest es selbst. |
-| `data-tl-state="error"` | `hasError` an einer `role="group"` (Chips, Segmente mit Mehrfachwahl) — dort erlaubt ARIA `aria-invalid` nicht. |
+| `data-tl-state="error"` | `hasError` an einer `role="group"` (Chips, Segmente mit Mehrfachwahl) — dort erlaubt ARIA `aria-invalid` nicht. In der Chip-Gruppe zeigen nur ungewählte, nicht deaktivierte Chips den Fehler- oder Warnrand; ein gewählter trägt die Marke. |
 | `data-tl-state="warning"` | `hasWarnings && !hasError`, am Kästchen, an der Radiogruppe, an `tl-segmented`, an `tl-chip-group`. Der Fehler verdrängt die Warnung. |
 | `aria-required="true"` | `mandatory`, am Kästchen, am Schalter, an der `role="radiogroup"`. Eine `role="group"` (Chips, Segmente mit Mehrfachwahl) trägt es nicht — ARIA erlaubt es dort so wenig wie `aria-invalid`. An `role="group"` gibt es kein `aria-required`; die Pflicht zeigt der Stern im Feld-Label an, das die Gruppe über `aria-labelledby` benennt. |
 | `tabIndex` | roving in Segmenten mit Einfachwahl: nur das gewählte (ohne Wahl das erste) hat `0`, die übrigen `-1`; Pfeiltasten wechseln die Wahl. Bei Mehrfachwahl und an Chips ist jedes Element erreichbar. |
-| `disabled` | heute setzt es kein Zustand des Formularmodells (es gibt keinen Schlüssel `disabled`); die Regeln `:disabled` stehen für Kundenmodule und spätere Zustände. |
+| `aria-readonly="true"` | `editable: false` an `TLCheckbox`: das Kästchen bzw. der Schalter rendert **ohne** `disabled`, mit `aria-readonly="true"` und einem Änderungs-Handler, der nichts tut — die Angekreuzt-Füllung behält den Kontrast der Marke. Kein Zeigen, Zeiger `default`. |
+| `disabled` | der inaktive Zustand, nicht der schreibgeschützte. Heute setzt ihn kein Zustand des Formularmodells (es gibt keinen Schlüssel `disabled`); die Regeln `:disabled` stehen für Kundenmodule und spätere Zustände. |
 | `:focus-visible` | den Ring liefert `base.css`; die Auswahl setzt und entfernt keinen Fokusstil. |
 
 Deaktiviert schlägt Fehler und Warnung: ein `disabled` Kästchen, Radio, Segment oder Chip zeigt keinen
@@ -85,7 +87,8 @@ Bei `editable: false` rendert `TLBooleanChoice` die Beschriftung seines Werts al
 (`tl-field-value`, siehe `field.contract.md`). `TLSegmentedChoice` und `TLOptionChips` rendern wie der
 DropdownSelect (`select.contract.md`) eine Liste von `tl-field-value`-Einträgen in `tl-select__values`:
 je gewählter Wert Text oder `tl-pill` seiner `colorRole`, mit Bild, Werte mit `link` als `a`, das
-`goto` sendet. `TLCheckbox` zeigt heute ein deaktiviertes Kästchen.
+`goto` sendet. `TLCheckbox` zeigt das Kästchen schreibgeschützt: `aria-readonly="true"`, nicht
+`disabled` (siehe Attribute).
 
 Klassen:
 

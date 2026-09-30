@@ -20,7 +20,7 @@ test('field.css liest genau die Farbrollen des Feldes', () => {
 test('der Rahmen folgt der Dichte und hat keine Schriftregel', () => {
   const d = declarationsOf(css, '.tl-field');
   assert.ok(d, '.tl-field fehlt');
-  for (const t of ['--tl-size-control', '--tl-space-control-x', '--tl-space-control-y', '--tl-radius-sm', '--tl-border-width-sm'])
+  for (const t of ['--tl-size-control', '--tl-space-control-x', '--tl-radius-sm', '--tl-border-width-sm'])
     assert.ok(d.includes(t), `.tl-field liest ${t} nicht`);
   assert.doesNotMatch(css, /font(-size|-weight)?\s*:|line-height\s*:/);
 });
@@ -48,6 +48,37 @@ test('der Lesewert endet mit Ellipse und lässt seine Kinder schrumpfen', () => 
 test('der mehrzeilige Lesewert stellt seine Zeilen untereinander, der Link-Lesewert ist unterstrichen', () => {
   assert.match(declarationsOf(css, '.tl-field-value--multiline') ?? '', /flex-direction:\s*column/);
   assert.match(declarationsOf(css, 'a.tl-field-value') ?? '', /text-decoration:\s*underline/);
+});
+
+test('der mehrzeilige Lesewert bricht um: pre-wrap am Block, overflow-wrap am Zeilentext', () => {
+  assert.match(declarationsOf(css, '.tl-field-value--multiline') ?? '', /white-space:\s*pre-wrap/);
+  assert.match(declarationsOf(css, '.tl-field-value--multiline > .tl-field-value__text') ?? '', /overflow-wrap:\s*anywhere/);
+});
+
+test('ein Chip passt ins Feld: size-control-sm plus zwei Ränder ist höchstens size-control, in jeder Dichte', () => {
+  const R = resolve(P, T);
+  const px = (v) => (v.endsWith('rem') ? parseFloat(v) * 16 : v.endsWith('px') ? parseFloat(v) : NaN);
+  const rand = px(R.measure['border-width-sm']);
+  assert.ok(Number.isFinite(rand), 'border-width-sm nicht in px auflösbar');
+  for (const [dichte, d] of Object.entries(R.density)) {
+    const feld = px(d['size-control']);
+    const chip = px(d['size-control-sm']);
+    assert.ok(Number.isFinite(feld) && Number.isFinite(chip), `${dichte}: Maße nicht auflösbar`);
+    assert.ok(chip + 2 * rand <= feld, `${dichte}: Chip ${chip}px + 2 × ${rand}px Rand > Feld ${feld}px`);
+  }
+});
+
+test('Felder halten size-control: space-control-y liest nur das mehrzeilige Feld', () => {
+  const regeln = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  const leser = [...regeln.matchAll(/([^{}]+)\{([^}]*)\}/g)]
+    .filter((m) => m[2].includes('--tl-space-control-y')).map((m) => m[1].trim());
+  assert.deepEqual(leser, ['.tl-field--multiline']);
+  assert.doesNotMatch(declarationsOf(css, '.tl-field') ?? '', /padding-block/);
+  const select = readComponent('select', 'select.css');
+  assert.match(declarationsOf(select, '.tl-select') ?? '',
+    /padding-block:\s*calc\(\(var\(--tl-size-control\) - var\(--tl-size-control-sm\)\) \/ 2 - var\(--tl-border-width-sm\)\)/);
+  const form = readComponent('form', 'form.css');
+  assert.match(declarationsOf(form, '.tl-form-field__input > .tl-field-value') ?? '', /min-height:\s*var\(--tl-size-control\)/);
 });
 
 test('tl-visually-hidden steht in base.css, ohne Maß-Literal', () => {
