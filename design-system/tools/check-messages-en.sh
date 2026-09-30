@@ -6,7 +6,7 @@
 #
 # Aufruf: design-system/tools/check-messages-en.sh [basis-ref]   (Standard: origin/master)
 set -eu
-WT="${TL_WORKTREE:-$HOME/git/tl8-wt-29584}"
+WT="${TL_WORKTREE:-$(cd "$(dirname "$0")/../.." && pwd)/engine}"
 BASE="${1:-origin/master}"
 JH="${JAVA_HOME_21:-$(ls -d /opt/homebrew/Cellar/openjdk@21/*/libexec/openjdk.jdk/Contents/Home 2>/dev/null | tail -1)}"
 [ -n "$JH" ] || { echo "JDK 21 nicht gefunden (JAVA_HOME_21 setzen)"; exit 2; }

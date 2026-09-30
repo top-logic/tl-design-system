@@ -53,7 +53,7 @@ Das Aussehen der React-Oberfläche kommt aus dem Paket `tl-design-system`
    deckungsgleich.
 6. `cd design-system && node tools/generate.mjs && node --test && node tools/lint-css.mjs` — alles
    grün, dann `node tools/publish-to-worktree.mjs` (kopiert `dist/` in den Worktree;
-   `TL_WORKTREE` setzen, wenn er nicht unter `~/git/tl8-wt-29584` liegt).
+   `TL_WORKTREE` setzen, wenn er nicht unter `engine/` im Projektordner liegt).
 7. TSX: `className` aus `tl-<block>` + Modifiern, `className`-Prop durchreichen, Zustände als
    Attribute, Icon mit `.tl-icon-sm|md`, Text mit `.tl-type-label`. Keine Inline-Styles für Farbe
    oder Maß.

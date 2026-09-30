@@ -3,11 +3,11 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
-import { homedir } from 'node:os';
+import { fileURLToPath } from 'node:url';
 import { measureBlocks, blocks, foreignTlNames, foreignTlInSources, foreignOf } from '../tools/inventory.mjs';
 import { knownVariables } from '../tools/lint-css.mjs';
 
-const MODULE = join(process.env.TL_WORKTREE ?? join(homedir(), 'git/tl8-wt-29584'), 'com.top_logic.layout.react');
+const MODULE = join(process.env.TL_WORKTREE ?? fileURLToPath(new URL('../../engine', import.meta.url)), 'com.top_logic.layout.react');
 const OLD = join(MODULE, 'src/main/webapp/style/tlReactControls.css');
 const SOURCES = join(MODULE, 'react-src');
 const budget = JSON.parse(readFileSync(new URL('./ratchet.json', import.meta.url)));

@@ -13,6 +13,7 @@ import { declarations } from './lib/css.mjs';
 import { knownVariables } from './lint-css.mjs';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 /** Der Namensraum des Design Systems: jede Custom Property, die mit `--tl` beginnt. */
 const TL_NAME = /--tl[A-Za-z0-9-]*/g;
@@ -120,10 +121,9 @@ export function measure(css) {
 // Aufruf von der Kommandozeile: node inventory.mjs [pfad]
 // ---------------------------------------------------------------------------
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const { homedir } = await import('node:os');
 
   const pfad = process.argv[2] ?? join(
-    process.env.TL_WORKTREE ?? join(homedir(), 'git/tl8-wt-29584'),
+    process.env.TL_WORKTREE ?? fileURLToPath(new URL('../../engine', import.meta.url)),
     'com.top_logic.layout.react/src/main/webapp/style/tlReactControls.css',
   );
   const css = readFileSync(pfad, 'utf8');
