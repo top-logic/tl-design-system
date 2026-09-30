@@ -32,3 +32,14 @@ test('kein Grund der Paarliste ist anderswo ein Vordergrund', () => {
   const vordergruende = new Set(paare.map((p) => p.fg));
   for (const { bg } of paare) assert.ok(!vordergruende.has(bg), `${bg} ist Grund und Vordergrund zugleich`);
 });
+
+test('kein Paar steht zweimal in der Liste', () => {
+  // Zwei Schleifen dürfen dasselbe Paar nennen; es zählt einmal, mit der höheren Schwelle. Sonst
+  // meldet derive einen Befund doppelt und zählt ihn im Kopf des Themes zweimal.
+  const gesehen = new Set();
+  for (const { fg, bg } of kontrastPaare(T)) {
+    const schluessel = `${fg}|${bg}`;
+    assert.ok(!gesehen.has(schluessel), `${fg} auf ${bg} steht doppelt`);
+    gesehen.add(schluessel);
+  }
+});

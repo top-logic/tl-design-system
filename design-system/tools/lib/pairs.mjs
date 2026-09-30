@@ -11,8 +11,21 @@ const STATUS = ['error', 'warning', 'success', 'info'];
 const KATEGORIEN = [1, 2, 3, 4, 5, 6, 7, 8];
 
 export function kontrastPaare(T) {
+  // Nennen zwei Schleifen dasselbe Paar, zählt es einmal, mit der höheren Schwelle — sonst meldete
+  // derive denselben Befund doppelt. Die Reihenfolge der Schleifen spielt damit keine Rolle.
   const p = [];
-  const paar = (fg, bg, soll) => p.push({ fg, bg, soll });
+  const index = new Map();
+  const paar = (fg, bg, soll) => {
+    const schluessel = `${fg}|${bg}`;
+    if (index.has(schluessel)) {
+      const vorhanden = index.get(schluessel);
+      vorhanden.soll = Math.max(vorhanden.soll, soll);
+      return;
+    }
+    const eintrag = { fg, bg, soll };
+    index.set(schluessel, eintrag);
+    p.push(eintrag);
+  };
   paar('text-primary', 'surface-base', 16.0); paar('text-secondary', 'surface-base', 7.0);
   paar('text-helper', 'surface-base', 5.2); paar('text-placeholder', 'surface-field', 4.6);
   paar('text-link', 'surface-base', 4.5); paar('text-link-hover', 'surface-base', 4.5);
