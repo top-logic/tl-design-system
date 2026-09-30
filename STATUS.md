@@ -154,7 +154,9 @@ Jetzt:
    (`3a8bf043af..bf970e6f54`, master gemergt, `layout.react`, `layout.view`, `demo.react` grün, `messages_en` ohne
    Diff) — **nicht gepusht, kein PR**. Die Ratsche steht bei 5994 Zeilen (7252 davor); die zwölf Blöcke der Spec sind
    gestrichen, dazu `TLResourceCell` und `Visually hidden text`; der `tsc`-Befund in `TLFormField.tsx` ist weg (`tsc`
-   32→26, keiner in Welle-2-Dateien). Entscheidungen beim Bauen: `docs/skalen.md` „Formulare“, Abschnitt „Entschieden
+   32→26, keiner in Welle-2-Dateien). Fix-Welle nach dem Final-Review (Task 12d): gewählter Chip ist Marke,
+   Checkbox schreibgeschützt per `aria-readonly`, Felder ohne `padding-block`, mehrzeiliger Lesewert bricht um;
+   Gates 232/232, Engine `a483bc99b8`, `layout.react` 446/446. Entscheidungen beim Bauen: `docs/skalen.md` „Formulare“, Abschnitt „Entschieden
    beim Bauen (30.09.)“; Ledger `.superpowers/sdd/2026-09-30-welle-2-formulare/progress.md`; Arbeitsliste
    `docs/migration/altlast.md` „Welle 2 · Formulare“. **Danach Sichtprüfung** in der Docker-Instanz des PRs, hell und
    dunkel (Plan Task 12, Schritt 3):
@@ -191,7 +193,7 @@ spätere Wellen: `surface-overlay` ins Kontrast-Gate (Welle 4), Icon-Schrift im 
 
 **Welle 0 ist umgesetzt.** Das Paket `design-system/` liefert `dist/primitives.css`,
 `dist/tokens.css`, `dist/base.css` und `dist/tokens.dtcg.json`. `cd design-system && node --test`
-ist das Gate — **224 Tests, alle grün**. `node tools/lint-css.mjs` ist das Klassen-Gate,
+ist das Gate — **232 Tests, alle grün**. `node tools/lint-css.mjs` ist das Klassen-Gate,
 `test/ratchet.json` das Budget des alten Stylesheets (5994 Zeilen nach Welle 2, davor 7252; Fremdzuwachs aus master hebt einen
 Block mit Ticketvermerk, die Summe darf sonst nur sinken) und die Einfang-Liste `foreignTl` der sechs fremden
 `--tl`-Namen im Altbestand (`--tl-item-index`, `--tl-toolbar-shrink-priority`, `--tl-toolbar-trigger-size`,

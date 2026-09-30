@@ -1546,10 +1546,10 @@ zeigt der Stern im Feld-Label (`tl-form-field__required`), und `aria-labelledby`
 
 | Achse | Regel | Warum |
 |---|---|---|
-| Mehrzeilig | `tl-field-value--multiline`: eine Spalte, je Zeile ein `tl-field-value__text`; in der Tabellenzelle wieder eine Reihe | Als `inline-flex`-Reihe lagen die Zeilen nebeneinander; eine Zelle hat eine Zeile |
+| Mehrzeilig | `tl-field-value--multiline`: eine Spalte, je Zeile ein `tl-field-value__text`, jede Zeile bricht um (`pre-wrap`, `overflow-wrap: anywhere`); in der Tabellenzelle wieder eine Reihe ohne Umbruch | Als `inline-flex`-Reihe lagen die Zeilen nebeneinander; eine Zelle hat eine Zeile. Ein langer Absatz, der mit Ellipse endete, verlöre seinen Inhalt |
 | Link | **unterstrichen** | Farbe allein kennzeichnet keinen Link (WCAG 1.4.1); `text-link` löst den Kontrast, nicht die Kennzeichnung |
 | Dropdown, Segmente, Chips | Der Lesewert aller drei Formen ist eine Liste in `span.tl-select__values`; Pill, Bild und `goto`-Link bleiben erhalten | Ein Lesewert „Bezeichnung, Komma“ hätte Rolle, Bild und Verweis verloren — das wäre ein Vertragsbruch |
-| Checkbox | **Ausnahme:** `editable: false` bleibt ein deaktiviertes Kästchen mit Haken | Der Wert eines Booleans ist als Haken lesbarer denn als Text |
+| Checkbox | **Ausnahme:** `editable: false` bleibt ein Kästchen mit Haken — seit dem Final-Review schreibgeschützt, nicht deaktiviert (siehe unten) | Der Wert eines Booleans ist als Haken lesbarer denn als Text |
 | Ein Helfer | `FieldValue` in `react-src/controls/form/` | Sonst wäre das Markup in fünf Controls kopiert worden |
 
 **Die Feldgruppe hat einen Endplatz.** *Entschieden:* Solange Text im Feld steht und `clearable` gilt,
@@ -1590,6 +1590,36 @@ Pick-Highlight und der Sidebar-Flyout (1000): Er liegt auf der Ebene des Dialogs
 **gleiche Ebene heißt DOM-Reihenfolge** — das Portal des Dialogs steht nach der Shell. Dasselbe gilt für
 Dialog, Drawer und Foto-Overlay untereinander; ein Dialog aus dem Drawer hängt an der Reihenfolge der
 Hosts (Sichtprüfung).
+
+**Ein gewählter Chip ist die Marke.** *Befund:* Der gewählte Chip trug `surface-brand-subtle` mit Rand
+`border-interactive` — neben einem angekreuzten Kästchen (volle Marke) sah „gewählt“ zweierlei aus, und in
+einer Gruppe mit Fehler färbte der Fehlerrand auch den gewählten Chip, der dann wie ein ungewählter wirkte.
+*Entschieden:* `.tl-chip[aria-pressed="true"]` ist `surface-brand` mit `text-on-brand`, beim Zeigen
+`surface-brand-hover`; deaktiviert und gewählt wie `.tl-checkbox:disabled:checked`. Die Prüfzustände der
+Gruppe treffen nur ungewählte, nicht deaktivierte Chips; `aria-invalid` an der Chip-Gruppe fällt, weil ARIA
+es an `role="group"` verbietet. Das gewählte Segment bleibt, wie es ist (`surface-brand-subtle`); diese
+Entscheidung betrifft nur Chips. *Warum:* Gewählt ist eine Aussage, und sie sieht an
+jedem Control gleich aus; die Kontrastpaare für `text-on-brand` auf `surface-brand` und für `surface-brand`
+auf den vier Gründen bestehen schon.
+
+**Die Checkbox ist schreibgeschützt, nicht deaktiviert.** *Befund:* `editable: false` renderte das Kästchen
+mit `disabled`; angekreuzt wurde die Füllung `border-disabled` — der Wert, den das Kästchen zeigen soll, lag
+im vom Gate ausgenommenen Deaktiviert-Grau. *Entschieden:* Das Kästchen trägt `aria-readonly="true"` statt
+`disabled`, die Engine blockiert Änderung und Klick; das Paket gibt ihm `cursor: default` und nimmt es aus
+dem Zeigen (`:where(:not(:disabled):not([aria-readonly="true"])):hover`). `disabled` bleibt der inaktive
+Zustand. *Warum:* Schreibgeschützt heißt „lesbar, nicht änderbar“, deaktiviert heißt „gerade nicht
+verfügbar“ — nur das erste gilt für eine Leseansicht, und die Markenfüllung hält ihren Kontrast. Die
+Schreibweise mit zwei `:not()` statt einer Liste hält Selektorlisten ohne Komma in Klammern.
+
+**Felder haben keinen `padding-block`.** *Befund:* Mit `space-control-y` oben und unten wuchs ein Feld über
+`size-control`, sobald ein Kind höher war als eine Textzeile — das Select mit Chips (`size-control-sm`) war
+höher als das Textfeld daneben, und der Lesewert stand niedriger als das Feld, das er ersetzt.
+*Entschieden:* `.tl-field` hat nur seitlichen Innenabstand; `space-control-y` gilt nur für
+`tl-field--multiline`. Das Select rechnet seinen Innenabstand aus `size-control`, `size-control-sm` und
+`border-width-sm`; der Lesewert im Formular hat `min-height: size-control`. Ein Test hält
+`size-control-sm` + 2 × `border-width-sm` ≤ `size-control` in beiden Dichten. *Warum:* Die Höhe eines
+Felds ist ein Token, keine Summe aus Innenabstand und Inhalt; eine Formularzeile springt sonst beim Wählen
+und beim Wechsel in die Leseansicht.
 
 **Die Marke als Vordergrund** (Punkt, Kästchen) prüft ein eigener Test im Paket, nicht die Paarliste:
 `surface-brand` ist Grund für `text-on-brand`, und die Liste verbietet, dass ein Grund anderswo Vordergrund

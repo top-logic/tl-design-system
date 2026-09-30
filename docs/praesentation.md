@@ -262,7 +262,7 @@ Einen vierten Weg gibt es nicht: Shell nutzen und den Draht ignorieren. Und es g
 |---|---|---|
 | 0 | Primitive, Rollen, Grundklassen | steht |
 | 1 | Button, Pill, Avatar, Progress, FontIcon | auf master |
-| 2 | Felder, Checkbox, Select, Formular | gebaut, PR folgt — ein Feldrahmen für alle; Fehler ist `aria-invalid`, dasselbe Attribut für Auge und Screenreader; ein deaktiviertes Feld zeigt nie einen Fehler; Ratsche 7.252 → 5.994 Zeilen, zwölf alte Blöcke gestrichen |
+| 2 | Felder, Checkbox, Select, Formular | gebaut, PR folgt — ein Feldrahmen für alle; Fehler ist `aria-invalid`, dasselbe Attribut für Auge und Screenreader; ein deaktiviertes Feld zeigt nie einen Fehler; gewählt sieht überall gleich aus (Chip wie Kästchen); schreibgeschützt bleibt lesbar, nicht grau; Ratsche 7.252 → 5.994 Zeilen, zwölf alte Blöcke gestrichen |
 | 3 | Tabelle, Baum, Menü, Toolbar, Reiter | Datendarstellung und Navigation |
 | 4 | Dialog, Fenster, Drawer, Snackbar, Shell | Gerüst und Overlays |
 | 5 | Kalender, Farbwahl, Medien, Dashboard | fachlich, zuletzt |

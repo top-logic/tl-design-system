@@ -29,6 +29,9 @@ Summe 1.341 Zeilen. Dazu im Paket, **ohne** Control in der Engine: Alert, Badge,
 über das Nötige hinaus. Der Zustand wird nicht neu geschnitten; wo `state.proto` (!1698) landet, verweisen
 die Verträge nachträglich darauf (UI-Paket-Spec §4).
 
+> **Fortgeschrieben 30.09.:** Zur Summe kamen beim Bauen `TLResourceCell` und „Visually hidden text“ (beide gestrichen) und
+> `TLToolbar` −6; die Ratsche steht bei 5994 Zeilen (davor 7252).
+
 ## 2 · Wie die Welle geliefert wird
 
 **Ein PR für die ganze Welle** (Hendrik, 30.09.): Ein Review wartet etwa gleich lang, ob klein oder groß;
@@ -44,6 +47,9 @@ System soll bis Ende der Woche ab 05.10. stehen; nacheinander passt das bei der 
 **Branch:** `CWS/CWS_29617_design_system_welle_2`, von `CWS/CWS_29617_design_system_welle_1_avatar` (!1695),
 weil Welle 2 `TLFormField.tsx` und `ThemeIcon` anfasst, die dort geändert sind. Nach dem Merge von !1695
 auf master umstellen.
+
+> **Fortgeschrieben 30.09.:** !1695 ist auf master (`95146ca38c`); der Branch hat `origin/master` gemergt (`bf970e6f54`).
+> Das PR-Ziel ist master.
 
 ## 3 · Feldrahmen und Zustände
 
@@ -73,6 +79,10 @@ darüber, und das Feld reserviert ihren Platz über `.tl-field-group:has(> .tl-f
 Ein Wrapper `span.tl-field` mit rahmenlosem Input fällt: der Fokusring läge innen um den Input, und ihn dort
 abzuschalten verlangte ein `outline: none`, das das Gate verbietet.
 
+> **Fortgeschrieben 30.09.:** Die Feldgruppe hat einen Endplatz (Löschen ersetzt Öffnen), und die Wurzel des Textfelds
+> trägt `tl-field-group` selbst. Felder haben keinen `padding-block`: die Höhe ist `size-control`,
+> `space-control-y` gilt nur mehrzeilig; das Select hält mit Chips (`size-control-sm`) dieselbe Höhe.
+
 ### 3b · Zustände sind Attribute, jeder aus einer Quelle
 
 | Zustand | Attribut | CSS |
@@ -94,6 +104,9 @@ vergessen wird. Warnung erscheint nur ohne Fehler (heute schon: `!hasError && ha
 `disabled` sendet kein Formular-Control heute (die Bestandsaufnahme fand es nur bei Button, Menü, Sidebar,
 Dashboard). Die Regel bleibt im Vertrag, weil sie eine Zeile kostet und Kundenmodule sie brauchen.
 
+> **Fortgeschrieben 30.09.:** Deaktiviert schlägt Fehler und Warnung — am Element durch die Reihenfolge, in Gruppen durch
+> `:not(:disabled)`. Alle Controls lesen `state.disabled`, auch wenn es heute niemand sendet.
+
 ### 3c · Schreibgeschützt ist ein anderes Element
 
 Bei `editable: false` rendert kein Eingabefeld, sondern Text. Klasse `tl-field-value`: kein Rahmen,
@@ -101,6 +114,11 @@ Bei `editable: false` rendert kein Eingabefeld, sondern Text. Klasse `tl-field-v
 Link (`option.link`, heute `a.tlOptionValue.tlResourceCell`) liest sie `text-link` / `text-link-hover`.
 Damit fallen zwei Befunde: der Browser-Link-Standard 1,29:1 im Dunkelmodus und die hart abgeschnittene Pill
 in der 120-px-Zelle. `--immutable` fällt überall, `.tlOptionValue` und `.tlResourceCell` ebenfalls.
+
+> **Fortgeschrieben 30.09.:** Die Checkbox bleibt schreibgeschützt ein Kästchen, aber mit `aria-readonly="true"` statt
+> `disabled` — die Markenfüllung und ihr Kontrast bleiben. Mehrzeilig ist `tl-field-value--multiline` und
+> bricht um (in der Zelle eine Reihe ohne Umbruch). Der Link-Lesewert ist unterstrichen. Der Lesewert von
+> Dropdown, Segmenten und Chips ist eine Liste in `tl-select__values`.
 
 ### 3d · Tabellenzellen
 
@@ -131,6 +149,10 @@ das CSS liest es künftig. Gewählt: `surface-brand-subtle`, Rand `border-intera
 Rand `border-control`. Der **gleitende Marker fällt** (Inline-`left`/`width`, 160-ms-Animation): das gewählte
 Segment trägt die Fläche selbst. Fehler an `tl-chip`-Gruppen (`role="group"`) über `data-tl-state~="error"`.
 
+> **Fortgeschrieben 30.09.:** Ein gewählter Chip ist die Marke (`surface-brand`, `text-on-brand`), wie ein angekreuztes
+> Kästchen; das gewählte Segment bleibt `surface-brand-subtle`. Die Prüfzustände der Chip-Gruppe treffen nur
+> ungewählte, nicht deaktivierte Chips; `aria-invalid` an der Chip-Gruppe fällt (ARIA verbietet es dort).
+
 ## 5 · Select
 
 **`TLDropdownSelect` → `tl-field tl-select`**, `role="combobox"` bleibt.
@@ -151,6 +173,10 @@ nur der gewählte Wert verlor sie (`tlDropdownSelect__value`, Befund „Select (
 Regel vom 10.09. um und wird im PR begründet: eine Rolle, die beim Wählen verschwindet, ist keine Rolle.
 
 **Einfaches `TLSelect`:** `tl-field`, der Pfeil bleibt nativ.
+
+> **Fortgeschrieben 30.09.:** Das Popup auf `layer-popover` lag unter dem Dialog-Backdrop des Altbestands; acht Regeln des
+> Altbestands lesen darum jetzt die Ebenen-Tokens (`docs/skalen.md` „Stapel-Übergang“). Die Symbole sind feste
+> ThemeImages (`css:fa-solid …`) wie in `TLValueList`, nicht Namen aus dem Theme.
 
 ## 6 · Formular
 
@@ -185,6 +211,11 @@ Fortschrittsfüllung, kein Stil. Tote Klassen (`--readonly` ohne Regel) fallen.
 der Button). Die Drop-Zone zeigt `data-tl-state~="dragover"`: Rand `border-interactive`, gestrichelt,
 `border-width-md`. Das `outline: none` am Upload-Knopf fällt.
 
+> **Fortgeschrieben 30.09.:** `aria-required` steht nur an Rollen, die es führen — nicht an `role="group"`; die Pflicht
+> zeigt dort der Stern. Jede Warnung ist ein eigenes `tl-form-field__message` mit Id und steht in
+> `aria-describedby` (Fehler, Warnungen, Hilfe). Der gestrichelte Rand der Drop-Zone ist ein `outline`
+> (`border-width-md`, `border-interactive`, Abstand `focus-offset`), kein `border`.
+
 ## 7 · Neu im Paket: Alert, Badge, Divider, Skeleton
 
 Je CSS, Vertrag, Specimen, Gate — kein Control, kein TSX, keine Zeile in der Engine. Controls entstehen,
@@ -216,6 +247,11 @@ Neu, alle im Paket (`node --test`):
   `tlVisuallyHidden`); Modul-Tests `layout.react`, `layout.view`, `demo.react` grün; `check-messages-en.sh`
   ohne Diff; `tsc --noEmit` ohne Befund in den angefassten Dateien.
 
+> **Fortgeschrieben 30.09.:** Das Kontrast-Gate prüft Feldränder auf fünf Feldgründen (`surface-field`, `-base`, `-layer`,
+> `-layer-nested`, `-overlay`) und Text, Hilfetext und Status-Text auf vier Flächen; die Marke als Vordergrund
+> prüft ein eigener Test. Fehler und Warnung als Modifier regelt `MODIFIERS` je Block, nicht `STATE_MODIFIER`;
+> am Element ist jeder Zustand ein Verstoß. Das Engine-Gate liest jedes `react-src` im Worktree.
+
 ## 9 · Reihenfolge mit Fertig-Bedingungen
 
 1. **Paket: Feld.** `field.css`, `tl-field-value`, `tl-visually-hidden` in `base.css`, neue Maße, Kontrast-Gates.
@@ -234,6 +270,9 @@ Neu, alle im Paket (`node --test`):
    Welle 2 ist als erledigt markiert.
 7. **PR** gegen den Branch von !1695 (nach dessen Merge gegen master), Bernhard Reviewer, Trac #29617 CC;
    Beschreibung englisch, Migration für Anwendungs-Stylesheets (alte → neue Klassen).
+
+> **Fortgeschrieben 30.09.:** zu 4 und 7: !1695 ist auf master (`95146ca38c`), der Branch hat `origin/master` gemergt
+> (`bf970e6f54`); der PR geht gegen master.
 
 ## 10 · Nicht-Ziele und Offenes
 
