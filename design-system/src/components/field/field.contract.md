@@ -14,33 +14,42 @@ Vom Server über `useTLState()`, gemeinsam aus `ReactFormFieldControl`:
 | Schlüssel | Typ | Bedeutung |
 |---|---|---|
 | `value` | je Control | Der Wert des Feldes. |
-| `editable` | boolean | `false`: kein Eingabefeld, sondern der Lesewert `tl-field-value`. |
+| `placeholder` | string, optional | Platzhalter, solange das Feld leer ist (nur beim Bearbeiten). |
+| `icon` | string, optional | Icon im Feld, vor dem Getippten: kodiertes ThemeImage (`ThemeIcon` in `tl-icon-sm`) im `tl-field-group__icon`. |
+| `clearable` | boolean, optional | Das Feld bietet einen Knopf, der es leert: `tl-field-group__action`. |
+| `debounceMs` | number, optional | Wie lange ein getippter Wert zurückgehalten wird, bevor er gesendet wird, in Millisekunden. |
+| `multiline` | boolean, optional | Das Textfeld ist ein mehrzeiliges `textarea`, Klasse `tl-field--multiline`. |
+| `rows` | number, optional | Sichtbare Zeilen des mehrzeiligen Feldes. |
+| `editable` | boolean | Ob das Feld bearbeitbar ist. `false`: kein Eingabefeld, sondern der Lesewert `tl-field-value`. |
 | `mandatory` | boolean | Pflichtfeld: `aria-required="true"`. |
-| `hasError` | boolean | Der Wert ist ungültig: `aria-invalid="true"`. |
-| `errorMessage` | string, optional | Text des Fehlers; das Formular zeigt ihn. |
-| `hasWarnings` | boolean | Der Wert ist gültig, aber auffällig: `data-tl-state="warning"`, nur ohne Fehler. |
-| `placeholder` | string, optional | Platzhalter im leeren Feld. |
-| `icon` | string, optional | Kodiertes ThemeImage vor dem Wert (`ThemeIcon` in `tl-icon-sm`), im `tl-field-group__icon`. |
-| `clearable` | boolean, optional | Endknopf zum Löschen, `tl-field-group__action`. |
-| `multiline` | boolean, optional | `textarea` statt `input`, Klasse `tl-field--multiline`. |
-| `rows` | number, optional | Zeilen des mehrzeiligen Feldes. |
+| `nullable` | boolean | Ob `null` ein gültiger Wert des Feldes ist. |
+| `hasError` | boolean | Das Feld hat einen Validierungsfehler: `aria-invalid="true"`. |
+| `errorMessage` | string, optional | Text des Fehlers. |
+| `hasWarnings` | boolean | Das Feld hat Validierungswarnungen: `data-tl-state="warning"`, nur ohne Fehler. |
+| `label` | string | Beschriftung des Feldes. |
+| `tooltip` | string, optional | Tooltip-Text. |
+| `hidden` | boolean | Das Control ist auf dem Client verborgen: es rendert nichts. |
+| `submitOnEnter` | boolean, optional | Enter im Feld sendet `submit`. |
+| `commitOnBlur` | boolean, optional | Verlässt der Fokus das Feld, sendet es `commit`. |
+| `sendValueOnBlur` | boolean, optional | Der getippte Wert wird bis zum Verlassen des Feldes zurückgehalten, statt schon beim Tippen gesendet zu werden. |
 
 Zusätze je Control:
 
 | Control | Schlüssel | Bedeutung |
 |---|---|---|
-| `TLTextInput`, `TLPasswordInput`, `TLDatePicker` | `inputType` | Das `type` des `input`. |
-| `TLNumberInput` | `inputMode` | Wählt die Bildschirmtastatur; `value` ist die Zahl im Format des Feldes als Text. |
-| `TLDatePicker` | `displayValue` | Der Wert in der Form, in der das Feld ihn zeigt. |
-| `TLSelect` | `options` | Die Auswahlmöglichkeiten. |
+| `TLTextInput`, `TLPasswordInput` | `inputType` | Welche Art Wert das Feld bearbeitet: das HTML-`type` des `input`. Fehlt er, gilt `text`. |
+| `TLDatePicker` | `inputType` | Welches HTML-`input` der Client rendert. |
+| `TLDatePicker` | `displayValue` | Der Wert als lokalisierter Text für die Leseansicht. |
+| `TLNumberInput` | `inputMode` | Welche Bildschirmtastatur das Feld anfordert: `numeric`, `decimal` oder `text`. |
+| `TLSelect` | `options` | Die Auswahlmöglichkeiten, je ein Eintrag mit `value` und `label`. |
 
 ## Aktionen
 
 | Auslöser | Aktion |
 |---|---|
-| Eingabe | `sendCommand('valueChanged', { value })`, entprellt um `debounceMs`; mit `sendValueOnBlur` erst beim Verlassen. |
-| Verlassen des Feldes (Blur) | `sendCommand('commit')`, wenn `commitOnBlur` gesetzt ist. |
-| Enter | `sendCommand('submit')`, wenn `submitOnEnter` gesetzt ist. |
+| Eingabe | `sendCommand('valueChanged', { value })`, entprellt um `debounceMs`; bei `sendValueOnBlur: true` erst beim Verlassen des Feldes. |
+| Verlassen des Feldes (Blur) | `sendCommand('commit')`, wenn `commitOnBlur: true`. |
+| Enter | `sendCommand('submit')`, wenn `submitOnEnter: true`. |
 
 ## Tokens
 
@@ -57,7 +66,7 @@ Zusätze je Control:
 | Warnung | Rand `--tl-status-warning-border` |
 | deaktiviert (vom Kontrast-Gate ausgenommen) | Fläche `--tl-surface-disabled`, Text `--tl-text-disabled`, Rand `--tl-border-disabled` |
 | Icon und Endknopf | Farbe `--tl-icon-secondary`; Lage `--tl-space-control-x`, `--tl-space-2xs`, Innenabstand `--tl-space-xs`; Endknopf beim Zeigen `--tl-surface-interactive-hover` |
-| reservierter Platz im Feld | `--tl-size-icon-sm` plus `--tl-space-xs` (Icon) bzw. `--tl-space-sm` und `--tl-space-2xs` (Endknopf) |
+| reservierter Platz im Feld | Icon: `--tl-space-control-x` + `--tl-size-icon-sm` + `--tl-space-xs`. Endknopf: seine Fläche (`--tl-space-2xs` + 2 × `--tl-space-xs` + `--tl-size-icon-sm`) plus eine Lücke `--tl-space-xs` |
 | Lesewert | Text `--tl-text-primary`, Abstand `--tl-space-xs` |
 | Lesewert als Link | `--tl-text-link`, `--tl-text-link-hover` |
 
@@ -71,7 +80,7 @@ Rand-Rollen halten am Gate 3,0 auf `surface-field` und jeder umgebenden Fläche 
 |---|---|
 | `aria-invalid="true"` | `hasError`. Das CSS liest es selbst — Screenreader und Bild haben eine Quelle. Wo ARIA es an der Rolle nicht erlaubt: `data-tl-state="error"`. |
 | `data-tl-state="warning"` | `hasWarnings && !hasError`. Der Fehler verdrängt die Warnung. ARIA kennt keine Warnung. |
-| `disabled` | `state.disabled`, das native Attribut. |
+| `disabled` | heute setzt es kein Zustand des Formularmodells; die Regel `.tl-field:disabled` steht für Kundenmodule und spätere Zustände. `editable: false` ist **kein** Disabled: es rendert den Lesewert `tl-field-value`. |
 | `aria-required="true"` | `mandatory`. |
 | `placeholder` | `placeholder`, wenn gesetzt. |
 | `:focus-visible` | den Ring liefert `base.css`; das Feld setzt und entfernt keinen Fokusstil. |

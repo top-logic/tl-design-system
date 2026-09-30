@@ -1627,6 +1627,10 @@
         "$type": "dimension",
         "$value": "{primitive.measure.line-3}"
       },
+      "size-hidden": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.line-1}"
+      },
       "focus-width": {
         "$type": "dimension",
         "$value": "{primitive.measure.line-2}"

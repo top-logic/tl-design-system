@@ -30,6 +30,9 @@ test('Fehler liest aria-invalid und data-tl-state, Warnung data-tl-state, Deakti
   assert.match(declarationsOf(css, '.tl-field[data-tl-state~="error"]') ?? '', /status-error-border/);
   assert.match(declarationsOf(css, '.tl-field[data-tl-state~="warning"]') ?? '', /status-warning-border/);
   assert.match(declarationsOf(css, '.tl-field:disabled') ?? '', /surface-disabled/);
+  // Ohne Kommentare vergleichen — der Kopfkommentar nennt die Warnung schon, vor jeder Regel.
+  const regeln = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  assert.ok(regeln.indexOf('data-tl-state~="warning"') < regeln.indexOf('aria-invalid="true"'), 'Warnung muss vor dem Fehler stehen, damit der Fehler gewinnt');
 });
 
 test('der Lesewert endet mit Ellipse und lässt seine Kinder schrumpfen', () => {
@@ -44,6 +47,7 @@ test('tl-visually-hidden steht in base.css, ohne Maß-Literal', () => {
   assert.ok(d, '.tl-visually-hidden fehlt in base.css');
   assert.match(d, /clip-path:\s*inset\(50%\)/);
   assert.match(d, /position:\s*absolute/);
+  assert.match(d, /width:\s*var\(--tl-size-hidden\)/);
 });
 
 test('das Feld-Specimen zeigt jeden Zustand, jede Form, beide Flächen und eine schmale Zelle', () => {

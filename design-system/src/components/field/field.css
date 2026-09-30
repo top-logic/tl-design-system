@@ -28,13 +28,15 @@
   border-color: var(--tl-border-emphasis);
 }
 
+/* Die Warnung steht vor dem Fehler: bei gleicher Spezifität gewinnt die spätere Regel, und der Fehler
+   muss die Warnung verdrängen. */
+.tl-field[data-tl-state~="warning"] {
+  border-color: var(--tl-status-warning-border);
+}
+
 .tl-field[aria-invalid="true"],
 .tl-field[data-tl-state~="error"] {
   border-color: var(--tl-status-error-border);
-}
-
-.tl-field[data-tl-state~="warning"] {
-  border-color: var(--tl-status-warning-border);
 }
 
 .tl-field:disabled {
@@ -90,8 +92,9 @@
   padding-inline-start: calc(var(--tl-space-control-x) + var(--tl-size-icon-sm) + var(--tl-space-xs));
 }
 
+/* Endknopf: Abstand zum Rand, Innenabstand beidseitig, Icon — und eine Lücke zum Text. */
 .tl-field-group:has(> .tl-field-group__action) > .tl-field {
-  padding-inline-end: calc(var(--tl-size-icon-sm) + var(--tl-space-sm) + var(--tl-space-2xs));
+  padding-inline-end: calc(var(--tl-space-2xs) + 2 * var(--tl-space-xs) + var(--tl-size-icon-sm) + var(--tl-space-xs));
 }
 
 /* --- Lesewert ---------------------------------------------------------------------- */
