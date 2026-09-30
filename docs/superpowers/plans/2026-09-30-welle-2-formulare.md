@@ -106,17 +106,18 @@ In `kontrastPaare` vor `for (const bg of GRUENDE_FOKUS)`:
     paar('status-error-border', bg, 3.0);
     paar('status-warning-border', bg, 3.0);
   }
-  paar('text-primary', 'surface-field', 4.5); paar('icon-secondary', 'surface-field', 3.0);
-  paar('surface-brand', 'surface-field', 3.0);          // angekreuzte Checkbox, gewählter Radio
+  paar('text-primary', 'surface-field', 4.5); paar('icon-secondary', 'surface-field', 3.0); // Schalterknopf
   paar('border-interactive', 'surface-brand-subtle', 3.0); // gewählter Chip, gewähltes Segment
 ```
+
+**Nicht** in diese Task: `surface-brand` gegen `surface-overlay` (dunkel 2,31 — der angekreuzte Kasten und der Primär-Button im Dialog). Das ist der offene Punkt „`surface-overlay` ins Kontrast-Gate (Welle 4)“ aus STATUS; er betrifft die Markenfläche, nicht die Ränder, und bleibt dort. In `docs/skalen.md` beim Nachziehen (Step 6) als gemessenen Wert nennen.
 
 Die bestehende Zeile `paar('border-control', 'surface-base', 3.0);` streichen (jetzt doppelt).
 
 - [ ] **Step 2: Test laufen lassen — muss scheitern**
 
-Run: `cd $P && node --test test/tokens.test.mjs 2>&1 | grep -E "^not ok|< 3" | head`
-Expected: FAIL mit `border-control`, `status-error-border`, `status-warning-border` auf `surface-field` (hell) und `surface-overlay` (dunkel).
+Run: `cd $P && node --test test/pairs.test.mjs 2>&1 | grep -E "^not ok|< 3|surface-(field|overlay)" | head`
+Expected: FAIL in `pairs.test.mjs` (es prüft jedes Paar der Liste gegen das Paket) mit `border-control`, `status-error-border`, `status-warning-border` auf `surface-field` (hell) und `surface-overlay` (dunkel). `tokens.test.mjs` führt daneben eine eigene, kürzere Liste `forderung` — sie bleibt unverändert.
 
 - [ ] **Step 3: Werte nachziehen**
 
@@ -153,7 +154,9 @@ In „Rahmen: vier Stufen“: Zeile `border-control` auf `#888B90` / `#75787D`, 
 Feldfläche und nicht im Dialog. Gemessen verfehlte er hell auf `surface-field` (2,94) und dunkel auf
 `surface-overlay` (2,79). Jetzt prüft die Paarliste jeden Rand eines Felds gegen fünf Gründe —
 Feldfläche, Grund, Panel, verschachteltes Panel, Dialog —, und `border-control`, `status-error-border`,
-`status-warning-border` sind je um die kleinste Stufe verschoben, die alle fünf trägt.
+`status-warning-border` sind je um die kleinste Stufe verschoben, die alle fünf trägt. Gemessen, aber
+offen gelassen für Welle 4 (Dialog): `surface-brand` auf `surface-overlay` dunkel 2,31 — der angekreuzte
+Kasten und der Primär-Button im Dialog heben sich dort nur über Haken bzw. Beschriftung ab.
 ```
 
 In „Semantik“ die Zeilen `border` für Fehler und Warnung auf die neuen Werte und Verhältnisse. `STATUS.md`: eine Zeile unter Welle 2.
@@ -195,7 +198,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { varsOf, colorVarsOf, declarationsOf, specimenProblems, missingInContract } from './lib/component.mjs';
 
-const CSS = `.tl-a, .tl-a--x { color: var(--tl-text-primary); border: var(--tl-border-width-sm) solid var(--tl-border-control); }
+const CSS = `/* Kopf — steht vor dem ersten Selektor, wie in jeder Komponentendatei. */
+.tl-a, .tl-a--x { color: var(--tl-text-primary); border: var(--tl-border-width-sm) solid var(--tl-border-control); }
 .tl-a:hover { background: var(--tl-surface-interactive-hover); }`;
 
 test('varsOf und colorVarsOf lesen Tokens, colorVarsOf ohne Maß-Rollen', () => {
@@ -203,7 +207,8 @@ test('varsOf und colorVarsOf lesen Tokens, colorVarsOf ohne Maß-Rollen', () => 
   assert.deepEqual(colorVarsOf(CSS), ['border-control', 'surface-interactive-hover', 'text-primary']);
 });
 
-test('declarationsOf findet eine Regel über ein Glied der Selektorliste', () => {
+test('declarationsOf findet eine Regel über ein Glied der Selektorliste, auch hinter einem Kommentar', () => {
+  assert.match(declarationsOf(CSS, '.tl-a'), /text-primary/);
   assert.match(declarationsOf(CSS, '.tl-a--x'), /text-primary/);
   assert.equal(declarationsOf(CSS, '.tl-b'), null);
 });
@@ -244,7 +249,9 @@ export const colorVarsOf = (css) => [...varsOf(css)]
   .sort();
 
 export function declarationsOf(css, selector) {
-  for (const m of css.matchAll(/([^{}]+)\{([^}]*)\}/g)) {
+  // Kommentare zuerst weg — sonst hängt der Kopfkommentar der Datei vor dem ersten Selektor.
+  const ohne = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  for (const m of ohne.matchAll(/([^{}]+)\{([^}]*)\}/g)) {
     const selectors = m[1].split(',').map((s) => s.trim());
     if (selectors.includes(selector)) return m[2];
   }
@@ -513,7 +520,7 @@ a.tl-field-value:hover {
 }
 ```
 
-Prüfen, ob `inset-block`, `inset-inline-start`, `inset-inline-end`, `pointer-events`, `margin-block` vom Lint durchgelassen werden (Werte sind Tokens, `0` oder `none`). `a.tl-field-value` ist ein Selektor mit Elementtyp — das Lint prüft nur die Klasse.
+`inset-block`, `inset-inline-start`, `inset-inline-end`, `pointer-events`, `margin-block` tragen nur Tokens, `0` oder `none` und bestehen das Lint. In Task 4 gilt dasselbe für `rotate(45deg)` (ein Winkel, kein Maß) und `opacity`-Anteile. `a.tl-field-value` ist ein Selektor mit Elementtyp — das Lint prüft nur die Klasse.
 
 - [ ] **Step 4: `.tl-visually-hidden` in `base.css`**
 
@@ -534,17 +541,19 @@ const VISUALLY_HIDDEN = `.tl-visually-hidden {
 `;
 ```
 
-und in die Ausgabe von `base.css` aufnehmen. `test/generate.test.mjs` hält `dist/` byte-identisch — nach `node tools/generate.mjs` ist das erfüllt.
+und in die Ausgabe von `base.css` aufnehmen. `test/generate.test.mjs` hält `dist/` byte-identisch — nach `node tools/generate.mjs` ist das erfüllt. `inset(50%)` ist ein Anteil, kein Maß; das Lint prüft Maß-Literale nur mit Einheit hinter Leerraum und lässt es durch — im Kommentar der Regel so benennen, damit niemand es für ein Versehen hält.
 
 - [ ] **Step 5: Lint kennt die Blöcke**
 
 In `tools/lint-css.mjs`:
 
 ```js
-const STATE_MODIFIER = /--(active|disabled|loading|hover|focus|focused|pressed|selected|open|closed|checked|busy|invalid|dirty|error|warning|immutable|dragover|dragging|highlighted|collapsed)$/;
+const STATE_MODIFIER = /--(active|disabled|loading|hover|focus|focused|pressed|selected|open|closed|checked|busy|invalid|dirty|immutable|readonly|dragover|dragging|highlighted|collapsed)$/;
 ```
 
-und in `MODIFIERS`:
+`error` und `warning` gehören **nicht** in diese Liste: an Pill und Alert sind sie Bedeutungen (`tl-pill--error`), kein Zustand. Dass `tl-field--error` kein Feld-Zustand sein darf, sichert die Modifier-Liste je Block (`tl-field` erlaubt nur `multiline`).
+
+In `MODIFIERS`:
 
 ```js
   'tl-field': new Set(['multiline']),
@@ -555,10 +564,15 @@ und in `MODIFIERS`:
 `test/lint-css.test.mjs` um einen Fall ergänzen:
 
 ```js
-test('ein Fehler- oder Warnzustand als Modifier bricht das Gate', () => {
-  for (const m of ['error', 'warning', 'immutable'])
-    assert.ok(lint(`.tl-field--${m} { color: var(--tl-text-primary); }`, { known: new Set(['--tl-text-primary']), file: 'x.css' })
+test('ein Zustand als Modifier des Feldes bricht das Gate — als Zustandswort oder als fremder Modifier', () => {
+  const known = new Set(['--tl-text-primary']);
+  for (const m of ['immutable', 'readonly', 'dragover'])
+    assert.ok(lint(`.tl-field--${m} { color: var(--tl-text-primary); }`, { known, file: 'x.css' })
       .some((v) => v.includes('Zustand als Modifier')), m);
+  for (const m of ['error', 'warning'])
+    assert.ok(lint(`.tl-field--${m} { color: var(--tl-text-primary); }`, { known, file: 'x.css' })
+      .some((v) => v.includes('kein Modifier von tl-field')), m);
+  assert.deepEqual(lint('.tl-pill--error { color: var(--tl-text-primary); }', { known, file: 'x.css' }), [], 'Bedeutung an der Pill bleibt erlaubt');
 });
 ```
 
@@ -1116,8 +1130,8 @@ Die Wurzel ist `div.tl-field.tl-select[role="combobox"]` — Rahmen, Zustände (
 | `.tl-select__chip-remove:hover`, `.tl-select__clear:hover` | `background: var(--tl-surface-interactive-hover);` |
 | `.tl-select__drag-handle` | `color: var(--tl-icon-secondary); cursor: grab;` |
 | `.tl-select__chip[data-tl-state~="dragging"]` | `opacity: 0.4;` |
-| `.tl-select__chip[data-tl-state~="drop-before"]` | `box-shadow: calc(-1 * var(--tl-border-width-accent)) 0 0 0 var(--tl-border-interactive);` |
-| `.tl-select__chip[data-tl-state~="drop-after"]` | `box-shadow: var(--tl-border-width-accent) 0 0 0 var(--tl-border-interactive);` |
+| `.tl-select__chip[data-tl-state~="drop-before"]` | `box-shadow: inset var(--tl-border-width-accent) 0 0 0 var(--tl-border-interactive);` (das Gate erlaubt `box-shadow` nur als `--tl-shadow-*` oder als `inset`-Linie) |
+| `.tl-select__chip[data-tl-state~="drop-after"]` | `box-shadow: inset calc(-1 * var(--tl-border-width-accent)) 0 0 0 var(--tl-border-interactive);` |
 | `.tl-select__controls` | `display: flex; flex: 0 0 auto; align-items: center; gap: var(--tl-space-2xs);` |
 | `.tl-select__arrow` | `color: var(--tl-icon-secondary);` |
 | `.tl-select__popup` | `position: fixed; z-index: var(--tl-layer-popover); display: flex; flex-direction: column; box-sizing: border-box; max-height: calc(8 * var(--tl-size-row) + var(--tl-size-control) + 2 * var(--tl-space-xs)); overflow: hidden; padding: var(--tl-space-xs); border: var(--tl-border-width-sm) solid var(--tl-border-separator); border-radius: var(--tl-radius-md); background: var(--tl-surface-overlay); box-shadow: var(--tl-shadow-popover); color: var(--tl-text-primary);` |
@@ -1693,7 +1707,8 @@ import { fileURLToPath } from 'node:url';
 
 const WT = process.env.TL_WORKTREE ?? fileURLToPath(new URL('../../_Working-Tree/tl8-wt-29584', import.meta.url));
 const M = join(WT, 'com.top_logic.layout.react');
-const ALT = /\b(tlReactTextInput|tlReactNumberInput|tlReactDatePicker|tlReactSelect|tlReactCheckbox|tlBooleanChoice|tlSegmentedChoice|tlOptionChips|tlDropdownSelect|tlOptionValue|tlOptionImage|tlOptionIcon|tlResourceCell|tlFormField|tlFormGroup|tlFormLayout|tlFieldList|tlFileUpload|tlVisuallyHidden)\b/;
+// Kein schließendes \b: vor `__` und `--` liegt keine Wortgrenze, tlFormField__error muss treffen.
+const ALT = /\b(tlReactTextInput|tlReactNumberInput|tlReactDatePicker|tlReactSelect|tlReactCheckbox|tlBooleanChoice|tlSegmentedChoice|tlOptionChips|tlDropdownSelect|tlOptionValue|tlOptionImage|tlOptionIcon|tlResourceCell|tlFormField|tlFormGroup|tlFormLayout|tlFieldList|tlFileUpload|tlVisuallyHidden)/;
 
 function* files(dir) {
   for (const f of readdirSync(dir)) {
