@@ -72,7 +72,7 @@ gesetzt; die Auswahl hat keine Schriftregel.
 | `aria-invalid="true"` | `hasError`, wo ARIA es erlaubt: am Kästchen, am Schalter, an der `role="radiogroup"` (Radios, Segmente mit Einfachwahl). Das CSS liest es selbst. |
 | `data-tl-state="error"` | `hasError` an einer `role="group"` (Chips, Segmente mit Mehrfachwahl) — dort erlaubt ARIA `aria-invalid` nicht. |
 | `data-tl-state="warning"` | `hasWarnings && !hasError`, am Kästchen, an der Radiogruppe, an `tl-segmented`, an `tl-chip-group`. Der Fehler verdrängt die Warnung. |
-| `aria-required="true"` | `mandatory`, am Kästchen, am Schalter, an der `role="radiogroup"`. Eine `role="group"` (Chips, Segmente mit Mehrfachwahl) trägt es nicht — ARIA erlaubt es dort so wenig wie `aria-invalid`. |
+| `aria-required="true"` | `mandatory`, am Kästchen, am Schalter, an der `role="radiogroup"`. Eine `role="group"` (Chips, Segmente mit Mehrfachwahl) trägt es nicht — ARIA erlaubt es dort so wenig wie `aria-invalid`. An `role="group"` gibt es kein `aria-required`; die Pflicht zeigt der Stern im Feld-Label an, das die Gruppe über `aria-labelledby` benennt. |
 | `tabIndex` | roving in Segmenten mit Einfachwahl: nur das gewählte (ohne Wahl das erste) hat `0`, die übrigen `-1`; Pfeiltasten wechseln die Wahl. Bei Mehrfachwahl und an Chips ist jedes Element erreichbar. |
 | `disabled` | heute setzt es kein Zustand des Formularmodells (es gibt keinen Schlüssel `disabled`); die Regeln `:disabled` stehen für Kundenmodule und spätere Zustände. |
 | `:focus-visible` | den Ring liefert `base.css`; die Auswahl setzt und entfernt keinen Fokusstil. |
