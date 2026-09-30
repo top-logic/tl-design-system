@@ -60,7 +60,7 @@ Hinweisstreifen vorbehalten (siehe Kommentarkopf in `button.css`).
 | `type="button"` | immer — kein Submit. |
 | `disabled` | `state.disabled`. Nicht `aria-disabled`: der Button soll wirklich nicht bedienbar sein. |
 | `aria-pressed="true"` | `state.active`. Fehlt sonst ganz (nicht `false`), damit ein gewöhnlicher Button kein Umschalter wird. |
-| `aria-busy="true"` | während einer laufenden Aktion (Upload). Das Icon pulsiert (`--tl-duration-loop`, `--tl-easing-standard`), der Zeiger zeigt Fortschritt — auch wenn der Knopf zugleich `disabled` ist; der Handler ignoriert Klicks, solange die Aktion läuft. |
+| `aria-busy="true"` | während einer laufenden Aktion (Upload). Das Icon pulsiert (`tl-button-busy`, `duration-loop`); der Zeiger zeigt Fortschritt nur dort, wo der Knopf nicht `disabled` ist — bei `disabled` ist der Puls der einzige Hinweis, weil `pointer-events: none` den Zeiger unterdrückt. Der Handler ignoriert Klicks, solange die Aktion läuft. |
 | `aria-label` | bei icon-only oder wenn ein Icon gesetzt ist: der `label`. |
 | `data-tooltip` | `text:<tooltip>`; das Tooltip-System liest es. |
 | `:focus-visible` | den Ring liefert `base.css`; die Komponente setzt und entfernt keinen Fokusstil. |
