@@ -72,6 +72,7 @@ gesetzt; die Auswahl hat keine Schriftregel.
 | `aria-invalid="true"` | `hasError`, wo ARIA es erlaubt: am Kästchen, am Schalter, an der `role="radiogroup"` (Radios, Segmente mit Einfachwahl). Das CSS liest es selbst. |
 | `data-tl-state="error"` | `hasError` an einer `role="group"` (Chips, Segmente mit Mehrfachwahl) — dort erlaubt ARIA `aria-invalid` nicht. |
 | `data-tl-state="warning"` | `hasWarnings && !hasError`, am Kästchen, an der Radiogruppe, an `tl-segmented`, an `tl-chip-group`. Der Fehler verdrängt die Warnung. |
+| `aria-required="true"` | `mandatory`, am Kästchen, am Schalter, an der `role="radiogroup"`. Eine `role="group"` (Chips, Segmente mit Mehrfachwahl) trägt es nicht — ARIA erlaubt es dort so wenig wie `aria-invalid`. |
 | `tabIndex` | roving in Segmenten mit Einfachwahl: nur das gewählte (ohne Wahl das erste) hat `0`, die übrigen `-1`; Pfeiltasten wechseln die Wahl. Bei Mehrfachwahl und an Chips ist jedes Element erreichbar. |
 | `disabled` | heute setzt es kein Zustand des Formularmodells (es gibt keinen Schlüssel `disabled`); die Regeln `:disabled` stehen für Kundenmodule und spätere Zustände. |
 | `:focus-visible` | den Ring liefert `base.css`; die Auswahl setzt und entfernt keinen Fokusstil. |
@@ -80,9 +81,11 @@ Deaktiviert schlägt Fehler und Warnung: ein `disabled` Kästchen, Radio, Segmen
 Fehler- oder Warnrand, auch wenn seine Gruppe `aria-invalid="true"` bzw. `data-tl-state` trägt, und
 kein Zeigen.
 
-Bei `editable: false` rendern `TLBooleanChoice`, `TLSegmentedChoice` und `TLOptionChips` den
-Lesewert (`tl-field-value`, siehe `field.contract.md`), Optionen mit `link` als Link. `TLCheckbox`
-zeigt heute ein deaktiviertes Kästchen.
+Bei `editable: false` rendert `TLBooleanChoice` die Beschriftung seines Werts als Lesewert
+(`tl-field-value`, siehe `field.contract.md`). `TLSegmentedChoice` und `TLOptionChips` rendern wie der
+DropdownSelect (`select.contract.md`) eine Liste von `tl-field-value`-Einträgen in `tl-select__values`:
+je gewählter Wert Text oder `tl-pill` seiner `colorRole`, mit Bild, Werte mit `link` als `a`, das
+`goto` sendet. `TLCheckbox` zeigt heute ein deaktiviertes Kästchen.
 
 Klassen:
 
