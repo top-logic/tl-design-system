@@ -266,20 +266,20 @@ Drei Übergangsregeln im alten Stylesheet lesen den neuen Button von außen (Dro
 
 Mit #29497 tragen die Buttons ihre Tooltips über die Bridge (`TOOLTIP_ATTR`, `WHEN_TRUNCATED`: der Label-Tooltip erscheint nur, wenn die Beschriftung abgeschnitten oder von der kompakten Toolbar ausgeblendet ist); mit #29596 setzt `rootClassName(state, …)` die vom View konfigurierte `css-class` an die Wurzel — beides umschließt `buttonClassName`, ändert die Klassen des Buttons aber nicht.
 
-### Pill (Welle 1, PR !1694 auf `CWS/CWS_29617_design_system_welle_1_pill`)
+### Pill (Welle 1, PR !1694 auf `CWS/CWS_29617_design_system_welle_1_pill`) — gemerged 28.09. (!1694, Merge-Commit `c38ad05ddd`; Migration der gespeicherten Annotationen mit !1720, Merge-Commit `806cf22543`, 30.09.)
 
 Die Pill ist Teil von `TLText` (#29596) und wird von `withPill` in Select, Dropdown, Chips und Tabellenzelle gezeichnet. Umstellung: die Farbe wird eine Rolle (`neutral`, `brand`, `error`, `warning`, `success`, `info`, `category-1` … `category-8`); `ReactValueColor.COLOR` trägt den Rollennamen statt CSS, `TLPill` rendert `tl-pill tl-pill--<rolle>`. Es fallen: `--tlPill-color` (aus `foreignTl`), die `color-mix`-Regeln im Block „The shape the text takes“, `ColorSpec.getValue()` (Literal), `ColorTokenOptions`/`ColorTokenConstraint` samt Resource-Keys, das Token `support-info`. Modelle: `demo.tickets.model.xml` nennt drei Rollen statt Tokens. Entscheidung: `docs/skalen.md` „Pill: Rolle statt Farbe“.
 
 Sichtprüfung 24.09. in der PR-Instanz (`http://docker:8007/CWS_29617_design_system_welle_1_pill/`, hell und dunkel): drei Rollen in Tabelle, Gruppenkopf, Dropdown-Liste und Chip zeichnen `tl-pill tl-pill--warning|info|success` aus `status-*-subtle`/`-border`, Text `text-primary`, kein Inline-Style, kein `.tlPill`. Zwei Befunde gehören der Select-Welle (Tabelle oben): Einzelwert ohne Pill, Abschneiden in schmaler Zelle.
 
-### Avatar (Welle 1, PR !1695 auf `CWS/CWS_29617_design_system_welle_1_avatar`, gestapelt auf !1694)
+### Avatar (Welle 1, PR !1695 auf `CWS/CWS_29617_design_system_welle_1_avatar`, gestapelt auf !1694) — gemerged 30.09. (!1695, Merge-Commit `95146ca38c`)
 
 `TLAvatar` (`ReactAvatarControl`, `AvatarElement`, `<avatar>`), alter Block „TLAvatar“ (37 Zeilen). Umstellung: die Farbe wird eine Kategorie aus dem Namen (`tl-avatar--category-<n>`, Tokens der Kategorie), ohne Namen und mit Bild die neutrale Rolle; kein `hsl()`-Inline-Style, kein `#fff`. Größen `sm`/`md`/`lg`/`xl` aus `size-avatar-*` (neu `size-9`); `AvatarSize` und `<avatar size>` heißen so, die alten Namen fallen. Initialen tragen die Typo-Klasse ihrer Größe (`label-strong`, `body-strong`, `heading-md`, `heading-lg`). Es fallen: der Block `TLAvatar`, `hue()` im TSX, die Literale 0.5625/0.75/1.125/1.5 rem. Entscheidung: `docs/skalen.md` „Avatar: die Farbe ist eine Kategorie“, Folie 34.
 
-### Progress (Welle 1, PR !1695 mit dem Avatar)
+### Progress (Welle 1, PR !1695 mit dem Avatar) — gemerged 30.09. (!1695, Merge-Commit `95146ca38c`)
 
 `TLProgress` (`ReactProgressControl`, `ProgressElement`, `<progress>`, `ProgressBar` in `TLJobStatus`); die alten Regeln standen ohne eigenen Block im Block `TLHtml` (Zeilen 3847–3908). Umstellung: `tl-progress` mit `__track`, `__fill`, `__label`; Spur `surface-interactive-selected`, Füllung `surface-brand`; unbestimmt über `[aria-busy="true"]`, die Klasse `tlProgress--indeterminate` fällt; Schwung aus `duration-loop` (neu, `dur-4` = 1200 ms), kein eigener Reduced-Motion-Block; Beschriftung trägt `.tl-type-label .tl-nums`. Es fallen sieben Literale und der Block-Anteil im `TLHtml`. Entscheidung: `docs/skalen.md` „Progress: ein Anteil, kein Urteil“; Motion-Skala um `duration-loop` ergänzt.
 
-### Icon (Welle 1, PR !1695 mit Avatar und Progress)
+### Icon (Welle 1, PR !1695 mit Avatar und Progress) — gemerged 30.09. (!1695, Merge-Commit `95146ca38c`)
 
 `TLIcon` (`ReactIconControl`, `IconElement`, `<theme-icon>`), `ThemeIcon`, `FontIcon`. Umstellung: `<theme-icon size="sm|md|lg|glyph">` (Default `sm`), das Control rendert `tl-icon-<stufe>` aus `base.css` und hat kein eigenes CSS; die Regel `.tlIcon` (Block „The shape the text takes“) fällt; `ThemeIcon` ohne Inline-Maß am Bild und mit `aria-hidden` am Glyph; `FontIcon.tsx` fällt, vier Leser nehmen `ThemeIcon`. Offen für Welle 2–4: Menü, Toolbar, Sidebar, Reiter, Select geben `ThemeIcon` noch eigene Klassen statt einer Stufe. Entscheidung: `docs/skalen.md` „Icon: die Stufe ist die Rolle“.

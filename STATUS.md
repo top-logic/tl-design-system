@@ -1,6 +1,6 @@
 # Stand
 
-**Letzte Sitzung:** 2026-09-30 (!1710 gemerged; Welle 2 beginnt) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-09-30 (!1695 gemerged, Welle 1 vollständig auf master; Welle 2 läuft) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -149,20 +149,14 @@ Merge-Reihenfolge im PR vorgeschlagen: erst !1694, dann !1695 auf master rebasen
 
 Jetzt:
 
-1. **Bernhards Approval auf !1695 (Head `3a8bf043af`) abwarten, dann mergen** — vorher `git fetch` und prüfen,
-   ob master erneut vorausgelaufen ist (dann noch einmal mergen, englischer PR-Kommentar, `add_reviewers bhu`).
-   Nach dem Merge: Worktree auf `master`, Avatar-Branch löschen, Ratsche gegen master prüfen, Pill- und
-   Avatar/Progress/Icon-Absätze in altlast.md als gemerged markieren (Task 4 des Konsolidierungsplans).
-   Offen zu entscheiden: der `tsc`-Befund in `TLFormField.tsx` (zwei `string | undefined` an
-   `ThemeIcon.encoded`) — noch in !1695 oder in Welle 2.
+1. **!1695 gemerged 30.09. 13:20** (Merge-Commit `95146ca38c`, Approval Bernhard 09:02, Build 16322). Per API ohne erneuten master-Merge, obwohl master vorgelaufen war (!1720, !1733). Remote- und lokaler Avatar-Branch gelöscht; altlast.md markiert Pill, Avatar, Progress, Icon als gemerged — **Welle 1 ist vollständig auf master.** Ratsche unverändert (der Welle-2-Worktree enthält !1695 bereits). Nebenbei gemerged: !1720 (Bernhard, 13:11), Migration `Ticket_29617_color_role` für gespeicherte Farbannotationen der Pill. **Entschieden:** der `tsc`-Befund in `TLFormField.tsx` (zwei `string | undefined` an `ThemeIcon.encoded`, Zeilen 146/154) gehört zu Welle 2 — die Datei wird dort ohnehin umgebaut.
 2. Nicht geprüft, offen: AppBar-Kollaps bei Platzmangel, AppBar auf `surface-layer`, `ButtonTone.DANGER`
    (kein Aufrufer — `setTone` einmal setzen).
-3. **Welle 2 (Task 13):** Spec `docs/superpowers/specs/2026-09-30-welle-2-formulare-design.md` geschrieben (30.09.), von Hendrik freigegeben; Plan `docs/superpowers/plans/2026-09-30-welle-2-formulare.md` (12 Tasks: 1–7 Paket, 8–11 Engine, 12 Sicht und PR) wartet auf Durchsicht, Ausführung per SDD. Befund beim Planen: Rand-Rollen verfehlen 3,0 auf `surface-field` (hell) und `surface-overlay` (dunkel) — Task 1. Entschieden: ein PR je Welle, Wellen überlappen (gemergt der Reihe nach), Branch `CWS/CWS_29617_design_system_welle_2` von !1695; Radio als Control, Alert/Badge/Divider/Skeleton nur im Paket. Ziel: ganzes System bis Ende der Woche ab 05.10.
+3. **Welle 2 (Task 13):** Spec `docs/superpowers/specs/2026-09-30-welle-2-formulare-design.md` geschrieben (30.09.), von Hendrik freigegeben; Plan `docs/superpowers/plans/2026-09-30-welle-2-formulare.md` (12 Tasks: 1–7 Paket, 8–11 Engine, 12 Sicht und PR) wartet auf Durchsicht, Ausführung per SDD. Befund beim Planen: Rand-Rollen verfehlen 3,0 auf `surface-field` (hell) und `surface-overlay` (dunkel) — Task 1. Entschieden: ein PR je Welle, Wellen überlappen (gemergt der Reihe nach), Branch `CWS/CWS_29617_design_system_welle_2` von !1695 (!1695 seit 30.09. in master; vor dem PR master mergen); Radio als Control, Alert/Badge/Divider/Skeleton nur im Paket. Ziel: ganzes System bis Ende der Woche ab 05.10.
    - **Task 1 erledigt (30.09.):** Paarliste prüft `border-control`, `status-error-border`, `status-warning-border` gegen fünf Feldgründe (`GRUENDE_FELD`); verschoben hell `gray-35`→`gray-36`, `red-32`→`red-35`, `amber-34`→`amber-36`, dunkel `gray-45`→`gray-43`, `red-42`→`red-41`, `amber-44`→`amber-43`; `gray-35` entfernt. `surface-brand` auf `surface-overlay` mitgemessen: hell 5,84, dunkel 4,53 (der Plan nannte 2,31 — nicht nachvollziehbar); die Gate-Frage `surface-overlay` bleibt Welle 4.
    - **Task 5a erledigt (30.09.):** Status-Text hält 4,5 auch im Dialog — Paarliste prüft `status-*-text` auf `surface-base`, `surface-layer`, `surface-layer-nested`, `surface-overlay`; dunkel `red-32`→`red-31`, `amber-34`→`amber-32`, `green-36`→`green-34`, `teal-35`→`teal-34`; `red-32`, `amber-34` entfernt.
    - **Task 7a erledigt (30.09.):** `text-helper` und `text-secondary` halten 4,5 auf `surface-base`, `-layer`, `-layer-nested`, `-overlay`; dunkel `text-helper` `gray-36`→`gray-33` (`#93969B`). Die Marke (3,0 auf denselben vier Gründen) prüft ein eigener Test in `tokens.test.mjs`, nicht `kontrastPaare` (Grund für `text-on-brand`); offen: derive: Marke auf Gründen prüfen.
    - **Offen für Welle 3 (Menü):** Zeigen und Auswahl auf gehobenen Flächen (auch Skeleton) — `surface-interactive-hover`/`-selected` auf `surface-overlay` dunkel 1,13 / 1,01; im Select-Popup trägt die Akzentlinie (`border-interactive`, 4,53) die Hervorhebung.
-4. Welle 1 abschließen: nach den Merges Ratsche gegen master, Welle-1-Abschnitt in altlast.md; dann Welle 2 (Eingabefelder, Select) planen — Befunde stehen in altlast.md „Sichtbare Befunde“.
 
 Das Repo liegt jetzt unter `TopLogic/tl-design-system`; Wiki (Home, Übersicht, Anleitung Komponenten mit
 Claude, Regeldatei) ist der Einstieg für Bernhard, `docs/*.md` die gepflegte Quelle.
