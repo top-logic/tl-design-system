@@ -157,7 +157,7 @@ Jetzt:
    `ThemeIcon.encoded`) — noch in !1695 oder in Welle 2.
 2. Nicht geprüft, offen: AppBar-Kollaps bei Platzmangel, AppBar auf `surface-layer`, `ButtonTone.DANGER`
    (kein Aufrufer — `setTone` einmal setzen).
-3. **Welle 2 (Task 13):** Spec `docs/superpowers/specs/2026-09-30-welle-2-formulare-design.md` geschrieben (30.09.), wartet auf Hendriks Durchsicht; dann Plan, Ausführung per SDD. Entschieden: ein PR je Welle, Wellen überlappen (gemergt der Reihe nach), Branch `CWS/CWS_29617_design_system_welle_2` von !1695; Radio als Control, Alert/Badge/Divider/Skeleton nur im Paket. Ziel: ganzes System bis Ende der Woche ab 05.10.
+3. **Welle 2 (Task 13):** Spec `docs/superpowers/specs/2026-09-30-welle-2-formulare-design.md` geschrieben (30.09.), von Hendrik freigegeben; Plan `docs/superpowers/plans/2026-09-30-welle-2-formulare.md` (12 Tasks: 1–7 Paket, 8–11 Engine, 12 Sicht und PR) wartet auf Durchsicht, Ausführung per SDD. Befund beim Planen: Rand-Rollen verfehlen 3,0 auf `surface-field` (hell) und `surface-overlay` (dunkel) — Task 1. Entschieden: ein PR je Welle, Wellen überlappen (gemergt der Reihe nach), Branch `CWS/CWS_29617_design_system_welle_2` von !1695; Radio als Control, Alert/Badge/Divider/Skeleton nur im Paket. Ziel: ganzes System bis Ende der Woche ab 05.10.
 4. Welle 1 abschließen: nach den Merges Ratsche gegen master, Welle-1-Abschnitt in altlast.md; dann Welle 2 (Eingabefelder, Select) planen — Befunde stehen in altlast.md „Sichtbare Befunde“.
 
 Das Repo liegt jetzt unter `TopLogic/tl-design-system`; Wiki (Home, Übersicht, Anleitung Komponenten mit
