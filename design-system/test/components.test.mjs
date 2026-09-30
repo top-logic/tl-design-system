@@ -80,6 +80,17 @@ test('disabled liest die drei Disabled-Rollen und sonst nichts', () => {
   assert.deepEqual(vars, ['--tl-border-disabled', '--tl-surface-disabled', '--tl-text-disabled'].sort());
 });
 
+test('beschäftigt steht nach disabled und pulsiert: ein hochladender Knopf ist beides', () => {
+  const css = readFileSync(new URL('../src/components/button/button.css', import.meta.url), 'utf8')
+    .replace(/\/\*[\s\S]*?\*\//g, '');
+  const busy = css.indexOf('.tl-button[aria-busy="true"] {');
+  const disabled = css.indexOf('.tl-button:disabled {');
+  assert.ok(busy >= 0 && disabled >= 0, 'Regel für aria-busy oder :disabled fehlt');
+  assert.ok(busy > disabled, 'aria-busy muss nach :disabled stehen, sonst verliert cursor: progress');
+  assert.match(css, /\.tl-button\[aria-busy="true"\] \.tl-button__icon\s*\{[^}]*animation:\s*tl-button-busy\b/);
+  assert.match(css, /@keyframes tl-button-busy\s*\{/);
+});
+
 test('das Button-Specimen zeigt jede Erscheinung, die Tönung, sm, und jeden Zustand', () => {
   const html = readFileSync(new URL('../src/components/button/button.spec.html', import.meta.url), 'utf8');
   for (const m of ['primary', 'secondary', 'ghost', 'link', 'danger', 'sm'])

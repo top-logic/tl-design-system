@@ -26,6 +26,7 @@
     border-color var(--tl-duration-fast) var(--tl-easing-standard),
     color var(--tl-duration-fast) var(--tl-easing-standard);
 }
+.tl-button[hidden] { display: none; }
 
 .tl-button__icon {
   flex-shrink: 0;
@@ -134,10 +135,6 @@
   background: var(--tl-surface-brand-subtle-hover);
 }
 
-.tl-button[aria-busy="true"] {
-  cursor: progress;
-}
-
 .tl-button:disabled {
   background: var(--tl-surface-disabled);
   border-color: var(--tl-border-disabled);
@@ -151,4 +148,20 @@
 .tl-button--link:disabled {
   background: transparent;
   border-color: transparent;
+}
+
+/* Beschäftigt steht nach disabled: ein Knopf, der hochlädt, ist beides, und bei gleicher Spezifität
+   gewinnt die spätere Regel. Das Icon pulsiert wie der Skeleton; der globale Reduced-Motion-Schalter
+   aus base.css beendet den Puls nach einem Durchlauf, und ohne Fill-Mode ruht das Icon bei opacity 1. */
+.tl-button[aria-busy="true"] {
+  cursor: progress;
+}
+
+.tl-button[aria-busy="true"] .tl-button__icon {
+  animation: tl-button-busy var(--tl-duration-loop) var(--tl-easing-standard) infinite alternate;
+}
+
+@keyframes tl-button-busy {
+  from { opacity: 1; }
+  to { opacity: 0.4; }
 }

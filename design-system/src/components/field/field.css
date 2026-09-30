@@ -19,6 +19,7 @@
   background: var(--tl-surface-field);
   color: var(--tl-text-primary);
 }
+.tl-field[hidden] { display: none; }
 
 .tl-field::placeholder {
   color: var(--tl-text-placeholder);
@@ -59,6 +60,7 @@
   display: block;
   min-width: 0;
 }
+.tl-field-group[hidden] { display: none; }
 
 .tl-field-group__icon,
 .tl-field-group__action {
@@ -110,6 +112,7 @@
   overflow: hidden;
   color: var(--tl-text-primary);
 }
+.tl-field-value[hidden] { display: none; }
 
 .tl-field-value > * {
   min-width: 0;

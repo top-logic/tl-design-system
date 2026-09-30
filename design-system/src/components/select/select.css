@@ -14,6 +14,7 @@
   gap: var(--tl-space-xs);
   cursor: pointer;
 }
+.tl-select[hidden] { display: none; }
 
 .tl-select__values {
   display: flex;

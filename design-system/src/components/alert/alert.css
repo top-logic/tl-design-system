@@ -14,6 +14,7 @@
   border-radius: var(--tl-radius-md);
   color: var(--tl-text-primary);
 }
+.tl-alert[hidden] { display: none; }
 
 .tl-alert--error { background: var(--tl-status-error-subtle); border-color: var(--tl-status-error-border); }
 .tl-alert--warning { background: var(--tl-status-warning-subtle); border-color: var(--tl-status-warning-border); }

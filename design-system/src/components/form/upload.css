@@ -9,6 +9,8 @@
   align-items: center;
   gap: var(--tl-space-control-gap);
 }
+/* Jeder Block, der display setzt, setzt auch [hidden]: sonst schlägt seine Klasse die Regel des Browsers. */
+.tl-upload[hidden] { display: none; }
 
 .tl-file-upload {
   display: inline-flex;
@@ -17,6 +19,7 @@
   min-width: 0;
   border-radius: var(--tl-radius-sm);
 }
+.tl-file-upload[hidden] { display: none; }
 
 .tl-file-upload[data-tl-state~="dragover"] {
   outline: var(--tl-border-width-md) dashed var(--tl-border-interactive);

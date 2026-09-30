@@ -20,6 +20,7 @@
   text-transform: uppercase;
   user-select: none;
 }
+.tl-avatar[hidden] { display: none; }
 
 /* Das Bild füllt den Kreis und wird beschnitten, nicht verzerrt. */
 .tl-avatar__image {

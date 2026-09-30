@@ -16,3 +16,4 @@
   background: var(--tl-surface-brand);
   color: var(--tl-text-on-brand);
 }
+.tl-badge[hidden] { display: none; }

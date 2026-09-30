@@ -48,7 +48,7 @@ Fläche, Beschriftung und Linie je Erscheinung; Hover und Active eine Stufe weit
 | `disabled` (vom Kontrast-Gate ausgenommen) | `--tl-surface-disabled` | `--tl-text-disabled` | `--tl-border-disabled` |
 | `ghost` / `link` + `disabled` (vom Kontrast-Gate ausgenommen) | — | `--tl-text-disabled` | — |
 
-Maße: Höhe `--tl-size-control` (klein `--tl-size-control-sm`), Innenabstand `--tl-space-control-x` (klein `--tl-space-2xs`), Abstand Icon–Text `--tl-space-xs`, Ecke `--tl-radius-sm`. Bewegung: `--tl-duration-fast` mit `--tl-easing-standard`. Icon: Klasse `.tl-icon-sm` neben Text, `.tl-icon-md` allein. Text: Klasse `.tl-type-label`.
+Maße: Höhe `--tl-size-control` (klein `--tl-size-control-sm`), Innenabstand `--tl-space-control-x` (klein `--tl-space-2xs`), Abstand Icon–Text `--tl-space-xs`, Ecke `--tl-radius-sm`. Bewegung: `--tl-duration-fast` mit `--tl-easing-standard`; der Puls von `aria-busy` `--tl-duration-loop`. Icon: Klasse `.tl-icon-sm` neben Text, `.tl-icon-md` allein. Text: Klasse `.tl-type-label`.
 
 `--tl-status-error-subtle` wird vom Button nicht gelesen — die getönte Fläche bleibt dem
 Hinweisstreifen vorbehalten (siehe Kommentarkopf in `button.css`).
@@ -60,7 +60,7 @@ Hinweisstreifen vorbehalten (siehe Kommentarkopf in `button.css`).
 | `type="button"` | immer — kein Submit. |
 | `disabled` | `state.disabled`. Nicht `aria-disabled`: der Button soll wirklich nicht bedienbar sein. |
 | `aria-pressed="true"` | `state.active`. Fehlt sonst ganz (nicht `false`), damit ein gewöhnlicher Button kein Umschalter wird. |
-| `aria-busy="true"` | während einer laufenden Aktion (Upload). Der Zeiger zeigt Fortschritt; der Handler ignoriert Klicks, solange die Aktion läuft. |
+| `aria-busy="true"` | während einer laufenden Aktion (Upload). Das Icon pulsiert (`--tl-duration-loop`, `--tl-easing-standard`), der Zeiger zeigt Fortschritt — auch wenn der Knopf zugleich `disabled` ist; der Handler ignoriert Klicks, solange die Aktion läuft. |
 | `aria-label` | bei icon-only oder wenn ein Icon gesetzt ist: der `label`. |
 | `data-tooltip` | `text:<tooltip>`; das Tooltip-System liest es. |
 | `:focus-visible` | den Ring liefert `base.css`; die Komponente setzt und entfernt keinen Fokusstil. |

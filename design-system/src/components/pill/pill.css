@@ -17,6 +17,7 @@
   color: var(--tl-text-primary);
   white-space: nowrap;
 }
+.tl-pill[hidden] { display: none; }
 
 .tl-pill__icon {
   flex-shrink: 0;

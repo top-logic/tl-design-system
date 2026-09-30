@@ -42,6 +42,11 @@ test('upload.css: die Drop-Zone zeigt dragover als Attribut, gestrichelt in der 
   assert.doesNotMatch(upload, /outline\s*:\s*(none|0)/);
 });
 
+test('upload.css: eine verborgene Upload-Hülle bleibt verborgen, obwohl tl-upload display setzt', () => {
+  assert.match(declarationsOf(upload, '.tl-upload') ?? '', /display\s*:\s*inline-flex/);
+  assert.match(declarationsOf(upload, '.tl-upload[hidden]') ?? '', /display\s*:\s*none/);
+});
+
 test('das Formular-Specimen zeigt jede Label-Lage, Pflicht, Hilfe, Fehler, Warnung, geändert, Gruppe, Upload', () => {
   const html = readComponent('form', 'form.spec.html');
   assert.deepEqual(specimenProblems(html), []);

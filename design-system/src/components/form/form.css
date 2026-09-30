@@ -11,6 +11,7 @@
   gap: var(--tl-space-2xs);
   min-width: 0;
 }
+.tl-form-field[hidden] { display: none; }
 
 .tl-form-field--side {
   grid-template-columns: minmax(var(--tl-size-field-label-min), var(--tl-size-field-label-max)) minmax(0, 1fr);
@@ -118,6 +119,7 @@
   gap: var(--tl-space-sm);
   min-width: 0;
 }
+.tl-form-group[hidden] { display: none; }
 
 .tl-form-group--separator {
   padding-top: var(--tl-space-sm);
@@ -190,6 +192,7 @@
   gap: var(--tl-space-md);
   min-width: 0;
 }
+.tl-form-layout[hidden] { display: none; }
 
 .tl-form-layout__empty {
   color: var(--tl-text-secondary);
@@ -213,6 +216,7 @@
   display: grid;
   gap: var(--tl-space-sm);
 }
+.tl-field-list[hidden] { display: none; }
 
 .tl-field-list__title {
   margin: 0;

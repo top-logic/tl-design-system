@@ -13,6 +13,7 @@
   gap: var(--tl-space-xs);
   min-width: 0;
 }
+.tl-progress[hidden] { display: none; }
 
 .tl-progress__track {
   flex: 1 1 auto;

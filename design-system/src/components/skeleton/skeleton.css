@@ -13,6 +13,7 @@
   background: var(--tl-surface-interactive-selected);
   animation: tl-skeleton-pulse var(--tl-duration-loop) var(--tl-easing-standard) infinite alternate;
 }
+.tl-skeleton[hidden] { display: none; }
 
 @keyframes tl-skeleton-pulse {
   from { opacity: 1; }
