@@ -1,13 +1,13 @@
 {
   "_": "Budget des alten tlReactControls.css, je Block (Ueberschrift /* --- Name --- */). Kein Block darf wachsen; ein abgeschnittener Block wird gestrichen. Nach jeder Welle nachziehen.",
-  "_blocks": "Zeilen je Block. Faengt ein fremdes Ticket in einem Block Zuwachs ein, wird der Block mit Vermerk des Tickets gehoben — nicht die Datei. Neue Bloecke von aussen zeigt node tools/inventory.mjs unter unlisted; die Welle, die sie holt, traegt sie ein. Gehoben 30.09. mit dem master-Merge 3a8bf043af: TLTabBar 123→125 (Inset-Kommentar) aus #29663, TLCard 47→52 und TLTableView 513→517 aus #29677; zugleich gesenkt TLFormLayout 48→35, TLFormField 307→305. Gesenkt 30.09. in Welle 2: TLToolbar 143→137 (verirrte Checkbox-Regel gestrichen). Welle 2 abgeschlossen 30.09.: TLFileUpload, TLFieldList, TLFormLayout, TLFormGroup, TLFormField und Visually hidden text gestrichen; TLTreeView (121) stand unter einer Ueberschrift mit zwei Strichen und zaehlte bisher zu TLFormField — die Ueberschrift hat jetzt drei, der Block steht fuer sich.",
+  "_blocks": "Zeilen je Block. Faengt ein fremdes Ticket in einem Block Zuwachs ein, wird der Block mit Vermerk des Tickets gehoben — nicht die Datei. Neue Bloecke von aussen zeigt node tools/inventory.mjs unter unlisted; die Welle, die sie holt, traegt sie ein. Gehoben 30.09. mit dem master-Merge 3a8bf043af: TLTabBar 123→125 (Inset-Kommentar) aus #29663, TLCard 47→52 und TLTableView 513→517 aus #29677; zugleich gesenkt TLFormLayout 48→35, TLFormField 307→305. Gesenkt 30.09. in Welle 2: TLToolbar 143→137 (verirrte Checkbox-Regel gestrichen). Welle 2 abgeschlossen 30.09.: TLFileUpload, TLFieldList, TLFormLayout, TLFormGroup, TLFormField und Visually hidden text gestrichen; TLTreeView (121) stand unter einer Ueberschrift mit zwei Strichen und zaehlte bisher zu TLFormField — die Ueberschrift hat jetzt drei, der Block steht fuer sich. Gehoben 30.09. mit dem master-Merge bf970e6f54 in den Welle-2-Branch: TLJobStatus 372→400 und Literal zIndex 21→22 aus #29671 (Drop-Verweigerung der React-Tabelle: .tlTableView--dropRefused, __row--dropRefused, __dropHint mit z-index 13000 — die Regeln stehen im Tabellenteil unter der TLJobStatus-Ueberschrift und zaehlen deshalb zu diesem Block).",
   "_lines": "Geschichte des Dateibudgets bis 24.09.: 6065 → 6088 (#29597) → 5766 (Welle 1) → 6692/7390/7405 (Merges von master). Seit 24.09. misst die Ratsche Bloecke; lines ist die Summe der gelisteten Bloecke.",
-  "lines": 5966,
+  "lines": 5994,
   "literals": {
     "color": 74,
     "fontSize": 48,
     "duration": 33,
-    "zIndex": 21,
+    "zIndex": 22,
     "outlineNone": 21
   },
   "blocks": {
@@ -63,7 +63,7 @@
     "What the color of the text means": 34,
     "The shape the text takes": 19,
     "TLHtml": 164,
-    "TLJobStatus (what a long-running job reports)": 372,
+    "TLJobStatus (what a long-running job reports)": 400,
     "TLColumnSelect": 113,
     "TLRelativeTime": 10,
     "TLFileChips": 113,
