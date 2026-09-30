@@ -1,6 +1,6 @@
 # Stand
 
-**Letzte Sitzung:** 2026-09-30 (Welle 2 gebaut und grün, PR folgt nach Freigabe; Welle 1 vollständig auf master) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-09-30 (Welle 2 gebaut und grün, PR !1740 nach Freigabe; Welle 1 vollständig auf master) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -149,7 +149,9 @@ Merge-Reihenfolge im PR vorgeschlagen: erst !1694, dann !1695 auf master rebasen
 
 Jetzt:
 
-1. **Welle 2 (Formulare) ist gebaut, der PR folgt nach Hendriks Freigabe.** Paket `e8f1221..0c10c7d` auf `main`
+0. **Welle 2 als PR [!1740](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1740) gegen master (30.09. 14:49, Head `ed8ea63828`, Bernhard Reviewer).** Push kam von Hendrik (die Sandbox erreicht den Schlüsselbund nicht). Offen: Jenkins-Build abwarten, Sichtprüfung in der PR-Instanz (`http://docker:80NN/CWS_29617_design_system_welle_2/`), Review-Runde; Ledger `.superpowers/sdd/2026-09-30-welle-2-formulare/progress.md` bleibt bis zum Merge.
+
+1. **Welle 2 (Formulare) ist gebaut, der PR !1740 nach Hendriks Freigabe.** Paket `e8f1221..0c10c7d` auf `main`
    (Tasks 1–7 samt Kontrast-Nachzügen 5a und 7a, Gates 224/224), Engine-Branch `CWS/CWS_29617_design_system_welle_2`
    (`3a8bf043af..bf970e6f54`, master gemergt, `layout.react`, `layout.view`, `demo.react` grün, `messages_en` ohne
    Diff) — **nicht gepusht, kein PR**. Die Ratsche steht bei 5994 Zeilen (7252 davor); die zwölf Blöcke der Spec sind
@@ -212,7 +214,7 @@ sind noch nicht erhoben.
 `src/components/`, Klassen im TSX umbenennen, Zustände auf Attribute, `className` durchreichen,
 Specimen, Vertrag, Gate grün, alter Block in `tlReactControls.css` gelöscht. Der Button ist die
 Vorlage, Welle 2 (Feldrahmen, `tl-field-value`, Attribut-Zustände) das jüngste Muster. Welle 1 ist auf
-`master`, Welle 2 gebaut (PR folgt). Arbeitsliste: `docs/migration/altlast.md`.
+`master`, Welle 2 gebaut (PR !1740). Arbeitsliste: `docs/migration/altlast.md`.
 
 Offen aus der Spec, nicht Teil von Welle 0:
 
