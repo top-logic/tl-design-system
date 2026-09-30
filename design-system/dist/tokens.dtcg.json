@@ -18,9 +18,9 @@
         "$type": "color",
         "$value": "#D9A514"
       },
-      "amber-34": {
+      "amber-32": {
         "$type": "color",
-        "$value": "#B88A00"
+        "$value": "#BD8F0F"
       },
       "amber-35": {
         "$type": "color",
@@ -314,9 +314,9 @@
         "$type": "color",
         "$value": "#FF6C5E"
       },
-      "red-32": {
+      "red-31": {
         "$type": "color",
-        "$value": "#FB594D"
+        "$value": "#FF6053"
       },
       "red-33": {
         "$type": "color",
@@ -369,6 +369,10 @@
       "teal-25": {
         "$type": "color",
         "$value": "#33C1DB"
+      },
+      "teal-34": {
+        "$type": "color",
+        "$value": "#1FA4BB"
       },
       "teal-35": {
         "$type": "color",
@@ -1278,7 +1282,7 @@
         },
         "status-error-text": {
           "$type": "color",
-          "$value": "{primitive.color.red-32}"
+          "$value": "{primitive.color.red-31}"
         },
         "status-error-border": {
           "$type": "color",
@@ -1302,7 +1306,7 @@
         },
         "status-warning-text": {
           "$type": "color",
-          "$value": "{primitive.color.amber-34}"
+          "$value": "{primitive.color.amber-32}"
         },
         "status-warning-border": {
           "$type": "color",
@@ -1318,7 +1322,7 @@
         },
         "status-success-text": {
           "$type": "color",
-          "$value": "{primitive.color.green-36}"
+          "$value": "{primitive.color.green-34}"
         },
         "status-success-border": {
           "$type": "color",
@@ -1334,7 +1338,7 @@
         },
         "status-info-text": {
           "$type": "color",
-          "$value": "{primitive.color.teal-35}"
+          "$value": "{primitive.color.teal-34}"
         },
         "status-info-border": {
           "$type": "color",

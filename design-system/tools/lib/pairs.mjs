@@ -35,9 +35,9 @@ export function kontrastPaare(T) {
   paar('text-link', 'surface-brand-subtle', 4.5); paar('text-primary', 'surface-brand-subtle', 4.5);
   for (const bg of GRUENDE_TEXT) paar('text-primary', bg, 4.5);
   for (const s of STATUS) {
-    for (const bg of ['surface-base', 'surface-layer']) {
-      paar(`status-${s}-text`, bg, 4.5); paar(`status-${s}-border`, bg, 3.0);
-    }
+    // Status-Text steht auch im Dialog: dieselben vier Flächen wie text-primary.
+    for (const bg of ['surface-base', 'surface-layer', 'surface-layer-nested', 'surface-overlay']) paar(`status-${s}-text`, bg, 4.5);
+    for (const bg of ['surface-base', 'surface-layer']) paar(`status-${s}-border`, bg, 3.0);
     paar('text-primary', `status-${s}-subtle`, 4.5);
   }
   for (const bg of GRUENDE_FELD) {
@@ -45,6 +45,7 @@ export function kontrastPaare(T) {
     paar('status-error-border', bg, 3.0);
     paar('status-warning-border', bg, 3.0);
   }
+  paar('text-secondary', 'surface-overlay', 4.5); // Popup-Status des Select
   paar('text-primary', 'surface-field', 4.5); paar('icon-secondary', 'surface-field', 3.0); // Schalterknopf
   paar('border-interactive', 'surface-brand-subtle', 3.0); // gewählter Chip, gewähltes Segment
   for (const bg of GRUENDE_FOKUS) paar('focus-ring', bg, 3.0);

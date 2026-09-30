@@ -147,10 +147,11 @@ test('der gelieferte Wert unter AA steht in der Datei und im Bericht, als gelief
   assert.ok(b && b.geliefert && b.ist < 4.5 && /^#[0-9A-F]{6}$/.test(b.vorschlag));
   assert.ok(ergebnis.css.includes('--tl-status-error-text: #F07070;'));
   // red-42 trägt status-error-text, und die Paarliste stellt jede Bedeutungsschrift gegen
-  // surface-base UND surface-layer: ein gelieferter Wert unter AA erzeugt damit zwei Befunde.
-  assert.equal(ergebnis.befunde.length, 2);
+  // surface-base, surface-layer, surface-layer-nested und surface-overlay: ein gelieferter Wert
+  // unter AA erzeugt damit vier Befunde.
+  assert.equal(ergebnis.befunde.length, 4);
   assert.ok(ergebnis.befunde.every((x) => x.fg === 'status-error-text' && x.geliefert));
-  assert.ok(ergebnis.css.includes('Findings: 2 pairs below its threshold'));
+  assert.ok(ergebnis.css.includes('Findings: 4 pairs below its threshold'));
 });
 
 const CLI = new URL('../tools/derive.mjs', import.meta.url).pathname;

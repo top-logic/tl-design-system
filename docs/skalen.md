@@ -347,19 +347,19 @@ Vier Bedeutungen — Fehler, Warnung, Erfolg, Info — mit je vier Rollen.
 
 | | Rolle | hell | dunkel | Prüfung |
 |---|---|---|---|---|
-| **Fehler** | `text` | `#D7352D` | `#FB594D` | hell 4,53 auf Grund; dunkel 5,62 auf Grund, 5,17 auf Layer |
+| **Fehler** | `text` | `#D7352D` | `#FF6053` | hell 4,53 auf Grund; dunkel 5,97 auf Grund, 5,49 auf Layer, 4,53 im Dialog |
 | | `border` | `#F14F43` | `#DC3B32` | alle fünf Feldgründe: hell 3,39 auf Grund, 3,20 auf Feld; dunkel 3,99 auf Grund, 3,03 im Dialog |
 | | `surface` | `#CC2823` | `#F14F43` | Beschriftung weiß 5,39 / dunkel 4,77 |
 | | `subtle` | `#FFEBE8` | `#35110D` | Text darauf 14,71 / 15,27 |
-| **Warnung** | `text` | `#936E00` | `#B88A00` | hell 4,50 auf Grund; dunkel 5,65 auf Grund, 5,20 auf Layer |
+| **Warnung** | `text` | `#936E00` | `#BD8F0F` | hell 4,50 auf Grund; dunkel 6,01 auf Grund, 5,53 auf Layer, 4,56 im Dialog |
 | | `border` | `#B28600` | `#98720C` | alle fünf Feldgründe: hell 3,19 auf Grund, 3,02 auf Feld; dunkel 4,02 auf Grund, 3,05 im Dialog |
 | | `surface` | `#D9A514` | `#EAB532` | Beschriftung dunkel 7,51 / 8,96 |
 | | `subtle` | `#FEEFCF` | `#281C02` | 14,84 / 15,03 |
-| **Erfolg** | `text` | `#008459` | `#36A376` | hell 4,53 auf Grund; dunkel 5,64 auf Grund, 5,19 auf Layer |
+| **Erfolg** | `text` | `#008459` | `#3DA97B` | hell 4,53 auf Grund; dunkel 6,06 auf Grund, 5,58 auf Layer, 4,60 im Dialog |
 | | `border` | `#36A376` | `#008459` | hell 3,02 auf Grund; dunkel 3,76 auf Grund, 3,46 auf Layer |
 | | `surface` | `#3DA97B` | `#60C99A` | Beschriftung dunkel 5,75 / 8,29 |
 | | `subtle` | `#DCF8E9` | `#0C2319` | 14,99 / 14,88 |
-| **Info** | `text` | `#007F92` | `#159FB6` | hell 4,52 auf Grund; dunkel 5,65 auf Grund, 5,20 auf Layer |
+| **Info** | `text` | `#007F92` | `#1FA4BB` | hell 4,52 auf Grund; dunkel 6,00 auf Grund, 5,52 auf Layer, 4,55 im Dialog |
 | | `border` | `#159FB6` | `#007F92` | hell 3,02 auf Grund; dunkel 3,77 auf Grund, 3,47 auf Layer |
 | | `surface` | `#33C1DB` | `#33C1DB` | Beschriftung dunkel 7,87 / 7,87 |
 | | `subtle` | `#CEF3FB` | `#002830` | 14,34 / 14,03 |
@@ -378,6 +378,18 @@ nötig. Die vier nun ungelesenen Primitive (`red-37`, `amber-40`, `green-41`, `t
 `amber-49` auf `amber-44`, `status-success-border` von `green-51` auf `green-46`,
 `status-info-border` von `teal-51` auf `teal-45`; die vier nun ungelesenen Primitive (`red-47`,
 `amber-49`, `green-51`, `teal-51`) sind ebenfalls aus `primitives.json` entfernt.
+
+**Nachgezogen 30.09. (Welle 2, Select):** Status-Text steht auch im Dialog (`surface-overlay`) — der
+Ladefehler im Popup des Select ist der erste Fall; dort lagen alle vier dunkel bei 4,26–4,29 (Fehler
+4,26, Warnung 4,29, Erfolg 4,28, Info 4,28). Jetzt gelten für Status-Text dieselben vier Flächen wie
+für `text-primary` (`surface-base`, `surface-layer`, `surface-layer-nested`, `surface-overlay`),
+festgeschrieben in der Paarliste. Die vier dunklen Rollen sind um die kleinste Stufe heller, die auf
+allen vier hält (`aufKontrast`, Namen aus `naming.mjs`): `status-error-text` `red-32` → `red-31`
+(neu), `status-warning-text` `amber-34` → `amber-32` (neu), `status-success-text` `green-36` →
+`green-34` (vorhanden; hell ist es `status-success-surface` — anderer Modus, keine Doppelrolle),
+`status-info-text` `teal-35` → `teal-34` (neu). `red-32` und `amber-34` sind ohne Leser und entfernt;
+`green-36` und `teal-35` bleiben, die hellen Linien lesen sie. `surface-field` ist kein Grund für
+Status-Text: der Fehlertext steht unter dem Feld, nicht darin.
 
 **Nachgezogen 30.09. (Welle 2), Fehler und Warnung:** Ihre Linien umranden ein Feld und schulden 3,0
 auf denselben fünf Gründen wie `border-control` (siehe „Rahmen: vier Stufen“). Gemessen verfehlten sie
