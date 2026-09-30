@@ -1503,6 +1503,96 @@ Browser-Standard, der Link im Lesemodus Browser-Blau (1,29:1).
 
 **Neu im Paket, ohne Control:** Alert, Badge, Divider, Skeleton. Controls entstehen, wenn eine Ansicht sie braucht.
 
+#### Entschieden beim Bauen (30.09.)
+
+Beim Bauen der Welle kamen Fragen, die die Spec nicht beantwortet hatte. Jede Antwort steht hier mit
+ihrem Grund; die Werte der Kontrast-Nachzüge (5a, 7a) stehen in „Semantik“ und „Neutrale“ und werden
+nicht wiederholt.
+
+**Neue Maße — sie folgen nicht der Dichte.** Sieben Tokens in `measure`, alle nur Referenzen:
+
+| Token | Referenz | Wofür | Warum nicht an der Dichte |
+|---|---|---|---|
+| `size-hidden` | `{line-1}` (1 px) | `tl-visually-hidden`: Breite und Höhe | Die Hülle soll **nichts** sein; ohne Maß erzeugt sie Scrollbalken. `border-width-sm` wäre Zweckentfremdung |
+| `size-choice` | `{size-4}` | Kästchen, Kreis von Checkbox und Radio | Ein gezeichnetes Symbol, keine Bedienhöhe; die Trefferfläche ist das Label, `size-control` |
+| `size-switch` | `{size-7}` | Breite der Schalterspur | Wie `size-choice` |
+| `size-switch-knob` | `{size-3}` | Durchmesser des Schalterknopfs | Bleibt in der Spur, die nicht mitwächst |
+| `size-indicator` | `{size-2}` | Punkt „Geändert“ am Feld-Label | Ein Zeichen am Text, kein Bedienelement; ersetzt `layer-accent` |
+| `size-field-label-min` / `-max` | `{size-10}` / `{size-11}` | Label-Spalte des Formulars | Sie folgt der Textbreite, nicht der Zeilenhöhe; zwei neue Primitive `6rem` / `10rem` statt des Literals `minmax(6rem, 10rem)` |
+
+Die Regel dahinter, wie bei `size-avatar-*`: ein Maß folgt der Dichte, wenn es eine Bedienhöhe ist
+(`size-control`, `size-row`); ein gezeichnetes Symbol oder eine Spalte tut es nicht.
+
+**Reihenfolge der Zustandsregeln.** *Befund:* Fehler und Warnung haben dieselbe Spezifität; stand die
+Warnregel nach der Fehlerregel, gewann bei beiden Attributen die Warnung — das Attribut des Screenreaders
+und das Bild widersprachen sich. *Entschieden:* Die Warnung steht **vor** dem Fehler, der Fehler gewinnt
+durch die Reihenfolge; das CSS setzt „Fehler verdrängt Warnung“ selbst durch, nicht nur das TSX. **Deaktiviert
+schlägt Fehler und Warnung:** Die Zustandsregeln der Gruppen (`tl-radio`, `tl-chip`) treffen nur
+`:not(:disabled)`, und der Hover-Wächter steht in `:where(:not(:disabled))`, damit die Spezifität bleibt.
+*Warum:* Ein deaktiviertes Element trägt keinen Prüfzustand; ohne die Regel schlug eine Gruppenregel
+(0,3,0) das `:disabled` (0,2,0), und ein deaktiviertes Segment zeigte die Hover-Fläche.
+
+**`aria-required` nur, wo ARIA es erlaubt.** `fieldStateAttrs(state, roleAllowsAria)` setzt `aria-invalid`
+und `aria-required` nur an Rollen, die sie führen (`textbox`, `combobox`, `checkbox`, `switch`,
+`radiogroup`, `listbox`); an `role="group"` verbietet ARIA beide. *Entschieden:* Die Pflicht einer Gruppe
+zeigt der Stern im Feld-Label (`tl-form-field__required`), und `aria-labelledby` verweist auf das Label.
+*Warum:* ARIA verbietet das Attribut an der Rolle; es bliebe ohne Wirkung und wäre ungültig. Der Parameter hieß zuerst `ariaInvalidAllowed`; er steuert zwei Attribute und heißt deshalb
+`roleAllowsAria`.
+
+**Der Lesewert ist ein anderes Element, und er hat fünf Regeln.** Die Ausgangsregel steht oben
+(`tl-field-value`, kein Zustand). Beim Bauen dazu:
+
+| Achse | Regel | Warum |
+|---|---|---|
+| Mehrzeilig | `tl-field-value--multiline`: eine Spalte, je Zeile ein `tl-field-value__text`; in der Tabellenzelle wieder eine Reihe | Als `inline-flex`-Reihe lagen die Zeilen nebeneinander; eine Zelle hat eine Zeile |
+| Link | **unterstrichen** | Farbe allein kennzeichnet keinen Link (WCAG 1.4.1); `text-link` löst den Kontrast, nicht die Kennzeichnung |
+| Dropdown, Segmente, Chips | Der Lesewert aller drei Formen ist eine Liste in `span.tl-select__values`; Pill, Bild und `goto`-Link bleiben erhalten | Ein Lesewert „Bezeichnung, Komma“ hätte Rolle, Bild und Verweis verloren — das wäre ein Vertragsbruch |
+| Checkbox | **Ausnahme:** `editable: false` bleibt ein deaktiviertes Kästchen mit Haken | Der Wert eines Booleans ist als Haken lesbarer denn als Text |
+| Ein Helfer | `FieldValue` in `react-src/controls/form/` | Sonst wäre das Markup in fünf Controls kopiert worden |
+
+**Die Feldgruppe hat einen Endplatz.** *Entschieden:* Solange Text im Feld steht und `clearable` gilt,
+ersetzt der Löschknopf den Öffnen-Link; und die **Wurzel** des Textfelds trägt `tl-field-group` selbst.
+*Warum:* Ein Wrapper, der beim ersten Tastendruck erschiene, würde das Feld neu einhängen und ihm den
+Fokus nehmen; zwei Knöpfe am selben Ende brauchten zwei Reservierungen und verschöben den Text.
+
+**Jeder Block, der `display` setzt, setzt auch `[hidden] { display: none }`.** *Befund:* `.tl-upload`
+setzt `display: inline-flex` und schlägt damit das `hidden`-Attribut — der verborgene Upload-Knopf war
+sichtbar. *Entschieden:* Die Regel gilt für jede Wurzelklasse des Pakets mit `display`; `hidden.test.mjs`
+prüft sie an allen 24 Blöcken. Kein globales `!important`. *Warum:* Der Fehler entsteht in jedem Block, der
+`display` setzt, und er ist im Specimen leicht zu übersehen — also ein Test, keine Erinnerung. Die
+Elementklassen (`__message`, `__popup`, `__option`, `__fill`) sind nicht erfasst; sie sind unkritisch,
+solange die Engine bedingt rendert.
+
+**Busy: der Puls ist der Hinweis.** *Befund:* Ein Upload-Knopf in `aria-busy` zeigte keinen Zustand; die
+Regel `.tl-button[aria-busy]` (`cursor: progress`) stand vor `:disabled` und verlor. *Entschieden:*
+`aria-busy="true"` steht **nach** `:disabled`, und das Icon pulsiert (`opacity`, `duration-loop`,
+`easing-standard`, alternierend, wie der Skeleton). Bei `disabled` ist der Puls der **einzige** Hinweis:
+`pointer-events: none` unterdrückt den Zeiger, und ein Fortschrittszeiger über einem nicht bedienbaren
+Knopf wäre eine falsche Einladung. Der Vertrag sagt darum „Puls“, nicht „Zeiger“.
+
+**Stapel-Übergang: acht Regeln des Altbestands lesen die Ebenen.** *Befund:* Der Altbestand stapelt bei
+9000–12000, das Paket bei 1000–1200 (`layer-*`). Das Popup des Select, auf `layer-popover` gestellt,
+lag dadurch **unter** dem Dialog-Backdrop (Literal 10000) — eine Regression gegenüber dem alten Popup.
+*Entschieden:* Acht Regeln des alten Stylesheets lesen jetzt Tokens, definieren sie aber nicht (die
+Übergangsregel aus CLAUDE.md):
+
+| Ebene | Leser |
+|---|---|
+| `layer-overlay` | `.tlDialog__backdrop`, `.tlDrawer`, `.tlPhotoCapture__overlay` |
+| `layer-popover` | `.tlMenu`, `.tlToolbar__dropdown`, `.tlColorInput__popup`, `.tlIconSelect__popup` |
+| `layer-toast` | `.tlSnackbar` |
+
+*Warum so viele:* Nur den Dialog umzustellen hätte Farb- und Icon-Popup (9000) und die Fotoaufnahme
+(10000) über die Snackbar (`layer-toast`) gelegt. Bewusst geblieben sind DragShield (12000), Tooltip,
+Pick-Highlight und der Sidebar-Flyout (1000): Er liegt auf der Ebene des Dialogs, und
+**gleiche Ebene heißt DOM-Reihenfolge** — das Portal des Dialogs steht nach der Shell. Dasselbe gilt für
+Dialog, Drawer und Foto-Overlay untereinander; ein Dialog aus dem Drawer hängt an der Reihenfolge der
+Hosts (Sichtprüfung).
+
+**Die Marke als Vordergrund** (Punkt, Kästchen) prüft ein eigener Test im Paket, nicht die Paarliste:
+`surface-brand` ist Grund für `text-on-brand`, und die Liste verbietet, dass ein Grund anderswo Vordergrund
+ist. Werte und Gründe: „Text und Linien“, Nachgezogen 30.09.
+
 **Offen für Welle 3:** gehobene Flächen — `surface-interactive-hover`/`-selected` auf `surface-overlay`
 messen dunkel 1,13 / 1,01. Im Select-Popup trägt die Akzentlinie (`border-interactive`, 4,53) die
 Hervorhebung, die Tönung ist nur ein Zusatz; die Paarliste hält die Linie mit 3,0 auf `surface-overlay`

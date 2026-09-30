@@ -229,13 +229,13 @@ Erhoben im Darkmode auf dem Branch der Welle 0; die Wellen prüfen je Komponente
 | Welle | Komponente | Kontext / Zustand | Befund | Klasse (alt) | Modus |
 |---|---|---|---|---|---|
 | 1 | Button | Werkzeugleiste, deaktiviert (`Bearbeiten`/`Löschen` ohne Auswahl) | Text `rgb(111,115,120)` auf Panel-Hintergrund `rgb(38,42,46)`, 3,03:1 — deaktivierter Zustand ist kaum lesbar — **bewusst ausgenommen** — deaktivierte Bedienelemente unterliegen WCAG 1.4.3 nicht (skalen.md „Disabled: vier Rollen ohne Gate“); `text-disabled` auf `surface-disabled` misst 2,06 hell / 2,35 dunkel | `.tlReactButton` (tlReactControls.css:82) | dark |
-| 2 | Eingabefelder / Select | Dialog „Neues Demo-Objekt“, Feldrand im Ruhezustand (`Aktiv (Auswahl)` u. a.) | Rand `var(--border-subtle)` = `rgb(58,64,69)` auf Feldfläche `var(--field)` = `rgb(38,42,46)`, 1,38:1 — Feldgrenze im Dunkelmodus praktisch unsichtbar; betrifft gemeinsame Regel für `tlReactTextInput`, `tlReactNumberInput`, `tlReactDatePicker`, `tlReactSelect` | `.tlReactSelect` (tlReactControls.css:4197) | dark |
-| 2 | Radio | Dialog „Neues Demo-Objekt“, Feld „Aktiv (Radio)“, unmarkiert | Für den Radio-Input ist kein `border`/`appearance` gesetzt (nur `accent-color` für den markierten Zustand) — der sichtbare Ring im unmarkierten Zustand ist reiner Browser-Standard, ohne Bezug zu einem Token; deutlich blasser als die benachbarte Checkbox mit eigenem Rand | `.tlBooleanChoice__option input` (tlReactControls.css:4343) | dark |
-| 2 | Select (Ressourcen-Referenz) | Tabelle „Demo-Objekte“, Spalte „Eigentümer“, Linktext `root` | Text `rgb(0,0,170)` (unveränderter Browser-Link-Standard) auf Zeilenhintergrund `rgb(26,28,30)`, 1,29:1 — für `.tlResourceCell` existiert keine Regel, `.tlDropdownSelect__readonlyValue` setzt keine `color`; der Link bleibt vollständig ungestylt und im Dunkelmodus fast unsichtbar | `.tlDropdownSelect__readonlyValue` (tlReactControls.css:4651) | dark |
+| 2 | Eingabefelder / Select | Dialog „Neues Demo-Objekt“, Feldrand im Ruhezustand (`Aktiv (Auswahl)` u. a.) | Rand `var(--border-subtle)` = `rgb(58,64,69)` auf Feldfläche `var(--field)` = `rgb(38,42,46)`, 1,38:1 — Feldgrenze im Dunkelmodus praktisch unsichtbar; betrifft gemeinsame Regel für `tlReactTextInput`, `tlReactNumberInput`, `tlReactDatePicker`, `tlReactSelect` — **umgesetzt auf `CWS/CWS_29617_design_system_welle_2`, Sichtprüfung mit dem PR** | `.tlReactSelect` (tlReactControls.css:4197) | dark |
+| 2 | Radio | Dialog „Neues Demo-Objekt“, Feld „Aktiv (Radio)“, unmarkiert | Für den Radio-Input ist kein `border`/`appearance` gesetzt (nur `accent-color` für den markierten Zustand) — der sichtbare Ring im unmarkierten Zustand ist reiner Browser-Standard, ohne Bezug zu einem Token; deutlich blasser als die benachbarte Checkbox mit eigenem Rand — **umgesetzt auf `CWS/CWS_29617_design_system_welle_2`, Sichtprüfung mit dem PR** | `.tlBooleanChoice__option input` (tlReactControls.css:4343) | dark |
+| 2 | Select (Ressourcen-Referenz) | Tabelle „Demo-Objekte“, Spalte „Eigentümer“, Linktext `root` | Text `rgb(0,0,170)` (unveränderter Browser-Link-Standard) auf Zeilenhintergrund `rgb(26,28,30)`, 1,29:1 — für `.tlResourceCell` existiert keine Regel, `.tlDropdownSelect__readonlyValue` setzt keine `color`; der Link bleibt vollständig ungestylt und im Dunkelmodus fast unsichtbar — **umgesetzt auf `CWS/CWS_29617_design_system_welle_2`, Sichtprüfung mit dem PR** | `.tlDropdownSelect__readonlyValue` (tlReactControls.css:4651) | dark |
 | 3 | Baum | Baum-Demo, Zeile bei Hover (`P2`) | Hover-Hintergrund `var(--layer-hover)` = `rgb(47,52,56)` auf Seitenhintergrund `rgb(26,28,30)`, 1,36:1 — Hover-Zustand kaum von der Ruhefläche zu unterscheiden | `.tlTreeView__node:hover` (tlReactControls.css:4093) | dark |
 | 3 | Tooltip (an Toolbar) | Toolbar-Button, Hover | Weiß (#FFF) auf Hellgrau (#F0F1F2), 1,2:1 — `text-inverse` wird im Dark-Theme nicht überschrieben (tl-react-theme.config.xml, Dark-Block bei Zeile 120) | `.tl-tooltip-popover` (tlReactControls.css:5546) | dark |
-| 2 | Select (Einzelwert) | Objektliste, Filter „Status“, ein gewählter Wert | Der gewählte Einzelwert steht als blanker Text (`tlDropdownSelect__value`), ohne Pill — die Rolle geht beim Wählen verloren, obwohl Liste, Chips und Tabellenzelle sie zeigen; bewusste Regel im TSX (Bernhard, 10.09.), in der Select-Welle entscheiden | `.tlDropdownSelect__value` (TLDropdownSelect.tsx:619) | light+dark |
-| 2 | Select (readonly, Tabellenzelle) | Objektliste, Tabelle „Geschlossen“, Spalte „Status“ (120 px) | Pill wird hart abgeschnitten statt mit Ellipse: `.tlOptionValue` ist Flex-Kind ohne `min-width: 0` in `.tlDropdownSelect--immutable` (`overflow: hidden`), also so breit wie ihr Inhalt; `max-width: 100%` der Pill greift damit ins Leere; `tl-pill__label` hat die Ellipse schon | `.tlOptionValue` (tlReactControls.css, Block Dropdown) | light+dark |
+| 2 | Select (Einzelwert) | Objektliste, Filter „Status“, ein gewählter Wert | Der gewählte Einzelwert steht als blanker Text (`tlDropdownSelect__value`), ohne Pill — die Rolle geht beim Wählen verloren, obwohl Liste, Chips und Tabellenzelle sie zeigen; bewusste Regel im TSX (Bernhard, 10.09.), in der Select-Welle entscheiden — **umgesetzt auf `CWS/CWS_29617_design_system_welle_2`, Sichtprüfung mit dem PR** | `.tlDropdownSelect__value` (TLDropdownSelect.tsx:619) | light+dark |
+| 2 | Select (readonly, Tabellenzelle) | Objektliste, Tabelle „Geschlossen“, Spalte „Status“ (120 px) | Pill wird hart abgeschnitten statt mit Ellipse: `.tlOptionValue` ist Flex-Kind ohne `min-width: 0` in `.tlDropdownSelect--immutable` (`overflow: hidden`), also so breit wie ihr Inhalt; `max-width: 100%` der Pill greift damit ins Leere; `tl-pill__label` hat die Ellipse schon — **umgesetzt auf `CWS/CWS_29617_design_system_welle_2`, Sichtprüfung mit dem PR** | `.tlOptionValue` (tlReactControls.css, Block Dropdown) | light+dark |
 | 3 | Menü | Benutzermenü „root“, Tastatur-Fokus auf erstem Eintrag („Abmelden“) | Fokus-Hintergrund `var(--layer-hover)` = `rgb(47,52,56)` auf Menühintergrund `rgb(38,42,46)`, 1,15:1, und kein sichtbarer Fokusring (`outline-style: none`); die einzige verlässliche Änderung ist die Texthelligkeit (`text-secondary` → `text-primary`) | `.tlMenu__item--focused` (tlReactControls.css:2593) | dark |
 
 Nicht geprüft: Lightmode (das Theme wurde absichtlich nicht umgeschaltet), Dichte-Umschaltung (`data-tl-density`), Tabelle mit Paginierung bei großen Datenmengen, Popover- und Snackbar-Komponenten, Formularlayout im Fehler-/Warnzustand, Toolbar-Icons ohne Tooltip-Text, sowie alle Ansichten in „Objektliste“, „Projekte“, „Diagramm-Demo“, „Gantt-Demo“, „Dokumentanzeige“, „Tiles“-Ansichten und „Responsive Master-Detail“.
@@ -250,7 +250,7 @@ Der Namensraum gehört dem Paket. Diese Namen führt der Altbestand heute; die W
 | `--tlGrid-gap` | `TLGrid.tsx`, `tlReactControls.css` (#29597) | Rasterabstand als Rechengröße für die Spaltenzahl | 4 |
 | `--tl-item-index` | `items.tsx`, `ReactLayoutControl.java`, `ObjectListElement.java` (#29597) | Position eines wiederholten Elements für gestaffelte Animation | 4 |
 
-`TLUploadButton` trägt am Wrapper die reservierte Klasse `tl-upload`; das Upload-Feld der Welle 2 definiert sie.
+`TLUploadButton` trägt am Wrapper die reservierte Klasse `tl-upload`; das Upload-Feld der Welle 2 definiert sie (`form/upload.css`).
 
 ### Fremdgut-Nähe
 
@@ -283,3 +283,74 @@ Sichtprüfung 24.09. in der PR-Instanz (`http://docker:8007/CWS_29617_design_sys
 ### Icon (Welle 1, PR !1695 mit Avatar und Progress) — gemerged 30.09. (!1695, Merge-Commit `95146ca38c`)
 
 `TLIcon` (`ReactIconControl`, `IconElement`, `<theme-icon>`), `ThemeIcon`, `FontIcon`. Umstellung: `<theme-icon size="sm|md|lg|glyph">` (Default `sm`), das Control rendert `tl-icon-<stufe>` aus `base.css` und hat kein eigenes CSS; die Regel `.tlIcon` (Block „The shape the text takes“) fällt; `ThemeIcon` ohne Inline-Maß am Bild und mit `aria-hidden` am Glyph; `FontIcon.tsx` fällt, vier Leser nehmen `ThemeIcon`. Offen für Welle 2–4: Menü, Toolbar, Sidebar, Reiter, Select geben `ThemeIcon` noch eigene Klassen statt einer Stufe. Entscheidung: `docs/skalen.md` „Icon: die Stufe ist die Rolle“.
+
+## Welle 2 · Formulare — gebaut 30.09., PR folgt
+
+Branch `CWS/CWS_29617_design_system_welle_2` (`3a8bf043af..bf970e6f54`, master gemergt, Suiten grün, `messages_en` ohne Diff) und Paket `e8f1221..0c10c7d`. Noch **nicht gepusht**; die Sichtprüfung steht aus und läuft mit dem PR. Spec: `docs/superpowers/specs/2026-09-30-welle-2-formulare-design.md`; Entscheidungen: `docs/skalen.md` „Formulare: ein Feldrahmen, Zustände als Attribute“ samt „Entschieden beim Bauen (30.09.)“.
+
+### Gestrichene Blöcke
+
+Zwölf Blöcke der Spec-Tabelle (Summe laut Spec §1: 1.341 Zeilen), dazu zwei, die beim Bauen mitfielen:
+
+| Block (`tlReactControls.css`) | Zeilen alt | Nachfolger |
+|---|---|---|
+| Simple input controls | 176 | `tl-field` |
+| Error / Warning states for simple inputs | 43 | `aria-invalid`, `data-tl-state~="warning"` |
+| Checkbox | 72 | `tl-checkbox`, `tl-radio` |
+| TLBooleanChoice | 46 | `tl-choice-group`, `tl-radio` |
+| TLSegmentedChoice | 100 | `tl-segmented` |
+| TLOptionChips | 70 | `tl-chip-group`, `tl-chip` |
+| TLDropdownSelect | 303 | `tl-field tl-select` |
+| TLFormField | 305 | `tl-form-field` |
+| TLFormGroup | 112 | `tl-form-group` |
+| TLFormLayout | 35 | `tl-form-layout` |
+| TLFieldList | 22 | `tl-field-list` |
+| TLFileUpload | 57 | `tl-file-upload`, `tl-upload` |
+| TLResourceCell (mitgefallen) | 23 | `tl-field-value` |
+| Visually hidden text (mitgefallen) | 17 | `tl-visually-hidden` |
+
+**Ratsche: 7252 → 5994** (`test/ratchet.json`, `lines`; Stand bei Start der Welle, Paket `e8f1221`). Drei Posten laufen dagegen: Fremdzuwachs aus master, eingefangen mit Ticketvermerk im Kommentar der Ratsche — TLTabBar 123→125 (#29663), TLCard 47→52 und TLTableView 513→517 (#29677) mit dem Merge `3a8bf043af`, TLJobStatus 372→400 (#29671, Drop-Verweigerung der Tabelle) mit dem Merge `bf970e6f54`. Dazu **TLTreeView (121 Zeilen)**: er stand unter einer Überschrift mit zwei Strichen und zählte bisher zu TLFormField; die Überschrift hat jetzt drei, der Block steht für sich — die 305 Zeilen von TLFormField enthielten also 121 fremde. Gesenkt außerdem TLTableView 517→497 (Zellregeln auf `tl-field` umbenannt, Kommentare gekürzt) und TLToolbar 143→137 (verirrte Checkbox-Regel). `foreignTl` unverändert; Literale `zIndex` 30→22, `outlineNone` 23→21.
+
+### Neu im Paket
+
+`field` (`tl-field`, `tl-field-group`, `tl-field-value`), `choice` (Checkbox, Radio, Schalter, Segmente, Chips), `select`, `form` (Feld, Gruppe, Layout, Liste), `upload`, dazu ohne Control in der Engine: `alert`, `badge`, `divider`, `skeleton`; in `base.css` `tl-visually-hidden`. Je `*.css`, `*.contract.md`, Specimen. Neue Maße: `size-hidden`, `size-choice`, `size-switch`, `size-switch-knob`, `size-indicator`, `size-field-label-min/-max`; die Rand- und Statusrollen wurden nachgezogen (Kontrast gegen `surface-field`, Dialog), `text-helper` dunkel `gray-33`.
+
+### Alt → neu für Anwendungs-Stylesheets
+
+Kunden- und Anwendungs-CSS, das die alten Klassen anspricht, liest künftig diese (Liste = Grep-Gate der Spec §8):
+
+| Alt | Neu |
+|---|---|
+| `tlReactTextInput`, `tlReactNumberInput`, `tlReactDatePicker`, `tlReactSelect` | `tl-field` |
+| `tlReactTextInput--multiline` | `tl-field--multiline` |
+| `tlReactTextInput--withIcon`, `--clearable`, `__icon` | `tl-field-group`, `tl-field-group__icon`, `tl-field-group__action` |
+| `--immutable` (an allen Feldern) | `tl-field-value` |
+| `tlOptionValue`, `tlResourceCell` | `tl-field-value` |
+| `--error`, `--warning`, `--disabled`, `--selected` (Zustandsklassen) | `aria-invalid="true"`, `data-tl-state~="warning"`, `disabled`, `aria-checked` / `aria-pressed` |
+| `tlReactCheckbox` | `tl-checkbox` (Schalter: `tl-checkbox--switch`) |
+| `tlBooleanChoice` | `tl-choice-group` mit `tl-radio` |
+| `tlSegmentedChoice` | `tl-segmented`, `tl-segmented__segment` |
+| `tlOptionChips` | `tl-chip-group`, `tl-chip` |
+| `tlDropdownSelect` | `tl-field tl-select` |
+| `tlFormField` | `tl-form-field` (Lage: `--side`, `--top`, `--after`, `--hidden`, `--full`) |
+| `tlFormGroup` | `tl-form-group` |
+| `tlFormLayout` | `tl-form-layout` |
+| `tlFieldList` | `tl-field-list` |
+| `tlFileUpload` | `tl-file-upload` |
+| `tlVisuallyHidden` | `tl-visually-hidden` |
+
+Es fallen ohne Ersatz: der gleitende Marker der SegmentedChoice (das gewählte Segment trägt die Fläche), die toten Klassen `tlFormField--error`/`--warning` und `tlFormLayout--readonly`, `__chevron--collapsed` (der Chevron ist ein `ThemeIcon`), das Inline-SVG des Hilfeknopfs.
+
+### Offen für spätere Wellen und Pakete
+
+| Gruppe | Stand |
+|---|---|
+| **Welle 3: gehobene Flächen** | `surface-interactive-hover`/`-selected` auf `surface-overlay` messen dunkel 1,13 / 1,01. Im Select-Popup trägt die Akzentlinie (`border-interactive`) die Hervorhebung; der Skeleton liest dieselbe Rolle und ist dunkel auf dem Overlay kaum sichtbar. Entscheidung mit dem Menü. |
+| **Java / i18n** | Der Retry-Knopf des Select trägt den ganzen Satz als Namen; ein eigener Key `js.dropdownSelect.retry` (`I18NConstants`, per JavaDoc erzeugt, nie von Hand) gehört in ein späteres Java-Paket. |
+| **`withPill`** | gehört nach `pill/`, nicht in die Select-Dateien. |
+| **Drei Renderer von `tl-field-value`** | `ReadonlyValue`, `TLResourceCell` und der Helfer `FieldValue` zeichnen dasselbe Element; zusammenführen, sobald die Tabellenzelle (Welle 3) angefasst wird. |
+| **Toggle-`aria-label`** | `TLFormGroup` wechselt `aria-label` des Einklappknopfs zusätzlich zu `aria-expanded` — Doppelansage, vorbestehend. |
+| **`tlBinaryField`** | tote Klasse im Altbestand, Welle 5. |
+| **Sichtprüfung (mit dem PR)** | Ellipsen: mehrzeiliger Lesewert außerhalb der Zelle, Segment- und Chip-Beschriftung bei sehr langem Text. Badge-Position am Icon. Select im Dialog (Popup über dem Backdrop) und Menü über dem Dialog; Dialog aus dem Drawer (gleiche Ebene, DOM-Reihenfolge); Icon-Zentrierung im Select; Link-Zellen jetzt unterstrichen; Hilfeknopf mit `tl-icon-sm` statt `md`. |
+| **Gebündeltes aus dem Review** | `describedBy` an `bridge/field-label.ts` (Editoren `codeedit`, `wysiwyg`, `model.search.react` hängen daran; `codeedit` und `model.search.react` liefen offline nicht, der PR-Build ist das Gate). Der Punkt „Geändert“ ist `aria-hidden` und wird nicht vorgelesen (Text oder `aria-description` am Feld). Live-Region-Timing der Warnungen (mit `aria-live` eingehängt). `hidden.test.mjs` deckt nur Blockklassen. Kontrast-Gate: Marke auf Gründen im `derive`-Bericht. |
+| **Paket** | `farbkreis-13.svg` (Übersicht, Wiki) zeigt noch alte Randwerte. Specimen `button`/`pill` laden mit `ri-*` keine Icon-Schrift und zeigen leere Icons; die Specimen der Welle 2 nutzen Bootstrap Icons. |

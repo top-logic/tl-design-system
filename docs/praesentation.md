@@ -261,8 +261,8 @@ Einen vierten Weg gibt es nicht: Shell nutzen und den Draht ignorieren. Und es g
 | Welle | Komponenten | Stand |
 |---|---|---|
 | 0 | Primitive, Rollen, Grundklassen | steht |
-| 1 | Button, Pill, Avatar, Progress, FontIcon | auf master bis auf Avatar/Progress/Icon (Review) |
-| 2 | Felder, Checkbox, Select, Formular | ein Feldrahmen für alle; Fehler ist `aria-invalid` — dasselbe Attribut für Auge und Screenreader |
+| 1 | Button, Pill, Avatar, Progress, FontIcon | auf master |
+| 2 | Felder, Checkbox, Select, Formular | gebaut, PR folgt — ein Feldrahmen für alle; Fehler ist `aria-invalid`, dasselbe Attribut für Auge und Screenreader; ein deaktiviertes Feld zeigt nie einen Fehler; Ratsche 7.252 → 5.994 Zeilen, zwölf alte Blöcke gestrichen |
 | 3 | Tabelle, Baum, Menü, Toolbar, Reiter | Datendarstellung und Navigation |
 | 4 | Dialog, Fenster, Drawer, Snackbar, Shell | Gerüst und Overlays |
 | 5 | Kalender, Farbwahl, Medien, Dashboard | fachlich, zuletzt |
@@ -305,7 +305,7 @@ Innerhalb einer Welle keine Reihenfolge — parallel ist möglich. Der Button is
 | 12 | Die Blockliste der Ratsche mit einem gestrichenen Eintrag |
 | 13 | Dieselbe Demo-App im TopLogic-Theme und mit Kundenprimitiv nebeneinander |
 | 13b | Drei Kacheln wie eine Preistafel: links TopLogic-Maske mit Kundenfarbe, Mitte TopLogic-Layout mit fremden Komponenten darin, rechts ein fremdes Frontend mit Pfeil auf die API; darunter die Regel „nach dem, was du mitbringst“ |
-| 14 | Die fünf Wellen als Zeitstrahl ohne Datumsangaben, Welle 0 und 1 markiert |
+| 14 | Die fünf Wellen als Zeitstrahl ohne Datumsangaben, Welle 0 und 1 markiert, Welle 2 als gebaut |
 | 15 | Ein Zeilenausschnitt aus einer Komponente: nur Rollen, nur Attribute |
 
 Specimen unter `node tools/serve.mjs` → `http://localhost:8137/`, Button, Pill und Avatar je mit Schalter für dunkel und kompakt.
