@@ -256,13 +256,13 @@ Einen vierten Weg gibt es nicht: Shell nutzen und den Draht ignorieren. Und es g
 
 ## 14 · Der Weg: fünf Wellen
 
-**Kleinste Bausteine zuerst, das Gerüst zuletzt. Keine Welle beginnt, bevor die vorherige grün ist.**
+**Kleinste Bausteine zuerst, das Gerüst zuletzt. Gebaut wird überlappend, gemergt der Reihe nach — je Welle ein PR.**
 
 | Welle | Komponenten | Stand |
 |---|---|---|
 | 0 | Primitive, Rollen, Grundklassen | steht |
-| 1 | Button, Pill, Avatar, Progress, FontIcon | läuft |
-| 2 | Felder, Checkbox, Select, Formular | Formulare sind der Großteil der Oberfläche |
+| 1 | Button, Pill, Avatar, Progress, FontIcon | auf master bis auf Avatar/Progress/Icon (Review) |
+| 2 | Felder, Checkbox, Select, Formular | ein Feldrahmen für alle; Fehler ist `aria-invalid` — dasselbe Attribut für Auge und Screenreader |
 | 3 | Tabelle, Baum, Menü, Toolbar, Reiter | Datendarstellung und Navigation |
 | 4 | Dialog, Fenster, Drawer, Snackbar, Shell | Gerüst und Overlays |
 | 5 | Kalender, Farbwahl, Medien, Dashboard | fachlich, zuletzt |

@@ -1430,6 +1430,39 @@ das 1-em-Maß — sichtbar nur bei `theme:`-Bildern, nicht bei Font-Glyphen.
 lesen, dass `components.css` keine `font-size` enthält, und dass Specimen und Vertrag die vier Stufen,
 das Bild-Icon ohne Inline-Breite und die Attribute zeigen.
 
+### Wellen überlappen, gemergt wird der Reihe nach
+
+**Der Befund (30.09.).** Ein PR wartet etwa drei Tage auf den Review; die Regel „Keine Welle beginnt,
+bevor die vorherige grün ist“ reiht vier Wellen hintereinander, und das ganze System soll bis Ende der
+Woche ab 05.10. stehen.
+
+**Entschieden:** **Keine Welle wird gemergt, bevor die vorherige gemergt ist** — gebaut wird gestapelt.
+Welle n+1 zweigt vom Branch der Welle n ab, solange diese im Review liegt, und wird nach deren Merge auf
+master umgestellt (wie Avatar auf Pill). Der Zweck der alten Regel bleibt: Muster aus Welle n fließen in
+Welle n+1, weil diese auf ihrem Stand baut. Je Welle **ein** PR, die Commits nach Gruppen geordnet.
+
+### Formulare: ein Feldrahmen, Zustände als Attribute
+
+**Der Befund.** Text, Zahl, Datum und Select teilen sich eine Selektorliste; DropdownSelect,
+SegmentedChoice, OptionChips und der Radio bauen den Rahmen je selbst nach. Fehler und Warnung sind
+Klassen (`--error`, `--warning`); `aria-invalid` wird gesetzt, aber von keiner Regel gelesen, und
+DropdownSelect hat keinen Fehlerzustand. Der Feldrand misst im Dunkelmodus 1,38:1, der Radio ist
+Browser-Standard, der Link im Lesemodus Browser-Blau (1,29:1).
+
+**Entschieden** (Spec `docs/superpowers/specs/2026-09-30-welle-2-formulare-design.md`):
+
+| Achse | Regel |
+|---|---|
+| Rahmen | eine Klasse `tl-field` am Eingabeelement bzw. an der Wurzel des DropdownSelect: `surface-field`, `border-control` (Gate 3,0), `size-control`, `radius-sm`, Fokus aus `base.css` |
+| Fehler | `aria-invalid="true"`, wo ARIA es erlaubt, sonst `data-tl-state~="error"` — das CSS liest das Attribut, das auch der Screenreader braucht |
+| Warnung | `data-tl-state~="warning"`; ARIA kennt keine Warnung |
+| Schreibgeschützt | kein Zustand, ein anderes Element: `tl-field-value`, Text mit Ellipse, als Link `text-link` |
+| Auswahl | Checkbox, Radio, Schalter aus Tokens (`appearance: none`); gewählt ist, was `aria-checked`/`aria-pressed` trägt; der gleitende Marker der SegmentedChoice fällt |
+| Einzelwert | trägt er eine Rolle, erscheint er als Pill — eine Rolle, die beim Wählen verschwindet, ist keine Rolle |
+| Symbole | Pfeil, Löschen, Suche, Griff sind `ThemeIcon` in `tl-icon-sm`, keine Textzeichen |
+
+**Neu im Paket, ohne Control:** Alert, Badge, Divider, Skeleton. Controls entstehen, wenn eine Ansicht sie braucht.
+
 ## Befunde aus dem Specimen
 
 ### Inter trägt nur zwei Gewichte
