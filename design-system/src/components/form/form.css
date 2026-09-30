@@ -39,6 +39,12 @@
   grid-row: 1;
 }
 
+/* Meldung und Hilfe stehen unter der Beschriftung, nicht in der schmalen Spalte des Kästchens. */
+.tl-form-field--after > .tl-form-field__message,
+.tl-form-field--after > .tl-form-field__help-text {
+  grid-column: 2;
+}
+
 .tl-form-field--full {
   grid-column: 1 / -1;
 }
@@ -104,8 +110,11 @@
 
 /* --- Gruppe ------------------------------------------------------------------------ */
 
+/* Eine Gruppe im mehrspaltigen Layout behält dessen Spalten: sie und ihr Körper sind Subgrids. Steht sie
+   außerhalb eines Rasters, ist subgrid ein einspaltiges Raster. */
 .tl-form-group {
   display: grid;
+  grid-template-columns: subgrid;
   gap: var(--tl-space-sm);
   min-width: 0;
 }
@@ -126,6 +135,7 @@
 }
 
 .tl-form-group__header {
+  grid-column: 1 / -1;
   display: flex;
   align-items: center;
   gap: var(--tl-space-xs);
@@ -160,6 +170,13 @@
 .tl-form-group__actions {
   display: flex;
   gap: var(--tl-space-2xs);
+}
+
+.tl-form-group__body {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  gap: var(--tl-space-md);
 }
 
 .tl-form-group__body[hidden] {

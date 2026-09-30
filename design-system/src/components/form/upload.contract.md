@@ -12,11 +12,14 @@ Vom Server über `useTLState()`.
 
 | Control | Schlüssel | Typ | Bedeutung |
 |---|---|---|---|
-| `TLFileUpload` (`ReactFileUploadControl`), `TLBinaryField` | `status` | string | `idle` oder `received`: die Datei ist eingegangen. Den Zustand „lädt hoch“ hält der Client selbst. |
+| `TLFileUpload` (`ReactFileUploadControl`), `TLBinaryField` (`ReactBinaryFieldControl`) | `status` | string | `idle` oder `received`: die Datei ist eingegangen. Den Zustand „lädt hoch“ hält der Client selbst. |
 | `TLFileUpload`, `TLBinaryField` | `error` | string, optional | Text des Fehlers beim letzten Hochladen: `tl-file-upload__status` mit `role="alert"`. |
 | `TLFileUpload`, `TLBinaryField` | `accept` | string, optional | Filter der erlaubten MIME-Typen, am verborgenen `input type="file"`. |
-| `TLFileUpload` | `maxSize` | number, optional | Höchstgröße des Hochladens in Byte, vom Server geprüft. |
-| `TLBinaryField` | `hasData`, `fileName`, `editable` | boolean, string, boolean | Ob eine Datei da ist, ihr Name, ob das Feld bearbeitbar ist; sonst nur der Verweis zum Herunterladen. |
+| `TLFileUpload`, `TLBinaryField` | `maxSize` | number, optional | Höchstgröße des Hochladens in Byte, vom Server geprüft. |
+| `TLBinaryField` (`ReactBinaryFieldControl`) | `hasData` | boolean | Ob eine Datei zum Herunterladen da ist; sonst „Keine Datei“. |
+| `TLBinaryField` | `fileName` | string | Vorgeschlagener Dateiname des Herunterladens. |
+| `TLBinaryField` | `dataRevision` | number | Zähler, der bei jedem Ersetzen der Daten steigt; der Client hängt ihn an die Abruf-Adresse, um Zwischenspeicher zu umgehen. |
+| `TLBinaryField` | `editable` | boolean | Aus `ReactFormFieldControl`: bearbeitbar; sonst nur der Verweis zum Herunterladen. |
 | `TLUploadButton` (`ReactUploadButtonControl`) | `accept` | string, optional | Filter am verborgenen `input type="file"`; `*` heißt kein Filter. |
 | `TLUploadButton` | `multiple` | boolean, optional | Mehrere Dateien auf einmal. |
 | `TLUploadButton` | `label`, `image`, `disabled`, `displayMode`, `appearance`, `tone`, `size` | wie `TLButton` | Geerbt von `ReactButtonControl`; der Knopf sieht aus wie jeder `tl-button`. |

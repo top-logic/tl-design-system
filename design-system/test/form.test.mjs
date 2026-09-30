@@ -70,3 +70,20 @@ test('die Warnung steht vor dem Fehler, der Einklappknopf zeigt nur aktiviert', 
   assert.ok(declarationsOf(form, '.tl-form-group__toggle:where(:not(:disabled)):hover'), 'Hover nicht auf Aktiviertes begrenzt');
   assert.doesNotMatch(ohne, /\.tl-form-group__toggle:hover/);
 });
+
+test('Gruppen behalten die Spalten des Layouts, --after setzt Meldungen in Spalte 2', () => {
+  const body = declarationsOf(form, '.tl-form-group__body') ?? '';
+  assert.match(body, /grid-template-columns:\s*subgrid/);
+  assert.match(body, /grid-column:\s*1 \/ -1/);
+  assert.match(declarationsOf(form, '.tl-form-group') ?? '', /grid-template-columns:\s*subgrid/);
+  assert.match(declarationsOf(form, '.tl-form-group__header') ?? '', /grid-column:\s*1 \/ -1/);
+  assert.match(declarationsOf(form, '.tl-form-field--after > .tl-form-field__message') ?? '', /grid-column:\s*2/);
+  assert.match(declarationsOf(form, '.tl-form-field--after > .tl-form-field__help-text') ?? '', /grid-column:\s*2/);
+});
+
+test('die Beschriftung ist ein div; das label trägt nur den Text, kein Knopf darin', () => {
+  const html = readComponent('form', 'form.spec.html');
+  assert.doesNotMatch(html, /<label[^>]*class="tl-form-field__label[ "]/);
+  for (const m of html.matchAll(/<label\b[^>]*>([\s\S]*?)<\/label>/g))
+    assert.doesNotMatch(m[1], /<button/, 'Knopf im label');
+});

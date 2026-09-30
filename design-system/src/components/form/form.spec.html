@@ -38,33 +38,33 @@
     <div class="tl-form-layout specimen__grid">
 
       <div class="tl-form-field tl-form-field--side">
-        <label class="tl-form-field__label tl-type-label" for="f-plain">
-          <span class="tl-form-field__label-text">Name</span>
-        </label>
+        <div class="tl-form-field__label tl-type-label">
+          <label class="tl-form-field__label-text" for="f-plain">Name</label>
+        </div>
         <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="f-plain" value="Anna Berger"></div>
       </div>
 
       <div class="tl-form-field tl-form-field--side">
-        <label class="tl-form-field__label tl-type-label" for="f-required">
-          <span class="tl-form-field__label-text">Kostenstelle</span>
+        <div class="tl-form-field__label tl-type-label">
+          <label class="tl-form-field__label-text" for="f-required">Kostenstelle</label>
           <span class="tl-form-field__required" aria-hidden="true">*</span>
-        </label>
+        </div>
         <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="f-required" aria-required="true" placeholder="Pflichtfeld"></div>
       </div>
 
       <div class="tl-form-field tl-form-field--side">
-        <label class="tl-form-field__label tl-type-label" for="f-help">
-          <span class="tl-form-field__label-text">Kürzel</span>
+        <div class="tl-form-field__label tl-type-label">
+          <label class="tl-form-field__label-text" for="f-help">Kürzel</label>
           <button type="button" class="tl-button tl-button--ghost tl-button--sm" aria-label="Hilfe zu Kürzel"><i class="tl-icon-sm bi bi-question-circle" aria-hidden="true"></i></button>
-        </label>
+        </div>
         <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="f-help" value="ABE" aria-describedby="f-help-text"></div>
         <div class="tl-form-field__help-text tl-type-label" id="f-help-text">Drei Buchstaben, eindeutig je Mandant.</div>
       </div>
 
       <div class="tl-form-field tl-form-field--side">
-        <label class="tl-form-field__label tl-type-label" for="f-error">
-          <span class="tl-form-field__label-text">E-Mail</span>
-        </label>
+        <div class="tl-form-field__label tl-type-label">
+          <label class="tl-form-field__label-text" for="f-error">E-Mail</label>
+        </div>
         <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="f-error" value="anna.berger@" aria-invalid="true" aria-describedby="f-error-msg"></div>
         <div class="tl-form-field__message tl-type-label" id="f-error-msg" role="alert">
           <i class="tl-icon-sm bi bi-exclamation-circle" aria-hidden="true"></i>
@@ -73,49 +73,63 @@
       </div>
 
       <div class="tl-form-field tl-form-field--side">
-        <label class="tl-form-field__label tl-type-label" for="f-warning">
-          <span class="tl-form-field__label-text">Telefon</span>
-        </label>
+        <div class="tl-form-field__label tl-type-label">
+          <label class="tl-form-field__label-text" for="f-warning">Telefon</label>
+        </div>
         <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="f-warning" value="12345" data-tl-state="warning" aria-describedby="f-warning-msg"></div>
         <div class="tl-form-field__message tl-type-label" id="f-warning-msg" aria-live="polite">
           <i class="tl-icon-sm bi bi-exclamation-triangle" aria-hidden="true"></i>
           <span>Ohne Vorwahl, möglicherweise unvollständig.</span>
         </div>
+        <div class="tl-form-field__message tl-type-label" aria-live="polite">
+          <i class="tl-icon-sm bi bi-exclamation-triangle" aria-hidden="true"></i>
+          <span>Nummer wird nur im Inland geprüft.</span>
+        </div>
       </div>
 
       <div class="tl-form-field tl-form-field--side" data-tl-state="dirty">
-        <label class="tl-form-field__label tl-type-label" for="f-dirty">
-          <span class="tl-form-field__label-text">Abteilung</span>
-          <span class="tl-form-field__dirty" role="img" aria-label="Geändert"></span>
-        </label>
+        <div class="tl-form-field__label tl-type-label">
+          <label class="tl-form-field__label-text" for="f-dirty">Abteilung</label>
+          <span class="tl-form-field__dirty" aria-hidden="true"></span>
+        </div>
         <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="f-dirty" value="Entwicklung"></div>
       </div>
 
       <div class="tl-form-field tl-form-field--top">
-        <label class="tl-form-field__label tl-type-label" for="f-top">
-          <span class="tl-form-field__label-text">Bemerkung, Label oben</span>
-        </label>
+        <div class="tl-form-field__label tl-type-label">
+          <label class="tl-form-field__label-text" for="f-top">Bemerkung, Label oben</label>
+        </div>
         <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="f-top" value="Text"></div>
       </div>
 
       <div class="tl-form-field tl-form-field--after">
-        <label class="tl-form-field__label tl-type-label" for="f-after">
-          <span class="tl-form-field__label-text">Aktiv, Label nach dem Kästchen</span>
-        </label>
+        <div class="tl-form-field__label tl-type-label">
+          <label class="tl-form-field__label-text" for="f-after">Aktiv, Label nach dem Kästchen</label>
+        </div>
         <div class="tl-form-field__input"><input type="checkbox" class="tl-checkbox" id="f-after" checked></div>
       </div>
 
+      <div class="tl-form-field tl-form-field--after">
+        <div class="tl-form-field__label tl-type-label">
+          <label class="tl-form-field__label-text" for="f-after-error">Bedingungen akzeptiert, mit Fehler</label>
+          <span class="tl-form-field__required" aria-hidden="true">*</span>
+        </div>
+        <div class="tl-form-field__input"><input type="checkbox" class="tl-checkbox" id="f-after-error" aria-required="true" aria-invalid="true" aria-describedby="f-after-error-msg"></div>
+        <div class="tl-form-field__message tl-type-label" id="f-after-error-msg" role="alert">
+          <i class="tl-icon-sm bi bi-exclamation-circle" aria-hidden="true"></i>
+          <span>Bitte bestätigen, um fortzufahren.</span>
+        </div>
+      </div>
+
       <div class="tl-form-field tl-form-field--hidden">
-        <label class="tl-form-field__label tl-type-label tl-visually-hidden" for="f-hidden">
-          <span class="tl-form-field__label-text">Suche</span>
-        </label>
+        <label class="tl-visually-hidden" for="f-hidden">Suche</label>
         <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="f-hidden" placeholder="Label unsichtbar, nur für Screenreader"></div>
       </div>
 
       <div class="tl-form-field tl-form-field--side tl-form-field--full">
-        <label class="tl-form-field__label tl-type-label" for="f-full">
-          <span class="tl-form-field__label-text">Volle Zeile</span>
-        </label>
+        <div class="tl-form-field__label tl-type-label">
+          <label class="tl-form-field__label-text" for="f-full">Volle Zeile</label>
+        </div>
         <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="f-full" value="Geht über alle Spalten"></div>
       </div>
 
@@ -126,15 +140,17 @@
           <div class="tl-form-group__actions"><button type="button" class="tl-button tl-button--ghost tl-button--sm">Bearbeiten</button></div>
         </div>
         <div class="tl-form-group__body" id="g-open-body">
-          <div class="tl-form-layout specimen__grid">
-            <div class="tl-form-field tl-form-field--side">
-              <label class="tl-form-field__label tl-type-label" for="g-street"><span class="tl-form-field__label-text">Straße</span></label>
-              <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="g-street" value="Hauptstraße 1"></div>
+          <div class="tl-form-field tl-form-field--side">
+            <div class="tl-form-field__label tl-type-label">
+              <label class="tl-form-field__label-text" for="g-street">Straße</label>
             </div>
-            <div class="tl-form-field tl-form-field--side">
-              <label class="tl-form-field__label tl-type-label" for="g-city"><span class="tl-form-field__label-text">Ort</span></label>
-              <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="g-city" value="Stuttgart"></div>
+            <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="g-street" value="Hauptstraße 1"></div>
+          </div>
+          <div class="tl-form-field tl-form-field--side">
+            <div class="tl-form-field__label tl-type-label">
+              <label class="tl-form-field__label-text" for="g-city">Ort</label>
             </div>
+            <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="g-city" value="Stuttgart"></div>
           </div>
         </div>
       </div>
@@ -146,7 +162,9 @@
         </div>
         <div class="tl-form-group__body" id="g-closed-body" hidden>
           <div class="tl-form-field tl-form-field--side">
-            <label class="tl-form-field__label tl-type-label" for="g-iban"><span class="tl-form-field__label-text">IBAN</span></label>
+            <div class="tl-form-field__label tl-type-label">
+              <label class="tl-form-field__label-text" for="g-iban">IBAN</label>
+            </div>
             <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="g-iban"></div>
           </div>
         </div>
@@ -158,7 +176,9 @@
         </div>
         <div class="tl-form-group__body">
           <div class="tl-form-field tl-form-field--side">
-            <label class="tl-form-field__label tl-type-label" for="g-mail"><span class="tl-form-field__label-text">E-Mail</span></label>
+            <div class="tl-form-field__label tl-type-label">
+              <label class="tl-form-field__label-text" for="g-mail">E-Mail</label>
+            </div>
             <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="g-mail" value="anna@example.org"></div>
           </div>
         </div>
@@ -168,11 +188,15 @@
         <h3 class="tl-field-list__title tl-type-heading-sm">Feldliste</h3>
         <div class="tl-field-list__fields">
           <div class="tl-field-list__item tl-form-field tl-form-field--top">
-            <label class="tl-form-field__label tl-type-label" for="l-one"><span class="tl-form-field__label-text">Erstes Feld</span></label>
+            <div class="tl-form-field__label tl-type-label">
+              <label class="tl-form-field__label-text" for="l-one">Erstes Feld</label>
+            </div>
             <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="l-one" value="Eins"></div>
           </div>
           <div class="tl-field-list__item tl-form-field tl-form-field--top">
-            <label class="tl-form-field__label tl-type-label" for="l-two"><span class="tl-form-field__label-text">Zweites Feld</span></label>
+            <div class="tl-form-field__label tl-type-label">
+              <label class="tl-form-field__label-text" for="l-two">Zweites Feld</label>
+            </div>
             <div class="tl-form-field__input"><input class="tl-field tl-type-body" id="l-two" value="Zwei"></div>
           </div>
         </div>

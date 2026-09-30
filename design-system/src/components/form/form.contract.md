@@ -16,11 +16,11 @@ Vom Server über `useTLState()`, aus `ReactFormFieldChromeControl`, `ReactFormGr
 
 | Schlüssel | Typ | Bedeutung |
 |---|---|---|
-| `label` | string | Text der Beschriftung, in `tl-form-field__label-text`. |
+| `label` | string | Text der Beschriftung: das `label` `tl-form-field__label-text`, das per `for` auf die Eingabe zeigt. |
 | `required` | boolean | Pflichtfeld: Stern `tl-form-field__required` (`aria-hidden`) an der Beschriftung, die Eingabe trägt `aria-required="true"`. Im Lesemodus kein Stern. |
 | `error` | string, optional | Text des Fehlers, `null` ohne Fehler: `tl-form-field__message` mit `role="alert"`. |
 | `errorIcon` | string, optional | Kodiertes ThemeImage vor dem Fehlertext (`ThemeIcon` in `tl-icon-sm`). |
-| `warnings` | Liste von string, optional | Warnungen, nur ohne Fehler: `tl-form-field__message` mit `aria-live="polite"`, eine Zeile je Warnung. |
+| `warnings` | Liste von string, optional | Warnungen, nur ohne Fehler: jede Warnung ist ein eigenes `tl-form-field__message` mit `aria-live="polite"`, mit Icon und Text. |
 | `warningIcon` | string, optional | Kodiertes ThemeImage vor jeder Warnung. |
 | `helpText` | string, optional | Hilfetext: ein Hilfeknopf (`tl-button tl-button--ghost tl-button--sm`) in der Beschriftung blendet `tl-form-field__help-text` ein und aus. |
 | `hasTooltip` | boolean | Die Beschriftung bietet einen reichen Tooltip, den der Server unter dem Schlüssel `tooltip` hält. |
@@ -99,10 +99,10 @@ Schrift setzt das Control von außen: `tl-type-label` an der Beschriftung und de
 
 | Attribut | Wann |
 |---|---|
-| `data-tl-state="dirty"` | `dirty`, an der Wurzel `tl-form-field`. Der Punkt trägt `role="img"` und einen `aria-label`. |
+| `data-tl-state="dirty"` | `dirty`, an der Wurzel `tl-form-field`. Der Punkt ist `aria-hidden="true"`. |
 | `aria-required="true"` | `required`, an der Eingabe; der sichtbare Stern ist `aria-hidden="true"`. |
 | `role="alert"` | `error`, an `tl-form-field__message`. |
-| `aria-live="polite"` | `warnings`, an `tl-form-field__message`. Der Fehler verdrängt die Warnung: steht ein Fehler, rendert keine Warnung. |
+| `aria-live="polite"` | `warnings`, je Warnung an einem eigenen `tl-form-field__message`. Der Fehler verdrängt die Warnung: steht ein Fehler, rendert keine Warnung. |
 | `aria-invalid="true"` | `hasError` an der Eingabe — das Feld zeichnet den Rand selbst (`field.contract.md`). |
 | `aria-expanded` | am `tl-form-group__toggle`: `true` offen, `false` eingeklappt; dazu `aria-controls` auf den Körper. |
 | `hidden` | am `tl-form-group__body`, wenn `collapsed`. |
@@ -115,15 +115,15 @@ Klassen:
 | Klasse | Element |
 |---|---|
 | `tl-form-field` | Wurzel des Feldrahmens; `--side`, `--top`, `--after`, `--hidden`, `--full` |
-| `tl-form-field__label` | `label` mit Text, Stern, Punkt und Hilfeknopf |
-| `tl-form-field__label-text` | der Beschriftungstext, endet mit Ellipse |
-| `tl-form-field__required` | der Pflichtstern |
-| `tl-form-field__dirty` | der Geändert-Punkt, nur sichtbar unter `data-tl-state="dirty"` |
+| `tl-form-field__label` | `div` um Beschriftung, Stern, Punkt und Hilfeknopf; kein `label`, denn ein `button` darf nicht in einem `label` stehen und fließt sonst in den Namen der Eingabe |
+| `tl-form-field__label-text` | das `label for="…"` mit dem Beschriftungstext, endet mit Ellipse |
+| `tl-form-field__required` | der Pflichtstern, `aria-hidden="true"`, im `tl-form-field__label` neben dem Text |
+| `tl-form-field__dirty` | der Geändert-Punkt, `aria-hidden="true"`, nur sichtbar unter `data-tl-state="dirty"` |
 | `tl-form-field__input` | der Platz der Eingabe |
-| `tl-form-field__message` | Fehler oder Warnung |
+| `tl-form-field__message` | der Fehler oder je eine Warnung |
 | `tl-form-field__help-text` | der Hilfetext |
 | `tl-form-group` | Wurzel der Gruppe; `--separator`, `--outlined`, `--full` |
-| `tl-form-group__header`, `__toggle`, `__title`, `__actions`, `__body` | Kopfzeile, Einklappknopf (`button`), Überschrift, Knöpfe, Körper |
+| `tl-form-group__header`, `__toggle`, `__title`, `__actions`, `__body` | Kopfzeile, Einklappknopf (`button`), Überschrift, Knöpfe, Körper; die Felder stehen unmittelbar im Körper, Gruppe und Körper sind Subgrids und behalten die Spalten des Layouts |
 | `tl-form-layout` | das Raster; `--fill` für ein Formular mit füllender Region; Element `__empty` |
 | `tl-field-list` | die Feldliste; Elemente `__title`, `__fields`, `__item` |
 
