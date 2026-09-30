@@ -149,7 +149,7 @@ Merge-Reihenfolge im PR vorgeschlagen: erst !1694, dann !1695 auf master rebasen
 
 Jetzt:
 
-0. **Welle 2 als PR [!1740](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1740) gegen master (30.09. 14:49, Head `ed8ea63828`, Bernhard Reviewer).** Push kam von Hendrik (die Sandbox erreicht den Schlüsselbund nicht). Offen: Jenkins-Build abwarten, Sichtprüfung in der PR-Instanz (`http://docker:80NN/CWS_29617_design_system_welle_2/`), Review-Runde; Ledger `.superpowers/sdd/2026-09-30-welle-2-formulare/progress.md` bleibt bis zum Merge.
+0. **Welle 2 als PR [!1740](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1740) gegen master (30.09. 14:49, Head `ed8ea63828`, Bernhard Reviewer).** Push kam von Hendrik (die Sandbox erreicht den Schlüsselbund nicht). **Sichtprüfung 30.09. auf `docker:8017` erledigt, hell und dunkel, alles wie entschieden:** Feldränder sichtbar, Fokusring, Pflichtstern, Fehlerzustand (roter Rand, Meldung mit Icon), Checkbox/Tri-State/Radio aus Tokens, Selects mit Icons, Select-Popup liegt im Dialog über dem Backdrop, Suchfeld-Icon mittig, gewählter Filterwert als Pill, Pill in der 120-px-Zelle mit Ellipse, gewählter Chip als Marke, schreibgeschützte Checkboxen lesbar, Upload- und Hilfe-Knopf. Nicht prüfbar in der Demo: kompakte Dichte (kein Schalter; Specimen deckt sie), Eigentümer-Link (Spalte nicht eingeblendet), Ziehen im Mehrfach-Select. Danach master (#29680) in den Branch gemergt (`3c87200bbb`), Push durch Hendrik, Review neu angefordert.
 
 1. **Welle 2 (Formulare) ist gebaut, der PR !1740 nach Hendriks Freigabe.** Paket `e8f1221..0c10c7d` auf `main`
    (Tasks 1–7 samt Kontrast-Nachzügen 5a und 7a, Gates 224/224), Engine-Branch `CWS/CWS_29617_design_system_welle_2`
