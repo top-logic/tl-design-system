@@ -237,8 +237,10 @@
   border-radius: var(--tl-radius-round);
 }
 
-.tl-checkbox:hover,
-.tl-radio:hover {
+/* Kein Zeigen auf Deaktiviertem. :where hält die Spezifität bei (0,2,0), damit Angekreuzt, Fehler und
+   Warnung weiter über dem Zeigen stehen. */
+.tl-checkbox:where(:not(:disabled)):hover,
+.tl-radio:where(:not(:disabled)):hover {
   border-color: var(--tl-border-emphasis);
 }
 
@@ -302,15 +304,17 @@
 
 /* --- Zustände ----------------------------------------------------------------- */
 
-/* Warnung vor Fehler: gleiche Spezifität, der Fehler steht später und gewinnt, wenn beide gesetzt sind. */
+/* Deaktiviert schlägt Fehler und Warnung: ein deaktiviertes Control trägt keinen Prüfzustand. Am
+   Element selbst gewinnt :disabled durch die Reihenfolge, in Gruppen meiden die Regeln :disabled.
+   Warnung vor Fehler: gleiche Spezifität, der Fehler steht später und gewinnt, wenn beide gesetzt sind. */
 .tl-checkbox[data-tl-state~="warning"],
-.tl-choice-group[data-tl-state~="warning"] .tl-radio {
+.tl-choice-group[data-tl-state~="warning"] .tl-radio:not(:disabled) {
   border-color: var(--tl-status-warning-border);
 }
 
 .tl-checkbox[aria-invalid="true"],
 .tl-radio[aria-invalid="true"],
-.tl-choice-group[aria-invalid="true"] .tl-radio {
+.tl-choice-group[aria-invalid="true"] .tl-radio:not(:disabled) {
   border-color: var(--tl-status-error-border);
 }
 
@@ -372,7 +376,7 @@
   cursor: pointer;
 }
 
-.tl-segmented__segment:hover {
+.tl-segmented__segment:where(:not(:disabled)):hover {
   background: var(--tl-surface-interactive-hover);
 }
 
@@ -418,7 +422,7 @@
   cursor: pointer;
 }
 
-.tl-chip:hover {
+.tl-chip:where(:not(:disabled)):hover {
   background: var(--tl-surface-interactive-hover);
 }
 
@@ -427,13 +431,13 @@
   background: var(--tl-surface-brand-subtle);
 }
 
-/* Warnung vor Fehler: der Fehler steht später und gewinnt. */
-.tl-chip-group[data-tl-state~="warning"] .tl-chip {
+/* Warnung vor Fehler: der Fehler steht später und gewinnt. Deaktivierte Chips bleiben ohne Prüfzustand. */
+.tl-chip-group[data-tl-state~="warning"] .tl-chip:not(:disabled) {
   border-color: var(--tl-status-warning-border);
 }
 
-.tl-chip-group[aria-invalid="true"] .tl-chip,
-.tl-chip-group[data-tl-state~="error"] .tl-chip {
+.tl-chip-group[aria-invalid="true"] .tl-chip:not(:disabled),
+.tl-chip-group[data-tl-state~="error"] .tl-chip:not(:disabled) {
   border-color: var(--tl-status-error-border);
 }
 

@@ -32,7 +32,11 @@ test('Fehler liest aria-invalid und data-tl-state, Warnung data-tl-state, Deakti
   assert.match(declarationsOf(css, '.tl-field:disabled') ?? '', /surface-disabled/);
   // Ohne Kommentare vergleichen — der Kopfkommentar nennt die Warnung schon, vor jeder Regel.
   const regeln = css.replace(/\/\*[\s\S]*?\*\//g, '');
-  assert.ok(regeln.indexOf('data-tl-state~="warning"') < regeln.indexOf('aria-invalid="true"'), 'Warnung muss vor dem Fehler stehen, damit der Fehler gewinnt');
+  const warnung = regeln.indexOf('data-tl-state~="warning"');
+  const fehler = regeln.indexOf('aria-invalid="true"');
+  assert.ok(warnung >= 0, 'data-tl-state~="warning" fehlt');
+  assert.ok(fehler >= 0, 'aria-invalid="true" fehlt');
+  assert.ok(warnung < fehler, 'Warnung muss vor dem Fehler stehen, damit der Fehler gewinnt');
 });
 
 test('der Lesewert endet mit Ellipse und lässt seine Kinder schrumpfen', () => {

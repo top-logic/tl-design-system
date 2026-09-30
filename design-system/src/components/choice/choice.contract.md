@@ -76,6 +76,10 @@ gesetzt; die Auswahl hat keine Schriftregel.
 | `disabled` | heute setzt es kein Zustand des Formularmodells (es gibt keinen Schlüssel `disabled`); die Regeln `:disabled` stehen für Kundenmodule und spätere Zustände. |
 | `:focus-visible` | den Ring liefert `base.css`; die Auswahl setzt und entfernt keinen Fokusstil. |
 
+Deaktiviert schlägt Fehler und Warnung: ein `disabled` Kästchen, Radio, Segment oder Chip zeigt keinen
+Fehler- oder Warnrand, auch wenn seine Gruppe `aria-invalid="true"` bzw. `data-tl-state` trägt, und
+kein Zeigen.
+
 Bei `editable: false` rendern `TLBooleanChoice`, `TLSegmentedChoice` und `TLOptionChips` den
 Lesewert (`tl-field-value`, siehe `field.contract.md`), Optionen mit `link` als Link. `TLCheckbox`
 zeigt heute ein deaktiviertes Kästchen.

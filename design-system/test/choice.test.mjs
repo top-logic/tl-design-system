@@ -37,14 +37,35 @@ test('gewählt ist ein Attribut: aria-checked am Segment, aria-pressed am Chip',
 });
 
 test('Fehler an Gruppen: aria-invalid an radiogroup, data-tl-state an group', () => {
-  assert.ok(declarationsOf(css, '.tl-choice-group[aria-invalid="true"] .tl-radio'), 'radiogroup-Fehler fehlt');
+  assert.ok(declarationsOf(css, '.tl-choice-group[aria-invalid="true"] .tl-radio:not(:disabled)'), 'radiogroup-Fehler fehlt');
   assert.ok(declarationsOf(css, '.tl-segmented[aria-invalid="true"]'), 'Segmente als radiogroup');
-  assert.ok(declarationsOf(css, '.tl-chip-group[data-tl-state~="error"] .tl-chip'), 'Chip-Gruppe (role=group) fehlt');
+  assert.ok(declarationsOf(css, '.tl-chip-group[data-tl-state~="error"] .tl-chip:not(:disabled)'), 'Chip-Gruppe (role=group) fehlt');
   // Ohne Kommentare vergleichen; je Block steht die Warnung vor dem Fehler, damit der Fehler gewinnt.
   const regeln = css.replace(/\/\*[\s\S]*?\*\//g, '');
-  for (const b of ['.tl-checkbox', '.tl-choice-group', '.tl-segmented', '.tl-chip-group'])
-    assert.ok(regeln.indexOf(`${b}[data-tl-state~="warning"]`) < regeln.indexOf(`${b}[aria-invalid="true"]`),
-      `${b}: Warnung muss vor dem Fehler stehen, damit der Fehler gewinnt`);
+  for (const b of ['.tl-checkbox', '.tl-choice-group', '.tl-segmented', '.tl-chip-group']) {
+    const warnung = regeln.indexOf(`${b}[data-tl-state~="warning"]`);
+    const fehler = regeln.indexOf(`${b}[aria-invalid="true"]`);
+    assert.ok(warnung >= 0, `${b}[data-tl-state~="warning"] fehlt`);
+    assert.ok(fehler >= 0, `${b}[aria-invalid="true"] fehlt`);
+    assert.ok(warnung < fehler, `${b}: Warnung muss vor dem Fehler stehen, damit der Fehler gewinnt`);
+  }
+});
+
+test('Deaktiviert schlägt Fehler und Warnung, und Deaktiviertes zeigt kein Zeigen', () => {
+  for (const s of ['.tl-choice-group[data-tl-state~="warning"] .tl-radio:not(:disabled)',
+    '.tl-choice-group[aria-invalid="true"] .tl-radio:not(:disabled)',
+    '.tl-chip-group[data-tl-state~="warning"] .tl-chip:not(:disabled)',
+    '.tl-chip-group[aria-invalid="true"] .tl-chip:not(:disabled)',
+    '.tl-chip-group[data-tl-state~="error"] .tl-chip:not(:disabled)'])
+    assert.ok(declarationsOf(css, s), `Gruppenregel ohne :not(:disabled): ${s}`);
+  // Keine Gruppenregel eines Prüfzustands trifft ein Kind ohne Wächter.
+  const regeln = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  for (const m of regeln.matchAll(/\.tl-(choice|chip)-group\[(aria-invalid|data-tl-state)[^\]]*\] \.tl-[a-z-]+[^,{]*/g))
+    assert.match(m[0].trim(), /:not\(:disabled\)$/, `Gruppenregel ohne :not(:disabled): ${m[0].trim()}`);
+  for (const s of ['.tl-checkbox:where(:not(:disabled)):hover', '.tl-radio:where(:not(:disabled)):hover',
+    '.tl-segmented__segment:where(:not(:disabled)):hover', '.tl-chip:where(:not(:disabled)):hover'])
+    assert.ok(declarationsOf(css, s), `Zeigen ohne Wächter: ${s}`);
+  assert.doesNotMatch(regeln, /(checkbox|radio|segment|chip):hover/, 'ungeschütztes :hover');
 });
 
 test('die Trefferfläche ist eine Control-Höhe und folgt der Dichte', () => {
