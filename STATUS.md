@@ -1,6 +1,6 @@
 # Stand
 
-**Letzte Sitzung:** 2026-09-29 (!1695 zweiter master-Merge mit Konflikt; wartet auf Bernhards Approval) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-09-30 (!1710 gemerged; Welle 2 beginnt) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -30,8 +30,8 @@ gepostet — Rücksprache mit Bernhard erwartet; Wiki „Übersicht“ §2b nach
 `0c359e1`). **Gruppe A ist fertig:** Branch `CWS/CWS_29617_design_system_ui_paket` von master, `@Key` an
 `ClientResources.Config.getResources()`, `TestClientResources` 4/4 (Override, Remove, Kundenskript nach unserem,
 `requires` auf entfernten Eintrag ist ein Fehler), Modul 395/395, `messages_en` erzeugt, Review Approved
-(`d3c33be37f..532e5f1895`); PR [!1710](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1710) auf master,
-Bernhard Reviewer (Request gesetzt). Ledger `.superpowers/sdd/2026-09-25-ui-paket/progress.md`.
+(`d3c33be37f..532e5f1895`); PR [!1710](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1710) **gemerged am 30.09.**
+(Head `532e5f1895`, Branch bleibt für die Gruppen B/C/E stehen). Ledger `.superpowers/sdd/2026-09-25-ui-paket/progress.md`.
 Gruppen B, C, E warten auf den Merge von !1698 (msgbuf 1.2.3). Gruppen B/C/E warten auf den Merge von !1698
 (blockiert auf msgbuf 1.2.3).
 
@@ -157,7 +157,8 @@ Jetzt:
    `ThemeIcon.encoded`) — noch in !1695 oder in Welle 2.
 2. Nicht geprüft, offen: AppBar-Kollaps bei Platzmangel, AppBar auf `surface-layer`, `ButtonTone.DANGER`
    (kein Aufrufer — `setTone` einmal setzen).
-3. Welle 1 abschließen: nach den Merges Ratsche gegen master, Welle-1-Abschnitt in altlast.md; dann Welle 2 (Eingabefelder, Select) planen — Befunde stehen in altlast.md „Sichtbare Befunde“.
+3. **Welle 2 planen (Task 13, läuft seit 30.09.)** — Brainstorming, Spec, Plan auf `main`.
+4. Welle 1 abschließen: nach den Merges Ratsche gegen master, Welle-1-Abschnitt in altlast.md; dann Welle 2 (Eingabefelder, Select) planen — Befunde stehen in altlast.md „Sichtbare Befunde“.
 
 Das Repo liegt jetzt unter `TopLogic/tl-design-system`; Wiki (Home, Übersicht, Anleitung Komponenten mit
 Claude, Regeldatei) ist der Einstieg für Bernhard, `docs/*.md` die gepflegte Quelle.
