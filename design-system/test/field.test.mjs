@@ -45,6 +45,11 @@ test('der Lesewert endet mit Ellipse und lässt seine Kinder schrumpfen', () => 
   assert.match(declarationsOf(css, '.tl-field-value > *') ?? '', /min-width:\s*0/);
 });
 
+test('der mehrzeilige Lesewert stellt seine Zeilen untereinander, der Link-Lesewert ist unterstrichen', () => {
+  assert.match(declarationsOf(css, '.tl-field-value--multiline') ?? '', /flex-direction:\s*column/);
+  assert.match(declarationsOf(css, 'a.tl-field-value') ?? '', /text-decoration:\s*underline/);
+});
+
 test('tl-visually-hidden steht in base.css, ohne Maß-Literal', () => {
   const base = readFileSync(new URL('../dist/base.css', import.meta.url), 'utf8');
   const d = declarationsOf(base, '.tl-visually-hidden');
@@ -58,13 +63,13 @@ test('das Feld-Specimen zeigt jeden Zustand, jede Form, beide Flächen und eine 
   const html = readComponent('field', 'field.spec.html');
   assert.deepEqual(specimenProblems(html), []);
   for (const s of ['aria-invalid="true"', 'data-tl-state="warning"', 'disabled', 'placeholder=', 'tl-field--multiline',
-    'tl-field-group__icon', 'tl-field-group__action', 'tl-field-value', 'tl-pill', 'specimen__cell', 'surface-layer', 'surface-overlay'])
+    'tl-field-group__icon', 'tl-field-group__action', 'tl-field-value', 'tl-field-value--multiline', 'tl-pill', 'specimen__cell', 'surface-layer', 'surface-overlay'])
     assert.ok(html.includes(s), `Specimen zeigt ${s} nicht`);
 });
 
 test('der Feld-Vertrag nennt jedes Token, jede Klasse und jedes Zustandsattribut', () => {
   const md = readComponent('field', 'field.contract.md');
   const names = [...varsOf(css), 'tl-field', 'tl-field--multiline', 'tl-field-group', 'tl-field-value',
-    'aria-invalid', 'data-tl-state', 'disabled', 'aria-required', 'hasError', 'hasWarnings', 'editable'];
+    'tl-field-value--multiline', 'aria-invalid', 'data-tl-state', 'disabled', 'aria-required', 'hasError', 'hasWarnings', 'editable'];
   assert.deepEqual(missingInContract(md, names), []);
 });

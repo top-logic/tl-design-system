@@ -68,7 +68,7 @@ Zusätze je Control:
 | Icon und Endknopf | Farbe `--tl-icon-secondary`; Lage `--tl-space-control-x`, `--tl-space-2xs`, Innenabstand `--tl-space-xs`; Endknopf beim Zeigen `--tl-surface-interactive-hover` |
 | reservierter Platz im Feld | Icon: `--tl-space-control-x` + `--tl-size-icon-sm` + `--tl-space-xs`. Endknopf: seine Fläche (`--tl-space-2xs` + 2 × `--tl-space-xs` + `--tl-size-icon-sm`) plus eine Lücke `--tl-space-xs` |
 | Lesewert | Text `--tl-text-primary`, Abstand `--tl-space-xs` |
-| Lesewert als Link | `--tl-text-link`, `--tl-text-link-hover` |
+| Lesewert als Link | `--tl-text-link`, `--tl-text-link-hover`; unterstrichen |
 
 Schrift: Klasse `.tl-type-body` am Feld, von außen gesetzt; `tl-field` hat keine Schriftregel.
 Rand-Rollen halten am Gate 3,0 auf `surface-field` und jeder umgebenden Fläche (`surface-base`,
@@ -86,7 +86,14 @@ Rand-Rollen halten am Gate 3,0 auf `surface-field` und jeder umgebenden Fläche 
 | `:focus-visible` | den Ring liefert `base.css`; das Feld setzt und entfernt keinen Fokusstil. |
 
 Bei `editable: false` rendert kein Eingabefeld, sondern der Lesewert: ein `span` (als Link ein `a`)
-mit `tl-field-value`, der Text darin in `tl-field-value__text`.
+mit `tl-field-value`, der Text darin in `tl-field-value__text`. Ein mehrzeiliger Text rendert ein
+`div` mit `tl-field-value tl-field-value--multiline` und je Zeile ein `tl-field-value__text`; eine
+leere Zeile behält ihre Höhe. Ein Link-Lesewert ist unterstrichen — Farbe allein kennzeichnet keinen
+Link.
+
+Die Feldgruppe hat **einen** Endplatz: solange Text steht und `clearable` gilt, ersetzt der
+Löschknopf den Öffnen-Link. Icon und Endknopf ändern nur die Klasse der Gruppe, nicht die Lage des
+Feldes im DOM, damit das Feld beim Tippen den Fokus behält.
 
 Klassen:
 
@@ -96,9 +103,10 @@ Klassen:
 | `tl-field--multiline` | das `textarea` bei `multiline` |
 | `tl-field-group` | `span` um Feld mit Icon oder Endknopf; das Feld darin trägt Rahmen und Fokusring |
 | `tl-field-group__icon` | `span` mit dem Icon vor dem Wert |
-| `tl-field-group__action` | `button type="button"` am Ende: Löschen oder Öffnen, mit `aria-label` |
+| `tl-field-group__action` | am Ende, genau einer: `button type="button"` (Löschen) oder `a` (Öffnen), mit `aria-label` |
 | `tl-field-value` | der Lesewert bei `editable: false` |
-| `tl-field-value__text` | der Text im Lesewert, endet mit Ellipse |
+| `tl-field-value--multiline` | der mehrzeilige Lesewert (`div`): die Zeilen untereinander |
+| `tl-field-value__text` | der Text im Lesewert, endet mit Ellipse; im mehrzeiligen eine Zeile |
 
 ## Konformität
 

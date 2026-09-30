@@ -74,7 +74,7 @@ const MODIFIERS = {
   'tl-progress': new Set([]), // Unbestimmt ist ein Zustand (aria-busy), keine Klasse.
   'tl-field': new Set(['multiline']), // Fehler, Warnung, Schreibschutz sind Attribute bzw. ein anderes Element.
   'tl-field-group': new Set([]),
-  'tl-field-value': new Set([]),
+  'tl-field-value': new Set(['multiline']),
   'tl-checkbox': new Set(['switch']),
   'tl-radio': new Set([]),
   'tl-choice': new Set([]),
