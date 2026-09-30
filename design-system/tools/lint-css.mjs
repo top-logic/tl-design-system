@@ -89,6 +89,10 @@ const MODIFIERS = {
   'tl-field-list': new Set([]),
   'tl-upload': new Set([]),
   'tl-file-upload': new Set([]),
+  'tl-alert': new Set(['error', 'warning', 'success', 'info']), // Bedeutung ist Pflicht, kein Zustand.
+  'tl-badge': new Set([]),
+  'tl-divider': new Set(['vertical']),
+  'tl-skeleton': new Set([]),
 };
 
 export function knownVariables(css) {

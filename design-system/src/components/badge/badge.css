@@ -1,0 +1,18 @@
+/* Badge — docs/skalen.md „Status: vier Bedeutungen“ (die Marke, nicht eine Bedeutung).
+   Ein Zähler an einem Icon oder Reiter: Markenfläche, abgeleitete Beschriftung, Pille. Die Schrift kommt
+   von außen (tl-type-label-strong tl-nums), damit Ziffern tabellarisch stehen und die Höhe aus der
+   Typo-Klasse nicht doppelt festgelegt wird. Ein Badge trägt nur Ziffern oder ein Kürzel — Text gehört
+   in eine Pill. */
+
+.tl-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: var(--tl-size-icon-sm);
+  height: var(--tl-size-icon-sm);
+  padding: 0 var(--tl-space-2xs);
+  border-radius: var(--tl-radius-full);
+  background: var(--tl-surface-brand);
+  color: var(--tl-text-on-brand);
+}

@@ -1,0 +1,28 @@
+/* Alert — docs/skalen.md „Status: vier Bedeutungen“.
+   Eine Meldung, die im Fluss steht: Icon, Titel, Text. Die Bedeutung ist ein Modifier und Pflicht —
+   es gibt keinen Alert ohne Bedeutung, darum hat die Basisklasse keine Fläche. Fläche und Linie tragen
+   die Bedeutung (subtle, border), der Text bleibt text-primary (4,5 auf jeder subtle-Fläche), allein das
+   Icon liest status-text (3,0 als Nicht-Text). Die dickere Linie steht am Zeilenanfang. */
+
+.tl-alert {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--tl-space-xs);
+  padding: var(--tl-space-sm) var(--tl-space-md);
+  border: var(--tl-border-width-sm) solid transparent;
+  border-inline-start-width: var(--tl-border-width-accent);
+  border-radius: var(--tl-radius-md);
+  color: var(--tl-text-primary);
+}
+
+.tl-alert--error { background: var(--tl-status-error-subtle); border-color: var(--tl-status-error-border); }
+.tl-alert--warning { background: var(--tl-status-warning-subtle); border-color: var(--tl-status-warning-border); }
+.tl-alert--success { background: var(--tl-status-success-subtle); border-color: var(--tl-status-success-border); }
+.tl-alert--info { background: var(--tl-status-info-subtle); border-color: var(--tl-status-info-border); }
+
+.tl-alert--error .tl-alert__icon { color: var(--tl-status-error-text); }
+.tl-alert--warning .tl-alert__icon { color: var(--tl-status-warning-text); }
+.tl-alert--success .tl-alert__icon { color: var(--tl-status-success-text); }
+.tl-alert--info .tl-alert__icon { color: var(--tl-status-info-text); }
+
+.tl-alert__body { min-width: 0; }

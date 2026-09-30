@@ -3,6 +3,36 @@
    https://git.top-logic.com/TopLogic/tl-design-system/wiki */
 /* Components, one section per file under src/components/. */
 
+/* --- alert/alert.css --- */
+/* Alert — docs/skalen.md „Status: vier Bedeutungen“.
+   Eine Meldung, die im Fluss steht: Icon, Titel, Text. Die Bedeutung ist ein Modifier und Pflicht —
+   es gibt keinen Alert ohne Bedeutung, darum hat die Basisklasse keine Fläche. Fläche und Linie tragen
+   die Bedeutung (subtle, border), der Text bleibt text-primary (4,5 auf jeder subtle-Fläche), allein das
+   Icon liest status-text (3,0 als Nicht-Text). Die dickere Linie steht am Zeilenanfang. */
+
+.tl-alert {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--tl-space-xs);
+  padding: var(--tl-space-sm) var(--tl-space-md);
+  border: var(--tl-border-width-sm) solid transparent;
+  border-inline-start-width: var(--tl-border-width-accent);
+  border-radius: var(--tl-radius-md);
+  color: var(--tl-text-primary);
+}
+
+.tl-alert--error { background: var(--tl-status-error-subtle); border-color: var(--tl-status-error-border); }
+.tl-alert--warning { background: var(--tl-status-warning-subtle); border-color: var(--tl-status-warning-border); }
+.tl-alert--success { background: var(--tl-status-success-subtle); border-color: var(--tl-status-success-border); }
+.tl-alert--info { background: var(--tl-status-info-subtle); border-color: var(--tl-status-info-border); }
+
+.tl-alert--error .tl-alert__icon { color: var(--tl-status-error-text); }
+.tl-alert--warning .tl-alert__icon { color: var(--tl-status-warning-text); }
+.tl-alert--success .tl-alert__icon { color: var(--tl-status-success-text); }
+.tl-alert--info .tl-alert__icon { color: var(--tl-status-info-text); }
+
+.tl-alert__body { min-width: 0; }
+
 /* --- avatar/avatar.css --- */
 /* Avatar — docs/skalen.md „Avatar: die Farbe ist eine Kategorie“.
    Ein Kreis für eine Person oder ein Objekt: das Bild, wo es eines gibt; sonst die Initialen auf
@@ -50,6 +80,26 @@
 .tl-avatar--category-6 { background: var(--tl-category-6-subtle); border-color: var(--tl-category-6-border); }
 .tl-avatar--category-7 { background: var(--tl-category-7-subtle); border-color: var(--tl-category-7-border); }
 .tl-avatar--category-8 { background: var(--tl-category-8-subtle); border-color: var(--tl-category-8-border); }
+
+/* --- badge/badge.css --- */
+/* Badge — docs/skalen.md „Status: vier Bedeutungen“ (die Marke, nicht eine Bedeutung).
+   Ein Zähler an einem Icon oder Reiter: Markenfläche, abgeleitete Beschriftung, Pille. Die Schrift kommt
+   von außen (tl-type-label-strong tl-nums), damit Ziffern tabellarisch stehen und die Höhe aus der
+   Typo-Klasse nicht doppelt festgelegt wird. Ein Badge trägt nur Ziffern oder ein Kürzel — Text gehört
+   in eine Pill. */
+
+.tl-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: var(--tl-size-icon-sm);
+  height: var(--tl-size-icon-sm);
+  padding: 0 var(--tl-space-2xs);
+  border-radius: var(--tl-radius-full);
+  background: var(--tl-surface-brand);
+  color: var(--tl-text-on-brand);
+}
 
 /* --- button/button.css --- */
 /* Button — docs/skalen.md „Button: vier Erscheinungen, eine Tönung, keine Größe“.
@@ -446,6 +496,23 @@
   background: var(--tl-surface-disabled);
   color: var(--tl-text-disabled);
   cursor: not-allowed;
+}
+
+/* --- divider/divider.css --- */
+/* Divider — docs/skalen.md „Rahmen: vier Stufen“.
+   Eine Trennlinie trennt nur und schuldet keinen Kontrast: border-separator. Horizontal ist die
+   Standardform (auch an <hr>); vertikal steht sie in einer Zeile und streckt sich auf deren Höhe. */
+
+.tl-divider {
+  margin: 0;
+  border: 0;
+  border-top: var(--tl-border-width-sm) solid var(--tl-border-separator);
+}
+
+.tl-divider--vertical {
+  align-self: stretch;
+  border-top: 0;
+  border-inline-start: var(--tl-border-width-sm) solid var(--tl-border-separator);
 }
 
 /* --- field/field.css --- */
@@ -1131,4 +1198,26 @@ a.tl-field-value:hover {
 
 .tl-select__status[role="alert"] {
   color: var(--tl-status-error-text);
+}
+
+/* --- skeleton/skeleton.css --- */
+/* Skeleton — docs/skalen.md „Progress: ein Anteil, kein Urteil“ (die vertiefte Fläche).
+   Platzhalter für Inhalt, der lädt: die neutrale, vertiefte Fläche, die auch die Spur des Progress
+   trägt, und ein langsamer Puls. Maße setzt der Ort, an dem er steht (Zeile, Block, Kreis); das
+   Stylesheet kennt nur Mindesthöhe und Radius. Der globale Reduced-Motion-Schalter aus base.css beendet
+   die Animation nach einem Durchlauf, darum gibt es hier keine eigene Regel. `alternate` endet bei
+   opacity 0,5 — deshalb setzt nichts einen Fill-Mode, und die Ruhelage ist opacity 1 (wie beim
+   Progress-Sweep). Der Behälter trägt aria-busy, der Platzhalter ist aria-hidden. */
+
+.tl-skeleton {
+  display: block;
+  min-height: var(--tl-size-icon-sm);
+  border-radius: var(--tl-radius-sm);
+  background: var(--tl-surface-interactive-selected);
+  animation: tl-skeleton-pulse var(--tl-duration-loop) var(--tl-easing-standard) infinite alternate;
+}
+
+@keyframes tl-skeleton-pulse {
+  from { opacity: 1; }
+  to { opacity: 0.5; }
 }
