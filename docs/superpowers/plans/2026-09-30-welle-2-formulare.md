@@ -110,7 +110,7 @@ In `kontrastPaare` vor `for (const bg of GRUENDE_FOKUS)`:
   paar('border-interactive', 'surface-brand-subtle', 3.0); // gewählter Chip, gewähltes Segment
 ```
 
-**Nicht** in diese Task: `surface-brand` gegen `surface-overlay` (dunkel 2,31 — der angekreuzte Kasten und der Primär-Button im Dialog). Das ist der offene Punkt „`surface-overlay` ins Kontrast-Gate (Welle 4)“ aus STATUS; er betrifft die Markenfläche, nicht die Ränder, und bleibt dort. In `docs/skalen.md` beim Nachziehen (Step 6) als gemessenen Wert nennen.
+**Nicht** in diese Task: `surface-brand` gegen `surface-overlay` — gemessen hell 5,84, dunkel 4,53, kein Befund (eine frühere Zahl 2,31 war eine Messung der hellen Marke gegen den dunklen Overlay und ist falsch). Der offene Punkt „`surface-overlay` ins Kontrast-Gate (Welle 4)“ aus STATUS bleibt eine Gate-Frage, kein Wertproblem.
 
 Die bestehende Zeile `paar('border-control', 'surface-base', 3.0);` streichen (jetzt doppelt).
 
@@ -154,9 +154,7 @@ In „Rahmen: vier Stufen“: Zeile `border-control` auf `#888B90` / `#75787D`, 
 Feldfläche und nicht im Dialog. Gemessen verfehlte er hell auf `surface-field` (2,94) und dunkel auf
 `surface-overlay` (2,79). Jetzt prüft die Paarliste jeden Rand eines Felds gegen fünf Gründe —
 Feldfläche, Grund, Panel, verschachteltes Panel, Dialog —, und `border-control`, `status-error-border`,
-`status-warning-border` sind je um die kleinste Stufe verschoben, die alle fünf trägt. Gemessen, aber
-offen gelassen für Welle 4 (Dialog): `surface-brand` auf `surface-overlay` dunkel 2,31 — der angekreuzte
-Kasten und der Primär-Button im Dialog heben sich dort nur über Haken bzw. Beschriftung ab.
+`status-warning-border` sind je um die kleinste Stufe verschoben, die alle fünf trägt. 
 ```
 
 In „Semantik“ die Zeilen `border` für Fehler und Warnung auf die neuen Werte und Verhältnisse. `STATUS.md`: eine Zeile unter Welle 2.
