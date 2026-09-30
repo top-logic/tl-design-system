@@ -64,7 +64,7 @@ const EASING_WORDS = /\b(ease-in-out|ease-in|ease-out|ease|linear)\b/;
 // Punkt 9: Attributselektoren, die auf Klassen zielen, umgehen das BEM/Prefix-Gate.
 const CLASS_ATTR_SELECTOR = /\[class[*^~]=/;
 // Punkt 10: Zustände sind Attribute (:disabled, [aria-pressed], [aria-busy], :focus-visible), nie Klassen.
-const STATE_MODIFIER = /--(active|disabled|loading|hover|focus|focused|pressed|selected|open|closed|checked|busy|invalid|dirty)$/;
+const STATE_MODIFIER = /--(active|disabled|loading|hover|focus|focused|pressed|selected|open|closed|checked|busy|invalid|dirty|immutable|readonly|dragover|dragging|highlighted|collapsed)$/;
 // Punkt 11: Die Modifier eines Blocks sind entschieden (docs/skalen.md), nicht gewachsen.
 const KATEGORIEN = [1, 2, 3, 4, 5, 6, 7, 8].map((k) => `category-${k}`);
 const MODIFIERS = {
@@ -72,6 +72,9 @@ const MODIFIERS = {
   'tl-pill': new Set(['brand', 'error', 'warning', 'success', 'info', ...KATEGORIEN]),
   'tl-avatar': new Set(['sm', 'lg', 'xl', ...KATEGORIEN]),
   'tl-progress': new Set([]), // Unbestimmt ist ein Zustand (aria-busy), keine Klasse.
+  'tl-field': new Set(['multiline']), // Fehler, Warnung, Schreibschutz sind Attribute bzw. ein anderes Element.
+  'tl-field-group': new Set([]),
+  'tl-field-value': new Set([]),
 };
 
 export function knownVariables(css) {

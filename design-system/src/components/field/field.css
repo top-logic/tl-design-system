@@ -1,0 +1,127 @@
+/* Feld — docs/skalen.md „Formulare: ein Feldrahmen, Zustände als Attribute“.
+   Ein Rahmen für jedes Eingabefeld: Text, Passwort, Zahl, Datum, Select, die Wurzel des
+   DropdownSelect. Der Rahmen folgt der Dichte; die Schrift setzt das Control von außen
+   (tl-type-body), das Feld hat keine Schriftregel. Zustände sind Attribute: aria-invalid ist der
+   Fehler — dasselbe Attribut für Screenreader und Bild —, data-tl-state~="error" dort, wo ARIA
+   aria-invalid nicht erlaubt, data-tl-state~="warning" die Warnung, :disabled der deaktivierte
+   Zustand. Schreibgeschützt ist kein Zustand, sondern ein anderes Element: tl-field-value. */
+
+.tl-field {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: var(--tl-size-control);
+  margin: 0;
+  padding: var(--tl-space-control-y) var(--tl-space-control-x);
+  border: var(--tl-border-width-sm) solid var(--tl-border-control);
+  border-radius: var(--tl-radius-sm);
+  background: var(--tl-surface-field);
+  color: var(--tl-text-primary);
+}
+
+.tl-field::placeholder {
+  color: var(--tl-text-placeholder);
+}
+
+.tl-field:hover {
+  border-color: var(--tl-border-emphasis);
+}
+
+.tl-field[aria-invalid="true"],
+.tl-field[data-tl-state~="error"] {
+  border-color: var(--tl-status-error-border);
+}
+
+.tl-field[data-tl-state~="warning"] {
+  border-color: var(--tl-status-warning-border);
+}
+
+.tl-field:disabled {
+  border-color: var(--tl-border-disabled);
+  background: var(--tl-surface-disabled);
+  color: var(--tl-text-disabled);
+  cursor: not-allowed;
+}
+
+.tl-field--multiline {
+  resize: vertical;
+}
+
+/* --- Feld mit Icon oder Endknopf ------------------------------------------------- */
+
+/* Das echte Eingabefeld trägt den Rahmen und den Fokusring; Icon und Endknopf liegen darüber, das
+   Feld reserviert ihren Platz. */
+.tl-field-group {
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+
+.tl-field-group__icon,
+.tl-field-group__action {
+  position: absolute;
+  inset-block: 0;
+  display: flex;
+  align-items: center;
+  color: var(--tl-icon-secondary);
+}
+
+.tl-field-group__icon {
+  inset-inline-start: var(--tl-space-control-x);
+  pointer-events: none;
+}
+
+.tl-field-group__action {
+  inset-inline-end: var(--tl-space-2xs);
+  margin-block: var(--tl-space-2xs);
+  padding: 0 var(--tl-space-xs);
+  border: 0;
+  border-radius: var(--tl-radius-sm);
+  background: transparent;
+  cursor: pointer;
+}
+
+.tl-field-group__action:hover {
+  background: var(--tl-surface-interactive-hover);
+}
+
+.tl-field-group:has(> .tl-field-group__icon) > .tl-field {
+  padding-inline-start: calc(var(--tl-space-control-x) + var(--tl-size-icon-sm) + var(--tl-space-xs));
+}
+
+.tl-field-group:has(> .tl-field-group__action) > .tl-field {
+  padding-inline-end: calc(var(--tl-size-icon-sm) + var(--tl-space-sm) + var(--tl-space-2xs));
+}
+
+/* --- Lesewert ---------------------------------------------------------------------- */
+
+/* Schreibgeschützt: kein Rahmen, eine Zeile, Ellipse. Kinder (Pill, Icon) dürfen schrumpfen, damit
+   ein langer Wert in einer schmalen Zelle mit Ellipse endet statt hart abgeschnitten zu werden. */
+.tl-field-value {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tl-space-xs);
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--tl-text-primary);
+}
+
+.tl-field-value > * {
+  min-width: 0;
+}
+
+.tl-field-value__text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+a.tl-field-value {
+  color: var(--tl-text-link);
+}
+
+a.tl-field-value:hover {
+  color: var(--tl-text-link-hover);
+}

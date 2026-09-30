@@ -64,11 +64,14 @@ DropdownSelect baut den Rahmen nicht mehr nach.
 | Text / Platzhalter | `text-primary` / `text-placeholder` |
 | Schrift | `tl-type-body`, von außen gesetzt wie beim Button; `tl-field` hat keine Schriftregel |
 | Fokus | der Ring aus `base.css`, `:focus-visible`; `:focus` und `outline: none` fallen |
-| Icon im Feld, Löschen-Knopf | `ThemeIcon` in `tl-icon-sm`; Elemente `tl-field__icon`, `tl-field__clear` |
+| Icon im Feld, Endknopf (Löschen, Öffnen) | `ThemeIcon` in `tl-icon-sm`; Wrapper `tl-field-group`, Elemente `tl-field-group__icon`, `tl-field-group__action` |
 
 Die Varianten des Textfelds (`--multiline`, `--withIcon`, `--clearable`) werden `tl-field--multiline`; Icon
-und Löschen brauchen keinen Modifier, das Feld reserviert den Platz über `:has(> .tl-field__icon)`. Das
-Feld mit Icon oder Löschen-Knopf ist ein Wrapper `span.tl-field` mit einem rahmenlosen `input.tl-field__input`.
+und Endknopf brauchen keinen Modifier. Den Rahmen trägt auch hier das echte `input.tl-field`: ein Wrapper
+`span.tl-field-group` legt Icon (`tl-field-group__icon`) und Endknopf (`tl-field-group__action`) absolut
+darüber, und das Feld reserviert ihren Platz über `.tl-field-group:has(> .tl-field-group__icon) > .tl-field`.
+Ein Wrapper `span.tl-field` mit rahmenlosem Input fällt: der Fokusring läge innen um den Input, und ihn dort
+abzuschalten verlangte ein `outline: none`, das das Gate verbietet.
 
 ### 3b · Zustände sind Attribute, jeder aus einer Quelle
 

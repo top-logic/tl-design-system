@@ -144,3 +144,14 @@ test('am Block tl-button sind nur die entschiedenen Modifier erlaubt', () => {
   assert.equal(lint('.tl-button--large { color: var(--tl-text-primary); }', { known, file: 'button/button.css' })
     .filter((m) => /kein Modifier von tl-button/.test(m)).length, 1);
 });
+
+test('ein Zustand als Modifier des Feldes bricht das Gate — als Zustandswort oder als fremder Modifier', () => {
+  const known = new Set(['--tl-text-primary']);
+  for (const m of ['immutable', 'readonly', 'dragover'])
+    assert.ok(lint(`.tl-field--${m} { color: var(--tl-text-primary); }`, { known, file: 'x.css' })
+      .some((v) => v.includes('Zustand als Modifier')), m);
+  for (const m of ['error', 'warning'])
+    assert.ok(lint(`.tl-field--${m} { color: var(--tl-text-primary); }`, { known, file: 'x.css' })
+      .some((v) => v.includes('kein Modifier von tl-field')), m);
+  assert.deepEqual(lint('.tl-pill--error { color: var(--tl-text-primary); }', { known, file: 'x.css' }), [], 'Bedeutung an der Pill bleibt erlaubt');
+});
