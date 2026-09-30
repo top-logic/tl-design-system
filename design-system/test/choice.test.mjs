@@ -17,7 +17,7 @@ test('choice.css liest genau diese Farbrollen', () => {
   assert.deepEqual(colorVarsOf(css), [
     'border-control', 'border-disabled', 'border-emphasis', 'border-interactive', 'icon-secondary',
     'status-error-border', 'status-warning-border', 'surface-brand', 'surface-brand-hover', 'surface-brand-subtle',
-    'surface-disabled', 'surface-field', 'surface-interactive-hover', 'text-disabled', 'text-on-brand', 'text-primary',
+    'surface-disabled', 'surface-field', 'surface-interactive-hover', 'text-disabled', 'text-on-brand', 'text-on-brand-hover', 'text-primary',
   ]);
 });
 
@@ -39,7 +39,9 @@ test('ein gewählter Chip sieht aus wie ein angekreuztes Kästchen: die Marke al
   const d = declarationsOf(css, '.tl-chip[aria-pressed="true"]') ?? '';
   assert.match(d, /background:\s*var\(--tl-surface-brand\)/);
   assert.match(d, /color:\s*var\(--tl-text-on-brand\)/);
-  assert.match(declarationsOf(css, '.tl-chip[aria-pressed="true"]:where(:not(:disabled)):hover') ?? '', /surface-brand-hover/);
+  const zeigen = declarationsOf(css, '.tl-chip[aria-pressed="true"]:where(:not(:disabled)):hover') ?? '';
+  assert.match(zeigen, /background:\s*var\(--tl-surface-brand-hover\)/);
+  assert.match(zeigen, /color:\s*var\(--tl-text-on-brand-hover\)/);
   assert.match(declarationsOf(css, '.tl-chip:disabled[aria-pressed="true"]') ?? '', /background:\s*var\(--tl-border-disabled\)/);
   // Die Prüfzustände der Gruppe treffen nur ungewählte Chips — ein gewählter trägt die Marke.
   const regeln = css.replace(/\/\*[\s\S]*?\*\//g, '');

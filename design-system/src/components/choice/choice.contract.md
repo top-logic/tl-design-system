@@ -51,7 +51,7 @@ Feldes (`field.contract.md`, Abschnitt Zustand) und gelten hier unverändert. Zu
 | Segmente | Rahmen `--tl-border-control`, `--tl-radius-sm`, `--tl-surface-field`; Segment `--tl-size-control` abzüglich 2 × `--tl-border-width-sm`, Innenabstand `--tl-space-control-x`, Text `--tl-text-primary`; beim Zeigen `--tl-surface-interactive-hover` |
 | Chips | Höhe `--tl-size-control-sm`, Innenabstand `--tl-space-sm`, Lücke `--tl-space-2xs` (auch im Segment zwischen Bild und Label), Ecke `--tl-radius-full`; Gruppe `--tl-space-xs`; beim Zeigen `--tl-surface-interactive-hover` |
 | Gewähltes Segment | Fläche `--tl-surface-brand-subtle`, Rand `--tl-border-interactive` |
-| Gewählter Chip | wie angekreuzt: Fläche und Rand `--tl-surface-brand`, Text `--tl-text-on-brand`; beim Zeigen `--tl-surface-brand-hover` |
+| Gewählter Chip | wie angekreuzt: Fläche und Rand `--tl-surface-brand`, Text `--tl-text-on-brand`; beim Zeigen Fläche `--tl-surface-brand-hover`, Text `--tl-text-on-brand-hover` |
 | Fehler | Rand `--tl-status-error-border` |
 | Warnung | Rand `--tl-status-warning-border` |
 | deaktiviert (vom Kontrast-Gate ausgenommen) | Fläche `--tl-surface-disabled`, Text `--tl-text-disabled`, Rand `--tl-border-disabled`; angekreuzt deaktiviert und gewählter Chip deaktiviert: Fläche `--tl-border-disabled` |

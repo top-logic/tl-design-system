@@ -266,6 +266,7 @@
 .tl-chip[aria-pressed="true"]:where(:not(:disabled)):hover {
   border-color: var(--tl-surface-brand-hover);
   background: var(--tl-surface-brand-hover);
+  color: var(--tl-text-on-brand-hover);
 }
 
 /* Warnung vor Fehler: der Fehler steht später und gewinnt. Den Prüfzustand zeigen nur ungewählte,

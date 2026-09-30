@@ -73,6 +73,13 @@
   cursor: pointer;
 }
 
+/* Der Entfernen-Knopf sitzt in der Pille (size-control-sm, mit Rand). Er ragt um die Randbreite über
+   ihren Inhalt: die Trefferfläche bleibt size-control-sm, die Pille wächst nicht — und mit ihr nicht
+   das Feld über size-control. */
+.tl-select__chip-remove {
+  margin-block: calc(-1 * var(--tl-border-width-sm));
+}
+
 .tl-select__chip-remove:hover,
 .tl-select__clear:hover {
   background: var(--tl-surface-interactive-hover);

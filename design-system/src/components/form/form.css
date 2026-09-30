@@ -95,6 +95,13 @@
   min-height: var(--tl-size-control);
 }
 
+/* Ebenso die Lesewert-Liste von Dropdown, Segmenten und Chips: ihre Pillen sind size-control-sm hoch,
+   die Zeile bleibt size-control. */
+.tl-form-field__input > .tl-select__values {
+  min-height: var(--tl-size-control);
+  align-items: center;
+}
+
 .tl-form-field__message {
   display: flex;
   align-items: start;
