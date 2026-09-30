@@ -1,6 +1,6 @@
 # Stand
 
-**Letzte Sitzung:** 2026-09-28 (Konsolidierung: eine Linie, UI-Paket mit #29643 abgestimmt) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-09-29 (!1695 zweiter master-Merge mit Konflikt; wartet auf Bernhards Approval) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -11,7 +11,7 @@
 Strang 0 schließt Welle 1 (**!1694 gemerged am 28.09.**, Merge-Commit `c38ad05ddd`, Pill-Branch gelöscht; !1695
 steht jetzt auf Basis `master` und ist mergeable; !1695 hat
 Request Changes mit drei Punkten: px im JavaDoc von `IconSize`, `lg` unlesbar, `size="xl"` in der Bild-Demo —
-**umgesetzt 28.09.**: zwei Namensräume — extern ganze Wörter `small|medium|large|x-large` bzw. `small|medium|large|glyph`, im Paket die Skalenkürzel, TSX bildet ab; Commits `01adf297bf..24ff522d42`, Verträge `db443ab`; Antwort im PR, Review bei Bernhard erneut angefordert. **Sichtprüfung 28.09. auf `docker:8012` erledigt, alles wie entschieden:** Avatar `medium` in Kopfzeile und Kommentarkopf (`category-3`, derselbe Name dieselbe Kategorie), `x-large` in der Bild-Demo mit Bild, mit Initialen (`category-1`, `heading-lg`) und leer; Fortschritt bestimmt (2/8, `aria-valuenow`, `tl-nums`) und unbestimmt (`aria-busy`, `tl-progress-sweep` 1,2 s); hell und dunkel; keine alten Klassen im DOM, Icons nur `tl-icon-sm/md`. Bernhard approved 11:07; Merge scheiterte an „out-of-date with base“ (drei Merges auf master am Vormittag), darum master gemerged (`09a39a7ead`), Jenkins grün. 29.09. erneut hinter master mit Konflikt in `TLFormField.tsx` (master-Importe aus #29665 gegen `FontIcon`→`ThemeIcon`); aufgelöst mit master-Importen plus `ThemeIcon`, Merge-Commit `3a8bf043af`, `messages_en`-Gate grün, Review bei Bernhard erneut angefordert. Offen, Altbestand des Branches: `tsc --noEmit` meldet in `TLFormField.tsx` zweimal `string | undefined` an `ThemeIcon.encoded` (Zeilen 146/154), nicht Teil des Vite-Gates. Nebenbefund, Altbestand: Klick in den WYSIWYG-Editor fokussiert die Toolbar, auf master reproduziert → Trac #29691). Strang 1
+**umgesetzt 28.09.**: zwei Namensräume — extern ganze Wörter `small|medium|large|x-large` bzw. `small|medium|large|glyph`, im Paket die Skalenkürzel, TSX bildet ab; Commits `01adf297bf..24ff522d42`, Verträge `db443ab`; Antwort im PR, Review bei Bernhard erneut angefordert. **Sichtprüfung 28.09. auf `docker:8012` erledigt, alles wie entschieden:** Avatar `medium` in Kopfzeile und Kommentarkopf (`category-3`, derselbe Name dieselbe Kategorie), `x-large` in der Bild-Demo mit Bild, mit Initialen (`category-1`, `heading-lg`) und leer; Fortschritt bestimmt (2/8, `aria-valuenow`, `tl-nums`) und unbestimmt (`aria-busy`, `tl-progress-sweep` 1,2 s); hell und dunkel; keine alten Klassen im DOM, Icons nur `tl-icon-sm/md`. Bernhard approved 11:07; Merge scheiterte an „out-of-date with base“ (drei Merges auf master am Vormittag), darum master gemerged (`09a39a7ead`), Jenkins grün. 29.09. erneut hinter master mit Konflikt in `TLFormField.tsx` (master-Importe aus #29665 gegen `FontIcon`→`ThemeIcon`); aufgelöst mit master-Importen plus `ThemeIcon`, Merge-Commit `3a8bf043af`, `messages_en`-Gate grün, **Jenkins grün, Review bei Bernhard erneut angefordert — sein Approval ist das einzige, was zum Merge fehlt.** (Gate-Hinweis: nach einem master-Merge scheitert `check-messages-en.sh` offline, bis die vorgelagerten Module mit Java-Änderungen per `mvn -o install -pl <Liste>` im lokalen Repo liegen — diesmal sieben Module, `HandlerResult.notExecutable` aus #29679 fehlte.) Offen, Altbestand des Branches: `tsc --noEmit` meldet in `TLFormField.tsx` zweimal `string | undefined` an `ThemeIcon.encoded` (Zeilen 146/154), nicht Teil des Vite-Gates. Nebenbefund, Altbestand: Klick in den WYSIWYG-Editor fokussiert die Toolbar, auf master reproduziert → Trac #29691). Strang 1
 verschmilzt das UI-Paket mit Bernhards #29643/!1698 und #29650. Strang 2 ist Welle 2. Nichts Neues, bis ein
 Faden geschlossen ist.
 
@@ -149,10 +149,12 @@ Merge-Reihenfolge im PR vorgeschlagen: erst !1694, dann !1695 auf master rebasen
 
 Jetzt:
 
-1. Bernhards erneutes Approval auf !1694 abwarten, dann mergen; dann !1695 (Avatar + Progress + Icon) auf master
-   rebasen, Basis umstellen, Docker-Instanz sichtprüfen (Kommentarköpfe, Bild-Demo `xl`, Fortschrittsbalken in
-   Objektliste und Long-Job-Demo, unbestimmt mit und ohne Reduced Motion); nach dem Merge Worktree auf `master`, Branch löschen, Ratsche
-   gegen master prüfen, Pill-Absatz in altlast.md als gemerged markieren.
+1. **Bernhards Approval auf !1695 (Head `3a8bf043af`) abwarten, dann mergen** — vorher `git fetch` und prüfen,
+   ob master erneut vorausgelaufen ist (dann noch einmal mergen, englischer PR-Kommentar, `add_reviewers bhu`).
+   Nach dem Merge: Worktree auf `master`, Avatar-Branch löschen, Ratsche gegen master prüfen, Pill- und
+   Avatar/Progress/Icon-Absätze in altlast.md als gemerged markieren (Task 4 des Konsolidierungsplans).
+   Offen zu entscheiden: der `tsc`-Befund in `TLFormField.tsx` (zwei `string | undefined` an
+   `ThemeIcon.encoded`) — noch in !1695 oder in Welle 2.
 2. Nicht geprüft, offen: AppBar-Kollaps bei Platzmangel, AppBar auf `surface-layer`, `ButtonTone.DANGER`
    (kein Aufrufer — `setTone` einmal setzen).
 3. Welle 1 abschließen: nach den Merges Ratsche gegen master, Welle-1-Abschnitt in altlast.md; dann Welle 2 (Eingabefelder, Select) planen — Befunde stehen in altlast.md „Sichtbare Befunde“.
