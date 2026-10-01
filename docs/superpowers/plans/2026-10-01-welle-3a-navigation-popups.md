@@ -737,6 +737,8 @@ cd ../../design-system && node tools/publish-to-worktree.mjs
 cd ../_Working-Tree/tl8-wt-29584 && git add com.top_logic.layout.react/src/main/webapp/style/tl-design-system && git commit -m "Ticket #29617: design system republished from the package (wave 3a: popover, menu, toolbar, tabs, breadcrumb, toggle, icon button)"
 ```
 
+**Im selben Commit** (P4-Fix: der Schrift-Reset steht jetzt in `:where`, die Typo-Klasse am Knopf wirkt — mit `tl-type-label` würden alle Knöpfe auf 12 px schrumpfen): in `react-src/controls/button/ButtonDefaults.tsx:31`, `react-src/controls/TLDropdownSelect.tsx:591` und `react-src/controls/TLHtml.tsx:113` `tl-type-label` → `tl-type-body`; `npm run build` grün; Commit-Betreff ergänzen: „…; buttons read tl-type-body“.
+
 - [ ] **Step 2: `bridge/popover.ts`**
 
 ```ts
