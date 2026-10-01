@@ -10,6 +10,9 @@
 }
 .tl-menu[hidden] { display: none; }
 
+/* Reset ohne Spezifität: die Typo-Klasse am Element gewinnt. */
+:where(.tl-menu__item) { font: inherit; }
+
 .tl-menu__item {
   display: flex;
   align-items: center;
@@ -21,7 +24,6 @@
   border-radius: var(--tl-radius-sm);
   background: transparent;
   color: var(--tl-text-primary);
-  font: inherit;
   text-align: start;
   cursor: pointer;
 }

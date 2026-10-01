@@ -14,6 +14,7 @@ test('tl-menu__item: Zeilenhöhe size-row, Zustand nur als Attribut, In-Kraft ü
   assert.match(declarationsOf(css, '.tl-menu__item'), /min-height:\s*var\(--tl-size-row\)/);
   assert.doesNotMatch(css, /--(focused|active|disabled)\b/);
   assert.doesNotMatch(css, /font-weight/);
+  assert.doesNotMatch(declarationsOf(css, '.tl-menu__item'), /(^|;)\s*font\s*:/);
   const md = readFileSync(new URL('../src/components/menu/menu.contract.md', import.meta.url), 'utf8');
-  assert.deepEqual(missingInContract(md, ['aria-current', 'tl-type-label-strong', 'tl-menu-region', 'data-tl-trigger']), []);
+  assert.deepEqual(missingInContract(md, ['aria-current', 'tl-type-body-strong', 'tl-menu-region', 'data-tl-trigger']), []);
 });

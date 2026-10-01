@@ -48,7 +48,7 @@ Fläche, Beschriftung und Linie je Erscheinung; Hover und Active eine Stufe weit
 | `disabled` (vom Kontrast-Gate ausgenommen) | `--tl-surface-disabled` | `--tl-text-disabled` | `--tl-border-disabled` |
 | `ghost` / `link` + `disabled` (vom Kontrast-Gate ausgenommen) | — | `--tl-text-disabled` | — |
 
-Maße: Höhe `--tl-size-control` (klein `--tl-size-control-sm`), Innenabstand `--tl-space-control-x` (klein `--tl-space-2xs`), Abstand Icon–Text `--tl-space-xs`, Ecke `--tl-radius-sm`. Bewegung: `--tl-duration-fast` mit `--tl-easing-standard`; der Puls von `aria-busy` `--tl-duration-loop`. Icon: Klasse `.tl-icon-sm` neben Text, `.tl-icon-md` allein. Text: Klasse `.tl-type-label`.
+Maße: Höhe `--tl-size-control` (klein `--tl-size-control-sm`), Innenabstand `--tl-space-control-x` (klein `--tl-space-2xs`), Abstand Icon–Text `--tl-space-xs`, Ecke `--tl-radius-sm`. Bewegung: `--tl-duration-fast` mit `--tl-easing-standard`; der Puls von `aria-busy` `--tl-duration-loop`. Icon: Klasse `.tl-icon-sm` neben Text, `.tl-icon-md` allein. Text: Klasse `.tl-type-body`.
 
 `--tl-status-error-subtle` wird vom Button nicht gelesen — die getönte Fläche bleibt dem
 Hinweisstreifen vorbehalten (siehe Kommentarkopf in `button.css`).

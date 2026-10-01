@@ -5,6 +5,9 @@
    Umriss und Ghost füllen sich beim Zeigen: roter Text trägt auf keiner Hover-Fläche 4,5, die
    getönte Fläche status-error-subtle bleibt dem Hinweisstreifen vorbehalten. */
 
+/* Reset ohne Spezifität: die Typo-Klasse am Element gewinnt. */
+:where(.tl-button) { font: inherit; }
+
 .tl-button {
   display: inline-flex;
   align-items: center;
@@ -16,7 +19,6 @@
   border-radius: var(--tl-radius-sm);
   background: transparent;
   color: var(--tl-text-primary);
-  font: inherit;
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;

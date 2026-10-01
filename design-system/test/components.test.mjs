@@ -5,7 +5,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { ratio, AA_TEXT, AA_NON_TEXT } from '../tools/lib/contrast.mjs';
 import { resolve } from '../tools/resolve.mjs';
-import { readGenerated } from './lib/component.mjs';
+import { readGenerated, componentCssFiles } from './lib/component.mjs';
+import { declarations } from '../tools/lib/css.mjs';
 
 const P = JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.url)));
 const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)));
@@ -384,4 +385,14 @@ test('Toggle: offen dreht das Icon, Reduced Motion gilt über base.css', () => {
   const css = readGenerated('toggle', 'toggle.css');
   assert.match(css, /\.tl-toggle\[aria-expanded="true"\] > \.tl-icon-sm\s*\{[^}]*rotate:\s*90deg/);
   assert.match(css, /transition:\s*rotate var\(--tl-duration-fast\) var\(--tl-easing-standard\)/);
+});
+
+test('Schrift-Reset nur in :where — jede tl-type-*-Klasse am Element gewinnt', () => {
+  // Der font-Shorthand setzt Gewicht, Größe und Zeilenhöhe zurück. In einem Komponentenblock hat er
+  // dieselbe Spezifität wie die Typo-Klasse und lädt nach base.css — er schlüge sie.
+  const out = [];
+  for (const [name, css] of componentCssFiles())
+    for (const d of declarations(css))
+      if (d.property === 'font' && !d.selector.startsWith(':where(')) out.push(`${name}:${d.line} ${d.selector}`);
+  assert.deepEqual(out, []);
 });

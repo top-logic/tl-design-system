@@ -55,15 +55,15 @@ Einträge, Kopfzeilen und Trenner werden übersprungen.
 
 Den Fokusring liefert `base.css` über `:focus-visible`; im Menü liegt er innen, weil der Behälter
 scrollt. In Kraft hat kein eigenes Gewicht im Stylesheet: es trägt die Typo-Klasse
-`tl-type-label-strong`.
+`tl-type-body-strong`.
 
 ## Attribute
 
 | Attribut | Wann |
 |---|---|
 | `tl-popover tl-menu` | immer; an der Fläche mit `role="menu"` |
-| `tl-menu__item` | an jedem Eintrag; ein `<button type="button">` mit `role="menuitem"` und `tl-type-label` |
-| `aria-current="true"` | am Eintrag, dessen Befehl in Kraft ist; dazu `tl-type-label-strong` statt `tl-type-label` |
+| `tl-menu__item` | an jedem Eintrag; ein `<button type="button">` mit `role="menuitem"` und `tl-type-body` |
+| `aria-current="true"` | am Eintrag, dessen Befehl in Kraft ist; dazu `tl-type-body-strong` statt `tl-type-body` |
 | `role="menuitemcheckbox"` | statt `menuitem` an einem Umschalter; dazu `aria-checked` |
 | `disabled` | am Eintrag, der nicht gewählt werden kann |
 | `tl-menu__icon` | am Icon des Eintrags, zusammen mit `tl-icon-sm`; `aria-hidden="true"` |
@@ -78,6 +78,6 @@ scrollt. In Kraft hat kein eigenes Gewicht im Stylesheet: es trägt die Typo-Kla
 
 Ein Menü besteht den Vertrag, wenn die Fläche `role="menu"` trägt, jeder Eintrag ein `<button>` mit
 `role="menuitem"` (oder `menuitemcheckbox` mit `aria-checked`) ist, der Eintrag in Kraft
-`aria-current="true"` und `tl-type-label-strong` trägt, die Tastatur oben vollständig wirkt, ein
+`aria-current="true"` und `tl-type-body-strong` trägt, die Tastatur oben vollständig wirkt, ein
 Klick-Auslöser `aria-haspopup="menu"` und `aria-expanded` setzt und im Klassen-Gate keine Klasse ohne
 `tl-`-Präfix hinterlässt.

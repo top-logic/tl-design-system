@@ -24,7 +24,7 @@ Ein Popover ist kein eigenes Control. Es ist die Fläche, die ein Control öffne
 ## Verhalten
 
 - Escape schließt.
-- Ein Klick außerhalb der Fläche und ihres Auslösers schließt.
+- Ein Drücken außerhalb der Fläche und ihres Auslösers schließt.
 - Beim Schließen kehrt der Fokus zum Auslöser zurück.
 - Die Fläche folgt ihrem Anker bei Scroll und Resize.
 - Fehlt der Platz auf der bevorzugten Seite, klappt sie um.
@@ -55,5 +55,5 @@ Ein Popover ist kein eigenes Control. Es ist die Fläche, die ein Control öffne
 ## Konformität
 
 Ein Popover besteht den Vertrag, wenn es im Portal unter `document.body` liegt, `tl-popover` und
-`data-tl-anchored-overlay` trägt, mit Escape und Außenklick schließt, den Fokus an den Auslöser
+`data-tl-anchored-overlay` trägt, mit Escape und Drücken außerhalb schließt, den Fokus an den Auslöser
 zurückgibt und im Klassen-Gate keine Klasse ohne `tl-`-Präfix hinterlässt.
