@@ -8,16 +8,7 @@
 <link rel="stylesheet" href="/dist/tokens.css">
 <link rel="stylesheet" href="/dist/base.css">
 <link rel="stylesheet" href="/dist/components.css">
-<style>
-  .specimen { display: grid; gap: var(--tl-space-lg); padding: var(--tl-space-xl); max-width: 64rem; margin: 0 auto; }
-  .specimen__bar { display: flex; gap: var(--tl-space-sm); align-items: center; }
-  .specimen__panel { background: var(--tl-surface-layer); border: var(--tl-border-width-sm) solid var(--tl-border-separator);
-    border-radius: var(--tl-radius-md); padding: var(--tl-space-md); display: grid; gap: var(--tl-space-sm); }
-  .specimen__base { padding: var(--tl-space-md); display: grid; gap: var(--tl-space-sm); }
-  .specimen__row { display: flex; gap: var(--tl-space-sm); flex-wrap: wrap; align-items: center; }
-  .specimen__row > .tl-type-label:first-child { min-width: 9rem; color: var(--tl-text-secondary); }
-  .specimen__stack { display: flex; gap: var(--tl-space-xs); align-items: center; }
-</style>
+<link rel="stylesheet" href="/specimen/specimen.css">
 </head>
 <body>
 <main class="specimen">
@@ -30,7 +21,7 @@
 
   <!-- Jede Zeile: eine Kategorie, in allen vier Größen mit Initialen. -->
   <template id="rows">
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--flow">
       <span class="tl-type-label">%NAME%</span>
       <span class="tl-avatar tl-avatar--sm %MOD% tl-type-label-strong" role="img" aria-label="%LABEL%" title="%LABEL%">%INI%</span>
       <span class="tl-avatar %MOD% tl-type-body-strong" role="img" aria-label="%LABEL%" title="%LABEL%">%INI%</span>
@@ -44,23 +35,23 @@
 
   <section class="specimen__panel">
     <p class="tl-type-heading-sm">Ohne Namen, mit Bild, in der Zeile</p>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--flow">
       <span class="tl-type-label">ohne Namen</span>
       <span class="tl-avatar tl-avatar--sm" aria-hidden="true"></span>
       <span class="tl-avatar" aria-hidden="true"></span>
       <span class="tl-avatar tl-avatar--lg" aria-hidden="true"></span>
       <span class="tl-avatar tl-avatar--xl" aria-hidden="true"></span>
     </div>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--flow">
       <span class="tl-type-label">mit Bild</span>
       <span class="tl-avatar tl-avatar--sm"><img class="tl-avatar__image" alt="Beispielbild" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Crect width='4' height='3' fill='%2364748b'/%3E%3Ccircle cx='2' cy='1.2' r='.7' fill='%23e2e8f0'/%3E%3C/svg%3E"></span>
       <span class="tl-avatar"><img class="tl-avatar__image" alt="Beispielbild" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Crect width='4' height='3' fill='%2364748b'/%3E%3Ccircle cx='2' cy='1.2' r='.7' fill='%23e2e8f0'/%3E%3C/svg%3E"></span>
       <span class="tl-avatar tl-avatar--lg"><img class="tl-avatar__image" alt="Beispielbild" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Crect width='4' height='3' fill='%2364748b'/%3E%3Ccircle cx='2' cy='1.2' r='.7' fill='%23e2e8f0'/%3E%3C/svg%3E"></span>
       <span class="tl-avatar tl-avatar--xl"><img class="tl-avatar__image" alt="Beispielbild" src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3Crect width='4' height='3' fill='%2364748b'/%3E%3Ccircle cx='2' cy='1.2' r='.7' fill='%23e2e8f0'/%3E%3C/svg%3E"></span>
     </div>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--flow">
       <span class="tl-type-label">im Kommentarkopf</span>
-      <span class="specimen__stack">
+      <span class="specimen__stack specimen__stack--inline">
         <span class="tl-avatar tl-avatar--category-3 tl-type-body-strong" role="img" aria-label="Anna Berg" title="Anna Berg">AB</span>
         <span class="tl-type-body-strong">Anna Berg</span>
         <span class="tl-type-label">vor 3 Minuten</span>

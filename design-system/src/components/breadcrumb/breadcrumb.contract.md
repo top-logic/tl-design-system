@@ -42,7 +42,7 @@ aktueller Seite. Das Breadcrumb hat keine eigene Schrift und keine eigene Fokusr
 
 | Attribut | Wann |
 |---|---|
-| `tl-breadcrumb` | am `<nav>`, mit `aria-label` |
+| `tl-breadcrumb` | am `<nav>`, mit `aria-label` aus dem Schlüssel `js.breadcrumb.label` |
 | `tl-breadcrumb__list` | an der `<ol>` |
 | `tl-breadcrumb__entry` | an jedem `<li>`: Stufe samt ihrem Trenner |
 | `tl-button tl-button--link tl-type-body` | an der Stufe, ein `<button type="button">` |

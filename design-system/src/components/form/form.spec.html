@@ -9,22 +9,15 @@
 <link rel="stylesheet" href="/dist/tokens.css">
 <link rel="stylesheet" href="/dist/base.css">
 <link rel="stylesheet" href="/dist/components.css">
+<link rel="stylesheet" href="/specimen/specimen.css">
 <style>
-  .specimen { display: grid; gap: var(--tl-space-lg); padding: var(--tl-space-xl); max-width: 64rem; margin: 0 auto; }
-  .specimen__bar { display: flex; gap: var(--tl-space-sm); align-items: center; }
-  .specimen__panel { background: var(--tl-surface-layer); border: var(--tl-border-width-sm) solid var(--tl-border-separator);
-    border-radius: var(--tl-radius-md); padding: var(--tl-space-md); display: grid; gap: var(--tl-space-md); }
-  .specimen__base { padding: var(--tl-space-md); display: grid; gap: var(--tl-space-md); }
-  .specimen__overlay { background: var(--tl-surface-overlay); box-shadow: var(--tl-shadow-popover);
-    border-radius: var(--tl-radius-md); padding: var(--tl-space-md); display: grid; gap: var(--tl-space-md); }
   /* Die Spaltenzahl von tl-form-layout setzt im Control ein Inline-Stil (Daten); im Specimen steht sie hier. */
   .specimen__grid { grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr)); }
-  .specimen__row { display: flex; gap: var(--tl-space-sm); align-items: center; flex-wrap: wrap; }
   .specimen__note { color: var(--tl-text-secondary); }
 </style>
 </head>
 <body>
-<main class="specimen">
+<main class="specimen specimen--loose">
   <div class="specimen__bar">
     <a class="tl-type-label" href="/">← Grundklassen</a>
     <span class="tl-type-heading-lg">Formular</span>
@@ -206,7 +199,7 @@
     </div>
 
     <p class="tl-type-heading-sm">Upload</p>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--flow">
       <span class="tl-upload">
         <input type="file" hidden>
         <button type="button" class="tl-button tl-button--secondary"><span class="tl-button__label">Datei wählen</span></button>
@@ -216,7 +209,7 @@
         <button type="button" class="tl-button tl-button--secondary" aria-busy="true" disabled><span class="tl-button__label">Lädt hoch…</span></button>
       </span>
     </div>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--flow">
       <div class="tl-file-upload">
         <input type="file" hidden>
         <button type="button" class="tl-button tl-button--secondary"><i class="tl-button__icon tl-icon-sm bi bi-upload" aria-hidden="true"></i><span class="tl-button__label">Datei wählen</span></button>

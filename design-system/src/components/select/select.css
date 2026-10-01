@@ -101,6 +101,7 @@
   max-height: calc(8 * var(--tl-size-row) + var(--tl-size-control) + 2 * var(--tl-space-xs));
   overflow: hidden;
 }
+.tl-select__popup[hidden] { display: none; }
 
 /* Die Gruppe um das Suchfeld (tl-field-group mit Lupe) trägt den Abstand zur Liste: säße er am Feld,
    würde die Gruppe um ihn höher und das absolut gesetzte Icon rutschte aus der Mitte des Feldes.

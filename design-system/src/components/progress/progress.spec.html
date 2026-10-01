@@ -8,14 +8,8 @@
 <link rel="stylesheet" href="/dist/tokens.css">
 <link rel="stylesheet" href="/dist/base.css">
 <link rel="stylesheet" href="/dist/components.css">
+<link rel="stylesheet" href="/specimen/specimen.css">
 <style>
-  .specimen { display: grid; gap: var(--tl-space-lg); padding: var(--tl-space-xl); max-width: 64rem; margin: 0 auto; }
-  .specimen__bar { display: flex; gap: var(--tl-space-sm); align-items: center; }
-  .specimen__panel { background: var(--tl-surface-layer); border: var(--tl-border-width-sm) solid var(--tl-border-separator);
-    border-radius: var(--tl-radius-md); padding: var(--tl-space-md); display: grid; gap: var(--tl-space-sm); }
-  .specimen__base { padding: var(--tl-space-md); display: grid; gap: var(--tl-space-sm); }
-  .specimen__row { display: grid; grid-template-columns: 9rem 1fr; gap: var(--tl-space-sm); align-items: center; }
-  .specimen__row > .tl-type-label:first-child { color: var(--tl-text-secondary); }
   .specimen__cell { width: 6rem; }
 </style>
 </head>
@@ -30,7 +24,7 @@
 
   <!-- Jede Zeile: ein Anteil, mit Beschriftung. Die Breite der Füllung setzt das Skript als Daten, wie das Control. -->
   <template id="rows">
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--label-sm specimen__row--wide">
       <span class="tl-type-label">%NAME%</span>
       <div class="tl-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="%PERCENT%" aria-valuetext="%LABEL%">
         <span class="tl-progress__track"><span class="tl-progress__fill"></span></span>
@@ -44,20 +38,20 @@
 
   <section class="specimen__panel">
     <p class="tl-type-heading-sm">Unbestimmt, ohne Beschriftung, in einer schmalen Zelle</p>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--label-sm specimen__row--wide">
       <span class="tl-type-label">aria-busy</span>
       <div class="tl-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-busy="true" aria-valuetext="In Arbeit…">
         <span class="tl-progress__track"><span class="tl-progress__fill"></span></span>
         <span class="tl-progress__label tl-type-label">In Arbeit…</span>
       </div>
     </div>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--label-sm specimen__row--wide">
       <span class="tl-type-label">ohne Beschriftung</span>
       <div class="tl-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="60" data-fraction="0.6">
         <span class="tl-progress__track"><span class="tl-progress__fill"></span></span>
       </div>
     </div>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--label-sm specimen__row--wide">
       <span class="tl-type-label">schmale Zelle</span>
       <div class="specimen__cell">
         <div class="tl-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40" aria-valuetext="2 / 5" data-fraction="0.4">

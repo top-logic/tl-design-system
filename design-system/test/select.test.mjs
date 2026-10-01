@@ -50,6 +50,11 @@ test('das Select-Specimen zeigt leer, einzeln mit Pill, mehrfach, offen, laden, 
     'tl-popover tl-select__popup', 'tl-button--icon', 'data-tl-state="highlighted"', 'aria-busy="true"', 'tl-select__status', 'aria-invalid="true"',
     'tl-field-value', 'aria-activedescendant'])
     assert.ok(html.includes(s), `Specimen zeigt ${s} nicht`);
+  // Die Liste führt nur ungewählte Optionen: keine trägt aria-selected="true", jede aria-selected="false".
+  assert.doesNotMatch(html, /aria-selected="true"/);
+  const optionen = [...html.matchAll(/<[^>]*role="option"[^>]*>/g)].map((m) => m[0]);
+  assert.ok(optionen.length > 0, 'Specimen zeigt keine Option');
+  for (const o of optionen) assert.match(o, /aria-selected="false"/, o);
 });
 
 test('der Select-Vertrag nennt Tokens, Klassen, Attribute und die Tastatur', () => {

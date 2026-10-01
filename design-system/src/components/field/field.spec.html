@@ -9,16 +9,8 @@
 <link rel="stylesheet" href="/dist/tokens.css">
 <link rel="stylesheet" href="/dist/base.css">
 <link rel="stylesheet" href="/dist/components.css">
+<link rel="stylesheet" href="/specimen/specimen.css">
 <style>
-  .specimen { display: grid; gap: var(--tl-space-lg); padding: var(--tl-space-xl); max-width: 64rem; margin: 0 auto; }
-  .specimen__bar { display: flex; gap: var(--tl-space-sm); align-items: center; }
-  .specimen__panel { background: var(--tl-surface-layer); border: var(--tl-border-width-sm) solid var(--tl-border-separator);
-    border-radius: var(--tl-radius-md); padding: var(--tl-space-md); display: grid; gap: var(--tl-space-sm); }
-  .specimen__base { padding: var(--tl-space-md); display: grid; gap: var(--tl-space-sm); }
-  .specimen__overlay { background: var(--tl-surface-overlay); box-shadow: var(--tl-shadow-popover);
-    border-radius: var(--tl-radius-md); padding: var(--tl-space-md); display: grid; gap: var(--tl-space-sm); }
-  .specimen__row { display: grid; grid-template-columns: 9rem minmax(0, 24rem); gap: var(--tl-space-sm); align-items: center; }
-  .specimen__row > .tl-type-label:first-child { color: var(--tl-text-secondary); }
   /* 120 px: die schmale Tabellenzelle, in der die Pill heute hart abgeschnitten wird. */
   .specimen__cell { width: 7.5rem; }
   /* 320 px: ein langer Absatz im mehrzeiligen Lesewert muss umbrechen, nicht in einer Ellipse enden. */
@@ -36,35 +28,35 @@
 
   <!-- Jede Zeile: ein Zustand oder eine Form, mit Beschriftung. Das Skript setzt die Zeilen auf jede Fläche. -->
   <template id="rows">
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--label-sm specimen__row--narrow">
       <span class="tl-type-label">Platzhalter</span>
       <input class="tl-field tl-type-body" placeholder="Platzhalter" aria-label="Platzhalter">
     </div>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--label-sm specimen__row--narrow">
       <span class="tl-type-label">Wert</span>
       <input class="tl-field tl-type-body" value="Wert" aria-label="Wert">
     </div>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--label-sm specimen__row--narrow">
       <span class="tl-type-label">aria-invalid</span>
       <input class="tl-field tl-type-body" value="Fehler" aria-invalid="true" aria-label="Fehler">
     </div>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--label-sm specimen__row--narrow">
       <span class="tl-type-label">data-tl-state warning</span>
       <input class="tl-field tl-type-body" value="Warnung" data-tl-state="warning" aria-label="Warnung">
     </div>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--label-sm specimen__row--narrow">
       <span class="tl-type-label">disabled</span>
       <input class="tl-field tl-type-body" value="deaktiviert" disabled aria-label="deaktiviert">
     </div>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--label-sm specimen__row--narrow">
       <span class="tl-type-label">Select</span>
       <select class="tl-field tl-type-body" aria-label="Auswahl"><option>Auswahl</option></select>
     </div>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--label-sm specimen__row--narrow">
       <span class="tl-type-label">mehrzeilig</span>
       <textarea class="tl-field tl-field--multiline tl-type-body" rows="3" aria-label="mehrzeilig">mehrzeilig</textarea>
     </div>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--label-sm specimen__row--narrow">
       <span class="tl-type-label">Icon und Löschen</span>
       <span class="tl-field-group">
         <span class="tl-field-group__icon"><i class="tl-icon-sm bi bi-search" aria-hidden="true"></i></span>
@@ -72,23 +64,23 @@
         <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-type-body" aria-label="Löschen"><i class="tl-icon-sm bi bi-x-lg" aria-hidden="true"></i></button>
       </span>
     </div>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--label-sm specimen__row--narrow">
       <span class="tl-type-label">Lesewert</span>
       <span class="tl-field-value tl-type-body"><span class="tl-field-value__text">Lesewert</span></span>
     </div>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--label-sm specimen__row--narrow">
       <span class="tl-type-label">Lesewert als Link</span>
       <a href="#" class="tl-field-value tl-type-body"><span class="tl-field-value__text">root (Link)</span></a>
     </div>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--label-sm specimen__row--narrow">
       <span class="tl-type-label">Lesewert mehrzeilig</span>
       <div class="tl-field-value tl-field-value--multiline tl-type-body"><span class="tl-field-value__text">Erste Zeile</span><span class="tl-field-value__text">&nbsp;</span><span class="tl-field-value__text">Dritte Zeile nach einer Leerzeile</span></div>
     </div>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--label-sm specimen__row--narrow">
       <span class="tl-type-label">Lesewert mehrzeilig, langer Absatz, 320 px</span>
       <div class="specimen__cell--wide"><div class="tl-field-value tl-field-value--multiline tl-type-body"><span class="tl-field-value__text">Ein langer Absatz im schreibgeschützten Feld: Er steht in einer Zelle von zwanzig rem Breite und muss dort umbrechen, statt nach der ersten Zeile mit einer Ellipse zu enden. Auch ein überlanges Wort wie Donaudampfschifffahrtsgesellschaftskapitänsmütze bricht notfalls mitten im Wort.</span></div></div>
     </div>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--label-sm specimen__row--narrow">
       <span class="tl-type-label">schmale Zelle, 120 px</span>
       <div class="specimen__cell"><span class="tl-field-value tl-type-body"><span class="tl-pill tl-pill--warning"><span class="tl-pill__label">Ein sehr langer Statuswert</span></span></span></div>
     </div>

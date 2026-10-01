@@ -111,7 +111,7 @@ test('die Aktion in der Gruppe ist ein tl-button--icon: tl-field-group__action g
     .filter((f) => readFileSync(new URL(f, src), 'utf8').includes('tl-field-group__action'));
   assert.deepEqual(treffer, []);
   assert.match(declarationsOf(css, '.tl-field-group > .tl-button') ?? '', /inset-inline-end:\s*var\(--tl-space-2xs\)/);
-  assert.match(declarationsOf(css, '.tl-field-group:has(> .tl-button) > .tl-field') ?? '', /padding-inline-end/);
+  assert.match(declarationsOf(css, '.tl-field-group:has(> .tl-button) > .tl-field') ?? '', /padding-inline-end:[^;]*var\(--tl-size-control-sm\)/);
   const md = readComponent('field', 'field.contract.md');
   assert.deepEqual(missingInContract(md, ['tl-button--icon']), []);
 });

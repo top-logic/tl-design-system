@@ -1,7 +1,7 @@
 // Das Klassen-Gate. Jede Regel aus docs/skalen.md, die ein Stylesheet brechen kann.
 import { declarations } from './lib/css.mjs';
 
-const ALLOWED = new Set(['0', '1', 'auto', 'none', '100%', 'currentColor', 'inherit', 'initial', 'transparent',
+const ALLOWED = new Set(['0', '1', 'auto', 'none', '100%', '50%', '-50%', 'currentColor', 'inherit', 'initial', 'transparent',
   'solid', 'hidden', 'visible', 'block', 'flex', 'grid', 'inline-flex', 'contents', 'relative', 'absolute',
   'fixed', 'sticky', 'center', 'start', 'end', 'stretch', 'baseline', 'nowrap', 'wrap', 'ellipsis', 'pointer',
   'default', 'border-box', 'both', 'row', 'column', 'space-between', 'left', 'right', 'inset',
@@ -38,7 +38,9 @@ const NAMED_COLORS = new Set([
 ]);
 
 const COLOR = /#[0-9a-fA-F]{3,8}\b|\b(rgba?|hsla?|oklch|color-mix)\(/;
-const LENGTH = /(^|\s)-?\d*\.?\d+(px|rem|em|%|vh|vw|ch|pt)\b/;
+// Nach `%` liegt keine Wortgrenze — darum eine eigene Alternative, die auf Leerraum, `;`, `)` oder das
+// Wertende schaut. Sonst ginge `width: 37%` unbemerkt durch.
+const LENGTH = /(^|\s)-?\d*\.?\d+(px|rem|em|vh|vw|ch|pt)\b|(^|\s)-?\d*\.?\d+%(?=\s|;|$|\))/;
 // Einheitenlose Literale (Punkt 10): opacity, flex, order und grid-* nehmen bewusst
 // dimensionslose Zahlen entgegen (0.5, 2, -1 …) — das ist keine Maß-Angabe und wird darum
 // nicht verschärft. LENGTH greift ohnehin nur bei einer Einheit, hier nur dokumentiert.

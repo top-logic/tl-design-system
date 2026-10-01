@@ -8,15 +8,7 @@
 <link rel="stylesheet" href="/dist/tokens.css">
 <link rel="stylesheet" href="/dist/base.css">
 <link rel="stylesheet" href="/dist/components.css">
-<style>
-  .specimen { display: grid; gap: var(--tl-space-lg); padding: var(--tl-space-xl); max-width: 64rem; margin: 0 auto; }
-  .specimen__bar { display: flex; gap: var(--tl-space-sm); align-items: center; }
-  .specimen__panel { background: var(--tl-surface-layer); border: var(--tl-border-width-sm) solid var(--tl-border-separator);
-    border-radius: var(--tl-radius-md); padding: var(--tl-space-md); display: grid; gap: var(--tl-space-sm); }
-  .specimen__base { padding: var(--tl-space-md); display: grid; gap: var(--tl-space-sm); }
-  .specimen__row { display: flex; gap: var(--tl-space-sm); flex-wrap: wrap; align-items: center; }
-  .specimen__row > .tl-type-label { min-width: 9rem; color: var(--tl-text-secondary); }
-</style>
+<link rel="stylesheet" href="/specimen/specimen.css">
 </head>
 <body>
 <main class="specimen">
@@ -29,7 +21,7 @@
 
   <!-- Jede Zeile: eine Erscheinung in Ruhe, mit Icon, icon-only, gedrückt, beschäftigt, deaktiviert. -->
   <template id="rows">
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--flow">
       <span class="tl-type-label">%NAME%</span>
       <button type="button" class="tl-button %MOD% tl-type-body"><span class="tl-button__label">Speichern</span></button>
       <button type="button" class="tl-button %MOD% tl-type-body"><i class="ri-save-line tl-icon-sm tl-button__icon" aria-hidden="true"></i><span class="tl-button__label">Speichern</span></button>
@@ -45,7 +37,7 @@
 
   <section class="specimen__panel">
     <p class="tl-type-heading-sm">Icon-Schaltfläche klein (Tabellenzeile)</p>
-    <div class="specimen__row">
+    <div class="specimen__row specimen__row--flow">
       <span class="tl-type-label">ghost sm</span>
       <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-type-body" aria-label="Bearbeiten"><i class="ri-pencil-line tl-icon-sm tl-button__icon" aria-hidden="true"></i></button>
       <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--danger tl-type-body" aria-label="Löschen"><i class="ri-delete-bin-line tl-icon-sm tl-button__icon" aria-hidden="true"></i></button>

@@ -170,3 +170,9 @@ test('cursor: not-allowed ist ein Verstoß — Deaktiviert zeigt den gewöhnlich
   assert.equal(lint('.tl-x:disabled { cursor: not-allowed; }', { known, file: 'x.css' }).length, 1);
   assert.deepEqual(lint('.tl-x:disabled { cursor: default; }', { known, file: 'x.css' }), []);
 });
+
+test('ein Prozent-Literal ist ein Maß-Literal — 50 % zum Zentrieren und 100 % bleiben erlaubt', () => {
+  assert.equal(lint('.tl-x{width:37%}', { known, file: 'x.css' }).length, 1);
+  assert.equal(lint('.tl-x { inset: 0 12.5% 0 0; }', { known, file: 'x.css' }).length, 1);
+  assert.deepEqual(lint('.tl-x { top: 50%; translate: 0 -50%; max-width: 100%; }', { known, file: 'x.css' }), []);
+});
