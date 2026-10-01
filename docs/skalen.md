@@ -1156,6 +1156,11 @@ Kontrastpaar. Die Werte sind so gewählt, dass deaktivierter Text im hellen Modu
 `text-placeholder` bleibt und die deaktivierte Fläche in beiden Modi neben `surface-interactive-selected`
 liegt — ein Zustand, der zurücktritt, ohne zu verschwinden.
 
+**Nachgezogen 01.10.: ein Zeiger.** Der Bestand hatte zwei — `not-allowed` an Feld und Auswahl, `default` am
+Button (#29675). Entschieden: **`default` überall.** Der Hinweis am deaktivierten Element trägt die Erklärung,
+nicht der Zeiger; ein Verbotszeichen auf einem Feld, das man nur gerade nicht bearbeiten darf, ist eine falsche
+Botschaft. Umsetzung im Paket vor Welle 3 (`altlast.md` „Konsolidierung“ N7).
+
 ### Scrim und Ebenen
 
 Ein modaler Dialog dunkelt die Seite darunter ab. Diese Fläche fehlte der Skala; sie heißt
@@ -1632,6 +1637,50 @@ messen dunkel 1,13 / 1,01. Im Select-Popup trägt die Akzentlinie (`border-inter
 Hervorhebung, die Tönung ist nur ein Zusatz; die Paarliste hält die Linie mit 3,0 auf `surface-overlay`
 und `surface-interactive-selected`. Menü und Dialog brauchen eigene Rollen für Zeigen und Auswahl auf
 gehobenen Flächen — Entscheidung mit dem Menü. Zweiter Leser dieser Entscheidung ist der Skeleton: `surface-interactive-selected` ist auf dunklem `surface-overlay` kaum sichtbar (1,01).
+
+### Zeigen auf allen Gründen: eine Skala, auf den hellsten Grund gestimmt (01.10.)
+
+**Der Befund zuerst.** Das Problem ist nicht nur das Overlay. Die drei dunklen Interaktionsstufen sind auf
+`surface-layer` (`gray-76`) gestimmt und versagen auf jedem helleren Grund:
+
+| dunkel | `surface-base` 79 | `surface-layer` 76 | `-nested` 74 | `surface-overlay` 70 |
+|---|---|---|---|---|
+| `surface-interactive-hover` `gray-73` | 1,17 | 1,07 | **1,01** | 1,13 (dunkler als der Grund) |
+| `surface-interactive-selected` `gray-69` | 1,33 | 1,23 | 1,13 | **1,01** |
+
+Eine Tabelle in einem verschachtelten Panel hat dunkel also auch heute keinen sichtbaren Hover.
+
+**Entschieden (Hendrik, 01.10.): eine Skala, nach der Regel der Neutralen** — die dunkelste Stufe, die auf
+allen vier Gründen noch sichtbar ist. Dunkel: `surface-interactive-hover` → `gray-67` (vorhanden; 1,17 auf dem
+Overlay, 1,42 auf `surface-layer`), `-selected` → `gray-64` (neu; 1,25 / 1,51; `border-interactive` darauf 3,63),
+`-active` → `gray-60` (neu; 1,46 / 1,77). Hell bleibt unverändert (1,07–1,12 / 1,18–1,23 / 1,31–1,36). Preis:
+auf `surface-layer` wird Zeigen dunkel kräftiger (1,42 statt 1,07).
+
+**Verworfen: eigene Rollen je Grund** (`surface-overlay-hover`, `-nested-hover`, …). Sechs neue Rollen, und die
+Komponente müsste ihren Grund kennen — eine Tabelle weiß nicht, ob sie in einem verschachtelten Panel liegt.
+Die Kategorie bleibt geschlossen, `derive` rechnet die neuen Graustufen über `grauRampe` automatisch mit, der
+Skeleton ist mitgelöst. Umsetzung mit Welle 3 (Menü ist der erste Leser).
+
+### Gleiches wird zusammengelegt, nicht zweimal neu gebaut (01.10.)
+
+**Der Befund zuerst.** Welle 3 fand drei Popups mit drei Verhalten (`TLMenu` ohne Portal, Spalten-Kontextmenü mit
+`zIndex: 10000` inline und ohne Positionsrechnung, Toolbar-Dropdown als Portal mit Scroll-Folge). Die Nachprüfung
+der Wellen 0–2 fand dasselbe Muster überall: acht handgeschriebene Positionsrechnungen (nur der Tooltip nutzt
+`@floating-ui/react`), drei zeilengleiche Upload-Fassungen, vier Fokus-Zeichnungen in zwei Blautönen, sieben
+Chevron-Zeichnungen in vier Zeichensätzen, acht Icon-Knopf-Arten mit Trefferflächen von 22 bis 32 px. Die
+React-Controls sind analog zu den alten entstanden — jedes mit eigenem Verhalten.
+
+**Entschieden (Hendrik, 01.10.):** Eine neue Haut macht nichts gleich. Findet eine Erkundung zwei Stellen, die
+dasselbe zeichnen oder tun, gibt es vor der Spec eine Prognose je Befund — sichtbarer Unterschied heute, worauf
+zusammenlegen, UX-Gewinn, berührte Stellen, Urteil *lohnt / lohnt mit der Welle / lohnt nicht* — und Hendrik
+entscheidet. Gebautes wird bei jeder neuen Welle gegen die neuen Komponenten nachgeprüft. Die Tabellen vom 01.10.
+stehen in `docs/migration/altlast.md` „Konsolidierung“: alle Zeilen angenommen; Welle 3 läuft als zwei gestapelte
+PRs (3a Navigation und Popups, 3b Daten), Paket-internes vorher, der Welle-2-Nachzug Fehlermeldung als eigenes
+Paket nach !1740, Upload und die restlichen Popups in Welle 4/5.
+
+**Warum nicht einfach „mit der Welle“ erledigen:** Die Welle misst am leeren Block, nicht am gleichen Verhalten.
+Ohne die Prognose wäre der Tabellen-Kontextmenü-Block leer geworden, und das Menü hätte weiter aus dem Viewport
+geragt — mit neuer Klasse.
 
 ## Befunde aus dem Specimen
 

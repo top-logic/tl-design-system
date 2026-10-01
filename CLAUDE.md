@@ -62,6 +62,14 @@ Befund entscheiden, die Regel als Test festschreiben.
 
 **Kundenthemes entstehen nur über `derive`; erzeugte Dateien werden nie von Hand geändert.**
 
+**Gleiches wird zusammengelegt, nicht zweimal neu gebaut.** Findet eine Erkundung zwei Stellen, die dasselbe
+zeichnen oder tun (Popup, Knopf, Eintrag, Spinner, Trenner, Drag-Logik …), gibt es **vor der Spec** eine Prognose
+je Befund: sichtbarer Unterschied heute, worauf zusammenlegen, UX-Gewinn, berührte Stellen, Urteil (lohnt / lohnt
+mit der Welle / lohnt nicht). Hendrik kreuzt an, erst dann Spec. Gebautes wird bei jeder neuen Welle gegen die
+neuen Komponenten nachgeprüft. Anlass 01.10.: drei Popups mit drei Verhalten in Welle 3; die Nachprüfung der
+Wellen 0–2 fand acht Positionsrechnungen, drei Upload-Fassungen, vier Fokus-Formen. Tabellen in
+`docs/migration/altlast.md` „Konsolidierung“.
+
 **Eine Komponente ist fertig, wenn ihr alter Block in `tlReactControls.css` leer ist** — nicht,
 wenn die neue aussieht wie die alte.
 

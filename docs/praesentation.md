@@ -169,6 +169,23 @@ Jede Komponente geht denselben Weg: CSS ins Paket, Klassen umbenennen, Zustände
 
 ---
 
+## 10a · Gleiches wird zusammengelegt, nicht zweimal neu gebaut
+
+**Die neue Haut allein macht nichts gleich.** Die React-Controls sind analog zu den alten entstanden — jedes mit eigenem Verhalten.
+
+| Was dasselbe tut | heute | morgen |
+|---|---|---|
+| **Popups** (Menü, Kontextmenü, Toolbar-Überlauf, Select) | acht eigene Positionsrechnungen; eines ragt aus dem Fenster, zwei folgen dem Scrollen nicht | **ein** Helfer: klappt um, bleibt im Fenster, folgt dem Scrollen |
+| **Icon-Knöpfe** | acht Arten, Trefferflächen 22–32 px, vier Hover-Optiken | ein `tl-button--icon`, 32 px, ein Hover |
+| **Fokus** | vier Zeichnungen, zwei Blautöne, Ring auch ohne Tastatur | ein Ring, nur bei Tastatur |
+| **Auf-/Zuklappen** | sieben Zeichnungen in vier Zeichensätzen, derselbe Pfeil heißt „zu“ und „offen“ | ein Knopf, ein Pfeil, 24 px |
+
+Vor jeder Welle: Was tut dasselbe? Prognose auf den Tisch, Entscheidung, dann die Spec. Gebautes wird mitgeprüft.
+
+> Sprechnotiz: Konsolidieren ist der Teil, den ein Styleguide nie erzwingt — er sieht Farben, nicht Verhalten.
+
+---
+
 ## 11 · Die Gates: was den Build bricht
 
 **Die Regeln stehen nicht nur im Dokument — sie laufen als Tests, über hundert.**
