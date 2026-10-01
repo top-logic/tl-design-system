@@ -84,11 +84,22 @@ test('beschäftigt steht nach disabled und pulsiert: ein hochladender Knopf ist 
   const css = readFileSync(new URL('../src/components/button/button.css', import.meta.url), 'utf8')
     .replace(/\/\*[\s\S]*?\*\//g, '');
   const busy = css.indexOf('.tl-button[aria-busy="true"] {');
-  const disabled = css.indexOf('.tl-button:disabled {');
+  const disabled = css.indexOf('.tl-button:disabled,');
   assert.ok(busy >= 0 && disabled >= 0, 'Regel für aria-busy oder :disabled fehlt');
   assert.ok(busy > disabled, 'aria-busy muss nach :disabled stehen, sonst verliert cursor: progress');
   assert.match(css, /\.tl-button\[aria-busy="true"\] \.tl-button__icon\s*\{[^}]*animation:\s*tl-button-busy\b/);
   assert.match(css, /@keyframes tl-button-busy\s*\{/);
+});
+
+test('deaktiviert bleibt zeigbar: der Tooltip nennt den Grund (#29675)', () => {
+  const css = readFileSync(new URL('../src/components/button/button.css', import.meta.url), 'utf8')
+    .replace(/\/\*[\s\S]*?\*\//g, '');
+  assert.doesNotMatch(css, /pointer-events:\s*none/, 'ein deaktivierter Knopf muss den Zeiger empfangen');
+  // Zeigen und Drücken ändern einen deaktivierten Knopf nicht.
+  assert.match(css, /\.tl-button:disabled,\s*\.tl-button:disabled:hover,\s*\.tl-button:disabled:active\s*\{/);
+  // Über einem deaktivierten Knopf bleibt der Zeiger default, auch in aria-busy: der Puls ist dort
+  // der einzige Hinweis (docs/skalen.md, Busy).
+  assert.match(css, /\.tl-button:disabled:active\s*\{[^}]*cursor:\s*default/);
 });
 
 test('das Button-Specimen zeigt jede Erscheinung, die Tönung, sm, und jeden Zustand', () => {
