@@ -1569,8 +1569,10 @@ solange die Engine bedingt rendert.
 Regel `.tl-button[aria-busy]` (`cursor: progress`) stand vor `:disabled` und verlor. *Entschieden:*
 `aria-busy="true"` steht **nach** `:disabled`, und das Icon pulsiert (`opacity`, `duration-loop`,
 `easing-standard`, alternierend, wie der Skeleton). Bei `disabled` ist der Puls der **einzige** Hinweis:
-`pointer-events: none` unterdrückt den Zeiger, und ein Fortschrittszeiger über einem nicht bedienbaren
-Knopf wäre eine falsche Einladung. Der Vertrag sagt darum „Puls“, nicht „Zeiger“.
+`.tl-button:disabled:hover { cursor: default }` (Spezifität 0,3,0) schlägt `[aria-busy]` (0,2,0), denn
+#29675 braucht das Zeigen auf einen deaktivierten Knopf für den Tooltip mit dem Grund, und ein
+Fortschrittszeiger über einem nicht bedienbaren Knopf wäre eine falsche Einladung; die Regeln aus #29675
+stehen seit 01.10. in `button.css`. Der Vertrag sagt darum „Puls“, nicht „Zeiger“.
 
 **Stapel-Übergang: acht Regeln des Altbestands lesen die Ebenen.** *Befund:* Der Altbestand stapelt bei
 9000–12000, das Paket bei 1000–1200 (`layer-*`). Das Popup des Select, auf `layer-popover` gestellt,
