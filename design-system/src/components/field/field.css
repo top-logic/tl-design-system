@@ -67,41 +67,32 @@
 }
 .tl-field-group[hidden] { display: none; }
 
-.tl-field-group__icon,
-.tl-field-group__action {
+.tl-field-group__icon {
   position: absolute;
   inset-block: 0;
   display: flex;
   align-items: center;
-  color: var(--tl-icon-secondary);
-}
-
-.tl-field-group__icon {
   inset-inline-start: var(--tl-space-control-x);
+  color: var(--tl-icon-secondary);
   pointer-events: none;
 }
 
-.tl-field-group__action {
+/* Die Aktion in der Gruppe (Löschen, Link öffnen) ist ein tl-button--icon --sm --ghost und sitzt im
+   Feld, am Ende; das Feld macht ihr Platz (:has unten). */
+.tl-field-group > .tl-button {
+  position: absolute;
   inset-inline-end: var(--tl-space-2xs);
-  margin-block: var(--tl-space-2xs);
-  padding: 0 var(--tl-space-xs);
-  border: 0;
-  border-radius: var(--tl-radius-sm);
-  background: transparent;
-  cursor: pointer;
-}
-
-.tl-field-group__action:hover {
-  background: var(--tl-surface-interactive-hover);
+  top: 50%;
+  translate: 0 -50%;
 }
 
 .tl-field-group:has(> .tl-field-group__icon) > .tl-field {
   padding-inline-start: calc(var(--tl-space-control-x) + var(--tl-size-icon-sm) + var(--tl-space-xs));
 }
 
-/* Endknopf: Abstand zum Rand, Innenabstand beidseitig, Icon — und eine Lücke zum Text. */
-.tl-field-group:has(> .tl-field-group__action) > .tl-field {
-  padding-inline-end: calc(var(--tl-space-2xs) + 2 * var(--tl-space-xs) + var(--tl-size-icon-sm) + var(--tl-space-xs));
+/* Endknopf: Abstand zum Rand, der Knopf (size-control-sm im Quadrat) — und eine Lücke zum Text. */
+.tl-field-group:has(> .tl-button) > .tl-field {
+  padding-inline-end: calc(var(--tl-space-2xs) + var(--tl-size-control-sm) + var(--tl-space-xs));
 }
 
 /* --- Lesewert ---------------------------------------------------------------------- */

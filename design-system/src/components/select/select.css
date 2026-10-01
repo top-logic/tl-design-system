@@ -5,8 +5,8 @@
    Ein gewählter Wert mit Rolle ist eine tl-pill — im Einzelwert, im Chip und im Lesewert.
    Zustände sind Attribute: aria-expanded offen, aria-selected gewählt, data-tl-state~="highlighted"
    die Tastatur-Hervorhebung, data-tl-state~="dragging" / "drop-before" / "drop-after" das Umordnen.
-   Das Popup schwebt über dem Formular, darum Schatten (shadow-popover) und Ebene (layer-popover);
-   sein Radius radius-md umschließt die Optionen mit radius-sm. */
+   Das Popup ist ein tl-popover (Fläche, Schatten, Ebene, Radius radius-md um die Optionen mit
+   radius-sm); hier steht nur sein Innenaufbau. Entfernen und Löschen sind tl-button--icon. */
 
 .tl-select {
   display: flex;
@@ -56,33 +56,10 @@
   min-width: 0;
 }
 
-/* Die Trefferfläche ist mindestens size-control-sm im Quadrat (WCAG 2.5.8, 24 × 24 px), auch wenn das
-   Icon kleiner ist. */
-.tl-select__chip-remove,
-.tl-select__clear {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-inline-size: var(--tl-size-control-sm);
-  min-block-size: var(--tl-size-control-sm);
-  padding: 0;
-  border: 0;
-  border-radius: var(--tl-radius-sm);
-  background: transparent;
-  color: var(--tl-icon-secondary);
-  cursor: pointer;
-}
-
-/* Der Entfernen-Knopf sitzt in der Pille (size-control-sm, mit Rand). Er ragt um die Randbreite über
-   ihren Inhalt: die Trefferfläche bleibt size-control-sm, die Pille wächst nicht — und mit ihr nicht
-   das Feld über size-control. */
-.tl-select__chip-remove {
+/* Der Entfernen-Knopf ist ein tl-button--icon --sm --ghost; er liegt in der Pille, ohne sie zu heben. */
+.tl-select__chip > .tl-button {
   margin-block: calc(-1 * var(--tl-border-width-sm));
-}
-
-.tl-select__chip-remove:hover,
-.tl-select__clear:hover {
-  background: var(--tl-surface-interactive-hover);
+  margin-inline-end: calc(-1 * var(--tl-space-2xs));
 }
 
 .tl-select__drag-handle {
@@ -117,21 +94,12 @@
 /* --- Popup ------------------------------------------------------------------------- */
 
 /* Höchstens acht Optionszeilen plus Suchfeld und Innenabstand; die 8 ist eine Anzahl Zeilen,
-   einheitenlos, kein Maß. Die Lage (top, left, Breite) setzt das Skript an der Wurzel. */
+   einheitenlos, kein Maß. Fläche, Ebene und Lage: tl-popover (bridge/popover.ts). */
 .tl-select__popup {
-  position: fixed;
-  z-index: var(--tl-layer-popover);
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
   max-height: calc(8 * var(--tl-size-row) + var(--tl-size-control) + 2 * var(--tl-space-xs));
   overflow: hidden;
-  padding: var(--tl-space-xs);
-  border: var(--tl-border-width-sm) solid var(--tl-border-separator);
-  border-radius: var(--tl-radius-md);
-  background: var(--tl-surface-overlay);
-  box-shadow: var(--tl-shadow-popover);
-  color: var(--tl-text-primary);
 }
 
 /* Die Gruppe um das Suchfeld (tl-field-group mit Lupe) trägt den Abstand zur Liste: säße er am Feld,

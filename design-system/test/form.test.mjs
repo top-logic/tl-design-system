@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { readComponent, colorVarsOf, declarationsOf, specimenProblems, missingInContract, varsOf } from './lib/component.mjs';
 
 const P = JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.url)));
@@ -19,7 +19,7 @@ test('die Label-Spalte und der Geändert-Punkt sind Tokens auf der Skala', () =>
 test('form.css liest genau diese Farbrollen, layer-accent nicht mehr', () => {
   assert.deepEqual(colorVarsOf(form), [
     'border-control', 'border-separator', 'status-error-text', 'status-warning-text', 'surface-brand',
-    'surface-interactive-hover', 'text-helper', 'text-primary', 'text-secondary',
+    'text-helper', 'text-primary', 'text-secondary',
   ]);
 });
 
@@ -52,7 +52,7 @@ test('das Formular-Specimen zeigt jede Label-Lage, Pflicht, Hilfe, Fehler, Warnu
   assert.deepEqual(specimenProblems(html), []);
   for (const s of ['tl-form-field--side', 'tl-form-field--top', 'tl-form-field--after', 'tl-visually-hidden',
     'tl-form-field__required', 'aria-required="true"', 'tl-form-field__help-text', 'role="alert"', 'aria-live="polite"',
-    'data-tl-state="dirty"', 'tl-form-group--outlined', 'aria-expanded="false"', 'hidden', 'tl-form-layout',
+    'data-tl-state="dirty"', 'tl-form-group--outlined', 'tl-toggle', 'aria-expanded="false"', 'hidden', 'tl-form-layout',
     'tl-field-list', 'tl-upload', 'tl-file-upload', 'data-tl-state="dragover"', 'aria-busy="true"'])
     assert.ok(html.includes(s), `Specimen zeigt ${s} nicht`);
 });
@@ -66,14 +66,18 @@ test('die Verträge nennen Tokens, Klassen und Attribute', () => {
     'aria-busy', 'data-tl-state']), []);
 });
 
-test('die Warnung steht vor dem Fehler, der Einklappknopf zeigt nur aktiviert', () => {
+test('die Warnung steht vor dem Fehler, der Einklappknopf ist ein tl-toggle', () => {
   const ohne = form.replace(/\/\*[\s\S]*?\*\//g, '');
   const warnung = ohne.indexOf('.tl-form-field__message[aria-live="polite"]');
   const fehler = ohne.indexOf('.tl-form-field__message[role="alert"]');
   assert.ok(warnung >= 0 && fehler >= 0, 'Warn- oder Fehlerregel fehlt');
   assert.ok(warnung < fehler, 'bei gleicher Spezifität muss der Fehler die Warnung verdrängen');
-  assert.ok(declarationsOf(form, '.tl-form-group__toggle:where(:not(:disabled)):hover'), 'Hover nicht auf Aktiviertes begrenzt');
-  assert.doesNotMatch(ohne, /\.tl-form-group__toggle:hover/);
+  const src = new URL('../src/', import.meta.url);
+  const treffer = readdirSync(src, { recursive: true }).filter((f) => /\.(css|html|md|json)$/.test(f))
+    .filter((f) => readFileSync(new URL(f, src), 'utf8').includes('tl-form-group__toggle'));
+  assert.deepEqual(treffer, []);
+  const md = readComponent('form', 'form.contract.md');
+  assert.deepEqual(missingInContract(md, ['tl-toggle']), []);
 });
 
 test('Gruppen behalten die Spalten des Layouts, --after setzt Meldungen in Spalte 2', () => {

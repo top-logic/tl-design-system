@@ -135,7 +135,7 @@
 
       <div class="tl-form-group tl-form-group--outlined tl-form-group--full">
         <div class="tl-form-group__header">
-          <button type="button" class="tl-form-group__toggle" aria-expanded="true" aria-controls="g-open-body" aria-label="Adresse einklappen"><i class="tl-icon-sm bi bi-chevron-down" aria-hidden="true"></i></button>
+          <button type="button" class="tl-toggle" aria-expanded="true" aria-controls="g-open-body" aria-label="Adresse einklappen"><i class="tl-icon-sm bi bi-chevron-right" aria-hidden="true"></i></button>
           <span class="tl-form-group__title tl-type-heading-sm">Adresse, offen</span>
           <div class="tl-form-group__actions"><button type="button" class="tl-button tl-button--ghost tl-button--sm">Bearbeiten</button></div>
         </div>
@@ -157,7 +157,7 @@
 
       <div class="tl-form-group tl-form-group--outlined tl-form-group--full">
         <div class="tl-form-group__header">
-          <button type="button" class="tl-form-group__toggle" aria-expanded="false" aria-controls="g-closed-body" aria-label="Konto ausklappen"><i class="tl-icon-sm bi bi-chevron-right" aria-hidden="true"></i></button>
+          <button type="button" class="tl-toggle" aria-expanded="false" aria-controls="g-closed-body" aria-label="Konto ausklappen"><i class="tl-icon-sm bi bi-chevron-right" aria-hidden="true"></i></button>
           <span class="tl-form-group__title tl-type-heading-sm">Konto, eingeklappt</span>
         </div>
         <div class="tl-form-group__body" id="g-closed-body" hidden>
@@ -255,14 +255,13 @@
   const html = document.documentElement;
   document.getElementById('mode').addEventListener('change', (e) => html.setAttribute('data-tl-mode', e.target.checked ? 'dark' : 'light'));
   document.getElementById('density').addEventListener('change', (e) => html.setAttribute('data-tl-density', e.target.checked ? 'compact' : 'normal'));
-  // Einklappen im Specimen: der Knopf schaltet aria-expanded und hidden am Körper.
+  // Einklappen im Specimen: der Knopf schaltet aria-expanded und hidden am Körper; der Chevron dreht über tl-toggle.
   document.addEventListener('click', (e) => {
-    const t = e.target.closest('.tl-form-group__toggle');
+    const t = e.target.closest('.tl-form-group__header > .tl-toggle');
     if (!t) return;
     const open = t.getAttribute('aria-expanded') !== 'true';
     t.setAttribute('aria-expanded', String(open));
     document.getElementById(t.getAttribute('aria-controls')).hidden = !open;
-    t.querySelector('i').className = 'tl-icon-sm bi bi-chevron-' + (open ? 'down' : 'right');
   });
 </script>
 </body>

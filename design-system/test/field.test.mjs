@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from '../tools/resolve.mjs';
 import { readComponent, colorVarsOf, declarationsOf, specimenProblems, missingInContract, varsOf } from './lib/component.mjs';
 
@@ -12,7 +12,7 @@ test('field.css liest genau die Farbrollen des Feldes', () => {
   assert.deepEqual(colorVarsOf(css), [
     'border-control', 'border-disabled', 'border-emphasis', 'icon-secondary',
     'status-error-border', 'status-warning-border', 'surface-disabled', 'surface-field',
-    'surface-interactive-hover', 'text-disabled', 'text-link', 'text-link-hover',
+    'text-disabled', 'text-link', 'text-link-hover',
     'text-placeholder', 'text-primary',
   ]);
 });
@@ -94,7 +94,7 @@ test('das Feld-Specimen zeigt jeden Zustand, jede Form, beide Flächen und eine 
   const html = readComponent('field', 'field.spec.html');
   assert.deepEqual(specimenProblems(html), []);
   for (const s of ['aria-invalid="true"', 'data-tl-state="warning"', 'disabled', 'placeholder=', 'tl-field--multiline',
-    'tl-field-group__icon', 'tl-field-group__action', 'tl-field-value', 'tl-field-value--multiline', 'tl-pill', 'specimen__cell', 'surface-layer', 'surface-overlay'])
+    'tl-field-group__icon', 'tl-button--icon', 'tl-field-value', 'tl-field-value--multiline', 'tl-pill', 'specimen__cell', 'surface-layer', 'surface-overlay'])
     assert.ok(html.includes(s), `Specimen zeigt ${s} nicht`);
 });
 
@@ -103,4 +103,15 @@ test('der Feld-Vertrag nennt jedes Token, jede Klasse und jedes Zustandsattribut
   const names = [...varsOf(css), 'tl-field', 'tl-field--multiline', 'tl-field-group', 'tl-field-value',
     'tl-field-value--multiline', 'aria-invalid', 'data-tl-state', 'disabled', 'aria-required', 'hasError', 'hasWarnings', 'editable'];
   assert.deepEqual(missingInContract(md, names), []);
+});
+
+test('die Aktion in der Gruppe ist ein tl-button--icon: tl-field-group__action gibt es in src/ nicht mehr', () => {
+  const src = new URL('../src/', import.meta.url);
+  const treffer = readdirSync(src, { recursive: true }).filter((f) => /\.(css|html|md|json)$/.test(f))
+    .filter((f) => readFileSync(new URL(f, src), 'utf8').includes('tl-field-group__action'));
+  assert.deepEqual(treffer, []);
+  assert.match(declarationsOf(css, '.tl-field-group > .tl-button') ?? '', /inset-inline-end:\s*var\(--tl-space-2xs\)/);
+  assert.match(declarationsOf(css, '.tl-field-group:has(> .tl-button) > .tl-field') ?? '', /padding-inline-end/);
+  const md = readComponent('field', 'field.contract.md');
+  assert.deepEqual(missingInContract(md, ['tl-button--icon']), []);
 });

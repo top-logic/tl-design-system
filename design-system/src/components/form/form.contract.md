@@ -34,7 +34,8 @@ Vom Server über `useTLState()`, aus `ReactFormFieldChromeControl`, `ReactFormGr
 Die Lage `hidden` zeigt keine Beschriftung, hält den Text aber in `tl-visually-hidden`, damit die Eingabe
 ihren Namen behält. Die Lage `after` setzt die Eingabe (Kästchen, Schalter) vor die Beschriftung.
 
-Es gibt im Formular keinen Schlüssel `disabled`: ein Feld ist bearbeitbar oder zeigt den Lesewert
+Der Feldrahmen hat keinen Schlüssel `disabled`; inaktiv ist das Eingabe-Control selbst
+(`state.disabled`, `field.contract.md`). Schreibgeschützt ist etwas anderes: das Feld zeigt den Lesewert
 `tl-field-value`, und das Layout nimmt im Lesemodus die Meldungen und den Stern weg.
 
 `TLFormGroup`:
@@ -43,7 +44,7 @@ Es gibt im Formular keinen Schlüssel `disabled`: ein Feld ist bearbeitbar oder 
 |---|---|---|
 | `headerControl` | Kinddeskriptor, optional | Das Control der Überschrift, in `tl-form-group__title`. |
 | `headerActions` | Liste von Kinddeskriptoren | Knöpfe neben der Überschrift, in `tl-form-group__actions`. |
-| `collapsible` | boolean | Die Gruppe lässt sich einklappen: `tl-form-group__toggle` steht in der Kopfzeile. |
+| `collapsible` | boolean | Die Gruppe lässt sich einklappen: ein `tl-toggle` steht in der Kopfzeile. |
 | `collapsed` | boolean | Die Gruppe ist eingeklappt: `aria-expanded="false"` am Knopf, `hidden` am Körper `tl-form-group__body`. |
 | `border` | string | `none`, `subtle` oder `outlined`; bildet sich ab auf: keine Klasse, `tl-form-group--separator`, `tl-form-group--outlined`. |
 | `fullLine` | boolean | Die Gruppe füllt alle Spalten des umgebenden Rasters: `tl-form-group--full`. |
@@ -70,7 +71,7 @@ Es gibt im Formular keinen Schlüssel `disabled`: ein Feld ist bearbeitbar oder 
 
 | Auslöser | Aktion |
 |---|---|
-| Klick auf `tl-form-group__toggle` | `sendCommand('toggleCollapse')`; der Server kehrt `collapsed` um. |
+| Klick auf den Einklappknopf (`tl-toggle`) | `sendCommand('toggleCollapse')`; der Server kehrt `collapsed` um. |
 | Klick auf die Beschriftung | Fokus in die Eingabe (oder Umschalten des Kästchens); keine Server-Aktion. |
 | Klick auf den Hilfeknopf | blendet `tl-form-field__help-text` im Client ein oder aus; keine Server-Aktion. |
 
@@ -89,7 +90,7 @@ Es gibt im Formular keinen Schlüssel `disabled`: ein Feld ist bearbeitbar oder 
 | Gruppe, Trennlinie | `--tl-border-separator`, Breite `--tl-border-width-sm` |
 | Gruppe, umrandet | Rand `--tl-border-control` (er begrenzt ein Bedienfeld), Ecke `--tl-radius-md` |
 | Kopfzeile, Überschrift | Text `--tl-text-primary` |
-| Einklappknopf | Fläche beim Zeigen `--tl-surface-interactive-hover`, Ecke `--tl-radius-sm`, nur wenn nicht deaktiviert |
+| Einklappknopf | aus `tl-toggle` (`toggle.contract.md`) |
 | Feldliste | Überschrift `--tl-text-primary` mit Linie `--tl-border-separator` |
 | leeres Formular | `--tl-text-secondary` |
 
@@ -105,7 +106,7 @@ Schrift setzt das Control von außen: `tl-type-label` an der Beschriftung und de
 | `role="alert"` | `error`, an `tl-form-field__message`. |
 | `aria-live="polite"` | `warnings`, je Warnung an einem eigenen `tl-form-field__message`. Der Fehler verdrängt die Warnung: steht ein Fehler, rendert keine Warnung. |
 | `aria-invalid="true"` | `hasError` an der Eingabe — das Feld zeichnet den Rand selbst (`field.contract.md`). |
-| `aria-expanded` | am `tl-form-group__toggle`: `true` offen, `false` eingeklappt; dazu `aria-controls` auf den Körper. |
+| `aria-expanded` | am Einklappknopf `tl-toggle`: `true` offen, `false` eingeklappt; dazu `aria-controls` auf den Körper. |
 | `hidden` | am `tl-form-group__body`, wenn `collapsed`. |
 | `:focus-visible` | den Ring liefert `base.css`; das Formular setzt und entfernt keinen Fokusstil. |
 
@@ -124,12 +125,12 @@ Klassen:
 | `tl-form-field__message` | der Fehler oder je eine Warnung |
 | `tl-form-field__help-text` | der Hilfetext |
 | `tl-form-group` | Wurzel der Gruppe; `--separator`, `--outlined`, `--full` |
-| `tl-form-group__header`, `__toggle`, `__title`, `__actions`, `__body` | Kopfzeile, Einklappknopf (`button`), Überschrift, Knöpfe, Körper; die Felder stehen unmittelbar im Körper, Gruppe und Körper sind Subgrids und behalten die Spalten des Layouts |
+| `tl-form-group__header`, `__title`, `__actions`, `__body` | Kopfzeile (darin der Einklappknopf `tl-toggle`), Überschrift, Knöpfe, Körper; die Felder stehen unmittelbar im Körper, Gruppe und Körper sind Subgrids und behalten die Spalten des Layouts |
 | `tl-form-layout` | das Raster; `--fill` für ein Formular mit füllender Region; Element `__empty` |
 | `tl-field-list` | die Feldliste; Elemente `__title`, `__fields`, `__item` |
 
-Der Einklappknopf `tl-form-group__toggle` ist ein `button type="button"` mit `aria-label`, sein Chevron
-ein Icon `tl-icon-sm`. Zustände sind Attribute, nie Klassen: `--dirty`, `--collapsed`, `--error`,
+Der Einklappknopf ist ein `tl-toggle`: ein `button type="button"` mit `aria-label`, sein Chevron ein
+Icon `tl-icon-sm`, das rechts (zu) zeigt und bei `aria-expanded="true"` nach unten dreht. Zustände sind Attribute, nie Klassen: `--dirty`, `--collapsed`, `--error`,
 `--warning` und `--readonly` gibt es nicht.
 
 ## Konformität

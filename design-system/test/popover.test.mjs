@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { readGenerated, declarationsOf, missingInContract } from './lib/component.mjs';
+import { readGenerated, declarationsOf, missingInContract, componentCssFiles } from './lib/component.mjs';
 
 test('tl-popover: Overlay-Fläche, Schatten, Ebene popover, Maße aus den Tokens', () => {
   const d = declarationsOf(readGenerated('popover', 'popover.css'), '.tl-popover');
@@ -17,4 +17,10 @@ test('tl-menu__item: Zeilenhöhe size-row, Zustand nur als Attribut, In-Kraft ü
   assert.doesNotMatch(declarationsOf(css, '.tl-menu__item'), /(^|;)\s*font\s*:/);
   const md = readFileSync(new URL('../src/components/menu/menu.contract.md', import.meta.url), 'utf8');
   assert.deepEqual(missingInContract(md, ['aria-current', 'tl-type-body-strong', 'tl-menu-region', 'data-tl-trigger']), []);
+});
+
+test('nur tl-popover setzt die Popup-Fläche: kein anderer Block liest shadow-popover', () => {
+  const hits = [];
+  for (const [name, css] of componentCssFiles()) if (!name.startsWith('popover/') && /--tl-shadow-popover/.test(css)) hits.push(name);
+  assert.deepEqual(hits, []);
 });

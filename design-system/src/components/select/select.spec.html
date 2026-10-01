@@ -20,7 +20,7 @@
   .specimen__row { display: grid; grid-template-columns: 12rem minmax(0, 24rem); gap: var(--tl-space-sm); align-items: start; }
   .specimen__row > .tl-type-label:first-child { color: var(--tl-text-secondary); padding-top: var(--tl-space-control-y); }
   .specimen__stack { display: grid; gap: var(--tl-space-2xs); min-width: 0; }
-  /* Im Specimen steht das Popup im Fluss unter seiner Wurzel; im Control schwebt es (position: fixed). */
+  /* Im Specimen steht das Popup im Fluss unter seiner Wurzel; im Control schwebt es (tl-popover, position: fixed). */
   .specimen__popup { position: static; }
 </style>
 </head>
@@ -50,7 +50,7 @@
           <span class="tl-select__value"><span class="tl-pill tl-pill--warning tl-type-label"><span class="tl-pill__label">In Arbeit</span></span></span>
         </span>
         <span class="tl-select__controls">
-          <button type="button" class="tl-select__clear" aria-label="Auswahl löschen"><i class="tl-icon-sm bi bi-x-lg" aria-hidden="true"></i></button>
+          <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-type-body" aria-label="Auswahl löschen"><i class="tl-icon-sm bi bi-x-lg" aria-hidden="true"></i></button>
           <i class="tl-icon-sm bi bi-chevron-down tl-select__arrow" aria-hidden="true"></i>
         </span>
       </div>
@@ -69,21 +69,21 @@
           <span class="tl-pill tl-pill--category-6 tl-type-label tl-select__chip">
             <i class="tl-icon-sm bi bi-grip-vertical tl-select__drag-handle" aria-hidden="true"></i>
             <span class="tl-pill__label">Nordlicht</span>
-            <button type="button" class="tl-select__chip-remove" aria-label="Nordlicht entfernen"><i class="tl-icon-sm bi bi-x" aria-hidden="true"></i></button>
+            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-type-body" aria-label="Nordlicht entfernen"><i class="tl-icon-sm bi bi-x" aria-hidden="true"></i></button>
           </span>
           <span class="tl-pill tl-type-label tl-select__chip" data-tl-state="dragging">
             <i class="tl-icon-sm bi bi-grip-vertical tl-select__drag-handle" aria-hidden="true"></i>
             <span class="tl-pill__label">Südwind</span>
-            <button type="button" class="tl-select__chip-remove" aria-label="Südwind entfernen"><i class="tl-icon-sm bi bi-x" aria-hidden="true"></i></button>
+            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-type-body" aria-label="Südwind entfernen"><i class="tl-icon-sm bi bi-x" aria-hidden="true"></i></button>
           </span>
           <span class="tl-pill tl-pill--category-2 tl-type-label tl-select__chip" data-tl-state="drop-before">
             <i class="tl-icon-sm bi bi-grip-vertical tl-select__drag-handle" aria-hidden="true"></i>
             <span class="tl-pill__label">Ostwerk</span>
-            <button type="button" class="tl-select__chip-remove" aria-label="Ostwerk entfernen"><i class="tl-icon-sm bi bi-x" aria-hidden="true"></i></button>
+            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-type-body" aria-label="Ostwerk entfernen"><i class="tl-icon-sm bi bi-x" aria-hidden="true"></i></button>
           </span>
         </span>
         <span class="tl-select__controls">
-          <button type="button" class="tl-select__clear" aria-label="Auswahl löschen"><i class="tl-icon-sm bi bi-x-lg" aria-hidden="true"></i></button>
+          <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-type-body" aria-label="Auswahl löschen"><i class="tl-icon-sm bi bi-x-lg" aria-hidden="true"></i></button>
           <i class="tl-icon-sm bi bi-chevron-down tl-select__arrow" aria-hidden="true"></i>
         </span>
       </div>
@@ -109,19 +109,18 @@
           <span class="tl-select__values"><span class="tl-select__value"><span class="tl-pill tl-pill--category-6 tl-type-label"><span class="tl-pill__label">Nordlicht</span></span></span></span>
           <span class="tl-select__controls"><i class="tl-icon-sm bi bi-chevron-up tl-select__arrow" aria-hidden="true"></i></span>
         </div>
-        <div class="tl-select__popup specimen__popup">
+        <div class="tl-popover tl-select__popup specimen__popup">
           <span class="tl-field-group tl-select__search-group"><span class="tl-field-group__icon" aria-hidden="true"><i class="tl-icon-sm bi bi-search"></i></span>
             <input class="tl-field tl-select__search tl-type-body" value="nor" aria-label="Optionen filtern" aria-controls="list-open" aria-activedescendant="opt-2">
           </span>
           <div class="tl-select__list tl-type-body" role="listbox" id="list-open" aria-label="Projekt">
-            <div class="tl-select__option" role="option" id="opt-1" aria-selected="true">
-              <span class="tl-pill tl-pill--category-6 tl-type-label"><span class="tl-pill__label"><span class="tl-type-label-strong">Nor</span>dlicht</span></span>
-              <i class="tl-icon-sm bi bi-check-lg" aria-hidden="true"></i>
+            <div class="tl-select__option" role="option" id="opt-1" aria-selected="false">
+              <span class="tl-pill tl-pill--category-2 tl-type-label"><span class="tl-pill__label"><span class="tl-type-label-strong">Nor</span>dkap</span></span>
             </div>
-            <div class="tl-select__option" role="option" id="opt-2" data-tl-state="highlighted">
+            <div class="tl-select__option" role="option" id="opt-2" aria-selected="false" data-tl-state="highlighted">
               <span><span class="tl-type-body-strong">Nor</span>dhafen</span>
             </div>
-            <div class="tl-select__option" role="option" id="opt-3">
+            <div class="tl-select__option" role="option" id="opt-3" aria-selected="false">
               <span>Tor <span class="tl-type-body-strong">Nor</span>d</span>
             </div>
           </div>
@@ -130,7 +129,7 @@
     </div>
     <div class="specimen__row">
       <span class="tl-type-label">laden, aria-busy</span>
-      <div class="tl-select__popup specimen__popup">
+      <div class="tl-popover tl-select__popup specimen__popup">
         <div class="tl-select__status tl-type-body">
           <div class="tl-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-busy="true" aria-valuetext="Lädt…">
             <span class="tl-progress__track"><span class="tl-progress__fill"></span></span>
@@ -141,7 +140,7 @@
     </div>
     <div class="specimen__row">
       <span class="tl-type-label">Ladefehler, role="alert"</span>
-      <div class="tl-select__popup specimen__popup">
+      <div class="tl-popover tl-select__popup specimen__popup">
         <div class="tl-select__status tl-type-body" role="alert">
           <i class="tl-icon-sm bi bi-exclamation-circle" aria-hidden="true"></i>
           <span>Laden fehlgeschlagen.</span>
@@ -151,7 +150,7 @@
     </div>
     <div class="specimen__row">
       <span class="tl-type-label">keine Treffer</span>
-      <div class="tl-select__popup specimen__popup">
+      <div class="tl-popover tl-select__popup specimen__popup">
         <span class="tl-field-group tl-select__search-group"><span class="tl-field-group__icon" aria-hidden="true"><i class="tl-icon-sm bi bi-search"></i></span>
           <input class="tl-field tl-select__search tl-type-body" value="xyz" aria-label="Optionen filtern">
         </span>

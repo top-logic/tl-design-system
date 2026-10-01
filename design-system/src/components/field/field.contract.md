@@ -16,11 +16,12 @@ Vom Server über `useTLState()`, gemeinsam aus `ReactFormFieldControl`:
 | `value` | je Control | Der Wert des Feldes. |
 | `placeholder` | string, optional | Platzhalter, solange das Feld leer ist (nur beim Bearbeiten). |
 | `icon` | string, optional | Icon im Feld, vor dem Getippten: kodiertes ThemeImage (`ThemeIcon` in `tl-icon-sm`) im `tl-field-group__icon`. |
-| `clearable` | boolean, optional | Das Feld bietet einen Knopf, der es leert: `tl-field-group__action`. |
+| `clearable` | boolean, optional | Das Feld bietet einen Knopf, der es leert: die Aktion der Gruppe, ein `tl-button--icon`. |
 | `debounceMs` | number, optional | Wie lange ein getippter Wert zurückgehalten wird, bevor er gesendet wird, in Millisekunden. |
 | `multiline` | boolean, optional | Das Textfeld ist ein mehrzeiliges `textarea`, Klasse `tl-field--multiline`. |
 | `rows` | number, optional | Sichtbare Zeilen des mehrzeiligen Feldes. |
 | `editable` | boolean | Ob das Feld bearbeitbar ist. `false`: kein Eingabefeld, sondern der Lesewert `tl-field-value`. |
+| `disabled` | boolean | Inaktiv, wie beim Button (`button.contract.md`): das Feld rendert `disabled` (siehe Attribute). |
 | `mandatory` | boolean | Pflichtfeld: `aria-required="true"`. |
 | `nullable` | boolean | Ob `null` ein gültiger Wert des Feldes ist. |
 | `hasError` | boolean | Das Feld hat einen Validierungsfehler: `aria-invalid="true"`. |
@@ -28,7 +29,7 @@ Vom Server über `useTLState()`, gemeinsam aus `ReactFormFieldControl`:
 | `hasWarnings` | boolean | Das Feld hat Validierungswarnungen: `data-tl-state="warning"`, nur ohne Fehler. |
 | `label` | string | Beschriftung des Feldes. |
 | `tooltip` | string, optional | Tooltip-Text. |
-| `hidden` | boolean | Das Control ist auf dem Client verborgen: es rendert nichts. |
+| `hidden` | boolean | Das Control ist auf dem Client verborgen: es bleibt im DOM, aber nicht zu sehen (wie `visible` in `form.contract.md`) — die Brücke blendet seinen Einhängepunkt aus, das Control bleibt montiert und behält seinen Zustand. |
 | `submitOnEnter` | boolean, optional | Enter im Feld sendet `submit`. |
 | `commitOnBlur` | boolean, optional | Verlässt der Fokus das Feld, sendet es `commit`. |
 | `sendValueOnBlur` | boolean, optional | Der getippte Wert wird bis zum Verlassen des Feldes zurückgehalten, statt schon beim Tippen gesendet zu werden. |
@@ -65,8 +66,9 @@ Zusätze je Control:
 | Fehler | Rand `--tl-status-error-border` |
 | Warnung | Rand `--tl-status-warning-border` |
 | deaktiviert (vom Kontrast-Gate ausgenommen) | Fläche `--tl-surface-disabled`, Text `--tl-text-disabled`, Rand `--tl-border-disabled` |
-| Icon und Endknopf | Farbe `--tl-icon-secondary`; Lage `--tl-space-control-x`, `--tl-space-2xs`, Innenabstand `--tl-space-xs`; Endknopf beim Zeigen `--tl-surface-interactive-hover` |
-| reservierter Platz im Feld | Icon: `--tl-space-control-x` + `--tl-size-icon-sm` + `--tl-space-xs`. Endknopf: seine Fläche (`--tl-space-2xs` + 2 × `--tl-space-xs` + `--tl-size-icon-sm`) plus eine Lücke `--tl-space-xs` |
+| Icon | Farbe `--tl-icon-secondary`, Abstand zum Rand `--tl-space-control-x` |
+| Endknopf | ein `tl-button--icon` mit `--sm` und `--ghost` (`button.contract.md`): Farben, Zeigen und Deaktiviert von dort; Abstand zum Rand `--tl-space-2xs`, senkrecht in der Mitte |
+| reservierter Platz im Feld | Icon: `--tl-space-control-x` + `--tl-size-icon-sm` + `--tl-space-xs`. Endknopf: `--tl-space-2xs` + `--tl-size-control-sm` (der Knopf) + eine Lücke `--tl-space-xs` |
 | Lesewert | Text `--tl-text-primary`, Abstand `--tl-space-xs` |
 | Lesewert als Link | `--tl-text-link`, `--tl-text-link-hover`; unterstrichen |
 
@@ -80,7 +82,7 @@ Rand-Rollen halten am Gate 3,0 auf `surface-field` und jeder umgebenden Fläche 
 |---|---|
 | `aria-invalid="true"` | `hasError`. Das CSS liest es selbst — Screenreader und Bild haben eine Quelle. Wo ARIA es an der Rolle nicht erlaubt: `data-tl-state="error"`. |
 | `data-tl-state="warning"` | `hasWarnings && !hasError`. Der Fehler verdrängt die Warnung. ARIA kennt keine Warnung. |
-| `disabled` | heute setzt es kein Zustand des Formularmodells; die Regel `.tl-field:disabled` steht für Kundenmodule und spätere Zustände. `editable: false` ist **kein** Disabled: es rendert den Lesewert `tl-field-value`. |
+| `disabled` | `state.disabled`, wie beim Button: das native `disabled` am `input`, `textarea` oder `select`, ohne Löschknopf; die Regel `.tl-field:disabled` liest es. `editable: false` ist **kein** Disabled: es rendert den Lesewert `tl-field-value`. |
 | `aria-required="true"` | `mandatory`. |
 | `placeholder` | `placeholder`, wenn gesetzt. |
 | `:focus-visible` | den Ring liefert `base.css`; das Feld setzt und entfernt keinen Fokusstil. |
@@ -92,7 +94,9 @@ leere Zeile behält ihre Höhe. Mehrzeilig bricht jede Zeile um, statt mit Ellip
 Tabellenzelle stellt die Engine die Zeilen in eine Reihe ohne Umbruch. Ein Link-Lesewert ist unterstrichen — Farbe allein kennzeichnet keinen
 Link.
 
-Die Feldgruppe hat **einen** Endplatz: solange Text steht und `clearable` gilt, ersetzt der
+Die Aktion in der Gruppe ist ein `tl-button--icon --sm --ghost` (`tl-button tl-button--ghost tl-button--sm tl-button--icon`),
+unmittelbares Kind von `tl-field-group`: `button type="button"` (Löschen) oder `a` (Öffnen), mit
+`aria-label`. Die Feldgruppe hat **einen** Endplatz: solange Text steht und `clearable` gilt, ersetzt der
 Löschknopf den Öffnen-Link. Icon und Endknopf ändern nur die Klasse der Gruppe, nicht die Lage des
 Feldes im DOM, damit das Feld beim Tippen den Fokus behält.
 
@@ -102,9 +106,8 @@ Klassen:
 |---|---|
 | `tl-field` | das echte `input`, `textarea` oder `select`; die Wurzel von `TLDropdownSelect` |
 | `tl-field--multiline` | das `textarea` bei `multiline` |
-| `tl-field-group` | `span` um Feld mit Icon oder Endknopf; das Feld darin trägt Rahmen und Fokusring |
+| `tl-field-group` | `span` um Feld mit Icon oder Endknopf (`tl-button--icon`); das Feld darin trägt Rahmen und Fokusring |
 | `tl-field-group__icon` | `span` mit dem Icon vor dem Wert |
-| `tl-field-group__action` | am Ende, genau einer: `button type="button"` (Löschen) oder `a` (Öffnen), mit `aria-label` |
 | `tl-field-value` | der Lesewert bei `editable: false` |
 | `tl-field-value--multiline` | der mehrzeilige Lesewert (`div`): die Zeilen untereinander |
 | `tl-field-value__text` | der Text im Lesewert, endet mit Ellipse; im mehrzeiligen eine Zeile |

@@ -76,7 +76,7 @@ gesetzt; die Auswahl hat keine Schriftregel.
 | `aria-required="true"` | `mandatory`, am Kästchen, am Schalter, an der `role="radiogroup"`. Eine `role="group"` (Chips, Segmente mit Mehrfachwahl) trägt es nicht — ARIA erlaubt es dort so wenig wie `aria-invalid`. An `role="group"` gibt es kein `aria-required`; die Pflicht zeigt der Stern im Feld-Label an, das die Gruppe über `aria-labelledby` benennt. |
 | `tabIndex` | roving in Segmenten mit Einfachwahl: nur das gewählte (ohne Wahl das erste) hat `0`, die übrigen `-1`; Pfeiltasten wechseln die Wahl. Bei Mehrfachwahl und an Chips ist jedes Element erreichbar. |
 | `aria-readonly="true"` | `editable: false` an `TLCheckbox`: das Kästchen bzw. der Schalter rendert **ohne** `disabled`, mit `aria-readonly="true"` und einem Änderungs-Handler, der nichts tut — die Angekreuzt-Füllung behält den Kontrast der Marke. Kein Zeigen, Zeiger `default`. |
-| `disabled` | der inaktive Zustand, nicht der schreibgeschützte. Heute setzt ihn kein Zustand des Formularmodells (es gibt keinen Schlüssel `disabled`); die Regeln `:disabled` stehen für Kundenmodule und spätere Zustände. |
+| `disabled` | der inaktive Zustand, nicht der schreibgeschützte: der Client liest `state.disabled`, wie beim Button (`button.contract.md`), und setzt `disabled` an Kästchen, Schalter, Radio, Segment und Chip. |
 | `:focus-visible` | den Ring liefert `base.css`; die Auswahl setzt und entfernt keinen Fokusstil. |
 
 Deaktiviert schlägt Fehler und Warnung: ein `disabled` Kästchen, Radio, Segment oder Chip zeigt keinen

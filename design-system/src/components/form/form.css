@@ -157,25 +157,6 @@
   color: var(--tl-text-primary);
 }
 
-.tl-form-group__toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--tl-size-control);
-  height: var(--tl-size-control);
-  padding: 0;
-  border: 0;
-  border-radius: var(--tl-radius-sm);
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
-}
-
-/* Kein Zeigen auf Deaktiviertem; :where hält die Spezifität niedrig. */
-.tl-form-group__toggle:where(:not(:disabled)):hover {
-  background: var(--tl-surface-interactive-hover);
-}
-
 .tl-form-group__title {
   flex: 1 1 auto;
   min-width: 0;
