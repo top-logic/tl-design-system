@@ -299,9 +299,9 @@ sobald sich eine davon ändert.
 | `surface-layer-nested` | `#FFFFFF` | `#242729` |
 | `surface-overlay` | `#FFFFFF` | `#2B2F33` |
 | `surface-field` | `#F0F4F9` | `#27292D` |
-| `surface-interactive-hover` | `#F0F2F6` | `#22262A` |
-| `surface-interactive-selected` | `#E5E8ED` | `#2B3034` |
-| `surface-interactive-active` | `#D9DDE3` | `#343A3F` |
+| `surface-interactive-hover` | `#F0F2F6` | `#343A3F` (`gray-67`, seit 01.10.; davor `gray-73`) |
+| `surface-interactive-selected` | `#E5E8ED` | `#393E42` (`gray-64`, seit 01.10.; davor `gray-69`) |
+| `surface-interactive-active` | `#D9DDE3` | `#44484C` (`gray-60`, seit 01.10.; davor `gray-67`) |
 
 **`surface-layer`, `surface-layer-nested` und `surface-overlay` bleiben im hellen Modus alle weiß — und das ist
 diesmal richtig.** Über `#FAFAFA` liegt bis Weiß nur eine Stufe; drei Ebenen lassen sich dort durch
@@ -1681,6 +1681,23 @@ Paket nach !1740, Upload und die restlichen Popups in Welle 4/5.
 **Warum nicht einfach „mit der Welle“ erledigen:** Die Welle misst am leeren Block, nicht am gleichen Verhalten.
 Ohne die Prognose wäre der Tabellen-Kontextmenü-Block leer geworden, und das Menü hätte weiter aus dem Viewport
 geragt — mit neuer Klasse.
+
+#### Entschieden beim Bauen (01.10., Welle 3a, Paket)
+
+**Der Schrift-Reset hat keine Spezifität.** Befund im Review von P4: `.tl-button { font: inherit }` (Welle 1) und
+`.tl-menu__item { font: inherit }` haben dieselbe Spezifität wie `.tl-type-*` in `base.css` und laden danach — der
+Shorthand setzte Gewicht, Größe und Zeilenhöhe der Typo-Klasse zurück. Seit Welle 1 wurden Knöpfe darum in der
+geerbten Body-Größe gezeichnet, nicht in `tl-type-label`, und so abgenommen. Entschieden: Resets stehen in
+`:where(.tl-x) { font: inherit }`, ein Gate verbietet den `font`-Shorthand außerhalb von `:where`; **Knopf und
+Menüeintrag lesen `tl-type-body`**, in Kraft `tl-type-body-strong` — `label` bleibt Feldbeschriftung, Hilfstext,
+Badge und Menükopf. Reiter und Breadcrumb lesen ebenfalls `body`; Spaltenkopf bleibt `label-strong`.
+
+**`[hidden]` auch an Elementen.** Das Gate `hidden.test.mjs` prüft nur Blockklassen; ein Reiter-Panel mit
+`display: flex` blieb trotz `hidden` sichtbar (Review P5). Jedes Element, das `display` setzt, trägt jetzt die
+Regel; die Gate-Erweiterung auf Elemente steht in `altlast.md` (N8).
+
+**Prozent-Literale.** Die Maß-Regel des Lints endete auf `\b` und fing kein `%` (Review des Plans). Geschlossen in
+P7; `50%` und `-50%` sind erlaubte Werte (Mittelachse), `100%` war es schon.
 
 ## Befunde aus dem Specimen
 
