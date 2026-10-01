@@ -95,6 +95,7 @@ const MODIFIERS = {
   'tl-alert': new Set(['error', 'warning', 'success', 'info']), // Bedeutung ist Pflicht, kein Zustand.
   'tl-badge': new Set([]),
   'tl-divider': new Set(['vertical']),
+  'tl-toggle': new Set([]),
   'tl-skeleton': new Set([]),
 };
 

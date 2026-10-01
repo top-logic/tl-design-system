@@ -379,3 +379,9 @@ test('der Icon-Vertrag nennt die vier Klassen, die vier Tokens und die Attribute
   for (const a of ['role="img"', 'aria-label', 'aria-hidden', 'alt=""']) assert.ok(md.includes(a), `Vertrag nennt ${a} nicht`);
   for (const h of ['## Zustand', '## Aktionen', '## Tokens', '## Attribute', '## Konformität']) assert.ok(md.includes(h), `Abschnitt ${h} fehlt`);
 });
+
+test('Toggle: offen dreht das Icon, Reduced Motion gilt über base.css', () => {
+  const css = readGenerated('toggle', 'toggle.css');
+  assert.match(css, /\.tl-toggle\[aria-expanded="true"\] > \.tl-icon-sm\s*\{[^}]*rotate:\s*90deg/);
+  assert.match(css, /transition:\s*rotate var\(--tl-duration-fast\) var\(--tl-easing-standard\)/);
+});

@@ -6,6 +6,7 @@ import { readGenerated, declarationsOf } from './lib/component.mjs';
 export const SQUARE = [
   ['button', 'button.css', '.tl-button--icon', 'size-control'],
   ['button', 'button.css', '.tl-button--icon.tl-button--sm', 'size-control-sm'],
+  ['toggle', 'toggle.css', '.tl-toggle', 'size-control-sm'],
 ];
 
 for (const [dir, file, sel, mass] of SQUARE) {
