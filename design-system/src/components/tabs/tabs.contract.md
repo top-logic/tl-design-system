@@ -1,0 +1,63 @@
+# Vertrag: Tabs
+
+Reiter, die zwischen Inhalten desselben Orts wechseln. TopLogic garantiert Zugänglichkeit, nicht das
+Aussehen; wer ins Bild passen will, liest die Tokens.
+
+## Zustand
+
+| Schlüssel | Typ | Bedeutung |
+|---|---|---|
+| `tabs` | Liste | Die Reiter in ihrer Reihenfolge; je Reiter `id`, `label`, optional `icon`. |
+| `selectedId` | string | Id des gewählten Reiters; genau einer ist gewählt. |
+
+## Aktionen
+
+| Aktion | Wirkung |
+|---|---|
+| `selectTab` | wählt den Reiter `tabId`; sein Panel erscheint, die anderen sind `hidden` |
+
+## Tastatur
+
+Roving-Tabindex: der gewählte Reiter trägt `tabindex="0"`, alle anderen `tabindex="-1"`. Pfeile wählen
+und fokussieren in einem Schritt.
+
+| Taste | Wirkung |
+|---|---|
+| `ArrowRight`, `ArrowLeft` | nächster, vorheriger Reiter wird gewählt und fokussiert; am Ende geht es vorn weiter (zyklisch) |
+| `Home`, `End` | erster, letzter Reiter wird gewählt und fokussiert |
+| `Tab` | vom Reiter ins Panel |
+
+## Tokens
+
+| Teil | Token |
+|---|---|
+| Reiterleiste, Abstand der Reiter | `--tl-space-xs` |
+| Reiterleiste, Innenabstand seitlich | `--tl-space-sm` |
+| Reiterleiste, Linie darunter | `--tl-border-width-sm`, `--tl-border-separator` |
+| Reiter, Höhe | `--tl-size-control` |
+| Reiter, Abstände | `--tl-space-md` seitlich, `--tl-space-xs` zwischen Icon und Label |
+| Reiter, Text | `--tl-text-secondary`; der gewählte `--tl-text-primary` |
+| Zeiger darüber | `--tl-text-primary`, `--tl-surface-interactive-hover` |
+| Akzentlinie unter dem gewählten Reiter | `--tl-border-width-accent`, `--tl-border-interactive` |
+
+Den Fokusring liefert `base.css` über `:focus-visible`. Der gewählte Reiter hat kein eigenes Gewicht:
+nichts springt beim Wechsel; alle Reiter tragen `tl-type-body`.
+
+## Attribute
+
+| Attribut | Wann |
+|---|---|
+| `tl-tabs` | am Behälter aus Leiste und Panels |
+| `tl-tabs__list` | an der Leiste, mit `role="tablist"` |
+| `tl-tabs__tab` | an jedem Reiter; ein `<button type="button">` mit `role="tab"` und `tl-type-body` |
+| `aria-selected="true"` | am gewählten Reiter; die anderen tragen `aria-selected="false"` |
+| `aria-controls` | am Reiter, mit der Id seines Panels; das Panel trägt `aria-labelledby` mit der Id des Reiters |
+| `tabindex` | `0` am gewählten, `-1` an den anderen Reitern |
+| `tl-tabs__panel` | am Inhalt; `role="tabpanel"`; ein nicht gewähltes Panel trägt `hidden` |
+
+## Konformität
+
+Tabs bestehen den Vertrag, wenn die Leiste `role="tablist"` trägt, jeder Reiter ein `<button>` mit
+`role="tab"`, `aria-selected` und `aria-controls` ist, genau einer `aria-selected="true"` trägt, jedes
+Panel `role="tabpanel"` mit `aria-labelledby` hat, die Tastatur oben vollständig wirkt und im
+Klassen-Gate keine Klasse ohne `tl-`-Präfix hinterlässt.

@@ -99,6 +99,9 @@ const MODIFIERS = {
   'tl-popover': new Set([]),
   'tl-menu': new Set([]),
   'tl-menu-region': new Set([]),
+  'tl-toolbar': new Set([]),
+  'tl-tabs': new Set([]),
+  'tl-breadcrumb': new Set([]),
   'tl-skeleton': new Set([]),
 };
 

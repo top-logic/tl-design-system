@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="de" data-tl-mode="light" data-tl-density="normal">
+<head>
+<meta charset="utf-8">
+<title>TopLogic Design System — Breadcrumb</title>
+<link rel="stylesheet" href="/fonts/style/interFonts.css">
+<link rel="stylesheet" href="/fonts/style/bootstrap-icons.css">
+<link rel="stylesheet" href="/dist/primitives.css">
+<link rel="stylesheet" href="/dist/tokens.css">
+<link rel="stylesheet" href="/dist/base.css">
+<link rel="stylesheet" href="/dist/components.css">
+<style>
+  .specimen { display: grid; gap: var(--tl-space-lg); padding: var(--tl-space-xl); max-width: 64rem; margin: 0 auto; }
+  .specimen__bar { display: flex; gap: var(--tl-space-sm); align-items: center; }
+  .specimen__panel { background: var(--tl-surface-layer); border: var(--tl-border-width-sm) solid var(--tl-border-separator);
+    border-radius: var(--tl-radius-md); padding: var(--tl-space-md); display: grid; gap: var(--tl-space-sm); }
+  .specimen__base { padding: var(--tl-space-md); display: grid; gap: var(--tl-space-sm); }
+  .specimen__overlay { background: var(--tl-surface-overlay); box-shadow: var(--tl-shadow-popover);
+    border-radius: var(--tl-radius-md); padding: var(--tl-space-md); display: grid; gap: var(--tl-space-sm); }
+  .specimen__row { display: grid; grid-template-columns: 12rem minmax(0, 32rem); gap: var(--tl-space-sm); align-items: start; }
+  .specimen__row > .tl-type-label:first-child { color: var(--tl-text-secondary); }
+</style>
+</head>
+<body>
+<main class="specimen">
+  <div class="specimen__bar">
+    <a class="tl-type-label" href="/">← Grundklassen</a>
+    <span class="tl-type-heading-lg">Breadcrumb</span>
+    <label class="tl-type-label"><input type="checkbox" id="mode"> dunkel</label>
+    <label class="tl-type-label"><input type="checkbox" id="density"> kompakt</label>
+  </div>
+
+  <!-- Jede Zeile: eine Form, mit Beschriftung. Das Skript setzt die Zeilen auf jede Fläche. -->
+  <template id="rows">
+    <div class="specimen__row">
+      <span class="tl-type-label">drei Stufen</span>
+      <nav class="tl-breadcrumb" aria-label="Pfad">
+        <ol class="tl-breadcrumb__list">
+          <li class="tl-breadcrumb__entry"><button type="button" class="tl-button tl-button--link tl-type-body"><span class="tl-button__label">Start</span></button><i class="tl-breadcrumb__separator tl-icon-sm bi bi-chevron-right" aria-hidden="true"></i></li>
+          <li class="tl-breadcrumb__entry"><button type="button" class="tl-button tl-button--link tl-type-body"><span class="tl-button__label">Projekte</span></button><i class="tl-breadcrumb__separator tl-icon-sm bi bi-chevron-right" aria-hidden="true"></i></li>
+          <li class="tl-breadcrumb__entry"><span class="tl-breadcrumb__current tl-type-body" aria-current="page">Angebot 2026</span></li>
+        </ol>
+      </nav>
+    </div>
+  </template>
+
+  <section class="specimen__panel" id="on-layer"><p class="tl-type-heading-sm">Auf surface-layer</p></section>
+  <section class="specimen__base" id="on-base"><p class="tl-type-heading-sm">Auf surface-base</p></section>
+  <section class="specimen__overlay" id="on-overlay"><p class="tl-type-heading-sm">Auf surface-overlay</p></section>
+</main>
+<script>
+  const tpl = document.getElementById('rows');
+  for (const id of ['on-layer', 'on-base', 'on-overlay']) {
+    const rows = tpl.content.cloneNode(true);
+    document.getElementById(id).append(rows);
+  }
+  const html = document.documentElement;
+  document.getElementById('mode').addEventListener('change', (e) => html.setAttribute('data-tl-mode', e.target.checked ? 'dark' : 'light'));
+  document.getElementById('density').addEventListener('change', (e) => html.setAttribute('data-tl-density', e.target.checked ? 'compact' : 'normal'));
+</script>
+</body>
+</html>

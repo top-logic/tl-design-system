@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { ratio, AA_TEXT, AA_NON_TEXT } from '../tools/lib/contrast.mjs';
 import { resolve } from '../tools/resolve.mjs';
-import { readGenerated, componentCssFiles } from './lib/component.mjs';
+import { readGenerated, componentCssFiles, declarationsOf } from './lib/component.mjs';
 import { declarations } from '../tools/lib/css.mjs';
 
 const P = JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.url)));
@@ -395,4 +395,15 @@ test('Schrift-Reset nur in :where — jede tl-type-*-Klasse am Element gewinnt',
     for (const d of declarations(css))
       if (d.property === 'font' && !d.selector.startsWith(':where(')) out.push(`${name}:${d.line} ${d.selector}`);
   assert.deepEqual(out, []);
+});
+
+test('Toolbar, Tabs, Breadcrumb lesen nur Tokens und kennen keine Zustandsklasse', () => {
+  for (const [dir, file] of [['toolbar', 'toolbar.css'], ['tabs', 'tabs.css'], ['breadcrumb', 'breadcrumb.css']]) {
+    assert.doesNotMatch(readGenerated(dir, file), /--(active|compact|collapsible)\b/, `${file}: Zustand als Klasse`);
+  }
+  const tabs = readGenerated('tabs', 'tabs.css');
+  const aktiv = declarationsOf(tabs, '.tl-tabs__tab[aria-selected="true"]');
+  assert.match(aktiv, /border-color:\s*var\(--tl-border-interactive\)/);
+  assert.doesNotMatch(aktiv, /font-weight/);
+  assert.match(declarationsOf(tabs, '.tl-tabs__panel'), /flex-direction:\s*column/);
 });

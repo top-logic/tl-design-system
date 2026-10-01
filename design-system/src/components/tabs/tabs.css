@@ -1,0 +1,54 @@
+/* Tabs — docs/skalen.md „Gleiches wird zusammengelegt“ (W2, W3).
+   role=tablist/tab/tabpanel; Roving-Tabindex, Pfeile wählen. Aktiv ist aria-selected: Akzentlinie
+   unten und text-primary, kein Fettdruck — nichts springt beim Wechsel. Den Fokusring liefert base.css.
+   Das Panel ist eine Flex-Spalte, damit füllende Kinder (die virtualisierte Tabelle) ihre Höhe bekommen. */
+
+.tl-tabs {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.tl-tabs[hidden] { display: none; }
+
+.tl-tabs__list {
+  display: flex;
+  gap: var(--tl-space-xs);
+  padding: 0 var(--tl-space-sm);
+  border-bottom: var(--tl-border-width-sm) solid var(--tl-border-separator);
+  flex-shrink: 0;
+}
+
+/* Reset ohne Spezifität: die Typo-Klasse am Element gewinnt. */
+:where(.tl-tabs__tab) { font: inherit; }
+
+.tl-tabs__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tl-space-xs);
+  min-height: var(--tl-size-control);
+  padding: 0 var(--tl-space-md);
+  border: 0;
+  border-bottom: var(--tl-border-width-accent) solid transparent;
+  background: transparent;
+  color: var(--tl-text-secondary);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tl-tabs__tab:hover {
+  color: var(--tl-text-primary);
+  background: var(--tl-surface-interactive-hover);
+}
+
+.tl-tabs__tab[aria-selected="true"] {
+  color: var(--tl-text-primary);
+  border-color: var(--tl-border-interactive);
+}
+
+.tl-tabs__panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
