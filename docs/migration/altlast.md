@@ -345,7 +345,7 @@ Es fallen ohne Ersatz: der gleitende Marker der SegmentedChoice (das gewählte S
 
 | Gruppe | Stand |
 |---|---|
-| **Welle 3: gehobene Flächen** | `surface-interactive-hover`/`-selected` auf `surface-overlay` messen dunkel 1,13 / 1,01. Im Select-Popup trägt die Akzentlinie (`border-interactive`) die Hervorhebung; der Skeleton liest dieselbe Rolle und ist dunkel auf dem Overlay kaum sichtbar. Entscheidung mit dem Menü. |
+| **Welle 3: gehobene Flächen** | `surface-interactive-hover`/`-selected` auf `surface-overlay` messen dunkel 1,13 / 1,01. Im Select-Popup trägt die Akzentlinie (`border-interactive`) die Hervorhebung; der Skeleton liest dieselbe Rolle und ist dunkel auf dem Overlay kaum sichtbar. Entscheidung mit dem Menü. **Erledigt mit Welle 3a** (Spec §8.1, „Zeigen auf allen Gründen“): dunkel `-hover` `gray-67`, `-selected` `gray-64`, `-active` `gray-60`. |
 | **Java / i18n** | Der Retry-Knopf des Select trägt den ganzen Satz als Namen; ein eigener Key `js.dropdownSelect.retry` (`I18NConstants`, per JavaDoc erzeugt, nie von Hand) gehört in ein späteres Java-Paket. |
 | **`withPill`** | gehört nach `pill/`, nicht in die Select-Dateien. |
 | **Drei Renderer von `tl-field-value`** | `ReadonlyValue`, `TLResourceCell` und der Helfer `FieldValue` zeichnen dasselbe Element; zusammenführen, sobald die Tabellenzelle (Welle 3) angefasst wird. |
@@ -353,8 +353,72 @@ Es fallen ohne Ersatz: der gleitende Marker der SegmentedChoice (das gewählte S
 | **`tlBinaryField`** | tote Klasse im Altbestand, Welle 5. |
 | **Sichtprüfung (mit dem PR)** | Ellipsen: mehrzeiliger Lesewert außerhalb der Zelle, Segment- und Chip-Beschriftung bei sehr langem Text. Badge-Position am Icon. Select im Dialog (Popup über dem Backdrop) und Menü über dem Dialog; Dialog aus dem Drawer (gleiche Ebene, DOM-Reihenfolge); Icon-Zentrierung im Select; Link-Zellen jetzt unterstrichen; Hilfeknopf mit `tl-icon-sm` statt `md`. |
 | **Gebündeltes aus dem Review** | `describedBy` an `bridge/field-label.ts` (Editoren `codeedit`, `wysiwyg`, `model.search.react` hängen daran; `codeedit` und `model.search.react` liefen offline nicht, der PR-Build ist das Gate). Der Punkt „Geändert“ ist `aria-hidden` und wird nicht vorgelesen (Text oder `aria-description` am Feld). Live-Region-Timing der Warnungen (mit `aria-live` eingehängt). `hidden.test.mjs` deckt nur Blockklassen. Kontrast-Gate: Marke auf Gründen im `derive`-Bericht. |
-| **AppBar-Breakpoint** | AppBar-Breakpoint für den Benutzernamen (war 640 px; Welle 4). Das Benutzermenü liegt im `trailing` der AppBar, nicht in einer Toolbar; „bei Platzmangel nur der Avatar“ (Spec §7) ist eine AppBar-Regel. |
 | **Paket** | `farbkreis-13.svg` (Übersicht, Wiki) zeigt noch alte Randwerte. Specimen `button`/`pill` laden mit `ri-*` keine Icon-Schrift und zeigen leere Icons; die Specimen der Welle 2 nutzen Bootstrap Icons. |
+
+## Welle 3a · Navigation und Popups — gebaut 01.10.2026
+
+Branch `CWS/CWS_29617_design_system_welle_3a` (`60a36b308e..21a8aa52c3`, gestapelt auf `welle_2`, Suiten grün, `messages_en` ohne Diff) und Paket `3b47ac5..` (Ratsche je Task). Noch **nicht gepusht**; die Sichtprüfung steht aus und läuft mit dem PR. Spec: `docs/superpowers/specs/2026-10-01-welle-3a-navigation-popups-design.md`; Konsolidierung W1–W5, W9, W12, N8 (unten).
+
+### Gestrichene Blöcke
+
+Die sechs Blöcke der Spec-Tabelle (§1), dazu der Dropdown-Teil der Toolbar, der unter der Dashboard-Überschrift stand:
+
+| Block (`tlReactControls.css`) | Zeilen alt | Nachfolger |
+|---|---|---|
+| TLMenu | 117 | `tl-popover tl-menu`, `tl-menu__item` |
+| TLMenuRegion | 29 | `tl-menu-region` (Klick: `tl-button`) |
+| User menu | 17 | `tl-button--ghost`, Name als `tl-button__label` |
+| TLToolbar | 137 | `tl-toolbar`, `tl-toolbar__group`, `tl-divider--vertical` |
+| Dashboard, Dropdown-Teil der Toolbar | 56 (140→84) | `tl-popover tl-menu` |
+| TLTabBar | 125 | `tl-tabs` |
+| TLBreadcrumb | 50 | `tl-breadcrumb` |
+
+**Ratsche: 5994 → 5537** (`test/ratchet.json`, `lines`). Zwei Überschriften neu, kein Zuwachs: **TLViewError (29)** stand ohne eigene Überschrift im TLMenu-Block; **TLInset (58)** trägt, was im TLTabBar-Block nicht zum Reiter gehörte (Abstandsmodell, `:root { --page-inset }`, `.tlInset`). Gesenkt: TLPanel 153→152, TLAppBar 90→89 (Host-Regeln der Toolbar), „Controls placed on the primary (accent) app bar“ 25→14 (der Klick-Auslöser ist ein `tl-button`). Kein Block gewachsen. `foreignTl` 6→4: `--tl-toolbar-trigger-size` und `--tl-toolbar-shrink-priority` fallen mit der Toolbar. Literale `fontSize` 48→47, `outlineNone` 21→20, `zIndex` 22→21 — der Tooltip (`.tl-tooltip-popover`) liest `--tl-layer-popover` statt `9999999999999999`; sein Block bleibt bis Welle 4.
+
+### Neu im Paket
+
+`popover` (`tl-popover`: Fläche jedes Popups, `layer-popover`, `shadow-popover`), `menu` (`tl-menu`, `__item`, `__icon`, `__label`, `__header`; `tl-menu-region` mit `data-tl-trigger`; in Kraft `aria-current`), `toolbar` (`tl-toolbar`, `__group`; `data-tl-compact`, `data-tl-overflow`), `tabs` (`tl-tabs`, `__list`, `__tab`, `__panel`; aktiv `aria-selected`), `breadcrumb` (`tl-breadcrumb`, `__list`, `__entry`, `__current`, `__separator`), `toggle` (`tl-toggle`, Chevron dreht mit `aria-expanded`); in `button` der Modifier `tl-button--icon` (quadratisch, mit `--sm` 24 px). Je `*.css`, `*.contract.md`, Specimen; Die Specimen teilen `specimen/specimen.css` (N8); `button` und `pill` zeigen weiter `ri-*`-Icons ohne Schrift (altlast „Paket“ der Welle 2). Neue Maße `size-popover-min` (`size-11`) und `size-popover-max` (`view-1` = `70vh`); dunkel `surface-interactive-hover`/`-selected`/`-active` auf `gray-67`/`gray-64`/`gray-60` (neue Primitive `gray-64`, `gray-60`; `gray-73` fällt). Schrift-Resets stehen in `:where(…)`; Knopf, Eintrag, Reiter und Breadcrumb lesen `tl-type-body`. Es fallen im Paket `tl-select__chip-remove`, `tl-select__clear`, `tl-field-group__action` und `tl-form-group__toggle` (Nachzug Welle 2).
+
+### Alt → neu für Anwendungs-Stylesheets
+
+Kunden- und Anwendungs-CSS, das die alten Klassen anspricht, liest künftig diese (Liste = Grep-Gate `test/engine-classes.test.mjs`):
+
+| Alt | Neu |
+|---|---|
+| `tlMenu` | `tl-popover tl-menu` |
+| `tlMenu__item`, `__icon`, `__label`, `__header` | `tl-menu__item`, `__icon`, `__label`, `__header` |
+| `tlMenu__item--focused` | DOM-Fokus (Roving), Ring aus `base.css` |
+| `tlMenu__item--active`, `--disabled` | `aria-current="true"` (`tl-type-body-strong`), `disabled` |
+| `tlMenu__separator`, `tlToolbar__dropdownSeparator` | `tl-divider` |
+| Spaltenmenü der Tabelle (`tlMenu` von Hand) | `Menu`-Instanz: `tl-popover tl-menu` |
+| `tlMenuRegion`, `tlMenuRegion--click` | `tl-menu-region` mit `data-tl-trigger="click"` (Knopf: `tl-button`, `aria-expanded`) oder `"contextmenu"` |
+| `tlUserMenu__name` | `tl-button__label` im Auslöser `tl-button--ghost` |
+| `tlToolbar`, `tlToolbar--compact`, `--collapsible` | `tl-toolbar`, `data-tl-compact` |
+| `tlToolbar__group`, `__group--inline`, `__group--menu`, `__item` | `tl-toolbar__group` |
+| `tlToolbar__separator` | `tl-divider tl-divider--vertical` |
+| `tlToolbar__menuTrigger`, `__menuTrigger--icon`, `__menuIcon`, `__chevron` | `tl-button` der Toolbar-Erscheinung, kompakt `tl-button--icon` |
+| `tlToolbar__dropdown`, `__dropdownItem` | `tl-popover tl-menu` mit `data-tl-overflow`, Einträge `tl-menu__item` (`ButtonDefaults appearance="menu-item"`) |
+| `tlReactTabBar`, `__tabs`, `__tab`, `__tabIcon`, `__content` | `tl-tabs`, `__list`, `__tab` (Icon `tl-icon-sm`), `__panel` |
+| `tlReactTabBar__tab--active` | `aria-selected="true"` |
+| `tlBreadcrumb`, `__list`, `__entry`, `__current` | `tl-breadcrumb`, `__list`, `__entry`, `__current` (`aria-current="page"`) |
+| `tlBreadcrumb__item` | `tl-button tl-button--link` |
+| `tlBreadcrumb__separator` (Inline-SVG) | `tl-breadcrumb__separator tl-icon-sm` (`ThemeIcon`, `aria-hidden`) |
+| `tl-select__chip-remove`, `tl-select__clear`, `tl-field-group__action` | `tl-button--ghost tl-button--sm tl-button--icon` |
+| `tl-form-group__toggle` | `tl-toggle` |
+| Select-Popup `tl-select__popup` | `tl-popover tl-select__popup` |
+
+Es fallen ohne Ersatz: die Fremddefinitionen `--tl-toolbar-trigger-size` (der TSX misst) und `--tl-toolbar-shrink-priority`, die Regel `.tlMenuRegion--click[aria-expanded="true"]` (griff nie), die Breitengrenze `max-width: 12rem` des Benutzernamens samt `@media (max-width: 640px)`.
+
+### Offen für spätere Wellen und Pakete
+
+| Gruppe | Stand |
+|---|---|
+| **AppBar-Breakpoint** | AppBar-Breakpoint für den Benutzernamen (war 640 px; Welle 4). Das Benutzermenü liegt im `trailing` der AppBar, nicht in einer Toolbar; „bei Platzmangel nur der Avatar“ (Spec §7) ist eine AppBar-Regel. Dazu die **Namensbreite** (war `max-width: 12rem`): `tl-button__label` schneidet erst ab, wenn etwas die Breite begrenzt — ohne Grenze greift die Ellipse nicht, ein langer Name verbreitert den Auslöser bis Welle 4. |
+| **Reiter-Überlauf** | `tl-tabs__list` hat keinen Überlauf: viele Reiter laufen über den Rand hinaus. Nicht in Welle 3 (Spec §11), ebenso Untermenüs und Typeahead im Menü. |
+| **Gefahrton im Toolbar-Überlauf** | Ein `danger`-Knopf verliert im Überlauf seinen Ton: der Menüvertrag kennt keinen Gefahr-Eintrag („ein Eintrag ist Struktur“). Entscheidung mit Hendrik offen; Option `data-tl-tone="danger"` am `tl-menu__item` im Paket. |
+| **Menü-Auslöser im Toolbar-Überlauf** | Unter `ButtonDefaults appearance="menu-item"` wird der Klick-Auslöser `button.tl-menu-region.tl-menu__item` ohne `role="menuitem"` und `tabindex=-1`; die Pfeiltasten des Überlaufs überspringen ihn. Heute unerreichbar (Toolbars tragen nur Kommando-Knöpfe). Fix: `menuItemProps(defaults)` wie `TLButton`, oder fest `ghost`; dazu entscheiden, ob `?? 'ghost'` (Panel-Leisten: `secondary`) oder der Vertrag „immer ghost“ gilt. |
+| **Gebündeltes aus dem Review** | Versteckter Upload im Überlauf fängt die Pfeiltasten (`<span hidden>` mit innerem `menuitem`; Roving filtert `getClientRects()` oder Upload rendert nichts). Tab schließt das Menü nicht (WAI-ARIA); Menü ohne `aria-labelledby`; Einträge, die bei offenem Menü dazukommen, bleiben `tabindex=-1` bis zur ersten Pfeiltaste. Kontextmenü am Punkt um `space-xs` versetzt (Offset auch am Punkt-Anker); Kontexttaste sendet einen Punkt statt des Elements. Fehlt das Anker-Element, öffnet das Menü ohne Anker. Popup-Breite nur beim Rendern gemessen; die Kaskade `select` nach `popover` hängt an der Dateireihenfolge in `generate.mjs`. Kein Offen-Stil für `aria-expanded` am `tl-button`. Tablist ohne `aria-label`; die Toolbar heißt generisch (`js.toolbar.label`), ein Name aus dem Kontext ist ein eigener Punkt. |
+| **Sichtprüfung (mit dem PR)** | Popup-Mindestbreite `size-popover-min` schlägt Felder unter 10rem; `max-height` des Select-Popups lässt weniger als acht Zeilen sichtbar; `Shift+F10` kann ein zweites natives Kontextmenü auslösen; Panelkopf `+2·space-2xs` höher, Trigger in der primären App-Bar; Toggle-Drehung; Specimen `progress`/`icon` im Browser. |
 
 ## Konsolidierung (01.10.) — Gleiches wird zusammengelegt
 
