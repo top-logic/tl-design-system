@@ -255,7 +255,7 @@ test('Toggle: offen dreht das Icon, Reduced Motion gilt über base.css', () => {
 - Test: `test/popover.test.mjs` (neu; Fall „nur tl-popover liest shadow-popover“ kommt in P6)
 
 **Interfaces:**
-- Produces: `.tl-popover`; `.tl-menu`, `.tl-menu__item`, `.tl-menu__icon`, `.tl-menu__label`, `.tl-menu__header`, `.tl-menu > .tl-divider`; `.tl-menu-region[data-tl-trigger="contextmenu"|"click"]`. In Kraft ist `aria-current="true"` **plus** `tl-type-label-strong` am Eintrag (das TSX setzt die Typo-Klasse; `font-weight` steht nur in `tl-type-*`). Leser: E1, E4, E5, E7.
+- Produces: `.tl-popover`; `.tl-menu`, `.tl-menu__item`, `.tl-menu__icon`, `.tl-menu__label`, `.tl-menu__header`, `.tl-menu > .tl-divider`; `.tl-menu-region[data-tl-trigger="contextmenu"|"click"]`. In Kraft ist `aria-current="true"` **plus** `tl-type-body-strong` am Eintrag (das TSX setzt die Typo-Klasse; `font-weight` steht nur in `tl-type-*`). Leser: E1, E4, E5, E7.
 
 - [ ] **Step 1: Test** — `test/popover.test.mjs`:
 
@@ -277,7 +277,7 @@ test('tl-menu__item: Zeilenhöhe size-row, Zustand nur als Attribut, In-Kraft ü
   assert.doesNotMatch(css, /--(focused|active|disabled)\b/);
   assert.doesNotMatch(css, /font-weight/);
   const md = readFileSync(new URL('../src/components/menu/menu.contract.md', import.meta.url), 'utf8');
-  assert.deepEqual(missingInContract(md, ['aria-current', 'tl-type-label-strong', 'tl-menu-region', 'data-tl-trigger']), []);
+  assert.deepEqual(missingInContract(md, ['aria-current', 'tl-type-body-strong', 'tl-menu-region', 'data-tl-trigger']), []);
 });
 ```
 
@@ -314,7 +314,7 @@ test('tl-menu__item: Zeilenhöhe size-row, Zustand nur als Attribut, In-Kraft ü
 /* Menu — docs/skalen.md „Gleiches wird zusammengelegt“ (W2, W3).
    Ein Menü ist ein tl-popover mit Einträgen. Der Fokus ist echt (Roving-Tabindex): der Ring aus
    base.css ist der Cursor, innen, weil der Behälter scrollt. Zustände sind Attribute: aria-current
-   (in Kraft; das Gewicht trägt tl-type-label-strong), disabled. Zeigen ist surface-interactive-hover —
+   (in Kraft; das Gewicht trägt tl-type-body-strong), disabled. Zeigen ist surface-interactive-hover —
    seit „Zeigen auf allen Gründen“ auch dunkel auf dem Overlay sichtbar. */
 
 .tl-menu {
@@ -391,9 +391,9 @@ test('tl-menu__item: Zeilenhöhe size-row, Zustand nur als Attribut, In-Kraft ü
 
 - [ ] **Step 5: Lint** — `'tl-popover': new Set([]), 'tl-menu': new Set([]), 'tl-menu-region': new Set([]),`.
 
-- [ ] **Step 6: Verträge** — `popover.contract.md` (Zustand `open`, Anker Element oder Punkt; Verhalten: Escape, Außenklick, Fokus zurück zum Auslöser, folgt Scroll und Resize, klappt um, bleibt im Viewport; Tokens; Attribute `tl-popover`, `data-tl-anchored-overlay` im Portal; Konformität). `menu.contract.md`: Zustand (`items`, `open`, `anchorId`/`anchorX`/`anchorY`), Aktionen (`selectItem`, `close`), **Tastatur** (Pfeile zyklisch, Home/End, Enter/Space, Escape; Fokus wandert mit, deaktivierte Einträge werden übersprungen), Tokens, Attribute (`tl-menu` am `role=menu`; `tl-menu__item` am `role=menuitem`, in Kraft `aria-current="true"` + `tl-type-label-strong`, Umschalter `role=menuitemcheckbox` + `aria-checked`; `tl-menu__header` `role=presentation`; `tl-divider`; `tl-menu-region` mit `data-tl-trigger`, bei `click` ein `button.tl-button--ghost` mit `aria-haspopup="menu"`, `aria-expanded`, Kinder nicht interaktiv (Avatar, Text); Kontextmenü per `Shift+F10` und Kontextmenü-Taste), Konformität. Satz: „Ein `TLButton` unter `ButtonDefaults appearance="menu-item"` ist ein Eintrag; der Container schlägt die Server-Erscheinung.“
+- [ ] **Step 6: Verträge** — `popover.contract.md` (Zustand `open`, Anker Element oder Punkt; Verhalten: Escape, Außenklick, Fokus zurück zum Auslöser, folgt Scroll und Resize, klappt um, bleibt im Viewport; Tokens; Attribute `tl-popover`, `data-tl-anchored-overlay` im Portal; Konformität). `menu.contract.md`: Zustand (`items`, `open`, `anchorId`/`anchorX`/`anchorY`), Aktionen (`selectItem`, `close`), **Tastatur** (Pfeile zyklisch, Home/End, Enter/Space, Escape; Fokus wandert mit, deaktivierte Einträge werden übersprungen), Tokens, Attribute (`tl-menu` am `role=menu`; `tl-menu__item` am `role=menuitem`, in Kraft `aria-current="true"` + `tl-type-body-strong`, Umschalter `role=menuitemcheckbox` + `aria-checked`; `tl-menu__header` `role=presentation`; `tl-divider`; `tl-menu-region` mit `data-tl-trigger`, bei `click` ein `button.tl-button--ghost` mit `aria-haspopup="menu"`, `aria-expanded`, Kinder nicht interaktiv (Avatar, Text); Kontextmenü per `Shift+F10` und Kontextmenü-Taste), Konformität. Satz: „Ein `TLButton` unter `ButtonDefaults appearance="menu-item"` ist ein Eintrag; der Container schlägt die Server-Erscheinung.“
 
-- [ ] **Step 7: Specimen** — `menu.spec.html`: statisch geöffnetes `div.tl-popover.tl-menu[role=menu]` mit Header, Einträgen (einer `aria-current` + `tl-type-label-strong`, einer `disabled`, einer mit Icon), `hr.tl-divider`; Auslöser `button.tl-menu-region.tl-button.tl-button--ghost[data-tl-trigger=click][aria-haspopup=menu][aria-expanded=true]`; auf layer/base/overlay; Index-Link.
+- [ ] **Step 7: Specimen** — `menu.spec.html`: statisch geöffnetes `div.tl-popover.tl-menu[role=menu]` mit Header, Einträgen (einer `aria-current` + `tl-type-body-strong`, einer `disabled`, einer mit Icon), `hr.tl-divider`; Auslöser `button.tl-menu-region.tl-button.tl-button--ghost[data-tl-trigger=click][aria-haspopup=menu][aria-expanded=true]`; auf layer/base/overlay; Index-Link.
 
 - [ ] **Step 8: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün. `git commit -m "Ticket #29617: Welle 3a -- tl-popover und tl-menu: eine Flaeche, ein Eintrag, echter Fokus"`
 
@@ -879,7 +879,7 @@ export const MenuItem: React.FC<{ id?: string; icon?: string; label: string; dis
     <button
       type="button"
       id={id}
-      className={'tl-menu__item ' + (current ? 'tl-type-label-strong' : 'tl-type-label') + (className ? ' ' + className : '')}
+      className={'tl-menu__item ' + (current ? 'tl-type-body-strong' : 'tl-type-body') + (className ? ' ' + className : '')}
       role="menuitem"
       aria-current={current ? 'true' : undefined}
       disabled={disabled}
@@ -993,8 +993,8 @@ export type ButtonAppearance = 'primary' | 'secondary' | 'ghost' | 'link' | 'men
 export interface ButtonDefaultsValue { appearance?: ButtonAppearance; iconOnly?: boolean; }
 // merged: useMemo(() => ({ ...parent, ...value }), [parent, value.appearance, value.iconOnly])
 export function buttonClassName(opts: { appearance: ButtonAppearance; danger?: boolean; small?: boolean; icon?: boolean; extra?: string }): string {
-  if (opts.appearance === 'menu-item') return ['tl-menu__item', 'tl-type-label', opts.extra ?? ''].filter(Boolean).join(' ');
-  return ['tl-button', `tl-button--${opts.appearance}`, 'tl-type-label',
+  if (opts.appearance === 'menu-item') return ['tl-menu__item', 'tl-type-body', opts.extra ?? ''].filter(Boolean).join(' ');
+  return ['tl-button', `tl-button--${opts.appearance}`, 'tl-type-body',
     opts.danger && opts.appearance !== 'link' ? 'tl-button--danger' : '',
     opts.small ? 'tl-button--sm' : '', opts.icon ? 'tl-button--icon' : '',
     opts.extra ?? ''].filter(Boolean).join(' ');
@@ -1089,9 +1089,9 @@ const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
 };
 ```
 
-Markup: `div.tl-tabs` (+ `fillClass`), `div.tl-tabs__list[role=tablist]`, je Reiter `button.tl-tabs__tab.tl-type-label[role=tab][id=…-tab-ID][data-tab-id][aria-selected][aria-controls=…-panel][tabIndex 0/-1]` mit `<ThemeIcon … className="tl-icon-sm" />` und `<span>{label}</span>`; `div.tl-tabs__panel[role=tabpanel][id=…-panel][aria-labelledby]` mit `FillBarrier`.
+Markup: `div.tl-tabs` (+ `fillClass`), `div.tl-tabs__list[role=tablist]`, je Reiter `button.tl-tabs__tab.tl-type-body[role=tab][id=…-tab-ID][data-tab-id][aria-selected][aria-controls=…-panel][tabIndex 0/-1]` mit `<ThemeIcon … className="tl-icon-sm" />` und `<span>{label}</span>`; `div.tl-tabs__panel[role=tabpanel][id=…-panel][aria-labelledby]` mit `FillBarrier`.
 
-- [ ] **Step 2: Breadcrumb** — `I18NConstants.java` (Block „Client-side i18n keys“): JavaDoc `@en Breadcrumb`, `@CustomKey("js.breadcrumb.label") public static ResKey JS_BREADCRUMB_LABEL;`. `messages_de.properties`: `js.breadcrumb.label = Navigationspfad`. TSX: `I18N_KEYS`, `useI18N`; `nav.tl-breadcrumb[aria-label]`, `ol.tl-breadcrumb__list`, `li.tl-breadcrumb__entry`, Trenner `<span className="tl-breadcrumb__separator" aria-hidden="true"><ThemeIcon encoded={SEPARATOR_ICON} className="tl-icon-sm" /></span>` (`ThemeIcon` kennt kein `aria-hidden` — der Span trägt es), Eintrag `button` mit `buttonClassName({ appearance: 'link' })`, aktuell `span.tl-breadcrumb__current.tl-type-label[aria-current=page]`.
+- [ ] **Step 2: Breadcrumb** — `I18NConstants.java` (Block „Client-side i18n keys“): JavaDoc `@en Breadcrumb`, `@CustomKey("js.breadcrumb.label") public static ResKey JS_BREADCRUMB_LABEL;`. `messages_de.properties`: `js.breadcrumb.label = Navigationspfad`. TSX: `I18N_KEYS`, `useI18N`; `nav.tl-breadcrumb[aria-label]`, `ol.tl-breadcrumb__list`, `li.tl-breadcrumb__entry`, Trenner `<span className="tl-breadcrumb__separator" aria-hidden="true"><ThemeIcon encoded={SEPARATOR_ICON} className="tl-icon-sm" /></span>` (`ThemeIcon` kennt kein `aria-hidden` — der Span trägt es), Eintrag `button` mit `buttonClassName({ appearance: 'link' })`, aktuell `span.tl-breadcrumb__current.tl-type-body[aria-current=page]`.
 
 - [ ] **Step 3: Altes CSS, Ratsche** — Block `TLTabBar`: 184–233 und 291–308 löschen; **234–290 bleiben** (Abstandsmodell, `:root { --page-inset }`, `.tlInset`) unter neuer Überschrift `/* --- TLInset ----- */` mit Eintrag in `ratchet.json` (Zahl aus `inventory.mjs`); `_blocks`-Vermerk. Block `TLBreadcrumb` (2160–2208) löschen. Zeile 2739 `.tlAppShell .tlBreadcrumb` → `.tlAppShell .tl-breadcrumb` (Übergangsregel, liest die Paketklasse; Kommentar „Übergang bis Welle 4 (Shell)“). `ratchet.json`: `TLTabBar`, `TLBreadcrumb` streichen.
 
