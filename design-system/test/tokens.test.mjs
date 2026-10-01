@@ -241,3 +241,13 @@ test('eine Kategorie hat genau zwei Rollen: subtle und border', () => {
     for (const n of rollen) assert.match(n, /^category-[1-8]-(subtle|border)$/, n);
   }
 });
+
+test('Zeigen auf allen Gründen (01.10.): dunkel liegen hover, selected, active über dem Overlay', () => {
+  const C = R.color.dark;
+  for (const rolle of ['surface-interactive-hover', 'surface-interactive-selected', 'surface-interactive-active']) {
+    assert.ok(ratio(C[rolle], C['surface-overlay']) >= 1.1, `${rolle} auf surface-overlay < 1,1`);
+  }
+  assert.ok(ratio(C['border-interactive'], C['surface-interactive-selected']) >= 3.0);
+  assert.equal(T.measure['size-popover-min'], '{size-11}');
+  assert.equal(T.measure['size-popover-max'], '{view-1}');
+});

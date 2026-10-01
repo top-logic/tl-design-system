@@ -194,6 +194,14 @@
         "$type": "color",
         "$value": "#54565B"
       },
+      "gray-60": {
+        "$type": "color",
+        "$value": "#44484C"
+      },
+      "gray-64": {
+        "$type": "color",
+        "$value": "#393E42"
+      },
       "gray-66": {
         "$type": "color",
         "$value": "#34383C"
@@ -213,10 +221,6 @@
       "gray-72": {
         "$type": "color",
         "$value": "#27292D"
-      },
-      "gray-73": {
-        "$type": "color",
-        "$value": "#22262A"
       },
       "gray-74": {
         "$type": "color",
@@ -487,6 +491,16 @@
         "$value": {
           "value": 10,
           "unit": "rem"
+        }
+      },
+      "view-1": {
+        "$type": "dimension",
+        "$value": {
+          "value": 70,
+          "unit": "vh"
+        },
+        "$extensions": {
+          "com.top-logic.note": "viewport unit, not a DTCG dimension"
         }
       },
       "text-1": {
@@ -1200,15 +1214,15 @@
         },
         "surface-interactive-hover": {
           "$type": "color",
-          "$value": "{primitive.color.gray-73}"
+          "$value": "{primitive.color.gray-67}"
         },
         "surface-interactive-selected": {
           "$type": "color",
-          "$value": "{primitive.color.gray-69}"
+          "$value": "{primitive.color.gray-64}"
         },
         "surface-interactive-active": {
           "$type": "color",
-          "$value": "{primitive.color.gray-67}"
+          "$value": "{primitive.color.gray-60}"
         },
         "surface-disabled": {
           "$type": "color",
@@ -1648,6 +1662,14 @@
       "size-field-label-max": {
         "$type": "dimension",
         "$value": "{primitive.measure.size-11}"
+      },
+      "size-popover-min": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-11}"
+      },
+      "size-popover-max": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.view-1}"
       },
       "size-choice": {
         "$type": "dimension",

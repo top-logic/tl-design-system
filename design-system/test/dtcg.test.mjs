@@ -59,6 +59,9 @@ test('Wertformen je $type: cubicBezier, number, shadow, duration, dimension, fon
   const percent = D.primitive.measure['corner-4'];
   assert.deepEqual(percent.$value, { value: 50, unit: '%' });
   assert.equal(percent.$extensions?.['com.top-logic.note'], 'percent, not a DTCG dimension');
+  const viewport = D.primitive.measure['view-1'];
+  assert.deepEqual(viewport.$value, { value: 70, unit: 'vh' });
+  assert.equal(viewport.$extensions?.['com.top-logic.note'], 'viewport unit, not a DTCG dimension');
 });
 
 test('jeder Name aus T.derived.light steht im Export', () => {
