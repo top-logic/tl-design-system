@@ -61,6 +61,7 @@ Hinweisstreifen vorbehalten (siehe Kommentarkopf in `button.css`).
 | `disabled` | `state.disabled`. Nicht `aria-disabled`: der Button soll wirklich nicht bedienbar sein. Der Zeiger erreicht ihn trotzdem (kein `pointer-events: none`), damit sein Tooltip den Grund nennt (#29675); Zeigen und Drücken ändern sein Aussehen nicht. |
 | `aria-pressed="true"` | `state.active`. Fehlt sonst ganz (nicht `false`), damit ein gewöhnlicher Button kein Umschalter wird. |
 | `aria-busy="true"` | während einer laufenden Aktion (Upload). Das Icon pulsiert (`tl-button-busy`, `duration-loop`); der Zeiger zeigt Fortschritt nur dort, wo der Knopf nicht `disabled` ist — bei `disabled` ist der Puls der einzige Hinweis, weil `:disabled:hover` den Zeiger auf `default` hält. Der Handler ignoriert Klicks, solange die Aktion läuft. |
+| `tl-button--icon` | quadratisch, ohne `__label`; Pflicht `aria-label` und Tooltip; mit `--sm` 24 px |
 | `aria-label` | bei icon-only oder wenn ein Icon gesetzt ist: der `label`. |
 | `data-tooltip` | `text:<tooltip>`; das Tooltip-System liest es. |
 | `:focus-visible` | den Ring liefert `base.css`; die Komponente setzt und entfernt keinen Fokusstil. |
@@ -69,5 +70,12 @@ Hinweisstreifen vorbehalten (siehe Kommentarkopf in `button.css`).
 
 Eine Komponente besteht den Vertrag, wenn sie im Specimen-Harness des Pakets für jeden Zustand
 oben das jeweilige Attribut trägt, auf Klick und Enter `click` sendet, bei `hidden` nichts rendert
-und im Klassen-Gate keine Klasse ohne `tl-`-Präfix hinterlässt. Der Test dazu folgt mit der
+und im Klassen-Gate keine Klasse ohne `tl-`-Präfix hinterlässt. Ein Icon-Knopf ohne `aria-label` fällt durch. Der Test dazu folgt mit der
 ersten Kundenkomponente; bis dahin gilt dieser Text.
+
+## Container-Kontext (`ButtonDefaults`)
+
+`appearance` ist die Erscheinung; `menu-item` rendert als `button.tl-menu__item` (siehe
+`menu.contract.md`) und **schlägt die Server-Erscheinung** — ein Eintrag ist Struktur. `iconOnly`:
+ein Knopf, der sein Icon zeigt, lässt sein Label weg und wird `--icon`; ein Knopf ohne Icon oder mit
+`label-only` bleibt, wie er ist.

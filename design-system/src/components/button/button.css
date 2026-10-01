@@ -125,6 +125,23 @@
   padding: 0 var(--tl-space-2xs);
 }
 
+/* --- Form: der Icon-Knopf ------------------------------------------------ */
+
+/* Quadratisch, ohne Label: der Knopf ist sein Icon. Pflicht am Element: aria-label und Tooltip
+   (Vertrag). Mit --sm 24 px — die Mindest-Trefferfläche (WCAG 2.5.8). */
+.tl-button--icon {
+  width: var(--tl-size-control);
+  height: var(--tl-size-control);
+  padding: 0;
+}
+
+.tl-button--icon.tl-button--sm {
+  width: var(--tl-size-control-sm);
+  height: var(--tl-size-control-sm);
+  min-height: var(--tl-size-control-sm);
+  padding: 0;
+}
+
 /* --- Zustände als Attribute --------------------------------------------- */
 
 .tl-button[aria-pressed="true"] {
