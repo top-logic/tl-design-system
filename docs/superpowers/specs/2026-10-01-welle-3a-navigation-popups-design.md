@@ -110,6 +110,13 @@ Welle-1-Übergangsregel „Dropdown-Eintrag füllt die Zeile“ (`tlReactControl
 - **Overflow-Menü** = `tl-menu` (§3c) über den Helfer, Gruppen durch `tl-divider`, bleibt gemountet und `[hidden]`,
   damit die Controls leben (wie heute).
 
+> **Fortgeschrieben 01.10. (Plan-Review):** Kompakt wird nur ein Knopf, der sein Icon **zeigt** (`icon-label`,
+> `icon-only`) — ein `label-only`-Knopf mit Bild behält sein Label, wie die alte Regel. Die kompakte Breite wird in
+> einem **zweiten Messdurchlauf** mit `iconOnly`-Kontext gemessen, nicht aus dem Icon geraten (Upload- und
+> Umschaltknöpfe lesen den Kontext mit). Die Breite des noch nicht gerenderten Überlauf-Triggers ist das Maß
+> `size-control`, aus den Tokens gelesen. `menu-item` als Container-Erscheinung schlägt die Server-Erscheinung — ein
+> Eintrag ist Struktur, kein Stil; ein Umschalter im Menü ist `role="menuitemcheckbox"` mit `aria-checked`.
+
 ## 5 · Fokus und Cursor: eine Regel
 
 1. **Ein Ring, eine Farbe:** der `:focus-visible`-Ring aus `base.css` (`focus-ring`, `focus-width`, `focus-offset`)
@@ -125,6 +132,11 @@ Welle-1-Übergangsregel „Dropdown-Eintrag füllt die Zeile“ (`tlReactControl
    `:focus-within` des Containers.
 5. **Hervorhebung ist kein Fokus:** die Akzentlinie im Select-Popup (`highlighted`) bleibt — dort liegt der
    DOM-Fokus im Suchfeld.
+
+> **Fortgeschrieben 01.10. (Plan-Review):** Ein **Drop-Ziel ist kein Fokus**: die Dragover-Markierung des Uploads
+> (und in 3b die Drop-Ziele von Tabelle und Baum) setzt `outline` in `border-interactive`; `focus-ring` liest nur
+> `base.css`. Das Gate verbietet `focus-ring` in Komponenten und `outline` in jeder anderen Farbe. In Kraft (Menü)
+> trägt die Typo-Klasse `tl-type-label-strong`, nicht eine `font-weight`-Regel am Eintrag.
 
 ## 6 · Drei Bausteine: Icon-Knopf, Toggle, Trenner
 
@@ -164,8 +176,12 @@ Welle-1-Übergangsregel „Dropdown-Eintrag füllt die Zeile“ (`tlReactControl
   Tastatur).
 - **Benutzermenü** (`user-menu.view.xml`) ist kein Block mehr: der Auslöser (Avatar + Name) wird ein
   `tl-button--ghost` mit Avatar im Icon-Slot und Name als `__label` (Ellipse). Eine eigene Breitengrenze gibt es
-  nicht: bei Platzmangel greift der Toolbar-Kompaktmodus (§4, `iconOnly`) und zeigt nur den Avatar; die Regel
-  `@media (max-width: 640px)` (`max-width: 12rem`) und `tlUserMenu__name` fallen.
+  nicht; die Regel `@media (max-width: 640px)` (`max-width: 12rem`) und `tlUserMenu__name` fallen.
+
+> **Fortgeschrieben 01.10. (Plan-Review):** Das Benutzermenü liegt im `trailing` der AppBar, nicht in einer
+> Toolbar — der Kompaktmodus aus §4 erreicht es nicht. „Bei Platzmangel nur der Avatar“ ist damit eine Regel der
+> AppBar (Breakpoints) und geht nach **Welle 4**; bis dahin schneidet der Name mit Ellipse ab. Vermerk in
+> `altlast.md` „Offen für spätere Wellen“.
 
 ## 8 · Tokens und Maße
 

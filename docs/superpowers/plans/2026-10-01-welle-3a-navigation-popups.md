@@ -6,16 +6,18 @@
 
 **Architecture:** Paket (`design-system/`): neue Komponentendateien `popover.css`, `menu.css`, `toggle.css`, `toolbar.css`, `tabs.css`, `breadcrumb.css`, Modifier `tl-button--icon`, drei neue Tokens, Verträge, Specimen, Gates. Engine (`_Working-Tree/tl8-wt-29584`, Branch `CWS/CWS_29617_design_system_welle_3a` von `welle_2`): ein Hook `bridge/popover.ts` auf `@floating-ui/react`, eine darstellende Komponente `controls/menu/Menu.tsx` mit Roving-Fokus, die `TLMenu`, das Spalten-Kontextmenü und der Toolbar-Overflow teilen; `ButtonDefaults` lernt `iconOnly` und `appearance: 'menu-item'`; Java liefert dem Menü ein Element als Anker und der Region den Offen-Zustand.
 
-**Tech Stack:** Node (ohne Abhängigkeiten) im Paket; React 19, TypeScript, Vite, `@floating-ui/react ^0.27` in der Engine; Java 21/Maven für `I18NConstants` und `MenuRegionControl`.
+**Tech Stack:** Node (ohne Abhängigkeiten) im Paket; React 19, TypeScript, Vite, `@floating-ui/react ^0.27` (installiert 0.27.19) in der Engine; Java 21/Maven für `I18NConstants`, `ContextMenuOpener`, `MenuRegionControl`.
 
 **Spec:** `docs/superpowers/specs/2026-10-01-welle-3a-navigation-popups-design.md` — Prognosen in `docs/migration/altlast.md` „Konsolidierung (01.10.)“.
+
+**Plan-Review (01.10., Opus, frisch):** 16 Gate-Brüche gefunden und hier eingearbeitet; drei Entscheidungen daraus (Fable): (1) kompakt wird nur ein Knopf, der sein Icon **zeigt** (`icon-label`, `icon-only`), nie `label-only` mit Bild — wie die alte Regel; die kompakte Breite wird in einem zweiten Messdurchlauf mit Kontext gemessen, nicht geraten. (2) `menu-item` als Container-Erscheinung schlägt die Server-Erscheinung — ein Eintrag ist Struktur, kein Stil; ein Umschalter im Menü ist `role="menuitemcheckbox"` mit `aria-checked`. (3) Ein Drop-Ziel ist kein Fokus: `outline` in `border-interactive` bleibt erlaubt, `focus-ring` setzt nur `base.css`. Die Spec ist dazu fortgeschrieben.
 
 ## Global Constraints
 
 - Alles Öffentliche: Englisch, kebab-case, Präfix `tl` (`--tl-…`, `.tl-…`, `data-tl-…`); Zustände sind Attribute, nie Klassen (CLAUDE.md „Namen“).
-- `src/tokens.json` trägt nur Referenzen `{name}`; Werte stehen in `src/primitives.json`.
-- Nach jeder Änderung an `src/`: `node tools/generate.mjs`; `node --test` und `node tools/lint-css.mjs` sind das Gate (heute 245 Tests, Lint grün).
-- Kein Literal in Komponenten-CSS (Farbe, Maß, Dauer), kein `:focus` ohne `-visible`, kein `outline: none`, kein `!important` außerhalb des Reduced-Motion-Blocks, kein `cursor: not-allowed`.
+- `src/tokens.json` trägt nur Referenzen `{name}`; Werte stehen in `src/primitives.json`; jede Primitive hat einen Leser (`layers.test.mjs`).
+- Nach jeder Änderung an `src/`: `node tools/generate.mjs`; `node --test` und `node tools/lint-css.mjs` sind das Gate (heute 245 Tests, Lint grün). **Kein Commit mit rotem Test.**
+- Kein Literal in Komponenten-CSS (Farbe, Maß, Dauer), kein `:focus` ohne `-visible`, kein `outline: none`, kein `!important` außerhalb des Reduced-Motion-Blocks, kein `cursor: not-allowed`, `font-weight` nur in `tl-type-*`-Klassen; jeder Block mit `display` setzt `[hidden] { display: none }`.
 - Außerhalb von `dist/` wird nichts im Namensraum `--tl` definiert; `dist/` wird nur über `node tools/publish-to-worktree.mjs` in den Worktree kopiert.
 - Engine: `messages_en.properties` nie von Hand; JavaDoc schreiben, `tools/check-messages-en.sh` laufen lassen, Diff committen, Deutsch in `messages_de.properties` nachziehen. Vor jedem Push `git fetch` (Bernhard committet auf unsere Branches); Push macht Hendrik.
 - Commits mit Präfix `Ticket #29617:`; Trailer `Co-Authored-By: <Modell, das den Task gebaut hat>`.
@@ -23,13 +25,11 @@
 
 ## Review Focus
 
-Was die Spec impliziert, aber kein Test im Paket allein beweist — je Zeile der Test, der es im Task festhält:
-
-1. **Menü am unteren Fensterrand klappt nach oben** und bleibt nach dem Scrollen am Anker (`autoUpdate`) — Task E1: Specimen-Hinweis und Sichtprüfung (Task E9); im Paket nicht prüfbar.
-2. **Ein deaktivierter Menüeintrag wird übersprungen**, der Fokus landet nie darauf — Task E1: `Menu.tsx` sucht `[role="menuitem"]:not([disabled])`; Sichtprüfung.
-3. **Overflow-Einträge bleiben live** (bleiben gemountet, nur `hidden`), sonst zeigen sie veraltete Ausführbarkeit — Task E3: der Portal-Inhalt bleibt gemountet; `layout.react` grün.
-4. **Kompakte Toolbar misst richtig**: Einheit mit Icon = `size-control`, Einheit ohne Icon = volle Breite — Task E3: `compactWidths` liest `.tl-button__icon` je Einheit.
-5. **Tab-Pfeiltasten wählen den Reiter** und setzen den Fokus; `Home`/`End` springen — Task E6: `TLTabBar` Roving; Sichtprüfung.
+1. **Menü am unteren Fensterrand klappt nach oben** und bleibt nach dem Scrollen am Anker — E1 (`strategy: 'fixed'`, `autoUpdate`), Sichtprüfung E9.
+2. **Ein deaktivierter Menüeintrag wird übersprungen** — E1: `ITEM`-Selektor `:not([disabled])`.
+3. **Overflow-Einträge bleiben live** (gemountet, nur `hidden`) und `autoUpdate` läuft nur, solange offen — E5: `setFloating` nur bei `open`.
+4. **Kompakte Toolbar misst richtig** — E5: zweiter Messdurchlauf mit `iconOnly`-Kontext, kein Raten.
+5. **Tab-Pfeiltasten wählen den Reiter** und setzen den Fokus — E6: `focusTab`.
 
 ---
 
@@ -39,8 +39,10 @@ Was die Spec impliziert, aber kein Test im Paket allein beweist — je Zeile der
 
 | Datei | Verantwortung |
 |---|---|
-| `src/primitives.json` (ändern) | `gray-64`, `gray-60`, `view-1` |
+| `src/primitives.json` (ändern) | `gray-64`, `gray-60`, `view-1`; `gray-73` fällt (ohne Leser) |
 | `src/tokens.json` (ändern) | dunkle Interaktionsstufen, `size-popover-min`, `size-popover-max` |
+| `tools/dtcg.mjs:66` (ändern) | `vh` als Dimension |
+| `specimen/probe.theme.css` (erzeugen) | Probe-Theme mit den neuen Stufen |
 | `src/components/button/button.css` (ändern) | `tl-button--icon` |
 | `src/components/toggle/toggle.css`, `toggle.contract.md`, `toggle.spec.html` | Auf-/Zuklappen |
 | `src/components/popover/popover.css`, `popover.contract.md` | die eine Popup-Fläche |
@@ -51,26 +53,28 @@ Was die Spec impliziert, aber kein Test im Paket allein beweist — je Zeile der
 | `src/components/select/select.css`, `field/field.css`, `form/form.css` (ändern) | Nachzüge: Popup liest `tl-popover`; drei Icon-Knopf-Blöcke fallen |
 | `specimen/specimen.css` | gemeinsame Specimen-Stile (N8) |
 | `tools/lint-css.mjs` (ändern) | neue Blöcke und Modifier |
-| `test/focus.test.mjs`, `test/square.test.mjs`, `test/popover.test.mjs` | neue Gates |
-| `test/engine-classes.test.mjs`, `test/ratchet.json` (ändern) | Engine-Gate, Ratsche |
+| `test/focus.test.mjs`, `test/square.test.mjs`, `test/popover.test.mjs`, `test/contracts-3a.test.mjs` | neue Gates |
+| `test/engine-classes.test.mjs`, `test/ratchet.json` (ändern, **erst in E9 bzw. je E-Task**) | Engine-Gate, Ratsche |
 
 **Engine `com.top_logic.layout.react/`** (Branch `CWS/CWS_29617_design_system_welle_3a`):
 
 | Datei | Verantwortung |
 |---|---|
 | `react-src/bridge/popover.ts` (neu) | `usePopover` auf floating-ui |
-| `react-src/controls/menu/Menu.tsx` (neu) | darstellendes Menü mit Roving-Fokus |
+| `react-src/controls/menu/Menu.tsx` (neu) | darstellendes Menü, `useRovingMenu` |
 | `react-src/controls/TLMenu.tsx` (ändern) | Server-Menü über `Menu` |
-| `react-src/controls/TLTableView.tsx` (ändern, nur 1701–1741 und 397–400) | Spaltenmenü über `Menu` |
-| `react-src/controls/button/ButtonDefaults.tsx`, `TLButton.tsx` (ändern) | `iconOnly`, `menu-item`, `--icon` |
-| `react-src/controls/TLToolbar.tsx` (ändern) | Klassen, Trigger, Kompakt über Kontext, Overflow über `Menu` |
-| `react-src/controls/TLDropdownSelect.tsx`, `TLTextInput.tsx`, `TLFormGroup.tsx` (ändern) | Nachzüge |
+| `react-src/controls/TLDropdownSelect.tsx`, `TLTextInput.tsx`, `TLFormField.tsx`, `TLFormGroup.tsx` (ändern) | Nachzüge Welle 2 |
+| `react-src/controls/TLTableView.tsx` (ändern, 397–400, 1120–1121, 1701–1741) | Spaltenmenü über `Menu` |
+| `react-src/controls/button/ButtonDefaults.tsx`, `TLButton.tsx`, `TLToggleButton.tsx`, `TLUploadButton.tsx` (ändern) | `iconOnly`, `menu-item`, `--icon` |
+| `react-src/controls/TLToolbar.tsx` (ändern) | Klassen, Trigger, Kompakt über Kontext mit zwei Messdurchläufen, Overflow über Portal + `useRovingMenu` |
 | `react-src/controls/TLTabBar.tsx`, `TLBreadcrumb.tsx`, `TLMenuRegion.tsx` (ändern) | Leisten |
 | `src/main/java/com/top_logic/layout/react/I18NConstants.java` (ändern) | `js.breadcrumb.label` |
 | `src/main/java/com/top_logic/layout/react/control/overlay/ContextMenuOpener.java` (ändern) | Anker-Element, Offen-Zustand |
 | `com.top_logic.layout.view/.../command/MenuRegionControl.java`, `ViewServlet.java` (ändern) | `anchorId`, `menuOpen` |
 | `com.top_logic.layout.view/.../views/user-menu.view.xml` (ändern) | Benutzermenü ohne eigene Klasse |
-| `src/main/webapp/style/tlReactControls.css` (ändern) | sechs Blöcke löschen, Host-Literale, Tooltip-Ebene |
+| `src/main/webapp/style/tlReactControls.css` (ändern) | sechs Blöcke löschen, zwei Überschriften neu (`TLViewError`, `TLInset`), Host-Literale, drei Altklassen-Reste, Tooltip-Ebene |
+
+**Zeilenangaben** beziehen sich auf den Stand `60a36b308e` (Welle-2-Branch, 01.10.); wer später baut, prüft sie mit `grep -n` nach.
 
 ---
 
@@ -79,14 +83,14 @@ Was die Spec impliziert, aber kein Test im Paket allein beweist — je Zeile der
 ### Task P1: Tokens — Zeigen auf allen Gründen, zwei Popover-Maße
 
 **Files:**
-- Modify: `design-system/src/primitives.json:15-16` (Grau), `:30-38` (measure)
-- Modify: `design-system/src/tokens.json:35-36` (dunkel), `:93-110` (measure)
+- Modify: `design-system/src/primitives.json:15-16` (Grau), `:30-38` (measure); `design-system/src/tokens.json:35-36`, `:93-110`; `design-system/tools/dtcg.mjs:66`
+- Create (erzeugt): `design-system/specimen/probe.theme.css`
 - Test: `design-system/test/tokens.test.mjs` (ergänzen)
 
 **Interfaces:**
 - Produces: Tokens `--tl-size-popover-min`, `--tl-size-popover-max`; dunkle `surface-interactive-hover/-selected/-active` auf `gray-67/-64/-60`.
 
-- [ ] **Step 1: Test schreiben** — in `test/tokens.test.mjs` anhängen:
+- [ ] **Step 1: Test** — in `test/tokens.test.mjs` anhängen (`R`, `T`, `ratio` sind dort importiert):
 
 ```js
 test('Zeigen auf allen Gründen (01.10.): dunkel liegen hover, selected, active über dem Overlay', () => {
@@ -100,70 +104,38 @@ test('Zeigen auf allen Gründen (01.10.): dunkel liegen hover, selected, active 
 });
 ```
 
-(`R`, `T`, `ratio` sind in der Datei schon importiert — prüfen, sonst wie in `components.test.mjs` importieren.)
+- [ ] **Step 2: Rot sehen** — `cd design-system && node --test test/tokens.test.mjs` → FAIL.
 
-- [ ] **Step 2: Rot sehen** — `cd design-system && node --test test/tokens.test.mjs` → FAIL (`gray-73` auf Overlay 1,13 ist dunkler, `size-popover-min` fehlt).
+- [ ] **Step 3: `tools/dtcg.mjs:66`** — `parseDimension` kennt rem, px, em, %; `vh` ergänzen, mit demselben `$extensions`-Vermerk wie bei `%` (Datei lesen, das Muster übernehmen). Test dazu in `test/dtcg.test.mjs`: `parseDimension('70vh')` liefert `{ value: 70, unit: 'vh' }` bzw. die Form, die die Funktion für `%` liefert.
 
-- [ ] **Step 3: Primitive und Tokens ändern**
+- [ ] **Step 4: Primitive und Tokens** — `src/primitives.json` Zeile 15–16: `"gray-60": "#44484C", "gray-64": "#393E42",` zwischen `gray-55` und `gray-66` einfügen; **`"gray-73": "#22262A"` streichen** (danach ohne Leser; `layers.test.mjs` bricht sonst). measure: `"view-1": "70vh",` nach `"size-11": "10rem",`. `src/tokens.json` dunkel: `"surface-interactive-hover": "{gray-67}", "surface-interactive-selected": "{gray-64}", "surface-interactive-active": "{gray-60}",`; measure: `"size-popover-min": "{size-11}", "size-popover-max": "{view-1}",`.
 
-`src/primitives.json` Zeile 15–16, zwischen `gray-55` und `gray-66` einfügen (Farbton der Rampe, aus `oklchZuHex` wie in skalen.md gerechnet):
+- [ ] **Step 5: Erzeugen** — `node tools/generate.mjs && node tools/derive.mjs test/fixtures/probe.primitives.json specimen/probe.theme.css` (das Probe-Theme trägt die Stufen mit; `derive.test.mjs` prüft die Datei).
 
-```json
-"gray-60": "#44484C", "gray-64": "#393E42",
-```
+- [ ] **Step 6: Gates** — `node --test && node tools/lint-css.mjs` → grün (Reviewer: 246 Tests).
 
-`src/primitives.json` measure, nach `"size-11": "10rem",`:
-
-```json
-"view-1": "70vh",
-```
-
-`src/tokens.json` dunkel (Zeile 35–36):
-
-```json
-"surface-interactive-hover": "{gray-67}", "surface-interactive-selected": "{gray-64}",
-"surface-interactive-active": "{gray-60}", "surface-disabled": "{gray-69}",
-```
-
-`src/tokens.json` measure, nach `"size-field-label-max": "{size-11}",`:
-
-```json
-"size-popover-min": "{size-11}", "size-popover-max": "{view-1}",
-```
-
-- [ ] **Step 4: Erzeugen, Gates** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs`. Erwartung: grün; `derive.test.mjs` grün (Probe-Theme rechnet die neuen Stufen über `grauRampe`). Scheitert ein Kontrastpaar in `pairs.test.mjs`, die Messwerte in `docs/skalen.md` „Zeigen auf allen Gründen“ nachlesen — sie halten.
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add design-system/src design-system/dist design-system/test/tokens.test.mjs
-git commit -m "Ticket #29617: Welle 3a -- Zeigen auf allen Gruenden (gray-67/64/60 dunkel), size-popover-min/max"
-```
+- [ ] **Step 7: Commit** — `git add design-system/src design-system/dist design-system/specimen/probe.theme.css design-system/tools/dtcg.mjs design-system/test && git commit -m "Ticket #29617: Welle 3a -- Zeigen auf allen Gruenden (gray-67/64/60 dunkel), size-popover-min/max, vh im DTCG"`
 
 ### Task P2: `tl-button--icon` — der quadratische Icon-Knopf
 
 **Files:**
-- Modify: `design-system/src/components/button/button.css:120-125` (nach `--sm`)
-- Modify: `design-system/tools/lint-css.mjs:76` (`'tl-button'`-Modifier)
-- Modify: `design-system/src/components/button/button.contract.md`
-- Test: `design-system/test/square.test.mjs` (neu)
+- Modify: `design-system/src/components/button/button.css` (nach dem `--sm`-Block, ~125), `tools/lint-css.mjs:76`, `button.contract.md`
+- Test: `design-system/test/square.test.mjs` (neu; der Toggle-Fall kommt in P3)
 
 **Interfaces:**
-- Produces: Klasse `tl-button--icon` (quadratisch `size-control`; mit `--sm` `size-control-sm`), Leser: Toolbar-Trigger, Hilfeknopf, Select-Clear/Chip-Remove, Feld-Aktion (Tasks E3, E4), 3b.
+- Produces: `tl-button--icon` (quadratisch `size-control`; mit `--sm` `size-control-sm`). Leser: E2 (Select, Feld, Hilfe), E5 (Toolbar-Trigger), 3b.
 
-- [ ] **Step 1: Test schreiben** — `test/square.test.mjs`:
+- [ ] **Step 1: Test** — `test/square.test.mjs`:
 
 ```js
-// Ein Icon-Knopf und ein Toggle sind quadratisch: Breite und Höhe lesen dasselbe Maß. Trefferfläche
-// mindestens size-control-sm (24 px, WCAG 2.5.8).
+// Ein Icon-Knopf (und ab P3 der Toggle) ist quadratisch: Breite und Höhe lesen dasselbe Maß.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readGenerated, declarationsOf } from './lib/component.mjs';
 
-const SQUARE = [
+export const SQUARE = [
   ['button', 'button.css', '.tl-button--icon', 'size-control'],
   ['button', 'button.css', '.tl-button--icon.tl-button--sm', 'size-control-sm'],
-  ['toggle', 'toggle.css', '.tl-toggle', 'size-control-sm'],
 ];
 
 for (const [dir, file, sel, mass] of SQUARE) {
@@ -177,9 +149,9 @@ for (const [dir, file, sel, mass] of SQUARE) {
 }
 ```
 
-- [ ] **Step 2: Rot sehen** — `node --test test/square.test.mjs` → FAIL (Selektor fehlt; `toggle.css` fehlt — der Toggle-Fall bleibt rot bis Task P3).
+- [ ] **Step 2: Rot sehen** — `node --test test/square.test.mjs` → FAIL.
 
-- [ ] **Step 3: CSS und Lint** — `button.css` nach dem `--sm`-Block:
+- [ ] **Step 3: CSS, Lint, Vertrag** — `button.css`:
 
 ```css
 /* --- Form: der Icon-Knopf ------------------------------------------------ */
@@ -200,24 +172,20 @@ for (const [dir, file, sel, mass] of SQUARE) {
 }
 ```
 
-`tools/lint-css.mjs` Zeile 76: `'tl-button': new Set(['primary', 'secondary', 'ghost', 'link', 'danger', 'sm', 'icon']),`
+`tools/lint-css.mjs:76`: `'tl-button': new Set(['primary', 'secondary', 'ghost', 'link', 'danger', 'sm', 'icon']),`. `button.contract.md`: Zeile `| `tl-button--icon` | quadratisch, ohne `__label`; Pflicht `aria-label` und Tooltip; mit `--sm` 24 px |`; „Konformität“: „Ein Icon-Knopf ohne `aria-label` fällt durch.“; Absatz „Container-Kontext (`ButtonDefaults`)“: `appearance` (Erscheinung; `menu-item` rendert als `button.tl-menu__item`, siehe `menu.contract.md`, und **schlägt die Server-Erscheinung** — ein Eintrag ist Struktur), `iconOnly` (ein Knopf, der sein Icon zeigt, lässt sein Label weg und wird `--icon`; ein Knopf ohne Icon oder mit `label-only` bleibt, wie er ist).
 
-`button.contract.md`: Zeile in der Attribut-Tabelle `| `tl-button--icon` | quadratisch, ohne `__label`; Pflicht `aria-label` und Tooltip; mit `--sm` 24 px |` und unter „Konformität“: „Ein Icon-Knopf ohne `aria-label` fällt durch.“ Dazu im Vertrag der Satz: „`appearance="menu-item"` (Container `ButtonDefaults`): der Knopf rendert als `button.tl-menu__item` — siehe `menu.contract.md`.“
-
-- [ ] **Step 4: Gates** — `node tools/generate.mjs && node --test test/square.test.mjs test/lint-css.test.mjs && node tools/lint-css.mjs` → Button-Fälle grün, Toggle-Fall rot (erwartet bis P3).
-
-- [ ] **Step 5: Commit** — `git commit -m "Ticket #29617: Welle 3a -- tl-button--icon, quadratisch aus size-control"`
+- [ ] **Step 4: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün. `git commit -m "Ticket #29617: Welle 3a -- tl-button--icon, quadratisch aus size-control"`
 
 ### Task P3: `tl-toggle` — Auf-/Zuklappen
 
 **Files:**
-- Create: `design-system/src/components/toggle/toggle.css`, `toggle.contract.md`, `toggle.spec.html`
-- Modify: `design-system/tools/lint-css.mjs` (`'tl-toggle': new Set([])`), `specimen/index.html` (Link)
+- Create: `src/components/toggle/toggle.css`, `toggle.contract.md`, `toggle.spec.html`
+- Modify: `tools/lint-css.mjs` (`'tl-toggle': new Set([])`), `specimen/index.html`, `test/square.test.mjs` (Zeile ergänzen), `test/components.test.mjs`
 
 **Interfaces:**
-- Produces: `button.tl-toggle[aria-expanded]` mit einem Kind `.tl-icon-sm` (Chevron rechts). Leser: `TLFormGroup` (E5), Baum und Baum-Tabelle (3b).
+- Produces: `button.tl-toggle[aria-expanded]` mit Kind `.tl-icon-sm` (Chevron rechts). Leser: E3 (`TLFormGroup`), 3b (Baum, Baum-Tabelle).
 
-- [ ] **Step 1: Test** — `test/square.test.mjs` deckt die Quadratur (P2). Zusätzlich in `test/components.test.mjs` anhängen:
+- [ ] **Step 1: Tests** — in `square.test.mjs` SQUARE um `['toggle', 'toggle.css', '.tl-toggle', 'size-control-sm']` ergänzen; in `components.test.mjs` (Import `readGenerated` vorhanden):
 
 ```js
 test('Toggle: offen dreht das Icon, Reduced Motion gilt über base.css', () => {
@@ -227,9 +195,9 @@ test('Toggle: offen dreht das Icon, Reduced Motion gilt über base.css', () => {
 });
 ```
 
-- [ ] **Step 2: Rot sehen** — `node --test test/components.test.mjs test/square.test.mjs` → FAIL.
+- [ ] **Step 2: Rot sehen** — `node --test test/square.test.mjs test/components.test.mjs` → FAIL.
 
-- [ ] **Step 3: CSS**
+- [ ] **Step 3: CSS** (Tokens `--tl-icon-primary`, `--tl-icon-disabled` existieren):
 
 ```css
 /* Toggle — docs/skalen.md „Gleiches wird zusammengelegt“ (W4).
@@ -275,32 +243,27 @@ test('Toggle: offen dreht das Icon, Reduced Motion gilt über base.css', () => {
 }
 ```
 
-Prüfen: existiert `--tl-icon-primary`/`--tl-icon-disabled` in `tokens.json`? (`grep '"icon-primary"' src/tokens.json`). Falls nicht, `--tl-text-primary`/`--tl-text-disabled` lesen.
+- [ ] **Step 4: Vertrag und Specimen** — `toggle.contract.md` nach dem Muster von `divider.contract.md`: Zustand (`expanded`, `disabled`), Aktionen (`toggle`), Tastatur (Enter/Space nativ), Tokens, Attribute (`tl-toggle`, `aria-expanded`, `aria-controls`, `aria-label` + Tooltip Pflicht; Kind `tl-icon-sm` mit dem Chevron-rechts-Glyph der Theme-Konfiguration), Konformität; Satz „Zwei Wörter, zwei Richtungen“ aus Spec §6. `toggle.spec.html` nach `divider.spec.html` (Zeilen „zu“, „offen“, „deaktiviert“; Glyph `bi bi-chevron-right`); Index-Link nach Divider.
 
-- [ ] **Step 4: Vertrag** — `toggle.contract.md` nach dem Muster von `divider.contract.md`: Zustand (`expanded: boolean`, `disabled`), Aktionen (`toggle`), Tastatur (Enter/Space nativ), Tokens (Tabelle), Attribute (`tl-toggle`, `aria-expanded`, `aria-controls`, `aria-label` + Tooltip Pflicht; Kind `tl-icon-sm` mit dem Chevron-rechts-Glyph der Theme-Konfiguration), Konformität. Satz „Zwei Wörter, zwei Richtungen“ aus Spec §6.
-
-- [ ] **Step 5: Specimen** — `toggle.spec.html` nach `divider.spec.html`: Zeilen „zu“, „offen“, „deaktiviert“, je auf layer/base/overlay; Glyph `bi bi-chevron-right`. In `specimen/index.html` nach dem Divider-Link: `<a class="tl-type-label" href="/src/components/toggle/toggle.spec.html">Toggle →</a>`.
-
-- [ ] **Step 6: Gates** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün (auch `square.test.mjs` komplett).
-
-- [ ] **Step 7: Commit** — `git commit -m "Ticket #29617: Welle 3a -- tl-toggle: ein Knopf, ein Chevron, 24 px"`
+- [ ] **Step 5: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün. `git commit -m "Ticket #29617: Welle 3a -- tl-toggle: ein Knopf, ein Chevron, 24 px"`
 
 ### Task P4: `tl-popover` und `tl-menu`
 
 **Files:**
 - Create: `src/components/popover/popover.css`, `popover.contract.md`; `src/components/menu/menu.css`, `menu.contract.md`, `menu.spec.html`
 - Modify: `tools/lint-css.mjs` (Blöcke `tl-popover`, `tl-menu`, `tl-menu-region`), `specimen/index.html`
-- Test: `test/popover.test.mjs` (neu)
+- Test: `test/popover.test.mjs` (neu; Fall „nur tl-popover liest shadow-popover“ kommt in P6)
 
 **Interfaces:**
-- Produces: `.tl-popover` (Fläche, Ebene, Maße), `.tl-menu` (= Popover + Liste), `.tl-menu__item`, `.tl-menu__icon`, `.tl-menu__label`, `.tl-menu__header`, `.tl-menu > .tl-divider`, `.tl-menu-region`. Leser: Tasks E1–E3, E4 (Select-Popup), E7.
+- Produces: `.tl-popover`; `.tl-menu`, `.tl-menu__item`, `.tl-menu__icon`, `.tl-menu__label`, `.tl-menu__header`, `.tl-menu > .tl-divider`; `.tl-menu-region[data-tl-trigger="contextmenu"|"click"]`. In Kraft ist `aria-current="true"` **plus** `tl-type-label-strong` am Eintrag (das TSX setzt die Typo-Klasse; `font-weight` steht nur in `tl-type-*`). Leser: E1, E4, E5, E7.
 
 - [ ] **Step 1: Test** — `test/popover.test.mjs`:
 
 ```js
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readGenerated, declarationsOf, componentCssFiles } from './lib/component.mjs';
+import { readFileSync } from 'node:fs';
+import { readGenerated, declarationsOf, missingInContract } from './lib/component.mjs';
 
 test('tl-popover: Overlay-Fläche, Schatten, Ebene popover, Maße aus den Tokens', () => {
   const d = declarationsOf(readGenerated('popover', 'popover.css'), '.tl-popover');
@@ -308,32 +271,25 @@ test('tl-popover: Overlay-Fläche, Schatten, Ebene popover, Maße aus den Tokens
     'size-popover-min', 'size-popover-max']) assert.match(d, new RegExp(`var\\(--tl-${t}\\)`));
 });
 
-test('nur tl-popover setzt die Popup-Fläche: kein anderer Block liest shadow-popover', () => {
-  const hits = [];
-  for (const [name, css] of componentCssFiles()) {
-    if (name.startsWith('popover/')) continue;
-    if (/--tl-shadow-popover/.test(css)) hits.push(name);
-  }
-  assert.deepEqual(hits, []);
-});
-
-test('tl-menu__item: Zeilenhöhe size-row, Zustand nur als Attribut', () => {
+test('tl-menu__item: Zeilenhöhe size-row, Zustand nur als Attribut, In-Kraft über die Typo-Klasse', () => {
   const css = readGenerated('menu', 'menu.css');
   assert.match(declarationsOf(css, '.tl-menu__item'), /min-height:\s*var\(--tl-size-row\)/);
   assert.doesNotMatch(css, /--(focused|active|disabled)\b/);
-  assert.match(css, /\.tl-menu__item\[aria-current="true"\]/);
+  assert.doesNotMatch(css, /font-weight/);
+  const md = readFileSync(new URL('../src/components/menu/menu.contract.md', import.meta.url), 'utf8');
+  assert.deepEqual(missingInContract(md, ['aria-current', 'tl-type-label-strong', 'tl-menu-region', 'data-tl-trigger']), []);
 });
 ```
 
-- [ ] **Step 2: Rot sehen** — `node --test test/popover.test.mjs` → FAIL (zweiter Fall rot wegen `select.css:134`, bis Task P6).
+- [ ] **Step 2: Rot sehen** — `node --test test/popover.test.mjs` → FAIL.
 
 - [ ] **Step 3: popover.css**
 
 ```css
 /* Popover — docs/skalen.md „Scrim und Ebenen“, „Gleiches wird zusammengelegt“ (W1).
    Die eine Fläche für alles, was über der Oberfläche schwebt und einen Anker hat: Menü, Select-Popup,
-   Toolbar-Überlauf. Die Lage setzt bridge/popover.ts (floating-ui) inline; hier stehen Fläche, Ebene
-   und Grenzen. Mindestbreite und Höhe sind Maße, keine Literale. */
+   Toolbar-Überlauf. Die Lage setzt bridge/popover.ts (floating-ui, fixed) inline; hier stehen Fläche,
+   Ebene und Grenzen. Mindestbreite und Höhe sind Maße, keine Literale. */
 
 .tl-popover {
   position: fixed;
@@ -358,13 +314,14 @@ test('tl-menu__item: Zeilenhöhe size-row, Zustand nur als Attribut', () => {
 /* Menu — docs/skalen.md „Gleiches wird zusammengelegt“ (W2, W3).
    Ein Menü ist ein tl-popover mit Einträgen. Der Fokus ist echt (Roving-Tabindex): der Ring aus
    base.css ist der Cursor, innen, weil der Behälter scrollt. Zustände sind Attribute: aria-current
-   (in Kraft), disabled. Zeigen ist surface-interactive-hover — seit „Zeigen auf allen Gründen“ auch
-   dunkel auf dem Overlay sichtbar. */
+   (in Kraft; das Gewicht trägt tl-type-label-strong), disabled. Zeigen ist surface-interactive-hover —
+   seit „Zeigen auf allen Gründen“ auch dunkel auf dem Overlay sichtbar. */
 
 .tl-menu {
   display: flex;
   flex-direction: column;
 }
+.tl-menu[hidden] { display: none; }
 
 .tl-menu__item {
   display: flex;
@@ -393,11 +350,6 @@ test('tl-menu__item: Zeilenhöhe size-row, Zustand nur als Attribut', () => {
 
 .tl-menu__item:focus-visible {
   outline-offset: calc(-1 * var(--tl-focus-offset));
-}
-
-/* In Kraft: der Eintrag, dessen Befehl gerade gilt (das aktive Theme). Gewicht der Typo-Stufe label. */
-.tl-menu__item[aria-current="true"] {
-  font-weight: var(--tl-font-weight-strong);
 }
 
 .tl-menu__item:disabled {
@@ -429,50 +381,43 @@ test('tl-menu__item: Zeilenhöhe size-row, Zustand nur als Attribut', () => {
 
 /* --- Auslöser --------------------------------------------------------------- */
 
-/* Eine Kontextmenü-Region ist reine Durchreiche: keine eigene Box. */
-.tl-menu-region {
+/* Eine Kontextmenü-Region ist reine Durchreiche: keine eigene Box. Ein Klick-Auslöser ist ein
+   nativer Knopf mit tl-button tl-button--ghost (Vertrag) — die Klasse markiert ihn nur. */
+.tl-menu-region[data-tl-trigger="contextmenu"] {
   display: contents;
 }
-
-/* Ein Klick-Auslöser ist ein Knopf: er trägt tl-button tl-button--ghost (Vertrag), hier steht nur,
-   was ihn vom Knopf unterscheidet — nichts. Die Klasse markiert ihn für Tests und den Hook. */
-.tl-menu-region[role="button"] {
-  display: inline-flex;
-}
+.tl-menu-region[hidden] { display: none; }
 ```
 
-Prüfen: gibt es `--tl-font-weight-strong`? (`grep font-weight src/tokens.json`). Wenn die Typo-Stufen das Gewicht nur in `.tl-type-*` tragen, stattdessen `.tl-menu__item[aria-current="true"] > .tl-menu__label { font-weight: 600; }` — **nein**, Literal: dann die Klasse `tl-type-label-strong` prüfen (`grep "label-strong" dist/base.css`); existiert sie, setzt das TSX sie am Eintrag und die CSS-Regel entfällt. Ergebnis im Vertrag festhalten.
+- [ ] **Step 5: Lint** — `'tl-popover': new Set([]), 'tl-menu': new Set([]), 'tl-menu-region': new Set([]),`.
 
-- [ ] **Step 5: Lint** — in `MODIFIERS`: `'tl-popover': new Set([]), 'tl-menu': new Set([]), 'tl-menu-region': new Set([]),`.
+- [ ] **Step 6: Verträge** — `popover.contract.md` (Zustand `open`, Anker Element oder Punkt; Verhalten: Escape, Außenklick, Fokus zurück zum Auslöser, folgt Scroll und Resize, klappt um, bleibt im Viewport; Tokens; Attribute `tl-popover`, `data-tl-anchored-overlay` im Portal; Konformität). `menu.contract.md`: Zustand (`items`, `open`, `anchorId`/`anchorX`/`anchorY`), Aktionen (`selectItem`, `close`), **Tastatur** (Pfeile zyklisch, Home/End, Enter/Space, Escape; Fokus wandert mit, deaktivierte Einträge werden übersprungen), Tokens, Attribute (`tl-menu` am `role=menu`; `tl-menu__item` am `role=menuitem`, in Kraft `aria-current="true"` + `tl-type-label-strong`, Umschalter `role=menuitemcheckbox` + `aria-checked`; `tl-menu__header` `role=presentation`; `tl-divider`; `tl-menu-region` mit `data-tl-trigger`, bei `click` ein `button.tl-button--ghost` mit `aria-haspopup="menu"`, `aria-expanded`, Kinder nicht interaktiv (Avatar, Text); Kontextmenü per `Shift+F10` und Kontextmenü-Taste), Konformität. Satz: „Ein `TLButton` unter `ButtonDefaults appearance="menu-item"` ist ein Eintrag; der Container schlägt die Server-Erscheinung.“
 
-- [ ] **Step 6: Verträge** — `popover.contract.md` (Zustand `open`, Anker; Verhalten: Escape, Außenklick, Fokus zurück; Tokens; Attribute `tl-popover`, `data-tl-anchored-overlay` bei Portal in modaler Fläche; Konformität). `menu.contract.md`: Zustand (`items`, `open`, `anchorId`/`anchorX`/`anchorY`), Aktionen (`selectItem`, `close`), **Tastatur** (Pfeile zyklisch, Home/End, Enter/Space, Escape; Fokus wandert mit, deaktivierte Einträge werden übersprungen), Tokens, Attribute (`tl-menu` am `role=menu`; `tl-menu__item` am `role=menuitem` mit `aria-current`/`disabled`; `tl-menu__header` `role=presentation`; `tl-divider`; `tl-menu-region` mit `role=button`, `aria-haspopup="menu"`, `aria-expanded`; Kontextmenü per `Shift+F10`), Konformität. Satz: „Ein `TLButton` mit `appearance="menu-item"` ist ein Eintrag.“
+- [ ] **Step 7: Specimen** — `menu.spec.html`: statisch geöffnetes `div.tl-popover.tl-menu[role=menu]` mit Header, Einträgen (einer `aria-current` + `tl-type-label-strong`, einer `disabled`, einer mit Icon), `hr.tl-divider`; Auslöser `button.tl-menu-region.tl-button.tl-button--ghost[data-tl-trigger=click][aria-haspopup=menu][aria-expanded=true]`; auf layer/base/overlay; Index-Link.
 
-- [ ] **Step 7: Specimen** — `menu.spec.html`: ein statisch geöffnetes `div.tl-popover.tl-menu[role=menu]` mit Header, drei Einträgen (einer `aria-current`, einer `disabled`), `hr.tl-divider`, einem mit Icon; daneben ein Auslöser `button.tl-menu-region.tl-button.tl-button--ghost[aria-haspopup=menu][aria-expanded=true]`; auf layer/base/overlay; Link im Index.
-
-- [ ] **Step 8: Gates** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → alles grün außer `popover.test.mjs` Fall 2 (Select, P6).
-
-- [ ] **Step 9: Commit** — `git commit -m "Ticket #29617: Welle 3a -- tl-popover und tl-menu: eine Flaeche, ein Eintrag, echter Fokus"`
+- [ ] **Step 8: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün. `git commit -m "Ticket #29617: Welle 3a -- tl-popover und tl-menu: eine Flaeche, ein Eintrag, echter Fokus"`
 
 ### Task P5: `tl-toolbar`, `tl-tabs`, `tl-breadcrumb`
 
 **Files:**
-- Create: `src/components/toolbar/{toolbar.css,toolbar.contract.md,toolbar.spec.html}`, `src/components/tabs/{tabs.css,tabs.contract.md,tabs.spec.html}`, `src/components/breadcrumb/{breadcrumb.css,breadcrumb.contract.md,breadcrumb.spec.html}`
-- Modify: `tools/lint-css.mjs`, `specimen/index.html`
+- Create: `src/components/toolbar/{toolbar.css,toolbar.contract.md,toolbar.spec.html}`, `src/components/tabs/{…}`, `src/components/breadcrumb/{…}`
+- Modify: `tools/lint-css.mjs`, `specimen/index.html`, `test/components.test.mjs` (**Import erweitern:** `import { readGenerated, declarationsOf } from './lib/component.mjs';`)
 
 **Interfaces:**
-- Produces: `.tl-toolbar[data-tl-overflow][data-tl-compact]`, `.tl-toolbar__group`; `.tl-tabs`, `.tl-tabs__list`, `.tl-tabs__tab[aria-selected]`, `.tl-tabs__panel`; `.tl-breadcrumb`, `__list`, `__entry`, `__separator`, `__current`. Leser: E3, E6.
+- Produces: `.tl-toolbar[data-tl-overflow][data-tl-compact]`, `.tl-toolbar__group`; `.tl-tabs`, `__list`, `__tab[aria-selected]`, `__panel`; `.tl-breadcrumb`, `__list`, `__entry`, `__separator`, `__current`. Leser: E5, E6.
 
-- [ ] **Step 1: Test** — in `test/components.test.mjs` anhängen:
+- [ ] **Step 1: Test** — in `components.test.mjs`:
 
 ```js
 test('Toolbar, Tabs, Breadcrumb lesen nur Tokens und kennen keine Zustandsklasse', () => {
   for (const [dir, file] of [['toolbar', 'toolbar.css'], ['tabs', 'tabs.css'], ['breadcrumb', 'breadcrumb.css']]) {
-    const css = readGenerated(dir, file);
-    assert.doesNotMatch(css, /--(active|compact|collapsible)\b/, `${file}: Zustand als Klasse`);
+    assert.doesNotMatch(readGenerated(dir, file), /--(active|compact|collapsible)\b/, `${file}: Zustand als Klasse`);
   }
   const tabs = readGenerated('tabs', 'tabs.css');
-  assert.match(declarationsOf(tabs, '.tl-tabs__tab[aria-selected="true"]'), /border-color:\s*var\(--tl-border-interactive\)/);
-  assert.doesNotMatch(declarationsOf(tabs, '.tl-tabs__tab[aria-selected="true"]'), /font-weight/);
+  const aktiv = declarationsOf(tabs, '.tl-tabs__tab[aria-selected="true"]');
+  assert.match(aktiv, /border-color:\s*var\(--tl-border-interactive\)/);
+  assert.doesNotMatch(aktiv, /font-weight/);
+  assert.match(declarationsOf(tabs, '.tl-tabs__panel'), /flex-direction:\s*column/);
 });
 ```
 
@@ -524,7 +469,8 @@ test('Toolbar, Tabs, Breadcrumb lesen nur Tokens und kennen keine Zustandsklasse
 ```css
 /* Tabs — docs/skalen.md „Gleiches wird zusammengelegt“ (W2, W3).
    role=tablist/tab/tabpanel; Roving-Tabindex, Pfeile wählen. Aktiv ist aria-selected: Akzentlinie
-   unten und text-primary, kein Fettdruck — nichts springt beim Wechsel. Den Fokusring liefert base.css. */
+   unten und text-primary, kein Fettdruck — nichts springt beim Wechsel. Den Fokusring liefert base.css.
+   Das Panel ist eine Flex-Spalte, damit füllende Kinder (die virtualisierte Tabelle) ihre Höhe bekommen. */
 
 .tl-tabs {
   display: flex;
@@ -567,13 +513,15 @@ test('Toolbar, Tabs, Breadcrumb lesen nur Tokens und kennen keine Zustandsklasse
 }
 
 .tl-tabs__panel {
+  display: flex;
+  flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
 }
 ```
 
-- [ ] **Step 5: breadcrumb.css**
+- [ ] **Step 5: breadcrumb.css** (`--tl-icon-secondary` existiert)
 
 ```css
 /* Breadcrumb — docs/skalen.md „Gleiches wird zusammengelegt“ (W2, W4).
@@ -605,42 +553,48 @@ test('Toolbar, Tabs, Breadcrumb lesen nur Tokens und kennen keine Zustandsklasse
 }
 ```
 
-(`--tl-icon-secondary` prüfen wie in P3; sonst `--tl-text-secondary`.)
-
 - [ ] **Step 6: Lint** — `'tl-toolbar': new Set([]), 'tl-tabs': new Set([]), 'tl-breadcrumb': new Set([]),`.
 
-- [ ] **Step 7: Verträge und Specimen** — drei Verträge nach dem Muster von P4 (Zustand aus `TabBarStateJson`/Toolbar-State/Breadcrumb-Items, Aktionen `selectTab`/`navigate`, Tastatur: Tabs Pfeile links/rechts + Home/End wählen und fokussieren; Toolbar: Tab-Reihenfolge der Knöpfe, Overflow-Menü wie `menu.contract.md`; Breadcrumb: native Knöpfe), Tokens, Attribute, Konformität. Specimen: Toolbar in drei Erscheinungen (ghost/secondary/primary-Container) mit `tl-divider--vertical`, eine mit `data-tl-compact` (Knöpfe als `tl-button--icon`), eine mit Overflow-Trigger (`tl-button--icon` + Glyph `bi bi-three-dots`); Tabs mit drei Reitern (einer `aria-selected`), Breadcrumb mit drei Stufen. Links im Index.
+- [ ] **Step 7: Verträge und Specimen** — drei Verträge nach dem Muster von P4; Tastatur: Tabs Pfeile links/rechts + Home/End wählen und fokussieren; Toolbar: Tab-Reihenfolge der Knöpfe, Overflow-Menü wie `menu.contract.md`, Kompakt heißt „jeder Knopf, der sein Icon zeigt, wird `--icon`“; Breadcrumb: native Knöpfe. Specimen: Toolbar in drei Erscheinungen mit `tl-divider--vertical`, eine mit `data-tl-compact` (Knöpfe `tl-button--icon`), eine mit Overflow-Trigger (`tl-button--icon`, `bi bi-three-dots`); Tabs mit drei Reitern (einer `aria-selected`); Breadcrumb mit drei Stufen. Index-Links.
 
-- [ ] **Step 8: Gates** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün (Ausnahme weiter `popover.test.mjs` Fall 2).
-
-- [ ] **Step 9: Commit** — `git commit -m "Ticket #29617: Welle 3a -- tl-toolbar, tl-tabs, tl-breadcrumb im Paket"`
+- [ ] **Step 8: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün. `git commit -m "Ticket #29617: Welle 3a -- tl-toolbar, tl-tabs, tl-breadcrumb im Paket"`
 
 ### Task P6: Nachzüge Welle 2 im Paket — Select-Popup liest `tl-popover`, drei Icon-Knopf-Blöcke fallen, Toggle in der FormGroup
 
 **Files:**
-- Modify: `src/components/select/select.css:117-138` (Popup), `:61-86` (`__chip-remove`, `__clear`)
-- Modify: `src/components/field/field.css:84-96` (`__action`)
-- Modify: `src/components/form/form.css:160-178` (`__toggle`)
-- Modify: `select.contract.md`, `field.contract.md`, `form.contract.md`
-- Test: `test/select.test.mjs`, `test/field.test.mjs`, `test/form.test.mjs` (Fälle, die die gestrichenen Klassen erwarten, umstellen)
+- Modify: `src/components/select/select.css:52-86` (Chip, `__chip-remove`, `__clear`), `:117-138` (Popup); `src/components/field/field.css:63-103` (Gruppe: `__action` in 70–71, 84–96, 103); `src/components/form/form.css:160-178` (`__toggle`)
+- Modify: `select.contract.md`, `field.contract.md`, `form.contract.md`; Specimen `select.spec.html`, `field.spec.html`, `form.spec.html`
+- Test: `test/select.test.mjs` (Import `readGenerated` **ergänzen**), `test/field.test.mjs`, `test/form.test.mjs`, `test/popover.test.mjs` (Fall 2 jetzt)
 
 **Interfaces:**
 - Consumes: `tl-popover` (P4), `tl-button--icon` (P2), `tl-toggle` (P3).
-- Produces: `.tl-select__popup` = nur noch Layout (`display:flex; flex-direction:column; overflow:hidden`) **plus** Klasse `tl-popover` am selben Element (E4 setzt beide); die Klassen `tl-select__chip-remove`, `tl-select__clear`, `tl-field-group__action`, `tl-form-group__toggle` existieren nicht mehr.
+- Produces: `.tl-select__popup` = nur Layout, am Element zusammen mit `tl-popover` (E2 setzt beide); `.tl-select__chip > .tl-button`, `.tl-field-group > .tl-button` als Lage-Regeln; die Klassen `tl-select__chip-remove`, `tl-select__clear`, `tl-field-group__action`, `tl-form-group__toggle` existieren nicht mehr.
 
-- [ ] **Step 1: Tests umstellen** — `grep -n "chip-remove\|__clear\|field-group__action\|form-group__toggle" test/*.mjs`; jeden Fall so umschreiben, dass er die **Abwesenheit** der Klasse in `src/` prüft und für den Ersatz den Vertrag liest (`missingInContract(md, ['tl-button--icon'])`). In `test/select.test.mjs` ergänzen:
+- [ ] **Step 1: Tests** — betroffen sind (Reviewer): `select.test.mjs` „select.css liest genau diese Farbrollen“, „das Popup schwebt …“ (Zeile 18), 65/84/86; `field.test.mjs` „field.css liest genau die Farbrollen des Feldes“, 97; `form.test.mjs` „form.css liest genau diese Farbrollen …“, 75/76. Jeden Fall auf den neuen Stand bringen: Rollenlisten ohne `shadow-popover`/`surface-overlay`/`layer-popover` (Select) und ohne die Hover-Rollen der gestrichenen Knöpfe (Feld, Form), Abwesenheitsprüfung der vier Klassen in `src/`, Ersatz über `missingInContract(md, ['tl-button--icon'])` bzw. `['tl-toggle']`. In `select.test.mjs` ergänzen:
 
 ```js
 test('das Select-Popup trägt die Fläche nicht selbst: tl-popover liefert sie', () => {
   const d = declarationsOf(readGenerated('select', 'select.css'), '.tl-select__popup');
-  assert.doesNotMatch(d, /shadow-popover|surface-overlay|layer-popover|border-radius/);
+  assert.doesNotMatch(d, /shadow-popover|surface-overlay|layer-popover|border-radius|position/);
   assert.match(d, /max-height:\s*calc\(8 \* var\(--tl-size-row\)/);
 });
 ```
 
-- [ ] **Step 2: Rot sehen** — `node --test test/select.test.mjs test/field.test.mjs test/form.test.mjs` → FAIL.
+In `popover.test.mjs` anhängen:
 
-- [ ] **Step 3: CSS** — `select.css` Popup-Block ersetzen durch:
+```js
+test('nur tl-popover setzt die Popup-Fläche: kein anderer Block liest shadow-popover', () => {
+  const hits = [];
+  for (const [name, css] of componentCssFiles()) if (!name.startsWith('popover/') && /--tl-shadow-popover/.test(css)) hits.push(name);
+  assert.deepEqual(hits, []);
+});
+```
+
+(`componentCssFiles` importieren.)
+
+- [ ] **Step 2: Rot sehen** — `node --test test/select.test.mjs test/field.test.mjs test/form.test.mjs test/popover.test.mjs` → FAIL.
+
+- [ ] **Step 3: CSS** — `select.css` Popup:
 
 ```css
 /* Höchstens acht Optionszeilen plus Suchfeld und Innenabstand; die 8 ist eine Anzahl Zeilen,
@@ -653,40 +607,62 @@ test('das Select-Popup trägt die Fläche nicht selbst: tl-popover liefert sie',
 }
 ```
 
-`select.css` 61–86 (`.tl-select__chip-remove, .tl-select__clear` samt Hover) löschen; was davon bleibt, ist nur Lage: `.tl-select__chip > .tl-button { margin-inline-end: calc(-1 * var(--tl-border-width-sm)); }` falls die Kante gebraucht wird (Specimen prüfen). `field.css` 84–96 löschen; `.tl-field-group > .tl-button { margin: var(--tl-space-2xs); }` behalten, falls der Abstand gebraucht wird. `form.css` 160–178 löschen (`.tl-form-group__header` behält `gap`).
+`select.css` 61–86 löschen und ersetzen durch die Lage des Entfernen-Knopfs in der Pille (negatives `margin-block`, sonst wächst die Pille über `size-control-sm`):
 
-- [ ] **Step 4: Verträge** — Select: „Chip entfernen und Leeren sind `tl-button tl-button--ghost tl-button--sm tl-button--icon` mit `aria-label`; das Popup trägt `tl-popover tl-select__popup`.“ Feld: „Die Aktion in der Gruppe (Löschen, Link öffnen) ist ein `tl-button--icon --sm --ghost`.“ Form: „Der Einklappknopf ist ein `tl-toggle`.“ Doku-Pass N8 in denselben Verträgen: `disabled` („der Zustand liest `state.disabled`“, wie der Button), `hidden` (Feld: bleibt im DOM — wie `form.contract.md`), „Chip“ (Select nennt ihn „Wert-Chip“), `aria-selected` (Select: „die Liste führt nur ungewählte Optionen; `aria-selected="false"` an jeder“).
+```css
+/* Der Entfernen-Knopf ist ein tl-button--icon --sm --ghost; er liegt in der Pille, ohne sie zu heben. */
+.tl-select__chip > .tl-button {
+  margin-block: calc(-1 * var(--tl-border-width-sm));
+  margin-inline-end: calc(-1 * var(--tl-space-2xs));
+}
+```
 
-- [ ] **Step 5: Specimen** — `select.spec.html`, `field.spec.html`, `form.spec.html` auf die neuen Klassen umstellen (Popup `tl-popover tl-select__popup`; Knöpfe `tl-button tl-button--ghost tl-button--sm tl-button--icon`; Toggle `tl-toggle`).
+`field.css`: in 70–71 `.tl-field-group__action` aus der Selektorliste streichen; 84–96 ersetzen durch:
 
-- [ ] **Step 6: Gates** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → **alles grün**, inkl. `popover.test.mjs`.
+```css
+/* Die Aktion in der Gruppe (Löschen, Link öffnen) ist ein tl-button--icon --sm --ghost und sitzt im
+   Feld, am Ende; das Feld macht ihr Platz (:has unten). */
+.tl-field-group > .tl-button {
+  position: absolute;
+  inset-inline-end: var(--tl-space-2xs);
+  top: 50%;
+  translate: 0 -50%;
+}
+```
 
-- [ ] **Step 7: Commit** — `git commit -m "Ticket #29617: Welle 3a -- Nachzuege Welle 2: Select-Popup auf tl-popover, Icon-Knoepfe und Toggle aus dem Paket"`
+Zeile 103: `:has(> .tl-field-group__action)` → `:has(> .tl-button)`. `form.css` 160–178 löschen (`.tl-form-group__header` behält `gap`).
 
-### Task P7: Fokus-Gate, Specimen-CSS, Engine-Gate vorbereiten
+- [ ] **Step 4: Verträge (inkl. Doku-Pass N8)** — Select: „Chip entfernen und Leeren sind `tl-button tl-button--ghost tl-button--sm tl-button--icon` mit `aria-label`; das Popup trägt `tl-popover tl-select__popup`“; „Wert-Chip“ statt „Chip“; „die Liste führt nur ungewählte Optionen, `aria-selected="false"` an jeder“; `disabled` liest `state.disabled` wie der Button. Feld: „Die Aktion in der Gruppe ist ein `tl-button--icon --sm --ghost`“; `hidden`: bleibt im DOM (wie `form.contract.md`). Form: „Der Einklappknopf ist ein `tl-toggle`.“ Choice: `disabled` wie oben.
+
+- [ ] **Step 5: Specimen** — die drei Specimen auf die neuen Klassen umstellen.
+
+- [ ] **Step 6: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → **alles grün**. `git commit -m "Ticket #29617: Welle 3a -- Nachzuege Welle 2: Select-Popup auf tl-popover, Icon-Knoepfe und Toggle aus dem Paket"`
+
+### Task P7: Fokus-Gate, Verträge-Gate, Specimen-CSS
 
 **Files:**
-- Create: `test/focus.test.mjs`, `specimen/specimen.css`
-- Modify: alle 19 `*.spec.html` (Style-Block → `<link rel="stylesheet" href="/specimen/specimen.css">`), `tools/serve.mjs` (prüfen, dass `/specimen/` ausgeliefert wird — `probe.theme.css` liegt dort schon)
-- Modify: `test/engine-classes.test.mjs:12` (ALT-Regex um die sechs Klassen)
+- Create: `test/focus.test.mjs`, `test/contracts-3a.test.mjs`, `specimen/specimen.css`
+- Modify: alle 18 `*.spec.html` (13 bestehende, 5 neue: Style-Block → `<link rel="stylesheet" href="/specimen/specimen.css">`), ggf. `src/components/form/upload.css:22`
+- **Nicht** anfassen: `test/engine-classes.test.mjs` (erst E9), `test/ratchet.json` (je E-Task).
 
-- [ ] **Step 1: focus.test.mjs**
+- [ ] **Step 1: focus.test.mjs** (Spec §5, fortgeschrieben: ein Drop-Ziel ist kein Fokus — `outline` in `border-interactive` ist erlaubt, `focus-ring` setzt nur `base.css`):
 
 ```js
-// Ein Ring, ein Maß (Spec §5): outline setzt nur der Basis-Ring in base.css; Komponenten dürfen den
-// Ring nur nach innen legen (−focus-offset) — kein anderer Offset, keine eigene Farbe.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { declarations } from '../tools/lib/css.mjs';
 import { componentCssFiles } from './lib/component.mjs';
 
-test('kein Komponentenblock setzt outline; outline-offset nur als −focus-offset', () => {
+const OFFSET = /^(calc\(-1 \* var\(--tl-focus-offset\)\)|var\(--tl-focus-offset\))$/;
+
+test('kein Komponentenblock setzt den Fokusring; outline nur als Drop-Ziel in border-interactive', () => {
   const bad = [];
   for (const [name, css] of componentCssFiles()) {
     for (const d of declarations(css)) {
-      if (d.property === 'outline' || d.property === 'outline-color' || d.property === 'outline-width') bad.push(`${name}:${d.line} ${d.property}`);
-      if (d.property === 'outline-offset' && d.value.trim() !== 'calc(-1 * var(--tl-focus-offset))') bad.push(`${name}:${d.line} ${d.value}`);
+      if (/^outline(-color|-width)?$/.test(d.property) && !/--tl-border-interactive/.test(d.value)) bad.push(`${name}:${d.line} ${d.property}: ${d.value}`);
+      if (/--tl-focus-ring/.test(d.value)) bad.push(`${name}:${d.line} liest focus-ring`);
+      if (d.property === 'outline-offset' && !OFFSET.test(d.value.trim())) bad.push(`${name}:${d.line} ${d.value}`);
     }
   }
   assert.deepEqual(bad, []);
@@ -698,42 +674,58 @@ test('base.css trägt den Ring genau einmal', () => {
 });
 ```
 
-Rot sehen, dann jeden Treffer in den bestehenden Komponenten beheben (erwartet: keiner — sonst ist es ein Welle-2-Nachzug, im Commit nennen).
+Rot sehen; `upload.css:22` (Dragover) prüfen: liest es `--tl-border-interactive`, ist es grün; liest es `focus-ring`, auf `border-interactive` umstellen (Kommentar „Drop-Ziel, kein Fokus“).
 
-- [ ] **Step 2: specimen.css** — die gemeinsamen Regeln aus `divider.spec.html` (`.specimen`, `__bar`, `__panel`, `__base`, `__overlay`, `__row`, `__stack`, `__toolbar`) in `specimen/specimen.css`; jede `*.spec.html` lädt sie statt des `<style>`-Blocks; Abweichungen (`__row`-Spaltenbreiten) als Modifier `.specimen__row--wide` dort aufnehmen. `node tools/serve.mjs` starten und zwei Specimen im Browser öffnen (Hendrik oder Chrome-Werkzeug): nichts verschoben.
+- [ ] **Step 2: contracts-3a.test.mjs** — je neuem Vertrag `missingInContract`:
 
-- [ ] **Step 3: Engine-Gate** — in `test/engine-classes.test.mjs` die Regex um `|tlMenu|tlMenuRegion|tlUserMenu|tlToolbar|tlReactTabBar|tlBreadcrumb` erweitern. Der Test wird **rot** gegen den Worktree, bis Teil E fertig ist — das ist gewollt; Kommentar im Test: „Welle 3a: rot bis zum Merge der Engine-Tasks“. Damit `node --test` im Paket bis dahin trotzdem läuft, den Fall mit `{ skip: process.env.TL_WAVE3A_PENDING && 'Welle 3a läuft' }` markieren und in STATUS vermerken, dass die Variable nach E8 gestrichen wird.
+```js
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { missingInContract } from './lib/component.mjs';
+const md = (d, f) => readFileSync(new URL(`../src/components/${d}/${f}`, import.meta.url), 'utf8');
+const SOLL = {
+  'popover/popover.contract.md': ['tl-popover', 'data-tl-anchored-overlay', 'layer-popover'],
+  'menu/menu.contract.md': ['tl-menu', 'tl-menu__item', 'role="menu"', 'aria-current', 'Home', 'End', 'Escape', 'tl-menu-region', 'aria-expanded'],
+  'toolbar/toolbar.contract.md': ['tl-toolbar', 'data-tl-overflow', 'data-tl-compact', 'tl-divider--vertical', 'iconOnly'],
+  'tabs/tabs.contract.md': ['tl-tabs', 'role="tablist"', 'aria-selected', 'aria-controls', 'ArrowRight', 'Home'],
+  'breadcrumb/breadcrumb.contract.md': ['tl-breadcrumb', 'aria-current="page"', 'tl-button--link', 'js.breadcrumb.label'],
+  'toggle/toggle.contract.md': ['tl-toggle', 'aria-expanded', 'aria-controls', 'aria-label'],
+};
+for (const [file, names] of Object.entries(SOLL)) test(`${file} nennt ${names.length} Pflichtbegriffe`, () => {
+  const [d, f] = file.split('/');
+  assert.deepEqual(missingInContract(md(d, f), names), []);
+});
+```
 
-- [ ] **Step 4: Gates, Commit** — `node --test && node tools/lint-css.mjs`; `git commit -m "Ticket #29617: Welle 3a -- Fokus-Gate, specimen.css, Engine-Gate um die sechs Bloecke"`
+- [ ] **Step 3: specimen.css** — gemeinsame Regeln aus `divider.spec.html` nach `specimen/specimen.css`; jede der 18 `*.spec.html` lädt sie; Abweichungen als `.specimen__row--wide` dort. `node tools/serve.mjs`, zwei Specimen im Browser prüfen (nichts verschoben).
+
+- [ ] **Step 4: Gates, Commit** — `node --test && node tools/lint-css.mjs` → grün (245 + neue). `git commit -m "Ticket #29617: Welle 3a -- Fokus-Gate, Vertraege-Gate, specimen.css"`
 
 ---
 
 ## Teil E — Engine (Branch `CWS/CWS_29617_design_system_welle_3a`)
 
+**Reihenfolge:** E1 (Popup, Menü) → E2, E3 (Nachzüge Welle 2 — sofort, weil `dist/` ab E1 die alten Welle-2-Klassen nicht mehr stylt) → E4 (Tabellenmenü) → E5 (Toolbar) → E6 (Tabs, Breadcrumb) → E7 (Region) → E8 (Benutzermenü) → E9 (Gates, PR).
+
 ### Task E1: Branch, Paket publizieren, `usePopover`, `Menu`, `TLMenu`
 
 **Files:**
-- Create: `com.top_logic.layout.react/react-src/bridge/popover.ts`, `react-src/controls/menu/Menu.tsx`
-- Modify: `react-src/bridge-entry.ts` (Export), `react-src/controls/TLMenu.tsx`, `src/main/webapp/style/tlReactControls.css:2794-2910` (Block `TLMenu`), `design-system/test/ratchet.json`
-- Test: `cd com.top_logic.layout.react && npm run build` (tsc + Vite), Modul-Tests `layout.react`
+- Create: `react-src/bridge/popover.ts`, `react-src/controls/menu/Menu.tsx`
+- Modify: `react-src/bridge-entry.ts`, `react-src/controls/TLMenu.tsx`, `tlReactControls.css:2794-2910`, `design-system/test/ratchet.json`
+- Test: `npm run build` (tsc + Vite), Modul-Tests `layout.react`
 
 **Interfaces:**
-- Produces:
-  ```ts
-  // bridge/popover.ts
-  export type PopoverAnchor = Element | { x: number; y: number };
-  export interface PopoverOptions { open: boolean; anchor: PopoverAnchor | null; onClose: () => void;
-    placement?: 'bottom-start' | 'bottom-end' | 'top-start'; }
-  export function usePopover(opts: PopoverOptions): {
-    setFloating: (el: HTMLElement | null) => void; style: React.CSSProperties; };
-  // controls/menu/Menu.tsx
-  export interface MenuProps { open: boolean; anchor: PopoverAnchor | null; onClose: () => void;
-    placement?: PopoverOptions['placement']; id?: string; className?: string; children: React.ReactNode; }
-  export const Menu: React.FC<MenuProps>;            // div.tl-popover.tl-menu[role=menu] im Portal, Roving-Fokus
-  export const MenuItem: React.FC<{ id?: string; icon?: string; label: string; disabled?: boolean;
-    current?: boolean; className?: string; onSelect: () => void }>;  // button.tl-menu__item[role=menuitem]
-  export const MenuHeader: React.FC<{ label: string }>; export const MenuSeparator: React.FC;
-  ```
+```ts
+// bridge/popover.ts
+export type PopoverAnchor = Element | { x: number; y: number };
+export interface PopoverOptions { open: boolean; anchor: PopoverAnchor | null; placement?: 'bottom-start' | 'bottom-end' | 'top-start'; }
+export function usePopover(opts: PopoverOptions): { setFloating: (el: HTMLElement | null) => void; style: React.CSSProperties };
+// controls/menu/Menu.tsx
+export function useRovingMenu(ref: React.RefObject<HTMLElement | null>, open: boolean, onClose: () => void): { onKeyDown: (e: React.KeyboardEvent) => void };
+export const Menu: React.FC<MenuProps>; export const MenuItem, MenuHeader, MenuSeparator;
+```
+Schließen (Escape, Außenklick) macht der Aufrufer bzw. `Menu` — der Hook positioniert nur.
 
 - [ ] **Step 1: Branch und Paket**
 
@@ -749,8 +741,8 @@ cd ../_Working-Tree/tl8-wt-29584 && git add com.top_logic.layout.react/src/main/
 /**
  * The one way a transient surface - a menu, a select popup, a toolbar overflow - is placed: at an
  * anchor element or a viewport point, flipped when it does not fit, shifted to stay inside the
- * viewport, following scroll and resize. Surface, layer and shadow are the design system's
- * (tl-popover); this hook only yields the position.
+ * viewport, following scroll and resize while open. Surface, layer and shadow are the design
+ * system's (tl-popover); this hook only yields the position. Closing is the caller's.
  */
 import React from 'react';
 import { useFloating, autoUpdate, offset, flip, shift } from '@floating-ui/react';
@@ -760,37 +752,40 @@ export type PopoverAnchor = Element | { x: number; y: number };
 export interface PopoverOptions {
   open: boolean;
   anchor: PopoverAnchor | null;
-  onClose: () => void;
   placement?: 'bottom-start' | 'bottom-end' | 'top-start';
 }
 
 /** The gap between anchor and surface: space-xs, read from the tokens so it follows the density. */
 function gapPx(): number {
-  const v = getComputedStyle(document.documentElement).getPropertyValue('--tl-space-xs').trim();
-  const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+  const root = getComputedStyle(document.documentElement);
+  const v = root.getPropertyValue('--tl-space-xs').trim();
+  const rem = parseFloat(root.fontSize) || 16;
   const n = parseFloat(v);
   return isNaN(n) ? 8 : v.endsWith('rem') ? n * rem : n;
 }
 
 export function usePopover(opts: PopoverOptions): { setFloating: (el: HTMLElement | null) => void; style: React.CSSProperties } {
-  const { open, anchor, onClose, placement = 'bottom-start' } = opts;
-  const reference = anchor instanceof Element ? anchor : null;
-  const virtual = anchor && !(anchor instanceof Element)
-    ? { getBoundingClientRect: () => ({ x: anchor.x, y: anchor.y, left: anchor.x, top: anchor.y,
-        right: anchor.x, bottom: anchor.y, width: 0, height: 0 }) }
-    : null;
+  const { open, anchor, placement = 'bottom-start' } = opts;
   const { refs, floatingStyles } = useFloating({
     open,
-    onOpenChange: (o) => { if (!o) onClose(); },
     placement,
-    elements: { reference: reference ?? undefined },
+    strategy: 'fixed',
     middleware: [offset(gapPx()), flip(), shift({ padding: gapPx() })],
-    whileElementsMounted: autoUpdate,
+    whileElementsMounted: open ? autoUpdate : undefined,
   });
+  // floating-ui keeps the position reference as state: set it on every change, element or point,
+  // or a menu once opened at a point stays there when it is next opened at an element.
+  const x = anchor && !(anchor instanceof Element) ? anchor.x : null;
+  const y = anchor && !(anchor instanceof Element) ? anchor.y : null;
   React.useLayoutEffect(() => {
-    if (virtual) refs.setPositionReference(virtual);
-  }, [virtual?.getBoundingClientRect().x, virtual?.getBoundingClientRect().y]);
-  return { setFloating: refs.setFloating, style: floatingStyles };
+    if (!open || !anchor) return;
+    if (anchor instanceof Element) { refs.setPositionReference(anchor); return; }
+    const r = { x: anchor.x, y: anchor.y, left: anchor.x, top: anchor.y, right: anchor.x, bottom: anchor.y, width: 0, height: 0 };
+    refs.setPositionReference({ getBoundingClientRect: () => r });
+  }, [open, anchor instanceof Element ? anchor : null, x, y, refs]);
+  // Only an open surface is observed: a mounted-but-hidden overflow menu must not run autoUpdate.
+  const setFloating = React.useCallback((el: HTMLElement | null) => refs.setFloating(open ? el : null), [open, refs]);
+  return { setFloating, style: floatingStyles };
 }
 ```
 
@@ -804,27 +799,12 @@ import type { PopoverAnchor, PopoverOptions } from 'tl-react-bridge';
 
 const { useCallback, useEffect, useRef } = React;
 
-const ITEM = '[role="menuitem"]:not([disabled])';
+const ITEM = '[role="menuitem"]:not([disabled]), [role="menuitemcheckbox"]:not([disabled])';
 
-export interface MenuProps {
-  open: boolean;
-  anchor: PopoverAnchor | null;
-  onClose: () => void;
-  placement?: PopoverOptions['placement'];
-  id?: string;
-  className?: string;
-  children: React.ReactNode;
-}
-
-/**
- * The one menu: a tl-popover with entries, portaled to the body, placed by usePopover. Keyboard
- * moves the real DOM focus (roving tabindex): arrows cycle, Home/End jump, Enter/Space choose,
- * Escape closes; disabled entries are skipped. Mounted only while open - a caller that needs its
- * entries to stay live (the toolbar overflow) keeps them mounted itself and passes `hidden`.
- */
 /**
  * Roving tabindex over the entries of a menu: exactly one entry is in the tab order, the one that
- * has focus; arrows cycle, Home/End jump, Escape closes. Shared by Menu and the toolbar overflow.
+ * has focus; arrows cycle, Home/End jump, Escape closes; disabled entries are skipped. Shared by
+ * Menu and the toolbar overflow.
  */
 export function useRovingMenu(ref: React.RefObject<HTMLElement | null>, open: boolean, onClose: () => void): { onKeyDown: (e: React.KeyboardEvent) => void } {
   const items = useCallback(() => Array.from(ref.current?.querySelectorAll<HTMLElement>(ITEM) ?? []), [ref]);
@@ -853,22 +833,37 @@ export function useRovingMenu(ref: React.RefObject<HTMLElement | null>, open: bo
   return { onKeyDown };
 }
 
+export interface MenuProps {
+  open: boolean;
+  anchor: PopoverAnchor | null;
+  onClose: () => void;
+  placement?: PopoverOptions['placement'];
+  id?: string;
+  className?: string;
+  children: React.ReactNode;
+}
+
+/**
+ * The one menu: a tl-popover with entries, portaled to the body, placed by usePopover, closed on
+ * Escape and on a press outside. Mounted only while open - a caller that needs its entries to stay
+ * live (the toolbar overflow) keeps them mounted itself and uses useRovingMenu directly.
+ */
 export const Menu: React.FC<MenuProps> = ({ open, anchor, onClose, placement, id, className, children }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const { setFloating, style } = usePopover({ open, anchor, onClose, placement });
+  const ref = useRef<HTMLDivElement | null>(null);
+  const { setFloating, style } = usePopover({ open, anchor, placement });
   useCloseOnOutsidePress(open, [ref], onClose);
   useFocusTrap(open, ref, 'first');
-  const { onKeyDown: handleKeyDown } = useRovingMenu(ref, open, onClose);
+  const { onKeyDown } = useRovingMenu(ref, open, onClose);
 
   if (!open) return null;
   return createPortal(
     <div
       id={id}
-      ref={(el) => { (ref as React.MutableRefObject<HTMLDivElement | null>).current = el; setFloating(el); }}
+      ref={(el) => { ref.current = el; setFloating(el); }}
       className={'tl-popover tl-menu' + (className ? ' ' + className : '')}
       role="menu"
       style={style}
-      onKeyDown={handleKeyDown}
+      onKeyDown={onKeyDown}
       {...anchoredOverlayProps}
     >
       {children}
@@ -882,7 +877,7 @@ export const MenuItem: React.FC<{ id?: string; icon?: string; label: string; dis
     <button
       type="button"
       id={id}
-      className={'tl-menu__item tl-type-label' + (className ? ' ' + className : '')}
+      className={'tl-menu__item ' + (current ? 'tl-type-label-strong' : 'tl-type-label') + (className ? ' ' + className : '')}
       role="menuitem"
       aria-current={current ? 'true' : undefined}
       disabled={disabled}
@@ -901,9 +896,9 @@ export const MenuHeader: React.FC<{ label: string }> = ({ label }) => (
 export const MenuSeparator: React.FC = () => <hr className="tl-divider" />;
 ```
 
-Enter/Space auf einem fokussierten `button` lösen `click` nativ aus — keine eigene Behandlung.
+Enter/Space auf einem fokussierten `button` lösen `click` nativ aus. Escape: `preventDefault` hält den Keyboard-Dispatcher an (`keyboard-dispatcher.ts:191`).
 
-- [ ] **Step 4: `TLMenu.tsx` umschreiben**
+- [ ] **Step 4: `TLMenu.tsx`**
 
 ```tsx
 import { React, useTLState, useTLCommand, rootClassName } from 'tl-react-bridge';
@@ -935,24 +930,37 @@ const TLMenu: React.FC<TLCellProps> = ({ controlId }) => {
 export default TLMenu;
 ```
 
-`rootClassName(state)` ohne weitere Klasse liefert nur `cssClass` aus dem Zustand (css.ts:25–32).
+- [ ] **Step 5: Altes CSS, Ratsche** — `tlReactControls.css`: Regeln `.tlMenu*` (2823–2910) löschen; die `.tlViewError*`-Regeln (2797–2821) bleiben unter neuer Überschrift `/* --- TLViewError ----- */`; Überschrift `TLMenu` fällt. `design-system/test/ratchet.json`: `"TLMenu"` streichen, `"TLViewError": <Zahl aus node tools/inventory.mjs>` eintragen, `_blocks`-Vermerk „01.10. Welle 3a: TLMenu gestrichen; TLViewError stand ohne eigene Überschrift im TLMenu-Block“.
 
-- [ ] **Step 5: Altes CSS** — in `tlReactControls.css` die Regeln `.tlMenu`, `.tlMenu__item*`, `.tlMenu__separator`, `.tlMenu__header`, `.tlMenu__icon`, `.tlMenu__label` löschen (2823–2910). Die `.tlViewError*`-Regeln (2797–2821) bleiben und bekommen die Überschrift `/* --- TLViewError ----- */` (drei Striche wie die anderen); die Überschrift `TLMenu` fällt. `design-system/test/ratchet.json`: `"TLMenu"` streichen, `"TLViewError": <Zeilen aus node tools/inventory.mjs>` eintragen, `_blocks`-Vermerk: „01.10. Welle 3a: TLMenu gestrichen; TLViewError stand ohne eigene Überschrift im TLMenu-Block“.
+- [ ] **Step 6: Bauen, testen, Commit** — `cd com.top_logic.layout.react && npm run build`; Modul-Tests `layout.react` (`control.overlay.*`); Paket `node --test test/ratchet.test.mjs`. `git commit -m "Ticket #29617: Design System wave 3a -- one popover (floating-ui), one menu with roving focus; TLMenu reads it, old block removed"`
 
-- [ ] **Step 6: Bauen und testen** — `cd com.top_logic.layout.react && npm run build` (tsc 0 neue Befunde); Modul-Tests: `mvn -o -q test -pl com.top_logic.layout.react -Dtest='test.com.top_logic.layout.react.control.overlay.*'` (oder die Suite wie in STATUS: `layout.react`). `cd design-system && node --test test/ratchet.test.mjs`.
-
-- [ ] **Step 7: Commit** — `git commit -m "Ticket #29617: Design System wave 3a -- one popover (floating-ui), one menu with roving focus; TLMenu reads it, old block removed"`
-
-### Task E2: Spalten-Kontextmenü der Tabelle über `Menu`
+### Task E2: Nachzug Select, Textfeld, Hilfeknopf — Popup über `usePopover`, Icon-Knöpfe
 
 **Files:**
-- Modify: `react-src/controls/TLTableView.tsx:397-400` (State), `:1115-1121` (Hooks), `:1701-1741` (Markup)
+- Modify: `react-src/controls/button/ButtonDefaults.tsx` (nur `buttonClassName` um `icon`), `TLDropdownSelect.tsx:57-87` (Chip), `:269-296` (Position), `:549-557` (Popup-Root), `:684-692` (Clear); `TLTextInput.tsx:249-271` (`__action`, `title` in 255); `TLFormField.tsx:143-149` (Hilfeknopf)
 
-- [ ] **Step 1: Markup ersetzen** — Zeilen 1701–1741 durch:
+- [ ] **Step 1: `buttonClassName`** — Signatur `{ appearance; danger?; small?; icon?; extra? }`; `opts.icon ? 'tl-button--icon' : ''` in der Liste (die `menu-item`-Verzweigung kommt in E5).
+- [ ] **Step 2: Select-Popup** — `useEffect` 276–296 und `dropdownStyle` löschen; `const { setFloating, style } = usePopover({ open: isOpen, anchor: containerRef.current });` Root: `className="tl-popover tl-select__popup"`, `ref={(el) => { dropdownRef.current = el; setFloating(el); }}`, `style={{ ...style, width: containerRef.current?.getBoundingClientRect().width }}`; `anchoredOverlayProps` bleibt; Außenklick bleibt bei `useCloseOnOutsidePress` (270).
+- [ ] **Step 3: Knöpfe** — Chip-Entfernen (75–83), Leeren (684–692), `TLTextInput` Löschen/Link (249–271): `className={buttonClassName({ appearance: 'ghost', small: true, icon: true })}`, `aria-label` wie heute, Icon `className="tl-button__icon tl-icon-sm"`; das native `title` (255) streichen. Hilfeknopf `TLFormField.tsx:143`: `icon: true` ergänzen.
+- [ ] **Step 4: Bauen, Tests, Commit** — `npm run build`; `layout.react` grün; `grep -rn "tl-select__chip-remove\|tl-select__clear\|tl-field-group__action" react-src` leer. `git commit -m "Ticket #29617: Design System wave 3a -- select popup placed by usePopover on tl-popover; remove, clear, field and help actions are icon buttons"`
+
+### Task E3: Nachzug FormGroup — `tl-toggle`
+
+**Files:**
+- Modify: `react-src/controls/TLFormGroup.tsx:11-12`, `:69-78`
+
+- [ ] **Step 1** — `const CHEVRON = 'css:fa-solid fa-chevron-right';`; Knopf `className="tl-toggle"`, Inhalt `<ThemeIcon encoded={CHEVRON} className="tl-icon-sm" />`; `aria-expanded`, `aria-controls`, `aria-label`, Tooltip bleiben.
+- [ ] **Step 2** — `npm run build`; `grep -rn "tl-form-group__toggle" react-src` leer; Commit `"Ticket #29617: Design System wave 3a -- form group collapses with tl-toggle"`.
+
+### Task E4: Spalten-Kontextmenü der Tabelle über `Menu`
+
+**Files:**
+- Modify: `react-src/controls/TLTableView.tsx:397-400`, `:1120-1121`, `:1701-1741`
+
+- [ ] **Step 1** — Zeilen 1701–1741 ersetzen:
 
 ```tsx
-<Menu open={!!contextMenu} anchor={contextMenu ? { x: contextMenu.x, y: contextMenu.y } : null}
-    onClose={() => setContextMenu(null)}>
+<Menu open={!!contextMenu} anchor={contextMenu ? { x: contextMenu.x, y: contextMenu.y } : null} onClose={() => setContextMenu(null)}>
   {contextMenu && contextMenu.colIdx + 1 !== frozenColumnCount && !columns[contextMenu.colIdx]?.pinnedEnd && (
     <MenuItem label={i18n['js.table.freezeUpTo']} onSelect={handleFreezeUpTo} />)}
   {contextMenu && frozenColumnCount > 0 && <MenuItem label={i18n['js.table.unfreezeAll']} onSelect={handleUnfreezeAll} />}
@@ -964,19 +972,17 @@ export default TLMenu;
 </Menu>
 ```
 
-Import: `import { Menu, MenuItem } from './menu/Menu';`. Zeilen 1120–1121 (`useCloseOnOutsidePress`, `useStandaloneKeyboardScope`) und `contextMenuRef` (400) löschen — `Menu` schließt selbst. Die Handler `handleFreezeUpTo` usw. müssen `setContextMenu(null)` weiter aufrufen (prüfen, 1044–1047).
+Import `{ Menu, MenuItem } from './menu/Menu'`; 1120–1121 und `contextMenuRef` (400) löschen; die Handler (1043–1047) rufen weiter `setContextMenu(null)`.
 
-- [ ] **Step 2: Bauen, Tests** — `npm run build`; `layout.react`-Tests `control.table.*` grün. `grep -n "tlMenu" react-src/controls/TLTableView.tsx` → leer.
+- [ ] **Step 2** — `npm run build`; `layout.react` `control.table.*` grün; `grep -n "tlMenu" react-src/controls/TLTableView.tsx` leer. Commit `"Ticket #29617: Design System wave 3a -- the column context menu is a Menu: placed, clamped, keyboard-reachable like every menu"`.
 
-- [ ] **Step 3: Commit** — `git commit -m "Ticket #29617: Design System wave 3a -- the column context menu is a Menu: placed, clamped, keyboard-reachable like every menu"`
-
-### Task E3: Button-Kontext und Toolbar
+### Task E5: Button-Kontext und Toolbar
 
 **Files:**
-- Modify: `react-src/controls/button/ButtonDefaults.tsx`, `react-src/controls/TLButton.tsx:52-152`, `react-src/controls/TLToolbar.tsx` (ganz), `tlReactControls.css` (Blöcke `TLToolbar` 4625–4760, Dropdown 5636–5680, Host-Regeln 1116–1121 und 2113–2118), `design-system/test/ratchet.json`
+- Modify: `react-src/controls/button/ButtonDefaults.tsx`, `TLButton.tsx:52-152`, `TLToggleButton.tsx`, `TLUploadButton.tsx:68-79`, `TLToolbar.tsx` (MenuGroup 108–251, Root 454–476, `measureUnits` 485–512), `tlReactControls.css` (Block `TLToolbar` 4625–4760, Dropdown 5626–5680, Host 1116–1121 und 2113–2118), `design-system/test/ratchet.json` (`TLToolbar` streichen, Block „Dashboard“ um die Dropdown-Zeilen senken, `foreignTl` −2)
 
 **Interfaces:**
-- Produces: `ButtonDefaultsValue { appearance?: ButtonAppearance; iconOnly?: boolean }`, `ButtonAppearance` um `'menu-item'`; `buttonClassName({ appearance, danger, small, icon, extra })`.
+- Produces: `ButtonAppearance` um `'menu-item'`; `ButtonDefaultsValue { appearance?; iconOnly?: boolean }`; `menuItemProps(defaults)` liefert `{ role, tabIndex }` für Einträge.
 
 - [ ] **Step 1: ButtonDefaults**
 
@@ -991,31 +997,44 @@ export function buttonClassName(opts: { appearance: ButtonAppearance; danger?: b
     opts.small ? 'tl-button--sm' : '', opts.icon ? 'tl-button--icon' : '',
     opts.extra ?? ''].filter(Boolean).join(' ');
 }
+/** What an entry of a menu carries besides its classes: the role and the roving tabindex. */
+export function menuItemProps(defaults: ButtonDefaultsValue, pressed?: boolean): { role?: string; tabIndex?: number } {
+  if (defaults.appearance !== 'menu-item') return {};
+  return { role: pressed === undefined ? 'menuitem' : 'menuitemcheckbox', tabIndex: -1 };
+}
 ```
 
-- [ ] **Step 2: TLButton** — nach Zeile 72: `const compact = defaults.iconOnly === true && !!resolvedImage; const resolvedMode2 = compact ? 'icon-only' : resolvedMode;` und alle folgenden Leser von `resolvedMode` auf `resolvedMode2` (Name danach zu `mode` vereinfachen). `const iconOnly = mode === 'icon-only'; const icon = iconOnly && !!resolvedImage;` `small = state.size === 'small' && iconOnly`. Klassen: `buttonClassName({ appearance: resolvedAppearance, danger: resolvedDanger, small, icon, extra: cssClasses })`. Teile: `const part = resolvedAppearance === 'menu-item' ? 'tl-menu' : 'tl-button';` → `className={part + '__icon ' + (showLabel ? 'tl-icon-sm' : 'tl-icon-md')}` und `<span className={part + '__label'}>`. Menüeintrag: `role="menuitem"` und `tabIndex={-1}` wenn `menu-item`. Der Tooltip bei `compact` ist der Label-Text (`iconOnly` → `tooltipProps[TOOLTIP_ATTR]` ohne `WHEN_TRUNCATED`): die bestehende Logik (120–127) deckt das, weil `iconOnly` dann wahr ist.
-
-- [ ] **Step 3: TLToolbar** — Änderungen (Zeilen des heutigen Stands):
-  - Konstanten 12–18: `OVERFLOW_ICON` bleibt; `COMPACT_CLASS`, `TRIGGER_SIZE_PROPERTY` löschen.
-  - `MenuGroup` (107–248): `menuStyle`, `useLayoutEffect`, `useCloseOnOutsidePress`, `useStandaloneKeyboardScope`, `useFocusTrap` löschen. Trigger:
-    ```tsx
-    <button ref={triggerRef} type="button"
-      className={buttonClassName({ appearance: inheritedAppearance, icon: iconOnly })}
-      onMouseDown={(e) => e.preventDefault()} onClick={handleToggle}
-      aria-expanded={open} aria-haspopup="menu" aria-label={iconOnly ? label : undefined}
-      {...tooltipProps(iconOnly ? label : undefined)}>
-      {iconOnly ? <ThemeIcon encoded={group.icon!} className="tl-button__icon tl-icon-md" />
-        : <><span className="tl-button__label">{label}</span><ThemeIcon encoded={CHEVRON_ICON} className="tl-icon-sm" /></>}
-    </button>
+- [ ] **Step 2: TLButton** (52–152) — Erscheinung: `const resolvedAppearance = defaults.appearance === 'menu-item' ? 'menu-item' : (appearance ?? serverAppearance ?? defaults.appearance ?? 'secondary');` (Container schlägt den Server, nur für `menu-item`). Modus: `const shows = resolvedMode !== 'label-only' && !!resolvedImage; const mode = defaults.iconOnly && shows ? 'icon-only' : resolvedAppearance === 'menu-item' && resolvedImage ? 'icon-label' : resolvedMode;` — kompakt wird nur ein Knopf, der sein Icon zeigt; im Menü zeigt jeder Knopf sein Label. `const iconOnly = mode === 'icon-only'; const icon = iconOnly && !!resolvedImage; const small = state.size === 'small' && iconOnly;` Klassen `buttonClassName({ appearance: resolvedAppearance, danger: resolvedDanger, small, icon, extra: cssClasses })`; Teile `const part = resolvedAppearance === 'menu-item' ? 'tl-menu' : 'tl-button';` an `__icon`/`__label`; Icon-Größe `showLabel ? 'tl-icon-sm' : 'tl-icon-md'` bleibt (ein Icon-Knopf trägt `md`). Zustand: `const pressed = resolvedActive ? true : state.active === false ? false : undefined;` — am `tl-button` `aria-pressed={resolvedActive ? true : undefined}` wie heute; als Eintrag `{...menuItemProps(defaults, pressed)}` und `aria-checked={resolvedAppearance === 'menu-item' && pressed !== undefined ? pressed : undefined}` statt `aria-pressed`. Tooltip-Logik (120–127) bleibt; bei `iconOnly` trägt sie das Label.
+- [ ] **Step 3: `TLToggleButton`, `TLUploadButton`** — beide lesen `useButtonDefaults()`: `iconOnly` wie TLButton (nur wenn ein Icon gezeigt wird) und `{...menuItemProps(defaults)}` am Knopf; `TLUploadButton` 68–79 nutzt `buttonClassName` schon — `icon` ergänzen, wenn kompakt.
+- [ ] **Step 4: TLToolbar**
+  - Konstanten: `COMPACT_CLASS`, `TRIGGER_SIZE_PROPERTY` löschen; `const CHEVRON_ICON = 'css:fa-solid fa-chevron-down';`.
+  - **Zwei Messdurchläufe** statt Klassenwechsel: Zustand `const [measurePhase, setMeasurePhase] = useState<'full' | 'compact' | null>(null);` Beim Wechsel der `groups` (`measuredRef.current !== groups`) → `measurePhase = 'full'`: Render mit `iconOnly={false}`, `useLayoutEffect` liest `full = readUnits()` und setzt `setMeasurePhase('compact')`; Render mit `iconOnly={true}`, Effekt liest `compact = readUnits()`, speichert `metricsRef`, `measuredRef.current = groups`, `setMeasurePhase(null)`; danach wie heute (`settled`). Während beider Phasen `toolbarStyle = { width: 'auto', flexShrink: 0 }` und alle Einheiten inline. `measureUnits` wird zu `readUnits(root, unitCount)` plus `metricsOf(root, full, compact)`:
+    ```ts
+    function metricsOf(root: HTMLElement, full: number[], compact: number[]): Metrics {
+      const rootStyle = getComputedStyle(root);
+      const gap = parseFloat(rootStyle.columnGap) || 0;
+      const groupElement = root.querySelector('.tl-toolbar__group');
+      const itemGap = groupElement ? (parseFloat(getComputedStyle(groupElement).columnGap) || gap) : gap;
+      const separatorElement = root.querySelector('.tl-divider--vertical');
+      const separator = separatorElement ? separatorElement.getBoundingClientRect().width : 1;
+      return { full, compact, gap, itemGap, separator, trigger: tokenPx(rootStyle, '--tl-size-control') };
+    }
+    function tokenPx(style: CSSStyleDeclaration, name: string): number {
+      const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+      const v = style.getPropertyValue(name).trim(); const n = parseFloat(v);
+      return isNaN(n) ? 2 * rem : v.endsWith('rem') ? n * rem : n;
+    }
     ```
-    mit `const CHEVRON_ICON = 'css:fa-solid fa-chevron-down';` und `inheritedAppearance = useButtonDefaults().appearance ?? 'ghost'`. Dropdown: bleibt gemountet, ein Portal mit `usePopover`:
+    Der Trigger ist erst beim Überlauf gerendert; seine Breite ist das Maß `size-control` (gelesen, nicht geraten).
+  - `MenuGroup` (108–251): `menuStyle`, `useLayoutEffect`, eigene Hooks löschen. Trigger `button` mit `className={buttonClassName({ appearance: inheritedAppearance, icon: iconOnly })}`, `aria-haspopup="menu"`, `aria-expanded={open}`, Icon `tl-button__icon tl-icon-md` bzw. Label + `<ThemeIcon encoded={CHEVRON_ICON} className="tl-icon-sm" />`. Dropdown bleibt gemountet:
     ```tsx
-    const { setFloating, style } = usePopover({ open, anchor: triggerRef.current, onClose: () => setOpen(false), placement: align === 'start' ? 'bottom-start' : 'bottom-end' });
+    const { setFloating, style } = usePopover({ open, anchor: triggerRef.current, placement: align === 'start' ? 'bottom-start' : 'bottom-end' });
     useCloseOnOutsidePress(open, [menuRef, triggerRef], () => setOpen(false));
     useFocusTrap(open, menuRef, 'first');
+    const { onKeyDown } = useRovingMenu(menuRef, open, () => setOpen(false));
     {createPortal(
       <div ref={(el) => { menuRef.current = el; setFloating(el); }} className="tl-popover tl-menu" role="menu"
-           hidden={!open} style={open ? style : undefined} onClick={() => setOpen(false)} onKeyDown={menuKeyDown} {...anchoredOverlayProps}>
+           hidden={!open} style={open ? style : undefined} onClick={() => setOpen(false)} onKeyDown={onKeyDown} {...anchoredOverlayProps}>
         <ButtonDefaults appearance="menu-item" iconOnly={false}>
           {visibleItems.map((item, i) => <TLChild key={i} control={item} />)}
           {sections.map((items, si) => <React.Fragment key={`sub-${si}`}>
@@ -1025,20 +1044,8 @@ export function buttonClassName(opts: { appearance: ButtonAppearance; danger?: b
         </ButtonDefaults>
       </div>, document.body)}
     ```
-    `menuKeyDown` kommt aus `useRovingMenu(menuRef, open, () => setOpen(false))` (E1, `Menu.tsx`) — keine Kopie. `iconOnly={false}` im Dropdown, damit kompakte Toolbars ihre Overflow-Einträge mit Label zeigen.
-  - Root (455–478): `className={rootClassName(state, 'tl-toolbar')}`, Attribute `data-tl-overflow={collapsible ? overflowEnd : undefined}` und `data-tl-compact={compact ? '' : undefined}`; `<ButtonDefaults appearance={appearance} iconOnly={compact}>`; Trenner `<hr className="tl-divider tl-divider--vertical" aria-orientation="vertical" />`; Gruppen `tl-toolbar__group` (ohne `--inline/--menu`; `data-tlunit` bleibt).
-  - `measureUnits` (485–512): kompakte Breiten nicht mehr durch Klassenwechsel, sondern:
-    ```ts
-    const control = tokenPx(rootStyle, '--tl-size-control');
-    const compact = full.map((w, i) => {
-      const el = root.querySelector<HTMLElement>(`[data-tlunit="${i}"]`);
-      return el?.querySelector('.tl-button__icon') ? control : w;
-    });
-    const separatorElement = root.querySelector('.tl-divider--vertical');
-    return { full, compact, gap, itemGap, separator, trigger: control };
-    ```
-    `tokenPx(style, name)` ersetzt `triggerSize`: liest `style.getPropertyValue(name)`, rechnet `rem` in px, Fallback `2 * rem`. Dazu `itemGap` aus `.tl-toolbar__group`.
-- [ ] **Step 4: Altes CSS** — Block `TLToolbar` (4625–4760) komplett löschen, Dropdown-Teil (5636–5680, inkl. `.tlToolbar__chevron` davor ab 5630) löschen. Host-Regeln ersetzen:
+  - Root (454–476): `className={rootClassName(state, 'tl-toolbar')}`, `data-tl-overflow={collapsible ? overflowEnd : undefined}`, `data-tl-compact={compact ? '' : undefined}`; `<ButtonDefaults appearance={appearance} iconOnly={measurePhase === 'compact' || compact}>`; Trenner `<hr className="tl-divider tl-divider--vertical" aria-orientation="vertical" />`; Gruppen `tl-toolbar__group` mit `data-tlunit`.
+- [ ] **Step 5: Altes CSS, Ratsche** — Block `TLToolbar` (4625–4760) löschen; Dropdown-Teil 5626–5680 löschen (beginnt mit `button.tlToolbar__menuTrigger[aria-expanded]`, liegt im Block „Dashboard“ → dessen Zahl in `ratchet.json` senken). Host-Regeln:
 
 ```css
 .tlPanel__header:has(> .tlPanel__toolbar > .tl-toolbar[data-tl-overflow]) > .tlPanel__toolbar {
@@ -1053,41 +1060,22 @@ export function buttonClassName(opts: { appearance: ButtonAppearance; danger?: b
 }
 ```
 
-`ratchet.json`: `"TLToolbar"` streichen; `foreignTl` ohne die zwei Toolbar-Namen; die Dropdown-Zeilen zählten zum Block „Dashboard“ o. ä. — `node tools/inventory.mjs` zeigt, welcher Block sinkt; dessen Zahl senken.
+`ratchet.json`: `"TLToolbar"` streichen; `foreignTl` ohne `--tl-toolbar-trigger-size`, `--tl-toolbar-shrink-priority`.
 
-- [ ] **Step 5: Bauen, Tests** — `npm run build`; `layout.react` (`TestReactToolbarControl`), `layout.view` (`TestAppBarElement`); Paket `node --test test/ratchet.test.mjs` grün (foreignTl leer bis auf `--tlText-tone` u. a.).
-
-- [ ] **Step 6: Commit** — `git commit -m "Ticket #29617: Design System wave 3a -- toolbar: buttons choose compact via ButtonDefaults, trigger is a tl-button, overflow is a Menu; --tl-toolbar-* gone"`
-
-### Task E4: Nachzug Select, Textfeld — Popup über `usePopover`, Icon-Knöpfe
-
-**Files:**
-- Modify: `react-src/controls/TLDropdownSelect.tsx:268-296` (Position), `:548-556` (Popup-Root), `:57-87` (Chip), `:684-692` (Clear); `react-src/controls/TLTextInput.tsx:248-273` (`__action`)
-
-- [ ] **Step 1: Select-Popup** — `useEffect` 276–296 und `dropdownStyle` löschen; `const { setFloating, style } = usePopover({ open: isOpen, anchor: containerRef.current, onClose: () => { setIsOpen(false); setSearchTerm(''); } });` Popup-Root: `className="tl-popover tl-select__popup"`, `ref={(el) => { dropdownRef.current = el; setFloating(el); }}`, `style={{ ...style, width: containerRef.current?.getBoundingClientRect().width }}` (Breite = Feld; `anchoredOverlayProps` bleibt).
-- [ ] **Step 2: Knöpfe** — Chip-Entfernen (75–83) und Leeren (684–692): `className={buttonClassName({ appearance: 'ghost', small: true, icon: true })}` mit `aria-label` wie heute und `<ThemeIcon … className="tl-button__icon tl-icon-sm" />`. `TLTextInput` 248–273: Löschknopf und Link-Aktion ebenso; das native `title` (255) streichen (Tooltip über `tooltipProps`).
-- [ ] **Step 3: Bauen, Tests, Commit** — `npm run build`; `layout.react` grün; `grep -rn "tl-select__chip-remove\|tl-select__clear\|tl-field-group__action" react-src` → leer. `git commit -m "Ticket #29617: Design System wave 3a -- select popup placed by usePopover on tl-popover; remove/clear/field actions are icon buttons"`
-
-### Task E5: Nachzug FormGroup — `tl-toggle`
-
-**Files:**
-- Modify: `react-src/controls/TLFormGroup.tsx:11-12`, `:69-78`
-
-- [ ] **Step 1** — Konstanten: nur `const CHEVRON = 'css:fa-solid fa-chevron-right';`. Knopf: `className="tl-toggle"`, Inhalt `<ThemeIcon encoded={CHEVRON} className="tl-icon-sm" />`; `aria-expanded`, `aria-controls`, `aria-label`, Tooltip bleiben.
-- [ ] **Step 2** — `npm run build`; `grep -rn "tl-form-group__toggle" react-src` leer; Commit `"Ticket #29617: Design System wave 3a -- form group collapses with tl-toggle"`.
+- [ ] **Step 6: Bauen, Tests, Commit** — `npm run build`; `layout.react` (`TestReactToolbarControl`), `layout.view` (`TestAppBarElement`); `node --test test/ratchet.test.mjs`. `git commit -m "Ticket #29617: Design System wave 3a -- toolbar: buttons go compact via ButtonDefaults (two measuring passes), trigger is a tl-button, overflow entries are menu items; --tl-toolbar-* gone"`
 
 ### Task E6: TabBar und Breadcrumb
 
 **Files:**
-- Modify: `react-src/controls/TLTabBar.tsx`, `react-src/controls/TLBreadcrumb.tsx`, `tlReactControls.css` (Blöcke 184–233, 291–307, 2160–2208), `src/main/java/com/top_logic/layout/react/I18NConstants.java`, `META-INF/messages_de.properties`, `design-system/test/ratchet.json`
+- Modify: `react-src/controls/TLTabBar.tsx`, `TLBreadcrumb.tsx`, `tlReactControls.css` (Block `TLTabBar` 184–308 — **darin 234–290 fremde Regeln**, Block `TLBreadcrumb` 2160–2208, Zeile 2739), `I18NConstants.java`, `messages_de.properties`, `design-system/test/ratchet.json`
 
 - [ ] **Step 1: TabBar**
 
 ```tsx
 const listRef = React.useRef<HTMLDivElement>(null);
 const focusTab = (index: number) => {
-  const tabsEl = Array.from(listRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]') ?? []);
-  const el = tabsEl[(index + tabsEl.length) % tabsEl.length];
+  const all = Array.from(listRef.current?.querySelectorAll<HTMLButtonElement>('[role="tab"]') ?? []);
+  const el = all[(index + all.length) % all.length];
   el?.focus();
   const id = el?.dataset.tabId; if (id) handleTabClick(id);
 };
@@ -1096,112 +1084,81 @@ const handleKeyDown = (e: React.KeyboardEvent, index: number) => {
   else if (e.key === 'Home') focusTab(0); else if (e.key === 'End') focusTab(tabs.length - 1); else return;
   e.preventDefault();
 };
-// Markup
-<div id={controlId} className={rootClassName(state, 'tl-tabs ' + fillClass)}>
-  <div ref={listRef} className="tl-tabs__list" role="tablist">
-    {tabs.map((tab, index) => (
-      <button key={tab.id} type="button" role="tab" id={`${controlId}-tab-${tab.id}`} data-tab-id={tab.id}
-        aria-selected={tab.id === activeTabId} aria-controls={`${controlId}-panel`}
-        tabIndex={tab.id === activeTabId ? 0 : -1}
-        className="tl-tabs__tab tl-type-label" onClick={() => handleTabClick(tab.id)} onKeyDown={(e) => handleKeyDown(e, index)}>
-        {tab.icon && <ThemeIcon encoded={tab.icon} className="tl-icon-sm" />}
-        <span>{tab.label}</span>
-      </button>))}
-  </div>
-  <div id={`${controlId}-panel`} className="tl-tabs__panel" role="tabpanel" aria-labelledby={activeTabId ? `${controlId}-tab-${activeTabId}` : undefined}>
-    <FillBarrier>{!!state.activeContent && <TLChild control={state.activeContent} />}</FillBarrier>
-  </div>
-</div>
 ```
 
-- [ ] **Step 2: Breadcrumb** — `I18NConstants.java` im Block „Client-side i18n keys“:
+Markup: `div.tl-tabs` (+ `fillClass`), `div.tl-tabs__list[role=tablist]`, je Reiter `button.tl-tabs__tab.tl-type-label[role=tab][id=…-tab-ID][data-tab-id][aria-selected][aria-controls=…-panel][tabIndex 0/-1]` mit `<ThemeIcon … className="tl-icon-sm" />` und `<span>{label}</span>`; `div.tl-tabs__panel[role=tabpanel][id=…-panel][aria-labelledby]` mit `FillBarrier`.
 
-```java
-	/**
-	 * @en Breadcrumb
-	 */
-	@CustomKey("js.breadcrumb.label")
-	public static ResKey JS_BREADCRUMB_LABEL;
-```
+- [ ] **Step 2: Breadcrumb** — `I18NConstants.java` (Block „Client-side i18n keys“): JavaDoc `@en Breadcrumb`, `@CustomKey("js.breadcrumb.label") public static ResKey JS_BREADCRUMB_LABEL;`. `messages_de.properties`: `js.breadcrumb.label = Navigationspfad`. TSX: `I18N_KEYS`, `useI18N`; `nav.tl-breadcrumb[aria-label]`, `ol.tl-breadcrumb__list`, `li.tl-breadcrumb__entry`, Trenner `<span className="tl-breadcrumb__separator" aria-hidden="true"><ThemeIcon encoded={SEPARATOR_ICON} className="tl-icon-sm" /></span>` (`ThemeIcon` kennt kein `aria-hidden` — der Span trägt es), Eintrag `button` mit `buttonClassName({ appearance: 'link' })`, aktuell `span.tl-breadcrumb__current.tl-type-label[aria-current=page]`.
 
-`messages_de.properties`: `js.breadcrumb.label = Navigationspfad` (alphabetisch bei den `js.`-Keys). TSX: `const I18N_KEYS = { 'js.breadcrumb.label': 'Breadcrumb' }; const i18n = useI18N(I18N_KEYS);` Markup: `<nav className={rootClassName(state, 'tl-breadcrumb')} aria-label={i18n['js.breadcrumb.label']}>`, `ol.tl-breadcrumb__list`, `li.tl-breadcrumb__entry`, Trenner `<ThemeIcon encoded={SEPARATOR_ICON} className="tl-breadcrumb__separator tl-icon-sm" aria-hidden />` mit `const SEPARATOR_ICON = 'css:fa-solid fa-chevron-right';`, Eintrag `<button type="button" className={buttonClassName({ appearance: 'link' })} …>`, aktuell `<span className="tl-breadcrumb__current tl-type-label" aria-current="page">`.
+- [ ] **Step 3: Altes CSS, Ratsche** — Block `TLTabBar`: 184–233 und 291–308 löschen; **234–290 bleiben** (Abstandsmodell, `:root { --page-inset }`, `.tlInset`) unter neuer Überschrift `/* --- TLInset ----- */` mit Eintrag in `ratchet.json` (Zahl aus `inventory.mjs`); `_blocks`-Vermerk. Block `TLBreadcrumb` (2160–2208) löschen. Zeile 2739 `.tlAppShell .tlBreadcrumb` → `.tlAppShell .tl-breadcrumb` (Übergangsregel, liest die Paketklasse; Kommentar „Übergang bis Welle 4 (Shell)“). `ratchet.json`: `TLTabBar`, `TLBreadcrumb` streichen.
 
-- [ ] **Step 3: Altes CSS, Ratsche** — Blöcke `TLTabBar` (184–233 und `.tlReactTabBar__content` 291–307) und `TLBreadcrumb` (2160–2208) löschen; `ratchet.json` beide streichen (291–307 zählt zu einem Nachbarblock — `inventory.mjs` zeigt, welcher sinkt).
-
-- [ ] **Step 4: messages_en** — `design-system/tools/check-messages-en.sh` → erzeugt `messages_en.properties` mit `js.breadcrumb.label = Breadcrumb`; Diff committen. Scheitert Maven offline, zuerst die vorgelagerten Module installieren (Memory „Gate nach master-Merge“).
-
+- [ ] **Step 4: messages_en** — `design-system/tools/check-messages-en.sh` → Diff committen.
 - [ ] **Step 5: Bauen, Tests, Commit** — `npm run build`; `layout.react` (`TestTabBarRouteVeto`), `layout.view`; `git commit -m "Ticket #29617: Design System wave 3a -- tabs with roving focus and arrow keys, breadcrumb with link buttons and a localized label"`
 
 ### Task E7: Menü-Auslöser — Anker-Element, `aria-expanded`, Tastatur
 
 **Files:**
-- Modify: `react-src/controls/TLMenuRegion.tsx`, `com.top_logic.layout.view/src/main/java/com/top_logic/layout/view/command/MenuRegionControl.java:56-100`, `com.top_logic.layout.react/src/main/java/com/top_logic/layout/react/control/overlay/ContextMenuOpener.java:53-70, 114-150, ~190`, `com.top_logic.layout.view/src/main/java/com/top_logic/layout/view/ViewServlet.java:399-414`, `tlReactControls.css:2911-2938`
-- Test: `com.top_logic.layout.view/src/test/java/test/com/top_logic/layout/view/command/TestContextMenuOpener.java` (RecordingRenderer um `show(String anchorId, …)`; neuer Fall „open with anchor records the anchor and reports closed“)
+- Modify: `react-src/controls/TLMenuRegion.tsx`; `MenuRegionControl.java:56-100`; `ContextMenuOpener.java` (53–70 Interface, 114–150 `open`, ~190 `handleClose`, `handleSelect`); `ViewServlet.java:399-414`; `tlReactControls.css:2911-2938` und `2152-2158`
+- Test: `TestContextMenuOpener.java` (`RecordingRenderer` 205: zweite `show`; neuer Fall)
 
-- [ ] **Step 1: Java** — `ContextMenuOpener.MenuRenderer`: zweite Methode `void show(String anchorId, List<MenuEntry> items, Function<String, HandlerResult> selectHandler, Runnable closeHandler);` (JavaDoc: „Show a menu at the element with the given ID.“). `ContextMenuOpener`: `public void open(String anchorId, List<Targeted> contributions, Runnable closed)` und `open(int x, int y, List<Targeted>, Runnable closed)`; beide bauen die Einträge über eine gemeinsame private Methode `List<MenuEntry> assemble(List<Targeted>)`; `_closed` wird in `handleClose()` (Zeile ~190) aufgerufen und genullt. Die bestehende `open(int, int, List)` delegiert mit `closed = null`. `ViewServlet` 400–414: zweite `show`-Implementierung `menu.updateItems(items); menu.setSelectHandler(selectHandler); menu.setCloseHandler(closeHandler); menu.setAnchorId(anchorId); menu.open();`. `MenuRegionControl`: `private static final String ARG_ANCHOR = "anchorId"; private static final String MENU_OPEN = "menuOpen";` — `handleOpen`: liest `anchorId` (String, optional); ruft `_opener.open(anchorId, targeted, () -> putState(MENU_OPEN, false))` bzw. die x/y-Variante; danach `putState(MENU_OPEN, true)`, nur wenn der Opener wirklich geöffnet hat (`open` gibt `boolean` zurück: `anything`). JavaDoc an jeder neuen Methode (englisch, `@en` nur bei `I18NConstants`).
-
-- [ ] **Step 2: Test** — in `TestContextMenuOpener`: `RecordingRenderer` erhält die zweite `show`; neuer Fall: `opener.open("anchor-1", contributions, closed)` → Renderer hat `anchorId == "anchor-1"`; `opener.close()` (oder der Close-Pfad des Tests) → `closed` wurde einmal gerufen. Rot sehen, dann Step 1 fertigstellen, grün: `mvn -o -q test -pl com.top_logic.layout.view -Dtest=TestContextMenuOpener`.
-
-- [ ] **Step 3: TSX**
+- [ ] **Step 1: Java** — `MenuRenderer`: `default void show(String anchorId, List<MenuEntry> items, Function<String, HandlerResult> selectHandler, Runnable closeHandler) { throw new UnsupportedOperationException("anchored menus"); }` (JavaDoc: „Show a menu at the element with the given ID.“) — `default`, damit andere Implementierungen nicht brechen; `ViewServlet` und `RecordingRenderer` überschreiben sie. `ContextMenuOpener`: `public boolean open(String anchorId, List<Targeted> contributions, Runnable closed)` und `public boolean open(int x, int y, List<Targeted> contributions, Runnable closed)`; gemeinsame private `assemble(List<Targeted>)`; `open(int, int, List)` delegiert mit `closed = null` (Aufrufer: `MenuRegionControl:112`, `DesignerTreeElement:280/303`, Tests). Vor jedem neuen Öffnen und in `handleClose()` **und** `handleSelect()` (nach `hide()`) wird `_closed` einmal gerufen und genullt — `aria-expanded` fällt auch nach einer Auswahl und wenn eine andere Region das Menü übernimmt. `ViewServlet`: zweite `show`: `menu.updateItems(items); menu.setSelectHandler(selectHandler); menu.setCloseHandler(closeHandler); menu.setAnchorId(anchorId); menu.open();`. `MenuRegionControl`: `ARG_ANCHOR = "anchorId"`, `MENU_OPEN = "menuOpen"`; `handleOpen` liest `anchorId` (optional) und ruft die passende `open`-Variante mit `() -> putState(MENU_OPEN, false)`; liefert sie `true`, `putState(MENU_OPEN, true)`. JavaDoc an allen neuen Methoden (englisch).
+- [ ] **Step 2: Test** — `TestContextMenuOpener`: `RecordingRenderer` merkt `anchorId` und `closeHandler`; neuer Fall: `opener.open("anchor-1", contributions, closed)` → `renderer.anchorId == "anchor-1"`; `renderer.closeHandler.run()` → `closed` einmal gerufen; zweiter Fall: Auswahl über `renderer.selectHandler.apply(id)` → `closed` einmal gerufen. Rot sehen, Step 1 fertigstellen, grün: `mvn -o -q test -pl com.top_logic.layout.view -Dtest=TestContextMenuOpener`.
+- [ ] **Step 3: TSX** — zwei Refs (`buttonRef: useRef<HTMLButtonElement>(null)`, `regionRef: useRef<HTMLDivElement>(null)` — tsc TS2352 sonst). Klick-Variante ist ein nativer `button` **ohne** eigenen Enter/Space-Handler (nativ `click`):
 
 ```tsx
 const menuOpen = state.menuOpen === true;
+const defaults = useButtonDefaults();
 const openAtRegion = useCallback(() => sendCommand('openMenu', { anchorId: controlId }), [sendCommand, controlId]);
 const openAtTarget = useCallback((target: Element) => {
   const r = target.getBoundingClientRect();
   sendCommand('openMenu', { x: Math.round(r.left), y: Math.round(r.bottom) });
 }, [sendCommand]);
-const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-  if (isClick && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openAtRegion(); return; }
-  if (!isClick && (e.key === 'ContextMenu' || (e.key === 'F10' && e.shiftKey))) { e.preventDefault(); e.stopPropagation(); openAtTarget(e.target as Element); }
-}, [isClick, openAtRegion, openAtTarget]);
-// click-Variante: ein echter Knopf
+const handleClick = useCallback((e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); if (pressClosedSurface()) return; openAtRegion(); }, [openAtRegion]);
+const handleContextKey = useCallback((e: React.KeyboardEvent) => {
+  if (e.key === 'ContextMenu' || (e.key === 'F10' && e.shiftKey)) { e.preventDefault(); e.stopPropagation(); openAtTarget(e.target as Element); }
+}, [openAtTarget]);
 return isClick
-  ? <button type="button" id={controlId} ref={regionRef as React.RefObject<HTMLButtonElement>}
+  ? <button type="button" id={controlId} ref={buttonRef} data-tl-trigger="click"
       className={rootClassName(state, 'tl-menu-region', buttonClassName({ appearance: defaults.appearance ?? 'ghost' }))}
-      aria-haspopup="menu" aria-expanded={menuOpen} onClick={handleClick} onKeyDown={handleKeyDown}>
+      aria-haspopup="menu" aria-expanded={menuOpen} onClick={handleClick}>
       {!!child && <TLChild control={child} />}
     </button>
-  : <div id={controlId} className={rootClassName(state, 'tl-menu-region')} ref={regionRef}
-      onContextMenu={handleContextMenu} onKeyDown={handleKeyDown}>
+  : <div id={controlId} ref={regionRef} data-tl-trigger="contextmenu" className={rootClassName(state, 'tl-menu-region')}
+      onContextMenu={handleContextMenu} onKeyDown={handleContextKey}>
       {!!child && <TLChild control={child} />}
     </div>;
 ```
 
-`handleClick` ruft `openAtRegion` (statt `openBelowRegion`); `defaults = useButtonDefaults()`. Ein `<button>` darf keine interaktiven Kinder haben — die Kinder des Benutzermenüs sind Avatar und Text (E8), keine Knöpfe; Vertrag nennt die Regel.
-
-- [ ] **Step 4: Altes CSS, Ratsche** — Block `TLMenuRegion` (2911–2938) löschen; `ratchet.json` streichen.
-- [ ] **Step 5: Gates** — `npm run build`; `check-messages-en.sh` (Java-Änderungen in zwei Modulen) → Diff committen; `layout.view` grün. Commit `"Ticket #29617: Design System wave 3a -- menu region anchors the menu to its element, reports aria-expanded, opens by keyboard"`.
+- [ ] **Step 4: Altes CSS, Ratsche** — Block `TLMenuRegion` (2911–2938) löschen; **2152–2158** (`.tlAppBar--primary .tlMenuRegion--click…`) löschen — der Auslöser ist ein `tl-button`, die AppBar-Primary-Regeln für `tl-button` greifen. `ratchet.json`: `TLMenuRegion` streichen; Block „TLAppBar“ sinkt (Zahl senken).
+- [ ] **Step 5: Gates, Commit** — `npm run build`; `check-messages-en.sh` (zwei Module) → Diff committen; `layout.view` grün. `git commit -m "Ticket #29617: Design System wave 3a -- menu region anchors the menu to its element, reports aria-expanded, opens by keyboard"`
 
 ### Task E8: Benutzermenü ohne eigenen Block
 
 **Files:**
-- Modify: `com.top_logic.layout.view/src/main/webapp/WEB-INF/views/user-menu.view.xml:60-65`, `tlReactControls.css:2940-2955`, `design-system/test/ratchet.json`
+- Modify: `user-menu.view.xml:60-65`, `tlReactControls.css:2940-2955`, `design-system/test/ratchet.json`, `docs/migration/altlast.md`
 
-- [ ] **Step 1** — `<text css-class="tl-button__label" input="currentUser" overflow="ellipsis"/>`; der Avatar davor bleibt (`tl-avatar` im Icon-Slot, Vertrag `menu.contract.md` nennt „Avatar + Label“ als zulässige Kinder des Klick-Auslösers). Prüfen: trägt `overflow="ellipsis"` eine eigene Klasse am `TLText`? (`grep -n "ellipsis" react-src/controls/TLText.tsx`) — wenn ja, reicht `tl-button__label` und das Attribut kann bleiben.
-- [ ] **Step 2** — Block `User menu` löschen, Ratsche streichen. Die `@media (max-width: 640px)`-Regel fällt ersatzlos: Breakpoints entscheidet Welle 4 mit der AppBar — Eintrag in `docs/migration/altlast.md` „Offen für spätere Wellen“: „AppBar-Breakpoint für den Benutzernamen (war 640 px)“.
-- [ ] **Step 3** — `layout.view`-Tests; Sichtprüfung in E9. Commit `"Ticket #29617: Design System wave 3a -- user menu trigger is a ghost button; no own stylesheet block"`.
+- [ ] **Step 1** — `<text css-class="tl-button__label" input="currentUser" overflow="ellipsis"/>`; Avatar davor bleibt. Hinweis Reviewer: `<menu>` mit zwei Kindern rendert ein `ReactStackControl` (ein `div` im `button`); die Ellipse wirkt trotzdem (`tl-button__label` mit `min-width: 0` im Flex-Stack — prüfen, ob der Stack `display: flex` ist; sonst `tl-button__label` an den Stack hängen, nicht an den Text).
+- [ ] **Step 2** — Block `User menu` (2940–2955) löschen, Ratsche streichen. Die `@media (max-width: 640px)`-Regel fällt ersatzlos: das Benutzermenü liegt im `trailing` der AppBar, nicht in einer Toolbar — „bei Platzmangel nur der Avatar“ (Spec §7) ist eine AppBar-Regel für Welle 4. Eintrag in `altlast.md` „Offen für spätere Wellen“: „AppBar-Breakpoint für den Benutzernamen (war 640 px; Welle 4)“. Spec §7 fortschreiben (Fable, mit dem Commit).
+- [ ] **Step 3** — `layout.view`-Tests; Commit `"Ticket #29617: Design System wave 3a -- user menu trigger is a ghost button; no own stylesheet block"`.
 
-### Task E9: Gates, Ebene des Tooltips, Sichtprüfung, PR
+### Task E9: Gates, Tooltip-Ebene, Sichtprüfung, PR
 
 **Files:**
-- Modify: `tlReactControls.css:5507` (`z-index: var(--tl-layer-popover);`), `design-system/test/engine-classes.test.mjs` (Skip-Variable entfernen), `docs/migration/altlast.md`, `STATUS.md`
+- Modify: `tlReactControls.css:5507`, `design-system/test/engine-classes.test.mjs:12` (Regex **jetzt** erweitern), `docs/migration/altlast.md`, `STATUS.md`
 
-- [ ] **Step 1: Tooltip-Ebene** — Zeile 5507 `z-index: var(--tl-layer-popover);`; Ratsche: der Block sinkt nicht, Literal-Zähler `zIndex` in `ratchet.json` (falls geführt) um 1 senken.
-- [ ] **Step 2: Paket-Gates gegen den Worktree** — `cd design-system && node --test && node tools/lint-css.mjs` (ohne `TL_WAVE3A_PENDING`; Skip in `engine-classes.test.mjs` entfernen): `engine-classes` grün (keine der sechs Klassen), `ratchet` grün (sechs Blöcke weg, `foreignTl` −2, kein Block gewachsen).
-- [ ] **Step 3: Engine-Gates** — `npm run build` (tsc), Modul-Tests `layout.react`, `layout.view`, `demo.react`; `tools/check-messages-en.sh` ohne Diff; `git grep -n "tlMenu\|tlMenuRegion\|tlUserMenu\|tlToolbar\|tlReactTabBar\|tlBreadcrumb" -- '*.tsx' '*.ts' '*.css' '*.xml' 'docs/'` leer (Treffer in `docs/plans/*.md` des Worktrees: alte Pläne — dort die Klassennamen als „alt (bis Welle 3a)“ markieren, nicht umschreiben).
-- [ ] **Step 4: Doku** — `altlast.md`: Abschnitt „Welle 3a · Navigation und Popups — gebaut <Datum>“ mit gestrichenen Blöcken, „Neu im Paket“, „Alt → neu für Anwendungs-Stylesheets“ (Tabelle alt → neu), Offen (AppBar-Breakpoint, Tab-Overflow); `STATUS.md` Stand; `docs/skalen.md` „Entschieden beim Bauen“ nur, wenn beim Bauen entschieden wurde.
-- [ ] **Step 5: Push und PR** — `git fetch`; Push durch Hendrik; PR gegen `CWS/CWS_29617_design_system_welle_2` (ist !1740 gemergt: gegen `master`, vorher `git merge origin/master`), Bernhard Reviewer, Trac #29617 CC; Beschreibung englisch: Ziel, Konsolidierung (W1–W5, W9, W12, N8 mit Link auf `altlast.md`), Migrationsliste, Sichtprüfungsliste aus Spec §10.5.
-- [ ] **Step 6: Sichtprüfung** in der Docker-Instanz (hell, dunkel, beide Dichten): Menü am Fensterrand klappt um, folgt dem Scrollen; Kontextmenü per `Shift+F10`; Spaltenmenü der Tabelle bleibt im Fenster; Toolbar kompakt und Überlauf (Einträge live); Reiter per Pfeilen; Benutzermenü-Knopf mit `aria-expanded`; Select-Popup folgt dem Scrollen; Hilfe-, Entfernen-, Leeren-Knopf 24 px; FormGroup-Toggle dreht. Befunde als Fix-Commits auf dem Branch.
+- [ ] **Step 1: Tooltip-Ebene** — 5507 `z-index: var(--tl-layer-popover);`.
+- [ ] **Step 2: Engine-Gate** — `ALT`-Regex um `|tlMenu|tlMenuRegion|tlUserMenu|tlToolbar|tlReactTabBar|tlBreadcrumb` erweitern; `cd design-system && node --test && node tools/lint-css.mjs` → `engine-classes` grün, `ratchet` grün (sechs Blöcke weg, zwei Überschriften neu, `foreignTl` −2, kein Block gewachsen).
+- [ ] **Step 3: Engine-Gates** — `npm run build`; `layout.react`, `layout.view`, `demo.react`; `check-messages-en.sh` ohne Diff; `git grep -n "tlMenu\|tlMenuRegion\|tlUserMenu\|tlToolbar\|tlReactTabBar\|tlBreadcrumb" -- '*.tsx' '*.ts' '*.css' '*.xml'` leer; in `docs/plans/*.md` des Worktrees die Namen als „alt (bis Welle 3a)“ markieren.
+- [ ] **Step 4: Doku** — `altlast.md`: Abschnitt „Welle 3a · Navigation und Popups — gebaut <Datum>“ (gestrichene Blöcke, „Neu im Paket“, Tabelle alt → neu, Offen: AppBar-Breakpoint, Tab-Overflow); `STATUS.md`; `docs/skalen.md` „Entschieden beim Bauen“ nur bei neuen Entscheidungen.
+- [ ] **Step 5: Push und PR** — `git fetch`; Push durch Hendrik; PR gegen `welle_2` (ist !1740 gemergt: gegen `master`, vorher `git merge origin/master`), Bernhard Reviewer, Trac #29617 CC; Beschreibung englisch: Ziel, Konsolidierung (W1–W5, W9, W12, N8, Link `altlast.md`), Migrationsliste, Sichtprüfungsliste.
+- [ ] **Step 6: Sichtprüfung** (Docker, hell/dunkel, beide Dichten): Menü am Fensterrand klappt um, folgt dem Scrollen, einmal am Punkt und danach am Element geöffnet; Kontextmenü per `Shift+F10`; Spaltenmenü im Fenster; Toolbar kompakt und Überlauf (Einträge live, Upload-Knopf richtig gemessen); Reiter per Pfeilen; Benutzermenü-Knopf mit `aria-expanded`, fällt nach Auswahl; Select-Popup folgt dem Scrollen; Hilfe-, Entfernen-, Leeren-Knopf 24 px; FormGroup-Toggle dreht. Befunde als Fix-Commits.
 
 ---
 
-## Self-Review
+## Self-Review (nach dem Plan-Review)
 
-**Spec coverage:** §3a–c → P4, E1, E2, E3 (Overflow); §4 → P5, E3; §5 → P7, menu.css/tabs.css (innen/außen), E1/E6 (Roving); §6 → P2, P3, P6, E4, E5; §7 → P5, E6, E7, E8; §8 → P1, P4 (Maße), E9 (Tooltip-Ebene), Icons in jedem E-Task über `ThemeIcon`; §9 Gates → P2 (square), P4 (popover), P7 (focus, engine-classes), E3/E6/E7/E8 (Ratsche), E9; §10 Reihenfolge = P1–P7, E1–E9; §11 Offenes → E8 (Breakpoint), E9 Doku.
+**Spec coverage:** §3 → P4, E1, E4, E5; §4 → P5, E5; §5 → P7 (fortgeschrieben: Drop-Ziel), menu/tabs, E1/E6; §6 → P2, P3, P6, E2, E3; §7 → P5, E6, E7, E8 (fortgeschrieben: Breakpoint Welle 4); §8 → P1, E9; §9 → P2, P4, P7, E9; §10 → P1–P7, E1–E9; §11 → E8, E9.
 
-**Placeholder scan:** keine „TBD“; zwei Prüfaufträge mit Alternative (Token `icon-primary`/`font-weight-strong`) sind benannt und enden in einer Entscheidung im Task.
+**Gate-Brüche aus dem Review:** 1–3 → P1; 4 → P2/P3; 5–7 → P4, P6; 8 → P5; 9–11 → P6; 12–13 → P7/E9; 14 → E6; 15 → E7; 16 → E6 (2739), E7 (2152–2158), E5 (5626).
 
-**Type consistency:** `usePopover`/`PopoverAnchor` (E1) gleich in E2, E3, E4; `buttonClassName({ icon })` (E3) in E4, E6, E7; `Menu`/`MenuItem` (E1) in E2; `useRovingMenu` (E3) wird in E1 angelegt — **Korrektur:** `useRovingMenu` gehört in `Menu.tsx` aus E1; E1 Step 3 nutzt ihn intern (`const { onKeyDown } = useRovingMenu(ref, open, onClose)`), E3 importiert ihn.
-
-**Review Focus:** 1 → E1/E9 (Sichtprüfung); 2 → E1 (`ITEM`-Selektor); 3 → E3 (`hidden`, gemountet); 4 → E3 (`compact`-Rechnung); 5 → E6 (`focusTab`).
+**Type consistency:** `usePopover({ open, anchor, placement })` ohne `onClose` in E1, E2, E5; `buttonClassName({ icon })` ab E2, `menu-item` ab E5; `useRovingMenu` in E1 definiert, E5 liest; `menuItemProps` in E5 für TLButton, TLToggleButton, TLUploadButton.
