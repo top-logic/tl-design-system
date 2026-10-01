@@ -96,6 +96,9 @@ const MODIFIERS = {
   'tl-badge': new Set([]),
   'tl-divider': new Set(['vertical']),
   'tl-toggle': new Set([]),
+  'tl-popover': new Set([]),
+  'tl-menu': new Set([]),
+  'tl-menu-region': new Set([]),
   'tl-skeleton': new Set([]),
 };
 
