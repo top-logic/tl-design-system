@@ -37,11 +37,5 @@
 
 /* --- Kategorien -------------------------------------------------------------- */
 
-.tl-avatar--category-1 { background: var(--tl-category-1-subtle); border-color: var(--tl-category-1-border); }
-.tl-avatar--category-2 { background: var(--tl-category-2-subtle); border-color: var(--tl-category-2-border); }
-.tl-avatar--category-3 { background: var(--tl-category-3-subtle); border-color: var(--tl-category-3-border); }
-.tl-avatar--category-4 { background: var(--tl-category-4-subtle); border-color: var(--tl-category-4-border); }
-.tl-avatar--category-5 { background: var(--tl-category-5-subtle); border-color: var(--tl-category-5-border); }
-.tl-avatar--category-6 { background: var(--tl-category-6-subtle); border-color: var(--tl-category-6-border); }
-.tl-avatar--category-7 { background: var(--tl-category-7-subtle); border-color: var(--tl-category-7-border); }
-.tl-avatar--category-8 { background: var(--tl-category-8-subtle); border-color: var(--tl-category-8-border); }
+/* Je Kategorie Fläche und Linie, erzeugt aus src/tokens.json (tools/generate.mjs). */
+/* @tl-roles: category .tl-avatar */

@@ -4,7 +4,7 @@ import { declarations } from './lib/css.mjs';
 const ALLOWED = new Set(['0', '1', 'auto', 'none', '100%', 'currentColor', 'inherit', 'initial', 'transparent',
   'solid', 'hidden', 'visible', 'block', 'flex', 'grid', 'inline-flex', 'contents', 'relative', 'absolute',
   'fixed', 'sticky', 'center', 'start', 'end', 'stretch', 'baseline', 'nowrap', 'wrap', 'ellipsis', 'pointer',
-  'default', 'not-allowed', 'border-box', 'both', 'row', 'column', 'space-between', 'left', 'right', 'inset',
+  'default', 'border-box', 'both', 'row', 'column', 'space-between', 'left', 'right', 'inset',
   'uppercase', 'underline', 'middle', 'top', 'bottom', 'normal', 'clip', 'light', 'dark', 'reduce', 'antialiased',
   'tabular-nums', 'slashed-zero']);
 // !important ist NICHT mehr pauschal erlaubt (Punkt 7) — nur noch im Reduced-Motion-Block,
@@ -133,6 +133,9 @@ export function lint(css, { known, file }) {
     }
     if (CLASS_ATTR_SELECTOR.test(sel)) say(d, 'Attributselektor auf Klassen — umgeht das BEM/Prefix-Gate');
     if (/:focus\b(?!-visible|-within)/.test(sel)) say(d, ':focus ohne -visible');
+    // Ein Zeiger für Deaktiviert (docs/skalen.md „Disabled“): not-allowed ist kein Literal, das ALLOWED
+    // fangen könnte — ein unbekanntes Wort meldet das Gate nicht —, darum eigens.
+    if (d.property === 'cursor' && d.value.trim() === 'not-allowed') say(d, 'cursor: not-allowed — Deaktiviert zeigt cursor: default');
 
     if (d.property === 'outline' && OUTLINE_OFF.test(d.value.trim())) say(d, 'outline: none/0 — der Ring ist Pflicht');
     if (d.property === 'outline-width' && /^0(px)?$/.test(d.value.trim())) say(d, 'outline-width: 0 — der Ring ist Pflicht');
@@ -188,13 +191,15 @@ if (typeof process !== 'undefined' && import.meta.url === `file://${process.argv
   const dist = new URL('../dist/', import.meta.url);
   const comps = new URL('../src/components/', import.meta.url);
   const known = knownVariables(readFileSync(new URL('primitives.css', dist), 'utf8') + readFileSync(new URL('tokens.css', dist), 'utf8'));
-  const files = [...readdirSync(dist).filter((f) => f.endsWith('.css') && f !== 'primitives.css' && f !== 'components.css').map((f) => [f, new URL(f, dist)])];
+  const files = [...readdirSync(dist).filter((f) => f.endsWith('.css') && f !== 'primitives.css' && f !== 'components.css').map((f) => [f, readFileSync(new URL(f, dist), 'utf8')])];
   if (existsSync(comps)) {
-    const { componentSources } = await import('./generate.mjs');
-    for (const c of componentSources(comps)) files.push([c.name, new URL(c.name, comps)]);
+    // Mit den erzeugten Rollenregeln (@tl-roles), sonst prüft das Gate sie nirgends.
+    const { componentSources, expandRoles } = await import('./generate.mjs');
+    const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url), 'utf8'));
+    for (const c of componentSources(comps)) files.push([c.name, expandRoles(c.css, T)]);
   }
   let n = 0;
-  for (const [f, url] of files) for (const v of lint(readFileSync(url, 'utf8'), { known, file: f })) { console.log(v); n++; }
+  for (const [f, css] of files) for (const v of lint(css, { known, file: f })) { console.log(v); n++; }
   console.log(n ? `${n} Verstöße` : 'Klassen-Gate grün');
   process.exit(n ? 1 : 0);
 }

@@ -2,14 +2,14 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from '../tools/resolve.mjs';
-import { readComponent, colorVarsOf, declarationsOf, specimenProblems, missingInContract, varsOf, contrastProblems } from './lib/component.mjs';
+import { readComponent, readGenerated, colorVarsOf, declarationsOf, specimenProblems, missingInContract, varsOf, contrastProblems } from './lib/component.mjs';
 
 const R = resolve(JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.url))),
   JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url))));
 const STATUS = ['error', 'warning', 'success', 'info'];
 
 test('Alert: je Bedeutung subtle-Fläche, border-Linie, Text text-primary, Icon status-text', () => {
-  const css = readComponent('alert', 'alert.css');
+  const css = readGenerated('alert', 'alert.css'); // mit den erzeugten Rollenregeln (@tl-roles)
   for (const s of STATUS) {
     const d = declarationsOf(css, `.tl-alert--${s}`) ?? '';
     assert.ok(d.includes(`--tl-status-${s}-subtle`) && d.includes(`--tl-status-${s}-border`), s);

@@ -47,7 +47,7 @@
   border-color: var(--tl-border-disabled);
   background: var(--tl-surface-disabled);
   color: var(--tl-text-disabled);
-  cursor: not-allowed;
+  cursor: default;
 }
 
 /* Mehrzeilig wächst das Feld mit den Zeilen; hier trägt es den Innenabstand oben und unten. */

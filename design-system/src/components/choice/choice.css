@@ -114,7 +114,7 @@
 .tl-radio:disabled {
   border-color: var(--tl-border-disabled);
   background: var(--tl-surface-disabled);
-  cursor: not-allowed;
+  cursor: default;
 }
 
 .tl-checkbox:disabled:checked,
@@ -144,7 +144,7 @@
 
 .tl-choice:has(:disabled) {
   color: var(--tl-text-disabled);
-  cursor: not-allowed;
+  cursor: default;
 }
 
 .tl-choice:has([aria-readonly="true"]) {
@@ -224,7 +224,7 @@
 
 .tl-segmented__segment:disabled {
   color: var(--tl-text-disabled);
-  cursor: not-allowed;
+  cursor: default;
 }
 
 /* --- Chips -------------------------------------------------------------------- */
@@ -284,7 +284,7 @@
   border-color: var(--tl-border-disabled);
   background: var(--tl-surface-disabled);
   color: var(--tl-text-disabled);
-  cursor: not-allowed;
+  cursor: default;
 }
 
 /* Deaktiviert und gewählt: wie .tl-checkbox:disabled:checked. */

@@ -16,10 +16,8 @@
 }
 .tl-alert[hidden] { display: none; }
 
-.tl-alert--error { background: var(--tl-status-error-subtle); border-color: var(--tl-status-error-border); }
-.tl-alert--warning { background: var(--tl-status-warning-subtle); border-color: var(--tl-status-warning-border); }
-.tl-alert--success { background: var(--tl-status-success-subtle); border-color: var(--tl-status-success-border); }
-.tl-alert--info { background: var(--tl-status-info-subtle); border-color: var(--tl-status-info-border); }
+/* Je Bedeutung Fläche und Linie, erzeugt aus src/tokens.json (tools/generate.mjs). */
+/* @tl-roles: status .tl-alert */
 
 .tl-alert--error .tl-alert__icon { color: var(--tl-status-error-text); }
 .tl-alert--warning .tl-alert__icon { color: var(--tl-status-warning-text); }

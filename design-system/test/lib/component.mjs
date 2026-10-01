@@ -1,6 +1,9 @@
 // Gemeinsame Helfer der Komponententests: lesen, was eine Komponente liest, zeigt und verspricht.
 import { readFileSync } from 'node:fs';
 import { ratio } from '../../tools/lib/contrast.mjs';
+import { componentSources, expandRoles } from '../../tools/generate.mjs';
+
+const TOKENS = JSON.parse(readFileSync(new URL('../../src/tokens.json', import.meta.url), 'utf8'));
 
 export const readComponent = (dir, file) =>
   readFileSync(new URL(`../../src/components/${dir}/${file}`, import.meta.url), 'utf8');
@@ -44,3 +47,19 @@ export function contrastProblems(R, mode, pairs) {
   }
   return out;
 }
+
+/** Alle CSS-Dateien unter src/components/, rekursiv: [Name relativ mit '/', Inhalt]. */
+export function* componentCssFiles() {
+  const root = new URL('../../src/components/', import.meta.url);
+  for (const c of componentSources(root)) yield [c.name, c.css];
+}
+
+/** Die Regeln einer Datei ohne Kommentare: [Selektorliste, Deklarationsblock]. Verschachtelte Blöcke
+    (@media) liefern ihre inneren Regeln. */
+export function rulesOf(css) {
+  const ohne = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  return [...ohne.matchAll(/([^{};]+)\{([^{}]*)\}/g)].map((m) => [m[1].trim(), m[2]]);
+}
+
+/** Eine Komponentendatei, wie sie in dist/components.css landet — mit erzeugten Rollenregeln. */
+export const readGenerated = (dir, file) => expandRoles(readComponent(dir, file), TOKENS);

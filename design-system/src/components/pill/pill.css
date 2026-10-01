@@ -26,6 +26,7 @@
 .tl-pill__label {
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* --- Rollen ---------------------------------------------------------------- */
@@ -35,28 +36,6 @@
   border-color: var(--tl-border-interactive);
 }
 
-.tl-pill--error {
-  background: var(--tl-status-error-subtle);
-  border-color: var(--tl-status-error-border);
-}
-.tl-pill--warning {
-  background: var(--tl-status-warning-subtle);
-  border-color: var(--tl-status-warning-border);
-}
-.tl-pill--success {
-  background: var(--tl-status-success-subtle);
-  border-color: var(--tl-status-success-border);
-}
-.tl-pill--info {
-  background: var(--tl-status-info-subtle);
-  border-color: var(--tl-status-info-border);
-}
-
-.tl-pill--category-1 { background: var(--tl-category-1-subtle); border-color: var(--tl-category-1-border); }
-.tl-pill--category-2 { background: var(--tl-category-2-subtle); border-color: var(--tl-category-2-border); }
-.tl-pill--category-3 { background: var(--tl-category-3-subtle); border-color: var(--tl-category-3-border); }
-.tl-pill--category-4 { background: var(--tl-category-4-subtle); border-color: var(--tl-category-4-border); }
-.tl-pill--category-5 { background: var(--tl-category-5-subtle); border-color: var(--tl-category-5-border); }
-.tl-pill--category-6 { background: var(--tl-category-6-subtle); border-color: var(--tl-category-6-border); }
-.tl-pill--category-7 { background: var(--tl-category-7-subtle); border-color: var(--tl-category-7-border); }
-.tl-pill--category-8 { background: var(--tl-category-8-subtle); border-color: var(--tl-category-8-border); }
+/* Bedeutungen und Kategorien: je Rolle Fläche und Linie, erzeugt aus src/tokens.json (tools/generate.mjs). */
+/* @tl-roles: status .tl-pill */
+/* @tl-roles: category .tl-pill */

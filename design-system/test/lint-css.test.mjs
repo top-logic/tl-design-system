@@ -165,3 +165,8 @@ test('ein Zustand als Element-Modifier ist ein Verstoß — auch Fehler und Warn
   assert.deepEqual(lint('.tl-alert--error { color: var(--tl-text-primary); }', { known, file: 'x.css' }), []);
   assert.deepEqual(lint('.tl-button__icon--large { }', { known, file: 'x.css' }), []);
 });
+
+test('cursor: not-allowed ist ein Verstoß — Deaktiviert zeigt den gewöhnlichen Zeiger (skalen.md „Disabled“)', () => {
+  assert.equal(lint('.tl-x:disabled { cursor: not-allowed; }', { known, file: 'x.css' }).length, 1);
+  assert.deepEqual(lint('.tl-x:disabled { cursor: default; }', { known, file: 'x.css' }), []);
+});

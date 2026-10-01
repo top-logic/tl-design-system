@@ -19,9 +19,32 @@ export function componentSources(dirUrl) {
   return files.sort().map((p) => ({ name: relative(root, p).split(sep).join('/'), css: readFileSync(p, 'utf8') }));
 }
 
-function componentsCss(components) {
+// Rollenregeln: Pill, Avatar und Alert lesen je Rolle dieselben zwei Tokens, Fläche und Linie. Statt sie
+// in jeder Datei auszuschreiben, steht dort ein Marker-Kommentar `/* @tl-roles: <art> <.tl-block> */`,
+// und hier entsteht je Rolle aus src/tokens.json eine Regel — eine neue Kategorie ist eine Zeile in
+// tokens.json, nicht drei. Kommentar, damit Klassen-Gate und Tests auf src/ ihn überlesen.
+// docs/skalen.md „Gleiches wird zusammengelegt“.
+const ROLLEN = {
+  category: (T) => Object.keys(T.color.light).map((n) => /^(category-\d+)-subtle$/.exec(n)?.[1])
+    .filter((r) => r && `${r}-border` in T.color.light).map((r) => [r, r]),
+  status: (T) => Object.keys(T.color.light).map((n) => /^status-([a-z]+)-subtle$/.exec(n)?.[1])
+    .filter((s) => s && `status-${s}-border` in T.color.light).map((s) => [s, `status-${s}`]),
+};
+const MARKER = /\/\*\s*@tl-roles:\s*(\S+)\s+(\S+)\s*\*\//g;
+
+/** Ersetzt jeden Marker `/* @tl-roles: <art> <.tl-block> *\/` durch die Rollenregeln aus T. */
+export function expandRoles(css, T) {
+  return css.replace(MARKER, (_, art, sel) => {
+    if (!ROLLEN[art]) throw new Error(`@tl-roles: unbekannte Rollenart ${art} (bekannt: ${Object.keys(ROLLEN).join(', ')})`);
+    if (!/^\.tl-[a-z0-9]+(-[a-z0-9]+)*$/.test(sel)) throw new Error(`@tl-roles: ${sel} ist keine Blockklasse`);
+    return ROLLEN[art](T).map(([mod, tok]) =>
+      `${sel}--${mod} { background: var(--tl-${tok}-subtle); border-color: var(--tl-${tok}-border); }`).join('\n');
+  });
+}
+
+function componentsCss(components, T) {
   return `${HERKUNFT}/* Components, one section per file under src/components/. */\n\n`
-    + components.map((c) => `/* --- ${c.name} --- */\n${c.css.trimEnd()}\n`).join('\n');
+    + components.map((c) => `/* --- ${c.name} --- */\n${expandRoles(c.css, T).trimEnd()}\n`).join('\n');
 }
 
 const REF = /^\{([a-z0-9-]+)\}$/;
@@ -178,7 +201,7 @@ export function generate(P, T, components = []) {
     'primitives.css': primitivesCss(P),
     'tokens.css': tokensCss(P, T, R),
     'base.css': baseCss(T),
-    'components.css': componentsCss(components),
+    'components.css': componentsCss(components, T),
   };
 }
 

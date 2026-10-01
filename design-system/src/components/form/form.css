@@ -63,10 +63,9 @@
   min-height: 0;
 }
 
+/* Das Label bricht um: ein abgeschnittenes Formularlabel versteckt, wonach das Feld fragt. */
 .tl-form-field__label-text {
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .tl-form-field__required {

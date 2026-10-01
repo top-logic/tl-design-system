@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { ratio, AA_TEXT, AA_NON_TEXT } from '../tools/lib/contrast.mjs';
 import { resolve } from '../tools/resolve.mjs';
+import { readGenerated } from './lib/component.mjs';
 
 const P = JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.url)));
 const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)));
@@ -172,7 +173,7 @@ for (const mode of ['light', 'dark']) {
 }
 
 test('pill.css liest je Rolle genau die Fläche und die Linie der PILL-Map, und Text nur als text-primary', () => {
-  const css = readFileSync(new URL('../src/components/pill/pill.css', import.meta.url), 'utf8');
+  const css = readGenerated('pill', 'pill.css'); // mit den erzeugten Rollenregeln (@tl-roles)
   const farbTokens = new Set([...css.matchAll(/var\((--tl-(?:surface|text|icon|border|status|category)-[a-z0-9-]+)\)/g)]
     .map((m) => m[1]).filter((t) => !/^--tl-border-width-/.test(t)));
   const belegt = new Set(['text-primary']);
@@ -196,7 +197,7 @@ test('das Pill-Specimen zeigt jede Rolle, Icon und Beschriftung, auf beiden Flä
 });
 
 test('der Pill-Vertrag nennt jedes Token, das pill.css liest, und jede Rolle', () => {
-  const css = readFileSync(new URL('../src/components/pill/pill.css', import.meta.url), 'utf8');
+  const css = readGenerated('pill', 'pill.css'); // mit den erzeugten Rollenregeln (@tl-roles)
   const md = readFileSync(new URL('../src/components/pill/pill.contract.md', import.meta.url), 'utf8');
   for (const t of new Set([...css.matchAll(/var\((--tl-[a-z0-9-]+)\)/g)].map((m) => m[1])))
     assert.ok(md.includes('`' + t + '`'), `Vertrag nennt ${t} nicht`);
@@ -240,7 +241,7 @@ test('die vier Avatar-Größen sind Maß-Tokens der Skala, 24/32/48/64 px, und f
 });
 
 test('avatar.css liest je Rolle genau Fläche und Linie der AVATAR-Map, Text nur als text-primary, Größen nur aus size-avatar-*', () => {
-  const css = readFileSync(new URL('../src/components/avatar/avatar.css', import.meta.url), 'utf8');
+  const css = readGenerated('avatar', 'avatar.css'); // mit den erzeugten Rollenregeln (@tl-roles)
   const farbTokens = new Set([...css.matchAll(/var\((--tl-(?:surface|text|icon|border|status|category)-[a-z0-9-]+)\)/g)]
     .map((m) => m[1]).filter((t) => !/^--tl-border-width-/.test(t)));
   const belegt = new Set(['text-primary']);
@@ -269,7 +270,7 @@ test('das Avatar-Specimen zeigt jede Kategorie, jede Größe, ohne Namen und mit
 });
 
 test('der Avatar-Vertrag nennt jedes Token, das avatar.css liest, jede Größe und die Attribute', () => {
-  const css = readFileSync(new URL('../src/components/avatar/avatar.css', import.meta.url), 'utf8');
+  const css = readGenerated('avatar', 'avatar.css'); // mit den erzeugten Rollenregeln (@tl-roles)
   const md = readFileSync(new URL('../src/components/avatar/avatar.contract.md', import.meta.url), 'utf8');
   for (const t of new Set([...css.matchAll(/var\((--tl-[a-z0-9-]+)\)/g)].map((m) => m[1])))
     assert.ok(md.includes('`' + t + '`'), `Vertrag nennt ${t} nicht`);

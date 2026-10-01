@@ -22,6 +22,7 @@
 }
 .tl-alert[hidden] { display: none; }
 
+/* Je Bedeutung Fläche und Linie, erzeugt aus src/tokens.json (tools/generate.mjs). */
 .tl-alert--error { background: var(--tl-status-error-subtle); border-color: var(--tl-status-error-border); }
 .tl-alert--warning { background: var(--tl-status-warning-subtle); border-color: var(--tl-status-warning-border); }
 .tl-alert--success { background: var(--tl-status-success-subtle); border-color: var(--tl-status-success-border); }
@@ -74,6 +75,7 @@
 
 /* --- Kategorien -------------------------------------------------------------- */
 
+/* Je Kategorie Fläche und Linie, erzeugt aus src/tokens.json (tools/generate.mjs). */
 .tl-avatar--category-1 { background: var(--tl-category-1-subtle); border-color: var(--tl-category-1-border); }
 .tl-avatar--category-2 { background: var(--tl-category-2-subtle); border-color: var(--tl-category-2-border); }
 .tl-avatar--category-3 { background: var(--tl-category-3-subtle); border-color: var(--tl-category-3-border); }
@@ -142,6 +144,7 @@
 .tl-button__label {
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* --- Erscheinungen ------------------------------------------------------- */
@@ -400,7 +403,7 @@
 .tl-radio:disabled {
   border-color: var(--tl-border-disabled);
   background: var(--tl-surface-disabled);
-  cursor: not-allowed;
+  cursor: default;
 }
 
 .tl-checkbox:disabled:checked,
@@ -430,7 +433,7 @@
 
 .tl-choice:has(:disabled) {
   color: var(--tl-text-disabled);
-  cursor: not-allowed;
+  cursor: default;
 }
 
 .tl-choice:has([aria-readonly="true"]) {
@@ -510,7 +513,7 @@
 
 .tl-segmented__segment:disabled {
   color: var(--tl-text-disabled);
-  cursor: not-allowed;
+  cursor: default;
 }
 
 /* --- Chips -------------------------------------------------------------------- */
@@ -570,7 +573,7 @@
   border-color: var(--tl-border-disabled);
   background: var(--tl-surface-disabled);
   color: var(--tl-text-disabled);
-  cursor: not-allowed;
+  cursor: default;
 }
 
 /* Deaktiviert und gewählt: wie .tl-checkbox:disabled:checked. */
@@ -647,7 +650,7 @@
   border-color: var(--tl-border-disabled);
   background: var(--tl-surface-disabled);
   color: var(--tl-text-disabled);
-  cursor: not-allowed;
+  cursor: default;
 }
 
 /* Mehrzeilig wächst das Feld mit den Zeilen; hier trägt es den Innenabstand oben und unten. */
@@ -820,10 +823,9 @@ a.tl-field-value:hover {
   min-height: 0;
 }
 
+/* Das Label bricht um: ein abgeschnittenes Formularlabel versteckt, wonach das Feld fragt. */
 .tl-form-field__label-text {
   min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .tl-form-field__required {
@@ -1066,6 +1068,7 @@ a.tl-field-value:hover {
 .tl-pill__label {
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* --- Rollen ---------------------------------------------------------------- */
@@ -1075,23 +1078,11 @@ a.tl-field-value:hover {
   border-color: var(--tl-border-interactive);
 }
 
-.tl-pill--error {
-  background: var(--tl-status-error-subtle);
-  border-color: var(--tl-status-error-border);
-}
-.tl-pill--warning {
-  background: var(--tl-status-warning-subtle);
-  border-color: var(--tl-status-warning-border);
-}
-.tl-pill--success {
-  background: var(--tl-status-success-subtle);
-  border-color: var(--tl-status-success-border);
-}
-.tl-pill--info {
-  background: var(--tl-status-info-subtle);
-  border-color: var(--tl-status-info-border);
-}
-
+/* Bedeutungen und Kategorien: je Rolle Fläche und Linie, erzeugt aus src/tokens.json (tools/generate.mjs). */
+.tl-pill--error { background: var(--tl-status-error-subtle); border-color: var(--tl-status-error-border); }
+.tl-pill--warning { background: var(--tl-status-warning-subtle); border-color: var(--tl-status-warning-border); }
+.tl-pill--success { background: var(--tl-status-success-subtle); border-color: var(--tl-status-success-border); }
+.tl-pill--info { background: var(--tl-status-info-subtle); border-color: var(--tl-status-info-border); }
 .tl-pill--category-1 { background: var(--tl-category-1-subtle); border-color: var(--tl-category-1-border); }
 .tl-pill--category-2 { background: var(--tl-category-2-subtle); border-color: var(--tl-category-2-border); }
 .tl-pill--category-3 { background: var(--tl-category-3-subtle); border-color: var(--tl-category-3-border); }

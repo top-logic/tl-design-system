@@ -35,6 +35,7 @@
 .tl-button__label {
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* --- Erscheinungen ------------------------------------------------------- */
