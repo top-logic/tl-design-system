@@ -182,6 +182,11 @@ Welle-1-Übergangsregel „Dropdown-Eintrag füllt die Zeile“ (`tlReactControl
 > Toolbar — der Kompaktmodus aus §4 erreicht es nicht. „Bei Platzmangel nur der Avatar“ ist damit eine Regel der
 > AppBar (Breakpoints) und geht nach **Welle 4**; bis dahin schneidet der Name mit Ellipse ab. Vermerk in
 > `altlast.md` „Offen für spätere Wellen“.
+>
+> **Fortgeschrieben 01.10. (beim Bauen, E8):** Die Ellipse greift nicht von selbst. `tl-button__label` schneidet
+> erst ab, wenn etwas die Breite begrenzt, und mit `max-width: 12rem` fiel die einzige Grenze. Ein langer Name
+> verbreitert den Auslöser deshalb bis Welle 4. Die Breitengrenze gehört zur AppBar-Regel der Welle 4 und nicht
+> in einen neuen Block im alten Stylesheet; `altlast.md` führt sie beim AppBar-Breakpoint mit.
 
 ## 8 · Tokens und Maße
 
