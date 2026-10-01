@@ -30,6 +30,7 @@
   align-items: center;
   gap: var(--tl-space-2xs);
 }
+.tl-toolbar__group[hidden] { display: none; }
 
 .tl-toolbar__group > :empty {
   display: none;

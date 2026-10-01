@@ -120,12 +120,14 @@
   padding: 0;
   list-style: none;
 }
+.tl-breadcrumb__list[hidden] { display: none; }
 
 .tl-breadcrumb__entry {
   display: inline-flex;
   align-items: center;
   gap: var(--tl-space-2xs);
 }
+.tl-breadcrumb__entry[hidden] { display: none; }
 
 .tl-breadcrumb__separator {
   color: var(--tl-icon-secondary);
@@ -1532,6 +1534,7 @@ a.tl-field-value:hover {
   border-bottom: var(--tl-border-width-sm) solid var(--tl-border-separator);
   flex-shrink: 0;
 }
+.tl-tabs__list[hidden] { display: none; }
 
 /* Reset ohne Spezifität: die Typo-Klasse am Element gewinnt. */
 :where(.tl-tabs__tab) { font: inherit; }
@@ -1549,6 +1552,7 @@ a.tl-field-value:hover {
   white-space: nowrap;
   cursor: pointer;
 }
+.tl-tabs__tab[hidden] { display: none; }
 
 .tl-tabs__tab:hover {
   color: var(--tl-text-primary);
@@ -1567,6 +1571,7 @@ a.tl-field-value:hover {
   min-height: 0;
   overflow: auto;
 }
+.tl-tabs__panel[hidden] { display: none; }
 
 /* --- toggle/toggle.css --- */
 /* Toggle — docs/skalen.md „Gleiches wird zusammengelegt“ (W4).
@@ -1644,6 +1649,7 @@ a.tl-field-value:hover {
   align-items: center;
   gap: var(--tl-space-2xs);
 }
+.tl-toolbar__group[hidden] { display: none; }
 
 .tl-toolbar__group > :empty {
   display: none;

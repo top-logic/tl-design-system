@@ -41,6 +41,8 @@
           <button type="button" class="tl-tabs__tab tl-type-body" role="tab" id="tab-3" aria-selected="false" aria-controls="panel-3" tabindex="-1">Verlauf</button>
         </div>
         <div class="tl-tabs__panel tl-type-body" role="tabpanel" id="panel-1" aria-labelledby="tab-1"><p>Inhalt des gewählten Reiters.</p></div>
+        <div class="tl-tabs__panel tl-type-body" role="tabpanel" id="panel-2" aria-labelledby="tab-2" hidden><p>Details (nicht gewählt, hidden).</p></div>
+        <div class="tl-tabs__panel tl-type-body" role="tabpanel" id="panel-3" aria-labelledby="tab-3" hidden><p>Verlauf (nicht gewählt, hidden).</p></div>
       </div>
     </div>
   </template>
@@ -53,6 +55,9 @@
   const tpl = document.getElementById('rows');
   for (const id of ['on-layer', 'on-base', 'on-overlay']) {
     const rows = tpl.content.cloneNode(true);
+    for (const el of rows.querySelectorAll('[id]')) el.id += '-' + id;
+    for (const el of rows.querySelectorAll('[aria-controls],[aria-labelledby]'))
+      for (const a of ['aria-controls', 'aria-labelledby']) if (el.hasAttribute(a)) el.setAttribute(a, el.getAttribute(a) + '-' + id);
     document.getElementById(id).append(rows);
   }
   const html = document.documentElement;

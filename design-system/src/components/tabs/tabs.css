@@ -17,6 +17,7 @@
   border-bottom: var(--tl-border-width-sm) solid var(--tl-border-separator);
   flex-shrink: 0;
 }
+.tl-tabs__list[hidden] { display: none; }
 
 /* Reset ohne Spezifität: die Typo-Klasse am Element gewinnt. */
 :where(.tl-tabs__tab) { font: inherit; }
@@ -34,6 +35,7 @@
   white-space: nowrap;
   cursor: pointer;
 }
+.tl-tabs__tab[hidden] { display: none; }
 
 .tl-tabs__tab:hover {
   color: var(--tl-text-primary);
@@ -52,3 +54,4 @@
   min-height: 0;
   overflow: auto;
 }
+.tl-tabs__panel[hidden] { display: none; }

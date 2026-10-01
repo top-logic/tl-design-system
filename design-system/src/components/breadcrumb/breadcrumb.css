@@ -11,12 +11,14 @@
   padding: 0;
   list-style: none;
 }
+.tl-breadcrumb__list[hidden] { display: none; }
 
 .tl-breadcrumb__entry {
   display: inline-flex;
   align-items: center;
   gap: var(--tl-space-2xs);
 }
+.tl-breadcrumb__entry[hidden] { display: none; }
 
 .tl-breadcrumb__separator {
   color: var(--tl-icon-secondary);

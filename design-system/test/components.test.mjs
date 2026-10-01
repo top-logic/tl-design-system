@@ -406,4 +406,5 @@ test('Toolbar, Tabs, Breadcrumb lesen nur Tokens und kennen keine Zustandsklasse
   assert.match(aktiv, /border-color:\s*var\(--tl-border-interactive\)/);
   assert.doesNotMatch(aktiv, /font-weight/);
   assert.match(declarationsOf(tabs, '.tl-tabs__panel'), /flex-direction:\s*column/);
+  assert.match(declarationsOf(tabs, '.tl-tabs__panel[hidden]'), /display:\s*none/);
 });
