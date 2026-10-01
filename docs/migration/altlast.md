@@ -353,6 +353,7 @@ Es fallen ohne Ersatz: der gleitende Marker der SegmentedChoice (das gewählte S
 | **`tlBinaryField`** | tote Klasse im Altbestand, Welle 5. |
 | **Sichtprüfung (mit dem PR)** | Ellipsen: mehrzeiliger Lesewert außerhalb der Zelle, Segment- und Chip-Beschriftung bei sehr langem Text. Badge-Position am Icon. Select im Dialog (Popup über dem Backdrop) und Menü über dem Dialog; Dialog aus dem Drawer (gleiche Ebene, DOM-Reihenfolge); Icon-Zentrierung im Select; Link-Zellen jetzt unterstrichen; Hilfeknopf mit `tl-icon-sm` statt `md`. |
 | **Gebündeltes aus dem Review** | `describedBy` an `bridge/field-label.ts` (Editoren `codeedit`, `wysiwyg`, `model.search.react` hängen daran; `codeedit` und `model.search.react` liefen offline nicht, der PR-Build ist das Gate). Der Punkt „Geändert“ ist `aria-hidden` und wird nicht vorgelesen (Text oder `aria-description` am Feld). Live-Region-Timing der Warnungen (mit `aria-live` eingehängt). `hidden.test.mjs` deckt nur Blockklassen. Kontrast-Gate: Marke auf Gründen im `derive`-Bericht. |
+| **AppBar-Breakpoint** | AppBar-Breakpoint für den Benutzernamen (war 640 px; Welle 4). Das Benutzermenü liegt im `trailing` der AppBar, nicht in einer Toolbar; „bei Platzmangel nur der Avatar“ (Spec §7) ist eine AppBar-Regel. |
 | **Paket** | `farbkreis-13.svg` (Übersicht, Wiki) zeigt noch alte Randwerte. Specimen `button`/`pill` laden mit `ri-*` keine Icon-Schrift und zeigen leere Icons; die Specimen der Welle 2 nutzen Bootstrap Icons. |
 
 ## Konsolidierung (01.10.) — Gleiches wird zusammengelegt
