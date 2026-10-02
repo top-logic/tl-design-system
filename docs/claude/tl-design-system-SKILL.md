@@ -16,7 +16,7 @@ Das Aussehen der React-Oberfläche kommt aus dem Paket `tl-design-system`
 
 1. Lies im Design-System-Repo `CLAUDE.md`, dann `docs/skalen.md` (Abschnitt der Komponente, falls
    vorhanden) und `design-system/dist/tokens.css` (die Namen, die du lesen darfst). Pfad: das Repo
-   liegt neben dem Worktree, sonst `git clone http://tl.bos.local:3000/TopLogic/tl-design-system.git`.
+   liegt neben dem Worktree, sonst `git clone https://git.top-logic.com/TopLogic/tl-design-system.git`.
 2. Prüfe, ob die Komponente schon im Paket ist: `ls design-system/src/components/`. Wenn ja, ändere
    sie dort. Wenn nein, entsteht sie dort — nie in `tlReactControls.css`.
 3. Ist die Komponente in einer späteren Welle geplant (`docs/praesentation.md`, Folie 30) und du
