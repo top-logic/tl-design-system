@@ -45,6 +45,11 @@ Ein `ViewAction` liefert heute zwei Fakten an sein Kommando: `appliesFormState()
 | `ReactButtonControl(ReactContext, CommandModel, String)` | ruft `setTone(model.getTone())` im Konstruktor. Der Ton ist je Kommando fest; `handleModelChange` zieht ihn nicht nach. |
 | `MessageButtons.discard(...)` | `setTone(DANGER)` — Verwerfen ist destruktiv, ohne Kette. |
 
+> **Fortgeschrieben 02.10. (Plan):** Die zusammengesetzten Aktionen `with-transaction`, `if` und `switch`
+> reichen `appliesFormState` und `getIntrinsicRule` ihrer inneren Aktionen schon nach oben; `getTone()`
+> folgt demselben Weg, bei `if`/`switch` zählt jeder Zweig. Sonst wäre
+> `<with-transaction><delete-object/></with-transaction>` nicht rot.
+
 Nicht geändert: `ViewCommand.Config`, `ButtonTone`, `ButtonState` (hat `tone`), `ToolbarBuilder`
 (Enter → `primary`; ein Löschen auf Enter wird damit `primary` + `danger`), `CliqueRegistry`.
 
@@ -86,6 +91,11 @@ Kette ist privat. Neue Parameter an den acht `ViewActionChain.run`-Aufrufern sin
   `markAsDefault()` bleibt: Enter bestätigt, der Knopf ist `primary` + `danger`.
 - `DirtyConfirmDialogControl` bekommt sein Rot über `MessageButtons.discard` (§3); kein Enter-Knopf,
   wie heute.
+
+> **Fortgeschrieben 02.10. (Plan):** Eine Rückfrage in einem `<if>`-Zweig sieht nur den Rest ihres
+> Zweigs. `ViewActionChain.nest` reicht deshalb den Ton der äußeren `Continuation` hinein, und der
+> Zweig antwortet mit dem Maximum aus eigenem Rest und außen — ein Löschen nach dem `<if>` färbt die
+> Rückfrage im Zweig.
 
 ## 6 · Paket (`design-system/src/components/menu/`)
 
