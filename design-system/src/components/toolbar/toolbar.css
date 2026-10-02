@@ -8,6 +8,7 @@
   display: flex;
   align-items: center;
   gap: var(--tl-space-xs);
+  min-height: var(--tl-size-bar);
   padding-block: var(--tl-space-2xs);
   flex-shrink: 0;
 }

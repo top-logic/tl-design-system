@@ -39,6 +39,7 @@ folgt `menu.contract.md`.
 |---|---|
 | Abstand zwischen Gruppen und Einträgen | `--tl-space-xs` |
 | Abstand innerhalb einer Gruppe | `--tl-space-2xs` |
+| Höhe | mindestens `--tl-size-bar` (so hoch wie die Reiterleiste) |
 | Abstand oben und unten | `--tl-space-2xs` |
 | Mindestbreite bei Überlauf | `--tl-size-control` (Platz für den Überlauf-Trigger) |
 

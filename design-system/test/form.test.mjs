@@ -18,9 +18,14 @@ test('die Label-Spalte und der Geändert-Punkt sind Tokens auf der Skala', () =>
 
 test('form.css liest genau diese Farbrollen, layer-accent nicht mehr', () => {
   assert.deepEqual(colorVarsOf(form), [
-    'border-control', 'border-separator', 'status-error-text', 'status-warning-text', 'surface-brand',
-    'text-helper', 'text-primary', 'text-secondary',
+    'border-control', 'border-separator', 'icon-primary', 'icon-secondary', 'status-error-text',
+    'status-warning-text', 'surface-brand', 'text-helper', 'text-primary', 'text-secondary',
   ]);
+});
+
+test('der Hilfeknopf ist leise: icon-secondary, erst unter dem Zeiger icon-primary', () => {
+  assert.match(declarationsOf(form, '.tl-form-field__help') ?? '', /color:\s*var\(--tl-icon-secondary\)/);
+  assert.match(declarationsOf(form, '.tl-form-field__help:hover') ?? '', /color:\s*var\(--tl-icon-primary\)/);
 });
 
 test('die Seitenlage nimmt die Label-Spalte aus Tokens, kein Literal', () => {

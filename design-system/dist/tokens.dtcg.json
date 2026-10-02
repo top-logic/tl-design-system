@@ -573,6 +573,13 @@
           "unit": "rem"
         }
       },
+      "height-5": {
+        "$type": "dimension",
+        "$value": {
+          "value": 2.5,
+          "unit": "rem"
+        }
+      },
       "line-1": {
         "$type": "dimension",
         "$value": {
@@ -1780,6 +1787,10 @@
           "$type": "dimension",
           "$value": "{primitive.measure.height-4}"
         },
+        "size-bar": {
+          "$type": "dimension",
+          "$value": "{primitive.measure.height-5}"
+        },
         "space-control-x": {
           "$type": "dimension",
           "$value": "{primitive.measure.size-3}"
@@ -1805,6 +1816,10 @@
         "size-row": {
           "$type": "dimension",
           "$value": "{primitive.measure.height-3}"
+        },
+        "size-bar": {
+          "$type": "dimension",
+          "$value": "{primitive.measure.height-4}"
         },
         "space-control-x": {
           "$type": "dimension",

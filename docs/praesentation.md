@@ -128,10 +128,13 @@ Deshalb ist Dunkel eine **zweite vollständige Palette**. Jede Rolle hat je Modu
 * **Schrift:** `label` 12 px, `body` 14 px, drei Überschriften, eine Display-Größe. Neun Klassen legen Familie, Größe, Gewicht und Zeilenhöhe zusammen fest — eine Größe allein ist keine Klasse.
 * **Abstände:** 4 · 8 · 12 · 16 · 24 · 32 · 48 px. Alles durch vier teilbar; Zeilenhöhen und Control-Höhen liegen auf demselben Raster.
 * **Dichte:** zwei Stufen. Eine Tabelle wird eng, indem Luft verschwindet — nicht indem Text schrumpft.
+* **Leisten:** Reiter und Toolbar sind gleich hoch, 40 px. Eine Höhe für alles, was eine Leiste ist; vorher war die Reiterleiste die engste Stelle im Rahmen.
 * **Radius:** Was bedient wird, bekommt 4 px. Was umschließt, 8 px. Pille und Kreis sind Formen, keine Stufen.
 * **Einheiten:** Was mit der Schrift skaliert, steht in `rem`. Linien bleiben Pixel.
 
 > Sprechnotiz: 13 px fällt weg — der Unterschied zu 14 ist unsichtbar, kostet aber in jeder Komponente eine Entscheidung.
+>
+> Sprechnotiz: Hilfe flüstert. Das Fragezeichen am Feld ist ein Umriss in Sekundärfarbe; laut wird es erst unter dem Zeiger.
 
 ---
 

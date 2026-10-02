@@ -34,7 +34,7 @@ und fokussieren in einem Schritt.
 | Reiterleiste, Abstand der Reiter | `--tl-space-xs` |
 | Reiterleiste, Innenabstand seitlich | `--tl-space-sm` |
 | Reiterleiste, Linie darunter | `--tl-border-width-sm`, `--tl-border-separator` |
-| Reiter, Höhe | `--tl-size-control` |
+| Reiter, Höhe | `--tl-size-bar` (so hoch wie die Toolbar) |
 | Reiter, Abstände | `--tl-space-md` seitlich, `--tl-space-xs` zwischen Icon und Label |
 | Reiter, Text | `--tl-text-secondary`; der gewählte `--tl-text-primary` |
 | Zeiger darüber | `--tl-text-primary`, `--tl-surface-interactive-hover` |

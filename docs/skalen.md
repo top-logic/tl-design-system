@@ -973,6 +973,7 @@ Alle sieben Werte sind durch vier teilbar. Damit liegen **Abstände, Zeilenhöhe
 | Control-Höhe | `2rem` (32) | `1.75rem` (28) |
 | Control-Höhe klein | `1.5rem` (24) | `1.5rem` (24) |
 | Tabellenzeile | `2.25rem` (36) | `2rem` (32) |
+| Leiste (Toolbar, Reiter) | `2.5rem` (40) | `2.25rem` (36) |
 | Polsterung waagerecht | `space-sm` | `space-xs` |
 | Polsterung senkrecht | `space-xs` | `space-2xs` |
 | Abstand im Formular | `space-md` | `space-sm` |
@@ -980,7 +981,7 @@ Alle sieben Werte sind durch vier teilbar. Damit liegen **Abstände, Zeilenhöhe
 
 **Zwei Stufen, nicht drei.** Jede Stufe muss in jeder Komponente umgesetzt und geprüft werden; eine dritte kostet die Hälfte mehr Pflege für einen Fall, den der Bestand nicht einmal andeutet.
 
-Die Zeilenhöhe ist **abgeleitet, nicht gesetzt**: Control-Höhe plus 4 px. Deshalb trägt die Zeile ihren Inhalt in beiden Stufen, statt ihn abzuschneiden.
+Die Zeilenhöhe ist **abgeleitet, nicht gesetzt**: Control-Höhe plus 4 px. Deshalb trägt die Zeile ihren Inhalt in beiden Stufen, statt ihn abzuschneiden. Ebenso die Leiste: Control-Höhe plus `space-2xs` oben und unten (seit 02.10., siehe „Leisten und Hilfe“).
 
 #### Warum das den heutigen Zustand auflöst
 
@@ -1723,6 +1724,30 @@ Regel; die Gate-Erweiterung auf Elemente steht in `altlast.md` (N8).
 
 **Prozent-Literale.** Die Maß-Regel des Lints endete auf `\b` und fing kein `%` (Review des Plans). Geschlossen in
 P7; `50%` und `-50%` sind erlaubte Werte (Mittelachse), `100%` war es schon.
+
+### Leisten und Hilfe: eine Höhe für Reiter und Toolbar, der Hilfeknopf ist leise (02.10.)
+
+**Der Befund zuerst.** Bernhards Sichtprüfung von !1760 (02.10., Bilder `docs/bilder/2026-10-02-bernhard-*.png`):
+„die Hilfe-Buttons sind jetzt aber echt massiv“ und „dafür, dass alles relativ viel Platz hat, sind die Tabbars
+recht gestaucht“. Gemessen auf `docker:8008`: Ein Reiter war `size-control` hoch (32 px), die Toolbar daneben
+40 px (`size-control` plus `space-2xs` oben und unten), die App-Leiste 56 px. Zwei gestapelte Reiterleisten
+waren damit die engste Stelle im ganzen Rahmen. Der Hilfeknopf war ein gefüllter Kreis (`fa-solid`) mit 16 px in
+`text-primary`. Daneben stand das Label mit 12 px in `text-secondary`: die kräftigste Farbe neben der leisesten
+Schrift. Die Sidebar-Einträge mit 52 px sind Altbestand und kein Maßstab.
+
+**Entschieden (Hendrik, 02.10.):**
+
+* **`size-bar`, ein Dichte-Token für Leisten:** Control-Höhe plus `space-2xs` oben und unten, also 40 px
+  normal und 36 px kompakt (`height-5` = `2.5rem` neu). Reiter lesen ihn als `min-height`, die Toolbar
+  ebenfalls. Damit stehen Reiterleiste und Toolbar auf einer Höhe und laufen nicht wieder auseinander.
+* **Der Hilfeknopf zeichnet den Umriss (`fa-regular fa-circle-question`) in `icon-secondary`,** unter dem
+  Zeiger `icon-primary`. Die Größe bleibt `size-icon-sm` (Regel „Text daneben → `sm`“), die Trefferfläche bleibt
+  `size-control-sm`. Leise wird er über Füllung und Farbe, nicht über die Größe: eine 12-px-Glyphe wäre ein
+  Richtungszeichen, und die Icon-Regel bliebe nicht mehr eine Regel.
+
+**Als Test:** `tokens.test.mjs` hält `size-bar` = `size-control` + 2 × `space-2xs` in beiden Dichten;
+`components.test.mjs` hält `min-height: size-bar` an Reiter und Toolbar; `form.test.mjs` hält die Farben des
+Hilfeknopfs.
 
 ## Befunde aus dem Specimen
 

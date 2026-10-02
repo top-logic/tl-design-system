@@ -68,6 +68,16 @@
   min-width: 0;
 }
 
+/* Der Hilfeknopf steht neben dem leisesten Text des Felds: Umriss-Glyphe in icon-secondary, erst unter dem
+   Zeiger icon-primary. Die Trefferfläche bleibt size-control-sm (docs/skalen.md „Leisten und Hilfe“). */
+.tl-form-field__help {
+  color: var(--tl-icon-secondary);
+}
+
+.tl-form-field__help:hover {
+  color: var(--tl-icon-primary);
+}
+
 .tl-form-field__required {
   color: var(--tl-status-error-text);
 }

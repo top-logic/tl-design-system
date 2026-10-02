@@ -22,7 +22,7 @@ Vom Server über `useTLState()`, aus `ReactFormFieldChromeControl`, `ReactFormGr
 | `errorIcon` | string, optional | Kodiertes ThemeImage vor dem Fehlertext (`ThemeIcon` in `tl-icon-sm`). |
 | `warnings` | Liste von string, optional | Warnungen, nur ohne Fehler: jede Warnung ist ein eigenes `tl-form-field__message` mit `aria-live="polite"`, mit Icon und Text. |
 | `warningIcon` | string, optional | Kodiertes ThemeImage vor jeder Warnung. |
-| `helpText` | string, optional | Hilfetext: ein Hilfeknopf (`tl-button tl-button--ghost tl-button--sm`) in der Beschriftung blendet `tl-form-field__help-text` ein und aus. |
+| `helpText` | string, optional | Hilfetext: ein Hilfeknopf (`tl-button tl-button--ghost tl-button--sm tl-button--icon tl-form-field__help`, Glyphe `fa-regular fa-circle-question`) in der Beschriftung blendet `tl-form-field__help-text` ein und aus. |
 | `hasTooltip` | boolean | Die Beschriftung bietet einen reichen Tooltip, den der Server unter dem Schlüssel `tooltip` hält. |
 | `tooltipText` | string, optional | Schlichter Text als Tooltip der Beschriftung; der reiche Tooltip geht vor. |
 | `dirty` | boolean | Das Feld ist geändert: `data-tl-state="dirty"` an der Wurzel, der Punkt `tl-form-field__dirty` erscheint. |
@@ -86,6 +86,7 @@ Der Feldrahmen hat keinen Schlüssel `disabled`; inaktiv ist das Eingabe-Control
 | Beschriftung | Text `--tl-text-secondary`; Pflichtstern `--tl-status-error-text` |
 | Geändert-Punkt | Größe `--tl-size-indicator`, Form `--tl-radius-round`, Fläche `--tl-surface-brand` |
 | Fehler / Warnung | Text `--tl-status-error-text` / `--tl-status-warning-text` |
+| Hilfeknopf | `--tl-icon-secondary`, unter dem Zeiger `--tl-icon-primary` |
 | Hilfetext | `--tl-text-helper` |
 | Gruppe, Trennlinie | `--tl-border-separator`, Breite `--tl-border-width-sm` |
 | Gruppe, umrandet | Rand `--tl-border-control` (er begrenzt ein Bedienfeld), Ecke `--tl-radius-md` |
@@ -123,6 +124,7 @@ Klassen:
 | `tl-form-field__dirty` | der Geändert-Punkt, `aria-hidden="true"`, nur sichtbar unter `data-tl-state="dirty"` |
 | `tl-form-field__input` | der Platz der Eingabe |
 | `tl-form-field__message` | der Fehler oder je eine Warnung |
+| `tl-form-field__help` | der Hilfeknopf in der Beschriftung |
 | `tl-form-field__help-text` | der Hilfetext |
 | `tl-form-group` | Wurzel der Gruppe; `--separator`, `--outlined`, `--full` |
 | `tl-form-group__header`, `__title`, `__actions`, `__body` | Kopfzeile (darin der Einklappknopf `tl-toggle`), Überschrift, Knöpfe, Körper; die Felder stehen unmittelbar im Körper, Gruppe und Körper sind Subgrids und behalten die Spalten des Layouts |

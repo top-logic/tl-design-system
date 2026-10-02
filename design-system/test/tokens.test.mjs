@@ -156,6 +156,14 @@ test('die kleine Control-Höhe trägt die Trefferfläche aus WCAG 2.5.8', () => 
     assert.ok(parseFloat(R.density[d]['size-control-sm']) * 16 >= 24, d);
 });
 
+test('eine Leiste ist Control-Höhe plus space-2xs oben und unten, in beiden Dichten', () => {
+  for (const d of ['normal', 'compact']) {
+    const bar = parseFloat(R.density[d]['size-bar']);
+    const control = parseFloat(R.density[d]['size-control']);
+    assert.equal(bar, control + 2 * parseFloat(R.measure['space-2xs']), d);
+  }
+});
+
 test('Zeilenhöhen der Typo-Klassen liegen auf dem 4-px-Raster', () => {
   for (const [n, k] of Object.entries(T.type)) {
     if (n.startsWith('_')) continue;
