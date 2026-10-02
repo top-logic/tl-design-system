@@ -443,6 +443,23 @@ Nicht in dieser Welle: Attribut `tone`/`appearance` am Kommando (bewusst nicht),
 | **Kleines aus dem Schluss-Review** | `TLTabBar.tsx`: `aria-labelledby` des Panels zeigt ins Leere, wenn `activeTabId` keinen Reiter trifft; Fix: nur setzen, wenn der Reiter existiert. `TLMenuRegion.tsx`: `buttonRef` und `regionRef` werden gesetzt, aber nie gelesen; Fix: entfernen. |
 | **Sichtprüfung (mit dem PR)** | Popup-Mindestbreite `size-popover-min` schlägt Felder unter 10rem; `max-height` des Select-Popups lässt weniger als acht Zeilen sichtbar — die Formel `8·row + control + 2·xs` übersieht Popover-Innenabstand (2·xs) und Rand (2·`border-width-sm`) unter `border-box` sowie den `margin-bottom: xs` der Suchgruppe, es fehlen rund 0,3 Zeilen; Fix nach der Sichtprüfung: `+ var(--tl-space-xs) + 2 * var(--tl-border-width-sm)`; `Shift+F10` kann ein zweites natives Kontextmenü auslösen; Panelkopf `+2·space-2xs` höher, Trigger in der primären App-Bar; Toggle-Drehung; Specimen `progress`/`icon` im Browser. |
 
+## Welle 3b · Daten — Spec 02.10.2026
+
+Spec `docs/superpowers/specs/2026-10-02-welle-3b-daten-design.md`, Branch `CWS/CWS_29617_design_system_welle_3b` von
+master `b29546f2ad`. Abzuschneiden: TLTableView (2693–3178 und 3565–3846), TLTreeView, TLColumnSelect, TLColumns,
+die drei TLText-Blöcke; TLJobStatus fällt dabei auf seinen wahren Stand (118). Konsolidierung W3 (Tabelle/Baum),
+W6, W7, W8, W10, W11, N1; die Tabelle „alt → neu“ entsteht mit dem Bau.
+
+**Offen nach 3b:**
+
+| Gruppe | Stand |
+|---|---|
+| **Spaltenbreite und Fixiergrenze per Tastatur** | `role=separator` ohne Tastatur; Pfeile am fokussierten Griff wären der Weg (WAI-ARIA Window Splitter). |
+| **Senkrechtes Auto-Scrollen beim Zeilenziehen** | fehlt heute; waagerecht gibt es zwei Fassungen (Spaltenzug, Breite ziehen) — beim Nachholen zusammenlegen. |
+| **Ziehen-Optik Dashboard, Kalender, Farbpalette** | eigene Markierungen (leuchtender Balken, Deckkraft 0,7, keine); Welle 4/5 auf `data-tl-state`. |
+| **`TLValueList`-Block** | bekommt in 3b Tastatur und Optik über den Hook, der Block selbst bleibt bis Welle 5. |
+| **Icon-Select** | Status, Spinner und Filter (W10, W8) in Welle 5. |
+
 ## Konsolidierung (01.10.) — Gleiches wird zusammengelegt
 
 Regel (CLAUDE.md „Arbeitsweise“, skalen.md „Gleiches wird zusammengelegt“): findet eine Erkundung zwei Stellen, die

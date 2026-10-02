@@ -6,7 +6,8 @@
 „Gleiches wird zusammengelegt“, „Leisten und Hilfe“, „Typo“, „Dichte“; Prognosen `docs/migration/altlast.md`
 „Konsolidierung (01.10.)“ W3 (Tabelle/Baum), W6, W7, W8, W10, W11, N1
 **Entschieden mit Hendrik:** 01.10. (Welle-3-Brainstorming: `role=grid`, Zustand = ARIA, Konsolidierungszeilen);
-02.10. in dieser Sitzung: TLText mit in 3b, Umsortieren per Tastatur, Zeilenhöhe misst der Client
+02.10. in dieser Sitzung: TLText mit in 3b, Umsortieren per Tastatur, Zeilenhöhe misst der Client, Ton `accent` fällt;
+Spec freigegeben 02.10.
 
 ---
 
@@ -207,7 +208,7 @@ Filter von Select-Popup und Spaltenwahl. Icon-Select folgt in Welle 5.
   | Ton `primary` (Standard), `secondary`, `helper` | ohne Attribut, `data-tl-tone="secondary"`, `"helper"` |
   | Ton `success`, `warning`, `error` | `data-tl-tone` → `status-*-text` |
   | Ton `on-color` | `data-tl-tone="on-brand"` → `text-on-brand` |
-  | Ton `accent` | **offen, §16** |
+  | Ton `accent` | **fällt** (Hendrik, 02.10.): `TextTone.ACCENT` aus dem Vokabular, die Styling-Demo nimmt `strong` |
   | Erscheinung `pill` | `tl-pill` mit `data-tl-role` (Ton → Rolle wie heute `roleOfTone`) |
 
   Die Klassen `tlText--strong` (5 Stellen in `*.view.xml` und `InspectedNodeElement.java`) und `tlText--placeholder`
@@ -272,12 +273,12 @@ Vor dem Start: Plan-Review durch einen frischen Agenten gegen die Gates (CLAUDE.
 
 Anwendungs-Stylesheets, die `tlTableView*`, `tlTreeView*`, `tlColumnSelect*`, `tlColumns*` oder `tlText*` lesen,
 brechen; die Migrationsliste steht im PR und in `altlast.md`. Wer `rowHeight` aus dem Zustand gelesen hat, liest
-`--tl-size-row`. `TextVariant` und `TextTone` bleiben als Vokabular unverändert — nur ihre Darstellung wechselt.
+`--tl-size-row`. `TextVariant` bleibt als Vokabular unverändert; `TextTone` verliert `accent` (§16) — wer ihn konfiguriert hat, nimmt `strong`.
 
-## 16 · Offen
+## 16 · Offen und entschieden
 
-- **Ton `accent`** („in der Farbe der Bedienelemente“, `TextTone.ACCENT`, eine Verwendung in
-  `styling-demo.view.xml`): `text-link` würde nicht klickbaren Text wie einen Link aussehen lassen. Vorschlag: der
-  Ton fällt (Bedeutung statt Farbe — Hervorhebung ist `strong`), die Demo nimmt `strong`. Entscheidung Hendrik.
+- ~~Ton `accent`~~ **Entschieden 02.10.: fällt.** `text-link` hätte nicht klickbaren Text wie einen Link aussehen
+  lassen; Hervorhebung ist `strong` (Bedeutung statt Farbe). `TextTone.ACCENT` geht aus dem Vokabular (Java, JavaDoc,
+  `messages_en` über `check-messages-en.sh`), `styling-demo.view.xml:138` nimmt `strong`.
 - Spaltenbreite und Fixiergrenze per Tastatur, senkrechtes Auto-Scrollen beim Zeilenziehen, Ziehen-Optik von
   Dashboard und Kalender: in `altlast.md` „Offen“.

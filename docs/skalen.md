@@ -1751,6 +1751,36 @@ Schrift. Die Sidebar-Einträge mit 52 px sind Altbestand und kein Maßstab.
 `components.test.mjs` hält `min-height: size-bar` an Reiter und Toolbar; `form.test.mjs` hält die Farben des
 Hilfeknopfs.
 
+### Welle 3b: Daten (02.10.)
+
+Spec `docs/superpowers/specs/2026-10-02-welle-3b-daten-design.md`. Neu entschieden über das Welle-3-Brainstorming
+(01.10.) hinaus:
+
+* **TLText kommt mit** (Hendrik). Fast jede Tabellenzelle ist ein TLText; ließe man seine drei Alt-Blöcke stehen,
+  stünde die neue Tabelle voll alter Schrift und alter Tonfarben. Varianten werden `tl-type-*`, Töne `data-tl-tone`.
+  Der Platzhalter verliert das Kursiv: die Typo kennt keinen Schnitt (siehe „Typo“).
+* **Ton `accent` fällt** (Hendrik). „In der Farbe der Bedienelemente“ heißt `text-link` — nicht klickbarer Text sähe
+  aus wie ein Link. Hervorhebung ist `strong`. Bedeutung statt Farbe.
+* **Umsortieren auch ohne Ziehen** (Hendrik). WCAG 2.2, 2.5.7 (AA) verlangt für jede Ziehbewegung einen Weg ohne
+  sie. Alt + Pfeil verschiebt um eine Stelle, ein Live-Bereich sagt die Position an — einmal in `useListReorder`,
+  damit für Spaltenwahl, Werteliste und Select-Chips zugleich.
+* **Die Zeilenhöhe misst der Client** (Hendrik). Der Server schickte fest 36 px, unabhängig von `data-tl-density`;
+  kompakt wäre die Tabelle die einzige Stelle ohne Verdichtung gewesen. Zwei Quellen für dasselbe Maß driften —
+  darum fällt `rowHeight` aus dem Zustand, und der Browser liest `--tl-size-row`.
+* **Der Cursor-Ring gehört `base.css`.** Tabelle und Baum führen den Cursor virtuell (`aria-activedescendant`); den
+  Ring zeichnet der Basis-Ring innen am Cursor, sobald der Behälter `:focus-visible` ist — die Fokusregel aus 3a
+  („`focus-ring` nur im Basis-Ring“) bleibt ohne Ausnahme.
+* **Tönung ist ein Attribut.** `data-tl-role` an Pill, Chip, Segment, Avatar und Alert, erzeugt aus einem Generator;
+  Avatar und Alert wechseln mit, weil ein Generator zwei Mechanismen nicht rechtfertigt. Keine Pill in der Kapsel.
+* **Eine Zeile schwebt nicht, auch nicht fixiert.** Die Kante fixierter Spalten ist eine Linie `border-emphasis`,
+  kein Schatten (vgl. „Elevation“).
+* **Die Deckkraft beim Ziehen bleibt eine Zahl** (`0.4`): einheitenlose Werte lässt das Lint bewusst zu; die Regel
+  steht jetzt einmal statt dreimal.
+
+**Befund dazu:** 282 Zeilen Tabellenregeln (3565–3846) standen ohne Überschrift im alten Stylesheet; die Ratsche
+schlug sie TLJobStatus zu. Die Blockmessung trifft nur, was eine Überschrift trägt — beim Ausschneiden wird TLJobStatus
+auf seinen wahren Stand gesetzt.
+
 ## Befunde aus dem Specimen
 
 ### Inter trägt nur zwei Gewichte

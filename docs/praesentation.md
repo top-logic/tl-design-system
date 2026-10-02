@@ -182,10 +182,15 @@ Jede Komponente geht denselben Weg: CSS ins Paket, Klassen umbenennen, Zustände
 | **Icon-Knöpfe** | acht Arten, Trefferflächen 22–32 px, vier Hover-Optiken | ein `tl-button--icon`, 32 px, ein Hover |
 | **Fokus** | vier Zeichnungen, zwei Blautöne, Ring auch ohne Tastatur | ein Ring, nur bei Tastatur |
 | **Auf-/Zuklappen** | sieben Zeichnungen in vier Zeichensätzen, derselbe Pfeil heißt „zu“ und „offen“ | ein Knopf, ein Pfeil, 24 px |
+| **Ziehen und Ablegen** | fünf Implementierungen, fünf Markierungen, Lage dreimal anders gerechnet | zwei Rechner, **eine** Markierung — und Umsortieren auch mit Alt + Pfeil |
+| **Laden und Leer** | vier Spinner, eine leere Tabelle ist eine leere Fläche | ein Fortschrittsbalken, „Keine Einträge“, Platzhalterzeilen beim Scrollen |
+| **Kapseln** | Pille in der Kapsel, drei Höhen, Farben dreimal erzeugt | eine Kapsel, die Bedeutung als Attribut |
 
 Vor jeder Welle: Was tut dasselbe? Prognose auf den Tisch, Entscheidung, dann die Spec. Gebautes wird mitgeprüft.
 
 > Sprechnotiz: Konsolidieren ist der Teil, den ein Styleguide nie erzwingt — er sieht Farben, nicht Verhalten.
+>
+> Sprechnotiz (Welle 3b): Die Tabelle wird ein echtes Raster für Screenreader und folgt der Dichte — kompakt sind die Zeilen 32 statt 36 px, weil der Browser die Höhe misst, nicht der Server.
 
 ---
 
