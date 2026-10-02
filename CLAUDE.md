@@ -99,15 +99,16 @@ wenn Hendrik es sagt. `STATUS.md` auf `main` gehört der Sitzung, die dort arbei
 
 ## Modelle
 
-Fable orchestriert, Opus und Sonnet arbeiten zu. Entscheidungen brauchen den Sitzungskontext,
-und der liegt nur im Orchestrator; Handwerk ist abgrenzbar und darf leer starten.
+Fable oder Opus 5.5 orchestriert (seit 02.10.: beide gleichwertig), Opus und Sonnet arbeiten zu.
+Entscheidungen brauchen den Sitzungskontext, und der liegt nur im Orchestrator; Handwerk ist
+abgrenzbar und darf leer starten. **Bedingung für jeden Orchestrator: alles wird verifiziert** —
+jedes Ergebnis eines Subagenten gegen Gates, Datei und laufende Instanz geprüft, bevor es als fertig gilt.
 
 | Aufgabe | Modell | Wie |
 |---|---|---|
-| Entscheiden, Spec, `docs/skalen.md`, Review-Antworten, `derive`-Design | Fable | Orchestrator selbst |
+| Entscheiden, Spec, `docs/skalen.md`, Review-Antworten, `derive`-Design | Fable oder Opus 5.5 | Orchestrator selbst |
 | Java-Migration im Worktree, Ratsche, Tests, Tickets | Opus | Subagent `model: opus` |
 | Umbenennen nach `altlast.md`, Bildexport, Wiki-Spiegelung, Suche | Sonnet | Subagent `model: sonnet` |
 
 Ein Fork erbt das Orchestrator-Modell; für ein anderes Modell einen frischen Agenten mit
-vollständigem Auftrag starten. Reine Umsetzungssitzungen mit fertigem Plan dürfen mit Opus
-orchestrieren; sobald eine Entscheidung ansteht, `/model fable`.
+vollständigem Auftrag starten. Das Plan-Review bleibt bei einem frischen Agenten, nicht beim Autor.
