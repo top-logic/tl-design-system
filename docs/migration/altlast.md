@@ -409,13 +409,37 @@ Kunden- und Anwendungs-CSS, das die alten Klassen anspricht, liest künftig dies
 
 Es fallen ohne Ersatz: die Fremddefinitionen `--tl-toolbar-trigger-size` (der TSX misst) und `--tl-toolbar-shrink-priority`, die Regel `.tlMenuRegion--click[aria-expanded="true"]` (griff nie), die Breitengrenze `max-width: 12rem` des Benutzernamens samt `@media (max-width: 640px)`.
 
+### Ton folgt der Aktion — gebaut 02.10.
+
+Spec `docs/superpowers/specs/2026-10-02-ton-folgt-der-aktion-design.md`, Branch `CWS/CWS_29617_design_system_ton`.
+
+| Vorher | Jetzt |
+|---|---|
+| Gefahrton im Toolbar-Überlauf ging verloren (`buttonClassName` verwarf `danger` im `menu-item`-Zweig) | `tl-menu__item--danger`; `menuItemClassName(current, extra, danger)` ist die eine Stelle für Kontextmenü und Überlauf |
+| `ReactButtonControl.setTone` ohne Aufrufer; das React-`CommandModel` kannte keinen Ton | `CommandModel.getTone()`; der Knopf übernimmt ihn bei der Konstruktion |
+| Löschen sah aus wie Speichern | `DeleteObjectAction` sagt `DANGER`, `ViewActions.tone` aggregiert, Transaktion und Zweige reichen weiter; Clique `delete` ist die zweite Quelle |
+| Rückfrage „Wirklich löschen?“ immer nur `primary` | `primary` + `danger`, wenn der Kettenrest zerstört (`Continuation.tone()`, auch aus einem Zweig heraus) |
+| Verwerfen im Dirty-Dialog ohne Ton | `MessageButtons.discard` ist `danger` |
+
+Nicht in dieser Welle: Attribut `tone`/`appearance` am Kommando (bewusst nicht), weitere Töne, das Dialog-Gerüst der sechs Zwei-Knopf-Dialoge (Welle 4, Prognose #4).
+
+**Offen aus den Task-Reviews:**
+
+| Gruppe | Stand |
+|---|---|
+| **`UploadCommand`** | Reicht weder `getTone()` noch `appliesFormState()` seiner Aktionen je Datei weiter: eine Upload-Kette mit `<delete-object/>` bleibt `DEFAULT`. Heute ohne Anwendungsfall; Fix später eine Zeile (`ViewActions.tone` über die Aktionen je Datei). |
+| **`<confirm>` in `<with-transaction>`** | Öffnet den Dialog (Ton `DEFAULT`, weil `RequireSyncContinuation` keinen Ton kennt), bevor die Kette scheitert — eine Rückfrage darf in der Transaktion nicht aussetzen. Fehlgebrauch aus dem Bestand; sollte abgewiesen werden, bevor der Dialog aufgeht. |
+| **`MenuEntry.tone`** | Als „nie `null`“ dokumentiert, aber ohne `requireNonNull` im Konstruktor. |
+| **Tests** | `TestDialogButtonTone` prüft „kein Ton“ mit `assertNull` statt strenger mit `containsKey`; die zusammengesetzten Aktionen stehen in einer Testmethode; kein Test für den `Switch`-Zweig von `nest`. |
+| **Specimen** | Kein Eintrag, der zugleich `aria-current` und `--danger` ist. |
+
 ### Offen für spätere Wellen und Pakete
 
 | Gruppe | Stand |
 |---|---|
 | **AppBar-Breakpoint** | AppBar-Breakpoint für den Benutzernamen (war 640 px; Welle 4). Das Benutzermenü liegt im `trailing` der AppBar, nicht in einer Toolbar; „bei Platzmangel nur der Avatar“ (Spec §7) ist eine AppBar-Regel. Dazu die **Namensbreite** (war `max-width: 12rem`): `tl-button__label` schneidet erst ab, wenn etwas die Breite begrenzt — ohne Grenze greift die Ellipse nicht, ein langer Name verbreitert den Auslöser bis Welle 4. |
 | **Reiter-Überlauf** | `tl-tabs__list` hat keinen Überlauf: viele Reiter laufen über den Rand hinaus. Nicht in Welle 3 (Spec §11), ebenso Untermenüs und Typeahead im Menü. |
-| **Gefahrton im Toolbar-Überlauf** | Ein `danger`-Knopf verliert im Überlauf seinen Ton: der Menüvertrag kennt keinen Gefahr-Eintrag („ein Eintrag ist Struktur“). Entscheidung mit Hendrik offen; Option `data-tl-tone="danger"` am `tl-menu__item` im Paket. |
+| ~~**Gefahrton im Toolbar-Überlauf**~~ | **Erledigt mit „Ton folgt der Aktion“ (02.10.):** `tl-menu__item--danger` — siehe den Abschnitt darüber. |
 | **Menü-Auslöser im Toolbar-Überlauf** | Unter `ButtonDefaults appearance="menu-item"` wird der Klick-Auslöser `button.tl-menu-region.tl-menu__item` ohne `role="menuitem"` und `tabindex=-1`; die Pfeiltasten des Überlaufs überspringen ihn. Heute unerreichbar (Toolbars tragen nur Kommando-Knöpfe). Fix: `menuItemProps(defaults)` wie `TLButton`, oder fest `ghost`; dazu entscheiden, ob `?? 'ghost'` (Panel-Leisten: `secondary`) oder der Vertrag „immer ghost“ gilt. |
 | **Gebündeltes aus dem Review** | Tab schließt das Menü nicht (WAI-ARIA); Menü ohne `aria-labelledby`; Einträge, die bei offenem Menü dazukommen, bleiben `tabindex=-1` bis zur ersten Pfeiltaste. Kontextmenü am Punkt um `space-xs` versetzt (Offset auch am Punkt-Anker); Kontexttaste sendet einen Punkt statt des Elements. Fehlt das Anker-Element (`TLMenu.tsx`: `getElementById` liefert `null`), öffnet das Menü am Viewport-Ursprung (0,0); Fix: auf den letzten Punkt zurückfallen oder nicht öffnen. Popup-Breite nur beim Rendern gemessen; die Kaskade `.tl-select__popup` über `.tl-popover` hängt an der Dateireihenfolge in `generate.mjs` (popover vor select); Fix: ein Reihenfolge-Test in `popover.test.mjs`. Kein Offen-Stil für `aria-expanded` am `tl-button`. Tablist ohne `aria-label`; die Toolbar heißt generisch (`js.toolbar.label`), ein Name aus dem Kontext ist ein eigener Punkt. |
 | **Kleines aus dem Schluss-Review** | `TLTabBar.tsx`: `aria-labelledby` des Panels zeigt ins Leere, wenn `activeTabId` keinen Reiter trifft; Fix: nur setzen, wenn der Reiter existiert. `TLMenuRegion.tsx`: `buttonRef` und `regionRef` werden gesetzt, aber nie gelesen; Fix: entfernen. |

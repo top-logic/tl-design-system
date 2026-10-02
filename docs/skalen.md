@@ -1339,6 +1339,8 @@ und Rückfrage.
 | Umfang | Nur destruktiv → `danger`. Hervorhebung bleibt Enter → `primary`. Keine Tabelle Clique → Erscheinung: die meisten Zeilen hießen „secondary, kein Ton“. |
 | Rückfrage | „Wirklich löschen?“: Enter bleibt auf Löschen, der Knopf wird `primary` + `danger` (rot gefüllt). Rot ist er genau dann, wenn das, was **nach** dem Bestätigen in der Kette kommt, zerstört — die `Continuation` kennt den Rest der Kette. |
 | Menüeintrag | `tl-menu__item--danger`, gezeichnet mit den drei Token-Paaren von `tl-button--ghost.tl-button--danger`. Ton ist kein Zustand, darum eine Klasse wie am Knopf, kein Attribut. Beide Pipelinen (Kontextmenü, Toolbar-Überlauf) enden in `menuItemClassName`. |
+| Zusammengesetzte Aktionen | `with-transaction`, `if`, `switch` tragen den Ton ihrer inneren Aktionen — bei `if`/`switch` zählt jeder Zweig, auch der nicht genommene, wie bei `appliesFormState`. Sonst wäre ein Löschen in einer Transaktion nicht rot. |
+| Rückfrage in einem Zweig | Sie sieht den Rest des Zweigs und den Rest der umschließenden Kette: `nest` gibt den Ton der äußeren Fortsetzung mit. |
 
 Begründung: dieselbe Linie wie bei der Pill („Rolle statt Farbe“) und bei Enter → `primary`. Eine
 freie Farbwahl je Knopf erzeugt Uneinheitlichkeit und muss an jeder Stelle gepflegt werden; eine
