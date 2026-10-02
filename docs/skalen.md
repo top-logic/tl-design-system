@@ -1320,6 +1320,31 @@ Border-Rollen wurden auf die dunkelste noch ausreichende vorhandene Stufe angeho
 
 ---
 
+### Ton folgt der Aktion: Bedeutung, nicht Farbe
+
+Der Befund (02.10., nach Welle 3a): Der Knopf kann `danger` seit Welle 1, aber nichts ruft es auf.
+`ReactButtonControl.setTone` hat keinen Aufrufer, das React-`CommandModel` kennt keinen Ton,
+`ViewCommand.Config` kennt weder Erscheinung noch Ton, und im Überlauf der Toolbar verwirft
+`buttonClassName` einen `danger` ausdrücklich. Hervorgehoben ist ein Knopf nur über Enter
+(`markAsDefault()` → `primary`). Der Bestätigungsdialog macht „Löschen“ immer `primary`, Verwerfen im
+Dirty-Dialog hat keinen Ton. Löschen sieht aus wie Speichern — in Toolbar, Kontextmenü, Dialogfuß
+und Rückfrage.
+
+**Entschieden:**
+
+| Frage | Regel |
+|---|---|
+| Steuerung | Der Autor sagt, *was* ein Kommando ist, nicht welche Farbe es hat. Kein Attribut `tone`/`appearance` am Kommando. Der Ton kommt aus der Aktionskette: `DeleteObjectAction` sagt `DANGER`, `ViewActions.tone` aggregiert wie `appliesFormState`, das Kommando reicht es durch. Zweite Quelle: Clique `delete`. |
+| Umfang | Nur destruktiv → `danger`. Hervorhebung bleibt Enter → `primary`. Keine Tabelle Clique → Erscheinung: die meisten Zeilen hießen „secondary, kein Ton“. |
+| Rückfrage | „Wirklich löschen?“: Enter bleibt auf Löschen, der Knopf wird `primary` + `danger` (rot gefüllt). Rot ist er genau dann, wenn das, was **nach** dem Bestätigen in der Kette kommt, zerstört — die `Continuation` kennt den Rest der Kette. |
+| Menüeintrag | `tl-menu__item--danger`, gezeichnet mit den drei Token-Paaren von `tl-button--ghost.tl-button--danger`. Ton ist kein Zustand, darum eine Klasse wie am Knopf, kein Attribut. Beide Pipelinen (Kontextmenü, Toolbar-Überlauf) enden in `menuItemClassName`. |
+
+Begründung: dieselbe Linie wie bei der Pill („Rolle statt Farbe“) und bei Enter → `primary`. Eine
+freie Farbwahl je Knopf erzeugt Uneinheitlichkeit und muss an jeder Stelle gepflegt werden; eine
+Bedeutung steht schon da — in der Aktion, die das Kommando ausführt. Spec
+`docs/superpowers/specs/2026-10-02-ton-folgt-der-aktion-design.md`.
+
+
 ### Pill: Rolle statt Farbe
 
 **Der Befund.** Die Pill ist seit #29596 kein eigenes Control mehr: `TLText` zeichnet einen Wert als

@@ -295,6 +295,7 @@ Innerhalb einer Welle keine Reihenfolge — parallel ist möglich. Der Button is
 **Weniger Entscheidungen, mehr Sicherheit — für Menschen und Modelle.**
 
 * **Man wählt eine Rolle, keinen Wert.** `surface-brand`, `status-error-text`, `space-md`. Ob der Wert stimmt, ist nicht mehr die Frage der Komponente.
+* **Ein Knopf weiß, was er tut.** Löschen ist rot — als Knopf, im Menü, in der Rückfrage — weil die Aktion es sagt, nicht weil jemand eine Farbe gesetzt hat.
 * **Zustände sind Attribute.** `disabled`, `aria-pressed`, `aria-busy` — das DOM weiß es ohnehin, und die Barrierefreiheit ist mit drin.
 * **Ein Fehler bricht den Build, nicht das Review.** Wer ein Literal schreibt, erfährt es sofort.
 * **Specimen statt Suche.** Jede Komponente zeigt sich in allen Zuständen, hell und dunkel, in beiden Dichten — an einem Ort.
