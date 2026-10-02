@@ -1,5 +1,5 @@
-// Welle 2 ist fertig, wenn keine alte Formular-Klasse mehr in der Engine steht — weder im TSX noch
-// im alten Stylesheet. Ohne Worktree (Kundenrechner, CI des Pakets) wird der Test übersprungen.
+// Die Wellen 2 und 3a sind fertig, wenn keine ihrer alten Klassen (Formular, Menü, Toolbar, Tabs,
+// Breadcrumb) mehr in der Engine steht — weder im TSX noch im alten Stylesheet. Ohne Worktree (Kundenrechner, CI des Pakets) wird der Test übersprungen.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
@@ -29,7 +29,7 @@ function* reactSources() {
   }
 }
 
-test('keine alte Formular-Klasse in react-src eines Moduls und in tlReactControls.css', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+test('keine alte Klasse der Wellen 2 und 3a in react-src eines Moduls und in tlReactControls.css', { skip: !existsSync(M) && 'kein Worktree' }, () => {
   const hits = [];
   for (const p of [...reactSources(), join(M, 'src/main/webapp/style/tlReactControls.css')]) {
     readFileSync(p, 'utf8').split('\n').forEach((line, i) => { if (ALT.test(line)) hits.push(`${p.slice(WT.length + 1)}:${i + 1}`); });

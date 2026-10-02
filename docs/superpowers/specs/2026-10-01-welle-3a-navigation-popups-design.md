@@ -77,7 +77,7 @@ Select-Popup (`select.css:121–138`) liest sie und verliert seine eigenen Fläc
 `menu.css`: `.tl-menu` (= `tl-popover` + `role=menu`), `.tl-menu__item` (`role=menuitem`, `min-height: size-row`,
 `gap: space-xs`, Icon `tl-icon-sm`, Label mit Ellipse wie `tl-button__label`), `.tl-menu__header`
 (`role=presentation`, `tl-type-label`, `text-secondary`), Trenner `tl-divider` (§6). Zustände **nur als Attribute**:
-`aria-current="true"` (aktiver Eintrag, `font-weight` der Typo-Stufe `label`), `disabled` (`text-disabled`,
+`aria-current="true"` (aktiver Eintrag, Typo-Klasse `tl-type-body-strong` statt `tl-type-body`), `disabled` (`text-disabled`,
 `cursor: default`). Die Klassen `--active`, `--disabled`, `--focused` fallen.
 
 **Echter Fokus:** Roving-Tabindex; Pfeile auf/ab (zyklisch), Home/End, Enter/Space wählen, Escape schließt. Der
@@ -136,7 +136,7 @@ Welle-1-Übergangsregel „Dropdown-Eintrag füllt die Zeile“ (`tlReactControl
 > **Fortgeschrieben 01.10. (Plan-Review):** Ein **Drop-Ziel ist kein Fokus**: die Dragover-Markierung des Uploads
 > (und in 3b die Drop-Ziele von Tabelle und Baum) setzt `outline` in `border-interactive`; `focus-ring` liest nur
 > `base.css`. Das Gate verbietet `focus-ring` in Komponenten und `outline` in jeder anderen Farbe. In Kraft (Menü)
-> trägt die Typo-Klasse `tl-type-label-strong`, nicht eine `font-weight`-Regel am Eintrag.
+> trägt die Typo-Klasse `tl-type-body-strong` (sonst `tl-type-body`), nicht eine `font-weight`-Regel am Eintrag.
 
 ## 6 · Drei Bausteine: Icon-Knopf, Toggle, Trenner
 
