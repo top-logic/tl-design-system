@@ -429,9 +429,7 @@ Nicht in dieser Welle: Attribut `tone`/`appearance` am Kommando (bewusst nicht),
 |---|---|
 | **`UploadCommand`** | Reicht weder `getTone()` noch `appliesFormState()` seiner Aktionen je Datei weiter: eine Upload-Kette mit `<delete-object/>` bleibt `DEFAULT`. Heute ohne Anwendungsfall; Fix später eine Zeile (`ViewActions.tone` über die Aktionen je Datei). |
 | **`<confirm>` in `<with-transaction>`** | Öffnet den Dialog (Ton `DEFAULT`, weil `RequireSyncContinuation` keinen Ton kennt), bevor die Kette scheitert — eine Rückfrage darf in der Transaktion nicht aussetzen. Fehlgebrauch aus dem Bestand; sollte abgewiesen werden, bevor der Dialog aufgeht. |
-| **`MenuEntry.tone`** | Als „nie `null`“ dokumentiert, aber ohne `requireNonNull` im Konstruktor. |
 | **Tests** | `TestDialogButtonTone` prüft „kein Ton“ mit `assertNull` statt strenger mit `containsKey`; die zusammengesetzten Aktionen stehen in einer Testmethode; kein Test für den `Switch`-Zweig von `nest`. |
-| **Specimen** | Kein Eintrag, der zugleich `aria-current` und `--danger` ist. |
 
 ### Offen für spätere Wellen und Pakete
 
