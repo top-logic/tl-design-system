@@ -27,7 +27,7 @@ Außerdem: Der Delegations-Test für `FormScopedCommandModel` (Spec §7) **gibt 
 - „serialisiert wird `tone` nur, wenn er nicht `DEFAULT` ist („absent means default“, wie am Knopf)“; das Proto-Feld ist `ButtonState.Tone tone;` — „das vorhandene Enum, kein zweites“.
 - „Der Ton ist je Kommando fest; `handleModelChange` zieht ihn nicht nach.“ „`markAsDefault()` bleibt: Enter bestätigt, der Knopf ist `primary` + `danger`.“
 - Branch „`CWS/CWS_29617_design_system_ton` auf `CWS/CWS_29617_design_system_welle_3a`, bis !1760 gemergt ist; dann gegen `master`.“
-- Paket: nach jeder Änderung an `src/` `node tools/generate.mjs`; `node --test` und `node tools/lint-css.mjs` sind das Gate (heute 266 Tests, Lint grün). **Kein Commit mit rotem Test.** `dist/` kommt nur über `node tools/publish-to-worktree.mjs` in den Worktree.
+- Paket: nach jeder Änderung an `src/` `node tools/generate.mjs`; `node --test` und `node tools/lint-css.mjs` sind das Gate (heute 268 Tests, Lint grün). **Kein Commit mit rotem Test.** `dist/` kommt nur über `node tools/publish-to-worktree.mjs` in den Worktree.
 - Kein Literal in Komponenten-CSS (Farbe, Maß, Dauer), kein `:focus` ohne `-visible`, kein `outline: none`, `font-weight` nur in `tl-type-*`-Klassen.
 - Engine-Maven immer im Modulverzeichnis und mit ausgeschriebenen Argumenten (zsh spaltet eine Variable nicht in mehrere Argumente):
   `JAVA_HOME=/opt/homebrew/Cellar/openjdk@21/21.0.10/libexec/openjdk.jdk/Contents/Home mvn -o -B -Dmaven.repo.local=/Users/hendrik/Claude/TopLogic-v8-DesignSystem/_Working-Tree/tl8-wt-29584/.m2/repository -Dskip.npm -Dskip.installnodenpm …`. Tests brauchen zusätzlich `-DskipTests=false test -Dtest=<Klasse>`. Ein layout.view-Test sieht Änderungen in layout.react erst nach `… -q install` in `com.top_logic.layout.react` (Tests dort per POM übersprungen).
@@ -91,7 +91,7 @@ Pfadkürzel: **WT** = `_Working-Tree/tl8-wt-29584`; **R** = `WT/com.top_logic.la
 
 **Projekt:** `docs/migration/altlast.md`, `STATUS.md` (Task 6); `docs/skalen.md` „Entschieden beim Bauen“ und `docs/praesentation.md` nur, wenn Fable die beiden Lücken bestätigt.
 
-**Zeilenangaben** beziehen sich auf `a998872f72` (Kopf von `welle_3a`, 02.10.); wer später baut, prüft sie mit `grep -n`.
+**Zeilenangaben** beziehen sich auf `be55ce1f65` (Kopf von `welle_3a`, 02.10.; geprüft im Plan-Review, keine Drift gegenüber `a998872f72`); wer später baut, prüft sie mit `grep -n`.
 
 ---
 
@@ -190,7 +190,7 @@ und im Kopfkommentar der Datei den Satz „Zustände sind Attribute: aria-curren
           <button type="button" class="tl-menu__item tl-menu__item--danger tl-type-body" role="menuitem" tabindex="-1" disabled><i class="tl-menu__icon tl-icon-sm bi bi-trash" aria-hidden="true"></i><span class="tl-menu__label">Löschen (deaktiviert)</span></button>
 ```
 
-- [ ] **Step 6: Erzeugen und Gates** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → 268 Tests grün, „Klassen-Gate grün“. (`tl-menu__item--danger` ist ein Element-Modifier; `lint-css.mjs` prüft nur Block-Modifier gegen `MODIFIERS` und `danger` steht nicht in `ELEMENT_STATE_MODIFIER` — keine Lint-Änderung nötig.) Sichtprobe: `node tools/serve.mjs`, `http://localhost:8137/src/components/menu/menu.spec.html`, hell und dunkel: Löschen rot, beim Zeigen rot gefüllt, deaktiviert grau.
+- [ ] **Step 6: Erzeugen und Gates** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → 270 Tests grün, „Klassen-Gate grün“. (`tl-menu__item--danger` ist ein Element-Modifier; `lint-css.mjs` prüft nur Block-Modifier gegen `MODIFIERS` und `danger` steht nicht in `ELEMENT_STATE_MODIFIER` — keine Lint-Änderung nötig.) Sichtprobe: `node tools/serve.mjs`, `http://localhost:8137/src/components/menu/menu.spec.html`, hell und dunkel: Löschen rot, beim Zeigen rot gefüllt, deaktiviert grau.
 
 - [ ] **Step 7: Commit Projekt-Repo**
 
@@ -208,7 +208,7 @@ Co-Authored-By: <Modell> <noreply@anthropic.com>"
 cd /Users/hendrik/Claude/TopLogic-v8-DesignSystem/_Working-Tree/tl8-wt-29584
 git fetch
 git checkout -b CWS/CWS_29617_design_system_ton origin/CWS/CWS_29617_design_system_welle_3a
-git log --oneline -1    # a998872f72 oder ein neuerer Commit von Bernhard
+git log --oneline -1    # be55ce1f65 oder ein neuerer Commit von Bernhard
 cd /Users/hendrik/Claude/TopLogic-v8-DesignSystem/design-system && node tools/publish-to-worktree.mjs
 cd /Users/hendrik/Claude/TopLogic-v8-DesignSystem/_Working-Tree/tl8-wt-29584
 git status --short      # erwartet: nur tl-design-system/components.css
@@ -569,7 +569,6 @@ import com.top_logic.layout.react.control.button.ButtonTone;
 import com.top_logic.layout.view.ViewElement;
 import com.top_logic.layout.view.command.ActionScript;
 import com.top_logic.layout.view.command.CommandCliques;
-import com.top_logic.layout.view.command.DeleteObjectAction;
 import com.top_logic.layout.view.command.GenericViewCommand;
 import com.top_logic.layout.view.command.IfAction;
 import com.top_logic.layout.view.command.SwitchAction;
@@ -885,7 +884,7 @@ Co-Authored-By: <Modell> <noreply@anthropic.com>"
 
 - [ ] **Step 8: messages_en** — wie Task 2 Step 11 (Module layout.react, layout.view).
 
-- [ ] **Step 9: Fertig-Bedingung (Spec §8.2) vormerken** — die Toolbar-Löschen in `attributes.view.xml` (×2), `demo/calendar.view.xml`, `tickets.view.xml`, `demo/tree-demo.view.xml` sind jetzt `ghost` + `danger`; geprüft wird im Docker in Task 6 Step 5. `npm run build` ist hier nicht nötig (kein TSX geändert), `TLButton` liest `state.tone` schon.
+- [ ] **Step 9: Fertig-Bedingung (Spec §8.2) vormerken** — die Toolbar-Löschen in `attributes.view.xml` (×2), `demo/calendar.view.xml`, `demo/pdf-demo.view.xml`, `tickets.view.xml`, `demo/tree-demo.view.xml` sind jetzt `ghost` + `danger`; geprüft wird im Docker in Task 6 Step 5. `npm run build` ist hier nicht nötig (kein TSX geändert), `TLButton` liest `state.tone` schon.
 
 ---
 
@@ -1557,7 +1556,7 @@ git commit -m "Ticket #29617: Design System tone -- the confirmation takes the t
 Co-Authored-By: <Modell> <noreply@anthropic.com>"
 ```
 
-- [ ] **Step 10: messages_en** — wie Task 2 Step 11.
+- [ ] **Step 10: messages_en** — wie Task 2 Step 11, aber hier ist ein Diff **sicher**: Step 7 ändert den Klassen-JavaDoc von `ConfirmAction`, und `com.top_logic.layout.view/src/main/java/META-INF/messages_en.properties` führt `com.top_logic.layout.view.command.ConfirmAction.tooltip` genau als diesen Text. Den erzeugten Diff committen und in `messages_de.properties` desselben Ordners den deutschen Absatz nachziehen (gleicher Commit). `layout.react` bleibt ohne Diff (kennt weder `ReactButtonControl` noch `ConfirmDialogControl` noch `MessageButtons`).
 
 ---
 
@@ -1598,7 +1597,7 @@ Nicht in dieser Welle: Attribut `tone`/`appearance` am Kommando (bewusst nicht),
 `docs/praesentation.md` Folie 15 prüfen: die Botschaft („Löschen ist rot, überall, ohne Einstellung“) bleibt; nur ergänzen, wenn die Folie Aktionen einzeln aufzählt. `STATUS.md` zieht mit (Step 4).
 
 - [ ] **Step 3: Gates**
-  - Paket: `cd /Users/hendrik/Claude/TopLogic-v8-DesignSystem/design-system && node tools/generate.mjs && git diff --exit-code dist && node --test && node tools/lint-css.mjs` → 268 grün, „Klassen-Gate grün“, `ratchet` unverändert (kein Altbestand berührt), `engine-classes` grün.
+  - Paket: `cd /Users/hendrik/Claude/TopLogic-v8-DesignSystem/design-system && node tools/generate.mjs && git diff --exit-code dist && node --test && node tools/lint-css.mjs` → 270 grün, „Klassen-Gate grün“, `ratchet` unverändert (kein Altbestand berührt), `engine-classes` grün.
   - Engine, in dieser Reihenfolge (Befehlsform aus „Global Constraints“): layout.react `"-Dtest=test.com.top_logic.layout.react.**.Test*"` → 0/0, dann `-q install`; layout.view `"-Dtest=test.com.top_logic.layout.view.**.Test*"` → 0/0, dann `-q install`; demo.react `-DskipTests=false test` ohne Filter → 11/0/0; `npm run build` und `npx tsc --noEmit` in `com.top_logic.layout.react`; `check-messages-en.sh` → kein Diff; `git status --short` im Worktree leer.
 
 - [ ] **Step 4: STATUS** — `STATUS.md`, Absatz „02.10., Brainstorming „Ton folgt der Aktion““: „Nächster Schritt“ ersetzen durch den Stand: Plan `docs/superpowers/plans/2026-10-02-ton-folgt-der-aktion.md`, Tasks 1–5 gebaut (Commits nennen), Gates grün, Sichtprüfung offen/erledigt, Push durch Hendrik offen. Die Zeile „Offen für Hendrik … Gefahrton im Toolbar-Überlauf …“ (:156) als erledigt markieren („erledigt mit Ton folgt der Aktion, `tl-menu__item--danger`“). Commit Projekt-Repo:
@@ -1614,7 +1613,7 @@ Co-Authored-By: <Modell> <noreply@anthropic.com>"
 (`docs/skalen.md`/`docs/praesentation.md` nur, wenn Step 2 sie geändert hat.)
 
 - [ ] **Step 5: Sichtprüfung** (Docker-Instanz des PR unter apps.top-logic.com, Chrome-Erweiterung; hell und dunkel, beide Dichten). Befunde als Fix-Commits:
-  - **Toolbar:** Löschen in `attributes.view.xml` (Tabelle oben und verschachtelte Tabelle), `demo/calendar.view.xml`, `tickets.view.xml`, `demo/tree-demo.view.xml` ist `ghost` rot; beim Zeigen rot gefüllt; deaktiviert (keine Auswahl) grau.
+  - **Toolbar:** Löschen in `attributes.view.xml` (Tabelle oben und verschachtelte Tabelle), `demo/calendar.view.xml`, `demo/pdf-demo.view.xml`, `tickets.view.xml`, `demo/tree-demo.view.xml` ist `ghost` rot; beim Zeigen rot gefüllt; deaktiviert (keine Auswahl) grau.
   - **Toolbar-Menügruppe und Überlauf:** `switch-demo.view.xml` legt Löschen in die Clique `more` (Menügruppe) — der Eintrag ist rot; Fenster schmal ziehen, bis ein Löschen in den Überlauf fällt — rot.
   - **Kontextmenü:** keine Demo bietet heute ein löschendes Kommando im Kontextmenü (kein `<context-menu>` in `com.top_logic.demo.react`); der Weg `TLMenu` → `MenuItem` → `menuItemClassName` ist durch `TestContextMenuOpener`, `TestControlStateSchema` und `tsc` gedeckt. Optional temporär in einer lokalen Demo prüfen, nicht committen.
   - **Rückfrage:** `projects/milestone-list.view.xml`, `projects/overview.view.xml`, `demo/constraint-test.view.xml` — „Löschen?“ hat einen rot gefüllten Bestätigen-Knopf, Enter bestätigt, Escape bricht ab, Abbrechen ist nicht rot.
