@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { readGenerated, declarationsOf, missingInContract, componentCssFiles } from './lib/component.mjs';
+import { readGenerated, declarationsOf, missingInContract, componentCssFiles, colorVarsOf, rulesOf } from './lib/component.mjs';
 
 test('tl-popover: Overlay-Fläche, Schatten, Ebene popover, Maße aus den Tokens', () => {
   const d = declarationsOf(readGenerated('popover', 'popover.css'), '.tl-popover');
@@ -23,4 +23,28 @@ test('nur tl-popover setzt die Popup-Fläche: kein anderer Block liest shadow-po
   const hits = [];
   for (const [name, css] of componentCssFiles()) if (!name.startsWith('popover/') && /--tl-shadow-popover/.test(css)) hits.push(name);
   assert.deepEqual(hits, []);
+});
+
+test('tl-menu__item--danger: genau die drei Paare von tl-button--ghost.tl-button--danger', () => {
+  const menu = readGenerated('menu', 'menu.css');
+  const button = readGenerated('button', 'button.css');
+  const paar = (css, sel) => colorVarsOf(declarationsOf(css, sel) ?? '');
+  assert.deepEqual(paar(menu, '.tl-menu__item--danger'), ['status-error-text']);
+  assert.deepEqual(paar(menu, '.tl-menu__item--danger'), paar(button, '.tl-button--danger.tl-button--ghost'));
+  assert.deepEqual(paar(menu, '.tl-menu__item--danger:hover'), ['status-error-surface', 'text-on-status-error']);
+  assert.deepEqual(paar(menu, '.tl-menu__item--danger:hover'), paar(button, '.tl-button--danger.tl-button--ghost:hover'));
+  assert.deepEqual(paar(menu, '.tl-menu__item--danger:active'), ['status-error-surface-active', 'text-on-status-error-active']);
+  assert.deepEqual(paar(menu, '.tl-menu__item--danger:active'), paar(button, '.tl-button--danger.tl-button--ghost:active'));
+  const md = readFileSync(new URL('../src/components/menu/menu.contract.md', import.meta.url), 'utf8');
+  assert.deepEqual(missingInContract(md, ['tl-menu__item--danger', 'tone']), []);
+});
+
+test('tl-menu__item--danger: deaktiviert steht nach dem Ton, der Ton nach dem Eintrag', () => {
+  // Gleiche Spezifität (0,2,0): ohne diese Reihenfolge färbte Zeigen einen deaktivierten Eintrag rot,
+  // oder der Grundeintrag überschriebe das Rot.
+  const order = rulesOf(readGenerated('menu', 'menu.css')).map(([sel]) => sel);
+  const ton = ['.tl-menu__item--danger', '.tl-menu__item--danger:hover', '.tl-menu__item--danger:active'].map((s) => order.indexOf(s));
+  assert.ok(ton.every((i) => i >= 0), 'eine Regel des Tons fehlt');
+  assert.ok(order.indexOf('.tl-menu__item:active') < Math.min(...ton), 'der Ton steht vor dem Grundeintrag');
+  assert.ok(order.indexOf('.tl-menu__item:disabled') > Math.max(...ton), 'deaktiviert steht vor dem Ton');
 });

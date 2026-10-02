@@ -11,7 +11,7 @@ Drei Menüs, eine Komponente: jedes ist eine Instanz von `TLMenu`. Ein `TLButton
 
 | Schlüssel | Typ | Bedeutung |
 |---|---|---|
-| `items` | Liste | Die Einträge in ihrer Reihenfolge; je Eintrag `type` (`item`, `separator`, `header`), `id`, `label`, `icon`, `disabled`, `active` (in Kraft). |
+| `items` | Liste | Die Einträge in ihrer Reihenfolge; je Eintrag `type` (`item`, `separator`, `header`), `id`, `label`, `icon`, `disabled`, `active` (in Kraft), `tone` (`danger` für eine destruktive Aktion; fehlt er, ist der Eintrag gewöhnlich). |
 | `open` | boolean | Das Menü ist sichtbar. Fehlt er, ist es zu. |
 | `anchorId` | string | Id des Elements, an dem das Menü hängt; es klappt um, wenn der Platz fehlt. |
 | `anchorX`, `anchorY` | number | Punkt, an dem das Menü hängt, wenn es kein Element gibt (Kontextmenü an der Mausposition). |
@@ -49,6 +49,9 @@ Einträge, Kopfzeilen und Trenner werden übersprungen.
 | Eintrag, Text | `--tl-text-primary`, deaktiviert `--tl-text-disabled` |
 | Zeiger darüber | `--tl-surface-interactive-hover` |
 | gedrückt | `--tl-surface-interactive-active` |
+| Eintrag destruktiv, Text | `--tl-status-error-text` |
+| destruktiv, Zeiger darüber | `--tl-status-error-surface` mit `--tl-text-on-status-error` |
+| destruktiv, gedrückt | `--tl-status-error-surface-active` mit `--tl-text-on-status-error-active` |
 | Fokusring, innen | `--tl-focus-offset` (negativ; Ring und Breite aus `base.css`) |
 | Kopfzeile | `--tl-text-secondary`, Abstände `--tl-space-2xs` und `--tl-space-control-x` |
 | Trenner | `--tl-space-2xs` darüber und darunter; die Linie trägt `tl-divider` |
@@ -64,6 +67,7 @@ scrollt. In Kraft hat kein eigenes Gewicht im Stylesheet: es trägt die Typo-Kla
 | `tl-popover tl-menu` | immer; an der Fläche mit `role="menu"` |
 | `tl-menu__item` | an jedem Eintrag; ein `<button type="button">` mit `role="menuitem"` und `tl-type-body` |
 | `aria-current="true"` | am Eintrag, dessen Befehl in Kraft ist; dazu `tl-type-body-strong` statt `tl-type-body` |
+| `tl-menu__item--danger` | am Eintrag einer destruktiven Aktion; folgt dem Ton des Kommandos (`tone`), nie vom Autor gesetzt. Deaktiviert gewinnt `--tl-text-disabled`; ein Eintrag kann in Kraft und destruktiv zugleich sein |
 | `role="menuitemcheckbox"` | statt `menuitem` an einem Umschalter; dazu `aria-checked` |
 | `disabled` | am Eintrag, der nicht gewählt werden kann |
 | `tl-menu__icon` | am Icon des Eintrags, zusammen mit `tl-icon-sm`; `aria-hidden="true"` |
@@ -78,6 +82,7 @@ scrollt. In Kraft hat kein eigenes Gewicht im Stylesheet: es trägt die Typo-Kla
 
 Ein Menü besteht den Vertrag, wenn die Fläche `role="menu"` trägt, jeder Eintrag ein `<button>` mit
 `role="menuitem"` (oder `menuitemcheckbox` mit `aria-checked`) ist, der Eintrag in Kraft
-`aria-current="true"` und `tl-type-body-strong` trägt, die Tastatur oben vollständig wirkt, ein
-Klick-Auslöser `aria-haspopup="menu"` und `aria-expanded` setzt und im Klassen-Gate keine Klasse ohne
-`tl-`-Präfix hinterlässt.
+`aria-current="true"` und `tl-type-body-strong` trägt, ein destruktiver Eintrag (`tone` ist
+`danger`) `tl-menu__item--danger` trägt, die Tastatur oben vollständig wirkt, ein Klick-Auslöser
+`aria-haspopup="menu"` und `aria-expanded` setzt und im Klassen-Gate keine Klasse ohne `tl-`-Präfix
+hinterlässt.
