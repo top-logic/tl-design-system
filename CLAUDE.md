@@ -44,7 +44,7 @@ der Kundenprojekte eingreifen.
 Alles Öffentliche ist Englisch, kebab-case, Präfix `tl`: Variablen `--tl-surface-brand`, Klassen
 `.tl-button--primary`, Attribute `data-tl-mode`, `data-tl-density`. Kategorien der Tokens sind
 geschlossen: `surface`, `text`, `icon`, `border`, `focus`, `shadow`, `space`, `radius`, `size`,
-`font`, `duration`, `easing`, `layer`, `status`. Zustände sind Attribute, nicht Klassen.
+`font`, `duration`, `easing`, `layer`, `status`, `category`. Zustände sind Attribute, nicht Klassen.
 
 Der Namensraum `--tl` (jede Custom Property, die so beginnt) gehört dem Paket. Außerhalb von
 `dist/` wird darin nichts definiert; gelesen werden darf, was das Paket definiert — eine
