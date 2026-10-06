@@ -186,3 +186,12 @@ test('ein Prozent-Literal ist ein Maß-Literal — 50 % zum Zentrieren und 100 %
   assert.equal(lint('.tl-x { inset: 0 12.5% 0 0; }', { known, file: 'x.css' }).length, 1);
   assert.deepEqual(lint('.tl-x { top: 50%; translate: 0 -50%; max-width: 100%; }', { known, file: 'x.css' }), []);
 });
+
+test('ein Pseudo-Element des Browsers fällt unter dasselbe Gate wie seine Klasse', () => {
+  // Der Kalenderknopf (field.css) liegt hinter ::-webkit-calendar-picker-indicator: Literale dort brechen.
+  const sel = '.tl-field:enabled::-webkit-calendar-picker-indicator:hover';
+  assert.deepEqual(lint(`${sel} { background-color: var(--tl-surface-interactive-selected); }`, { known, file: 'x.css' }), []);
+  assert.equal(lint(`${sel} { background-color: #eee; }`, { known, file: 'x.css' }).length, 1, 'Farbliteral');
+  assert.equal(lint('.tl-field::-webkit-calendar-picker-indicator { width: 24px; }', { known, file: 'x.css' }).length, 1, 'Maß-Literal');
+  assert.equal(lint('.tlField::-webkit-calendar-picker-indicator { width: auto; }', { known, file: 'x.css' }).length, 1, 'BEM');
+});

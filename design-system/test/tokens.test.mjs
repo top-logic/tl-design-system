@@ -259,3 +259,15 @@ test('Zeigen auf allen Gründen (01.10.): dunkel liegen hover, selected, active 
   assert.equal(T.measure['size-popover-min'], '{size-11}');
   assert.equal(T.measure['size-popover-max'], '{view-1}');
 });
+
+test('Knöpfe im Feld (06.10.): Zeigen und Drücken heben sich von surface-field ab, Drücken vom Zeigen', () => {
+  for (const m of MODES) {
+    const C = R.color[m];
+    const zeigen = ratio(C['surface-interactive-selected'], C['surface-field']);
+    const druecken = ratio(C['surface-interactive-active'], C['surface-interactive-selected']);
+    assert.ok(zeigen >= 1.1, `${m}: surface-interactive-selected auf surface-field = ${zeigen.toFixed(2)}, gefordert 1,1`);
+    assert.ok(druecken >= 1.1, `${m}: surface-interactive-active auf -selected = ${druecken.toFixed(2)}, gefordert 1,1`);
+  }
+  // Der Befund: die Zeigen-Stufe des Ghost-Knopfs verschwindet hell auf dem Feld.
+  assert.ok(ratio(R.color.light['surface-interactive-hover'], R.color.light['surface-field']) < 1.1);
+});

@@ -6,7 +6,8 @@
    Zustände sind Attribute: aria-expanded offen, aria-selected gewählt, data-tl-state~="highlighted"
    die Tastatur-Hervorhebung, data-tl-state~="dragging" / "drop-before" / "drop-after" das Umordnen.
    Das Popup ist ein tl-popover (Fläche, Schatten, Ebene, Radius radius-md um die Optionen mit
-   radius-sm); hier steht nur sein Innenaufbau. Entfernen und Löschen sind tl-button--icon. */
+   radius-sm); hier steht nur sein Innenaufbau. Entfernen und Löschen sind tl-button--icon, Löschen und
+   Chevron zeigen als Knöpfe im Feld eine Stufe kräftiger. */
 
 .tl-select {
   display: flex;
@@ -16,6 +17,8 @@
      und unten ist die halbe Differenz, abzüglich des Randes. Bricht die Wahl in eine zweite Reihe um,
      wächst das Feld um eine Chip-Reihe. */
   padding-block: calc((var(--tl-size-control) - var(--tl-size-control-sm)) / 2 - var(--tl-border-width-sm));
+  /* Am Ende stehen Löschen und Chevron als Knöpfe im Feld: space-2xs vom Rand wie die Aktion der tl-field-group. */
+  padding-inline-end: var(--tl-space-2xs);
   cursor: pointer;
 }
 .tl-select[hidden] { display: none; }
@@ -87,8 +90,35 @@
   gap: var(--tl-space-2xs);
 }
 
+/* Löschen und Chevron sind Knöpfe im Feld wie die Aktion der tl-field-group (field.css): quadratisch
+   size-control-sm, am Ende space-2xs vom Rand (padding-inline-end von .tl-select), Zeigen surface-interactive-selected, Drücken
+   surface-interactive-active — auf surface-field ist die Zeigen-Stufe des Ghost-Knopfs hell nicht zu sehen. */
+.tl-select__controls > .tl-button--ghost:not(:disabled):hover {
+  background: var(--tl-surface-interactive-selected);
+}
+.tl-select__controls > .tl-button--ghost:not(:disabled):active {
+  background: var(--tl-surface-interactive-active);
+}
+
+/* Der Chevron bleibt aria-hidden und ohne Fokus: der Klick trifft die Wurzel, die das Popup öffnet. Er zeigt
+   aber dieselbe Fläche wie die Knöpfe daneben, solange der Zeiger auf ihm steht. */
 .tl-select__arrow {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: var(--tl-size-control-sm);
+  height: var(--tl-size-control-sm);
+  border-radius: var(--tl-radius-sm);
   color: var(--tl-icon-secondary);
+  transition: background-color var(--tl-duration-fast) var(--tl-easing-standard);
+}
+
+.tl-select:not([aria-disabled="true"]) .tl-select__arrow:hover {
+  background: var(--tl-surface-interactive-selected);
+}
+.tl-select:not([aria-disabled="true"]) .tl-select__arrow:active {
+  background: var(--tl-surface-interactive-active);
 }
 
 /* --- Popup ------------------------------------------------------------------------- */

@@ -10,7 +10,7 @@ const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)
 
 test('select.css liest genau diese Farbrollen', () => {
   assert.deepEqual(colorVarsOf(css), [
-    'border-interactive', 'icon-secondary', 'status-error-text', 'surface-interactive-hover',
+    'border-interactive', 'icon-secondary', 'status-error-text', 'surface-interactive-active', 'surface-interactive-hover',
     'surface-interactive-selected', 'text-placeholder', 'text-secondary',
   ]);
 });
@@ -101,4 +101,20 @@ test('ein Feld mit entfernbaren Chips bleibt size-control hoch, in jeder Dichte'
   const liste = declarationsOf(form, '.tl-form-field__input > .tl-select__values') ?? '';
   assert.match(liste, /min-height:\s*var\(--tl-size-control\)/);
   assert.match(liste, /align-items:\s*center/);
+});
+
+test('Knöpfe im Feld (06.10.): Löschen und Pfeil zeigen selected und drücken active, am Ende space-2xs', () => {
+  assert.match(declarationsOf(css, '.tl-select') ?? '', /padding-inline-end:\s*var\(--tl-space-2xs\)/);
+  assert.match(declarationsOf(css, '.tl-select__controls > .tl-button--ghost:not(:disabled):hover') ?? '', /background:\s*var\(--tl-surface-interactive-selected\)/);
+  assert.match(declarationsOf(css, '.tl-select__controls > .tl-button--ghost:not(:disabled):active') ?? '', /background:\s*var\(--tl-surface-interactive-active\)/);
+  const pfeil = declarationsOf(css, '.tl-select__arrow') ?? '';
+  for (const r of [/width:\s*var\(--tl-size-control-sm\)/, /height:\s*var\(--tl-size-control-sm\)/,
+    /border-radius:\s*var\(--tl-radius-sm\)/, /justify-content:\s*center/, /color:\s*var\(--tl-icon-secondary\)/])
+    assert.match(pfeil, r);
+  assert.match(declarationsOf(css, '.tl-select:not([aria-disabled="true"]) .tl-select__arrow:hover') ?? '', /background:\s*var\(--tl-surface-interactive-selected\)/);
+  assert.match(declarationsOf(css, '.tl-select:not([aria-disabled="true"]) .tl-select__arrow:active') ?? '', /background:\s*var\(--tl-surface-interactive-active\)/);
+  // Der Pfeil ist ein span um das Icon, wie TLDropdownSelect ihn rendert.
+  const html = readComponent('select', 'select.spec.html');
+  assert.match(html, /<span class="tl-select__arrow" aria-hidden="true"><i class="tl-icon-sm bi bi-chevron-(down|up)"><\/i><\/span>/);
+  assert.doesNotMatch(html, /<i [^>]*tl-select__arrow/);
 });

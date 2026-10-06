@@ -1847,6 +1847,77 @@ Lint kennt den Hof als dritte erlaubte `box-shadow`-Form (`0 0 0 <Maß aus Token
 oder `-active`), `lint-css.test.mjs` prüft Literal, Unschärfe, Versatz und Fokusfarbe als Verstöße. `pairs.mjs`
 führt die zwei neuen Fokus-Gründe.
 
+### Knöpfe im Feld zeigen eine Stufe kräftiger (06.10.)
+
+**Der Befund zuerst.** Die Icon-Knöpfe im Feld — Löschen im Select (`tl-select__controls`), Löschen und Link
+öffnen im Textfeld (`tl-field-group`), der Entfernen-Knopf im Chip — sind `tl-button--icon --sm --ghost` und
+zeigen beim Zeigen `surface-interactive-hover`. „Zeigen auf allen Gründen“ (01.10.) hat diese Stufe auf
+`surface-base`, `-layer`, `-nested` und `-overlay` gestimmt, nicht auf `surface-field`. Hell liegt sie dort
+bei **1,01** (`gray-4` auf `gray-3`): kein sichtbares Zeigen. Dunkel 1,26 — sichtbar. Der Pfeil des Select
+(`tl-select__arrow`) zeigte gar nichts, der Kalenderknopf des Datumsfelds war das ungestaltete
+`::-webkit-calendar-picker-indicator`. Anlass: Trac #29752.
+
+| auf `surface-field` | hell | dunkel |
+|---|---|---|
+| `surface-interactive-hover` | **1,01** | 1,26 |
+| `surface-interactive-selected` | 1,11 | 1,35 |
+| `surface-interactive-active` | 1,23 | 1,58 |
+| `-active` auf `-selected` (Drücken gegen Zeigen) | 1,11 | 1,17 |
+
+**Entschieden (06.10.): im Feld rückt die Skala eine Stufe vor** — Zeigen `surface-interactive-selected`,
+Drücken `surface-interactive-active`. Vorhandene Rollen, kein neues Token; 1,11 hell entspricht dem, was
+Zeigen auf den anderen Gründen hat (1,07–1,12). Es gilt für jedes Icon im Feld, das man treffen kann:
+
+| Wer | Selektor | Form |
+|---|---|---|
+| Endknopf des Textfelds | `.tl-field-group > .tl-button--ghost:not(:disabled)` | der Knopf selbst |
+| Löschen im Select | `.tl-select__controls > .tl-button--ghost:not(:disabled)` | der Knopf selbst |
+| Pfeil des Select | `.tl-select:not([aria-disabled="true"]) .tl-select__arrow` | `span` wird ein Quadrat `size-control-sm`, Ecke `radius-sm`, Icon mittig; bleibt `aria-hidden`, ohne Fokus, der Klick trifft die Wurzel |
+| Kalenderknopf (Datum, Zeit, Zeitpunkt) | `.tl-field:enabled::-webkit-calendar-picker-indicator` | Quadrat `size-control-sm`, Ecke `radius-sm`, natives Icon auf `size-icon-sm` eingerückt, `cursor: pointer`; `background-color`, weil das Icon das Hintergrundbild ist |
+
+Am Ende des Feldes stehen die Knöpfe `space-2xs` vom Rand: im Select als `padding-inline-end` der Wurzel, am
+Kalenderknopf als negativer Rand um `space-control-x` − `space-2xs`. Der Wächter `:not(:disabled)` ist
+Pflicht: `field.css` und `select.css` stehen nach `button.css` und schlügen sonst dessen leeren
+Deaktiviert-Zustand bei gleicher Spezifität. Das Pfeil-Icon (`icon-secondary`) hält auf beiden Flächen 3,0
+(hell 5,98 / 5,39, dunkel 4,27 / 3,64); die Paarliste führt die zwei Paare. Die Sichtbarkeit selbst hält
+`tokens.test.mjs` (≥ 1,1 auf `surface-field` und Drücken gegen Zeigen, wie der Test vom 01.10.) — nicht die
+Paarliste: dort ist jede `surface-interactive-*` ein Grund, und ein Grund darf kein Vordergrund sein.
+
+Das Icon des Kalenderknopfs zeichnet der Browser; es folgt `color-scheme`, das `tokens.css` je Modus setzt
+(dunkel hell gezeichnet, im Specimen geprüft). Jede Regel mit dem Pseudo-Element steht allein: ein
+unbekanntes Pseudo-Element verwirft die ganze Selektorliste. **Firefox** kennt es nicht und zeichnet einen
+eigenen Knopf, den kein Stylesheet erreicht — dort bleibt das native Bild, ohne Ersatz.
+
+**Offen: der Entfernen-Knopf im Chip.** Der Chip ist eine `tl-pill`, und die neutrale Pille *ist*
+`surface-interactive-selected`: Zeigen darauf misst 1,00. Keine vorhandene Stufe trägt Zeigen und ein
+kräftigeres Drücken auf allen 14 Pillenflächen (neutral, Marke, vier Bedeutungen, acht Kategorien):
+
+| auf den Pillenflächen | hell | dunkel |
+|---|---|---|
+| `surface-interactive-hover` (heute) | 1,00–1,10 | 1,07–1,47 |
+| `surface-interactive-selected` | 1,00–1,09 (neutral 1,00, Marke 1,02) | 1,00–1,57 |
+| `surface-interactive-active` | 1,11–1,21 | 1,17–1,84 |
+
+`-active` taugt zum Zeigen, für Drücken fehlt eine Stufe darüber. Vorschlag zur Entscheidung: eine Rolle
+`surface-interactive-strong` (hell `gray-18`, dunkel `gray-55`; 1,28 / 1,26 über `-active`, 1,42–1,55 bzw.
+1,47–2,31 auf den Pillen, `text-primary` darauf 9,65 / 6,61). Bis dahin zeigt der Chip-Knopf weiter die
+Ghost-Stufe.
+
+**Verworfen:**
+
+* **Der Hof aus „Auswahlmarken zeigen einen Hof“:** die Knöpfe sind in W4/W5 (`altlast.md`) quadratisch
+  zusammengelegt und zeigen das Zeigen als eigene Fläche; ein Hof wäre eine zweite Form für dasselbe.
+* **Die Ghost-Stufe für alle Knöpfe anheben:** auf `surface-layer` und `-overlay` wäre Zeigen dann 1,23 statt
+  1,12 — in Menü und Toolbar kräftiger als entschieden, nur um das Feld zu retten.
+* **Eine eigene Rolle für „Zeigen im Feld“:** die vorhandene Stufe trägt; die Kategorie bleibt geschlossen.
+* **Zeigen am Pfeil über die ganze Wurzel** (`.tl-select:hover .tl-select__arrow`): die Wurzel zeigt ihr
+  Zeigen schon am Rand (`border-emphasis`); der Pfeil soll nur aufleuchten, wenn der Zeiger auf ihm steht.
+
+**Als Test:** `field.test.mjs` und `select.test.mjs` halten Selektoren, Flächen, Quadrat und Wächter; ein
+Test hält jede Regel mit `::-webkit-` allein und ohne die Kurzform `background`; das Specimen rendert den
+Pfeil als `span` um das Icon wie `TLDropdownSelect`. `lint-css.test.mjs` prüft, dass Literale am
+Pseudo-Element so brechen wie an der Klasse.
+
 ## Befunde aus dem Specimen
 
 ### Inter trägt nur zwei Gewichte

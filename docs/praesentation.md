@@ -146,6 +146,7 @@ Deshalb ist Dunkel eine **zweite vollständige Palette**. Jede Rolle hat je Modu
 * Wer klickt, weiß, wo er ist. Bisher zeigten 36 von 64 Stellen den Ring auch bei der Maus.
 * `outline: none` bricht den Build. 22 Stellen im Bestand hatten keinen Fokus mehr.
 * Zeigen ist nicht Fokus: Kästchen, Radio und Schalter zeigen unter dem Zeiger einen Hof bis zur Trefferfläche — auch, wenn man nur über das Label fährt. Deckend, in der Zeigen-Fläche, auf jedem Grund sichtbar.
+* Knöpfe im Feld — Löschen, Link öffnen, der Pfeil des Select, der Kalenderknopf — zeigen eine Stufe kräftiger: auf der Feldfläche war das gewöhnliche Zeigen hell unsichtbar (1,01). Ein Quadrat, eine Fläche, wie jeder Icon-Knopf.
 
 **Bewegung: drei Dauern, drei Kurven, ein Schalter.**
 
