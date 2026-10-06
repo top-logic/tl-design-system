@@ -1,7 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { readComponent, colorVarsOf, declarationsOf, specimenProblems, missingInContract, varsOf } from './lib/component.mjs';
+import { readComponent, colorVarsOf, declarationsOf, specimenProblems, missingInContract, varsOf, componentCssFiles } from './lib/component.mjs';
+import { declarations } from '../tools/lib/css.mjs';
+import { resolve } from '../tools/resolve.mjs';
 
 const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)));
 const css = readComponent('choice', 'choice.css');
@@ -17,8 +19,58 @@ test('choice.css liest genau diese Farbrollen', () => {
   assert.deepEqual(colorVarsOf(css), [
     'border-control', 'border-disabled', 'border-emphasis', 'border-interactive', 'icon-secondary',
     'status-error-border', 'status-warning-border', 'surface-brand', 'surface-brand-hover', 'surface-brand-subtle',
-    'surface-disabled', 'surface-field', 'surface-interactive-hover', 'text-disabled', 'text-on-brand', 'text-on-brand-hover', 'text-primary',
+    'surface-disabled', 'surface-field', 'surface-interactive-active', 'surface-interactive-hover', 'text-disabled', 'text-on-brand', 'text-on-brand-hover', 'text-primary',
   ]);
+});
+
+test('Auswahlmarken zeigen einen Hof: Zeigen und Drücken, an der Marke und am Label, nie deaktiviert oder schreibgeschützt', () => {
+  const W = ':where(:not(:disabled):not([aria-readonly="true"]))';
+  const AUSDEHNUNG = 'calc((var(--tl-size-control) - var(--tl-size-choice)) / 2)';
+  const regeln = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  for (const [zustand, rolle] of [['hover', 'surface-interactive-hover'], ['active', 'surface-interactive-active']]) {
+    for (const marke of ['.tl-checkbox', '.tl-radio']) {
+      for (const s of [`${marke}${W}:${zustand}`, `:where(.tl-choice:${zustand}) ${marke}${W}`]) {
+        // Die Marke trägt unter demselben Selektor auch den Rand beim Zeigen: alle Blöcke lesen.
+        const d = declarations(css).filter((x) => x.selector.split(',').map((y) => y.trim()).includes(s))
+          .map((x) => `${x.property}: ${x.value}`).join(';');
+        assert.ok(d, `Hof fehlt: ${s}`);
+        assert.ok(d.includes(`box-shadow: 0 0 0 ${AUSDEHNUNG} var(--tl-${rolle})`), `${s}: Hof nicht aus ${rolle}`);
+      }
+    }
+  }
+  // Drücken steht nach Zeigen; das Label liegt in :where, damit Drücken an der Marke das Zeigen am Label schlägt.
+  assert.ok(regeln.indexOf('var(--tl-surface-interactive-hover)') < regeln.indexOf('var(--tl-surface-interactive-active)'));
+  const schatten = declarations(css).filter((d) => d.property === 'box-shadow');
+  assert.equal(schatten.length, 2, 'genau zwei Hof-Regeln');
+  for (const d of schatten) {
+    for (const s of d.selector.split(',').map((x) => x.trim())) {
+      assert.ok(s.includes(W), `Hof ohne Wächter: ${s}`);
+      assert.doesNotMatch(s, /focus|::after|::before|segment|chip/, `Hof an falscher Stelle: ${s}`);
+    }
+  }
+  // Der Schalter trägt den Hof an der Spur (der Marke selbst), nicht am Knopf: ein deckender Hof am Knopf verdeckte die Spur.
+  assert.doesNotMatch(declarationsOf(css, '.tl-checkbox--switch::after') ?? '', /box-shadow/);
+  assert.match(declarationsOf(css, '.tl-checkbox') ?? '', /transition:\s*box-shadow var\(--tl-duration-fast\) var\(--tl-easing-standard\)/);
+});
+
+test('der Hof gehört nur den Auswahlmarken: kein anderer Block liest ihn', () => {
+  const hits = [];
+  for (const [name, text] of componentCssFiles())
+    for (const d of declarations(text))
+      if (d.property === 'box-shadow' && /surface-interactive/.test(d.value) && name !== 'choice/choice.css') hits.push(`${name}:${d.line} ${d.selector}`);
+  assert.deepEqual(hits, []);
+});
+
+test('der Hof reicht über den Fokusring hinaus, in jeder Dichte: der Ring liegt ganz auf dem Hof', () => {
+  const P = JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.url)));
+  const R = resolve(P, T);
+  const rem = (v) => (v.endsWith('rem') ? parseFloat(v) * 16 : parseFloat(v));
+  const choice = rem(R.measure['size-choice']);
+  const ring = rem(R.measure['focus-offset']) + rem(R.measure['focus-width']);
+  for (const [dichte, d] of Object.entries(R.density)) {
+    const hof = (rem(d['size-control']) - choice) / 2;
+    assert.ok(hof >= ring, `${dichte}: Hof ${hof} px < Ring ${ring} px`);
+  }
 });
 
 test('Kästchen und Kreis zeichnen sich selbst, ohne Bild und ohne accent-color', () => {

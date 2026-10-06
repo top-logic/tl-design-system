@@ -67,6 +67,32 @@
       </span>
     </div>
     <div class="specimen__row specimen__row--wide">
+      <span class="tl-type-label">Hof, Zeigen (data-specimen="hover")</span>
+      <span class="tl-choice-group">
+        <label class="tl-choice tl-type-body" data-specimen="hover"><input type="checkbox" class="tl-checkbox"> aus</label>
+        <label class="tl-choice tl-type-body" data-specimen="hover"><input type="checkbox" class="tl-checkbox" checked> an</label>
+        <label class="tl-choice tl-type-body" data-specimen="hover"><input type="radio" name="h1" class="tl-radio" checked> Radio</label>
+        <label class="tl-choice tl-type-body" data-specimen="hover"><input type="checkbox" role="switch" class="tl-checkbox tl-checkbox--switch" checked> Schalter</label>
+      </span>
+    </div>
+    <div class="specimen__row specimen__row--wide">
+      <span class="tl-type-label">Hof, Drücken (data-specimen="active")</span>
+      <span class="tl-choice-group">
+        <label class="tl-choice tl-type-body" data-specimen="active"><input type="checkbox" class="tl-checkbox"> aus</label>
+        <label class="tl-choice tl-type-body" data-specimen="active"><input type="checkbox" class="tl-checkbox" checked> an</label>
+        <label class="tl-choice tl-type-body" data-specimen="active"><input type="radio" name="h2" class="tl-radio" checked> Radio</label>
+        <label class="tl-choice tl-type-body" data-specimen="active"><input type="checkbox" role="switch" class="tl-checkbox tl-checkbox--switch"> Schalter</label>
+      </span>
+    </div>
+    <div class="specimen__row specimen__row--wide">
+      <span class="tl-type-label">kein Hof: gezeigt, aber deaktiviert / schreibgeschützt</span>
+      <span class="tl-choice-group">
+        <label class="tl-choice tl-type-body" data-specimen="hover"><input type="checkbox" class="tl-checkbox" disabled checked> deaktiviert</label>
+        <label class="tl-choice tl-type-body" data-specimen="hover"><input type="radio" name="h3" class="tl-radio" disabled> deaktiviert</label>
+        <label class="tl-choice tl-type-body" data-specimen="hover"><input type="checkbox" class="tl-checkbox" checked aria-readonly="true"> schreibgeschützt</label>
+      </span>
+    </div>
+    <div class="specimen__row specimen__row--wide">
       <span class="tl-type-label">Radio, role="radiogroup"</span>
       <span class="tl-choice-group" role="radiogroup" aria-label="Aktiv">
         <label class="tl-choice tl-type-body"><input type="radio" name="r1" class="tl-radio" checked> Ja</label>
@@ -172,6 +198,17 @@
     // Radio-Namen je Fläche, sonst bilden die drei Kopien eine einzige Gruppe.
     for (const r of rows.querySelectorAll('input[type="radio"]')) r.name = `${r.name}-${id}`;
     document.getElementById(id).append(rows);
+  }
+  // Hof im Stand: Zeigen und Drücken lassen sich nicht statisch setzen. Die echten Regeln aus components.css
+  // werden kopiert, mit data-specimen statt :hover/:active am Label — keine zweite Fassung, die abweichen kann.
+  for (const sheet of document.styleSheets) {
+    if (!sheet.href || !sheet.href.endsWith('/dist/components.css')) continue;
+    for (const rule of [...sheet.cssRules]) {
+      if (!rule.selectorText || !rule.style.boxShadow || !rule.selectorText.includes('.tl-choice:')) continue;
+      const sel = rule.selectorText.split(',').map((x) => x.trim()).filter((x) => x.startsWith(':where(.tl-choice:'))
+        .map((x) => x.replace(/\.tl-choice:(hover|active)/, '.tl-choice[data-specimen="$1"]')).join(', ');
+      sheet.insertRule(`${sel} { box-shadow: ${rule.style.boxShadow}; }`, sheet.cssRules.length);
+    }
   }
   // Gemischt gibt es nur als Eigenschaft, nicht als HTML-Attribut.
   for (const el of document.querySelectorAll('input[data-indeterminate]')) el.indeterminate = true;

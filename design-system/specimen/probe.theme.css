@@ -31,7 +31,7 @@
   --tl-border-emphasis: #75716D;
   --tl-border-interactive: #E6521C;
   --tl-border-disabled: #C7C3BE;
-  --tl-focus-ring: #E8541E;
+  --tl-focus-ring: #DD4A0D;
   --tl-status-error-text: #F07070;
   --tl-status-warning-text: #916D00;
   --tl-category-1-subtle: #F1F2DC;
@@ -131,5 +131,6 @@
    note     light: text-link in der Helligkeit nachgeführt, damit 4,5 auf dem Grund hält (#E8541E → #BE3B00)
    note     die Marke liegt 10° neben einer Bedeutung; Stufe B entscheidet, ob die Bedeutung einen anderen Ton bekommt
    note     light: border-interactive in der Helligkeit nachgeführt, damit es auf seinem Grund hält (#E8541E → #E6521C)
+   note     light: focus-ring in der Helligkeit nachgeführt, damit es auf seinem Grund hält (#E8541E → #DD4A0D)
    note     light: status-warning-text in der Helligkeit nachgeführt, damit es auf seinem Grund hält (#936E00 → #916D00)
 */

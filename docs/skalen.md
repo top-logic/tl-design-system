@@ -1781,6 +1781,72 @@ Spec `docs/superpowers/specs/2026-10-02-welle-3b-daten-design.md`. Neu entschied
 schlug sie TLJobStatus zu. Die Blockmessung trifft nur, was eine Überschrift trägt — beim Ausschneiden wird TLJobStatus
 auf seinen wahren Stand gesetzt.
 
+### Auswahlmarken zeigen einen Hof (06.10.)
+
+**Der Befund zuerst.** Kästchen, Radio und Schalter zeigten das Zeigen nur am Rand (`border-control` →
+`border-emphasis`), und am angekreuzten Kästchen gar nicht — dort ist der Rand die Marke. Die Trefferfläche ist
+das Label (`size-control`), gezeichnet sind 16 px (`size-choice`): wer über den Text fährt, sah an der Marke
+nichts. MUI, Material und Fluent zeigen an derselben Stelle eine Fläche um die Marke. Anlass: Trac #29752
+(„kleine React-UI-Verbesserungen“).
+
+**Entschieden (06.10.):**
+
+| Achse | Regel |
+|---|---|
+| Wer | `.tl-checkbox`, `.tl-radio`, der Schalter (`.tl-checkbox--switch`) — sonst niemand |
+| Auslöser | `:hover`/`:active` an der Marke **und** am `tl-choice` um sie; die Trefferfläche ist das Label |
+| Farbe | Zeigen `surface-interactive-hover`, Drücken `surface-interactive-active` — deckend, angekreuzt wie leer |
+| Größe | Ausdehnung (`size-control` − `size-choice`) / 2: der Hof füllt die Marke auf die Trefferfläche auf, folgt damit der Dichte (8 px normal, 6 px kompakt) |
+| Zeichnung | `box-shadow: 0 0 0 <Ausdehnung> <Fläche>` — zeichnet nur außerhalb der Marke, verschiebt nichts, braucht kein Pseudo-Element; Übergang `duration-fast`, `easing-standard` |
+| Form | die der Marke: Kreis am Radio, Quadrat mit `radius-sm` + Ausdehnung am Kästchen, Pille um die Spur am Schalter |
+| Wächter | kein Hof bei `:disabled` und `aria-readonly="true"`, dieselbe `:where`-Klammer wie beim Rand |
+| Fokus | Fokus allein zeigt keinen Hof; der Fokus bleibt der eine Ring aus `base.css` |
+
+**Warum deckend und neutral.** Das Lint verbietet `color-mix`, `rgba` und Farbliterale in Komponenten, und Zeigen
+ist hier eine deckende Fläche. „Zeigen auf allen Gründen“ (01.10.) hat `surface-interactive-hover` genau dafür
+gestimmt, auf allen vier Gründen sichtbar zu sein (hell 1,07–1,12, dunkel 1,17–1,54; Drücken 1,31–1,36 bzw.
+1,46–1,93). Der Markenton für angekreuzte Marken, wie MUI ihn tönt, fällt an genau dieser Regel durch:
+`surface-brand-subtle-hover` misst dunkel auf `surface-overlay` **1,00**, `surface-brand-subtle` dunkel auf
+`surface-layer` 1,04 — im Dialog wäre der Hof weg. Ein Drücken-Gegenstück dazu gäbe es auch nicht; es wäre ein
+neues Token für eine schwächere Lösung.
+
+**Warum die Form der Marke und kein Kreis am Kästchen.** Ein echter Kreis um ein Quadrat braucht ein eigenes,
+positioniertes Pseudo-Element (`::after` trägt den Haken), und es müsste mit negativem `z-index` hinter der Marke
+liegen. Dann malt es unter dem Hintergrund jedes Vorfahren im selben Stapelkontext — TLCheckbox rendert das
+Kästchen ohne Label in Tabellenzellen und Formularen, dort verschwände der Hof hinter der Zeile. Der Schatten hat
+das Problem nicht. 4 + 8 px Ecke an 32 px wirken ohnehin fast rund.
+
+**Warum am Schalter die Spur, nicht der Knopf.** MUI legt den Hof um den Knopf, durchscheinend über die Spur. Ein
+deckender Hof um den 12-px-Knopf mit 32 px Durchmesser verdeckte die 16 px hohe Spur fast ganz; hinter die Spur
+legen ginge nur mit dem `z-index`-Weg oben. Der Hof umschließt darum die ganze Marke — beim Schalter ist das die
+Spur.
+
+**Fokus und Hof.** Der Ring liegt mit Abstand und Breite 4 px außerhalb der Marke, der Hof reicht 6–8 px: wird
+eine fokussierte Marke gezeigt oder gedrückt, liegt der Ring ganz auf dem Hof. Die Paarliste hält deshalb
+`focus-ring` mit 3,0 auch auf `surface-interactive-hover` und `-active` (hell 5,21 / 4,28, dunkel 3,87 / 3,10);
+`derive` führt den Ring im Probe-Theme dafür nach (`#E8541E` → `#DD4A0D`). Fokus allein bekommt keinen Hof, anders
+als bei MUI: der Fokus ist ein Ring, und „jede Fokusdarstellung, die nicht `outline` ist“, bleibt ein Verstoß.
+
+**Verworfen:**
+
+* **Durchscheinender Hof aus `currentColor` wie MUI** (`alpha(primary, 0.04)`): verbietet das Lint, und zu Recht —
+  eine Deckkraft über unbekanntem Grund hat keinen messbaren Kontrast.
+* **Hof auch an Icon-Knöpfen, Toggles, Chips, Toolbar-Knöpfen:** die sind in W4/W5 (`altlast.md`) quadratisch
+  zusammengelegt und zeigen das Zeigen als eigene Fläche. Ein Hof dort wäre eine zweite Zeigen-Form für dasselbe.
+* **Ein eigenes Token für die Ausdehnung:** sie ist eine Rechnung aus zwei bestehenden Maßen und folgt so der
+  Dichte von selbst; ein drittes Maß könnte davon abweichen.
+
+**Preis:** Der Hof ragt 6–8 px über die Marke hinaus — links über die Kante des Labels, rechts bis an den Text
+(`space-xs` = 8 px Abstand). Er verschiebt nichts, aber ein Behälter mit `overflow: hidden` schneidet ihn, wie den
+Fokusring (siehe „Fokus“).
+
+**Als Test:** `choice.test.mjs` hält die acht Auslöser (Marke und Label, Zeigen und Drücken, Kästchen und Radio)
+mit Ausdehnung und Fläche, den Wächter an jedem, Drücken nach Zeigen, keinen Hof an Fokus, Knopf, Segment oder
+Chip und den Hof über dem Ring in beiden Dichten; ein zweiter Test hält den Hof aus jedem anderen Block heraus. Das
+Lint kennt den Hof als dritte erlaubte `box-shadow`-Form (`0 0 0 <Maß aus Tokens>` in `surface-interactive-hover`
+oder `-active`), `lint-css.test.mjs` prüft Literal, Unschärfe, Versatz und Fokusfarbe als Verstöße. `pairs.mjs`
+führt die zwei neuen Fokus-Gründe.
+
 ## Befunde aus dem Specimen
 
 ### Inter trägt nur zwei Gewichte

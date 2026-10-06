@@ -42,6 +42,16 @@ test('z-index, box-shadow und Dauern nur aus Tokens', () => {
   assert.deepEqual(lint('.tl-x { z-index: var(--tl-layer-popover); box-shadow: var(--tl-shadow-popover); transition: color var(--tl-duration-fast) var(--tl-easing-standard); }', { known, file: 'x.css' }), []);
 });
 
+test('der Hof einer Auswahlmarke: nur Ausdehnung aus Tokens, nur in der Zeigen- oder Drücken-Fläche', () => {
+  const ok = (v) => lint(`.tl-x { box-shadow: ${v}; }`, { known, file: 'x.css' });
+  assert.deepEqual(ok('0 0 0 calc((var(--tl-size-control) - var(--tl-size-choice)) / 2) var(--tl-surface-interactive-hover)'), []);
+  assert.deepEqual(ok('0 0 0 var(--tl-space-xs) var(--tl-surface-interactive-active)'), []);
+  assert.ok(ok('0 0 0 8px var(--tl-surface-interactive-hover)').length >= 1, 'Maß-Literal');
+  assert.ok(ok('0 0 0 var(--tl-space-xs) var(--tl-focus-ring)').length >= 1, 'kein Fokusersatz');
+  assert.ok(ok('0 0 2px var(--tl-space-xs) var(--tl-surface-interactive-hover)').length >= 1, 'keine Unschärfe');
+  assert.ok(ok('0 1px 0 var(--tl-space-xs) var(--tl-surface-interactive-hover)').length >= 1, 'kein Versatz');
+});
+
 test('benannte Farben sind ein Verstoß — transparent und currentColor bleiben erlaubt', () => {
   assert.equal(lint('.tl-x { color: white; }', { known, file: 'x.css' }).length, 1);
   assert.equal(lint('.tl-x { border: 1px solid red; }', { known, file: 'x.css' }).length >= 1, true);

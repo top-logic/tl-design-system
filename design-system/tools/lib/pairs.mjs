@@ -2,8 +2,9 @@
 // Kundentheme — dieselben Paare, dieselben Schwellen (docs/skalen.md).
 const GRUENDE_TEXT = ['surface-layer', 'surface-layer-nested', 'surface-overlay',
   'surface-interactive-hover', 'surface-interactive-selected', 'surface-interactive-active'];
+// Der Hof einer Auswahlmarke liegt unter dem Ring, wenn eine fokussierte Marke gezeigt oder gedrückt wird.
 const GRUENDE_FOKUS = ['surface-base', 'surface-layer', 'surface-layer-nested', 'surface-overlay',
-  'surface-field', 'surface-brand-subtle'];
+  'surface-field', 'surface-brand-subtle', 'surface-interactive-hover', 'surface-interactive-active'];
 // Wo ein Feld liegt: auf dem Grund, auf Panels, verschachtelt, im Dialog — und seine eigene Fläche,
 // denn der Rand grenzt beides ab (WCAG 1.4.11, „angrenzende Farben“).
 const GRUENDE_FELD = ['surface-field', 'surface-base', 'surface-layer', 'surface-layer-nested', 'surface-overlay'];
