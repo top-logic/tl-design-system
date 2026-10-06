@@ -43,7 +43,7 @@ Feldes (`field.contract.md`, Abschnitt Zustand) und gelten hier unverändert. Zu
 |---|---|
 | Kästchen, Kreis | Maß `--tl-size-choice` (folgt nicht der Dichte); Ecke `--tl-radius-sm` bzw. `--tl-radius-round` |
 | Rand | `--tl-border-control`, Breite `--tl-border-width-sm`; beim Zeigen `--tl-border-emphasis` |
-| Hof (Kästchen, Radio, Schalter) | beim Zeigen `--tl-surface-interactive-hover`, beim Drücken `--tl-surface-interactive-active`, angekreuzt wie leer; als `box-shadow` ohne Versatz und Unschärfe, Ausdehnung (`--tl-size-control` − `--tl-size-choice`) / 2, folgt der Form der Marke (Quadrat mit `--tl-radius-sm`, Kreis, Pille um die Spur); Übergang `--tl-duration-fast`, `--tl-easing-standard` |
+| Hof (Kästchen, Radio, Schalter) | beim Zeigen `--tl-surface-state-hover`, beim Drücken `--tl-surface-state-active` — durchscheinende Schichten, was darunter liegt bleibt sichtbar; angekreuzt wie leer; als `box-shadow` ohne Versatz und Unschärfe, Ausdehnung (`--tl-size-control` − `--tl-size-choice`) / 2, folgt der Form der Marke (Quadrat mit `--tl-radius-sm`, Kreis, Pille um die Spur); Übergang `--tl-duration-fast`, `--tl-easing-standard` |
 | Fläche | `--tl-surface-field` |
 | Angekreuzt, gemischt, gewähltes Radio | Fläche und Rand `--tl-surface-brand`; Haken, Strich, Punkt `--tl-text-on-brand`, Strichstärke `--tl-border-width-md` |
 | Schalter | Spur `--tl-size-switch` × `--tl-size-choice`, Ecke `--tl-radius-full`; Knopf `--tl-size-switch-knob`, rund `--tl-radius-round`, aus `--tl-icon-secondary`, an `--tl-text-on-brand`; Bewegung `--tl-duration-fast`, `--tl-easing-standard` (Reduced Motion über den globalen Schalter) |
@@ -86,7 +86,8 @@ Fehler- oder Warnrand, auch wenn seine Gruppe `aria-invalid="true"` bzw. `data-t
 kein Zeigen.
 
 Der Hof gehört den Auswahlmarken: Kästchen, Radio und Schalter zeigen beim Zeigen und Drücken eine Fläche
-um die Marke, in ihrer Form und bis zur Trefferfläche — wie MUI, aber deckend. Segmente, Chips, Toggles und Icon-Knöpfe haben keinen —
+um die Marke, in ihrer Form und bis zur Trefferfläche — wie MUI, durchscheinend: eine Linie unter dem Hof bleibt
+sichtbar, und er hebt sich auf jedem Grund gleich stark ab (`docs/skalen.md` „Höfe sind durchscheinend“). Segmente, Chips, Toggles und Icon-Knöpfe haben keinen —
 sie tragen das Zeigen als eigene Fläche. Der Hof verschiebt nichts; ein Behälter mit `overflow: hidden`
 schneidet ihn wie den Fokusring.
 

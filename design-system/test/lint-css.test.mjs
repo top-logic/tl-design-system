@@ -42,14 +42,26 @@ test('z-index, box-shadow und Dauern nur aus Tokens', () => {
   assert.deepEqual(lint('.tl-x { z-index: var(--tl-layer-popover); box-shadow: var(--tl-shadow-popover); transition: color var(--tl-duration-fast) var(--tl-easing-standard); }', { known, file: 'x.css' }), []);
 });
 
-test('der Hof einer Auswahlmarke: nur Ausdehnung aus Tokens, nur in der Zeigen- oder Drücken-Fläche', () => {
+test('der Hof: nur Ausdehnung aus Tokens, nur in der durchscheinenden Zeigen- oder Drücken-Schicht', () => {
   const ok = (v) => lint(`.tl-x { box-shadow: ${v}; }`, { known, file: 'x.css' });
-  assert.deepEqual(ok('0 0 0 calc((var(--tl-size-control) - var(--tl-size-choice)) / 2) var(--tl-surface-interactive-hover)'), []);
-  assert.deepEqual(ok('0 0 0 var(--tl-space-xs) var(--tl-surface-interactive-active)'), []);
-  assert.ok(ok('0 0 0 8px var(--tl-surface-interactive-hover)').length >= 1, 'Maß-Literal');
+  assert.deepEqual(ok('0 0 0 calc((var(--tl-size-control) - var(--tl-size-choice)) / 2) var(--tl-surface-state-hover)'), []);
+  assert.deepEqual(ok('0 0 0 var(--tl-space-xs) var(--tl-surface-state-active)'), []);
+  assert.ok(ok('0 0 0 8px var(--tl-surface-state-hover)').length >= 1, 'Maß-Literal');
   assert.ok(ok('0 0 0 var(--tl-space-xs) var(--tl-focus-ring)').length >= 1, 'kein Fokusersatz');
-  assert.ok(ok('0 0 2px var(--tl-space-xs) var(--tl-surface-interactive-hover)').length >= 1, 'keine Unschärfe');
-  assert.ok(ok('0 1px 0 var(--tl-space-xs) var(--tl-surface-interactive-hover)').length >= 1, 'kein Versatz');
+  assert.ok(ok('0 0 2px var(--tl-space-xs) var(--tl-surface-state-hover)').length >= 1, 'keine Unschärfe');
+  assert.ok(ok('0 1px 0 var(--tl-space-xs) var(--tl-surface-state-hover)').length >= 1, 'kein Versatz');
+  // Der Hof ist durchscheinend: eine deckende Fläche als Hof verdeckte, was darunter liegt.
+  assert.ok(ok('0 0 0 var(--tl-space-xs) var(--tl-surface-interactive-hover)').length >= 1, 'deckender Hof');
+  // Die Deckkraft steht im Token, nie in der Komponente.
+  assert.ok(ok('0 0 0 var(--tl-space-xs) color-mix(in srgb, var(--tl-text-primary) 8%, transparent)').length >= 1, 'color-mix');
+  assert.ok(ok('0 0 0 var(--tl-space-xs) rgba(0, 0, 0, 0.08)').length >= 1, 'rgba-Literal');
+});
+
+test('die durchscheinenden Schichten surface-state-* gibt es nur als Hof', () => {
+  for (const [p, v] of [['background', 'var(--tl-surface-state-hover)'], ['background-color', 'var(--tl-surface-state-active)'],
+    ['border-color', 'var(--tl-surface-state-hover)'], ['color', 'var(--tl-surface-state-hover)'],
+    ['box-shadow', 'inset 0 0 0 var(--tl-border-width-md) var(--tl-surface-state-hover)']])
+    assert.ok(lint(`.tl-x { ${p}: ${v}; }`, { known, file: 'x.css' }).length >= 1, `${p}: ${v}`);
 });
 
 test('benannte Farben sind ein Verstoß — transparent und currentColor bleiben erlaubt', () => {

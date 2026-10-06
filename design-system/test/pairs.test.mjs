@@ -14,7 +14,12 @@ test('die Paarliste nennt jede Rolle, die tokens.test prüft, und nur vorhandene
   const namen = new Set(paare.flatMap((p) => [p.fg, p.bg]));
   for (const n of ['text-primary', 'text-link', 'focus-ring', 'status-error-text', 'category-1-border', 'text-on-brand'])
     assert.ok(namen.has(n), n);
-  for (const n of namen) assert.ok(n in T.color.light || n in T.derived.light, `${n} unbekannt`);
+  for (const n of namen) {
+    // Eine Zusammensetzung <Schicht>/<Grund>: eine durchscheinende Effekt-Rolle über einer deckenden Fläche.
+    const [schicht, grund] = n.includes('/') ? n.split('/') : [null, n];
+    if (schicht) assert.ok(schicht in T.effect.light && schicht.startsWith('surface-state-'), `${schicht} ist keine Schicht`);
+    assert.ok(grund in T.color.light || grund in T.derived.light, `${n} unbekannt`);
+  }
 });
 
 test('jedes Paar der Liste trägt in beiden Modi im Paket', () => {

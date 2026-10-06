@@ -19,7 +19,7 @@ test('choice.css liest genau diese Farbrollen', () => {
   assert.deepEqual(colorVarsOf(css), [
     'border-control', 'border-disabled', 'border-emphasis', 'border-interactive', 'icon-secondary',
     'status-error-border', 'status-warning-border', 'surface-brand', 'surface-brand-hover', 'surface-brand-subtle',
-    'surface-disabled', 'surface-field', 'surface-interactive-active', 'surface-interactive-hover', 'text-disabled', 'text-on-brand', 'text-on-brand-hover', 'text-primary',
+    'surface-disabled', 'surface-field', 'surface-interactive-hover', 'surface-state-active', 'surface-state-hover', 'text-disabled', 'text-on-brand', 'text-on-brand-hover', 'text-primary',
   ]);
 });
 
@@ -27,7 +27,7 @@ test('Auswahlmarken zeigen einen Hof: Zeigen und Drücken, an der Marke und am L
   const W = ':where(:not(:disabled):not([aria-readonly="true"]))';
   const AUSDEHNUNG = 'calc((var(--tl-size-control) - var(--tl-size-choice)) / 2)';
   const regeln = css.replace(/\/\*[\s\S]*?\*\//g, '');
-  for (const [zustand, rolle] of [['hover', 'surface-interactive-hover'], ['active', 'surface-interactive-active']]) {
+  for (const [zustand, rolle] of [['hover', 'surface-state-hover'], ['active', 'surface-state-active']]) {
     for (const marke of ['.tl-checkbox', '.tl-radio']) {
       for (const s of [`${marke}${W}:${zustand}`, `:where(.tl-choice:${zustand}) ${marke}${W}`]) {
         // Die Marke trägt unter demselben Selektor auch den Rand beim Zeigen: alle Blöcke lesen.
@@ -39,7 +39,7 @@ test('Auswahlmarken zeigen einen Hof: Zeigen und Drücken, an der Marke und am L
     }
   }
   // Drücken steht nach Zeigen; das Label liegt in :where, damit Drücken an der Marke das Zeigen am Label schlägt.
-  assert.ok(regeln.indexOf('var(--tl-surface-interactive-hover)') < regeln.indexOf('var(--tl-surface-interactive-active)'));
+  assert.ok(regeln.indexOf('var(--tl-surface-state-hover)') < regeln.indexOf('var(--tl-surface-state-active)'));
   const schatten = declarations(css).filter((d) => d.property === 'box-shadow');
   assert.equal(schatten.length, 2, 'genau zwei Hof-Regeln');
   for (const d of schatten) {
@@ -48,7 +48,7 @@ test('Auswahlmarken zeigen einen Hof: Zeigen und Drücken, an der Marke und am L
       assert.doesNotMatch(s, /focus|::after|::before|segment|chip/, `Hof an falscher Stelle: ${s}`);
     }
   }
-  // Der Schalter trägt den Hof an der Spur (der Marke selbst), nicht am Knopf: ein deckender Hof am Knopf verdeckte die Spur.
+  // Der Schalter trägt den Hof an der Spur (der Marke selbst), nicht am Knopf: der Hof folgt der Form der Marke.
   assert.doesNotMatch(declarationsOf(css, '.tl-checkbox--switch::after') ?? '', /box-shadow/);
   assert.match(declarationsOf(css, '.tl-checkbox') ?? '', /transition:\s*box-shadow var\(--tl-duration-fast\) var\(--tl-easing-standard\)/);
 });
@@ -57,7 +57,7 @@ test('der Hof gehört nur den Auswahlmarken: kein anderer Block liest ihn', () =
   const hits = [];
   for (const [name, text] of componentCssFiles())
     for (const d of declarations(text))
-      if (d.property === 'box-shadow' && /surface-interactive/.test(d.value) && name !== 'choice/choice.css') hits.push(`${name}:${d.line} ${d.selector}`);
+      if (/surface-state-/.test(d.value) && name !== 'choice/choice.css') hits.push(`${name}:${d.line} ${d.selector}`);
   assert.deepEqual(hits, []);
 });
 

@@ -9,11 +9,13 @@ import { grauRampe, kategorienVerteilen, kategorieRollen, markenRollen, beschrif
   from './lib/color.mjs';
 import { kontrastPaare, werte } from './lib/pairs.mjs';
 import { leseThemeEingabe, ThemeEingabeFehler } from './lib/theme-input.mjs';
-import { ratio } from './lib/contrast.mjs';
+import { ratio, rgba, color } from './lib/contrast.mjs';
 
 const REF = /^\{([a-z0-9-]+)\}$/;
 const MODES = ['light', 'dark'];
 const KATEGORIEN = Array.from({ length: 8 }, (_, i) => i + 1);
+/** Die Familie der Schleier: eine Graustufe mit Deckkraft, Wert der Zustandsschichten surface-state-*. */
+const SCHLEIER = /^veil-\d+$/;
 /**
  * Die drei Flächen, deren Helligkeit unmittelbar aus der Saat des Kunden kommt. Ihre
  * Beschriftungen (text-on-brand, -hover, -active, icon-on-brand) wählen nach der
@@ -59,6 +61,20 @@ export function derive(P, T, json, quelle = 'input') {
       if (f.startsWith('_') || !Pk[f] || typeof Pk[f] !== 'object') continue;
       if (Object.hasOwn(Pk[f], n)) Pk[f][n] = v;
     }
+  }
+
+  // 1b Die Schleier (durchscheinende Zustandsschichten, docs/skalen.md „Höfe sind durchscheinend“) sind eine
+  // Graustufe mit Deckkraft. Rührt der Kunde das Grau an, folgt der Schleier seiner Stufe und behält seine
+  // Deckkraft; einen gelieferten Schleier lässt derive stehen.
+  for (const [n, v] of Object.entries(P.effect ?? {})) {
+    if (!SCHLEIER.test(n) || Object.hasOwn(geliefert, n)) continue;
+    const s = rgba(v);
+    const stufe = Object.entries(P.color).find(([g, hex]) => g.startsWith('gray-')
+      && hex === `#${[s.r, s.g, s.b].map((k) => k.toString(16).padStart(2, '0')).join('').toUpperCase()}`)?.[0];
+    if (!stufe) throw new Error(`${n}: ${v} ist keine Graustufe mit Deckkraft`);
+    if (Pk.color[stufe] === P.color[stufe]) continue;
+    const k = color(Pk.color[stufe]);
+    Pk.effect[n] = `rgba(${k.r}, ${k.g}, ${k.b}, ${s.a})`;
   }
 
   // 2 Auflösen: geliefertes zieht durch alle Rollen, Beschriftungen folgen den Flächen.

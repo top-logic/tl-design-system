@@ -1783,6 +1783,11 @@ auf seinen wahren Stand gesetzt.
 
 ### Auswahlmarken zeigen einen Hof (06.10.)
 
+> **Farbe des Hofs geändert (06.10., Bernhard):** der Hof ist durchscheinend, `surface-state-hover` /
+> `surface-state-active` statt der deckenden `surface-interactive-hover` / `-active`. Begründung, Werte und
+> Messung unter „Höfe sind durchscheinend“ (06.10.). Wer, Auslöser, Größe, Form, Wächter und Fokus unten gelten
+> weiter; „Warum deckend und neutral“ und der verworfene durchscheinende Hof sind damit überholt.
+
 **Der Befund zuerst.** Kästchen, Radio und Schalter zeigten das Zeigen nur am Rand (`border-control` →
 `border-emphasis`), und am angekreuzten Kästchen gar nicht — dort ist der Rand die Marke. Die Trefferfläche ist
 das Label (`size-control`), gezeichnet sind 16 px (`size-choice`): wer über den Text fährt, sah an der Marke
@@ -1829,8 +1834,9 @@ als bei MUI: der Fokus ist ein Ring, und „jede Fokusdarstellung, die nicht `ou
 
 **Verworfen:**
 
-* **Durchscheinender Hof aus `currentColor` wie MUI** (`alpha(primary, 0.04)`): verbietet das Lint, und zu Recht —
-  eine Deckkraft über unbekanntem Grund hat keinen messbaren Kontrast.
+* ~~**Durchscheinender Hof aus `currentColor` wie MUI** (`alpha(primary, 0.04)`): verbietet das Lint, und zu Recht —
+  eine Deckkraft über unbekanntem Grund hat keinen messbaren Kontrast.~~ Umgekehrt am 06.10.: der Grund ist
+  bekannt (die vier Gründe und das Feld), gemessen wird die Schicht über ihm — „Höfe sind durchscheinend“.
 * **Hof auch an Icon-Knöpfen, Toggles, Chips, Toolbar-Knöpfen:** die sind in W4/W5 (`altlast.md`) quadratisch
   zusammengelegt und zeigen das Zeigen als eigene Fläche. Ein Hof dort wäre eine zweite Zeigen-Form für dasselbe.
 * **Ein eigenes Token für die Ausdehnung:** sie ist eine Rechnung aus zwei bestehenden Maßen und folgt so der
@@ -1928,6 +1934,83 @@ WCAG 2.5.8 hält über die Ausnahme „Abstand“, denn der nächste Knopf liegt
 Test hält jede Regel mit `::-webkit-` allein und ohne die Kurzform `background`; das Specimen rendert den
 Pfeil als `span` um das Icon wie `TLDropdownSelect`. `lint-css.test.mjs` prüft, dass Literale am
 Pseudo-Element so brechen wie an der Klasse.
+
+### Höfe sind durchscheinend (06.10.)
+
+**Der Befund zuerst.** Der deckende Hof aus „Auswahlmarken zeigen einen Hof“ verdeckt, was unter ihm liegt. Am
+Schieberegler der Engine sitzt der Hof um den Knopf auf der Wertlinie: deckend schneidet er die Linie rechts und
+links des Knopfes 8 px weit heraus — die Linie bricht am Knopf ab, das sieht falsch aus (Linie unter dem Hof:
+1,00 gegen den Hof). Dazu streut der deckende Hof je Grund: hell 1,01 (Feld) bis 1,12, dunkel 1,17 (Dialog) bis
+1,54.
+
+**Entschieden (Bernhard, 06.10.): ein Hof ist durchscheinend.** Eine bewusste Änderung der Regel „Zeigen ist eine
+deckende Fläche, kein `rgba`“ — für den Hof, nicht für Flächen. Zwei neue Rollen, je Modus, unter den Effekten
+wie `surface-scrim` (die einzigen Rollen mit Deckkraft):
+
+| Rolle | hell | dunkel |
+|---|---|---|
+| `surface-state-hover` | `{veil-1}` = `rgba(27, 29, 33, 0.06)` | `{veil-3}` = `rgba(240, 243, 249, 0.06)` |
+| `surface-state-active` | `{veil-2}` = `rgba(27, 29, 33, 0.12)` | `{veil-4}` = `rgba(240, 243, 249, 0.12)` |
+
+Die Farbe ist die Textstufe des Modus (`gray-77` hell, `gray-5` dunkel), die Deckkraft 6 % / 12 % — MUI nimmt
+4–8 % fürs Zeigen und 12 % für Fokus und Drücken; 4 % misst hell 1,08 und fällt unter die Schwelle 1,1, die
+„Zeigen auf allen Gründen“ (01.10.) und „Knöpfe im Feld“ (06.10.) für Zeigen halten. Die Primitive heißen
+`veil-*` (Familie plus Stufe, keine Rolle), die Werte stehen in `primitives.json`, `tokens.json` trägt nur die
+Referenz. CSS: `--tl-surface-state-hover`, `--tl-surface-state-active`.
+
+**Gemessen als Zusammensetzung:** die Schicht über dem Grund gegen den Grund (`ueberlagert` in
+`tools/lib/contrast.mjs`, sRGB wie der Browser).
+
+| | `surface-base` | `-layer` | `-layer-nested` | `-overlay` | `surface-field` |
+|---|---|---|---|---|---|
+| hell Zeigen | 1,12 | 1,13 | 1,13 | 1,13 | 1,12 |
+| hell Drücken | 1,28 | 1,27 | 1,27 | 1,27 | 1,27 |
+| hell Drücken gegen Zeigen | 1,14 | 1,13 | 1,13 | 1,13 | 1,13 |
+| dunkel Zeigen | 1,16 | 1,18 | 1,18 | 1,19 | 1,19 |
+| dunkel Drücken | 1,39 | 1,41 | 1,42 | 1,44 | 1,42 |
+| dunkel Drücken gegen Zeigen | 1,20 | 1,19 | 1,20 | 1,21 | 1,20 |
+| `focus-ring` auf dem Drücken-Hof | hell 4,16–4,59 | | | dunkel 3,14–4,31 | |
+
+Durchscheinend heißt auch: der Hof hebt sich auf **jedem** Grund gleich stark ab (hell 1,12–1,13 statt 1,01–1,12),
+und eine Linie darunter bleibt eine Linie — `surface-brand` auf `surface-layer` 5,84 / unter dem Zeigen-Hof
+5,55 / unter dem Drücken-Hof 5,30 (dunkel 5,49 / 4,96 / 4,40), `border-control` 3,42 → 3,20 (dunkel 3,69 → 3,22).
+
+**Regeln:**
+
+* Das Lint erlaubt `--tl-surface-state-*` **nur** im Hof (`box-shadow: 0 0 0 <Maß aus Tokens> var(--tl-surface-state-hover|-active)`)
+  und den Hof **nur** aus diesen Rollen; als Fläche, Rand oder Text ist eine Deckkraft ein Verstoß. Zeigen auf einer
+  Fläche (Knopf, Zeile, Chip) bleibt deckend, `surface-interactive-*`.
+* `color-mix`, `rgba` und Farbliterale bleiben in Komponenten verboten: die Deckkraft steht im Token, nie im CSS.
+* Die Paarliste misst den Ring auf dem Hof als Zusammensetzung `<Schicht>/<Grund>` über allen fünf Gründen, statt
+  auf `surface-interactive-hover`/`-active`. Im Probe-Theme führt `derive` den Ring dafür etwas weiter nach
+  (`#E8541E` → `#DB4809` statt `#DD4A0D`).
+* `derive` färbt die Schleier mit dem Kundengrau nach: ein Schleier ist eine Graustufe mit Deckkraft; ändert der
+  Kunde das Grau, folgt er seiner Stufe und behält die Deckkraft (Probe warm: `rgba(31, 28, 25, …)` /
+  `rgba(247, 242, 237, …)`). Einen gelieferten `veil-*` lässt `derive` stehen.
+* Der Schieberegler der Engine liest dieselben zwei Rollen — ein Hof-Begriff überall.
+
+**Die Knöpfe im Feld bleiben deckend** (`surface-interactive-selected`/`-active`, „Knöpfe im Feld zeigen eine
+Stufe kräftiger“): sie zeigen das Zeigen als ihre eigene Fläche, nicht als Hof um etwas, und unter ihnen liegt nur
+das Feld — es gibt nichts zu durchscheinen.
+
+**Am Schalter bleibt der Hof um die Spur.** Der Grund für „Spur, nicht Knopf“ war die Deckkraft; der durchscheinende
+Hof ließe sich nun wie bei MUI um den Knopf legen. Offen gelassen: der Hof folgt bei allen drei Marken der Form der
+Marke, und ein Hof am `::after`-Knopf wäre eine zweite Form.
+
+**Verworfen:**
+
+* **Der deckende Hof:** verdeckt die Linie unter dem Knopf des Schiebers und streut je Grund (siehe Befund).
+* **`color-mix(in srgb, var(--tl-text-primary) 8%, transparent)` in der Komponente:** die Deckkraft stünde in jeder
+  Komponente neu, ein Kunde könnte sie nicht über die Primitive ändern, und das Lint verlöre die Regel
+  „kein Farbwert im CSS“. Die Durchsicht gehört ins Token.
+* **Deckkraft aus `currentColor` wie MUI:** die Farbe hinge an der Textfarbe des Elements — am angekreuzten
+  Kästchen `text-on-brand`, am deaktivierten Label `text-disabled`; der Hof wäre je Zustand ein anderer.
+
+**Als Test:** `tokens.test.mjs` hält die Deckkraft (0 < a ≤ 0,25), Zeigen ≥ 1,1, Drücken ≥ 1,2 und Drücken gegen
+Zeigen ≥ 1,1 auf allen fünf Gründen in beiden Modi; `lint-css.test.mjs` den deckenden Hof, `color-mix` und
+`rgba` im Hof sowie `surface-state-*` als Fläche, Rand, Text und `inset`-Linie als Verstöße; `choice.test.mjs` den
+Hof aus den Schichten und keinen anderen Leser im Paket; `pairs.test.mjs` die Zusammensetzungen;
+`derive.test.mjs` die Schleier im Kundengrau. Das Specimen zeigt den Hof über einer Linie.
 
 ## Befunde aus dem Specimen
 

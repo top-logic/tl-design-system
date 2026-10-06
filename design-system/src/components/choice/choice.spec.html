@@ -14,6 +14,11 @@
   .specimen__wrap { display: flex; flex-wrap: wrap; gap: var(--tl-space-md); }
   /* 160 px: ein langes Label in Segment und Chip endet mit Ellipse. */
   .specimen__narrow { width: 10rem; display: grid; gap: var(--tl-space-xs); }
+  /* Eine Linie durch die Mitte der Marken, wie die Wertlinie eines Schiebers: der Hof ist durchscheinend und
+     lässt sie sehen. Die Linie liegt hinter den Marken (z-index -1 im eigenen Stapelkontext). */
+  .specimen__line { position: relative; isolation: isolate; }
+  .specimen__line::before { content: ""; position: absolute; inset-inline: 0; top: 50%;
+    border-top: var(--tl-border-width-md) solid var(--tl-surface-brand); z-index: -1; }
 </style>
 </head>
 <body>
@@ -82,6 +87,15 @@
         <label class="tl-choice tl-type-body" data-specimen="active"><input type="checkbox" class="tl-checkbox" checked> an</label>
         <label class="tl-choice tl-type-body" data-specimen="active"><input type="radio" name="h2" class="tl-radio" checked> Radio</label>
         <label class="tl-choice tl-type-body" data-specimen="active"><input type="checkbox" role="switch" class="tl-checkbox tl-checkbox--switch"> Schalter</label>
+      </span>
+    </div>
+    <div class="specimen__row specimen__row--wide">
+      <span class="tl-type-label">Hof über einer Linie: Zeigen, Drücken — die Linie bleibt sichtbar</span>
+      <span class="tl-choice-group specimen__line">
+        <label class="tl-choice tl-type-body" data-specimen="hover"><input type="radio" name="h4" class="tl-radio" checked> Zeigen</label>
+        <label class="tl-choice tl-type-body" data-specimen="active"><input type="radio" name="h4" class="tl-radio"> Drücken</label>
+        <label class="tl-choice tl-type-body" data-specimen="hover"><input type="checkbox" class="tl-checkbox"> Zeigen</label>
+        <label class="tl-choice tl-type-body" data-specimen="active"><input type="checkbox" class="tl-checkbox" checked> Drücken</label>
       </span>
     </div>
     <div class="specimen__row specimen__row--wide">
