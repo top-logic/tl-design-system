@@ -95,7 +95,7 @@ test('ein Feld mit entfernbaren Chips bleibt size-control hoch, in jeder Dichte'
   // Randbreite über ihren Inhalt.
   const button = readComponent('button', 'button.css');
   assert.match(declarationsOf(button, '.tl-button--icon.tl-button--sm') ?? '', /height:\s*var\(--tl-size-control-sm\)/);
-  assert.match(declarationsOf(css, '.tl-select__chip > .tl-button') ?? '', /margin-block:\s*calc\(-1 \* var\(--tl-border-width-sm\)\)/);
+  // Der Entfernen-Knopf im Chip ist kleiner als die Pille und liegt in ihr (Test unten).
   // Die Lesewert-Liste im Formular steht so hoch wie ein Feld.
   const form = readComponent('form', 'form.css');
   const liste = declarationsOf(form, '.tl-form-field__input > .tl-select__values') ?? '';
@@ -123,4 +123,24 @@ test('Knöpfe im Feld (06.10.): der Entfernen-Knopf im Chip zeigt und drückt ac
   for (const zustand of ['hover', 'active'])
     assert.match(declarationsOf(css, `.tl-select__chip > .tl-button--ghost:not(:disabled):${zustand}`) ?? '',
       /background:\s*var\(--tl-surface-interactive-active\)/, zustand);
+});
+
+test('der Entfernen-Knopf liegt ganz im Pillenrand: Kreis ohne negativen Rand, konzentrisch zum runden Ende', () => {
+  const knopf = declarationsOf(css, '.tl-select__chip > .tl-button') ?? '';
+  assert.doesNotMatch(knopf, /margin/, 'kein Rand, der den Knopf über den Pillenrand zieht');
+  assert.doesNotMatch(css.replace(/\/\*[\s\S]*?\*\//g, ''), /calc\(-1 \* var\(--tl-border-width-sm\)\)/);
+  const mass = 'calc(var(--tl-size-control-sm) - 2 * var(--tl-border-width-sm) - var(--tl-space-2xs))';
+  for (const p of ['width', 'height']) assert.ok(knopf.includes(`${p}: ${mass}`), `${p} fehlt`);
+  assert.match(knopf, /border-radius:\s*var\(--tl-radius-round\)/);
+  // Lücke oben und unten = (Innenhöhe − Durchmesser) / 2 = space-2xs / 2; am Ende derselbe Innenabstand.
+  assert.match(declarationsOf(css, '.tl-select__chip:has(> .tl-button)') ?? '', /padding-inline-end:\s*calc\(var\(--tl-space-2xs\) \/ 2\)/);
+  const R = resolve(P, T);
+  const px = (v) => (v.endsWith('rem') ? parseFloat(v) * 16 : parseFloat(v));
+  const rand = px(R.measure['border-width-sm']);
+  const luecke = px(R.measure['space-2xs']) / 2;
+  for (const [dichte, d] of Object.entries(R.density)) {
+    const pille = px(d['size-control-sm']);
+    const kreis = pille - 2 * rand - 2 * luecke;
+    assert.ok(luecke > 0 && kreis >= px(R.measure['size-icon-sm']), `${dichte}: Kreis ${kreis}px kleiner als das Icon`);
+  }
 });

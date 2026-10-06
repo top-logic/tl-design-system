@@ -1903,8 +1903,16 @@ vorhandene Stufe, die sich auf jeder Pille abhebt. Selektor `.tl-select__chip > 
 mit `:hover` und `:active` in einer Regel. Drücken hat am Chip keine eigene, kräftigere Stufe; der Knopf
 entfernt den Chip beim Loslassen ohnehin, ein Drücken-Bild sieht man kaum.
 
+**Form am Chip (06.10., nach Sichtprüfung):** der Knopf liegt ganz innerhalb des Pillenrandes — ein Kreis
+(`radius-round`), konzentrisch zum runden Ende, Durchmesser `size-control-sm` − 2 × `border-width-sm` −
+`space-2xs` (18 px in beiden Dichten), Lücke `space-2xs` / 2 (2 px; ein `space-3xs` gibt es nicht) oben, unten
+und als Innenabstand am Ende. Das Icon bleibt `size-icon-sm`. Die Trefferfläche sinkt damit von 24 auf 18 px;
+WCAG 2.5.8 hält über die Ausnahme „Abstand“, denn der nächste Knopf liegt um das Label der Nachbarpille weiter.
+
 **Verworfen:**
 
+* **Der quadratische Icon-Knopf mit negativem Rand über dem Pillenrand** (24 px, `radius-sm`): beim Zeigen
+  übermalte die Fläche den Rand oben und unten und schnitt das runde Ende ab.
 * **Eine neue Rolle `surface-interactive-strong` für das Drücken am Chip** (hell `gray-18`, dunkel `gray-55`;
   1,28 / 1,26 über `-active`, auf den Pillen 1,42–1,55 bzw. 1,47–2,31): eine vierte Stufe der Interaktionsskala
   für einen einzigen Knopf. Die Kategorie bleibt geschlossen; Zeigen und Drücken teilen sich am Chip `-active`.
