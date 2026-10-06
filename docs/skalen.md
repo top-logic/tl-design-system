@@ -1888,23 +1888,26 @@ Das Icon des Kalenderknopfs zeichnet der Browser; es folgt `color-scheme`, das `
 unbekanntes Pseudo-Element verwirft die ganze Selektorliste. **Firefox** kennt es nicht und zeichnet einen
 eigenen Knopf, den kein Stylesheet erreicht — dort bleibt das native Bild, ohne Ersatz.
 
-**Offen: der Entfernen-Knopf im Chip.** Der Chip ist eine `tl-pill`, und die neutrale Pille *ist*
-`surface-interactive-selected`: Zeigen darauf misst 1,00. Keine vorhandene Stufe trägt Zeigen und ein
-kräftigeres Drücken auf allen 14 Pillenflächen (neutral, Marke, vier Bedeutungen, acht Kategorien):
+**Der Entfernen-Knopf im Chip liegt auf der Pille, nicht auf dem Feld.** Die neutrale Pille *ist*
+`surface-interactive-selected`: die Feld-Stufe misst darauf 1,00. Auf allen 14 Pillenflächen (neutral, Marke,
+vier Bedeutungen, acht Kategorien):
 
 | auf den Pillenflächen | hell | dunkel |
 |---|---|---|
-| `surface-interactive-hover` (heute) | 1,00–1,10 | 1,07–1,47 |
+| `surface-interactive-hover` (Ghost-Stufe) | 1,00–1,10 | 1,07–1,47 |
 | `surface-interactive-selected` | 1,00–1,09 (neutral 1,00, Marke 1,02) | 1,00–1,57 |
 | `surface-interactive-active` | 1,11–1,21 | 1,17–1,84 |
 
-`-active` taugt zum Zeigen, für Drücken fehlt eine Stufe darüber. Vorschlag zur Entscheidung: eine Rolle
-`surface-interactive-strong` (hell `gray-18`, dunkel `gray-55`; 1,28 / 1,26 über `-active`, 1,42–1,55 bzw.
-1,47–2,31 auf den Pillen, `text-primary` darauf 9,65 / 6,61). Bis dahin zeigt der Chip-Knopf weiter die
-Ghost-Stufe.
+**Entschieden (06.10.): am Chip zeigen und drücken beide `surface-interactive-active`** — die einzige
+vorhandene Stufe, die sich auf jeder Pille abhebt. Selektor `.tl-select__chip > .tl-button--ghost:not(:disabled)`
+mit `:hover` und `:active` in einer Regel. Drücken hat am Chip keine eigene, kräftigere Stufe; der Knopf
+entfernt den Chip beim Loslassen ohnehin, ein Drücken-Bild sieht man kaum.
 
 **Verworfen:**
 
+* **Eine neue Rolle `surface-interactive-strong` für das Drücken am Chip** (hell `gray-18`, dunkel `gray-55`;
+  1,28 / 1,26 über `-active`, auf den Pillen 1,42–1,55 bzw. 1,47–2,31): eine vierte Stufe der Interaktionsskala
+  für einen einzigen Knopf. Die Kategorie bleibt geschlossen; Zeigen und Drücken teilen sich am Chip `-active`.
 * **Der Hof aus „Auswahlmarken zeigen einen Hof“:** die Knöpfe sind in W4/W5 (`altlast.md`) quadratisch
   zusammengelegt und zeigen das Zeigen als eigene Fläche; ein Hof wäre eine zweite Form für dasselbe.
 * **Die Ghost-Stufe für alle Knöpfe anheben:** auf `surface-layer` und `-overlay` wäre Zeigen dann 1,23 statt
@@ -1913,7 +1916,7 @@ Ghost-Stufe.
 * **Zeigen am Pfeil über die ganze Wurzel** (`.tl-select:hover .tl-select__arrow`): die Wurzel zeigt ihr
   Zeigen schon am Rand (`border-emphasis`); der Pfeil soll nur aufleuchten, wenn der Zeiger auf ihm steht.
 
-**Als Test:** `field.test.mjs` und `select.test.mjs` halten Selektoren, Flächen, Quadrat und Wächter; ein
+**Als Test:** `field.test.mjs` und `select.test.mjs` halten Selektoren, Flächen, Quadrat und Wächter, auch am Chip; `tokens.test.mjs` hält `-active` mit ≥ 1,1 auf allen 14 Pillenflächen; ein
 Test hält jede Regel mit `::-webkit-` allein und ohne die Kurzform `background`; das Specimen rendert den
 Pfeil als `span` um das Icon wie `TLDropdownSelect`. `lint-css.test.mjs` prüft, dass Literale am
 Pseudo-Element so brechen wie an der Klasse.

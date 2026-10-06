@@ -1429,6 +1429,16 @@ a.tl-field-value:hover {
   margin-inline-end: calc(-1 * var(--tl-space-2xs));
 }
 
+/* Der Entfernen-Knopf liegt auf der Pille, nicht auf dem Feld: die neutrale Pille ist selbst
+   surface-interactive-selected, die Ghost-Stufe verschwindet auf ihr und auf den getönten Pillen. Zeigen und
+   Drücken nehmen darum beide surface-interactive-active, die einzige Stufe, die sich auf allen 14
+   Pillenflächen abhebt (docs/skalen.md „Knöpfe im Feld zeigen eine Stufe kräftiger“). Eine kräftigere
+   Drücken-Stufe gibt es nicht; die Kategorie bleibt geschlossen. */
+.tl-select__chip > .tl-button--ghost:not(:disabled):hover,
+.tl-select__chip > .tl-button--ghost:not(:disabled):active {
+  background: var(--tl-surface-interactive-active);
+}
+
 .tl-select__drag-handle {
   color: var(--tl-icon-secondary);
   cursor: grab;

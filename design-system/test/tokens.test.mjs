@@ -271,3 +271,14 @@ test('Knöpfe im Feld (06.10.): Zeigen und Drücken heben sich von surface-field
   // Der Befund: die Zeigen-Stufe des Ghost-Knopfs verschwindet hell auf dem Feld.
   assert.ok(ratio(R.color.light['surface-interactive-hover'], R.color.light['surface-field']) < 1.1);
 });
+
+test('Knöpfe im Feld (06.10.): der Entfernen-Knopf im Chip hebt sich auf jeder der 14 Pillenflächen ab', () => {
+  const pillen = ['surface-interactive-selected', 'surface-brand-subtle',
+    ...['error', 'warning', 'success', 'info'].map((s) => `status-${s}-subtle`),
+    ...[1, 2, 3, 4, 5, 6, 7, 8].map((k) => `category-${k}-subtle`)];
+  assert.equal(pillen.length, 14);
+  for (const m of MODES) for (const bg of pillen) {
+    const ist = ratio(R.color[m]['surface-interactive-active'], R.color[m][bg]);
+    assert.ok(ist >= 1.1, `${m}: surface-interactive-active auf ${bg} = ${ist.toFixed(2)}, gefordert 1,1`);
+  }
+});

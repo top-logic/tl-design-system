@@ -118,3 +118,9 @@ test('Knöpfe im Feld (06.10.): Löschen und Pfeil zeigen selected und drücken 
   assert.match(html, /<span class="tl-select__arrow" aria-hidden="true"><i class="tl-icon-sm bi bi-chevron-(down|up)"><\/i><\/span>/);
   assert.doesNotMatch(html, /<i [^>]*tl-select__arrow/);
 });
+
+test('Knöpfe im Feld (06.10.): der Entfernen-Knopf im Chip zeigt und drückt active', () => {
+  for (const zustand of ['hover', 'active'])
+    assert.match(declarationsOf(css, `.tl-select__chip > .tl-button--ghost:not(:disabled):${zustand}`) ?? '',
+      /background:\s*var\(--tl-surface-interactive-active\)/, zustand);
+});
