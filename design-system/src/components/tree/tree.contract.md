@@ -56,7 +56,7 @@ Der Baum `tl-tree` ist fokussierbar (`tabindex="0"`) und hält den Fokus; der Cu
 |---|---|
 | `tl-tree` | `ul` mit `role="tree"`, `aria-label` = `js.tree.label`; `aria-multiselectable="true"` bei `multi`; `aria-activedescendant` = `<controlId>-node-<id>` |
 | `tl-tree__node` | `li` mit `role="treeitem"`, `id`, `aria-level`, `aria-selected`; an aufklappbaren Knoten `aria-expanded`; `aria-busy="true"`, solange die Kinder kommen |
-| Ladezeile | `li.tl-status` mit `role="treeitem"`, `aria-level` = Ebene des Knotens + 1, `aria-label` = `js.tree.loading`; darin der unbestimmte `tl-progress` |
+| Ladezeile | `li.tl-status` mit `role="treeitem"`, `aria-level` = `depth` + 2 des wartenden Knotens (`depth` zählt ab 0, sein `aria-level` ist `depth` + 1; die Ladezeile steht eine Ebene tiefer), `aria-label` = `js.tree.loading`; darin der unbestimmte `tl-progress` mit `aria-hidden="true"` und ohne eigenen Namen, damit nichts doppelt angesagt wird. Der Einzug der Ladezeile ist der ihres `aria-level`: (`aria-level` − 1) × `--tl-size-control-sm`. |
 
 **Cursor und Fokus (WCAG 2.4.7).** `tl-tree` setzt `aria-activedescendant` nur, solange ein Knoten mit
 dieser Id gerendert ist und `data-tl-state~="cursor"` trägt. Im leeren Baum oder ohne Cursor fehlt das
@@ -93,7 +93,7 @@ Bauteile anderer Blöcke:
 | Bauteil | Wo und wie |
 |---|---|
 | `tl-toggle` | Auf-/Zuklapper: `tabindex="-1"`, `aria-expanded`, `aria-label` wie jeder Toggle, ohne `aria-controls` — er zeigte auf den eigenen Knoten. Zeigen und Drücken mit dem Schleier (`toggle.contract.md`). |
-| `tl-status` | Ladezeile unter einem ladenden Knoten: `li` mit `role="treeitem"`, benannt über `aria-label`; darin `tl-progress` unbestimmt. |
+| `tl-status` | Ladezeile unter einem ladenden Knoten: `li` mit `role="treeitem"`, benannt über `aria-label`; darin `tl-progress` unbestimmt und `aria-hidden`. |
 
 Klassen:
 

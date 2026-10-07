@@ -19,7 +19,7 @@ test('tl-tree: Vertrag nennt Cursor ohne Knoten (aria-activedescendant nur mit K
   const md = readComponent('tree', 'tree.contract.md');
   assert.deepEqual(missingInContract(md, ['tl-tree', 'tl-tree__node', 'tl-tree__spacer', 'tl-tree__content', 'aria-activedescendant', 'aria-busy', 'js.tree.loading', 'js.tree.label']), []);
   assert.match(md, /nur, solange ein Knoten mit\s+dieser Id/);
-  assert.match(md, /Ebene des Knotens \+ 1/);
+  assert.match(md, /`depth` \+ 2/);
   assert.match(md, /ohne `aria-controls`/);
 });
 
@@ -29,4 +29,19 @@ test('tl-tree: Specimen — Ladezeile ist ein treeitem mit Namen, Ids tragen das
   assert.match(html, /<li class="tl-status[^"]*" role="treeitem" aria-level="\d+" aria-label="Lädt">/);
   assert.match(html, /aria-busy="true"/);
   assert.doesNotMatch(html, /aria-valuetext|aria-controls/);
+});
+
+test('tl-tree: Ladezeile trägt den Namen an der li, der Fortschritt darin ist aria-hidden; Verträge stimmen überein', () => {
+  const html = readComponent('tree', 'tree.spec.html');
+  const zeile = html.match(/<li class="tl-status[^>]*>([\s\S]*?)<\/li>/);
+  assert.ok(zeile, 'Ladezeile fehlt');
+  assert.match(zeile[0], /^<li[^>]*aria-label="Lädt"/);
+  const progress = zeile[1].match(/<div class="tl-progress"[^>]*>/)[0];
+  assert.match(progress, /aria-hidden="true"/);
+  assert.doesNotMatch(progress, /aria-label|aria-labelledby|aria-valuetext/);
+  const tree = readComponent('tree', 'tree.contract.md');
+  assert.match(tree, /`depth` \+ 2/);
+  assert.match(tree, /`tl-progress` mit `aria-hidden="true"`/);
+  const status = readComponent('status', 'status.contract.md');
+  assert.match(status, /Element, das der Screenreader ansagt/);
 });
