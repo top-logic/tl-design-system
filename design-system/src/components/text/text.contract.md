@@ -9,7 +9,7 @@ Zugänglichkeit, nicht das Aussehen; wer ins Bild passen will, liest die Tokens.
 | Schlüssel | Typ | Bedeutung |
 |---|---|---|
 | `text` | string | Der Wert. Ein leerer Wert nimmt keinen Platz (siehe unten). |
-| `variant` | Typo-Variante | Wird zur Typo-Klasse `tl-type-<variante>` nach der Tabelle in Spec §11; `caption` wird `tl-type-label`. |
+| `variant` | `display` \| `headline` \| `title` \| `body` \| `label` \| `caption` | Wird zur Typo-Klasse: `display` → `tl-type-display`, `headline` → `tl-type-heading-lg`, `title` → `tl-type-heading-sm`, `body` → `tl-type-body`, `label` → `tl-type-label`, `caption` → `tl-type-label`. |
 | `tone` | `primary` \| `secondary` \| `helper` \| `placeholder` \| `success` \| `warning` \| `error` \| `on-color` | `primary` setzt kein Attribut, der Text erbt. `on-color` wird `data-tl-tone="on-brand"`. Alle anderen werden `data-tl-tone` mit ihrem Namen. `accent` gibt es nicht (02.10.). Platzhalter ist ein Ton, keine Kursive: die Typo kennt keinen Schriftstil. |
 | `overflow` | `truncate` | Wird zur Klasse `tl-text--truncate`: eine Zeile, die mit Ellipse endet. |
 | `appearance` | `pill` | Oder eine Farbrolle: der Text wird als Pill gezeichnet. |
@@ -18,9 +18,9 @@ Als Pill (`appearance: pill` oder eine Farbrolle) ist `span.tl-pill` **selbst di
 `data-tl-role` und den übrigen Text-Attributen (`id`, `role`, `data-tooltip`, Klasse aus
 `css-class`); die Beschriftung steht in `tl-pill__label`. Es gibt keine Hülle `tl-text` darum
 (entschieden 07.10.). Ton und Rolle: `success`, `warning`, `error` behalten ihren Namen, alles andere
-ist `neutral`.
+bleibt ohne `data-tl-role` (neutral: die Pill ohne Attribut ist neutral, siehe `pill.contract.md`).
 
-Stark ist die Typo-Klasse als `css-class` (`tl-type-body-strong`).
+Stark ist die `-strong`-Klasse der Variante als `css-class`: `tl-type-body-strong` oder `tl-type-label-strong`. Überschriften sind schon fett genug und brauchen keine.
 
 Ein Text ohne Wert (`text` leer) nimmt keinen Platz, außer er trägt `role` (Live-Bereich); master #29752.
 
