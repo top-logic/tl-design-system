@@ -19,6 +19,8 @@ test('drag.css: Einfügemarke, Ablegen darauf, Ablehnung auf einer Fläche über
     const flaeche = alle(`[data-tl-state~="${z}"]::before`);
     for (const d of [/content:\s*""/, /position:\s*absolute/, /inset:\s*0/, /z-index:\s*var\(--tl-layer-sticky\)/, /pointer-events:\s*none/])
       assert.match(flaeche, d, z);
+    // Die Marke folgt der Form des Ziels (runde Pille, Option mit radius-sm); eckige Ziele bleiben eckig.
+    assert.match(flaeche, /border-radius:\s*inherit/, z);
     assert.match(declarationsOf(css, `:where([data-tl-state~="${z}"])`) ?? '', /position:\s*relative/, z);
     assert.doesNotMatch(alle(`[data-tl-state~="${z}"]`), /box-shadow/, `${z}: der Rahmen liegt auf ::before, nicht am Ziel`);
   }

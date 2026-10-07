@@ -24,7 +24,7 @@ Ablegen auf die ganze Tabelle trägt dieselben Zustände an ihrer Wurzel.
 ## Bild
 
 Marke und Rahmen liegen auf `::before` über dem Ziel (über den Hintergründen seiner Kinder und
-haftenden Zellen, `--tl-layer-sticky`, ohne Zeigerereignisse), `::after` bleibt dem Cursor-Ring
+haftenden Zellen, `--tl-layer-sticky`, ohne Zeigerereignisse, mit der Ecke des Ziels — `border-radius: inherit`, die Marke folgt der runden Pille), `::after` bleibt dem Cursor-Ring
 (`base.css`); ein Ziel braucht kein eigenes `position` — `drag.css` setzt es über `:where` ohne
 Spezifität, eine Lage, die der Block setzt (absolute Zeile, haftende Kopfzelle), bleibt. Die Fläche von
 `drop-onto` steht am Ziel selbst; ein Block, dessen eigene Fläche sie übermalen würde, stellt diese in
