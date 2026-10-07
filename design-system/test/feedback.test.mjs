@@ -59,7 +59,17 @@ test('Alert: Körper, Text, Aktionen und Schließen-Knopf stehen im Paket, eine 
   assert.equal((css.replace(/\/\*[\s\S]*?\*\//g, '').match(/\.tl-alert__body\s*\{/g) ?? []).length, 1, 'tl-alert__body genau einmal');
   assert.match(declarationsOf(css, '.tl-alert__message') ?? '', /white-space:\s*pre-line/);
   assert.match(declarationsOf(css, '.tl-alert__actions') ?? '', /padding-block-start:\s*var\(--tl-space-xs\)/);
-  assert.match(declarationsOf(css, '.tl-alert:has(> .tl-alert__close)') ?? '', /grid-template-columns:\s*auto minmax\(0, 1fr\) auto/);
   assert.match(declarationsOf(css, '.tl-alert__close') ?? '', /align-self:\s*start/);
   for (const e of ['body', 'actions']) assert.match(declarationsOf(css, `.tl-alert__${e}[hidden]`) ?? '', /display:\s*none/, e);
+});
+
+// Ein Theme darf das Icon durch das unsichtbare Bild ersetzen; dann rendert TLAlert keines. Die Spalten
+// folgen darum dem Inhalt — Icon davor, Schließen-Knopf danach —, statt ein Icon vorauszusetzen.
+test('Alert: die Spalten folgen dem Inhalt, mit und ohne Icon, mit und ohne Schließen-Knopf', () => {
+  const css = readGenerated('alert', 'alert.css');
+  const cols = (sel) => (declarationsOf(css, sel) ?? '').match(/grid-template-columns:\s*([^;]+);/)?.[1].trim();
+  assert.equal(cols('.tl-alert'), 'minmax(0, 1fr)', 'nur der Körper');
+  assert.equal(cols('.tl-alert:has(> .tl-alert__icon)'), 'auto minmax(0, 1fr)', 'Icon und Körper');
+  assert.equal(cols('.tl-alert:has(> .tl-alert__close)'), 'minmax(0, 1fr) auto', 'Körper und Knopf');
+  assert.equal(cols('.tl-alert:has(> .tl-alert__icon):has(> .tl-alert__close)'), 'auto minmax(0, 1fr) auto', 'Icon, Körper, Knopf');
 });

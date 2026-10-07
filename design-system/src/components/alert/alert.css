@@ -6,7 +6,7 @@
 
 .tl-alert {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--tl-space-xs);
   padding: var(--tl-space-sm) var(--tl-space-md);
   border: var(--tl-border-width-sm) solid transparent;
@@ -49,9 +49,19 @@
 }
 .tl-alert__actions[hidden] { display: none; }
 
-/* Mit Schließen-Knopf eine dritte Spalte; der Knopf steht oben. Die Spalte folgt dem Inhalt (:has), kein
-   Modifier — wie die Kapsel mit Entfernen-Knopf. */
+/* Die Spalten folgen dem Inhalt (:has), kein Modifier — wie die Kapsel mit Entfernen-Knopf: das Icon eine
+   Spalte davor, der Schließen-Knopf eine danach; der Knopf steht oben. Das Icon ist nicht immer da — ein
+   Theme darf es durch das unsichtbare Bild ersetzen, dann rendert TLAlert keines; der Körper rückt nach
+   vorn, statt in die Icon-Spalte zu fallen und den Knopf in seine zu schieben. */
+.tl-alert:has(> .tl-alert__icon) {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
 .tl-alert:has(> .tl-alert__close) {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.tl-alert:has(> .tl-alert__icon):has(> .tl-alert__close) {
   grid-template-columns: auto minmax(0, 1fr) auto;
 }
 

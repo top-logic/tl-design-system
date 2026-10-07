@@ -14,9 +14,9 @@ Was es bekommt (`AlertStateJson`):
 | `variant` | `error` \| `warning` \| `success` \| `info` | Die Bedeutung, gerendert als `data-tl-role`. Pflicht im Markup: es gibt keinen Alert ohne Bedeutung; die Basisklasse `tl-alert` trägt darum keine Fläche, erst die Rolle. Fehlt sie im Zustand, ist es `info`. |
 | `title` | string, optional | Kurzer Titel, Element `tl-alert__title`, Klasse `.tl-type-body-strong`, von außen gesetzt. |
 | `message` | string | Der Text der Meldung, Element `tl-alert__message`; Zeilenumbrüche des Servers bleiben stehen. |
-| `icon` | string | Kodiertes ThemeImage passend zur Bedeutung, Element `tl-alert__icon`. |
+| `icon` | string | Kodiertes ThemeImage passend zur Bedeutung, Element `tl-alert__icon`. Ein Theme darf es durch das unsichtbare Bild (`none`) ersetzen; dann steht kein Icon da, und der Körper rückt in die erste Spalte. |
 | `actions` | Liste von Controls, optional | Knöpfe, was man gegen die Meldung tun kann, Element `tl-alert__actions`, in dieser Reihenfolge. |
-| `closable` | boolean | Ob der Benutzer die Meldung schließen kann; dann steht der Schließen-Knopf `tl-alert__close` in einer dritten Spalte. |
+| `closable` | boolean | Ob der Benutzer die Meldung schließen kann; dann steht der Schließen-Knopf `tl-alert__close` in einer Spalte hinter dem Körper. |
 | `generation` | number | Die Fassung der Meldung; `dismiss` nennt sie, eine veraltete wird ignoriert. |
 | `hidden` | boolean | Verborgen: der Alert rendert nichts. |
 
@@ -41,8 +41,8 @@ Was es bekommt (`AlertStateJson`):
 | Attribut | Wann |
 |---|---|
 | `tl-alert` + `data-tl-role` | `tl-alert` immer, `data-tl-role` genau eine Bedeutung (`error`, `warning`, `success`, `info`), Pflicht |
-| `tl-alert__icon`, `tl-alert__body`, `tl-alert__title`, `tl-alert__message`, `tl-alert__actions` | Elemente; das Icon ist `aria-hidden="true"`, denn die Bedeutung steht im Text |
-| `tl-alert__close` | Schließen-Knopf, `tl-button tl-button--ghost tl-button--sm`, mit `aria-label` und Tooltip „Dismiss“; die dritte Spalte folgt ihm (`:has`), kein Modifier |
+| `tl-alert__icon`, `tl-alert__body`, `tl-alert__title`, `tl-alert__message`, `tl-alert__actions` | Elemente; das Icon ist `aria-hidden="true"`, denn die Bedeutung steht im Text. Die Spalten folgen dem Inhalt (`:has`): das Icon bekommt eine vor dem Körper, wo es da ist; ohne Icon kein Platzhalter |
+| `tl-alert__close` | Schließen-Knopf, `tl-button tl-button--ghost tl-button--sm tl-button--icon` (dieselbe Form wie Entfernen und Leeren im Select), Glyphe über `ThemeIcon` mit `tl-icon-sm`, mit `aria-label` und Tooltip „Dismiss“; die Spalte hinter dem Körper folgt ihm (`:has`), kein Modifier |
 | `role="alert"` | `error`: die Meldung wird sofort vorgelesen |
 | `role="status"` | `warning`, `success`, `info`: höflich vorgelesen |
 
