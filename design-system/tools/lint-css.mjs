@@ -70,6 +70,10 @@ const HOF = /^0 0 0 (calc\((?:[^;]*)\)|var\(--tl-[a-z0-9-]+\)) var\(--tl-surface
 // Die Zustandsschichten sind durchscheinend und darum nur als Hof erlaubt; eine Fläche, ein Rand oder Text aus
 // ihnen hätte keinen messbaren Kontrast. Zeigen auf einer Fläche bleibt deckend (surface-interactive-*).
 const SCHICHT = /var\(--tl-surface-state-[a-z0-9-]+\)/;
+// Die eine Ausnahme (07.10., Hendrik): der Auf-/Zuklapper steht auf jedem Zeilengrund (gezeigt, ausgewählt);
+// eine deckende Zeigen-Stufe verschwände dort. Sein Zeigen und Drücken ist darum die Schicht als eigene Fläche
+// — nur an diesen zwei Selektoren, nur als background, nur genau das Token.
+const SCHICHT_FLAECHE = { '.tl-toggle:hover': 'var(--tl-surface-state-hover)', '.tl-toggle:active': 'var(--tl-surface-state-active)' };
 // Punkt 9: Attributselektoren, die auf Klassen zielen, umgehen das BEM/Prefix-Gate.
 const CLASS_ATTR_SELECTOR = /\[class[*^~]=/;
 // Punkt 10: Zustände sind Attribute (:disabled, [aria-pressed], [aria-busy], :focus-visible), nie Klassen.
@@ -115,6 +119,7 @@ const MODIFIERS = {
   'tl-breadcrumb': new Set([]),
   'tl-skeleton': new Set([]),
   'tl-status': new Set([]),
+  'tl-table': new Set([]),
 };
 
 export function knownVariables(css) {
@@ -174,8 +179,9 @@ export function lint(css, { known, file }) {
     if (d.property === 'z-index' && !/^var\(--tl-layer-/.test(d.value)) say(d, 'z-index nur aus --tl-layer-*');
     if (d.property === 'box-shadow' && !/^var\(--tl-shadow-/.test(d.value) && !/^inset\b/.test(d.value) && !HOF.test(d.value.trim()))
       say(d, 'box-shadow nur --tl-shadow-*, inset-Linie oder Hof (0 0 0 <Maß> surface-state-hover/-active)');
-    if (SCHICHT.test(d.value) && !(d.property === 'box-shadow' && HOF.test(d.value.trim())))
-      say(d, 'surface-state-* ist durchscheinend und nur als Hof erlaubt (box-shadow 0 0 0 <Maß> <Schicht>)');
+    if (SCHICHT.test(d.value) && !(d.property === 'box-shadow' && HOF.test(d.value.trim()))
+      && !(d.property === 'background' && SCHICHT_FLAECHE[sel] === d.value.trim()))
+      say(d, 'surface-state-* ist durchscheinend und nur als Hof erlaubt (box-shadow 0 0 0 <Maß> <Schicht>), als Fläche nur am tl-toggle');
 
     // Punkt 8: Kurve nur aus --tl-easing-* — Literale in transition*/animation* geprüft
     // NACH Entfernen von var(...), sonst matcht "linear" aus --tl-easing-linear.

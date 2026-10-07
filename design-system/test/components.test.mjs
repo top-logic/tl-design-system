@@ -414,3 +414,13 @@ test('Toolbar, Tabs, Breadcrumb lesen nur Tokens und kennen keine Zustandsklasse
   assert.match(declarationsOf(tabs, '.tl-tabs__panel'), /flex-direction:\s*column/);
   assert.match(declarationsOf(tabs, '.tl-tabs__panel[hidden]'), /display:\s*none/);
 });
+
+// Entscheidung 07.10. (Hendrik): Zeigen und Drücken des Auf-/Zuklappers sind der durchscheinende Schleier,
+// überall (Formulargruppe, Tabellen- und Baumzeile) — auf einem gezeigten oder ausgewählten Grund bleibt er sichtbar.
+test('tl-toggle zeigt und drückt mit dem Schleier, deaktiviert ohne', () => {
+  const css = readGenerated('toggle', 'toggle.css');
+  assert.match(declarationsOf(css, '.tl-toggle:hover') ?? '', /background:\s*var\(--tl-surface-state-hover\)/);
+  assert.match(declarationsOf(css, '.tl-toggle:active') ?? '', /background:\s*var\(--tl-surface-state-active\)/);
+  assert.match(declarationsOf(css, '.tl-toggle:disabled') ?? '', /background:\s*transparent/);
+  assert.doesNotMatch(css.replace(/\/\*[\s\S]*?\*\//g, ''), /surface-interactive-(hover|active)/, 'keine deckende Stufe');
+});

@@ -32,8 +32,8 @@ Enter und Leertaste lösen `toggle` aus; das leistet das native `<button>`.
 | Rand | `--tl-border-width-sm` |
 | Ecke | `--tl-radius-sm` |
 | Glyph | `--tl-icon-primary`, deaktiviert `--tl-icon-disabled` |
-| Zeiger darüber | `--tl-surface-interactive-hover` |
-| gedrückt | `--tl-surface-interactive-active` |
+| Zeiger darüber | `--tl-surface-state-hover` (durchscheinend, sichtbar auf jedem Grund: Formulargruppe, gezeigte und ausgewählte Zeile) |
+| gedrückt | `--tl-surface-state-active` |
 | Drehung | `--tl-duration-fast`, `--tl-easing-standard` (Reduced Motion setzt `base.css`) |
 
 Den Fokusring liefert `base.css` über `:focus-visible`.
@@ -44,12 +44,12 @@ Den Fokusring liefert `base.css` über `:focus-visible`.
 |---|---|
 | `tl-toggle` | immer; an einem `<button type="button">` |
 | `aria-expanded` | immer; `true` offen, `false` zu |
-| `aria-controls` | immer; Id des gesteuerten Bereichs |
+| `aria-controls` | immer; Id des gesteuerten Bereichs — außer in Tabellenzeile und Baumknoten: dort klappt er die eigene Zeile auf (`table.contract.md`) |
 | `aria-label` | immer; der Knopf trägt keinen Text, dazu ein Tooltip |
 | `tl-icon-sm` | am Kind; der Chevron-rechts-Glyph der Theme-Konfiguration |
 
 ## Konformität
 
-Ein Toggle besteht den Vertrag, wenn er ein `<button>` ist, `aria-expanded`, `aria-controls` und
-`aria-label` trägt, genau ein `tl-icon-sm`-Kind mit dem Chevron-rechts-Glyph hat und im Klassen-Gate
+Ein Toggle besteht den Vertrag, wenn er ein `<button>` ist, `aria-expanded`, `aria-controls` (außer in
+Tabellenzeile und Baumknoten) und `aria-label` trägt, genau ein `tl-icon-sm`-Kind mit dem Chevron-rechts-Glyph hat und im Klassen-Gate
 keine Klasse ohne `tl-`-Präfix hinterlässt.

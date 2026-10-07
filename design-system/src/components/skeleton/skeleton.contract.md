@@ -5,7 +5,7 @@ Zugänglichkeit, nicht das Aussehen; wer ins Bild passen will, liest die Tokens.
 
 ## Zustand
 
-Es gibt noch kein Control; ein Control entsteht, wenn eine Ansicht es braucht, und trägt dann diese Klassen und Attribute.
+Erster Aufrufer: die Tabelle zeichnet Zeilen, die der Server noch nicht geschickt hat, als `tl-skeleton` in `tl-table__placeholder` (3b §10); das Raster trägt `aria-busy`.
 
 Was ein Skeleton bekäme:
 

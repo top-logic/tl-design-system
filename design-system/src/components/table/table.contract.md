@@ -1,0 +1,235 @@
+# Vertrag: Tabelle
+
+Ein Raster aus Kopf und virtuell gerendertem Körper (3b §3–§6), Leser ist `TLTableView`. Darüber
+optional eine Filterleiste, im Rahmen die Spaltenwahl und der Griff der Fixiergrenze. Zustände sind
+Attribute: ausgewählt, sortiert, aufgeklappt, Cursor, Lage einer Spalte, aktiver Filter, Ziehen.
+TopLogic garantiert Funktion, Tastatur und Fokus, nicht das Aussehen; wer ins Bild passen will, liest
+die Tokens.
+
+## Zustand
+
+Die Schlüssel von `TableViewControl` (`TLTableView.tsx`). Die Zeilenhöhe ist kein Zustand: das TSX
+rechnet sie aus `--tl-size-row` (`useTokenPx`).
+
+| Schlüssel | Typ | Bedeutung |
+|---|---|---|
+| `columns` | Liste | Die angezeigten Spalten in ihrer Reihenfolge, je Spalte: |
+| `columns[].name` | string | Name der Spalte; Schlüssel der Zellen. |
+| `columns[].label` | string | Überschrift. |
+| `columns[].width` | number | Breite in Pixeln; steht inline an Kopf- und Zelle. |
+| `columns[].sortable` | boolean | Die Überschrift ist ein Sortierknopf (`tl-table__sort`). |
+| `columns[].sortDirection` | `asc` \| `desc` | Richtung, solange nach der Spalte sortiert wird. |
+| `columns[].sortPriority` | number | Stufe einer mehrstufigen Sortierung (1 = erste); ab zwei Stufen als `tl-badge`. |
+| `columns[].filterable` | boolean | Die Kopfzelle trägt den Trichter (`tl-table__filter`). |
+| `columns[].filterActive` | boolean | Ein Filter der Spalte wirkt: `data-tl-state~="filtered"`. |
+| `columns[].groupable` | boolean | Nach der Spalte darf gruppiert werden. |
+| `columns[].pinnedEnd` | boolean | Angeheftet am rechten Ende: `data-tl-state~="pinned"`, die erste davon `"pinned-first"`. |
+| `columns[].cssClass` | string | Klasse an jeder Zelle der Spalte, Kopf eingeschlossen. |
+| `columns[].tooltip` | string | Was die Überschrift über ihren Text hinaus sagt. |
+| `totalRowCount` | number | Zeilen insgesamt; Grundlage von `aria-rowcount`. |
+| `rows` | Liste | Die Zeilen im sichtbaren Fenster, je Zeile: |
+| `rows[].id` | string | Kennung der Zeile. |
+| `rows[].index` | number | Position in der ganzen Tabelle; Grundlage von `aria-rowindex` und der Id `<controlId>-row-<index>`. |
+| `rows[].selected` | boolean | `aria-selected="true"`. |
+| `rows[].cells` | Objekt | Die Zellen nach Spaltenname (Server-Controls). |
+| `rows[].tooltips` | Objekt | Tooltip je Spaltenname, wo die Zelle mehr sagt, als sie zeigt. |
+| `rows[].treeDepth` | number | Ebene im Baum; `aria-level` = `treeDepth` + 1, Einzug = Ebene × `--tl-size-control-sm`. |
+| `rows[].expandable` | boolean | Die Zeile trägt einen `tl-toggle`; sonst hält `tl-table__spacer` seinen Platz. |
+| `rows[].expanded` | boolean | `aria-expanded` an Zeile und Toggle. |
+| `rows[].groupCount` | number | Nur an einer Gruppenzeile: wie viele Zeilen die Gruppe hält (`tl-table__count`). |
+| `rows[].draggable` | boolean | Die Zeile lässt sich ziehen (`draggable="true"`). |
+| `selectionMode` | `single` \| `multi` | Bei `multi` die Auswahlspalte mit `tl-checkbox` und `aria-multiselectable="true"`. |
+| `selectedCount` | number | Ausgewählte Zeilen; steuert das Kopf-Kästchen (gesetzt, teilweise, leer). |
+| `cursorIndex` | number | Zeile des Tastatur-Cursors; −1: kein Cursor. |
+| `frozenColumnCount` | number | Wie viele Spalten links fixiert sind (`frozen`, die letzte `frozen-last`). |
+| `treeMode` | boolean | Baum: `role="treegrid"`. |
+| `grouping` | string | Spalte, nach der gruppiert wird; leer: nicht gruppiert. Gruppiert: `role="treegrid"`. |
+| `columnSelect` | boolean | Die Spaltenwahl (`tl-table__columns`) steht im Rahmen. |
+| `filterBar` | boolean | Die Filterleiste steht über dem Rahmen. |
+| `namedFilters` | Liste | Benannte Filter als `tl-chip` (`id`, `label`, `deletable`). |
+| `activeNamedFilter` | string | Id des wirkenden benannten Filters; sein `tl-chip__toggle` trägt `aria-pressed="true"`. |
+| `search` | string | Suchtext über die angezeigten Spalten. |
+| `filterSaving` | boolean | Die aktuellen Kriterien lassen sich speichern (`tl-table__save`). |
+| `dragEnabled` | boolean | Zeilen lassen sich ziehen. |
+| `dragType` | string | Art der gezogenen Daten. |
+| `dropAccepts` | Liste | Arten, die die Tabelle als Ziel annimmt. |
+| `dropOnRows` | boolean | Abgelegt wird auf, vor oder hinter Zeilen; sonst auf der Tabelle als Ganzes. |
+| `dropVerdicts` | Objekt | Antwort des Servers je Probe: angenommen oder abgelehnt mit Grund (`tl-table__hint`). |
+
+## Aktionen
+
+| Aktion | Auslöser |
+|---|---|
+| `select` | Klick auf eine Zeile oder ihr Kästchen, Leertaste am Cursor |
+| `selectAll` | Kopf-Kästchen, Strg + A |
+| `moveSelection` | Pfeile, Pos1/Ende, Bild auf/ab — mit Richtung, Umschalt (erweitern), Strg (nur Cursor) |
+| `activate` | Doppelklick, Enter |
+| `expand` | Toggle, Pfeil rechts/links an einer Baum- oder Gruppenzeile |
+| `sort` | Sortierknopf; mit Umschalt eine Stufe dazu |
+| `columnResize` | Griff `tl-table__resize` losgelassen |
+| `columnReorder` | Kopfzelle an eine neue Stelle gezogen |
+| `setFrozenColumnCount` | Griff `tl-table__freeze` losgelassen, Kontextmenü „Bis hier fixieren“ / „Alle lösen“ |
+| `openFilter` | Trichter |
+| `openColumnSelect` | Spaltenwahl |
+| `search` | Eingabe in der Suche (verzögert) |
+| `applyNamedFilter` | `tl-chip__toggle` eines benannten Filters |
+| `clearFilter` | `tl-chip__toggle` des wirkenden Filters |
+| `saveNamedFilter` | Speichern in `tl-table__save` |
+| `deleteNamedFilter` | `tl-chip__remove` |
+| `drop` | Ablegen auf, vor oder hinter einer Zeile oder auf der Tabelle |
+| `dropProbe` | Ziehen über ein Ziel: fragt einmal je Ziel, ob dort abgelegt werden darf |
+| `scroll` | Rollen des Körpers: das neue sichtbare Fenster |
+
+`TLTableView` sendet heute zusätzlich `group` aus dem Kontextmenü der Kopfzelle („Nach dieser Spalte
+gruppieren“, „Gruppierung aufheben“); die Spaltenwahl sendet dafür `groupBy` (`reorder-list.contract.md`).
+
+## Tastatur
+
+Das Raster `tl-table__grid` ist fokussierbar (`tabindex="0"`) und hält den Fokus; der Cursor ist
+virtuell (`aria-activedescendant`). Knöpfe im Kopf (Kopf-Kästchen, Sortieren, Trichter, Spaltenwahl)
+sind eigene Tab-Halte; Kästchen und Toggles in Zeilen tragen `tabindex="-1"`.
+
+| Taste | im Raster |
+|---|---|
+| `ArrowUp` / `ArrowDown` | Cursor eine Zeile; mit Umschalt erweitert sich die Auswahl, mit Strg bewegt sich nur der Cursor |
+| `Home` / `End` | erste bzw. letzte Zeile (Umschalt, Strg wie oben) |
+| `PageUp` / `PageDown` | eine Fensterhöhe (Umschalt, Strg wie oben) |
+| `Space` | wählt die Cursorzeile bzw. wählt sie ab |
+| Strg + `A` | alle Zeilen (`selectAll`) |
+| `Enter` | öffnet die Cursorzeile (`activate`) |
+| `ArrowRight` / `ArrowLeft` | klappt eine Baum- oder Gruppenzeile auf bzw. zu; an jeder anderen Zeile schiebt der Körper waagerecht |
+
+| Taste | im Kopf |
+|---|---|
+| `Enter` am Sortierknopf | sortiert nach der Spalte; Umschalt + `Enter` fügt eine Stufe an |
+
+## Semantik
+
+| Element | Rolle und Attribute |
+|---|---|
+| `tl-table__grid` | `role="grid"`, im Baum- und Gruppenmodus `role="treegrid"`; `aria-rowcount` = Zeilen + 1 (ohne Zeilen 2: die Statuszeile `aria-rowindex="2"` zählt mit); `aria-colcount`; `aria-multiselectable="true"` bei `multi`; `aria-busy="true"`, solange Zeilen im Fenster nachgeladen werden; `aria-activedescendant` = `<controlId>-row-<index>` |
+| `tl-table__header` | `role="rowgroup"` |
+| `tl-table__header-row` | `role="row"`, `aria-rowindex="1"`, `data-tl-axis="horizontal"` (Einfügemarke links/rechts) |
+| `tl-table__header-cell` | `role="columnheader"`; `aria-sort` (`ascending` / `descending`) nur an der ersten Sortierstufe |
+| `tl-table__body` | `role="rowgroup"`, `tabindex="-1"`: er scrollt nur und ist kein eigener Tab-Halt |
+| `tl-table__row` | `role="row"` mit `id="<controlId>-row-<index>"`, `aria-rowindex`, `aria-selected`; im Baum `aria-level` und an aufklappbaren Zeilen `aria-expanded` |
+| `tl-table__cell` | `role="gridcell"` |
+
+**Cursor und Fokus (WCAG 2.4.7).** Das Raster setzt `aria-activedescendant` nur, solange eine Zeile
+mit dieser Id gerendert ist und `data-tl-state~="cursor"` trägt. Ohne Cursor (`cursorIndex` −1), in der
+leeren Tabelle oder solange die Cursorzeile außerhalb des Fensters liegt, fehlt das Attribut — dann
+zeigt das Raster selbst den Ring aus `base.css`. Mit dem Attribut gibt das Raster den Ring an die
+Cursorzeile ab: `base.css` zeichnet ihn innen auf ihrem `::after`. Ein `aria-activedescendant` auf eine
+Id, die es nicht gibt, ließe den Fokus unsichtbar.
+
+## Stapel
+
+Ring (`::after`, `base.css`) und Einfügemarke (`::before`, `drag.css`) einer Zeile liegen auf
+`--tl-layer-sticky`, über den haftenden Zellen ihrer Zeile (`--tl-layer-raised`). Die Zeile ist
+positioniert (`position: relative`, im TSX `absolute`), bildet aber keinen eigenen Stapel; der Körper
+isoliert ihn (`isolation: isolate`): nichts aus einer Zeile liegt über Filterleiste, Spaltenwahl oder
+Fixiergrenze. Der Kopf liegt **außerhalb** des Rollbehälters `tl-table__body`, der seine Zeilen
+abschneidet (`overflow: auto`): Ring und Marke einer Zeile, die unter den Kopf rollt, werden mit ihr
+abgeschnitten und können den Kopf nicht übermalen. Darum braucht der Kopf keine eigene Ebene. Kopf und
+Körper scrollen waagerecht gemeinsam: das TSX überträgt `scrollLeft` des Körpers auf den Kopf
+(`overflow: hidden`).
+
+## Tokens
+
+| Teil | Token |
+|---|---|
+| Schrift | `--tl-text-primary`; Anzahl der Gruppenzeile `--tl-text-secondary` |
+| Filterleiste | Lücke `--tl-space-xs`, Innenabstand `--tl-space-xs` `--tl-space-sm`, Fläche `--tl-surface-layer`, Linie darunter `--tl-border-width-sm` in `--tl-border-separator`; Speichern mit Lücke `--tl-space-2xs` |
+| Kopf | Linie darunter `--tl-border-width-sm` in `--tl-border-emphasis`; Kopfzeile `--tl-size-bar` hoch auf `--tl-surface-layer` |
+| Kopfzelle | Innenabstand `--tl-space-control-x`, Lücke `--tl-space-2xs`, Trennlinie `--tl-border-separator`; Sortierknopf unter dem Zeiger `--tl-surface-interactive-hover` |
+| Sortiermarke, Trichter | `--tl-icon-secondary`; Trichter bei aktivem Filter `--tl-icon-primary` |
+| Spaltenwahl | `--tl-size-bar` hoch, Fläche `--tl-surface-layer`, unter dem Zeiger `--tl-surface-interactive-hover` |
+| Griffe (Breite, Fixiergrenze) | `--tl-space-xs` breit, Fixiergrenze `--tl-size-bar` hoch; unter dem Zeiger und beim Ziehen eine Linie `--tl-border-width-md` in `--tl-border-interactive` |
+| Vorschau der Fixiergrenze | `--tl-border-width-md` in `--tl-border-interactive` |
+| Ebenen | Griff der Breite, haftende Zellen `--tl-layer-raised`; Fixiergrenze, Vorschau, Ring und Marke der Zeile `--tl-layer-sticky` |
+| Zeile | `--tl-size-row` hoch (`min-height`), Fläche `--tl-surface-layer`, Linie darunter `--tl-border-width-sm` in `--tl-border-separator`; gezeigt `--tl-surface-interactive-hover`, ausgewählt `--tl-surface-interactive-selected` |
+| Zelle | Innenabstand `--tl-space-control-x`, Trennlinie `--tl-border-separator` |
+| Kante zur scrollenden Fläche | `frozen-last` rechts, `pinned-first` links: `--tl-border-width-sm` in `--tl-border-emphasis` |
+| Feld in der Zelle | randlos; Fokusring innen (`outline-offset` −`--tl-focus-offset`); Warnung innere Linie `--tl-border-width-md` in `--tl-status-warning-border`, Fehler in `--tl-status-error-border` |
+| Baum | Toggle und Einzug je Ebene `--tl-size-control-sm` (Platzhalter `tl-table__spacer`); Abstand der Anzahl `--tl-space-xs` |
+| Platzhalter | Innenabstand `--tl-space-control-x`, Linie darunter wie die Zeile |
+| Ablehnung | Rand `--tl-status-error-border`, Text `--tl-status-error-text` |
+
+Schrift: `.tl-type-body` an der Tabelle, von außen gesetzt; Gruppenzeile `tl-type-body-strong`, ihre
+Anzahl `tl-type-label`. Eine Zeile schwebt nicht: kein Schatten, Kanten sind Linien. Ziehen und Ablegen
+zeichnet `drag.css` (`drag.contract.md`), den Cursor-Ring `base.css`.
+
+## Attribute
+
+| Attribut | Wann |
+|---|---|
+| `aria-selected` | an jeder Zeile: `"true"` ausgewählt, sonst `"false"` |
+| `aria-sort` | an der Kopfzelle der ersten Sortierstufe |
+| `aria-expanded` | an aufklappbaren Zeilen und ihrem `tl-toggle` |
+| `aria-busy` | am Raster, solange Zeilen nachgeladen werden |
+| `data-tl-state~="cursor"` | an der Cursorzeile (genau eine, die Id aus `aria-activedescendant`) |
+| `data-tl-state~="frozen"` | an Kopf- und Zellen der fixierten Spalten; die letzte zusätzlich `"frozen-last"` |
+| `data-tl-state~="pinned"` | an Kopf- und Zellen der angehefteten Spalten; die erste zusätzlich `"pinned-first"` |
+| `data-tl-state~="filtered"` | an der Kopfzelle einer Spalte mit aktivem Filter |
+| `data-tl-state~="dragging"`, `"drop-before"`, `"drop-after"`, `"drop-onto"`, `"drop-refused"` | an Zeile, Kopfzelle oder `tl-table` als Ganzem (`drag.contract.md`) |
+| `draggable="true"` | an ziehbaren Zeilen und verschiebbaren Kopfzellen |
+| `role="separator"` | an `tl-table__resize` und `tl-table__freeze`, mit `aria-label` (`js.table.freezeSplitter`); Zeigerbedienung |
+| `hidden` | an jedem Element, das gerade nicht steht |
+
+Bauteile anderer Blöcke:
+
+| Bauteil | Wo und wie |
+|---|---|
+| `tl-checkbox` | Auswahlspalte (`tl-table__select`): im Kopf mit `aria-label` `js.table.selectAll`, in der Zeile `js.table.selectRow` und `tabindex="-1"`. Kopf „teilweise“ nur als `indeterminate` — **kein** `aria-checked`: ARIA in HTML verbietet es am nativen Kästchen, der Browser meldet `indeterminate` als „gemischt“ (entschieden 07.10.). |
+| `tl-toggle` | Auf-/Zuklapper in Baum- und Gruppenzeilen: `tabindex="-1"`, `aria-expanded`, `aria-label` wie jeder Toggle, **ohne** `aria-controls` — er zeigte auf die eigene Zeile. Zeigen und Drücken mit dem Schleier (`toggle.contract.md`): sichtbar auch auf gezeigter und ausgewählter Zeile. |
+| `tl-button--icon` | Trichter (`--sm --ghost`), Spaltenwahl (`--ghost`, in angehefteter letzter Kopfzelle `--sm`), Speichern |
+| `tl-badge` | Stufe einer mehrstufigen Sortierung im Sortierknopf |
+| `tl-status` | statt Zeilen in der leeren Tabelle: `role="row"` `aria-rowindex="2"` > `role="gridcell"`, Text `js.table.empty` |
+| `tl-skeleton` | in `tl-table__placeholder` für Zeilen im Fenster, die der Server noch nicht geschickt hat; der Platzhalter ist `aria-hidden`, das Raster trägt `aria-busy` |
+| `tl-chip` | benannter Filter in der Filterleiste: `span.tl-chip` > `tl-chip__toggle` (`aria-pressed`) und, wenn löschbar, `tl-chip__remove` |
+| `tl-field-group` | Suche (`tl-table__search`) und Name beim Speichern |
+| `tl-popover` | Grund einer Ablehnung beim Ziehen (`tl-table__hint`), Lage aus `bridge/popover.ts` |
+
+Klassen:
+
+| Klasse | Element |
+|---|---|
+| `tl-table` | die Wurzel; Ziel, wenn auf der Tabelle als Ganzem abgelegt wird |
+| `tl-table__filter-bar` | die Filterleiste über dem Rahmen |
+| `tl-table__search` | die `tl-field-group` der Suche, am rechten Ende |
+| `tl-table__save` | Speichern der Kriterien (Name, Speichern, Abbrechen) |
+| `tl-table__frame` | der Rahmen um Raster, Spaltenwahl und Fixiergrenze |
+| `tl-table__grid` | das Raster (`role="grid"` / `"treegrid"`), Fokus |
+| `tl-table__header` | der Kopf (`role="rowgroup"`) |
+| `tl-table__header-row` | die Kopfzeile |
+| `tl-table__header-cell` | jede Kopfzelle |
+| `tl-table__sort` | der Sortierknopf, ein `button` |
+| `tl-table__label` | die Überschrift; endet mit Ellipse |
+| `tl-table__mark` | Sortierpfeil, Gruppierungsmarke: `tl-icon-sm`, `aria-hidden` |
+| `tl-table__filter` | der Trichter |
+| `tl-table__columns` | die Spaltenwahl (Zahnrad) |
+| `tl-table__resize` | Griff der Spaltenbreite |
+| `tl-table__freeze` | Griff der Fixiergrenze |
+| `tl-table__freeze-preview` | wo die Fixiergrenze beim Loslassen landet |
+| `tl-table__body` | der rollende Körper (`role="rowgroup"`) |
+| `tl-table__canvas` | trägt die volle Höhe aller Zeilen; die Zeilen stehen absolut darin |
+| `tl-table__row` | jede Zeile |
+| `tl-table__cell` | jede Zelle |
+| `tl-table__select` | die Zelle der Auswahlspalte (mit `tl-table__cell` bzw. `tl-table__header-cell`) |
+| `tl-table__tree` | Toggle, Einzug und Wert in der Baumspalte; ein `div`, kein `span` — ein `span` als Kind der Zelle ist ein Lesewert und wird Block (`.tl-table__cell > span`) |
+| `tl-table__spacer` | Platzhalter eines Blatts an der Stelle des Toggles |
+| `tl-table__value` | der Wert neben dem Toggle; endet mit Ellipse |
+| `tl-table__count` | Anzahl der Gruppenzeile |
+| `tl-table__placeholder` | Zeile, die noch lädt |
+| `tl-table__hint` | der Grund einer Ablehnung (am `tl-popover`) |
+
+Breiten, Versätze haftender Zellen, Einzug und die Lage der Zeilen sind Daten und stehen inline
+(`style`), alles andere in `table.css`. Inline wird nichts im Namensraum `--tl` definiert.
+
+## Konformität
+
+Eine Tabelle besteht den Vertrag, wenn das Raster fokussierbar ist und `aria-activedescendant` nur auf
+eine gerenderte Cursorzeile setzt, jede Zeile `aria-selected` und `aria-rowindex` trägt, Sortierung,
+Auswahl, Lage, Filter und Ziehen allein über `aria-*` und `data-tl-state` ausgedrückt sind, das
+Kopf-Kästchen „teilweise“ nur als `indeterminate` meldet und im Klassen-Gate keine Klasse ohne
+`tl`-Präfix bleibt.

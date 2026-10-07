@@ -45,9 +45,9 @@ for (const name of ['alert', 'badge', 'divider', 'skeleton']) {
     const css = readComponent(name, `${name}.css`);
     const md = readComponent(name, `${name}.contract.md`);
     assert.deepEqual(missingInContract(md, [...varsOf(css), `tl-${name}`]), []);
-    // Der Alert hat seit master #29652 ein Control (TLAlert); die übrigen noch nicht.
+    // Der Alert hat seit master #29652 ein Control (TLAlert), der Skeleton seinen ersten Aufrufer (die Tabelle); Badge und Divider noch nicht.
     if (name === 'alert') assert.match(md, /TLAlert/, 'alert: Vertrag nennt sein Control nicht');
-    else assert.match(md, /kein Control/i, `${name}: Vertrag sagt nicht, dass es noch kein Control gibt`);
+    else if (name !== 'skeleton') assert.match(md, /kein Control/i, `${name}: Vertrag sagt nicht, dass es noch kein Control gibt`);
   });
 }
 

@@ -58,7 +58,8 @@ test('der Hof gehört nur den Auswahlmarken: kein anderer Block liest ihn', () =
   const hits = [];
   for (const [name, text] of componentCssFiles())
     for (const d of declarations(text))
-      if (/surface-state-/.test(d.value) && name !== 'choice/choice.css') hits.push(`${name}:${d.line} ${d.selector}`);
+      // Ausnahme 07.10.: der Toggle zeigt mit dem Schleier als Fläche (kein Hof, toggle.css; Lint SCHICHT_FLAECHE).
+      if (/surface-state-/.test(d.value) && name !== 'choice/choice.css' && name !== 'toggle/toggle.css') hits.push(`${name}:${d.line} ${d.selector}`);
   assert.deepEqual(hits, []);
 });
 

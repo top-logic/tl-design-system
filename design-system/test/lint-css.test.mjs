@@ -210,3 +210,19 @@ test('ein Pseudo-Element des Browsers fällt unter dasselbe Gate wie seine Klass
   assert.equal(lint('.tl-field::-webkit-calendar-picker-indicator { width: 24px; }', { known, file: 'x.css' }).length, 1, 'Maß-Literal');
   assert.equal(lint('.tlField::-webkit-calendar-picker-indicator { width: auto; }', { known, file: 'x.css' }).length, 1, 'BEM');
 });
+
+// Entscheidung 07.10. (Hendrik): der Auf-/Zuklapper steht auf jedem Zeilengrund (gezeigt, ausgewählt) und zeigt
+// sein Zeigen und Drücken darum als durchscheinende eigene Fläche — die eine Ausnahme der Schicht-Regel, nur
+// dort und nur als background. Der Hof bleibt, wie er ist.
+test('surface-state-* als Fläche gibt es genau am tl-toggle, beim Zeigen und Drücken', () => {
+  const known = new Set(['--tl-surface-state-hover', '--tl-surface-state-active']);
+  for (const [sel, v] of [['.tl-toggle:hover', 'hover'], ['.tl-toggle:active', 'active']])
+    assert.deepEqual(lint(`${sel} { background: var(--tl-surface-state-${v}); }`, { known, file: 'x.css' }), [], sel);
+  for (const css of ['.tl-toggle { background: var(--tl-surface-state-hover); }',
+    '.tl-toggle:hover { color: var(--tl-surface-state-hover); }',
+    '.tl-toggle:hover { border-color: var(--tl-surface-state-hover); }',
+    '.tl-toggle:hover, .tl-x:hover { background: var(--tl-surface-state-hover); }',
+    '.tl-button:hover { background: var(--tl-surface-state-hover); }',
+    '.tl-toggle:hover { box-shadow: inset 0 0 0 var(--tl-border-width-md) var(--tl-surface-state-hover); }'])
+    assert.ok(lint(css, { known, file: 'x.css' }).length >= 1, css);
+});

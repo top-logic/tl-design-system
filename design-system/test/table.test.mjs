@@ -1,0 +1,45 @@
+// Die Tabelle — 3b §3–§6: Zeile size-row, Kopf size-bar, Lage und Cursor als Attribute.
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readGenerated, declarationsOf } from './lib/component.mjs';
+
+const css = readGenerated('table', 'table.css');
+
+test('tl-table: Zeile size-row, Kopf size-bar, Zustände als Attribute, keine Literale des Altbestands', () => {
+  assert.match(declarationsOf(css, '.tl-table__row') ?? '', /min-height:\s*var\(--tl-size-row\)/);
+  // Positioniert: Bezug für den Ring (::after) und die Ziehen-Marke (::before), auch im Specimen.
+  assert.match(declarationsOf(css, '.tl-table__row') ?? '', /position:\s*relative/);
+  // Jedes Element, das display setzt, setzt auch [hidden] (3a-Regel; hidden.test prüft nur Blöcke).
+  for (const el of ['filter-bar', 'save', 'frame', 'grid', 'header-row', 'header-cell', 'sort', 'row', 'cell', 'tree', 'placeholder'])
+    assert.match(declarationsOf(css, `.tl-table__${el}[hidden]`) ?? '', /display:\s*none/, el);
+  assert.match(declarationsOf(css, '.tl-table__row') ?? '', /border-bottom:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-separator\)/);
+  assert.match(declarationsOf(css, '.tl-table__row:hover') ?? '', /surface-interactive-hover/);
+  assert.match(declarationsOf(css, '.tl-table__row[aria-selected="true"]') ?? '', /surface-interactive-selected/);
+  assert.match(declarationsOf(css, ':where(.tl-table__row)') ?? '', /background:\s*var\(--tl-surface-layer\)/);
+  assert.match(declarationsOf(css, '.tl-table__header-row') ?? '', /min-height:\s*var\(--tl-size-bar\)/);
+  assert.match(declarationsOf(css, '.tl-table__header') ?? '', /border-bottom:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-emphasis\)/);
+  const haftend = declarationsOf(css, '.tl-table__cell[data-tl-state~="frozen"]') ?? '';
+  assert.match(haftend, /position:\s*sticky/);
+  assert.match(haftend, /z-index:\s*var\(--tl-layer-raised\)/);
+  assert.match(haftend, /background:\s*inherit/);
+  assert.match(declarationsOf(css, '.tl-table__cell[data-tl-state~="frozen-last"]') ?? '', /border-emphasis/);
+  assert.match(declarationsOf(css, '.tl-table__cell[data-tl-state~="pinned-first"]') ?? '', /border-emphasis/);
+  assert.match(declarationsOf(css, '.tl-table__freeze-preview') ?? '', /z-index:\s*var\(--tl-layer-sticky\)/);
+  assert.match(declarationsOf(css, '.tl-table__spacer') ?? '', /width:\s*var\(--tl-size-control-sm\)/);
+  assert.match(declarationsOf(css, '.tl-table__cell .tl-field[aria-invalid="true"]') ?? '',
+    /box-shadow:\s*inset 0 0 0 var\(--tl-border-width-md\) var\(--tl-status-error-border\)/);
+  assert.match(declarationsOf(css, '.tl-table__cell .tl-field[data-tl-state~="warning"]') ?? '', /status-warning-border/);
+  assert.doesNotMatch(css, /shadow-raised|clip-path|accent-color|outline\s*:|font-weight|--(selected|cursor|group|frozen|pinned|active)\b/);
+  assert.match(declarationsOf(css, '.tl-table__header-cell[data-tl-state~="filtered"] .tl-table__filter') ?? '', /icon-primary/);
+});
+
+test('der Körper isoliert seinen Stapel, Spaltenwahl und Fixiergrenze sind so hoch wie die Kopfzeile', () => {
+  assert.match(declarationsOf(css, '.tl-table__body') ?? '', /isolation:\s*isolate/);
+  // Der Kopf steht außerhalb des Rollbehälters: der Körper schneidet Ring (::after) und Marke (::before) seiner
+  // Zeilen ab, die unter den Kopf rollen. Darum braucht der Kopf keine eigene Ebene (table.contract.md „Stapel“).
+  assert.match(declarationsOf(css, '.tl-table__body') ?? '', /overflow:\s*auto/);
+  assert.doesNotMatch(declarationsOf(css, '.tl-table__header') ?? '', /z-index|position/);
+  assert.match(declarationsOf(css, '.tl-table__columns') ?? '', /height:\s*var\(--tl-size-bar\)/);
+  assert.match(declarationsOf(css, '.tl-table__freeze') ?? '', /height:\s*var\(--tl-size-bar\)/);
+  assert.match(declarationsOf(css, '.tl-table__hint') ?? '', /status-error-border/);
+});
