@@ -304,3 +304,39 @@ test('Knöpfe im Feld (06.10.): der Entfernen-Knopf im Chip hebt sich auf jeder 
     assert.ok(ist >= 1.1, `${m}: surface-interactive-active auf ${bg} = ${ist.toFixed(2)}, gefordert 1,1`);
   }
 });
+
+// Statusfamilien: dieselbe Stufe als Text und Fläche (oder Rand und Fläche) macht den Zustand
+// unsichtbar, und ein Kundentheme könnte die beiden nie trennen (docs/skalen.md, Status-Rollen).
+const STATUS_FAMILIEN = ['error', 'warning', 'success', 'info'];
+const STATUS_ROLLEN = ['text', 'border', 'surface', 'surface-hover', 'surface-active', 'subtle'];
+
+// Liefert je Doppelbelegung eine Meldung; leer, wenn kein Primitiv zwei Rollen einer Familie trägt.
+function statusDoppelbelegungen(color) {
+  const funde = [];
+  for (const mode of MODES) {
+    for (const s of STATUS_FAMILIEN) {
+      const gesehen = new Map();
+      for (const rolle of STATUS_ROLLEN) {
+        const name = `status-${s}-${rolle}`;
+        const ref = color[mode]?.[name];
+        if (ref === undefined) continue;
+        if (gesehen.has(ref))
+          funde.push(`${mode}/${s}: ${ref} trägt ${gesehen.get(ref)} und ${name}`);
+        else gesehen.set(ref, name);
+      }
+    }
+  }
+  return funde;
+}
+
+test('kein Primitiv trägt in einem Modus zwei Rollen einer Statusfamilie', () => {
+  assert.deepEqual(statusDoppelbelegungen(T.color), []);
+});
+
+test('das Status-Gate meldet den verworfenen Tausch (dunkel Rand und Fläche beide red-35)', () => {
+  const kaputt = structuredClone(T.color);
+  kaputt.dark['status-error-border'] = '{red-35}';
+  kaputt.dark['status-error-surface'] = '{red-35}';
+  assert.deepEqual(statusDoppelbelegungen(kaputt),
+    ['dark/error: {red-35} trägt status-error-border und status-error-surface']);
+});
