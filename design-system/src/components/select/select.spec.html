@@ -197,10 +197,10 @@
   const tpl = document.getElementById('rows');
   for (const id of ['on-layer', 'on-base', 'on-overlay']) {
     const rows = tpl.content.cloneNode(true);
-    // Eindeutige Ids je Fläche, damit aria-controls und aria-activedescendant auf ihre eigene Liste zeigen.
+    // Eindeutige Ids je Fläche, damit aria-controls, aria-activedescendant und aria-labelledby auf ihre eigene Liste zeigen.
     for (const el of rows.querySelectorAll('[id]')) el.id += '-' + id;
-    for (const el of rows.querySelectorAll('[aria-controls], [aria-activedescendant]'))
-      for (const a of ['aria-controls', 'aria-activedescendant']) if (el.hasAttribute(a)) el.setAttribute(a, el.getAttribute(a) + '-' + id);
+    for (const el of rows.querySelectorAll('[aria-controls], [aria-activedescendant], [aria-labelledby]'))
+      for (const a of ['aria-controls', 'aria-activedescendant', 'aria-labelledby']) if (el.hasAttribute(a)) el.setAttribute(a, el.getAttribute(a) + '-' + id);
     document.getElementById(id).append(rows);
   }
   const html = document.documentElement;
