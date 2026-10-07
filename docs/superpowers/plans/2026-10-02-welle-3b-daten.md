@@ -4,7 +4,7 @@
 
 **Goal:** Die Datendarstellung — Tabelle (beide Teile), Baum, Spaltenwahl, Spalten-Layout, Text — aus `tlReactControls.css` abschneiden und durch Paket-Komponenten ersetzen, die **ein** Raster, **einen** Cursor-Ring, **eine** Ziehen-Optik, **einen** Lesewert und Tönung **als Attribut** kennen; mit den Nachzügen W7, W8, W10, W11, N1 im selben PR.
 
-**Architecture:** Paket (`design-system/`): `generate.mjs` erzeugt Rollenregeln als `[data-tl-role="…"]` (auch für Elemente), `base.css` gibt den Fokusring eines Behälters mit `aria-activedescendant` an dessen Cursor-Element ab; neue Komponenten `status`, `drag`, `reorder-list`, `text`, `columns`, `table`, `tree`; Kapsel mit zwei Knöpfen in `choice.css`. Engine (`_Working-Tree/tl8-wt-29584`, Branch `CWS/CWS_29617_design_system_welle_3b` = master `b29546f2ad`): Helfer `bridge/token-px.ts`, `bridge/filter-options.ts`, `stateAttr` in `bridge/css.ts`, Tastatur und Live-Bereich in `bridge/list-reorder.ts`; `FieldValue` als einziger Lesewert; `TLText`, `TLColumns`, `TLColumnSelect`, `TLTreeView`, `TLTableView` auf die Paketklassen; Java: `rowHeight` fällt, `TextTone.ACCENT` fällt, neue Resource-Keys.
+**Architecture:** Paket (`design-system/`): `generate.mjs` erzeugt Rollenregeln als `[data-tl-role="…"]` (auch für Elemente), `base.css` gibt den Fokusring eines Behälters mit `aria-activedescendant` an dessen Cursor-Element ab; neue Komponenten `status`, `drag`, `reorder-list`, `text`, `columns`, `table`, `tree`; Kapsel mit zwei Knöpfen in `choice.css`. Engine (`_Working-Tree/tl8-wt-29584`, Branch `CWS/CWS_29617_design_system_welle_3b`, am 07.10. per Fast-Forward auf master `eef176e2ad` vorgezogen): Helfer `bridge/token-px.ts`, `bridge/filter-options.ts`, `stateAttr` in `bridge/css.ts`, Tastatur und Live-Bereich in `bridge/list-reorder.ts`; `FieldValue` als einziger Lesewert; `TLText`, `TLColumns`, `TLColumnSelect`, `TLTreeView`, `TLTableView` auf die Paketklassen; Java: `rowHeight` fällt, `TextTone.ACCENT` fällt, neue Resource-Keys.
 
 **Tech Stack:** Node ohne Abhängigkeiten im Paket; React 19, TypeScript, Vite, `@floating-ui/react` in der Engine; Java 21/Maven (JUnit 4) für `TableViewControl`, `TextTone`, `I18NConstants`.
 
@@ -13,6 +13,16 @@
 **Vorgeprüft (02.10., beim Schreiben):** Alles Paket-CSS dieses Plans, die Generator-Änderung und jeder neue oder geänderte Paket-Test liefen in einer Kopie des Pakets: `node tools/lint-css.mjs` grün, `node --test` grün bis auf die Vertragstexte, die die Tasks schreiben; die neuen Tests scheitern gegen das unveränderte Paket (rot zuerst). Die Engine-TSX (Helfer, Select, Lesewert, Text, Spalten, Spaltenwahl, Baum, Tabelle) lief in einer Kopie von `react-src` durch `tsc --noEmit` (0 Befunde) und beide Vite-Builds. Java, Maven und `check-messages-en.sh` sind **nicht** vorgeprüft.
 
 **Plan-Review 02.10. eingearbeitet am 07.10.** (B1, M1–M5, Punkte 1–19, Entscheidungen 16/22/23; Review: `.superpowers/sdd/2026-10-02-welle-3b-daten/plan-review.md`). Nachgeprüft in Scratch-Kopien: P9 mit Fehler- und Warnlinie (`red-34`) und allen Paaren — `node --test` 270/270 (5 skipped), Lint grün, Probe-Theme ändert nur `focus-ring` hell samt Hinweiszeile; die neue `drag.css` (Fläche `::before`) und ihr Test, die Regel für das deaktivierte Segment (P1) — Lint und Tests grün; `useListReorder` mit Tastatur und Fokusrückgabe (E2, M2) samt Aufrufern Spaltenwahl und Werteliste — `tsc --noEmit` 0 Befunde. Jeder neue Grep lief gegen `b29546f2ad`.
+
+**Neu verankert am 07.10. auf master `eef176e2ad`** (Branch vorgezogen, 164 Commits; frischer Prüfer, nur Scratch-Kopien): alle Zeilenangaben der Engine (`TLDropdownSelect.tsx`, `TLToolbar.tsx`, `bridge-entry.ts`, `tlReactControls.css`, `docs/faq/react-view-layer.md`, `messages_de.properties`, Demo-Views) auf `eef176e2ad`; `TLTableView.tsx`, `TLText.tsx`, `TLTreeView.tsx`, `TLColumnSelect.tsx`, `TLColumns.tsx`, `TLValueList.tsx`, `selectOptions.tsx`, `FieldValue.tsx`, `TLResourceCell.tsx`, `list-reorder.ts`, `popover.ts`, `css.ts`, alle Java-Dateien des Plans und die Tests sind bis auf eine Zeile (`TLTableView.tsx:1457`, Kopf-Tooltip) unverändert, ihre Zeilen gelten weiter. Eingearbeitete Wechselwirkungen mit master: `TLAlert` (#29652) liest die Bedeutung als Modifier → E1; `TLChoiceGroup` (#29654, ersetzt `TLBooleanChoice`) rendert `OptionContent` → E1, E3; `.tl-choice-group--vertical` (#29654) steht im TLTableView-Block → ins Paket (P2), E7; das Select ohne Suchfeld (`noFilter`, #29654) trägt `aria-activedescendant` am Feld → P5 nimmt `role=combobox` aus; „Text ohne Wert nimmt keinen Platz“ (#29752, `.tlText:empty:not([role])`) → P6, E4; „Tooltip bei Ellipse“ ohne Deklaration (#29752, `tooltip-host.ts`) → E4, E8 (Kopf ohne `TOOLTIP_WHEN_CLIPPED`); `git grep`-Pfade mit `*` ohne `/**` trafen nie (Befund am Plan) → E1, E5, E6, E9. Vorbedingung V1 (Bernhards Republish) ist erledigt, siehe unten.
+
+**Zweites Mal neu verankert am 07.10. auf `main` `80749da`** (Merge von Bernhards Paket-Branch `CWS/CWS_29752_hoefe`, `6791acf..3af3180`: Höfe der Auswahlmarken, Knöpfe im Feld, Entfernen im Select-Chip als Kreis, Zustandsschleier `surface-state-hover/-active`, Paarliste mit Schichten `<Schicht>/<Grund>`). Basis jetzt **285 Tests**, Lint grün, `dist` byte-gleich mit master im Worktree. P1–P9 nacheinander in einer Scratch-Kopie von `80749da` angewandt, Plantext wörtlich wo er Code ist (Verträge und Specimen, die der Plan nur beschreibt, als Platzhalter mit den Pflichtbegriffen): jeder Task grün, Lint grün, Testzahlen je Task im Commit-Step (P1 295 … P9 329). Eingearbeitete Entscheidungen Hendriks vom 07.10.: **TLAlert-Block mit 3b ins Paket** (P1 Step 5b, E1); **Entfernen in der Kapsel = Bernhards Kreis**, eine Regel für Filterkapsel und Select-Chip (P2, P4 Step 5); **`.tl-choice-group--vertical` ins Paket** (P2, unverändert). Befund: P9 Step 4 ändert das Probe-Theme **nicht** mehr (Bernhards `focus-ring` `#DB4809` hält die neuen Paare schon).
+
+---
+
+## Vorbedingung V1: Bernhards Republish auf master — erledigt 07.10. (`80749da`)
+
+master trug im Worktree ein Paket-`dist`, das es in `design-system/src` nicht gab (#29752: `9e1700c157`, `f51fadda9e`, `5dd9557741`, `cf604585f6`). Bernhards Paket-Branch `CWS/CWS_29752_hoefe` ist nach `main` gemergt (Merge `80749da`, mit src, Tests, Lint-Regel für den Hof, Paarliste mit Schichten, `derive` für Schleier, `skalen.md` „Auswahlmarken zeigen einen Hof“, „Höfe sind durchscheinend“, „Knöpfe im Feld zeigen eine Stufe kräftiger“); `node --test` 285/285, Lint grün, `ratchet.json` ohne `--tl-surface-state-*` in `foreignTl`, und `dist/{base,components,primitives,tokens}.css` auf `80749da` ist byte-gleich mit `<WT>/com.top_logic.layout.react/src/main/webapp/style/tl-design-system/` (geprüft 07.10.). Die Diff-Prüfung vor dem Publizieren bleibt (E1 Step 1): veröffentlicht master in der Zwischenzeit erneut, wäre der Worktree-Stand nicht mehr der von `80749da`.
 
 ---
 
@@ -36,14 +46,15 @@ Jede Zeile nennt den Befund, den Beleg und die Variante, die dieser Plan baut. H
 
 **Präzisierungen (keine Entscheidung nötig, im Review zu sehen):**
 
-- **Cursor-Ring über `::after`:** Chromium malt positionierte Kinder (haftende Zellen) über den eigenen Umriss einer Zeile — der Altbestand zeichnete den Cursor deshalb an den Zellen (`tlReactControls.css:3016–3020`). `base.css` zeichnet den Ring darum an einer Fläche `::after` des Cursor-Elements (Ebene `layer-sticky`, der Behälter isoliert den Stapel). `generate.test.mjs` zählt danach zwei `:focus-visible` (zwei Selektoren einer Regel), `focus.test.mjs` weiter genau **eine** Ring-Deklaration — Task P5.
+- **Cursor-Ring über `::after`:** Chromium malt positionierte Kinder (haftende Zellen) über den eigenen Umriss einer Zeile — der Altbestand zeichnete den Cursor deshalb an den Zellen (`tlReactControls.css:3183–3187`, `eef176e2ad`). `base.css` zeichnet den Ring darum an einer Fläche `::after` des Cursor-Elements (Ebene `layer-sticky`, der Behälter isoliert den Stapel). `generate.test.mjs` zählt danach zwei `:focus-visible` (zwei Selektoren einer Regel), `focus.test.mjs` weiter genau **eine** Ring-Deklaration — Task P5.
 - **`data-tl-axis="horizontal"`** am Behälter von Einträgen, die nebeneinander stehen (Select-Chips, Kopfzeile): woran die Ziehen-Optik „waagerecht: links/rechts“ (§9) erkennt — Task P4.
 - **Spaltenzug ohne Sonderzonen:** mit `useListReorder` fallen die Ablagezonen „vor der ersten Spalte“ (Kopfzelle der Auswahl, `TLTableView.tsx:1383–1390`) und „hinter der letzten“ (`1504–1519`); die Hälften der ersten und letzten Spalte leisten dasselbe — Task E8.
 - **Übergangsblock** „Table cells holding legacy controls“ im alten Stylesheet: Zellregeln, die Altklassen anderer Wellen lesen (`.tlStack--row`, `.tlValueList--block`, `tlRowCommandCell` aus `RowCommandColumn.java:68`), bleiben dort und lesen `tl-table__cell` — Task E7.
-- **Block „Controls placed on the primary (accent) app bar“** (`tlReactControls.css:2066–2079`) enthält nur das Umfärben über `--tlText-tone`; er fällt mit ihm (Text ohne Ton erbt die Farbe) — Task E4.
+- **Block „Controls placed on the primary (accent) app bar“** (`tlReactControls.css:2177–2190`, `eef176e2ad`) enthält nur das Umfärben über `--tlText-tone`; er fällt mit ihm (Text ohne Ton erbt die Farbe) — Task E4.
 - **`TLValueList`** verschiebt per Tastatur heute mit Pfeil **ohne** Alt (`TLValueList.tsx:87–102`); mit dem gemeinsamen Hook gilt Alt + Pfeil wie überall — Task E2.
 - **Name des Baums:** `ReactTreeControl` führt keinen Namen im Zustand (Schlüssel `ReactTreeControl.java:44–110`); `aria-label` ist darum immer `js.tree.label` — Task E6.
-- **Basis:** heute 270 Tests (nicht 268), Lint grün; `tsc --noEmit` in der Engine 0 Befunde.
+- **Höfe und Knöpfe im Feld (Bernhard, `80749da`) gegen 3b geprüft:** Der Hof eines Kästchens ist ein `box-shadow` der Marke, kein Pseudo-Element — er stört weder den Cursor-Ring (`::after` der Zeile) noch die Ziehen-Marke (`::before`). In der Auswahlspalte (`size-bar` breit, Zeile `size-row` hoch, `overflow: hidden` an der Zelle) passt der Hof (`size-control` im Quadrat) in beiden Dichten: normal 40×36 um 32, kompakt 36×32 um 28 — nichts wird abgeschnitten, zwischen Hof und Ring bleiben 2 px. Auf einer ausgewählten Zeile liegt der durchscheinende Hof über `surface-interactive-selected` und bleibt sichtbar; einen Ring trägt das Zeilenkästchen nie (`tabindex=-1`). Der Löschknopf der Tabellensuche (`.tl-field-group > .tl-button`) bekommt Bernhards „eine Stufe kräftiger“ von selbst; Speichern/Bestätigen/Abbrechen stehen auf `surface-layer`, dort ist die Ghost-Stufe sichtbar. Offen (Hendrik): `tl-toggle` in einer gezeigten Tabellen- oder Baumzeile zeigt beim Zeigen `surface-interactive-hover` auf `surface-interactive-hover` — unsichtbar; dieselbe Lage wie Bernhards Knöpfe im Feld.
+- **Basis:** 285 Tests auf `main` `80749da` (vor dem Merge von Bernhards Höfen 270), Lint grün; `tsc --noEmit` in der Engine 0 Befunde.
 
 ---
 
@@ -51,7 +62,7 @@ Jede Zeile nennt den Befund, den Beleg und die Variante, die dieser Plan baut. H
 
 - Alles Öffentliche: Englisch, kebab-case, Präfix `tl` (`--tl-…`, `.tl-…`, `data-tl-…`); Zustände sind Attribute, nie Klassen (CLAUDE.md „Namen“). Tönung ist `data-tl-role`, Ton ist `data-tl-tone`.
 - `src/tokens.json` trägt nur Referenzen `{name}`; Werte stehen in `src/primitives.json`. Keine neuen Tokens (Spec §12): Zeilen `size-row`, Kopf `size-bar`, Einzug und Toggle `size-control-sm`, Griffe `space-xs`, Ebenen `layer-raised`/`-sticky`/`-popover`.
-- Nach jeder Änderung an `src/`: `node tools/generate.mjs`; `node --test` und `node tools/lint-css.mjs` sind das Gate (Basis 270 Tests, Lint grün). **Kein Commit mit rotem Test.**
+- Nach jeder Änderung an `src/`: `node tools/generate.mjs`; `node --test` und `node tools/lint-css.mjs` sind das Gate (Basis 285 Tests seit `80749da`, Lint grün). **Kein Commit mit rotem Test.**
 - Kein Literal in Komponenten-CSS (Farbe, Maß, Dauer) außer einheitenlosen Anteilen (`opacity: 0.4`, `lint-css.mjs:44`); kein `:focus` ohne `-visible`, kein `outline` außer dem Basis-Ring und `outline-offset` als ±`focus-offset`; `focus-ring` nur in `base.css`; `font-weight`/`font-size` nur in `tl-type-*`; Schrift-Reset nur in `:where(…)`; jeder Block mit `display` setzt `[hidden] { display: none }`.
 - Außerhalb von `dist/` wird nichts im Namensraum `--tl` definiert — auch nicht inline im TSX: Zeilenhöhe und Einzug rechnet das TSX aus Token-Pixeln (`useTokenPx`).
 - Icons über `ThemeIcon` mit `tl-icon-sm` (Knopf-Icons `tl-button__icon`); Glyphen als Konstanten `css:fa-solid …`; keine `bi-*`-Klassen, keine Textzeichen (▲▼▾▸▶▼×), keine Inline-SVGs (Spec §12).
@@ -83,7 +94,7 @@ cd /Users/hendrik/Claude/TopLogic-v8-DesignSystem/design-system && node tools/in
 
 ## Review Focus
 
-1. **Cursor-Ring über fixierten Spalten, nur mit Tastatur:** Tab in die Tabelle, Pfeil ab — der Ring liegt innen um die ganze Zeile, auch über fixierten und angehefteten Zellen; Klick mit der Maus zeigt keinen; der Ring im Select-Suchfeld (auch `aria-activedescendant`) bleibt. Gate: `focus.test.mjs` „der Cursor-Ring …“ (P5) prüft beide Selektoren und die Fläche; Sichtprüfung E11 Punkt 1 klickt, tippt dann Pfeil (Chromium setzt `:focus-visible` nach einem Mausklick nicht in jedem Fall — fällt der Ring dann aus, ist das ein Befund für Fable, nicht für einen Fix im Task).
+1. **Cursor-Ring über fixierten Spalten, nur mit Tastatur:** Tab in die Tabelle, Pfeil ab — der Ring liegt innen um die ganze Zeile, auch über fixierten und angehefteten Zellen; Klick mit der Maus zeigt keinen; der Ring im Select-Suchfeld (auch `aria-activedescendant`) bleibt, ebenso am offenen Select ohne Suchfeld (`noFilter`, master #29654: `aria-activedescendant` am Feld `role=combobox`). Gate: `focus.test.mjs` „der Cursor-Ring …“ (P5) prüft beide Selektoren und die Fläche; Sichtprüfung E11 Punkt 1 klickt, tippt dann Pfeil (Chromium setzt `:focus-visible` nach einem Mausklick nicht in jedem Fall — fällt der Ring dann aus, ist das ein Befund für Fable, nicht für einen Fix im Task).
 2. **Dichte umschalten bei offener Tabelle:** Zeilen und Einzug springen auf 32 px/24 px, die Zeilen liegen weiter lückenlos, der Server bekommt das neue Fenster. Gate: `useTokenPx` beobachtet `data-tl-density` am `html` (E2 Step 1); E7 Step 4 sendet `scroll` bei neuer Zeilenhöhe; Sichtprüfung E11 Punkt 3.
 3. **Schnelles Scrollen:** Zeilen, die noch nicht da sind, sind Skeleton-Zeilen, das Raster ist `aria-busy` und verliert es, sobald alle da sind; eine leere Tabelle sagt „Keine Einträge“ statt einer leeren Fläche. Gate: E7 Step 4 (`missing`), Sichtprüfung E11 Punkt 6.
 4. **Alt + Pfeil an den Enden und waagerecht:** am ersten/letzten Eintrag passiert nichts (kein Befehl, keine Ansage); bei Select-Chips verschiebt Alt + Pfeil links/rechts und löst **nicht** die Browser-Navigation „Zurück“ aus (Alt + Links unter Windows/Linux). Gate: `keyboardMove` prüft die Grenzen und ruft `preventDefault` (E2 Step 3); Sichtprüfung E11 Punkt 8.
@@ -132,7 +143,7 @@ cd /Users/hendrik/Claude/TopLogic-v8-DesignSystem/design-system && node tools/in
 | `src/main/webapp/style/tlReactControls.css` (ändern) | die Blöcke aus Spec §1, der Block der Primär-App-Bar, neuer Übergangsblock |
 | `docs/faq/react-view-layer.md`, `docs/faq/react-theme-tokens.md`, `docs/plans/*.md` (ändern) | Doku auf die Paketnamen |
 
-**Zeilenangaben** im alten Stylesheet beziehen sich auf master `b29546f2ad`; Löschungen innerhalb eines Tasks von unten nach oben, danach mit `grep -n` prüfen. **Ab E3 sind sie nur Orientierung:** E2 löscht im Block TLValueList (895–911) und verschiebt alles danach; jeder Task findet seine Regeln über die Überschrift und den Selektor, die der Step nennt (`grep -n` auf beide), nicht über die Zeilennummer.
+**Zeilenangaben** im alten Stylesheet beziehen sich auf master `eef176e2ad` (neu verankert 07.10.; die Spec nennt noch `b29546f2ad`); Löschungen innerhalb eines Tasks von unten nach oben, danach mit `grep -n` prüfen. **Ab E2 sind sie nach Zeile 2682 nur Orientierung:** E1 löscht den Block TLAlert (2682–2713, 32 Zeilen) und verschiebt alles danach; **ab E3 überall:** E2 löscht im Block TLValueList (898–914) und verschiebt alles danach; jeder Task findet seine Regeln über die Überschrift und den Selektor, die der Step nennt (`grep -n` auf beide), nicht über die Zeilennummer.
 
 ---
 
@@ -141,10 +152,10 @@ cd /Users/hendrik/Claude/TopLogic-v8-DesignSystem/design-system && node tools/in
 ### Task P1: Rolle als Attribut — Generator, Pill, Avatar, Alert, Chip, Segment
 
 **Files:**
-- Modify: `design-system/tools/generate.mjs:22-42` (Rollenregeln), `tools/lint-css.mjs:74-80,98`
-- Modify: `src/components/pill/pill.css:32-40`, `avatar/avatar.css:40-41`, `alert/alert.css:1-25`, `choice/choice.css:197-203`, nach `.tl-chip[hidden]` und nach `.tl-segmented__segment:disabled`
-- Modify: Specimen `pill.spec.html`, `avatar.spec.html`, `alert.spec.html`, `select.spec.html`, `field.spec.html`, `choice.spec.html:35`; Verträge `pill.contract.md`, `avatar.contract.md`, `alert.contract.md`, `choice.contract.md`
-- Test: `test/roles.test.mjs`, `test/components.test.mjs`, `test/feedback.test.mjs`, `test/lint-css.test.mjs`
+- Modify: `design-system/tools/generate.mjs:22-42` (Rollenregeln), `tools/lint-css.mjs:81-87,105` (Zeilen auf `80749da`)
+- Modify: `src/components/pill/pill.css:32-40`, `avatar/avatar.css:40-41`, `alert/alert.css:1-26` (Rollen; Step 5b: TLAlert-Block), `choice/choice.css:223-226`, nach `.tl-chip[hidden]` und nach `.tl-segmented__segment:disabled`
+- Modify: Specimen `pill.spec.html`, `avatar.spec.html`, `alert.spec.html`, `select.spec.html`, `field.spec.html`, `choice.spec.html:40`; Verträge `pill.contract.md`, `avatar.contract.md`, `alert.contract.md`, `choice.contract.md`
+- Test: `test/roles.test.mjs`, `test/components.test.mjs`, `test/feedback.test.mjs` (Rollen; Step 5b: Alert-Block, `kein Control`), `test/lint-css.test.mjs`
 
 **Interfaces:**
 - Produces: `.tl-pill[data-tl-role="brand|error|warning|success|info|category-1…8"]`, `.tl-avatar[data-tl-role="category-1…8"]`, `.tl-alert[data-tl-role="error|warning|success|info"]` (Pflicht), `.tl-chip[data-tl-role=…]`, `.tl-segmented__segment[data-tl-role=…]`; Marker `/* @tl-roles: brand|status|category <.tl-block oder .tl-block__element> */`. Die Klassen `tl-pill--<rolle>`, `tl-avatar--category-*`, `tl-alert--<status>` gibt es nicht mehr. Leser: E1.
@@ -210,7 +221,7 @@ und im Fall „der Marker wird ersetzt“ die drei ersten Zeilen ersetzen durch
   assert.doesNotMatch(html, /tl-pill--/, 'Specimen zeigt noch einen Rollen-Modifier');
 ```
 
-im Avatar-Test (253) `css.includes(`.tl-avatar--${k}`)` → `css.includes(`.tl-avatar[data-tl-role="${k}"]`)`. `test/feedback.test.mjs:14,16`: `.tl-alert--${s}` → `.tl-alert[data-tl-role="${s}"]` (beide Stellen). `test/lint-css.test.mjs:156` ersetzen durch
+im Avatar-Test (253) `css.includes(`.tl-avatar--${k}`)` → `css.includes(`.tl-avatar[data-tl-role="${k}"]`)`. `test/feedback.test.mjs:14,16`: `.tl-alert--${s}` → `.tl-alert[data-tl-role="${s}"]` (beide Stellen). `test/lint-css.test.mjs:178` (auf `80749da`; die Zeile `assert.deepEqual(lint('.tl-pill--error …'), [], 'Bedeutung an der Pill bleibt erlaubt')`) ersetzen durch
 
 ```js
   // Seit 3b ist die Rolle ein Attribut (data-tl-role): auch die Bedeutung an der Pill ist kein Modifier mehr.
@@ -219,7 +230,7 @@ im Avatar-Test (253) `css.includes(`.tl-avatar--${k}`)` → `css.includes(`.tl-a
   assert.deepEqual(lint('.tl-pill[data-tl-role="error"] { color: var(--tl-text-primary); }', { known, file: 'x.css' }), []);
 ```
 
-und 165 durch `assert.deepEqual(lint('.tl-alert[data-tl-role="error"] { color: var(--tl-text-primary); }', { known, file: 'x.css' }), []);`.
+und 187 durch `assert.deepEqual(lint('.tl-alert[data-tl-role="error"] { color: var(--tl-text-primary); }', { known, file: 'x.css' }), []);`.
 
 - [ ] **Step 2: Rot sehen** — `cd design-system && node --test test/roles.test.mjs test/components.test.mjs test/feedback.test.mjs test/lint-css.test.mjs` → FAIL (u. a. „kennt die Marke als Rolle“, „der Marker wird ersetzt“, Alert, `kein Modifier von tl-pill`, „ein deaktiviertes Segment …“).
 
@@ -288,7 +299,7 @@ export function expandRoles(css, T) {
 /* @tl-roles: category .tl-chip */
 ```
 
-und die Regel `.tl-segmented__segment > .tl-pill, .tl-chip > .tl-pill { min-width: 0; }` (197–203, mitsamt Leerzeile) ersetzen durch
+und die Regel `.tl-segmented__segment > .tl-pill, .tl-chip > .tl-pill { min-width: 0; }` (223–226 auf `80749da`, mitsamt Leerzeile) ersetzen durch
 
 ```css
 /* Die Tönung trägt das Segment selbst (data-tl-role), vor Zeigen und Gewählt. */
@@ -310,32 +321,100 @@ und direkt nach der Regel `.tl-segmented__segment:disabled { color: …; cursor:
 }
 ```
 
-`tools/lint-css.mjs`: Zeile 74 (`const KATEGORIEN = …`) löschen; `'tl-pill': new Set([]), // Die Rolle ist ein Attribut (data-tl-role), kein Modifier.`; `'tl-avatar': new Set(['sm', 'lg', 'xl']), // Die Kategorie ist ein Attribut (data-tl-role).`; `'tl-alert': new Set([]), // Die Bedeutung ist Pflicht und ein Attribut (data-tl-role).`
+`tools/lint-css.mjs`: Zeile 81 (`const KATEGORIEN = …`) löschen; `'tl-pill': new Set([]), // Die Rolle ist ein Attribut (data-tl-role), kein Modifier.`; `'tl-avatar': new Set(['sm', 'lg', 'xl']), // Die Kategorie ist ein Attribut (data-tl-role).`; `'tl-alert': new Set([]), // Die Bedeutung ist Pflicht und ein Attribut (data-tl-role).`
 
-- [ ] **Step 4: Specimen** — `pill.spec.html`: im Template (29–31) `class="tl-pill %MOD% tl-type-label"` → `class="tl-pill tl-type-label" data-tl-role="%ROLE%"`; `VARIANTEN` (45–54) trägt statt der Klasse den Rollennamen (`['brand', 'brand', 'Eigenes']`, `['error', 'error', 'Abgelehnt']` …, neutral `''`); im Skript `.replaceAll('%MOD%', mod)` → `.replaceAll('%ROLE%', mod)`; Fließtext 40: `<span class="tl-pill" data-tl-role="warning">`, `data-tl-role="category-6"`. `avatar.spec.html`: Template `%MOD%` aus der Klasse nehmen und `data-tl-role="%ROLE%"` anhängen, `KATEGORIEN` als `['category-1', …]` und `.replaceAll('%ROLE%', mod)`; Zeile 55 `data-tl-role="category-3"`. `alert.spec.html` 30–70: aus `<div class="tl-alert tl-alert--error tl-type-body" role="alert">` wird `<div class="tl-alert tl-type-body" data-tl-role="error" role="alert">`, ebenso für `warning`, `success`, `info`. `select.spec.html` (41, 60, 70, 100, 109, 153) und `field.spec.html:85`: aus `class="tl-pill tl-pill--warning tl-type-label"` wird `class="tl-pill tl-type-label" data-tl-role="warning"` (übrige Klassen bleiben, die Rolle wandert ins Attribut). (Der Grep auf leere Modifier folgt am Ende von Step 5: die Verträge nennen die alten Namen noch.)
+- [ ] **Step 4: Specimen** — `pill.spec.html`: im Template (29–31) `class="tl-pill %MOD% tl-type-label"` → `class="tl-pill tl-type-label" data-tl-role="%ROLE%"`; `VARIANTEN` (45–54) trägt statt der Klasse den Rollennamen (`['brand', 'brand', 'Eigenes']`, `['error', 'error', 'Abgelehnt']` …, neutral `''`); im Skript `.replaceAll('%MOD%', mod)` → `.replaceAll('%ROLE%', mod)`; Fließtext 40: `<span class="tl-pill" data-tl-role="warning">`, `data-tl-role="category-6"`. `avatar.spec.html`: Template `%MOD%` aus der Klasse nehmen und `data-tl-role="%ROLE%"` anhängen, `KATEGORIEN` als `['category-1', …]` und `.replaceAll('%ROLE%', mod)`; Zeile 55 `data-tl-role="category-3"`. `alert.spec.html` 30–70: aus `<div class="tl-alert tl-alert--error tl-type-body" role="alert">` wird `<div class="tl-alert tl-type-body" data-tl-role="error" role="alert">`, ebenso für `warning`, `success`, `info`. `select.spec.html` (41, 60, 70, 90, 94, 98, 131, 140, 184 auf `80749da` — Bernhards Chip-Zeilen 90–98 sind neu) und `field.spec.html:104`: aus `class="tl-pill tl-pill--warning tl-type-label"` wird `class="tl-pill tl-type-label" data-tl-role="warning"` (übrige Klassen bleiben, die Rolle wandert ins Attribut). (Der Grep auf leere Modifier folgt am Ende von Step 5: die Verträge nennen die alten Namen noch.)
 
-- [ ] **Step 5: Verträge** — `pill.contract.md`: Attribut-Tabelle `data-tl-role` (`brand`, `error`, `warning`, `success`, `info`, `category-1` … `category-8`; ohne Attribut neutral), Konformität 56 „…`data-tl-role` seiner Rolle trägt…“. `avatar.contract.md:61`: „…das Attribut `data-tl-role="category-<n>"` seines Hashes trägt…“; Größen bleiben Modifier (`small` → `tl-avatar--sm` usw., Test `components.test.mjs:281`). `alert.contract.md:36`: Zeile `| `tl-alert` + `data-tl-role` | `tl-alert` immer, `data-tl-role` genau eine Bedeutung (`error`, `warning`, `success`, `info`), Pflicht |`. `choice.contract.md`: Tabelle „Klassen“ um `tl-chip`/`tl-segmented__segment` mit `data-tl-role` („die Rolle des Werts; keine Pill im Chip oder Segment, Bild und Beschriftung stehen nebeneinander mit `--tl-space-2xs`“), Absatz 89 „…je gewählter Wert Text oder `tl-pill` mit `data-tl-role` seiner `colorRole`…“; Attribut-Zeile 67 `:indeterminate` + `aria-checked="mixed"` ersetzen durch `| `:indeterminate` | `triState` und `value: null`. `indeterminate` ist eine Eigenschaft des `input` (kein HTML-Attribut); der Browser meldet es dem Screenreader als „gemischt“. **Kein** `aria-checked` am nativen Kästchen (ARIA in HTML; entschieden 07.10.). |` und in `choice.spec.html:35` `aria-checked="mixed"` streichen (`data-indeterminate` bleibt). Danach: `grep -rn 'tl-pill--\|tl-alert--\|tl-avatar--category' src` → leer.
+- [ ] **Step 5: Verträge** — `pill.contract.md`: Attribut-Tabelle `data-tl-role` (`brand`, `error`, `warning`, `success`, `info`, `category-1` … `category-8`; ohne Attribut neutral), Konformität 56 „…`data-tl-role` seiner Rolle trägt…“. `avatar.contract.md:61`: „…das Attribut `data-tl-role="category-<n>"` seines Hashes trägt…“; Größen bleiben Modifier (`small` → `tl-avatar--sm` usw., Test `components.test.mjs:281`). `alert.contract.md:36`: Zeile `| `tl-alert` + `data-tl-role` | `tl-alert` immer, `data-tl-role` genau eine Bedeutung (`error`, `warning`, `success`, `info`), Pflicht |`. `choice.contract.md`: Tabelle „Klassen“ um `tl-chip`/`tl-segmented__segment` mit `data-tl-role` („die Rolle des Werts; keine Pill im Chip oder Segment, Bild und Beschriftung stehen nebeneinander mit `--tl-space-2xs`“), Absatz 97 „…je gewählter Wert Text oder `tl-pill` mit `data-tl-role` seiner `colorRole`…“; Attribut-Zeile 68 `:indeterminate` + `aria-checked="mixed"` ersetzen durch `| `:indeterminate` | `triState` und `value: null`. `indeterminate` ist eine Eigenschaft des `input` (kein HTML-Attribut); der Browser meldet es dem Screenreader als „gemischt“. **Kein** `aria-checked` am nativen Kästchen (ARIA in HTML; entschieden 07.10.). |` und in `choice.spec.html:40` `aria-checked="mixed"` streichen (`data-indeterminate` bleibt). Danach: `grep -rn 'tl-pill--\|tl-alert--\|tl-avatar--category' src` → leer.
 
-- [ ] **Step 6: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün (279 Tests: 278 laut Plan-Review, dazu „ein deaktiviertes Segment …“). `git add design-system && git commit -m "Ticket #29617: Welle 3b -- Toenung als Attribut: @tl-roles erzeugt [data-tl-role], Chip und Segment tragen die Rolle selbst"`
+- [ ] **Step 5b: TLAlert-Block ins Paket (Entscheidung Hendrik 07.10.)** — Die Regeln des Blocks „TLAlert“ in `tlReactControls.css` (master #29652, `eef176e2ad` 2682–2713: `.tl-alert--closable`, `__body`, `__message`, `__actions`, `__close`) wandern nach `alert.css`; E1 schneidet den Block ab. `.tl-alert__body { min-width: 0; }` steht im Paket schon — zusammenführen, nicht doppeln. Statt des Modifiers `tl-alert--closable` folgt die dritte Spalte dem Inhalt (`:has(> .tl-alert__close)`, wie die Kapsel mit Entfernen-Knopf) — das Lint kennt für `tl-alert` keinen Modifier (Step 3), `TLAlert` setzt die Klasse nicht mehr (E1). Test (rot) an `test/feedback.test.mjs` anhängen:
 
-### Task P2: Entfernbare Kapsel — `tl-chip__toggle`, `tl-chip__remove`
+```js
+
+// Entscheidung 07.10.: der TLAlert-Block des alten Stylesheets (#29652) geht mit 3b ins Paket.
+test('Alert: Körper, Text, Aktionen und Schließen-Knopf stehen im Paket, eine Regel je Element', () => {
+  const css = readGenerated('alert', 'alert.css');
+  const body = declarationsOf(css, '.tl-alert__body') ?? '';
+  for (const d of [/display:\s*flex/, /flex-direction:\s*column/, /gap:\s*var\(--tl-space-2xs\)/, /min-width:\s*0/]) assert.match(body, d);
+  assert.equal((css.replace(/\/\*[\s\S]*?\*\//g, '').match(/\.tl-alert__body\s*\{/g) ?? []).length, 1, 'tl-alert__body genau einmal');
+  assert.match(declarationsOf(css, '.tl-alert__message') ?? '', /white-space:\s*pre-line/);
+  assert.match(declarationsOf(css, '.tl-alert__actions') ?? '', /padding-block-start:\s*var\(--tl-space-xs\)/);
+  assert.match(declarationsOf(css, '.tl-alert:has(> .tl-alert__close)') ?? '', /grid-template-columns:\s*auto minmax\(0, 1fr\) auto/);
+  assert.match(declarationsOf(css, '.tl-alert__close') ?? '', /align-self:\s*start/);
+  for (const e of ['body', 'actions']) assert.match(declarationsOf(css, `.tl-alert__${e}[hidden]`) ?? '', /display:\s*none/, e);
+});
+```
+
+und im Test „`${name}`: Specimen und Vertrag“ (`feedback.test.mjs:41–49`) die Zeile `assert.match(md, /kein Control/i, …)` ersetzen durch
+
+```js
+    // Der Alert hat seit master #29652 ein Control (TLAlert); die übrigen noch nicht.
+    if (name === 'alert') assert.match(md, /TLAlert/, 'alert: Vertrag nennt sein Control nicht');
+    else assert.match(md, /kein Control/i, `${name}: Vertrag sagt nicht, dass es noch kein Control gibt`);
+```
+
+In `alert.css` die Zeile `.tl-alert__body { min-width: 0; }` ersetzen durch (vorgeprüft 07.10. auf `80749da` nach P1 Step 1–5: Lint grün, `node --test` grün):
+
+```css
+/* Der Körper stapelt Titel, Text und Aktionen (TLAlert, master #29652); min-width: 0 lässt langen Text
+   umbrechen, statt die Spalte zu weiten. */
+.tl-alert__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tl-space-2xs);
+  min-width: 0;
+}
+.tl-alert__body[hidden] { display: none; }
+
+/* Der Text bricht an jeder Stelle um und behält die Zeilenumbrüche des Servers. */
+.tl-alert__message {
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+/* Was man gegen die Meldung tun kann: Knöpfe in einer umbrechenden Reihe unter dem Text. */
+.tl-alert__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tl-space-xs);
+  padding-block-start: var(--tl-space-xs);
+}
+.tl-alert__actions[hidden] { display: none; }
+
+/* Mit Schließen-Knopf eine dritte Spalte; der Knopf steht oben. Die Spalte folgt dem Inhalt (:has), kein
+   Modifier — wie die Kapsel mit Entfernen-Knopf. */
+.tl-alert:has(> .tl-alert__close) {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.tl-alert__close {
+  align-self: start;
+}
+```
+
+`alert.contract.md`: „Es gibt noch kein Control …“ und „Was ein Alert bekäme:“ ersetzen durch „Das Control ist `TLAlert` (`ReactAlertControl`, `AlertStateJson`, master #29652; View-Element `<alert>`).“; Zustand nach `AlertStateJson` (`variant` → `data-tl-role`, `title`, `message`, `icon`, `actions`, `closable`, `generation`, `hidden`), Aktion `dismiss` (Argument `generation`); Tokens-Zeile „Form und Abstand“ um „im Körper `--tl-space-2xs` zwischen Titel, Text und Aktionen, über den Aktionen `--tl-space-xs`“; Attribute um `tl-alert__message`, `tl-alert__actions`, `tl-alert__close` (`tl-button--ghost --sm`, `aria-label` und Tooltip „Dismiss“). `alert.spec.html`: ein Alert mit Aktionen und Schließen-Knopf.
+
+- [ ] **Step 6: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün (295 Tests auf `80749da`: 285 + neun aus Step 1 + einer aus Step 5b; nachgezählt 07.10. in einer Kopie). `git add design-system && git commit -m "Ticket #29617: Welle 3b -- Toenung als Attribut: @tl-roles erzeugt [data-tl-role], Chip und Segment tragen die Rolle selbst; TLAlert-Block im Paket"`
+
+### Task P2: Entfernbare Kapsel — `tl-chip__toggle`, `tl-chip__remove` (Kreis wie im Select-Chip)
 
 **Files:**
-- Modify: `src/components/choice/choice.css` (Ende), `choice.contract.md`, `choice.spec.html`
-- Test: `test/choice.test.mjs:11-17,140-147`
+- Modify: `src/components/choice/choice.css` (Ende; nach `.tl-choice-group[hidden]`), `src/components/select/select.css:62-85` (Bernhards Kreis-Regeln bekommen den zweiten Selektor), `choice.contract.md`, `choice.spec.html`, `tools/lint-css.mjs` (`tl-choice-group`)
+- Test: `test/choice.test.mjs:18-24` (Farbrollen) und anhängen
 
 **Interfaces:**
-- Produces: `span.tl-chip` > `button.tl-chip__toggle[aria-pressed]` + `button.tl-chip__remove.tl-button.tl-button--ghost.tl-button--sm.tl-button--icon`. Leser: E9 (Filterleiste).
+- Produces: `span.tl-chip` > `button.tl-chip__toggle[aria-pressed]` + `button.tl-chip__remove.tl-button.tl-button--ghost.tl-button--sm.tl-button--icon`; `.tl-choice-group--vertical`. Leser: E9 (Filterleiste), E1 (`TLChoiceGroup`).
+- **Entscheidung Hendrik 07.10.:** Das Entfernen in der Kapsel ist Bernhards Kreis aus dem Select-Chip (`b673054`, `130944a`): ein Kreis innerhalb der Kapsellinie, Durchmesser `size-control-sm` − 2 × `border-width-sm` − `space-2xs`, `radius-round`, Lücke `space-2xs` / 2 am Ende, Zeigen und Drücken `surface-interactive-active`. Kein `margin-block`. **Eine Regel für beide** — die Kreis-Regeln in `select.css` bekommen `.tl-chip__remove` als zweiten Selektor (dort stehen Bernhards Tests und Vertrag; `choice.css` schreibt keine zweite Fassung, der Test prüft das).
 
-- [ ] **Step 1: Tests (rot)** — `test/choice.test.mjs` „choice.css liest genau diese Farbrollen“ ersetzen durch
+- [ ] **Step 1: Tests (rot)** — `test/choice.test.mjs` „choice.css liest genau diese Farbrollen“ ersetzen durch (dazu kommen `surface-brand-active` und `text-on-brand-active` des gedrückten Entfernens; `surface-state-*` sind Bernhards Hof)
 
 ```js
 test('choice.css liest genau diese Farbrollen', () => {
   assert.deepEqual(colorVarsOf(css), [
     'border-control', 'border-disabled', 'border-emphasis', 'border-interactive', 'icon-secondary',
-    'status-error-border', 'status-warning-border', 'surface-brand', 'surface-brand-active', 'surface-brand-hover',
-    'surface-brand-subtle', 'surface-disabled', 'surface-field', 'surface-interactive-hover', 'text-disabled',
-    'text-on-brand', 'text-on-brand-active', 'text-on-brand-hover', 'text-primary',
+    'status-error-border', 'status-warning-border', 'surface-brand', 'surface-brand-active', 'surface-brand-hover', 'surface-brand-subtle',
+    'surface-disabled', 'surface-field', 'surface-interactive-hover', 'surface-state-active', 'surface-state-hover', 'text-disabled', 'text-on-brand',
+    'text-on-brand-active', 'text-on-brand-hover', 'text-primary',
   ]);
 });
 ```
@@ -343,22 +422,46 @@ test('choice.css liest genau diese Farbrollen', () => {
 und anhängen
 
 ```js
+
 test('entfernbare Kapsel: umschalten und entfernen in einem span.tl-chip, gedrückt wie ein gedrückter Chip', () => {
   assert.match(declarationsOf(css, '.tl-chip:has(> .tl-chip__toggle)') ?? '', /padding:\s*0/);
   assert.match(declarationsOf(css, '.tl-chip__toggle') ?? '', /border-radius:\s*var\(--tl-radius-full\)/);
   // Der Knopf setzt display: [hidden] des Browsers verlöre sonst (3a-Regel, auch am Element).
   assert.match(declarationsOf(css, '.tl-chip__toggle[hidden]') ?? '', /display:\s*none/);
+  // Folgt das Entfernen, endet der Umschalt-Knopf am Label: der Abstand zum Kreis ist der gap der Kapsel.
+  assert.match(declarationsOf(css, '.tl-chip__toggle:has(+ .tl-chip__remove)') ?? '', /padding-inline-end:\s*0/);
   const gedrueckt = declarationsOf(css, '.tl-chip:has(> .tl-chip__toggle[aria-pressed="true"])') ?? '';
   assert.match(gedrueckt, /background:\s*var\(--tl-surface-brand\)/);
   assert.match(gedrueckt, /color:\s*var\(--tl-text-on-brand\)/);
   assert.match(declarationsOf(css, '.tl-chip:has(> .tl-chip__toggle[aria-pressed="true"]) > .tl-chip__remove') ?? '', /color:\s*inherit/);
-  assert.match(declarationsOf(css, '.tl-chip__remove') ?? '', /margin-block:\s*calc\(-1 \* var\(--tl-border-width-sm\)\)/);
+});
+
+// Entscheidung 07.10.: Filterkapsel und Select-Chip teilen ein Modell für das Entfernen (Bernhards Kreis,
+// select.css) — eine Regel, zwei Selektoren, keine zweite Fassung in choice.css.
+test('Entfernen in der Kapsel ist derselbe Kreis wie im Select-Chip: eine Regel für beide', () => {
+  const select = readComponent('select', 'select.css');
+  const kreis = declarationsOf(select, '.tl-chip__remove') ?? '';
+  assert.equal(kreis, declarationsOf(select, '.tl-select__chip > .tl-button'), 'dieselbe Regel');
+  assert.match(kreis, /border-radius:\s*var\(--tl-radius-round\)/);
+  assert.doesNotMatch(kreis, /margin/);
+  assert.equal(declarationsOf(select, '.tl-chip:has(> .tl-chip__remove)'), declarationsOf(select, '.tl-select__chip:has(> .tl-button)'));
+  assert.equal(declarationsOf(select, '.tl-chip__remove:not(:disabled):hover'),
+    declarationsOf(select, '.tl-select__chip > .tl-button--ghost:not(:disabled):hover'));
+  assert.equal(declarationsOf(css, '.tl-chip__remove'), null, 'keine zweite Fassung in choice.css');
+});
+
+// master #29654 (TLChoiceGroup) definierte den Modifier im TLTableView-Block des alten Stylesheets;
+// E7 löscht diesen Bereich, das Paket trägt ihn (neu verankert 07.10.).
+test('eine Auswahlgruppe steht untereinander mit --vertical', () => {
+  const v = declarationsOf(css, '.tl-choice-group--vertical') ?? '';
+  assert.match(v, /flex-direction:\s*column/);
+  assert.match(v, /align-items:\s*flex-start/);
 });
 ```
 
-und in „der Auswahl-Vertrag nennt …“ die Namensliste um `'tl-chip__toggle', 'tl-chip__remove', 'data-tl-role'` ergänzen.
+und in „der Auswahl-Vertrag nennt …“ (`choice.test.mjs:169`) die Namensliste nach `'tl-chip__label', ` um `'tl-chip__toggle', 'tl-chip__remove', 'data-tl-role', 'tl-choice-group--vertical', ` ergänzen.
 
-- [ ] **Step 2: Rot sehen** — `node --test test/choice.test.mjs` → FAIL (Farbrollen, Kapsel, Vertrag).
+- [ ] **Step 2: Rot sehen** — `node --test test/choice.test.mjs` → FAIL (Farbrollen, Kapsel, ein Modell, `--vertical`, Vertrag).
 
 - [ ] **Step 3: CSS** — an `choice.css` anhängen:
 
@@ -369,7 +472,9 @@ und in „der Auswahl-Vertrag nennt …“ die Namensliste um `'tl-chip__toggle'
 /* Zwei Knöpfe in einer Kapsel (Filterleiste der Tabelle, 3b §11): span.tl-chip mit dem Umschalt-Knopf
    tl-chip__toggle (aria-pressed) und dem Entfernen-Knopf tl-chip__remove (tl-button--icon --sm --ghost).
    Die Kapsel zeichnet Rahmen und Fläche; gedrückt sieht sie aus wie ein gedrückter Knopf-Chip, und der
-   Entfernen-Knopf liest dann die Beschriftung auf der Marke. Er liegt in der Kapsel, ohne sie zu heben. */
+   Entfernen-Knopf liest dann die Beschriftung auf der Marke. Das Entfernen ist derselbe Kreis innerhalb der
+   Kapsellinie wie im Select-Chip — eine Regel für beide in select.css (Entscheidung 07.10., „Gleiches wird
+   zusammengelegt“). */
 .tl-chip:has(> .tl-chip__toggle) {
   padding: 0;
   cursor: default;
@@ -394,9 +499,10 @@ und in „der Auswahl-Vertrag nennt …“ die Namensliste um `'tl-chip__toggle'
 }
 .tl-chip__toggle[hidden] { display: none; }
 
-.tl-chip__remove {
-  margin-block: calc(-1 * var(--tl-border-width-sm));
-  margin-inline-start: calc(-1 * var(--tl-space-xs));
+/* Folgt das Entfernen, endet der Umschalt-Knopf am Label: der Abstand zum Kreis ist der gap der Kapsel
+   (space-2xs), wie zwischen Label und Kreis im Select-Chip. */
+.tl-chip__toggle:has(+ .tl-chip__remove) {
+  padding-inline-end: 0;
 }
 
 .tl-chip:has(> .tl-chip__toggle[aria-pressed="true"]) {
@@ -423,15 +529,67 @@ und in „der Auswahl-Vertrag nennt …“ die Namensliste um `'tl-chip__toggle'
 
 (Kontrast: `text-on-brand-active` auf `surface-brand-active` steht als abgeleitetes Paar schon in der Liste.)
 
-- [ ] **Step 4: Vertrag, Specimen** — `choice.contract.md` Tokens: Zeile „Entfernbare Kapsel | Rahmen und Fläche wie der Chip; gedrückt `--tl-surface-brand`, Text `--tl-text-on-brand`, Zeigen `--tl-surface-brand-hover`/`--tl-text-on-brand-hover`; Entfernen gedrückt beim Zeigen `--tl-surface-brand-active`/`--tl-text-on-brand-active`“; Klassen: `tl-chip__toggle` („`button` in einem `span.tl-chip`, `aria-pressed`; trägt das Label“), `tl-chip__remove` („`tl-button tl-button--ghost tl-button--sm tl-button--icon`, `aria-label` und Tooltip Pflicht, 24 px“). `choice.spec.html`: Zeile „entfernbar“ mit zwei Kapseln (eine `aria-pressed="false"`, eine `"true"`), der Entfernen-Knopf mit `bi bi-x-lg` wie die übrigen Specimen-Icons.
+`select.css` (Bernhards Kreis, auf `80749da` 62–85): vom Kommentar „Der Entfernen-Knopf ist ein tl-button--icon --sm --ghost, liegt aber ganz innerhalb des Pillenrandes …“ bis vor `.tl-select__drag-handle {` ersetzen durch — dieselben drei Regeln, je um den Selektor der Filterkapsel erweitert, der Kommentar um einen Satz:
 
-- [ ] **Step 5: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün. `git commit -m "Ticket #29617: Welle 3b -- entfernbare Kapsel: tl-chip__toggle und tl-chip__remove"`
+```css
+/* Der Entfernen-Knopf ist ein tl-button--icon --sm --ghost, liegt aber ganz innerhalb des Pillenrandes: ein
+   Kreis, konzentrisch zum runden Ende der Pille, mit einer Lücke von space-2xs / 2 zum Rand oben, unten und am
+   Ende. Durchmesser = Pillenhöhe size-control-sm − 2 × Rand − 2 × Lücke; das Ende der Pille trägt nur die
+   Lücke als Innenabstand. Ein Quadrat über dem Rand verdeckte beim Zeigen Rand und rundes Ende. Dasselbe Modell
+   trägt das Entfernen der Filterkapsel (tl-chip__remove, choice.css): eine Regel für beide (07.10.). */
+.tl-select__chip:has(> .tl-button),
+.tl-chip:has(> .tl-chip__remove) {
+  padding-inline-end: calc(var(--tl-space-2xs) / 2);
+}
+
+.tl-select__chip > .tl-button,
+.tl-chip__remove {
+  width: calc(var(--tl-size-control-sm) - 2 * var(--tl-border-width-sm) - var(--tl-space-2xs));
+  height: calc(var(--tl-size-control-sm) - 2 * var(--tl-border-width-sm) - var(--tl-space-2xs));
+  min-height: 0;
+  border-radius: var(--tl-radius-round);
+}
+
+/* Der Entfernen-Knopf liegt auf der Pille, nicht auf dem Feld: die neutrale Pille ist selbst
+   surface-interactive-selected, die Ghost-Stufe verschwindet auf ihr und auf den getönten Pillen. Zeigen und
+   Drücken nehmen darum beide surface-interactive-active, die einzige Stufe, die sich auf allen 14
+   Pillenflächen abhebt (docs/skalen.md „Knöpfe im Feld zeigen eine Stufe kräftiger“). Eine kräftigere
+   Drücken-Stufe gibt es nicht; die Kategorie bleibt geschlossen. */
+.tl-select__chip > .tl-button--ghost:not(:disabled):hover,
+.tl-select__chip > .tl-button--ghost:not(:disabled):active,
+.tl-chip__remove:not(:disabled):hover,
+.tl-chip__remove:not(:disabled):active {
+  background: var(--tl-surface-interactive-active);
+}
+```
+
+(Spezifität: `.tl-chip:has(> .tl-chip__remove)` schlägt `.tl-chip:has(> .tl-chip__toggle) { padding: 0 }` bei gleicher Spezifität, weil `select.css` im Generat nach `choice.css` steht; das gedrückte Entfernen `.tl-chip:has(> .tl-chip__toggle[aria-pressed="true"]) > .tl-chip__remove:hover` (0,5,0) schlägt das Zeigen `.tl-chip__remove:not(:disabled):hover` (0,3,0).)
+
+Direkt nach `.tl-choice-group[hidden] { display: none; }` in `choice.css` einfügen (master #29654, wörtlich aus dem TLTableView-Block von `tlReactControls.css` übernommen, den E7 löscht):
+
+```css
+
+/* Untereinander statt nebeneinander (TLChoiceGroup, master #29654): jede Option so breit wie ihr Label,
+   keine umbrechende Reihe. */
+.tl-choice-group--vertical {
+  flex-direction: column;
+  align-items: flex-start;
+}
+```
+
+`tools/lint-css.mjs` MODIFIERS: `'tl-choice-group': new Set(['vertical']), // Untereinander (TLChoiceGroup, #29654).`
+
+(Vorgeprüft 07.10. auf `80749da` nach P1: Lint grün, `node --test` 298/298; Bernhards `select.test` „der Entfernen-Knopf liegt ganz im Pillenrand“ und „… zeigt und drückt active“ bleiben unverändert grün.)
+
+- [ ] **Step 4: Vertrag, Specimen** — `choice.contract.md`: `TLBooleanChoice` (Zeilen 21, 69) heißt seit master #29654 `TLChoiceGroup` (`ReactDropdownSelectControl` mit `SelectDisplay.RADIO`: Radios bei einem Wert, Kästchen bei mehreren, je in `label.tl-choice` in einer `tl-choice-group`, Rolle `radiogroup` bzw. `group`); Klassen-Zeile `tl-choice-group--vertical` („die Optionen untereinander; ohne den Modifier nebeneinander mit Umbruch, Zustand `orientation`“). Tokens: Zeile „Entfernbare Kapsel | Rahmen und Fläche wie der Chip; gedrückt `--tl-surface-brand`, Text `--tl-text-on-brand`, Zeigen `--tl-surface-brand-hover`/`--tl-text-on-brand-hover`; Entfernen gedrückt beim Zeigen `--tl-surface-brand-active`/`--tl-text-on-brand-active`. Das Entfernen ist derselbe Kreis wie im Select-Chip (eine Regel, `select.css`): Durchmesser `--tl-size-control-sm` − 2 × `--tl-border-width-sm` − `--tl-space-2xs`, `--tl-radius-round`, Lücke `--tl-space-2xs` / 2 am Ende; Zeigen und Drücken `--tl-surface-interactive-active`“ (die Tokens müssen im Vertrag stehen — „der Auswahl-Vertrag nennt jedes Token“ liest `varsOf(choice.css)`, darunter `--tl-surface-brand-active`, `--tl-text-on-brand-active`); Klassen: `tl-chip__toggle` („`button` in einem `span.tl-chip`, `aria-pressed`; trägt das Label“), `tl-chip__remove` („`tl-button tl-button--ghost tl-button--sm tl-button--icon`, `aria-label` und Tooltip Pflicht; Kreis innerhalb der Kapsellinie wie im Select-Chip“), `data-tl-role` (an `tl-chip` und `tl-segmented__segment`). `select.contract.md` Zeile 86 (Entfernen): „Dasselbe Modell trägt `tl-chip__remove` der Filterkapsel (`choice.contract.md`).“ `choice.spec.html`: Zeile „entfernbar“ mit zwei Kapseln (eine `aria-pressed="false"`, eine `"true"`), der Entfernen-Knopf mit `bi bi-x-lg` wie die übrigen Specimen-Icons.
+
+- [ ] **Step 5: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün (298 Tests). `git commit -m "Ticket #29617: Welle 3b -- entfernbare Kapsel: tl-chip__toggle und tl-chip__remove als Bernhards Kreis (eine Regel mit dem Select-Chip), tl-choice-group--vertical"`
 
 ### Task P3: `tl-status` — Laden, leer, Fehler; Nachzug Select
 
 **Files:**
 - Create: `src/components/status/status.css`, `status.contract.md`, `status.spec.html`
-- Modify: `src/components/select/select.css:146-159` (Status fällt), `select.contract.md`, `select.spec.html`, `tools/lint-css.mjs` (Blockliste), `specimen/index.html`
+- Modify: `src/components/select/select.css:195-207` (Status fällt; Zeilen auf `80749da`), `select.contract.md`, `select.spec.html`, `tools/lint-css.mjs` (Blockliste), `specimen/index.html`
 - Test: `test/status.test.mjs` (neu), `test/select.test.mjs:11-17,49`
 
 **Interfaces:**
@@ -457,7 +615,7 @@ test('tl-status: eine Zeile size-row in text-secondary, als Alarm status-error-t
 });
 ```
 
-`test/select.test.mjs`: in „select.css liest genau diese Farbrollen“ `'status-error-text'` und `'text-secondary'` streichen (Ergebnis `['border-interactive', 'icon-secondary', 'surface-interactive-hover', 'surface-interactive-selected', 'text-placeholder']`); im Specimen-Test `'tl-select__status'` → `'tl-status'`.
+`test/select.test.mjs`: in „select.css liest genau diese Farbrollen“ `'status-error-text'` und `'text-secondary'` streichen (Ergebnis auf `80749da` `['border-interactive', 'icon-secondary', 'surface-interactive-active', 'surface-interactive-hover', 'surface-interactive-selected', 'text-placeholder']` — `surface-interactive-active` lesen Bernhards Knöpfe im Feld); im Specimen-Test `'tl-select__status'` → `'tl-status'`.
 
 - [ ] **Step 2: Rot sehen** — `node --test test/status.test.mjs test/select.test.mjs` → FAIL (ENOENT `status.css`, Farbrollen).
 
@@ -489,21 +647,21 @@ test('tl-status: eine Zeile size-row in text-secondary, als Alarm status-error-t
 }
 ```
 
-`select.css`: den Abschnitt „Laden, keine Treffer, Ladefehler: eine Zeile im Popup.“ mit `.tl-select__status` und `.tl-select__status[role="alert"]` (146–159) löschen. `tools/lint-css.mjs` MODIFIERS: `'tl-status': new Set([]),` nach `'tl-skeleton'`.
+`select.css`: den Abschnitt „Laden, keine Treffer, Ladefehler: eine Zeile im Popup.“ mit `.tl-select__status` und `.tl-select__status[role="alert"]` (195–207) löschen. `tools/lint-css.mjs` MODIFIERS: `'tl-status': new Set([]),` nach `'tl-skeleton'`.
 
-- [ ] **Step 4: Vertrag, Specimen** — `status.contract.md` nach dem Muster von `toggle.contract.md` (Abschnitte Zustand, Aktionen, Tokens, Attribute, Konformität): Zustand „lädt“ (Kind `tl-progress` mit `aria-busy="true"`, Beschriftung optional), „leer“ (Text), „Fehler“ (`role="alert"`, darf einen `tl-button--link` zum Wiederholen tragen); Tokens `--tl-size-row`, `--tl-space-xs`, `--tl-space-control-x`, `--tl-text-secondary`, `--tl-status-error-text`; Leser Select-Popup, Baum (eine `li` mit `role="treeitem"` eine Ebene unter einem Knoten mit `aria-busy`, Name aus `js.tree.loading`), Tabelle (eine `role="row"` > `role="gridcell"` mit `tl-status`). `status.spec.html` nach `toggle.spec.html`: drei Zeilen (lädt mit `tl-progress[aria-busy="true"]`, leer, Fehler mit Link) auf layer/base/overlay; `select.spec.html`: `tl-select__status` → `tl-status` (drei Stellen 124, 135, 148); `select.contract.md`: „Laden, keine Treffer und Ladefehler sind eine `tl-status`-Zeile“; Index-Link „Status →“.
+- [ ] **Step 4: Vertrag, Specimen** — `status.contract.md` nach dem Muster von `toggle.contract.md` (Abschnitte Zustand, Aktionen, Tokens, Attribute, Konformität): Zustand „lädt“ (Kind `tl-progress` mit `aria-busy="true"`, Beschriftung optional), „leer“ (Text), „Fehler“ (`role="alert"`, darf einen `tl-button--link` zum Wiederholen tragen); Tokens `--tl-size-row`, `--tl-space-xs`, `--tl-space-control-x`, `--tl-text-secondary`, `--tl-status-error-text`; Leser Select-Popup, Baum (eine `li` mit `role="treeitem"` eine Ebene unter einem Knoten mit `aria-busy`, Name aus `js.tree.loading`), Tabelle (eine `role="row"` > `role="gridcell"` mit `tl-status`). `status.spec.html` nach `toggle.spec.html`: drei Zeilen (lädt mit `tl-progress[aria-busy="true"]`, leer, Fehler mit Link) auf layer/base/overlay; `select.spec.html`: `tl-select__status` → `tl-status` (drei Stellen 155, 166, 179); `select.contract.md` 122, 123, 149 ebenso; `select.contract.md`: „Laden, keine Treffer und Ladefehler sind eine `tl-status`-Zeile“; Index-Link „Status →“.
 
-- [ ] **Step 5: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün. `git commit -m "Ticket #29617: Welle 3b -- tl-status: Laden, leer, Fehler als eine Zeile; Select liest ihn"`
+- [ ] **Step 5: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün (299 Tests). `git commit -m "Ticket #29617: Welle 3b -- tl-status: Laden, leer, Fehler als eine Zeile; Select liest ihn"`
 
 ### Task P4: Eine Ziehen-Optik und die umsortierbare Liste
 
 **Files:**
 - Create: `src/components/drag/drag.css`, `drag.contract.md`; `src/components/reorder-list/reorder-list.css`, `reorder-list.contract.md`, `reorder-list.spec.html`
-- Modify: `src/components/select/select.css:60-79` (Chip-Ziehen fällt), `select.contract.md`, `select.spec.html:39` (`data-tl-axis`), `tools/lint-css.mjs`, `specimen/index.html`
+- Modify: `src/components/select/select.css:92-103` (Chip-Ziehen fällt; Zeilen auf `80749da`), `select.contract.md`, `select.spec.html:59,61,66,71` (`data-tl-axis`, Griffe als Knopf), `tools/lint-css.mjs`, `specimen/index.html`
 - Test: `test/drag.test.mjs` (neu), `test/select.test.mjs:30-34` (der Test „Hervorhebung und Ziehen sind data-tl-state, gewählt ist aria-selected“)
 
 **Interfaces:**
-- Produces: `[data-tl-state~="drop-before|drop-after|drop-onto|drop-refused|dragging"]` — Marke und Rahmen auf `::before` über dem Ziel (`layer-sticky`, das Ziel wird über `:where` positioniert, ohne eine Lage des Blocks zu überschreiben), `[data-tl-axis="horizontal"] > …` (links/rechts); `ul.tl-reorder-list`, `li.tl-reorder-list__item`, `.tl-reorder-list__handle` (an einem `tl-button--icon --sm --ghost`), `.tl-reorder-list__label`, `.tl-reorder-list__search`; `.tl-select__chip > .tl-select__drag-handle`. Leser: E2 (Select-Chips, `TLValueList`), E5 (Spaltenwahl), E6 (Baum), E8/E9 (Tabelle).
+- Produces: `[data-tl-state~="drop-before|drop-after|drop-onto|drop-refused|dragging"]` — Marke und Rahmen auf `::before` über dem Ziel (`layer-sticky`, das Ziel wird über `:where` positioniert, ohne eine Lage des Blocks zu überschreiben), `[data-tl-axis="horizontal"] > …` (links/rechts); `ul.tl-reorder-list`, `li.tl-reorder-list__item`, `.tl-reorder-list__handle` (an einem `tl-button--icon --sm --ghost`), `.tl-reorder-list__label`, `.tl-reorder-list__search`; `.tl-select__chip:has(> .tl-select__drag-handle)` (der Griff ist ein `tl-button` und damit Bernhards Kreis). Leser: E2 (Select-Chips, `TLValueList`), E5 (Spaltenwahl), E6 (Baum), E8/E9 (Tabelle).
 
 - [ ] **Step 1: Tests (rot)** — `test/drag.test.mjs`:
 
@@ -575,7 +733,9 @@ test('tl-reorder-list: Liste ohne Aufzählung, Einträge size-row, Griff innen f
 test('Hervorhebung ist data-tl-state, das Ziehen zeichnet drag.css, gewählt ist aria-selected', () => {
   assert.ok(declarationsOf(css, '.tl-select__option[data-tl-state~="highlighted"]'), 'Hervorhebung fehlt');
   assert.doesNotMatch(css.replace(/\/\*[\s\S]*?\*\//g, ''), /data-tl-state~="(dragging|drop-)/, 'die Ziehen-Optik steht in drag.css');
-  assert.match(declarationsOf(css, '.tl-select__chip > .tl-select__drag-handle') ?? '', /margin-inline-start/);
+  // Der Griff ist ein Kreis wie das Entfernen (eine Regel .tl-select__chip > .tl-button); am Anfang der Pille
+  // trägt sie dieselbe Lücke als Innenabstand wie am Ende (Entscheidung 07.10.: ein Modell).
+  assert.match(declarationsOf(css, '.tl-select__chip:has(> .tl-select__drag-handle)') ?? '', /padding-inline-start:\s*calc\(var\(--tl-space-2xs\) \/ 2\)/);
   assert.doesNotMatch(css, /--highlighted|--dragging|--open|--drop/);
 });
 ```
@@ -721,24 +881,24 @@ test('Hervorhebung ist data-tl-state, das Ziehen zeichnet drag.css, gewählt ist
 
 (`.tl-reorder-list__handle` steht in `components.css` nach `button/` und schlägt die Farbe von `tl-button--ghost` bei gleicher Spezifität.)
 
-- [ ] **Step 5: Select** — `select.css` die Regeln `.tl-select__chip[data-tl-state~="dragging"]`, den Kommentar „Die Einfügemarke beim Ziehen …“ und die zwei `drop-before`/`drop-after`-Regeln (60–79 nach P3) ersetzen durch
+- [ ] **Step 5: Select** — `select.css` die Regeln `.tl-select__chip[data-tl-state~="dragging"]`, den Kommentar „Die Einfügemarke beim Ziehen …“ und die zwei `drop-before`/`drop-after`-Regeln (92–103 auf `80749da`) ersetzen durch
 
 ```css
 
-/* Der Griff ist ein tl-button--icon --sm --ghost (Ziehen und Alt + Pfeil, 3b §8); er liegt vorn in der
-   Pille, ohne sie zu heben. Gezogen, Einfügemarke: drag.css; tl-select__values trägt
+/* Der Griff ist ein tl-button--icon --sm --ghost (Ziehen und Alt + Pfeil, 3b §8) und derselbe Kreis wie das
+   Entfernen (.tl-select__chip > .tl-button oben); am Anfang der Pille trägt sie dieselbe Lücke als
+   Innenabstand wie am Ende. Gezogen, Einfügemarke: drag.css; tl-select__values trägt
    data-tl-axis="horizontal", die Marke steht links oder rechts. */
-.tl-select__chip > .tl-select__drag-handle {
-  margin-inline-start: calc(-1 * var(--tl-space-2xs));
-  margin-inline-end: 0;
+.tl-select__chip:has(> .tl-select__drag-handle) {
+  padding-inline-start: calc(var(--tl-space-2xs) / 2);
 }
 ```
 
-(`.tl-select__drag-handle { color: icon-secondary; cursor: grab }` bleibt; die neue Regel steht nach `.tl-select__chip > .tl-button` und überschreibt dessen `margin-inline-end`.) Kopfkommentar `select.css:6–7`: „…die Tastatur-Hervorhebung; Ziehen zeichnet drag.css“. `select.spec.html:39` (`tl-select__values` des Mehrfachwerts) bekommt `data-tl-axis="horizontal"`, der Chip-Griff wird `<button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-select__drag-handle" aria-label="Verschieben">`. `tools/lint-css.mjs` MODIFIERS: `'tl-reorder-list': new Set([]),`.
+(Entscheidung 07.10., ein Modell: der Griff ist ein `tl-button` im Chip und bekommt damit Bernhards Kreis — Durchmesser, `radius-round`, Zeigen/Drücken `surface-interactive-active` — ohne eigene Regel; kein negativer Rand mehr, Bernhards Test „der Entfernen-Knopf liegt ganz im Pillenrand“ verbietet ihn am Knopf. `.tl-select__drag-handle { color: icon-secondary; cursor: grab }` bleibt.) Kopfkommentar `select.css:6–7`: „…die Tastatur-Hervorhebung; Ziehen zeichnet drag.css“. `select.spec.html:59` (`tl-select__values` des Mehrfachwerts mit Griffen; die Plan-Angabe 39 war der Einzelwert) bekommt `data-tl-axis="horizontal"`, die drei Chip-Griffe 61, 66, 71 (`<i class="… tl-select__drag-handle">`) werden `<button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-select__drag-handle" aria-label="Verschieben"><i class="tl-icon-sm bi bi-grip-vertical tl-button__icon" aria-hidden="true"></i></button>`. `tools/lint-css.mjs` MODIFIERS: `'tl-reorder-list': new Set([]),`. (Vorgeprüft 07.10. auf `80749da` nach P1–P3: Lint grün, `node --test` 302/302.)
 
 - [ ] **Step 6: Verträge, Specimen** — `drag.contract.md`: Tabelle der fünf Zustände wie Spec §9 (Wort, Bild, Token), „Marke und Rahmen liegen auf `::before` über dem Ziel (über den Hintergründen seiner Kinder und haftenden Zellen), `::after` bleibt dem Cursor-Ring; ein Ziel braucht kein eigenes `position`“, `data-tl-axis="horizontal"` am Behälter, „Ein Rechner: `dropPositionAt` (Drittel) für Ablageziele, `useListReorder` (Hälften) für Reihenfolgen“, „Ein Drop-Ziel ist kein Fokus“. `reorder-list.contract.md`: Zustand (`entries`, je Eintrag Name, sichtbar, gruppiert), Aktionen (`columnReorder`, `columnVisible`, `groupBy`), **Tastatur** (Griff ist ein `button` mit `aria-label` „<Name> verschieben“ und `aria-describedby` auf den Hinweis; Alt + Pfeil auf/ab verschiebt um eine Stelle und sendet denselben Befehl wie das Ziehen; Live-Bereich `role="status"` sagt „<Name>, Position n von m“ an, Key `js.reorder.moved`; Enden: nichts), Tokens, Attribute (`tl-reorder-list` am `ul`, `tl-reorder-list__item` am `li`, `tl-reorder-list__handle` am Griff, `tl-reorder-list__label`, `tl-reorder-list__search` an der `tl-field-group`; Gruppierungsknopf `tl-button--icon --sm --ghost` mit `aria-pressed`; Kästchen `label.tl-choice` > `input.tl-checkbox`), Konformität. `reorder-list.spec.html`: Liste mit fünf Einträgen, einer `data-tl-state="dragging"`, einer `"drop-before"`, einer mit gedrücktem Gruppierungsknopf, einer mit deaktiviertem Kästchen; davor die Suche. `select.contract.md`: „Der Chip-Griff ist ein Knopf (`useListReorder`, Alt + Pfeil links/rechts); `tl-select__values` trägt `data-tl-axis="horizontal"`“. Index-Link „Liste →“.
 
-- [ ] **Step 7: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün. `git commit -m "Ticket #29617: Welle 3b -- eine Ziehen-Optik (drag.css) und tl-reorder-list"`
+- [ ] **Step 7: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün (302 Tests). `git commit -m "Ticket #29617: Welle 3b -- eine Ziehen-Optik (drag.css) und tl-reorder-list"`
 
 ### Task P5: Der Cursor-Ring in `base.css`
 
@@ -747,7 +907,7 @@ test('Hervorhebung ist data-tl-state, das Ziehen zeichnet drag.css, gewählt ist
 - Test: `test/focus.test.mjs` (Fall anhängen), `test/generate.test.mjs:70`
 
 **Interfaces:**
-- Produces: Ein Behälter mit `aria-activedescendant`, der kein `input`/`textarea` ist, trägt bei `:focus-visible` keinen Ring; das Element darin mit `data-tl-state~="cursor"` trägt ihn über `::after` innen. Das Cursor-Element muss positioniert sein (Tabellenzeile `absolute`, Baumknoten `relative`). Leser: P7, P8, E6, E7.
+- Produces: Ein Behälter mit `aria-activedescendant`, der kein `input`/`textarea` und kein `[role="combobox"]` ist, trägt bei `:focus-visible` keinen Ring (das Select ohne Suchfeld — `noFilter`, master #29654 — trägt `aria-activedescendant` am Feld `div[role=combobox]`, sein Cursor steht im Popup; ohne die Ausnahme verlöre das offene Feld seinen Ring, neu verankert 07.10.); das Element darin mit `data-tl-state~="cursor"` trägt ihn über `::after` innen. Das Cursor-Element muss positioniert sein (Tabellenzeile `absolute`, Baumknoten `relative`). Leser: P7, P8, E6, E7.
 
 - [ ] **Step 1: Test (rot)** — an `test/focus.test.mjs` anhängen:
 
@@ -758,11 +918,13 @@ test('der Cursor-Ring: ein Behälter mit aria-activedescendant gibt den Ring an 
   const ring = /([^{}]+)\{\s*outline:\s*var\(--tl-focus-width\) solid var\(--tl-focus-ring\);/.exec(base);
   assert.ok(ring, 'Ring-Regel fehlt');
   const selektoren = ring[1].split(/,\n/).map((s) => s.trim());
-  assert.ok(selektoren.some((s) => s.includes(':where(:not(:not(input, textarea)[aria-activedescendant])):focus-visible')),
-    'der Behälter mit aria-activedescendant trägt den Ring nicht selbst');
-  assert.ok(selektoren.some((s) => s === ':where(:not(input, textarea)[aria-activedescendant]:focus-visible [data-tl-state~="cursor"])::after'),
+  // Ein Feld mit aria-activedescendant (Suchfeld, Select ohne Suchfeld: role=combobox) ist kein Behälter:
+  // sein Cursor steht im Popup, es behält den Ring.
+  assert.ok(selektoren.some((s) => s.includes(':where(:not(:not(input, textarea, [role="combobox"])[aria-activedescendant])):focus-visible')),
+    'der Behälter mit aria-activedescendant trägt den Ring nicht selbst, ein Feld schon');
+  assert.ok(selektoren.some((s) => s === ':where(:not(input, textarea, [role="combobox"])[aria-activedescendant]:focus-visible [data-tl-state~="cursor"])::after'),
     'das Cursor-Element trägt den Ring');
-  const flaeche = /:where\(:not\(input, textarea\)\[aria-activedescendant\] \[data-tl-state~="cursor"\]\)::after\s*\{([^}]*)\}/.exec(base);
+  const flaeche = /:where\(:not\(input, textarea, \[role="combobox"\]\)\[aria-activedescendant\] \[data-tl-state~="cursor"\]\)::after\s*\{([^}]*)\}/.exec(base);
   assert.ok(flaeche, 'Fläche des Cursor-Rings fehlt');
   for (const d of [/content:\s*""/, /position:\s*absolute/, /inset:\s*0/, /z-index:\s*var\(--tl-layer-sticky\)/,
     /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/, /pointer-events:\s*none/])
@@ -789,16 +951,17 @@ ersetzen durch
    Ein Behälter mit virtuellem Cursor (Tabelle, Baum: aria-activedescendant, 3a §5.4, 3b §3) trägt ihn
    nicht selbst: der Ring liegt innen am Element mit data-tl-state~="cursor". Gezeichnet wird er von
    dessen ::after, einer Fläche über dem Element — haftende Zellen überdecken den eigenen Umriss einer
-   Zeile. Ein Suchfeld mit aria-activedescendant (Select) ist kein Behälter und behält den Ring. */
-:where(a, button, input, select, textarea, summary, [tabindex], [contenteditable]):where(:not(:not(input, textarea)[aria-activedescendant])):focus-visible,
-:where(:not(input, textarea)[aria-activedescendant]:focus-visible [data-tl-state~="cursor"])::after {
+   Zeile. Ein Feld mit aria-activedescendant ist kein Behälter und behält den Ring: das Suchfeld eines
+   Select (input) und das Select ohne Suchfeld (role=combobox) — ihr Cursor steht im Popup. */
+:where(a, button, input, select, textarea, summary, [tabindex], [contenteditable]):where(:not(:not(input, textarea, [role="combobox"])[aria-activedescendant])):focus-visible,
+:where(:not(input, textarea, [role="combobox"])[aria-activedescendant]:focus-visible [data-tl-state~="cursor"])::after {
   outline: var(--tl-focus-width) solid var(--tl-focus-ring);
   outline-offset: var(--tl-focus-offset);
 }
 
 /* Die Fläche des Cursor-Rings: deckungsgleich mit dem Element, über seinen haftenden Zellen
    (layer-sticky; der Behälter isoliert den Stapel), für den Zeiger durchlässig, der Ring nach innen. */
-:where(:not(input, textarea)[aria-activedescendant] [data-tl-state~="cursor"])::after {
+:where(:not(input, textarea, [role="combobox"])[aria-activedescendant] [data-tl-state~="cursor"])::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -808,7 +971,7 @@ ersetzen durch
 }
 ```
 
-(Spezifität: der erste Selektor bleibt (0,1,0) wie bisher; beide `::after`-Selektoren (0,0,1), die zweite Regel steht später und gewinnt `outline-offset`. Die Fläche liegt immer am Cursor-Element, unsichtbar ohne Ring.)
+(Spezifität: der erste Selektor bleibt (0,1,0) wie bisher; beide `::after`-Selektoren (0,0,1), die zweite Regel steht später und gewinnt `outline-offset`. Die Fläche liegt immer am Cursor-Element, unsichtbar ohne Ring. Vorgeprüft 07.10. in einer Kopie mit der `combobox`-Ausnahme: `focus`/`generate` grün, `node --test` 271/271 mit `TL_WORKTREE`, Lint grün.)
 
 - [ ] **Step 4: Bestehenden Test nachziehen** — `node tools/generate.mjs && node --test test/focus.test.mjs test/generate.test.mjs` → `focus` grün, `generate.test.mjs` „base.css: Zahlenklasse, Fokusring …“ FAIL (`:focus-visible` zählt 2). Zeile 70 ersetzen durch
 
@@ -818,7 +981,7 @@ ersetzen durch
   assert.equal((base.match(/:focus-visible/g) ?? []).length, 2, 'ein Fokusring, zwei Selektoren');
 ```
 
-- [ ] **Step 5: Gates, Commit** — `node --test && node tools/lint-css.mjs` → grün (`base.css` besteht das Gate: kein Klassenselektor, `z-index` aus `--tl-layer-*`). `git commit -m "Ticket #29617: Welle 3b -- Cursor-Ring: der Behaelter mit aria-activedescendant gibt den Ring an sein Cursor-Element ab"`
+- [ ] **Step 5: Gates, Commit** — `node --test && node tools/lint-css.mjs` → grün (303 Tests; `base.css` besteht das Gate: kein Klassenselektor, `z-index` aus `--tl-layer-*`; Bernhards „der Hof reicht über den Fokusring hinaus“ bleibt grün). `git commit -m "Ticket #29617: Welle 3b -- Cursor-Ring: der Behaelter mit aria-activedescendant gibt den Ring an sein Cursor-Element ab"`
 
 ### Task P6: `tl-text` und `tl-columns`
 
@@ -838,7 +1001,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readGenerated, declarationsOf } from './lib/component.mjs';
 
-test('tl-text: Ton als data-tl-tone, ohne Ton erbt der Text; Ellipse ist --truncate', () => {
+test('tl-text: Ton als data-tl-tone, ohne Ton erbt der Text; Ellipse ist --truncate; leer nimmt keinen Platz', () => {
   const css = readGenerated('text', 'text.css');
   const TOENE = { secondary: 'text-secondary', helper: 'text-helper', placeholder: 'text-placeholder',
     success: 'status-success-text', warning: 'status-warning-text', error: 'status-error-text', 'on-brand': 'text-on-brand' };
@@ -847,6 +1010,8 @@ test('tl-text: Ton als data-tl-tone, ohne Ton erbt der Text; Ellipse ist --trunc
   assert.equal(declarationsOf(css, '.tl-text'), null, 'ohne Ton keine Farbregel: der Text erbt');
   assert.doesNotMatch(css, /accent|font-style|font-weight/);
   assert.match(declarationsOf(css, '.tl-text--truncate') ?? '', /text-overflow:\s*ellipsis/);
+  // master #29752: ein Text ohne Wert nimmt keinen Platz, einer mit Rolle (Live-Bereich) bleibt.
+  assert.match(declarationsOf(css, '.tl-text:empty:not([role])') ?? '', /display:\s*none/);
 });
 
 test('tl-columns: drei Abstände aus der Skala, Spalten schrumpfen', () => {
@@ -877,7 +1042,14 @@ test('tl-columns: drei Abstände aus der Skala, Spalten schrumpfen', () => {
 .tl-text[data-tl-tone="error"] { color: var(--tl-status-error-text); }
 .tl-text[data-tl-tone="on-brand"] { color: var(--tl-text-on-brand); }
 
-/* Eine Zeile, die mit Ellipse endet: als Block, sonst schneidet ein Inline-Element nicht ab. */
+/* Ein Text ohne Wert — ein Kanal, der noch nichts hält — nimmt keinen Platz, damit das Layout um ihn
+   keine Lücke freihält (master #29752). Ein Text mit Rolle bleibt: ein Live-Bereich muss auf der Seite
+   stehen, bevor seine Meldung kommt. */
+.tl-text:empty:not([role]) { display: none; }
+
+/* Eine Zeile, die mit Ellipse endet: als Block, sonst schneidet ein Inline-Element nicht ab. Den vollen
+   Text als Tooltip bietet der Tooltip-Host der Engine von selbst an (text-overflow: ellipsis, master
+   #29752) — keine Deklaration nötig. */
 .tl-text--truncate {
   display: block;
   min-width: 0;
@@ -917,11 +1089,11 @@ test('tl-columns: drei Abstände aus der Skala, Spalten schrumpfen', () => {
 }
 ```
 
-`tools/lint-css.mjs` MODIFIERS: `'tl-text': new Set(['truncate']), 'tl-columns': new Set(['gap-compact', 'gap-default', 'gap-loose']),`.
+`tools/lint-css.mjs` MODIFIERS: `'tl-text': new Set(['truncate']), 'tl-columns': new Set(['gap-compact', 'gap-default', 'gap-loose']),`. (Vorgeprüft 07.10. mit der `:empty`-Regel in einer Kopie: Lint grün, `text`/`hidden`/`ellipsis`/`lint-css`-Tests grün.)
 
-- [ ] **Step 4: Verträge, Specimen** — `text.contract.md`: Zustand (`text`, `variant` → Typo-Klasse nach der Tabelle in Spec §11 inklusive `caption` → `tl-type-label`, `tone` → `data-tl-tone` mit `on-color` → `on-brand` und `primary` ohne Attribut, `overflow` → `tl-text--truncate`, `appearance: pill` oder eine Farbrolle → `span.tl-pill` **als Wurzel** mit `data-tl-role` (Ton → Rolle: `success`/`warning`/`error` behalten ihren Namen, sonst neutral) und den übrigen Text-Attributen (`id`, `role`, `data-tooltip`, Klasse aus `css-class`), die Beschriftung in `tl-pill__label`; keine Hülle `tl-text`, entschieden 07.10.), „Stark ist die Typo-Klasse als `css-class` (`tl-type-body-strong`)“, „`accent` gibt es nicht (02.10.)“, Tokens, Attribute, Konformität. `columns.contract.md`: Zustand (`weights`, `breakpoint`, `gap`, `children`), die Formel aus dem Kopfkommentar, Klassen, Konformität. `text.spec.html`: jede Variante je Zeile, jeder Ton, `--truncate` in einer schmalen Zelle, eine Pill als Wurzel (`span.tl-pill tl-type-label` mit `data-tl-role="warning"`, kein `tl-text` darum), auf layer/base/overlay; `columns.spec.html`: drei Spalten in drei Abständen, eine Umbruchbreite per Skript als Inline-Basis gesetzt (Skripte zählen nicht als Inline-Style). Index-Links.
+- [ ] **Step 4: Verträge, Specimen** — `text.contract.md`: Zustand (`text`, `variant` → Typo-Klasse nach der Tabelle in Spec §11 inklusive `caption` → `tl-type-label`, `tone` → `data-tl-tone` mit `on-color` → `on-brand` und `primary` ohne Attribut, `overflow` → `tl-text--truncate`, `appearance: pill` oder eine Farbrolle → `span.tl-pill` **als Wurzel** mit `data-tl-role` (Ton → Rolle: `success`/`warning`/`error` behalten ihren Namen, sonst neutral) und den übrigen Text-Attributen (`id`, `role`, `data-tooltip`, Klasse aus `css-class`), die Beschriftung in `tl-pill__label`; keine Hülle `tl-text`, entschieden 07.10.), „Stark ist die Typo-Klasse als `css-class` (`tl-type-body-strong`)“, „`accent` gibt es nicht (02.10.)“, „Ein Text ohne Wert (`text` leer) nimmt keinen Platz, außer er trägt `role` (Live-Bereich); master #29752“, „Abgeschnittener Text (`--truncate`) zeigt seinen vollen Text als Tooltip über den Tooltip-Host, ohne Deklaration (master #29752)“, Tokens, Attribute, Konformität. `columns.contract.md`: Zustand (`weights`, `breakpoint`, `gap`, `children`), die Formel aus dem Kopfkommentar, Klassen, Konformität. `text.spec.html`: jede Variante je Zeile, jeder Ton, `--truncate` in einer schmalen Zelle, eine Pill als Wurzel (`span.tl-pill tl-type-label` mit `data-tl-role="warning"`, kein `tl-text` darum), auf layer/base/overlay; `columns.spec.html`: drei Spalten in drei Abständen, eine Umbruchbreite per Skript als Inline-Basis gesetzt (Skripte zählen nicht als Inline-Style). Index-Links.
 
-- [ ] **Step 5: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün. `git commit -m "Ticket #29617: Welle 3b -- tl-text (Ton als data-tl-tone) und tl-columns"`
+- [ ] **Step 5: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün (305 Tests). `git commit -m "Ticket #29617: Welle 3b -- tl-text (Ton als data-tl-tone) und tl-columns"`
 
 ### Task P7: `tl-table`
 
@@ -1462,7 +1634,7 @@ test('der Körper isoliert seinen Stapel, Spaltenwahl und Fixiergrenze sind so h
 
 - [ ] **Step 4: Vertrag, Specimen, Skeleton** — `table.contract.md`: Zustand (die Schlüssel von `TableViewControl` aus `TLTableView.tsx:309–330` ohne `rowHeight`), Aktionen (`select`, `selectAll`, `moveSelection`, `activate`, `expand`, `sort`, `columnResize`, `columnReorder`, `setFrozenColumnCount`, `openFilter`, `openColumnSelect`, `search`, `applyNamedFilter`, `clearFilter`, `saveNamedFilter`, `deleteNamedFilter`, `drop`, `dropProbe`, `scroll`), **Tastatur** (Raster fokussierbar; Pfeile, Pos1/Ende, Bild auf/ab bewegen den Cursor, Umschalt erweitert, Strg bewegt nur den Cursor, Leertaste wählt, Strg+A alle, Enter öffnet; Pfeil rechts/links klappt eine Baum- oder Gruppenzeile auf/zu und schiebt sonst waagerecht; Sortieren: Enter am Kopf-Knopf, Umschalt + Enter fügt eine Stufe an), **Semantik** (`role="grid"`/`role="treegrid"` am `tl-table__grid`, `aria-rowcount` = Zeilen + 1 (ohne Zeilen 2: die Statuszeile `aria-rowindex="2"` zählt mit), `aria-colcount`, `aria-multiselectable`, `aria-busy` beim Nachladen, `aria-activedescendant` = `<controlId>-row-<index>`; Kopf `role="rowgroup"` > `role="row"` `aria-rowindex="1"` > `role="columnheader"` mit `aria-sort` nur an der ersten Stufe; Körper `role="rowgroup"` mit `tabindex="-1"` (scrollt nur, kein eigener Tab-Halt) > `role="row"` mit `aria-rowindex`, `aria-selected`, im Baum `aria-level`, `aria-expanded` > `role="gridcell"`), Tokens (jede `var()` aus `table.css`), Attribute (`data-tl-state`-Wörter `cursor`, `frozen`, `frozen-last`, `pinned`, `pinned-first`, `filtered` und die Ziehen-Wörter aus `drag.contract.md`; `tl-checkbox` mit `aria-label` `js.table.selectAll`/`js.table.selectRow`, Kopf „teilweise“ nur als `indeterminate` — **kein** `aria-checked` (ARIA in HTML verbietet es am nativen Kästchen, der Browser meldet `indeterminate` als „gemischt“; entschieden 07.10.); Toggle `tl-toggle` mit `tabindex=-1` und `aria-expanded`, ohne `aria-controls` (er zeigte auf die eigene Zeile); Lehre `tl-status` mit `js.table.empty`; `tl-skeleton` in `tl-table__placeholder`; Filterleiste `tl-chip` + `tl-chip__toggle`/`__remove`, `tl-field-group`), Konformität. `table.spec.html`: Raster mit Kopf (eine sortierte Spalte mit Pfeil und Badge, eine gefilterte, eine fixierte mit `frozen-last`, eine angeheftete), fünf statische Zeilen (eine `aria-selected`, eine `cursor` im fokussierten Raster mit `aria-activedescendant`, eine `drop-before`, eine Baumzeile mit Toggle, eine Gruppenzeile mit Anzahl), eine Zelle mit Feld im Fehler, eine Skeleton-Zeile, darunter die leere Tabelle; Spaltenbreiten setzt das Skript über `el.style.width` (kein `style=` im HTML). `skeleton.contract.md`: Satz „Es gibt noch kein Control“ ersetzen durch „Erster Aufrufer: die Tabelle zeichnet Zeilen, die der Server noch nicht geschickt hat, als `tl-skeleton` in `tl-table__placeholder` (3b §10); das Raster trägt `aria-busy`“. `test/feedback.test.mjs` 40–49: die Prüfung `/kein Control/i` nur für `alert`, `badge`, `divider` (Bedingung `if (name !== 'skeleton')`). Index-Link „Tabelle →“.
 
-- [ ] **Step 5: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün. `git commit -m "Ticket #29617: Welle 3b -- tl-table: Raster, Kopf, Zeile, Zellen, Lage als Attribut"`
+- [ ] **Step 5: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün (307 Tests). `git commit -m "Ticket #29617: Welle 3b -- tl-table: Raster, Kopf, Zeile, Zellen, Lage als Attribut"`
 
 ### Task P8: `tl-tree`
 
@@ -1556,12 +1728,12 @@ test('tl-tree: Knoten size-row, positioniert für den Cursor-Ring, Auswahl als F
 
 - [ ] **Step 4: Vertrag, Specimen** — `tree.contract.md`: Zustand (`nodes` mit `id`, `depth`, `expandable`, `expanded`, `loading`, `selected`, `content`; `selectionMode`, `dragEnabled`, `dropEnabled`, `dropIndicatorNodeId`, `dropIndicatorPosition` `above|within|below` → `drop-before|drop-onto|drop-after`), Aktionen (`expand`, `collapse`, `select`, `activate`, `contextMenu`, `dragOver`, `drop`, `dragEnd`), Tastatur (unverändert, Spec §7: Pfeile, Rechts/Links klappt bzw. springt, Pos1/Ende, Enter öffnet, Leertaste wählt), Semantik (`role="tree"` mit `aria-label` = `js.tree.label`, `aria-multiselectable`, `aria-activedescendant` = `<controlId>-node-<id>`; `role="treeitem"` mit `id`, `aria-level`, `aria-expanded`, `aria-selected`, `aria-busy`; die Ladezeile ist ein `role="treeitem"` mit `aria-level` = Ebene des Knotens + 1 und `aria-label` = `js.tree.loading`, darin der unbestimmte `tl-progress`), Attribute (`tl-toggle` mit `tabindex=-1` und `aria-expanded`, ohne `aria-controls` — er zeigte auf den eigenen Knoten; `tl-status` als Ladezeile unter einem ladenden Knoten), Tokens, Konformität. `tree.spec.html`: fokussierter Baum (`tabindex="0"`, `aria-activedescendant`) mit drei Ebenen, ein Knoten `cursor`, einer `aria-selected`, einer `aria-busy` mit Ladezeile `<li class="tl-status" role="treeitem" aria-level="…" aria-label="Lädt">` samt `tl-progress`, einer `drop-onto`; Einzug per Skript. Index-Link „Baum →“.
 
-- [ ] **Step 5: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün. `git commit -m "Ticket #29617: Welle 3b -- tl-tree: Cursor und Auswahl wie die Tabelle"`
+- [ ] **Step 5: Gates, Commit** — `node tools/generate.mjs && node --test && node tools/lint-css.mjs` → grün (308 Tests). `git commit -m "Ticket #29617: Welle 3b -- tl-tree: Cursor und Auswahl wie die Tabelle"`
 
 ### Task P9: Gates — Kontrast, Zustandswörter, Verträge
 
 **Files:**
-- Modify: `tools/lib/pairs.mjs:55-56`, `src/primitives.json:24` (neue Stufe `red-34`), `src/tokens.json:18,20,46,48` (A1, entschieden 07.10.), `specimen/probe.theme.css` (erzeugt), `tools/lint-css.mjs:69,72`
+- Modify: `tools/lib/pairs.mjs:65` (Zeilen auf `80749da`), `src/primitives.json:24` (neue Stufe `red-34`), `src/tokens.json:18,20,46,48` (A1, entschieden 07.10.), `specimen/probe.theme.css` (erzeugt, bleibt byte-gleich), `tools/lint-css.mjs:76,79`
 - Test: `test/pairs.test.mjs` (Fall anhängen), `test/lint-css.test.mjs` (Fall anhängen), `test/contracts-3b.test.mjs` (neu)
 
 - [ ] **Step 1: Tests (rot)** — an `test/pairs.test.mjs` anhängen:
@@ -1643,7 +1815,8 @@ for (const name of ['status', 'reorder-list', 'text', 'columns', 'table', 'tree'
   // Fehler- und Warnlinie im Zelleditor und Ablehnung beim Ziehen auf einer ausgewählten oder gezeigten
   // Zeile (Stufen seit 07.10.: hell red-41/amber-43, dunkel red-34/amber-36), Platzhalter-Ton im Text.
   for (const bg of ['surface-interactive-selected', 'surface-interactive-hover']) paar('focus-ring', bg, 3.0);
-  for (const bg of ['surface-layer', 'surface-interactive-selected']) paar('icon-secondary', bg, 3.0);
+  // icon-secondary auf surface-interactive-selected steht seit Bernhards Knöpfen im Feld schon in der Liste (b985047).
+  paar('icon-secondary', 'surface-layer', 3.0);
   paar('border-emphasis', 'surface-layer', 3.0);
   for (const bg of ['surface-interactive-selected', 'surface-interactive-hover']) {
     paar('status-error-border', bg, 3.0);
@@ -1652,11 +1825,11 @@ for (const name of ['status', 'reorder-list', 'text', 'columns', 'table', 'tree'
   for (const bg of ['surface-base', 'surface-layer', 'surface-layer-nested']) paar('text-placeholder', bg, 4.5);
 ```
 
-Dann `node tools/derive.mjs test/fixtures/probe.primitives.json specimen/probe.theme.css` — das Probe-Theme ändert genau `--tl-focus-ring` hell `#E8541E` → `#E6521C` und bekommt die zugehörige Hinweiszeile im Kopf („focus-ring in der Helligkeit nachgeführt …“). Das kommt allein vom neuen Paar `focus-ring` auf `surface-interactive-selected`/`-hover`; Fehler- und Warnlinie aus Step 3 ändern das Probe-Theme nicht (nachgerechnet 07.10. in Kopien des Pakets: Step 3 mit den Rand-Paaren allein → byte-identisch; mit allen Paaren dieses Steps → genau diese Änderung). `git diff specimen/probe.theme.css` → eine geänderte Zeile (`--tl-focus-ring`), eine neue Hinweiszeile. `node --test test/pairs.test.mjs test/derive.test.mjs` → grün (`derive.test.mjs` verlangt die Datei byte-identisch).
+Dann `node tools/derive.mjs test/fixtures/probe.primitives.json specimen/probe.theme.css` — das Probe-Theme bleibt **byte-gleich** (nachgemessen 07.10. auf `80749da` mit `red-34`, den vier Token-Änderungen und allen Paaren dieses Steps: `diff` leer). Bernhard hat es beim Merge schon neu erzeugt (`--tl-focus-ring` hell `#E8541E` → `#DB4809` für die Hof-Paare `focus-ring` auf `surface-state-*/<Grund>`); `#DB4809` hält die neuen Paare `focus-ring` auf `surface-interactive-selected`/`-hover` bereits. Die frühere Erwartung `#E8541E → #E6521C` galt vor dem Merge und ist überholt. Die Paarliste kennt seit `80749da` Schichten (`<Schicht>/<Grund>`, durchscheinende `surface-state-*` über einem deckenden Grund); die 3b-Paare brauchen keine: Zeile, Kopf, Knoten und Ziehen-Marke sind deckend, und die Kästchen in Tabellenzeilen haben `tabindex=-1` (kein Ring über einem Hof auf `surface-interactive-selected`); das Kopf-Kästchen steht auf `surface-layer`, die Kästchen der Spaltenwahl auf `surface-overlay` — beide sind schon Hof-Gründe der Liste (`GRUENDE_HOF`). `kontrastPaare` entdoppelt (121 → 132 Paare mit diesem Step). `node --test test/pairs.test.mjs test/derive.test.mjs` → grün (`derive.test.mjs` verlangt die Datei byte-identisch).
 
-- [ ] **Step 5: Lint und Verträge** — `tools/lint-css.mjs` Zeile 69 (`STATE_MODIFIER`) und 72 (`ELEMENT_STATE_MODIFIER`): in beiden Alternativen nach `collapsed` ergänzen `|expanded|cursor|filtered|frozen|frozen-last|pinned|pinned-first|drop-before|drop-after|drop-onto|drop-refused`. Verträge, die noch Begriffe aus Step 1 vermissen, nachziehen — `field.contract.md`: Abschnitt „Lesewert“ um „ein Renderer (`FieldValue`): äußerer Link `href` (neuer Tab), innerer Link `onGoto` (Kommando `goto`), Icon über `ThemeIcon`, Tönung als `tl-pill` mit `data-tl-role`“; `select.contract.md`: „Filter: `filterOptions` (trim, Kleinschreibung, enthält)“, sofern P3/P4 es nicht schon schrieben.
+- [ ] **Step 5: Lint und Verträge** — `tools/lint-css.mjs` Zeile 76 (`STATE_MODIFIER`) und 79 (`ELEMENT_STATE_MODIFIER`; Zeilen auf `80749da`): in beiden Alternativen nach `collapsed` ergänzen `|expanded|cursor|filtered|frozen|frozen-last|pinned|pinned-first|drop-before|drop-after|drop-onto|drop-refused`. Verträge, die noch Begriffe aus Step 1 vermissen, nachziehen — `field.contract.md`: Abschnitt „Lesewert“ um „ein Renderer (`FieldValue`): äußerer Link `href` (neuer Tab), innerer Link `onGoto` (Kommando `goto`), Icon über `ThemeIcon`, Tönung als `tl-pill` mit `data-tl-role`“; `select.contract.md`: „Filter: `filterOptions` (trim, Kleinschreibung, enthält)“, sofern P3/P4 es nicht schon schrieben.
 
-- [ ] **Step 6: Gates, Commit** — `node --test && node tools/lint-css.mjs` → grün (die Testzahl steht im Commit-Text; sie wächst gegenüber 270 um die Fälle aus P1–P9). `git add design-system && git commit -m "Ticket #29617: Welle 3b -- Gates: Kontrast der Daten (Fehler- und Warnlinie auf ausgewaehlt/Zeigen: hell red-41/amber-43, dunkel neue Stufe red-34/amber-36), Zustandswoerter, Vertraege"`
+- [ ] **Step 6: Gates, Commit** — `node --test && node tools/lint-css.mjs` → grün (329 Tests auf `80749da`: 285 + 44 aus P1–P9; nachgezählt 07.10. in einer Kopie, mit Platzhalter-Verträgen und -Specimen, die nur die Pflichtbegriffe trugen — die Zahl hängt nicht am Inhalt). `git add design-system && git commit -m "Ticket #29617: Welle 3b -- Gates: Kontrast der Daten (Fehler- und Warnlinie auf ausgewaehlt/Zeigen: hell red-41/amber-43, dunkel neue Stufe red-34/amber-36), Zustandswoerter, Vertraege"`
 
 ---
 
@@ -1664,19 +1837,19 @@ Dann `node tools/derive.mjs test/fixtures/probe.primitives.json specimen/probe.t
 
 **Reihenfolge:** E1 (Publizieren, Rollen, Status — sofort, weil `dist/` ab E1 `tl-pill--*`, `tl-avatar--category-*` und `tl-select__status` nicht mehr stylt) → E2 (Helfer) → E3 (Lesewert) → E4 (Text) → E5 (Spaltenwahl, Spalten) → E6 (Baum) → E7–E9 (Tabelle) → E10 (Gates, Doku) → E11 (Push, PR, Sichtprüfung). **Nicht pushen vor E9:** dazwischen ist die Tabelle teils alt, teils neu gestylt.
 
-Jeder E-Task mit Änderung am alten Stylesheet endet mit: `node tools/inventory.mjs` → Zahlen in `design-system/test/ratchet.json` eintragen (gestrichene Blöcke löschen, gesunkene nachziehen, neue eintragen, `_blocks`-Vermerk „02.10. Welle 3b: …“; **die Literal-Budgets unter `literals` sinken mit** — Zahl aus `inventory.mjs`, nach E9 laut Plan-Review `fontSize` 47→41, `outlineNone` 20→16, `duration` 33→32, `zIndex` 21→14; TLJobStatus landet nach E9 bei ≈ 122, nicht 118 — Leerzeilen) → `node --test test/ratchet.test.mjs` grün → Commit im Projekt-Repo `git commit -m "Ticket #29617: Welle 3b -- Ratsche nach E<n> (…)"`.
+Jeder E-Task mit Änderung am alten Stylesheet endet mit: `node tools/inventory.mjs` → Zahlen in `design-system/test/ratchet.json` eintragen (gestrichene Blöcke löschen, gesunkene nachziehen, neue eintragen, `_blocks`-Vermerk „02.10. Welle 3b: …“; **die Literal-Budgets unter `literals` sinken mit** — Zahl aus `inventory.mjs`, nachgerechnet 07.10. auf `eef176e2ad` in einer Kopie des Stylesheets, Löschungen wie in den Tasks: nach E5 `outlineNone` 19; nach E6 `fontSize` 45, `duration` 32, `outlineNone` 18; nach E7 `fontSize` 44, `zIndex` 19, `outlineNone` 17; nach E8 `fontSize` 42, `zIndex` 16; nach E9 `fontSize` 41, `zIndex` 15, `outlineNone` 16 — Ausgang `fontSize` 47, `duration` 33, `zIndex` 22, `outlineNone` 20, `color` bleibt 74; TLJobStatus landet nach E9 bei 117–122 je nach Leerzeilen) → `node --test test/ratchet.test.mjs` grün → Commit im Projekt-Repo `git commit -m "Ticket #29617: Welle 3b -- Ratsche nach E<n> (…)"`.
 
 ### Task E1: Paket publizieren; Rollen als Attribut; Select-Status
 
 **Files:**
 - Modify: `com.top_logic.layout.react/src/main/webapp/style/tl-design-system/*` (publiziert)
-- Modify: `react-src/controls/pill/TLPill.tsx`, `selectOptions.tsx`, `TLDropdownSelect.tsx` (Chip 57–87, `OptionRow` 139, Einzelwert 633, Status 567–582), `TLOptionChips.tsx:3,98-106`, `TLSegmentedChoice.tsx:3,134-147`, `TLAvatar.tsx:91-99`, `TLCheckbox.tsx:78` (`aria-checked` fällt, Entscheidung 22), `TLText.tsx:66` (nur `TLPill`-Aufruf bleibt gültig)
-- Modify: `docs/faq/react-theme-tokens.md:45`, `docs/faq/react-view-layer.md:555,585,719`
+- Modify: `react-src/controls/pill/TLPill.tsx`, `selectOptions.tsx`, `TLDropdownSelect.tsx` (Chip 58–88, `OptionRow` 140, Einzelwert 702, Status 633–648; Zeilen auf `eef176e2ad`), `TLOptionChips.tsx:3,98-106`, `TLSegmentedChoice.tsx:3,134-147`, `TLChoiceGroup.tsx:3,114,152` (master #29654), `TLAlert.tsx:20-21,44` (master #29652), `tlReactControls.css:2682-2713` (Block TLAlert, Entscheidung 07.10.), `TLAvatar.tsx:91-99`, `TLCheckbox.tsx:78` (`aria-checked` fällt, Entscheidung 22), `TLText.tsx:66` (nur `TLPill`-Aufruf bleibt gültig)
+- Modify: `docs/faq/react-theme-tokens.md:45`, `docs/faq/react-view-layer.md:627,657,791`
 
 **Interfaces:**
-- Produces: `roleAttr(role?: string): string | undefined` und `TLPill({ role, className, icon, children })` in `controls/pill/TLPill.tsx` (rendert `span.tl-pill[data-tl-role]` > Icon + `span.tl-pill__label`); `pillClassName` fällt. In `selectOptions.tsx`: `OptionContent` (Bild + Label als Geschwister, für Elemente, die die Rolle selbst tragen), `OptionLabel` (Pill bei Rolle, sonst `OptionContent`), `optionRoleAttr(option)`. `withPill` bleibt bis E3 (Leser `TLResourceCell`).
+- Produces: `roleAttr(role?: string): string | undefined` und `TLPill({ role, className, icon, children })` in `controls/pill/TLPill.tsx` (rendert `span.tl-pill[data-tl-role]` > Icon + `span.tl-pill__label`); `pillClassName` fällt. In `selectOptions.tsx`: `OptionContent` (Bild + Label als Geschwister, für Elemente, die die Rolle selbst tragen), `OptionLabel` (Pill bei Rolle, sonst `OptionContent`), `optionRoleAttr(option)`. `withPill` bleibt bis E3 (Leser `TLResourceCell`). `OptionContent` zeichnet ab hier **keine** Pill mehr — jeder Leser, dessen Element die Rolle nicht selbst trägt, nimmt `OptionLabel` (Liste, Einzelwert, `TLChoiceGroup`).
 
-- [ ] **Step 1: Publizieren** — `cd design-system && node tools/publish-to-worktree.mjs`.
+- [ ] **Step 1: Publizieren** — zuerst prüfen, dass der Worktree-Stand noch der von `80749da` ist (V1 erledigt; veröffentlicht master in der Zwischenzeit erneut, ginge das verloren): `for f in base components primitives tokens; do git -C /Users/hendrik/Claude/TopLogic-v8-DesignSystem show 80749da:design-system/dist/$f.css | diff -q - $WT/com.top_logic.layout.react/src/main/webapp/style/tl-design-system/$f.css; done` → keine Ausgabe (geprüft 07.10.: alle vier gleich); sonst Stopp und erst den neuen master-Stand ins Paket holen. Dann `cd design-system && node tools/publish-to-worktree.mjs` und im Worktree `git diff --stat -- com.top_logic.layout.react/src/main/webapp/style/tl-design-system` — der Diff zeigt nur 3b-Änderungen (Rollen als Attribut, Status, Ziehen-Optik, Cursor-Ring, neue Komponenten, Alert-Layout, Kapsel), keine gestrichene Regel aus Bernhards Höfen (`git diff … | grep '^-' | grep -c 'surface-state\|veil\|calendar-picker\|radius-round'` → 0).
 
 - [ ] **Step 2: Pill** — `react-src/controls/pill/TLPill.tsx` ganz ersetzen:
 
@@ -1781,18 +1954,18 @@ export function optionRoleAttr(option: OptionDescriptor): string | undefined {
 
 `ReadonlyValue` (95) liest jetzt `<OptionLabel option={option} labelClassName="tl-field-value__text" />` (bis E3).
 
-- [ ] **Step 4: Leser** — `TLOptionChips.tsx`: Import um `optionRoleAttr` ergänzen; am `button.tl-chip` `data-tl-role={optionRoleAttr(option)}`. `TLSegmentedChoice.tsx`: ebenso am `button.tl-segmented__segment`. `TLDropdownSelect.tsx`: Import `pillClassName` streichen, `OptionContent` → `OptionLabel` in `OptionRow` (139) und im Einzelwert (633), `optionRoleAttr` importieren; Chip-Wurzel `className="tl-pill tl-type-label tl-select__chip"` mit `data-tl-role={optionRoleAttr(option)}`, Label bleibt `span.tl-pill__label`; die drei Status-Zeilen (567, 572, 579) `className="tl-select__status tl-type-body"` → `className="tl-status tl-type-body"`. `TLAvatar.tsx:93`: `` `tl-avatar--category-${categoryOf(name)}` `` aus der Klassenliste nehmen und am `span` `data-tl-role={`category-${categoryOf(name)}`}` setzen. `TLCheckbox.tsx:78`: die Zeile `aria-checked={triState && value !== true && value !== false ? 'mixed' : value === true}` löschen — `indeterminate` setzt der Effekt über `boxRef` (36–37) schon, der Browser meldet es als „gemischt“ und `checked` selbst; ARIA in HTML verbietet `aria-checked` am nativen Kästchen (Entscheidung 22, 07.10.; `choice.contract.md` seit P1).
+- [ ] **Step 4: Leser** — `TLOptionChips.tsx`: Import um `optionRoleAttr` ergänzen; am `button.tl-chip` `data-tl-role={optionRoleAttr(option)}`. `TLSegmentedChoice.tsx`: ebenso am `button.tl-segmented__segment`. `TLDropdownSelect.tsx`: Import `pillClassName` streichen, `OptionContent` → `OptionLabel` in `OptionRow` (140) und im Einzelwert (702), `optionRoleAttr` importieren; Chip-Wurzel (61) `className="tl-pill tl-type-label tl-select__chip"` mit `data-tl-role={optionRoleAttr(option)}`, Label bleibt `span.tl-pill__label`; die drei Status-Zeilen (633, 638, 645) `className="tl-select__status tl-type-body"` → `className="tl-status tl-type-body"`. `TLChoiceGroup.tsx` (master #29654, ersetzt `TLBooleanChoice`): Import `OptionContent` → `OptionLabel`, an beiden Optionen (114 Kästchen, 152 Radio) `<OptionLabel option={option} />` — das `label.tl-choice` trägt keine Rolle, eine farbige Option bleibt eine Pill wie bisher. `TLAlert.tsx` (master #29652): `` `tl-alert--${variant}` `` **und** `closable && 'tl-alert--closable'` aus der Klassenliste nehmen (`rootClassName(state, 'tl-alert')`) und am `div` `data-tl-role={variant}` setzen — die dritte Spalte für den Schließen-Knopf folgt seit P1 Step 5b dem Inhalt (`.tl-alert:has(> .tl-alert__close)`); JavaDoc 20–21 „…(`tl-alert`, colored by the `tl-alert--<variant>` modifier)“ → „…(`tl-alert`, colored by its variant as `data-tl-role`; the dismiss button gets a column of its own by the design system)“. `tlReactControls.css`: den Block `/* --- TLAlert` bis vor `/* --- TLAppShell` (`eef176e2ad` 2682–2713) löschen — `alert.css` trägt ihn seit P1 Step 5b (Entscheidung Hendrik 07.10.). Ratsche: TLAlert steht in `ratchet.json` nicht unter `blocks` (unlisted, Orchestrator-Vermerk 07.10.), der Ratschen-Test verlangt darum nichts (er prüft nur gelistete Blöcke auf Wachstum und `missing`); nur der `_blocks`-Vermerk „07.10. Welle 3b: TLAlert (32, unlisted) mit E1 abgeschnitten, Regeln in alert.css“. Literale hat der Block keine. `TLAvatar.tsx:93`: `` `tl-avatar--category-${categoryOf(name)}` `` aus der Klassenliste nehmen und am `span` `data-tl-role={`category-${categoryOf(name)}`}` setzen. `TLCheckbox.tsx:78`: die Zeile `aria-checked={triState && value !== true && value !== false ? 'mixed' : value === true}` löschen — `indeterminate` setzt der Effekt über `boxRef` (36–37) schon, der Browser meldet es als „gemischt“ und `checked` selbst; ARIA in HTML verbietet `aria-checked` am nativen Kästchen (Entscheidung 22, 07.10.; `choice.contract.md` seit P1).
 
-- [ ] **Step 5: Doku** — `docs/faq/react-theme-tokens.md:45`: „…carries the role as the attribute `data-tl-role`, `<span class="tl-pill" data-tl-role="warning">`, and nothing else…“. `docs/faq/react-view-layer.md`: 555 „…category roles of the design system (`data-tl-role="category-<n>"`, derived …)“, 585 `` `.tl-avatar[data-tl-role="category-<n>"]` `` statt `` `.tl-avatar--category-<n>` ``, 719 „…draws it everywhere as `tl-pill` with `data-tl-role="<role>"` and a `tl-pill__label`, and nothing but that attribute is set…“.
+- [ ] **Step 5: Doku** — `docs/faq/react-theme-tokens.md:45`: „…carries the role as the attribute `data-tl-role`, `<span class="tl-pill" data-tl-role="warning">`, and nothing else…“. `docs/faq/react-view-layer.md`: 627 „…category roles of the design system (`data-tl-role="category-<n>"`, derived …)“, 657 `` `.tl-avatar[data-tl-role="category-<n>"]` `` statt `` `.tl-avatar--category-<n>` ``, 791 „…draws it everywhere as `tl-pill` with `data-tl-role="<role>"` and a `tl-pill__label`, and nothing but that attribute is set…“.
 
-- [ ] **Step 6: Prüfen, Commit** — `tsc --noEmit` 0 Befunde, beide Vite-Builds; `git grep -n "tl-pill--\|tl-avatar--category\|tl-alert--\|pillClassName\|tl-select__status" -- 'com.top_logic.*/react-src' docs/faq` → leer; `git grep -n "aria-checked=" -- com.top_logic.layout.react/react-src/controls/TLCheckbox.tsx` → leer; `layout.react`-Tests grün. `git add -A com.top_logic.layout.react docs/faq && git commit -m "Ticket #29617: Design System wave 3b -- package republished; color roles are data-tl-role (pill, avatar, chip, segment, select chip), select status reads tl-status, the checkbox leaves its mixed state to indeterminate (no aria-checked)"`
+- [ ] **Step 6: Prüfen, Commit** — `tsc --noEmit` 0 Befunde, beide Vite-Builds; `git grep -n -e 'tl-pill--' -e 'tl-avatar--category' -e 'tl-alert--' -e 'pillClassName' -e 'tl-select__status' -- 'com.top_logic.*/react-src/**' docs/faq com.top_logic.layout.react/src/main/webapp/style/tlReactControls.css` → leer (`/**`: ein Pfad mit `*` ohne `/**` trifft in `git grep` keine Datei und gäbe immer „leer“; seit der Alert-Block ins Paket geht, fällt auch `tl-alert--closable`; heute trifft der Grep `TLAlert.tsx:21,44`, `tlReactControls.css:2688`, `TLAvatar.tsx:93`, `TLDropdownSelect.tsx:11,61,633,638,645`, `TLPill.tsx`, `react-theme-tokens.md:45`, `react-view-layer.md:627,657,791`); `git grep -n 'OptionContent' -- com.top_logic.layout.react/react-src/controls/TLChoiceGroup.tsx` → leer; `git grep -n "aria-checked=" -- com.top_logic.layout.react/react-src/controls/TLCheckbox.tsx` → leer; `layout.react`-Tests grün. `git add -A com.top_logic.layout.react docs/faq && git commit -m "Ticket #29617: Design System wave 3b -- package republished; color roles are data-tl-role (pill, avatar, chip, segment, select chip), select status reads tl-status, the checkbox leaves its mixed state to indeterminate (no aria-checked); alert and choice group follow, the alert layout moves into the package"`
 
 ### Task E2: Helfer — Token-Pixel, Filter, Zustandsattribut, Umsortieren per Tastatur
 
 **Files:**
 - Create: `react-src/bridge/token-px.ts`, `react-src/bridge/filter-options.ts`
-- Modify: `react-src/bridge/css.ts`, `bridge/list-reorder.ts`, `bridge/popover.ts:18-28`, `bridge-entry.ts:42,77`, `controls/TLToolbar.tsx:519-528`, `controls/TLDropdownSelect.tsx` (Chips 20–87, 202–205, 226–234, 446–506, 260, 600–664), `controls/TLValueList.tsx:75-102,122-146`, `controls/TLColumnSelect.tsx:82` (nur `count`/`labelOf`, sonst E5)
-- Modify: `src/main/java/com/top_logic/layout/react/I18NConstants.java` (Block „Value list“), `META-INF/messages_de.properties`, `tlReactControls.css:895-911` (TLValueList), `design-system/test/ratchet.json`
+- Modify: `react-src/bridge/css.ts`, `bridge/list-reorder.ts`, `bridge/popover.ts:18-28`, `bridge-entry.ts:42,79`, `controls/TLToolbar.tsx:587-596`, `controls/TLDropdownSelect.tsx` (Chips 21–88, 210–213, 239–247, 512–572, 282, 666–733; Zeilen auf `eef176e2ad`), `controls/TLValueList.tsx:75-102,122-146`, `controls/TLColumnSelect.tsx:82` (nur `count`/`labelOf`, sonst E5)
+- Modify: `src/main/java/com/top_logic/layout/react/I18NConstants.java` (Block „Value list“), `META-INF/messages_de.properties`, `tlReactControls.css:898-914` (TLValueList), `design-system/test/ratchet.json`
 
 **Interfaces:**
 - Produces (aus `tl-react-bridge`): `tokenPx(element: Element | null, name: string, fallback: number): number`; `useTokenPx(ref: React.RefObject<Element | null>, name: string, fallback: number): number`; `filterOptions<T extends { label: string }>(options: readonly T[], needle: string): T[]`; `stateAttr(...words: (string | false | null | undefined)[]): string | undefined`; `reorderState(state: ReorderItemState): 'dragging' | 'drop-before' | 'drop-after' | undefined`; `ListReorderOptions` um `count: number` (Pflicht), `labelOf?(index): string` und `keyOf?(index): string` (`onMove(from, to)` bleibt); `ReorderHandleProps` um `onKeyDown`, `'aria-describedby'`, `'aria-label'` und `ref` (Fokusrückgabe nach Alt + Pfeil, Plan-Review M2); `ListReorder.announcer: React.ReactElement`. Resource-Keys `js.reorder.handle|hint|moved|position`.
@@ -1861,7 +2034,7 @@ export function useTokenPx(ref: React.RefObject<Element | null>, name: string, f
 }
 ```
 
-Eine Fassung statt drei: `TLToolbar.tsx` — die lokale Funktion `tokenPx(style, name)` samt Kommentar (523–528) löschen, Aufruf 519 `tokenPx(root, '--tl-size-control', 32)`, `tokenPx` in den Import aus `tl-react-bridge`. `bridge/popover.ts` — Rumpf von `gapPx` ersetzen durch `return tokenPx(document.documentElement, '--tl-space-xs', 8);` (Kommentar bleibt), Import `import { tokenPx } from './token-px';`.
+Eine Fassung statt drei: `TLToolbar.tsx` — die lokale Funktion `tokenPx(style, name)` samt Kommentar (590–596) löschen, Aufruf 587 `tokenPx(root, '--tl-size-control', 32)`, `tokenPx` in den Import aus `tl-react-bridge`. `bridge/popover.ts` — Rumpf von `gapPx` ersetzen durch `return tokenPx(document.documentElement, '--tl-space-xs', 8);` (Kommentar bleibt), Import `import { tokenPx } from './token-px';`.
 
 - [ ] **Step 2: filter-options.ts und stateAttr** — `bridge/filter-options.ts` (neu):
 
@@ -2118,7 +2291,7 @@ die Zeile: `<div key={index} className="tlValueList__row" data-tl-state={reorder
       )}
 ```
 
-(`const HANDLE_ICON = 'css:fa-solid fa-grip-vertical';` oben.) Die drei Zustände `dragIndex`, `dropTargetIndex`, `dropPosition` (202–205) und die vier Handler 446–506 löschen; an ihre Stelle:
+(`const HANDLE_ICON = 'css:fa-solid fa-grip-vertical';` oben.) Die drei Zustände `dragIndex`, `dropTargetIndex`, `dropPosition` samt Kommentar (210–213) und die vier Handler samt Kommentar (512–572) löschen; an ihre Stelle:
 
 ```tsx
   // -- Reordering the chips: the common gesture (useListReorder), along the row of chips --
@@ -2146,7 +2319,7 @@ die Zeile: `<div key={index} className="tlValueList__row" data-tl-state={reorder
   });
 ```
 
-Die Filterung 226–234:
+Die Filterung 239–247:
 
 ```tsx
   // Derived: the options not chosen, narrowed by the search (filterOptions, shared with the column
@@ -2157,7 +2330,7 @@ Die Filterung 226–234:
   );
 ```
 
-Die Hervorhebung des Treffers in `OptionRow` (`labelContent`, 118–130) markiert dasselbe Wort, das `filterOptions` sucht — getrimmt:
+Die Hervorhebung des Treffers in `OptionRow` (`labelContent`, 116–128) markiert dasselbe Wort, das `filterOptions` sucht — getrimmt:
 
 ```tsx
   const labelContent = useMemo(() => {
@@ -2177,7 +2350,7 @@ Die Hervorhebung des Treffers in `OptionRow` (`labelContent`, 118–130) markier
   }, [option.label, option.colorRole, searchTerm]);
 ```
 
- Fokus nach dem Entfernen (260): `'.tl-select__chip > .tl-button:not(.tl-select__drag-handle)'`. `span.tl-select__values`: `data-tl-axis={multiSelect ? 'horizontal' : undefined} {...reorder.containerProps}`; die Chip-Schleife:
+ Fokus nach dem Entfernen (282): `'.tl-select__chip > .tl-button:not(.tl-select__drag-handle)'`. `span.tl-select__values`: `data-tl-axis={multiSelect ? 'horizontal' : undefined} {...reorder.containerProps}`; die Chip-Schleife:
 
 ```tsx
             value.map((v, idx) => (
@@ -2195,9 +2368,9 @@ Die Hervorhebung des Treffers in `OptionRow` (`labelContent`, 118–130) markier
             ))
 ```
 
-und vor dem Portal `{dragEnabled && reorder.announcer}`.
+und vor dem Portal `{dragEnabled && reorder.announcer}`. (master #29654/#29752, geprüft 07.10.: ein Klick irgendwo auf das Feld schaltet die Liste jetzt um — `handleFieldClick`; der Griff-Knopf hält ihn mit `stopPropagation` wie der Entfernen-Knopf. Die Tipp-Suche des Selects ohne Suchfeld (`handleKeyDown`, `isTypeAheadKey`) übergeht Tasten auf einem `BUTTON` — Alt + Pfeil am Griff bleibt beim Hook.)
 
-- [ ] **Step 5: Keys und altes CSS** — `I18NConstants.java` nach `JS_VALUE_LIST_MOVE` ein Block `// -- Reordering client-side i18n keys --` mit vier Konstanten nach dem Muster von `js.dropdownSelect.removeChip` (`@en Move {0}` → `js.reorder.handle`, `JS_REORDER_HANDLE`; `@en Alt + arrow key moves the entry` → `js.reorder.hint`; `@en {0}, position {1} of {2}` → `js.reorder.moved`; `@en Position {0} of {1}` → `js.reorder.position`). `messages_de.properties`: `js.reorder.handle = {0} verschieben`, `js.reorder.hint = Alt + Pfeiltaste verschiebt den Eintrag`, `js.reorder.moved = {0}, Position {1} von {2}`, `js.reorder.position = Position {0} von {1}`. `check-messages-en.sh` → Diff committen. `tlReactControls.css` im Block TLValueList: den Kommentar und die zwei `border-*: 2px solid transparent` in `.tlValueList__row` (895–898) und die drei Regeln `--dragging`, `--dragOver-before`, `--dragOver-after` (901–911) löschen — die Optik zeichnet `drag.css`. Ratsche (TLValueList sinkt).
+- [ ] **Step 5: Keys und altes CSS** — `I18NConstants.java` nach `JS_VALUE_LIST_MOVE` ein Block `// -- Reordering client-side i18n keys --` mit vier Konstanten nach dem Muster von `js.dropdownSelect.removeChip` (`@en Move {0}` → `js.reorder.handle`, `JS_REORDER_HANDLE`; `@en Alt + arrow key moves the entry` → `js.reorder.hint`; `@en {0}, position {1} of {2}` → `js.reorder.moved`; `@en Position {0} of {1}` → `js.reorder.position`). `messages_de.properties`: `js.reorder.handle = {0} verschieben`, `js.reorder.hint = Alt + Pfeiltaste verschiebt den Eintrag`, `js.reorder.moved = {0}, Position {1} von {2}`, `js.reorder.position = Position {0} von {1}`. `check-messages-en.sh` → Diff committen. `tlReactControls.css` im Block TLValueList: den Kommentar und die zwei `border-*: 2px solid transparent` in `.tlValueList__row` (898–901) und die drei Regeln `--dragging`, `--dragOver-before`, `--dragOver-after` (904–914) löschen — die Optik zeichnet `drag.css`. Ratsche (TLValueList 117 → 101 oder 102 je nach Leerzeile, nachgerechnet 07.10. auf `eef176e2ad`; Zahl aus `inventory.mjs`).
 
 - [ ] **Step 6: Prüfen, Commit** — `tsc --noEmit` 0, beide Builds, `layout.react`-Tests grün, `git grep -n "tlValueList__row--" -- 'com.top_logic.layout.react/'` leer, `git grep -n "handles.current\|handleKeyDown" -- com.top_logic.layout.react/react-src/controls/TLValueList.tsx` leer, `git grep -n "draggable={draggable" -- com.top_logic.layout.react/react-src/controls/TLDropdownSelect.tsx` leer. `git commit -m "Ticket #29617: Design System wave 3b -- helpers: tokenPx/useTokenPx (one version), filterOptions, stateAttr; reorder by Alt + arrow with a live region for select chips and value lists"`
 
@@ -2208,7 +2381,7 @@ und vor dem Portal `{dragEnabled && reorder.announcer}`.
 
 **Interfaces:**
 - Consumes: `TLPill` (E1).
-- Produces: `FieldValue({ id?, className?, text, href?, onGoto?, multiline?, icon?, role?, tooltip? })` — `href` äußerer Link (neuer Tab), `onGoto` innerer Link (`goto`), `icon` kodiertes Theme-Bild (`ThemeIcon`), `role` Farbrolle (Pill mit `data-tl-role`, nur um Inhalt), `tooltip` der `data-tooltip`-Wert. Bestehende Aufrufer (`TLTextInput`, `TLNumberInput`, `TLDatePicker`, `TLSelect`, `TLPasswordInput`, `TLBooleanChoice`) bleiben unverändert gültig.
+- Produces: `FieldValue({ id?, className?, text, href?, onGoto?, multiline?, icon?, role?, tooltip? })` — `href` äußerer Link (neuer Tab), `onGoto` innerer Link (`goto`), `icon` kodiertes Theme-Bild (`ThemeIcon`), `role` Farbrolle (Pill mit `data-tl-role`, nur um Inhalt), `tooltip` der `data-tooltip`-Wert. Bestehende Aufrufer (`TLTextInput`, `TLNumberInput`, `TLDatePicker`, `TLSelect`, `TLPasswordInput`) bleiben unverändert gültig; `TLBooleanChoice` gibt es seit master #29654 nicht mehr — sein Nachfolger `TLChoiceGroup` liest `ReadonlyValues` (aus `selectOptions.tsx`, Step 2) und ist damit mit abgedeckt.
 
 - [ ] **Step 1: FieldValue** — `form/FieldValue.tsx` ganz ersetzen:
 
@@ -2358,11 +2531,11 @@ export function ReadonlyValue({
 
 **Files:**
 - Modify: `react-src/controls/TLText.tsx`
-- Modify: `com.top_logic.layout.react/src/main/java/com/top_logic/layout/react/control/common/TextTone.java`, `ReactTextControl.java:76`, `META-INF/messages_de.properties:265-266`
-- Modify: `com.top_logic.layout.view/src/main/java/com/top_logic/layout/view/element/TextElement.java:135`, `com.top_logic.layout.view/src/main/java/META-INF/messages_de.properties:1395`, `…/inspector/InspectedNodeElement.java:83`, `…/views/admin/access-control/coverage.view.xml:369`
+- Modify: `com.top_logic.layout.react/src/main/java/com/top_logic/layout/react/control/common/TextTone.java`, `ReactTextControl.java:76`, `META-INF/messages_de.properties:275-276`
+- Modify: `com.top_logic.layout.view/src/main/java/com/top_logic/layout/view/element/TextElement.java:135`, `com.top_logic.layout.view/src/main/java/META-INF/messages_de.properties:1456`, `…/inspector/InspectedNodeElement.java:83`, `…/views/admin/access-control/coverage.view.xml:369`
 - Modify: `com.top_logic.layout.configedit/src/main/java/com/top_logic/layout/configedit/ConfigListEditorControl.java:65,614-616`
-- Modify: `com.top_logic.demo.react/src/main/webapp/WEB-INF/views/demo/styling-demo.view.xml:138-143`, `html-demo.view.xml:254`, `repeater-card.view.xml:37`, `views/tickets/comment.view.xml:34`
-- Modify: `tlReactControls.css:2066-2079` (Primär-App-Bar), `:3180-3283` (`.tlText` und drei Blöcke); `docs/faq/react-view-layer.md:100,121,158-180,669`; `design-system/test/ratchet.json`
+- Modify: `com.top_logic.demo.react/src/main/webapp/WEB-INF/views/demo/styling-demo.view.xml:144-149`, `html-demo.view.xml:253`, `repeater-card.view.xml:37`, `views/tickets/comment.view.xml:34`
+- Modify: `tlReactControls.css:2177-2190` (Primär-App-Bar), `:3354-3464` (`.tlText`, `.tlText:empty:not([role])` aus master #29752 und drei Blöcke); `docs/faq/react-view-layer.md:133,154,191-213,741`; `design-system/test/ratchet.json`
 - Test: `com.top_logic.layout.view/src/test/java/test/com/top_logic/layout/view/element/TestTextElement.java`, `src/test/resources/test/com/top_logic/layout/view/element/test-text.view.xml`
 
 **Interfaces:**
@@ -2390,7 +2563,7 @@ Rot: `$MVN install -pl com.top_logic.layout.react` und `$MVN test -DskipTests=fa
 	PLACEHOLDER("placeholder"),
 ```
 
-`TextElement.java:135`: „…{@link TextTone#HELPER hint}, an {@link TextTone#ACCENT accent}, or an outcome“ → „…{@link TextTone#HELPER hint}, a {@link TextTone#PLACEHOLDER placeholder}, or an outcome“ (Rest des Satzes lesen und grammatisch anpassen). `ReactTextControl.java:76`: „Additional CSS class to append to the design system's classes of the text, or {@code null}.“ `messages_de.properties`: die zwei Zeilen `TextTone.ACCENT` und `.tooltip` löschen, `TextTone.PLACEHOLDER = Platzhalter` und `TextTone.PLACEHOLDER.tooltip = Text, der für einen noch fehlenden Wert steht: ein nicht vergebener Name, eine Liste ohne Einträge.` einfügen. `com.top_logic.layout.view/src/main/java/META-INF/messages_de.properties:1395` (`com.top_logic.layout.view.element.TextElement.Config.tone.tooltip`): der JavaDoc von `TextElement.java:135` ist dieser Tooltip, darum von Hand „…ein erklärender Hinweis, eine Hervorhebung oder ein Ergebnis…“ → „…ein erklärender Hinweis, ein Platzhalter oder ein Ergebnis…“ (die englische Fassung schreibt `check-messages-en.sh` in Step 6). Grün — `layout.view` liest `TextTone` aus dem lokalen Repo, darum vorher neu installieren, in Abhängigkeitsreihenfolge react → configedit → view:
+`TextElement.java:135`: „…{@link TextTone#HELPER hint}, an {@link TextTone#ACCENT accent}, or an outcome“ → „…{@link TextTone#HELPER hint}, a {@link TextTone#PLACEHOLDER placeholder}, or an outcome“ (Rest des Satzes lesen und grammatisch anpassen). `ReactTextControl.java:76`: „Additional CSS class to append to the design system's classes of the text, or {@code null}.“ `messages_de.properties`: die zwei Zeilen `TextTone.ACCENT` und `.tooltip` löschen, `TextTone.PLACEHOLDER = Platzhalter` und `TextTone.PLACEHOLDER.tooltip = Text, der für einen noch fehlenden Wert steht: ein nicht vergebener Name, eine Liste ohne Einträge.` einfügen. `com.top_logic.layout.view/src/main/java/META-INF/messages_de.properties:1456` (`com.top_logic.layout.view.element.TextElement.Config.tone.tooltip`): der JavaDoc von `TextElement.java:135` ist dieser Tooltip, darum von Hand „…ein erklärender Hinweis, eine Hervorhebung oder ein Ergebnis…“ → „…ein erklärender Hinweis, ein Platzhalter oder ein Ergebnis…“ (die englische Fassung schreibt `check-messages-en.sh` in Step 6). Grün — `layout.view` liest `TextTone` aus dem lokalen Repo, darum vorher neu installieren, in Abhängigkeitsreihenfolge react → configedit → view:
 
 ```bash
 $MVN install -pl com.top_logic.layout.react 2>&1 | tail -3
@@ -2412,7 +2585,7 @@ $MVN test -DskipTests=false -pl com.top_logic.layout.view -Dtest=test.com.top_lo
 	}
 ```
 
-(Import `com.top_logic.layout.react.control.common.TextTone`.) `coverage.view.xml:369`, `html-demo.view.xml:254`, `repeater-card.view.xml:37`, `comment.view.xml:34`: `css-class="tlText--strong"` → `css-class="tl-type-body-strong"`. `styling-demo.view.xml:138–143`: `<text tone="accent">` mit Label `accent` → `<text css-class="tl-type-body-strong">` mit Label `strong` (en/de). Danach `mvn exec:java@normalize-layouts` nur, wenn der Prettyprinter die geänderten Dateien anders setzt (`git diff` prüfen).
+(Import `com.top_logic.layout.react.control.common.TextTone`.) `coverage.view.xml:369`, `html-demo.view.xml:253`, `repeater-card.view.xml:37`, `comment.view.xml:34`: `css-class="tlText--strong"` → `css-class="tl-type-body-strong"`. `styling-demo.view.xml:144–149`: `<text tone="accent">` mit Label `accent` → `<text css-class="tl-type-body-strong">` mit Label `strong` (en/de). Danach `mvn exec:java@normalize-layouts` nur, wenn der Prettyprinter die geänderten Dateien anders setzt (`git diff` prüfen).
 
 - [ ] **Step 4: TLText** — `react-src/controls/TLText.tsx` ganz ersetzen:
 
@@ -2524,9 +2697,9 @@ const TLText: React.FC<TLCellProps> = ({ controlId }) => {
 export default TLText;
 ```
 
-(Die starke Klasse kommt über `rootClassName` nach `tl-type-body` und gewinnt, weil `body-strong` in `base.css` nach `body` steht. Die Pill ist die Wurzel — keine Verschachtelung `span.tl-text > span.tl-pill` mehr, Entscheidung 23; `TLPill` selbst bleibt für Lesewert und Optionen, hier genügt `roleAttr`, weil die Wurzel `id`, `role` und `data-tooltip` trägt.)
+(Die starke Klasse kommt über `rootClassName` nach `tl-type-body` und gewinnt, weil `body-strong` in `base.css` nach `body` steht. Zwei Verhalten aus master #29752 bleiben erhalten, ohne Code hier: ein Text ohne Wert rendert ein leeres `span.tl-text` (auch mit `appearance=pill`, weil `pillRole` dann fehlt), das `text.css` mit `.tl-text:empty:not([role])` ausblendet (P6) — bisher `.tlText:empty:not([role])`; der volle Text eines abgeschnittenen Textes (`tl-text--truncate`, `text-overflow: ellipsis`) erscheint als Tooltip über den Tooltip-Host (`tooltip-host.ts`, `findCutOffText`), ohne Deklaration; ein `data-tooltip` des Servers ist näher und gewinnt. Die Pill ist die Wurzel — keine Verschachtelung `span.tl-text > span.tl-pill` mehr, Entscheidung 23; `TLPill` selbst bleibt für Lesewert und Optionen, hier genügt `roleAttr`, weil die Wurzel `id`, `role` und `data-tooltip` trägt.)
 
-- [ ] **Step 5: Altes CSS, Doku** — `tlReactControls.css` (über Überschrift und Selektor, b29546f2ad-Zeilen nur Orientierung): vom Kommentar `/* The text control states how it is drawn as roles …` mit `.tlText` (3180) über `/* --- What the text is for`, `/* --- What the color of the text means`, `/* --- The shape the text takes` bis vor `/* --- TLHtml` (3283) löschen; den Block `/* --- Controls placed on the primary (accent) app bar` mit seinen Kommentaren und `.tlAppBar--primary .tlText--tone-primary` bis vor `/* --- TLBottomBar` (2066–2079) löschen. Danach `grep -n 'tlText' tlReactControls.css` → leer. `docs/faq/react-view-layer.md`: Beispiel 100 `<span class="tl-text tl-type-body tlDemoHeroTitle">`; 121 `` `tl-text--truncate` `` statt `` `tlText--ellipsis` ``; Absatz 158–180 neu: `tone` ohne `accent`, mit `placeholder`; „Every text is a `tl-text` with the type class of its variant (`tl-type-heading-lg` …) and its tone as the attribute `data-tl-tone` (`secondary`, `helper`, `placeholder`, `success`, `warning`, `error`, `on-brand`); the primary tone carries no attribute and inherits the colour of its surroundings, which is how text on the primary app bar reads in the bar's colour. A strong text names the strong type class, `css-class="tl-type-body-strong"`.“; 669 `css-class="tl-type-body-strong"`. Ratsche: drei Text-Blöcke und „Controls placed on the primary (accent) app bar“ streichen, TLTableView sinkt um die neun Zeilen der `.tlText`-Regel; `foreignTl` ohne `--tlText-tone`.
+- [ ] **Step 5: Altes CSS, Doku** — `tlReactControls.css` (über Überschrift und Selektor, `eef176e2ad`-Zeilen nur Orientierung): vom Kommentar `/* The text control states how it is drawn as roles …` mit `.tlText` (3354) und `.tlText:empty:not([role])` (3364–3369, master #29752 — `text.css` trägt sie seit P6) über `/* --- What the text is for`, `/* --- What the color of the text means`, `/* --- The shape the text takes` bis vor `/* --- TLHtml` (3465) löschen; den Block `/* --- Controls placed on the primary (accent) app bar` mit seinen Kommentaren und `.tlAppBar--primary .tlText--tone-primary` bis vor `/* --- TLBottomBar` (2177–2190) löschen. Danach `grep -n 'tlText' tlReactControls.css` → leer. `docs/faq/react-view-layer.md`: Beispiel 133 `<span class="tl-text tl-type-body tlDemoHeroTitle">`; 154 `` `tl-text--truncate` `` statt `` `tlText--ellipsis` ``; Absatz 191–213 neu (Liste `tone` 194–195, Klassen-Absatz 198–213): `tone` ohne `accent`, mit `placeholder`; „Every text is a `tl-text` with the type class of its variant (`tl-type-heading-lg` …) and its tone as the attribute `data-tl-tone` (`secondary`, `helper`, `placeholder`, `success`, `warning`, `error`, `on-brand`); the primary tone carries no attribute and inherits the colour of its surroundings, which is how text on the primary app bar reads in the bar's colour. A strong text names the strong type class, `css-class="tl-type-body-strong"`. A text without a value takes no room, unless it carries a role (a live region).“; 741 `css-class="tl-type-body-strong"`. Ratsche: drei Text-Blöcke und „Controls placed on the primary (accent) app bar“ streichen, TLTableView 511 → 494 (die `.tlText`-Regel und `.tlText:empty`, 17 Zeilen; nachgerechnet 07.10.); `foreignTl` ohne `--tlText-tone`.
 
 - [ ] **Step 6: Gates, Commit** — `tsc --noEmit` 0, beide Builds; `check-messages-en.sh` (Module react, view, configedit) → Diff committen; Modul-Tests in Abhängigkeitsreihenfolge, je Modul `test` und danach `install`, bevor das nächste läuft: `layout.react` → `layout.configedit` → `layout.view` grün; `git grep -n "tlText\|TextTone.ACCENT\|tone=\"accent\"" -- '*.java' '*.xml' '*.tsx' '*.ts' '*.css' docs/faq` leer. `git commit -m "Ticket #29617: Design System wave 3b -- text reads tl-text: type class per variant, tone as data-tl-tone; the accent tone is gone, placeholder is a tone, strong is the type class"`
 
@@ -2534,7 +2707,7 @@ export default TLText;
 
 **Files:**
 - Modify: `react-src/controls/TLColumnSelect.tsx`, `TLColumns.tsx`
-- Modify: `tlReactControls.css:3848-3960` (TLColumnSelect), `:1851-1877` (TLColumns); `docs/faq/react-view-layer.md:542`; `design-system/test/ratchet.json`
+- Modify: `tlReactControls.css:4027-4139` (TLColumnSelect), `:1962-1988` (TLColumns); `docs/faq/react-view-layer.md:614`; `design-system/test/ratchet.json`
 
 **Interfaces:**
 - Consumes: P4 (`tl-reorder-list`), P6 (`tl-columns`), E2 (`useListReorder` mit Tastatur, `reorderState`, `filterOptions`).
@@ -2680,15 +2853,15 @@ const TLColumns: React.FC<TLCellProps> = ({ controlId }) => {
 export default TLColumns;
 ```
 
-- [ ] **Step 3: Altes CSS, Doku, Ratsche** — über die Überschriften (b29546f2ad-Zeilen nur Orientierung): Block `/* --- TLColumnSelect` bis vor `/* --- TLRelativeTime` (3848–3960) und Block `/* --- TLColumns` bis vor `/* --- TLDeckPane` (1851–1877) löschen; `grep -n 'tlColumnSelect\|tlColumns' tlReactControls.css` → leer. `react-view-layer.md:542`: „…against are `.tl-columns`, `.tl-columns--gap-<gap>` and `.tl-columns__column` (design system, `columns.css`)…“. Ratsche: TLColumnSelect und TLColumns streichen.
+- [ ] **Step 3: Altes CSS, Doku, Ratsche** — über die Überschriften (`eef176e2ad`-Zeilen nur Orientierung): Block `/* --- TLColumnSelect` bis vor `/* --- TLRelativeTime` (4027–4139) und Block `/* --- TLColumns` bis vor `/* --- TLDeckPane` (1962–1988) löschen; `grep -n 'tlColumnSelect\|tlColumns' tlReactControls.css` → leer. `react-view-layer.md:614`: „…against are `.tl-columns`, `.tl-columns--gap-<gap>` and `.tl-columns__column` (design system, `columns.css`)…“. Ratsche: TLColumnSelect und TLColumns streichen.
 
-- [ ] **Step 4: Prüfen, Commit** — `tsc --noEmit` 0, beide Builds, `layout.react` grün (`TestReactColumnsControl`), `git grep -n "tlColumnSelect\|tlColumns" -- 'com.top_logic.*/react-src' '*.css' docs/faq` leer. `git commit -m "Ticket #29617: Design System wave 3b -- column selection is a tl-reorder-list (keyboard reorder, filterOptions, tl-field-group search); columns read tl-columns"`
+- [ ] **Step 4: Prüfen, Commit** — `tsc --noEmit` 0, beide Builds, `layout.react` grün (`TestReactColumnsControl`), `git grep -n "tlColumnSelect\|tlColumns" -- 'com.top_logic.*/react-src/**' '*.css' docs/faq` leer (heute: `TLColumnSelect.tsx`, `TLColumns.tsx`, die zwei Blöcke, `react-view-layer.md:614`). `git commit -m "Ticket #29617: Design System wave 3b -- column selection is a tl-reorder-list (keyboard reorder, filterOptions, tl-field-group search); columns read tl-columns"`
 
 ### Task E6: Baum
 
 **Files:**
 - Modify: `react-src/controls/TLTreeView.tsx`
-- Modify: `I18NConstants.java` (Block „Tree“), `messages_de.properties`; `tlReactControls.css:4084-4204`; `design-system/test/ratchet.json`
+- Modify: `I18NConstants.java` (Block „Tree“), `messages_de.properties`; `tlReactControls.css:4263-4383`; `design-system/test/ratchet.json`
 
 **Interfaces:**
 - Consumes: P5, P8, E2 (`useTokenPx`, `stateAttr`), `dropPositionAt`, `ProgressBar` aus `TLProgress.tsx`.
@@ -2819,9 +2992,9 @@ const DROP_STATE: Record<string, string> = { above: 'drop-before', within: 'drop
   );
 ```
 
-- [ ] **Step 4: Keys, altes CSS, Ratsche** — `I18NConstants.java` nach `JS_TREE_VIEW_COLLAPSE`: `@en Tree` → `@CustomKey("js.tree.label") public static ResKey JS_TREE_LABEL;` und `@en Loading entries\u2026` → `@CustomKey("js.tree.loading") public static ResKey JS_TREE_LOADING;` (der Name der Ladezeile, Plan-Review M3); `messages_de.properties`: `js.tree.label = Baum`, `js.tree.loading = Einträge werden geladen…`; `check-messages-en.sh` → Diff committen (nie von Hand). Block `/* --- TLTreeView` bis vor `/* --- TLSlider` (b29546f2ad: 4084–4204) löschen; Ratsche streichen.
+- [ ] **Step 4: Keys, altes CSS, Ratsche** — `I18NConstants.java` nach `JS_TREE_VIEW_COLLAPSE`: `@en Tree` → `@CustomKey("js.tree.label") public static ResKey JS_TREE_LABEL;` und `@en Loading entries\u2026` → `@CustomKey("js.tree.loading") public static ResKey JS_TREE_LOADING;` (der Name der Ladezeile, Plan-Review M3); `messages_de.properties`: `js.tree.label = Baum`, `js.tree.loading = Einträge werden geladen…`; `check-messages-en.sh` → Diff committen (nie von Hand). Block `/* --- TLTreeView` bis vor `/* --- TLSlider` (`eef176e2ad`: 4263–4383) löschen; Ratsche streichen.
 
-- [ ] **Step 5: Prüfen, Commit** — `tsc --noEmit` 0, beide Builds, `layout.react` grün (`TestReactTreeControlSelection`), `git grep -n "tlTreeView\|tlTreeSpin" -- 'com.top_logic.*/react-src' '*.css'` leer, `git grep -n 'role="none"\|aria-controls' -- com.top_logic.layout.react/react-src/controls/TLTreeView.tsx` leer. `git commit -m "Ticket #29617: Design System wave 3b -- tree reads tl-tree: aria-activedescendant cursor, tl-toggle, indent from the token, a named tl-status tree item while children load, the shared drop calculator"`
+- [ ] **Step 5: Prüfen, Commit** — `tsc --noEmit` 0, beide Builds, `layout.react` grün (`TestReactTreeControlSelection`), `git grep -n "tlTreeView\|tlTreeSpin" -- 'com.top_logic.*/react-src/**' '*.css'` leer (heute: `TLTreeView.tsx` und der Block), `git grep -n 'role="none"\|aria-controls' -- com.top_logic.layout.react/react-src/controls/TLTreeView.tsx` leer. `git commit -m "Ticket #29617: Design System wave 3b -- tree reads tl-tree: aria-activedescendant cursor, tl-toggle, indent from the token, a named tl-status tree item while children load, the shared drop calculator"`
 
 ### Task E7: Tabelle I — Raster, Körper, Zeilenhöhe, Auswahl, Baum- und Gruppenzeilen, leer und lädt
 
@@ -3199,7 +3372,7 @@ Zelle (statt 1610–1681):
 
 Raster und Rahmen schließen: nach dem Körper `</div>` (Raster), dann die Fixiergrenze, der Spaltenknopf (ohne `cogInHeaderCell`) und die Vorschau `className="tl-table__freeze-preview"`, dann `</div>` (Rahmen); das Spaltenmenü bleibt danach in der Wurzel. Die Vorschau und den Griff stellt E8 auf die Paketklassen um; bis dahin stehen sie mit ihren alten Klassen im Rahmen.
 
-- [ ] **Step 6: Altes CSS, Übergangsblock, Ratsche** — in `tlReactControls.css` über Kommentar und Selektor löschen (b29546f2ad-Zeilen nur Orientierung; E2 und E4 haben davor gelöscht), von unten nach oben: (a) von `/* -- Tree table -- */` bis vor `/* Marks the column header the rows are grouped by. */` (3781–3840; `.tlTableView__groupMark` bleibt bis E8); (b) von `/* -- Frozen columns -- */` bis vor `/* Grip to drag the boundary of the frozen area …` (3677–3737: fixiert, angeheftet, `tlRowCommandCell`); (c) die Regeln `.tlTableView__checkboxCell` und `.tlTableView__checkbox` direkt nach `.tlJobStatus__error` (3565–3575; der Kopf liest sie bis E8 noch — dazwischen ist sein Kästchen ungestylt, gepusht wird erst nach E9); (d) von `.tlTableView__body {` bis vor `/* --- TLHtml` (2988–3179, endet mit `.tlTableView__cell:last-child`); (e) den Kommentar `/* The table always fills …` und die Regel `.tlTableView { … }` bis vor `/* The filter bar above the column headings …` (2695–2708). Vor der Überschrift `/* --- TLTableView` einfügen:
+- [ ] **Step 6: Altes CSS, Übergangsblock, Ratsche** — in `tlReactControls.css` über Kommentar und Selektor löschen (`eef176e2ad`-Zeilen nur Orientierung; E2 und E4 haben davor gelöscht), von unten nach oben: (a) von `/* -- Tree table -- */` bis vor `/* Marks the column header the rows are grouped by. */` (3960–4019; `.tlTableView__groupMark` bleibt bis E8); (b) von `/* -- Frozen columns -- */` bis vor `/* Grip to drag the boundary of the frozen area …` (3856–3916: fixiert, angeheftet, `tlRowCommandCell`); (c) die Regeln `.tlTableView__checkboxCell` und `.tlTableView__checkbox` direkt nach `.tlJobStatus__error` (3744–3754; der Kopf liest sie bis E8 noch — dazwischen ist sein Kästchen ungestylt, gepusht wird erst nach E9); (d) von `.tlTableView__body {` bis vor `/* --- TLHtml` (3155–3352, endet mit `.tlTableView__cell:last-child`; darin seit master #29654 auch `.tl-choice-group--vertical` (3256–3261) — das Paket trägt ihn seit P2, er fällt hier mit; `.tlTableView__cell > .tl-choice-group` liest `table.css` als `.tl-table__cell > .tl-choice-group`); (e) den Kommentar `/* The table always fills …` und die Regel `.tlTableView { … }` bis vor `/* The filter bar above the column headings …` (2862–2875). Vor der Überschrift `/* --- TLTableView` einfügen:
 
 ```css
 /* --- Table cells holding legacy controls (until waves 4 and 5) ------------ */
@@ -3232,9 +3405,9 @@ Raster und Rahmen schließen: nach dem Körper `</div>` (Raster), dann die Fixie
 }
 ```
 
-Ratsche: neuer Block „Table cells holding legacy controls (until waves 4 and 5)“, TLTableView und TLJobStatus sinken, `literals` mitsenken (Zahlen aus `inventory.mjs`); `_blocks`-Vermerk.
+Ratsche: neuer Block „Table cells holding legacy controls (until waves 4 and 5)“, TLTableView und TLJobStatus sinken (nachgerechnet 07.10. auf `eef176e2ad`: TLTableView 494 → ≈ 280, TLJobStatus 400 → ≈ 266, je nach Leerzeilen), `literals` mitsenken (Zahlen aus `inventory.mjs`; nachgerechnet nach E7: `fontSize` 44, `zIndex` 19, `outlineNone` 17, `duration` 32); `_blocks`-Vermerk.
 
-- [ ] **Step 7: Prüfen, Commit** — `tsc --noEmit` 0, beide Builds; `layout.react` grün (`TestPinnedColumns`, `TestTableGrouping`, `TestTableTooltips`, `TestTableSelectionRetention`, `TestTableViewDragDrop`, `TestReactStylesheetTokens`); `check-messages-en.sh` → Diff committen. Greps nur auf das, was E7 entfernt (Plan-Review B1: ein Grep über `rowHeight` kann nie leer sein — die neue lokale `const rowHeight` aus `useTokenPx` und das Dashboard, `TLDashboard.tsx:161` und `ReactDashboardControl.java:40`, mit eigenem Zustandsschlüssel für die Kachelhöhe, bleiben; `tlTableView__checkbox` steht bis E8 im Kopf, die Zeilen-Ziehregeln 3618–3665 bis E9). Alle vier → leer (vorgeprüft gegen `b29546f2ad`: heute treffen sie genau die Zeilen und Regeln, die E7 ändert oder löscht):
+- [ ] **Step 7: Prüfen, Commit** — `tsc --noEmit` 0, beide Builds; `layout.react` grün (`TestPinnedColumns`, `TestTableGrouping`, `TestTableTooltips`, `TestTableSelectionRetention`, `TestTableViewDragDrop`, `TestReactStylesheetTokens`); `check-messages-en.sh` → Diff committen. Greps nur auf das, was E7 entfernt (Plan-Review B1: ein Grep über `rowHeight` kann nie leer sein — die neue lokale `const rowHeight` aus `useTokenPx` und das Dashboard, `TLDashboard.tsx:161` und `ReactDashboardControl.java:40`, mit eigenem Zustandsschlüssel für die Kachelhöhe, bleiben; `tlTableView__checkbox` steht bis E8 im Kopf, die Zeilen-Ziehregeln 3797–3844 (`eef176e2ad`) bis E9). Alle vier → leer (vorgeprüft gegen `b29546f2ad`, erneut gegen `eef176e2ad` am 07.10.: heute treffen sie genau die Zeilen und Regeln, die E7 ändert oder löscht):
 
 ```bash
 cd $WT
@@ -3333,9 +3506,10 @@ Vor dem `return` des Controls:
             const w = getColWidth(col);
             const { isFrozen, isPinned, words } = placeOf(colIdx);
             const sortIcon = col.sortDirection === 'asc' ? ICON.sortAsc : ICON.sortDesc;
+            // A label cut off by its ellipsis offers its full text by itself (tooltip host, master
+            // #29752); only a tooltip the column declares is set here.
             const label = (
-              <span className="tl-table__label"
-                {...(col.tooltip ? tooltipProps(col.tooltip) : TOOLTIP_WHEN_CLIPPED)}>{col.label}</span>
+              <span className="tl-table__label" {...tooltipProps(col.tooltip)}>{col.label}</span>
             );
             return (
               <div
@@ -3420,7 +3594,7 @@ Vor dem `return` des Controls:
       </div>
 ```
 
-(Die zwei Sonderzonen — `onDragOver` der Auswahlzelle und die leere Zone hinter der letzten Spalte — fallen, Präzisierung oben.) Im Rahmen hinter dem Raster:
+(Die zwei Sonderzonen — `onDragOver` der Auswahlzelle und die leere Zone hinter der letzten Spalte — fallen, Präzisierung oben. Die Beschriftung trägt **kein** `TOOLTIP_WHEN_CLIPPED` mehr: master `ee2a37200f` (#29752) hat es am Kopf gestrichen, weil der Tooltip-Host abgeschnittenen Text mit `text-overflow: ellipsis` selbst anbietet — `.tl-table__label` (P7) hat die Ellipse; die Zellen behalten `TOOLTIP_WHEN_CLIPPED` wie auf master.) Im Rahmen hinter dem Raster:
 
 ```tsx
         {/* Grip on the boundary of the frozen columns, confined to the heading: a grip running down
@@ -3445,9 +3619,9 @@ Vor dem `return` des Controls:
 
 `I18N_KEYS` um `'js.table.filterActive': 'Filter (active)'`; `I18NConstants.java`: `@en Filter (active)` → `js.table.filterActive`; `messages_de.properties`: `js.table.filterActive = Filter (aktiv)`.
 
-- [ ] **Step 4: Altes CSS, Ratsche** — löschen über Kommentar und Selektor (b29546f2ad-Zeilen nur Orientierung), von unten: `/* Marks the column header the rows are grouped by. */` mit `.tlTableView__groupMark` (3841–3846); von `/* Grip to drag the boundary of the frozen area …` bis einschließlich der Regel `.tlTableView__frozenPreview { … }` (3739–3779: Fixiergrenze, Vorschau); von `.tlTableView__resizeHandle {` bis vor `/* -- Row drag and drop -- */` (3577–3616: Griff, gezogener Kopf, `dragOver-left/right`); von `/* The header row, with the column selection button …` bis einschließlich der Regel `.tlTableView__sortPriority { … }` (2864–2986). Ratsche: TLTableView und TLJobStatus sinken, `literals` mitsenken.
+- [ ] **Step 4: Altes CSS, Ratsche** — löschen über Kommentar und Selektor (`eef176e2ad`-Zeilen nur Orientierung), von unten: `/* Marks the column header the rows are grouped by. */` mit `.tlTableView__groupMark` (4020–4025); von `/* Grip to drag the boundary of the frozen area …` bis einschließlich der Regel `.tlTableView__frozenPreview { … }` (3918–3958: Fixiergrenze, Vorschau); von `.tlTableView__resizeHandle {` bis vor `/* -- Row drag and drop -- */` (3756–3795: Griff, gezogener Kopf, `dragOver-left/right`); von `/* The header row, with the column selection button …` bis einschließlich der Regel `.tlTableView__sortPriority { … }` (3031–3153). Ratsche: TLTableView und TLJobStatus sinken (nachgerechnet 07.10.: ≈ 156 und ≈ 176), `literals` mitsenken (nach E8: `fontSize` 42, `zIndex` 16, `outlineNone` 17, `duration` 32).
 
-- [ ] **Step 5: Prüfen, Commit** — `tsc --noEmit` 0, beide Builds; `layout.react` grün (`TestPinnedColumns`); `check-messages-en.sh` → Diff committen; `git grep -n "tlTableView__header\|tlTableView__sort\|tlTableView__frozen\|tlTableView__resize\|tlTableView__columns\|tlTableView__checkbox\|tlTableView__groupMark\|u25B2\|u25BC" -- 'com.top_logic.layout.react/'` leer; `git grep -n "aria-checked\|tl-icon-md" -- com.top_logic.layout.react/react-src/controls/TLTableView.tsx` leer. `git commit -m "Ticket #29617: Design System wave 3b -- table header: sort button with aria-sort and Shift+Enter, filter and column icon buttons, separators with role=separator, column reorder through useListReorder"`
+- [ ] **Step 5: Prüfen, Commit** — `tsc --noEmit` 0, beide Builds; `layout.react` grün (`TestPinnedColumns`); `check-messages-en.sh` → Diff committen; `git grep -n "tlTableView__header\|tlTableView__sort\|tlTableView__frozen\|tlTableView__resize\|tlTableView__columns\|tlTableView__checkbox\|tlTableView__groupMark\|u25B2\|u25BC" -- 'com.top_logic.layout.react/'` leer; `git grep -n "aria-checked\|tl-icon-md\|TOOLTIP_WHEN_CLIPPED)}>{col.label}" -- com.top_logic.layout.react/react-src/controls/TLTableView.tsx` leer. `git commit -m "Ticket #29617: Design System wave 3b -- table header: sort button with aria-sort and Shift+Enter, filter and column icon buttons, separators with role=separator, column reorder through useListReorder"`
 
 ### Task E9: Tabelle III — Filterleiste, Ziehen der Zeilen, Ablehnungshinweis
 
@@ -3623,9 +3797,9 @@ und im Render statt des Portals 1264–1268:
 
 (Die Suche filtert weiter auf dem Server, 300 ms — `handleSearchChange` bleibt. Alle Icons `tl-icon-sm`, auch in den Knöpfen voller Größe — Spec §12, Entscheidung 16.)
 
-- [ ] **Step 3: Altes CSS, Ratsche** — löschen über Kommentar und Selektor (b29546f2ad-Zeilen nur Orientierung), von unten: von `/* -- Row drag and drop -- */` bis einschließlich der Regel `.tlTableView__dropHint { … }` (3618–3676: Zeilen ziehen, `--dragover`, `--dropRefused`, `__dropHint` mit `z-index: 13000`); die Überschrift `/* --- TLTableView` mit allem, was unter ihr bis vor `/* --- TLHtml` noch steht — nach E7 und E8 nur noch die Filterleiste ab `/* The filter bar above the column headings …` (2693–2862; der Übergangsblock aus E7 steht vor der Überschrift und bleibt). `grep -n "tlTableView" tlReactControls.css` → kein Treffer (der Übergangsblock aus E7 liest `tl-table__cell`, nicht die alte Klasse). Ratsche: TLTableView streichen, TLJobStatus auf die Zahl aus `inventory.mjs` (Plan-Review: 122, nicht 118 — die Leerzeilen zwischen den ausgeschnittenen Regeln bleiben im Block) mit Vermerk „Tabellenregeln ausgeschnitten, keine Änderung an TLJobStatus“; `literals` auf die Zahlen aus `inventory.mjs` (laut Plan-Review nach E9: `fontSize` 41, `outlineNone` 16, `duration` 32, `zIndex` 14 — Abweichungen begründen, nicht abschreiben).
+- [ ] **Step 3: Altes CSS, Ratsche** — löschen über Kommentar und Selektor (`eef176e2ad`-Zeilen nur Orientierung), von unten: von `/* -- Row drag and drop -- */` bis einschließlich der Regel `.tlTableView__dropHint { … }` (3797–3855: Zeilen ziehen, `--dragover`, `--dropRefused`, `__dropHint` mit `z-index: 13000`); die Überschrift `/* --- TLTableView` mit allem, was unter ihr bis vor `/* --- TLHtml` noch steht — nach E7 und E8 nur noch die Filterleiste ab `/* The filter bar above the column headings …` (2860–3029; der Übergangsblock aus E7 steht vor der Überschrift und bleibt). `grep -n "tlTableView" tlReactControls.css` → kein Treffer (der Übergangsblock aus E7 liest `tl-table__cell`, nicht die alte Klasse). Ratsche: TLTableView streichen, TLJobStatus auf die Zahl aus `inventory.mjs` (nachgerechnet 07.10. auf `eef176e2ad`: 117 mit je einer mitgelöschten Leerzeile, bis 122, wenn die Leerzeilen zwischen den ausgeschnittenen Regeln bleiben) mit Vermerk „Tabellenregeln ausgeschnitten, keine Änderung an TLJobStatus“; `literals` auf die Zahlen aus `inventory.mjs` (nachgerechnet 07.10. nach E9: `color` 74, `fontSize` 41, `duration` 32, `zIndex` 15 — nicht 14: master #29743 hob das Budget 21 → 22 —, `outlineNone` 16; Abweichungen begründen, nicht abschreiben). Die Blöcke TLAccordion und TLAlert (master #29651/#29652) stehen in `inventory.mjs` unter `unlisted`; 3b trägt sie nicht ein (Orchestrator-Vermerk vom 07.10. in `ratchet.json`).
 
-- [ ] **Step 4: Prüfen, Commit** — `tsc --noEmit` 0, beide Builds; `layout.react` grün (`TestTableViewDragDrop`, `TestReactStylesheetTokens`); `git grep -n "tlTableView" -- 'com.top_logic.*/react-src' '*.css' '*.java' '*.view.xml'` leer; `git grep -n "tl-icon-md" -- com.top_logic.layout.react/react-src/controls/TLTableView.tsx` leer. `git commit -m "Ticket #29617: Design System wave 3b -- table filter bar: removable chips, tl-field-group search with clear button; drop states as data-tl-state, the refusal hint is a tl-popover; old table rules gone"`
+- [ ] **Step 4: Prüfen, Commit** — `tsc --noEmit` 0, beide Builds; `layout.react` grün (`TestTableViewDragDrop`, `TestReactStylesheetTokens`); `git grep -n "tlTableView" -- 'com.top_logic.*/react-src/**' '*.css' '*.java' '*.view.xml'` leer; `git grep -n "tl-icon-md" -- com.top_logic.layout.react/react-src/controls/TLTableView.tsx` leer. `git commit -m "Ticket #29617: Design System wave 3b -- table filter bar: removable chips, tl-field-group search with clear button; drop states as data-tl-state, the refusal hint is a tl-popover; old table rules gone"`
 
 ### Task E10: Gates und Doku
 
@@ -3642,7 +3816,7 @@ und im Render statt des Portals 1264–1268:
 
 - [ ] **Step 1: Push und PR** — `git fetch`; ist master weitergelaufen: `git merge origin/master` (Gates aus E10 Step 2 wiederholen); Push durch Hendrik; PR gegen `master`, Bernhard Reviewer (`add_reviewers bhu`), Trac #29617 CC; Beschreibung englisch: Ziel, Konsolidierung (W3, W6, W7, W8, W10, W11, N1, Link `altlast.md`), Migrationsliste alt → neu (aus E10 Step 3), **`rowHeight` fällt (Java, für Bernhard benannt)**, `TextTone.ACCENT` fällt / `PLACEHOLDER` neu, Sichtprüfungsliste.
 
-- [ ] **Step 2: Sichtprüfung** (Docker-Instanz des PRs, hell und dunkel, normal und kompakt): (1) Tab in eine Tabelle, Pfeile: Ring innen um die Zeile, auch über fixierten und angehefteten Spalten; Klick mit der Maus: kein Ring; Klick, dann Pfeil: Befund notieren; Ring im Select-Suchfeld vorhanden. (2) Sortieren per Enter, Umschalt + Enter (Badge „2“), `aria-sort` im Inspektor. (3) Dichte umschalten bei offener Tabelle: Zeilen 36 → 32 px, Baumeinzug 24 px, keine Lücken. (4) Filter aktiv: Trichter `icon-primary`, Tooltip „Filter (aktiv)“. (5) Fixierte Spalte beim waagerechten Scrollen, Kante als Linie, Fixiergrenze ziehen (Vorschau), Breite ziehen; Pfeil links/rechts schiebt den Körper. (6) Schnell scrollen: Skeleton-Zeilen; leere Tabelle „Keine Einträge“. (7) Zeilen ziehen (davor/darauf/danach, Ablehnung mit Hinweis-Popover), Spalten ziehen (Marke links/rechts), Knoten ziehen im Baum. (8) Spaltenwahl: ziehen, Alt + Pfeil mit Ansage (Screenreader oder `role=status` im Inspektor), Suche ab elf Spalten; Select-Chips: Alt + Pfeil links/rechts ohne Browser-Zurück; `TLValueList`: Alt + Pfeil. (9) Kapseln mit Rollen: Chip, Segment, Select-Chip, Pill im Lesewert, Avatar-Kategorie; gedrückter Chip; Filterleiste mit entfernbaren Kapseln. (10) Lesewert mit Icon und Link in Tabellenzellen (`TLResourceCell`, Ressourcenbild). (11) TLText-Varianten in der Styling-Demo, `strong` statt `accent`, Platzhalter in der Konfigurationsliste. (12) Baum lädt: Fortschrittszeile unter dem Knoten, im Inspektor ein `treeitem` eine Ebene tiefer mit Namen „Einträge werden geladen…“. Nachgezogen aus dem Plan-Review: (13) Ziehen-Marken liegen sichtbar **über** den Kindern — an der Tabellenwurzel (`drop-onto`/`drop-refused`) über Filterleiste, Kopf und Zeilen, an einer Zeile über fixierten und angehefteten Zellen, am Spaltenkopf und Baumknoten (M4); Ring und Marke an derselben Zeile stören sich nicht. (14) Klick in eine Zelle einer editierbaren Tabelle öffnet den Editor in dieser Spalte (M1). (15) Spaltenwahl und Select-Chips: nach Alt + Pfeil bleibt der Fokus am Griff des bewegten Eintrags, ein zweites Alt + Pfeil bewegt ihn weiter (M2). (16) Pfeil links/rechts und Leertaste in einem Dropdown, an einem Kästchen, einem Chip oder dem Sortierknopf der Tabelle gehören dem Control, nicht der Tabelle (Leertaste am Sortierknopf sortiert); Tab läuft vom Raster zum nächsten Control ohne Halt am Körper. (17) Firefox: Ziehen vom Sortierknopf in einem ziehbaren Kopf startet den Spaltenzug, ein Klick sortiert. (18) Ablehnungshinweis: Lage am Punktanker unter dem Ziehbild — verdeckt das Ziehbild ihn oder er das Ziehbild, Befund. (19) Waagerechtes Scrollen mit Cursor-Ring: der Ring bleibt an beiden Rändern sichtbar (links unter fixierten Spalten, rechts unter angehefteten und dem Spaltenknopf). (20) Ein deaktiviertes Segment mit Rolle zeigt keine Tönung. Befunde als Fix-Commits.
+- [ ] **Step 2: Sichtprüfung** (Docker-Instanz des PRs, hell und dunkel, normal und kompakt): (1) Tab in eine Tabelle, Pfeile: Ring innen um die Zeile, auch über fixierten und angehefteten Spalten; Klick mit der Maus: kein Ring; Klick, dann Pfeil: Befund notieren; Ring im Select-Suchfeld vorhanden, ebenso am offenen Select ohne Suchfeld (boolesches Select, Tippen springt zur Option). (2) Sortieren per Enter, Umschalt + Enter (Badge „2“), `aria-sort` im Inspektor. (3) Dichte umschalten bei offener Tabelle: Zeilen 36 → 32 px, Baumeinzug 24 px, keine Lücken. (4) Filter aktiv: Trichter `icon-primary`, Tooltip „Filter (aktiv)“. (5) Fixierte Spalte beim waagerechten Scrollen, Kante als Linie, Fixiergrenze ziehen (Vorschau), Breite ziehen; Pfeil links/rechts schiebt den Körper. (6) Schnell scrollen: Skeleton-Zeilen; leere Tabelle „Keine Einträge“. (7) Zeilen ziehen (davor/darauf/danach, Ablehnung mit Hinweis-Popover), Spalten ziehen (Marke links/rechts), Knoten ziehen im Baum. (8) Spaltenwahl: ziehen, Alt + Pfeil mit Ansage (Screenreader oder `role=status` im Inspektor), Suche ab elf Spalten; Select-Chips: Alt + Pfeil links/rechts ohne Browser-Zurück; `TLValueList`: Alt + Pfeil. (9) Kapseln mit Rollen: Chip, Segment, Select-Chip, Pill im Lesewert, Avatar-Kategorie; gedrückter Chip; Filterleiste mit entfernbaren Kapseln. (10) Lesewert mit Icon und Link in Tabellenzellen (`TLResourceCell`, Ressourcenbild). (11) TLText-Varianten in der Styling-Demo, `strong` statt `accent`, Platzhalter in der Konfigurationsliste. (12) Baum lädt: Fortschrittszeile unter dem Knoten, im Inspektor ein `treeitem` eine Ebene tiefer mit Namen „Einträge werden geladen…“. Nachgezogen aus dem Plan-Review: (13) Ziehen-Marken liegen sichtbar **über** den Kindern — an der Tabellenwurzel (`drop-onto`/`drop-refused`) über Filterleiste, Kopf und Zeilen, an einer Zeile über fixierten und angehefteten Zellen, am Spaltenkopf und Baumknoten (M4); Ring und Marke an derselben Zeile stören sich nicht. (14) Klick in eine Zelle einer editierbaren Tabelle öffnet den Editor in dieser Spalte (M1). (15) Spaltenwahl und Select-Chips: nach Alt + Pfeil bleibt der Fokus am Griff des bewegten Eintrags, ein zweites Alt + Pfeil bewegt ihn weiter (M2). (16) Pfeil links/rechts und Leertaste in einem Dropdown, an einem Kästchen, einem Chip oder dem Sortierknopf der Tabelle gehören dem Control, nicht der Tabelle (Leertaste am Sortierknopf sortiert); Tab läuft vom Raster zum nächsten Control ohne Halt am Körper. (17) Firefox: Ziehen vom Sortierknopf in einem ziehbaren Kopf startet den Spaltenzug, ein Klick sortiert. (18) Ablehnungshinweis: Lage am Punktanker unter dem Ziehbild — verdeckt das Ziehbild ihn oder er das Ziehbild, Befund. (19) Waagerechtes Scrollen mit Cursor-Ring: der Ring bleibt an beiden Rändern sichtbar (links unter fixierten Spalten, rechts unter angehefteten und dem Spaltenknopf). (20) Ein deaktiviertes Segment mit Rolle zeigt keine Tönung. Nachgezogen beim Vorziehen auf master `eef176e2ad` (07.10.): (21) Ein `<text>` ohne Wert nimmt keinen Platz, einer mit `role` bleibt (#29752). (22) Abgeschnittene Spaltenüberschrift und abgeschnittener `<text overflow="ellipsis">` zeigen den vollen Text als Tooltip, ohne Deklaration (#29752). (23) Radio- und Kästchengruppe (`TLChoiceGroup`, #29654) untereinander und nebeneinander, eine farbige Option als Pill; boolesches Radio in einer Tabellenzelle bleibt eine Reihe. (24) `<alert>` in allen vier Bedeutungen getönt, mit Aktionen und Schließen-Knopf in eigener Spalte oben (#29652, Regeln jetzt im Paket). (25) Select-Chip: Griff vorn und Entfernen hinten als Kreise innerhalb der Pillenlinie; Filterkapsel der Tabelle: dasselbe Entfernen, gedrückt auf der Marke (ein Modell, 07.10.). (26) Hof der Kästchen in Tabellenzeilen (Zeigen auf einer ausgewählten Zeile) wird nicht von der Zelle abgeschnitten; Cursor-Ring und Hof berühren sich nicht. Befunde als Fix-Commits.
 
 ---
 
