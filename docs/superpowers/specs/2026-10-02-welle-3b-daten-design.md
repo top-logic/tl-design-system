@@ -10,6 +10,9 @@
 Spec freigegeben 02.10.; nach dem Plan-Review entschieden 07.10.: Fehler- und Warnlinie auf ausgewählter Zeile
 (Tausch + `red-34`), Raster innen (A2), `docs/plans` außerhalb des Gates (A3), `strong` als Klasse und Ton
 `placeholder` (A4), eine Filter-Glyphe (A5), nur `indeterminate`, Pill als Wurzel — `docs/skalen.md` „Welle 3b“
+Nach dem Vorziehen auf master (07.10.): baut auf Bernhards Paket-Branch `hoefe` (Merge `80749da`); Alert-Teile aus
+#29652 und `.tl-choice-group--vertical` ins Paket; Entfernen in der Kapsel = Bernhards Kreis; nur `error` ist
+`role="alert"`; der Toggle in Zeilen zeigt mit `surface-state-*`
 
 ---
 

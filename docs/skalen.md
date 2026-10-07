@@ -1810,6 +1810,17 @@ Spec `docs/superpowers/specs/2026-10-02-welle-3b-daten-design.md`. Neu entschied
   Beschriftung „Filter (aktiv)“, damit der Zustand nicht an der Farbe allein hängt (WCAG 1.4.1).
 * **Historische Pläne sind nicht im Gate.** `docs/plans/` bekommt je Datei einen Vermerk wie in 3a; `docs/faq/` wird
   umgeschrieben und geprüft.
+* **Gleiches mit master zusammengelegt (07.10., nach dem Vorziehen auf master):** Bernhards Paket-Branch
+  `CWS/CWS_29752_hoefe` ist nach `main` gemergt; 3b baut darauf. Der Entfernen-Knopf der Kapsel übernimmt Bernhards
+  Kreis aus dem Select-Chip — eine Regel für beide. Die Alert-Teile, die #29652 ins alte Stylesheet gelegt hat
+  (`tl-alert__body`, `__message`, `__actions`, `__close`), wandern ins Paket; die dritte Spalte des schließbaren
+  Alerts folgt aus dem Inhalt (`:has(> .tl-alert__close)`), nicht aus einem Modifier. `.tl-choice-group--vertical`
+  (#29654) stand im Tabellenblock und geht ebenfalls ins Paket.
+* **Nur ein Fehler unterbricht.** `role="alert"` hat allein der Alert `error`; `warning`, `info`, `success` sind
+  `role="status"`. Ein Alert unterbricht den Screenreader sofort — eine Warnung ist nicht dringend genug dafür.
+* **Der Auf-/Zuklapper in einer Zeile zeigt mit dem Schleier.** Eine gezeigte oder ausgewählte Zeile hat schon die
+  Fläche, die der Toggle zum Zeigen nähme; deckend wäre er dort unsichtbar. `surface-state-hover`/`-active` ist
+  durchscheinend und trägt auf jedem Zeilengrund (Bernhards Höfe, „Höfe sind durchscheinend“).
 
 **Befund dazu:** 282 Zeilen Tabellenregeln (3565–3846) standen ohne Überschrift im alten Stylesheet; die Ratsche
 schlug sie TLJobStatus zu. Die Blockmessung trifft nur, was eine Überschrift trägt — beim Ausschneiden wird TLJobStatus
