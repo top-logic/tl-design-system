@@ -234,3 +234,14 @@ test('outline-style: none ist nur am Behälter mit Cursor in base.css erlaubt', 
   assert.equal(lint('button:focus-visible { outline-style: none; }', { known, file: 'base.css' }).length, 1);
   assert.equal(lint(`${sel} { outline: none; }`, { known, file: 'base.css' }).length, 1);
 });
+
+test('3b: Cursor, Lage, Filter und Ziehen sind Zustände, keine Modifier — an Block und Element', () => {
+  const known = new Set(['--tl-text-primary']);
+  for (const z of ['cursor', 'frozen', 'frozen-last', 'pinned', 'pinned-first', 'filtered', 'expanded', 'drop-before', 'drop-after', 'drop-onto', 'drop-refused']) {
+    assert.equal(lint(`.tl-table--${z} { color: var(--tl-text-primary); }`, { known, file: 'x.css' })
+      .filter((m) => /Zustand als Modifier/.test(m)).length, 1, `Block ${z}`);
+    assert.equal(lint(`.tl-table__row--${z} { color: var(--tl-text-primary); }`, { known, file: 'x.css' })
+      .filter((m) => /Zustand als Element-Modifier/.test(m)).length, 1, `Element ${z}`);
+  }
+  assert.deepEqual(lint('.tl-table__row[data-tl-state~="cursor"] { color: var(--tl-text-primary); }', { known, file: 'x.css' }), []);
+});

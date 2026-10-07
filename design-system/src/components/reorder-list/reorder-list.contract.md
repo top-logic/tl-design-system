@@ -76,7 +76,7 @@ Klassen:
 | `tl-reorder-list__label` | die Beschriftung im Kästchen |
 | `tl-reorder-list__search` | an der `tl-field-group` der Suche vor der Liste |
 | `tl-button--icon` | der Gruppierungsknopf, mit `--sm` und `--ghost` und `aria-pressed` |
-| `tl-choice` | das Kästchen: `label.tl-choice` > `input.tl-checkbox` und die Beschriftung |
+| `tl-choice` | das Kästchen: `label.tl-choice` > `input` mit `tl-checkbox` und die Beschriftung |
 | `tl-visually-hidden` | Hinweis „Alt + Pfeil verschiebt“ und Live-Bereich: gelesen, nicht gezeigt |
 
 Symbole (Griff, Gruppieren, Suche) sind `ThemeIcon` in `tl-icon-sm`, Knopf-Icons mit `tl-button__icon`.

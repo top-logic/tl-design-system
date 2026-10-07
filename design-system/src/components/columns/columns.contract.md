@@ -34,7 +34,7 @@ Keine.
 | Klasse | Wann |
 |---|---|
 | `tl-columns` | die Reihe |
-| `tl-columns--gap-compact`, `--gap-default`, `--gap-loose` | genau eine, der Abstand |
+| `tl-columns--gap-compact`, `tl-columns--gap-default`, `tl-columns--gap-loose` | genau eine, der Abstand |
 | `tl-columns__column` | jede Spalte |
 
 ## Konformität

@@ -95,6 +95,10 @@ leere Zeile behält ihre Höhe. Mehrzeilig bricht jede Zeile um, statt mit Ellip
 Tabellenzelle stellt die Engine die Zeilen in eine Reihe ohne Umbruch. Ein Link-Lesewert ist unterstrichen — Farbe allein kennzeichnet keinen
 Link.
 
+Jeden Lesewert — im Formular, im Select und in der Tabellenzelle — zeichnet ein Renderer (`FieldValue`):
+äußerer Link `href` (neuer Tab), innerer Link `onGoto` (Kommando `goto`), Icon über `ThemeIcon`, Tönung als
+`tl-pill` mit `data-tl-role`.
+
 Die Aktion in der Gruppe ist ein `tl-button--icon --sm --ghost` (`tl-button tl-button--ghost tl-button--sm tl-button--icon`),
 unmittelbares Kind von `tl-field-group`: `button type="button"` (Löschen) oder `a` (Öffnen), mit
 `aria-label`. Die Feldgruppe hat **einen** Endplatz: solange Text steht und `clearable` gilt, ersetzt der

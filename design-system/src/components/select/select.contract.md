@@ -74,7 +74,7 @@ Der Fokus bleibt an der Wurzel bzw. am Suchfeld; die Hervorhebung wandert über
 | `Tab` | verlässt das Feld | schließt und verlässt das Feld |
 | `Backspace` | — | im leeren Suchfeld bei `multiSelect`: entfernt den letzten Wert-Chip |
 | `Alt` + `ArrowLeft` / `ArrowRight` | auf dem Ziehgriff eines Wert-Chips (`customOrder`): verschiebt den Chip um eine Stelle und sendet dasselbe `valueChanged` wie das Ziehen; an den Enden nichts | — |
-| Tippen | — | filtert die Optionen im Suchfeld; der Treffer im Label nimmt die kräftige Variante der Typo-Klasse seines Trägers: `tl-type-body-strong` in einem schlichten Label, `tl-type-label-strong` in einer Pill |
+| Tippen | — | filtert die Optionen im Suchfeld (Filter: `filterOptions` — trim, Kleinschreibung, enthält); der Treffer im Label nimmt die kräftige Variante der Typo-Klasse seines Trägers: `tl-type-body-strong` in einem schlichten Label, `tl-type-label-strong` in einer Pill |
 
 ## Tokens
 

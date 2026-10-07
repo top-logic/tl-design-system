@@ -88,6 +88,9 @@ Balken links. Ziehen und Ablegen zeichnet `drag.css` (`drag.contract.md`), den C
 | `draggable="true"` | an ziehbaren Knoten |
 | `hidden` | an jedem Element, das gerade nicht steht |
 
+Cursor und Ziehen sind Zustände: das Wort `cursor` und die des Ziehens stehen in `data-tl-state`, nie als
+Modifier (Klassen-Gate).
+
 Bauteile anderer Blöcke:
 
 | Bauteil | Wo und wie |

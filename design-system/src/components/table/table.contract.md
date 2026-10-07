@@ -176,6 +176,9 @@ zeichnet `drag.css` (`drag.contract.md`), den Cursor-Ring `base.css`.
 | `role="separator"` | an `tl-table__resize` und `tl-table__freeze`, mit `aria-label` (`js.table.freezeSplitter`); Zeigerbedienung |
 | `hidden` | an jedem Element, das gerade nicht steht |
 
+Cursor, Lage, Filter und Ziehen sind Zustände: die Wörter `cursor`, `frozen`, `frozen-last`, `pinned`,
+`pinned-first`, `filtered` und die des Ziehens stehen in `data-tl-state`, nie als Modifier (Klassen-Gate).
+
 Bauteile anderer Blöcke:
 
 | Bauteil | Wo und wie |

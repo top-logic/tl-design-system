@@ -48,3 +48,15 @@ test('kein Paar steht zweimal in der Liste', () => {
     gesehen.add(schluessel);
   }
 });
+
+test('3b: die Paare der Daten stehen in der Liste', () => {
+  const namen = new Set(kontrastPaare(T).map((p) => `${p.fg}|${p.bg}`));
+  for (const k of ['icon-secondary|surface-interactive-selected', 'icon-secondary|surface-layer',
+    'status-error-border|surface-interactive-selected', 'status-error-border|surface-interactive-hover',
+    'status-warning-border|surface-interactive-selected', 'status-warning-border|surface-interactive-hover',
+    'focus-ring|surface-interactive-selected',
+    'focus-ring|surface-interactive-hover', 'border-emphasis|surface-layer',
+    'text-placeholder|surface-base', 'text-placeholder|surface-layer', 'text-placeholder|surface-layer-nested',
+    'icon-primary|surface-state-hover/surface-interactive-hover', 'icon-primary|surface-state-active/surface-interactive-selected'])
+    assert.ok(namen.has(k), k);
+});

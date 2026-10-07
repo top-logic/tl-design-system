@@ -63,6 +63,23 @@ export function kontrastPaare(T) {
   // Knöpfe im Feld: der Pfeil des Select steht beim Zeigen und Drücken auf der Fläche seines Quadrats.
   paar('icon-secondary', 'surface-interactive-selected', 3.0); paar('icon-secondary', 'surface-interactive-active', 3.0);
   paar('border-interactive', 'surface-brand-subtle', 3.0); // gewählter Chip, gewähltes Segment
+  // Daten (3b §13): ausgewählte Zeile und Knoten, Cursor-Ring, Marken im Kopf, Kante fixierter Spalten,
+  // Fehler- und Warnlinie im Zelleditor und Ablehnung beim Ziehen auf einer ausgewählten oder gezeigten
+  // Zeile (Stufen seit 07.10.: hell red-41/amber-43, dunkel red-34/amber-36), Platzhalter-Ton im Text.
+  for (const bg of ['surface-interactive-selected', 'surface-interactive-hover']) paar('focus-ring', bg, 3.0);
+  // icon-secondary auf surface-interactive-selected steht seit Bernhards Knöpfen im Feld schon in der Liste (b985047).
+  paar('icon-secondary', 'surface-layer', 3.0);
+  paar('border-emphasis', 'surface-layer', 3.0);
+  for (const bg of ['surface-interactive-selected', 'surface-interactive-hover']) {
+    paar('status-error-border', bg, 3.0);
+    paar('status-warning-border', bg, 3.0);
+  }
+  for (const bg of ['surface-base', 'surface-layer', 'surface-layer-nested']) paar('text-placeholder', bg, 4.5);
+  // Der Auf-/Zuklapper zeigt mit dem Schleier (07.10.): sein Glyph über der Schicht auf jedem Grund, auf dem er
+  // steht — Formulargruppe, Zeile gezeigt und ausgewählt. Kein Ring auf diesen Zusammensetzungen: in Zeile und
+  // Knoten hat der Toggle tabindex=-1; der fokussierbare der Formulargruppe steht auf den Hof-Gründen oben.
+  for (const s of SCHICHTEN) for (const g of ['surface-layer', 'surface-layer-nested', 'surface-interactive-hover', 'surface-interactive-selected'])
+    paar('icon-primary', `${s}/${g}`, 3.0);
   for (const bg of GRUENDE_FOKUS) paar('focus-ring', bg, 3.0);
   for (const k of KATEGORIEN) {
     paar('text-primary', `category-${k}-subtle`, 4.5);
