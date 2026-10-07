@@ -226,3 +226,11 @@ test('surface-state-* als Fläche gibt es genau am tl-toggle, beim Zeigen und Dr
     '.tl-toggle:hover { box-shadow: inset 0 0 0 var(--tl-border-width-md) var(--tl-surface-state-hover); }'])
     assert.ok(lint(css, { known, file: 'x.css' }).length >= 1, css);
 });
+
+test('outline-style: none ist nur am Behälter mit Cursor in base.css erlaubt', () => {
+  const sel = ':where(:not(input, textarea, [role="combobox"])[aria-activedescendant]):focus-visible';
+  assert.deepEqual(lint(`${sel} { outline-style: none; }`, { known, file: 'base.css' }), []);
+  assert.equal(lint(`${sel} { outline-style: none; }`, { known, file: 'tl-table.css' }).length, 1);
+  assert.equal(lint('button:focus-visible { outline-style: none; }', { known, file: 'base.css' }).length, 1);
+  assert.equal(lint(`${sel} { outline: none; }`, { known, file: 'base.css' }).length, 1);
+});

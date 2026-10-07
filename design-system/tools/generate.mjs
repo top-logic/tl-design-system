@@ -180,6 +180,13 @@ ${type}
   pointer-events: none;
 }
 
+/* Der Behälter mit virtuellem Cursor zeichnet kein Browser-Outline (Spec 3b §3): der Ring liegt am
+   Cursor-Element. Die einzige Ausnahme vom Ring, nur dieser Selektor. Ohne Cursor-Element setzt die
+   Engine kein aria-activedescendant (WCAG 2.4.7) — dann gilt der normale Ring. */
+:where(:not(input, textarea, [role="combobox"])[aria-activedescendant]):focus-visible {
+  outline-style: none;
+}
+
 /* Icons: drei Stufen nach Rolle plus Glyph im Control — siehe skalen.md „Icons“.
    line-height 1, sonst erbt der Glyph die Zeilenhöhe des Fließtexts; das 1em-Quadrat hält
    Menü- und Baumspalten in Flucht. Die Fläche einer Icon-Schaltfläche ist Sache des Controls. */

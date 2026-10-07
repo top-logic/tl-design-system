@@ -40,3 +40,13 @@ test('der Cursor-Ring: ein Behälter mit aria-activedescendant gibt den Ring an 
     /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/, /pointer-events:\s*none/])
     assert.match(flaeche[1], d);
 });
+
+test('der Behälter mit Cursor zeichnet kein Browser-Outline — die einzige Ausnahme vom Ring', () => {
+  const base = readFileSync(new URL('../dist/base.css', import.meta.url), 'utf8');
+  const sel = ':where(:not(input, textarea, [role="combobox"])[aria-activedescendant]):focus-visible';
+  const m = [...base.matchAll(/([^{}]+)\{([^}]*outline-style:\s*none[^}]*)\}/g)];
+  assert.equal(m.length, 1, 'genau eine Regel mit outline-style: none');
+  assert.equal(m[0][1].replace(/\/\*[\s\S]*?\*\//g, '').trim(), sel);
+  assert.ok(/\[data-tl-state~="cursor"\]\)::after\s*\{[^}]*outline-offset/.test(base), 'Cursor-Ring-Fläche daneben');
+  assert.equal((base.match(/outline:\s*var\(--tl-focus-width\) solid var\(--tl-focus-ring\)/g) ?? []).length, 1);
+});

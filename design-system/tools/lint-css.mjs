@@ -122,6 +122,9 @@ const MODIFIERS = {
   'tl-table': new Set([]),
 };
 
+// Die einzige Ausnahme vom Ring: der Behälter mit virtuellem Cursor, nur in base.css (Spec 3b §3).
+const CURSOR_CONTAINER = ':where(:not(input, textarea, [role="combobox"])[aria-activedescendant]):focus-visible';
+
 export function knownVariables(css) {
   return new Set([...css.matchAll(/--tl-[a-z0-9-]+(?=:)/g)].map((m) => m[0]));
 }
@@ -163,7 +166,7 @@ export function lint(css, { known, file }) {
 
     if (d.property === 'outline' && OUTLINE_OFF.test(d.value.trim())) say(d, 'outline: none/0 — der Ring ist Pflicht');
     if (d.property === 'outline-width' && /^0(px)?$/.test(d.value.trim())) say(d, 'outline-width: 0 — der Ring ist Pflicht');
-    if (d.property === 'outline-style' && d.value.trim() === 'none') say(d, 'outline-style: none — der Ring ist Pflicht');
+    if (d.property === 'outline-style' && d.value.trim() === 'none' && !(file === 'base.css' && sel.trim() === CURSOR_CONTAINER)) say(d, 'outline-style: none — der Ring ist Pflicht');
     if (d.property === 'outline-color' && d.value.trim() === 'transparent') say(d, 'outline-color: transparent — der Ring ist Pflicht');
 
     if (d.property === 'font-size' && !isTypeClass) say(d, 'font-size außerhalb einer tl-type-Klasse');
