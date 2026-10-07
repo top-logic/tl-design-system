@@ -80,6 +80,8 @@ const ELEMENT_STATE_MODIFIER = /^tl-[a-z0-9-]+__[a-z0-9-]+--(active|disabled|loa
 // Punkt 11: Die Modifier eines Blocks sind entschieden (docs/skalen.md), nicht gewachsen.
 const MODIFIERS = {
   'tl-button': new Set(['primary', 'secondary', 'ghost', 'link', 'danger', 'sm', 'icon']),
+  'tl-text': new Set(['truncate']),
+  'tl-columns': new Set(['gap-compact', 'gap-default', 'gap-loose']),
   'tl-pill': new Set([]), // Die Rolle ist ein Attribut (data-tl-role), kein Modifier.
   'tl-avatar': new Set(['sm', 'lg', 'xl']), // Die Kategorie ist ein Attribut (data-tl-role).
   'tl-progress': new Set([]), // Unbestimmt ist ein Zustand (aria-busy), keine Klasse.
