@@ -31,11 +31,8 @@
 
 /* --- Rollen ---------------------------------------------------------------- */
 
-.tl-pill--brand {
-  background: var(--tl-surface-brand-subtle);
-  border-color: var(--tl-border-interactive);
-}
-
-/* Bedeutungen und Kategorien: je Rolle Fläche und Linie, erzeugt aus src/tokens.json (tools/generate.mjs). */
+/* Die Rolle ist ein Attribut, data-tl-role (3b §11): je Rolle Fläche und Linie, erzeugt aus
+   src/tokens.json (tools/generate.mjs). Ohne Attribut ist die Pill neutral. */
+/* @tl-roles: brand .tl-pill */
 /* @tl-roles: status .tl-pill */
 /* @tl-roles: category .tl-pill */

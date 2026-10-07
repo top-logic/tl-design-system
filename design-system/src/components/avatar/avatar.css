@@ -37,5 +37,5 @@
 
 /* --- Kategorien -------------------------------------------------------------- */
 
-/* Je Kategorie Fläche und Linie, erzeugt aus src/tokens.json (tools/generate.mjs). */
+/* Je Kategorie (data-tl-role) Fläche und Linie, erzeugt aus src/tokens.json (tools/generate.mjs). */
 /* @tl-roles: category .tl-avatar */

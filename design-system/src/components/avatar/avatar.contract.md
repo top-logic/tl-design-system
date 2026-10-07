@@ -58,6 +58,6 @@ unterschreitet 12 px.
 ## Konformität
 
 Eine Komponente besteht den Vertrag, wenn sie im Specimen-Harness des Pakets für jeden Namen die
-Klasse `tl-avatar--category-<n>` seines Hashes trägt, für jede Größe außer `medium` den Modifier ihres Kürzels, ohne
+Attribut `data-tl-role="category-<n>"` seines Hashes trägt, für jede Größe außer `medium` den Modifier ihres Kürzels, ohne
 Namen und ohne Bild die neutrale Fläche zeigt, mit Bild das `__image` rendert, kein `style`-Attribut
 setzt und im Klassen-Gate keine Klasse ohne `tl-`-Präfix hinterlässt.

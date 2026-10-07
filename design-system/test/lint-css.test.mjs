@@ -175,7 +175,10 @@ test('ein Zustand als Modifier des Feldes bricht das Gate — als Zustandswort o
   for (const m of ['error', 'warning'])
     assert.ok(lint(`.tl-field--${m} { color: var(--tl-text-primary); }`, { known, file: 'x.css' })
       .some((v) => v.includes('kein Modifier von tl-field')), m);
-  assert.deepEqual(lint('.tl-pill--error { color: var(--tl-text-primary); }', { known, file: 'x.css' }), [], 'Bedeutung an der Pill bleibt erlaubt');
+  // Seit 3b ist die Rolle ein Attribut (data-tl-role): auch die Bedeutung an der Pill ist kein Modifier mehr.
+  assert.ok(lint('.tl-pill--error { color: var(--tl-text-primary); }', { known, file: 'x.css' })
+    .some((v) => v.includes('kein Modifier von tl-pill')), 'Rolle als Modifier der Pill');
+  assert.deepEqual(lint('.tl-pill[data-tl-role="error"] { color: var(--tl-text-primary); }', { known, file: 'x.css' }), []);
 });
 
 test('ein Zustand als Element-Modifier ist ein Verstoß — auch Fehler und Warnung', () => {
@@ -184,7 +187,7 @@ test('ein Zustand als Element-Modifier ist ein Verstoß — auch Fehler und Warn
     assert.equal(v.length, 1, v.join('\n'));
     assert.match(v[0], /Zustand als Element-Modifier/);
   }
-  assert.deepEqual(lint('.tl-alert--error { color: var(--tl-text-primary); }', { known, file: 'x.css' }), []);
+  assert.deepEqual(lint('.tl-alert[data-tl-role="error"] { color: var(--tl-text-primary); }', { known, file: 'x.css' }), []);
   assert.deepEqual(lint('.tl-button__icon--large { }', { known, file: 'x.css' }), []);
 });
 

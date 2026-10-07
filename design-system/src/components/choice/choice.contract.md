@@ -65,7 +65,7 @@ gesetzt; die Auswahl hat keine Schriftregel.
 | Attribut | Wann |
 |---|---|
 | `:checked` | `value: true` an Kästchen, Schalter, Radio — der native Zustand des `input`, kein Attribut von Hand. |
-| `:indeterminate` + `aria-checked="mixed"` | `triState` und `value: null`. `indeterminate` ist eine Eigenschaft des `input` (kein HTML-Attribut); `aria-checked="mixed"` sagt es dem Screenreader. |
+| `:indeterminate` | `triState` und `value: null`. `indeterminate` ist eine Eigenschaft des `input` (kein HTML-Attribut); der Browser meldet es dem Screenreader als „gemischt“. **Kein** `aria-checked` am nativen Kästchen (ARIA in HTML; entschieden 07.10.). |
 | `role="switch"` + `aria-checked` | `display: switch`; am `input type="checkbox"` mit `tl-checkbox tl-checkbox--switch`. |
 | `role="radiogroup"` | an der `tl-choice-group` der Radios (`TLBooleanChoice`) und an `tl-segmented` bei Einfachwahl. |
 | `role="group"` | an `tl-chip-group` und an `tl-segmented` bei `multiSelect`. |
@@ -94,7 +94,7 @@ schneidet ihn wie den Fokusring.
 Bei `editable: false` rendert `TLBooleanChoice` die Beschriftung seines Werts als Lesewert
 (`tl-field-value`, siehe `field.contract.md`). `TLSegmentedChoice` und `TLOptionChips` rendern wie der
 DropdownSelect (`select.contract.md`) eine Liste von `tl-field-value`-Einträgen in `tl-select__values`:
-je gewählter Wert Text oder `tl-pill` seiner `colorRole`, mit Bild, Werte mit `link` als `a`, das
+je gewählter Wert Text oder `tl-pill` mit `data-tl-role` seiner `colorRole`, mit Bild, Werte mit `link` als `a`, das
 `goto` sendet. `TLCheckbox` zeigt das Kästchen schreibgeschützt: `aria-readonly="true"`, nicht
 `disabled` (siehe Attribute).
 
@@ -109,9 +109,11 @@ Klassen:
 | `tl-choice-group` | die Gruppe mehrerer `tl-choice`; bei Radios mit `role="radiogroup"` |
 | `tl-segmented` | die Leiste der Segmente, `role="radiogroup"` oder `role="group"` |
 | `tl-segmented__segment` | `button type="button"` je Option |
+| `tl-segmented__segment` + `data-tl-role` | die Rolle des Werts (`colorRole`); keine Pill im Chip oder Segment, Bild und Beschriftung stehen nebeneinander mit `--tl-space-2xs` |
 | `tl-segmented__label` | `span` um das Label im Segment; endet mit Ellipse |
 | `tl-chip-group` | die Wolke der Chips, `role="group"` |
 | `tl-chip` | `button type="button"` je Option, mit `aria-pressed` |
+| `tl-chip` + `data-tl-role` | die Rolle des Werts (`colorRole`); keine Pill im Chip oder Segment, Bild und Beschriftung stehen nebeneinander mit `--tl-space-2xs` |
 | `tl-chip__label` | `span` um das Label im Chip; endet mit Ellipse |
 
 ## Konformität

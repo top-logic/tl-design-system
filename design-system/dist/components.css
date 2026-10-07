@@ -5,7 +5,7 @@
 
 /* --- alert/alert.css --- */
 /* Alert — docs/skalen.md „Status: vier Bedeutungen“.
-   Eine Meldung, die im Fluss steht: Icon, Titel, Text. Die Bedeutung ist ein Modifier und Pflicht —
+   Eine Meldung, die im Fluss steht: Icon, Titel, Text. Die Bedeutung ist ein Attribut (data-tl-role) und Pflicht —
    es gibt keinen Alert ohne Bedeutung, darum hat die Basisklasse keine Fläche. Fläche und Linie tragen
    die Bedeutung (subtle, border), der Text bleibt text-primary (4,5 auf jeder subtle-Fläche), allein das
    Icon liest status-text (3,0 als Nicht-Text). Die dickere Linie steht am Zeilenanfang. */
@@ -22,18 +22,51 @@
 }
 .tl-alert[hidden] { display: none; }
 
-/* Je Bedeutung Fläche und Linie, erzeugt aus src/tokens.json (tools/generate.mjs). */
-.tl-alert--error { background: var(--tl-status-error-subtle); border-color: var(--tl-status-error-border); }
-.tl-alert--warning { background: var(--tl-status-warning-subtle); border-color: var(--tl-status-warning-border); }
-.tl-alert--success { background: var(--tl-status-success-subtle); border-color: var(--tl-status-success-border); }
-.tl-alert--info { background: var(--tl-status-info-subtle); border-color: var(--tl-status-info-border); }
+/* Je Bedeutung (data-tl-role, Pflicht) Fläche und Linie, erzeugt aus src/tokens.json (tools/generate.mjs). */
+.tl-alert[data-tl-role="error"] { background: var(--tl-status-error-subtle); border-color: var(--tl-status-error-border); }
+.tl-alert[data-tl-role="warning"] { background: var(--tl-status-warning-subtle); border-color: var(--tl-status-warning-border); }
+.tl-alert[data-tl-role="success"] { background: var(--tl-status-success-subtle); border-color: var(--tl-status-success-border); }
+.tl-alert[data-tl-role="info"] { background: var(--tl-status-info-subtle); border-color: var(--tl-status-info-border); }
 
-.tl-alert--error .tl-alert__icon { color: var(--tl-status-error-text); }
-.tl-alert--warning .tl-alert__icon { color: var(--tl-status-warning-text); }
-.tl-alert--success .tl-alert__icon { color: var(--tl-status-success-text); }
-.tl-alert--info .tl-alert__icon { color: var(--tl-status-info-text); }
+.tl-alert[data-tl-role="error"] .tl-alert__icon { color: var(--tl-status-error-text); }
+.tl-alert[data-tl-role="warning"] .tl-alert__icon { color: var(--tl-status-warning-text); }
+.tl-alert[data-tl-role="success"] .tl-alert__icon { color: var(--tl-status-success-text); }
+.tl-alert[data-tl-role="info"] .tl-alert__icon { color: var(--tl-status-info-text); }
 
-.tl-alert__body { min-width: 0; }
+/* Der Körper stapelt Titel, Text und Aktionen (TLAlert, master #29652); min-width: 0 lässt langen Text
+   umbrechen, statt die Spalte zu weiten. */
+.tl-alert__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tl-space-2xs);
+  min-width: 0;
+}
+.tl-alert__body[hidden] { display: none; }
+
+/* Der Text bricht an jeder Stelle um und behält die Zeilenumbrüche des Servers. */
+.tl-alert__message {
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+/* Was man gegen die Meldung tun kann: Knöpfe in einer umbrechenden Reihe unter dem Text. */
+.tl-alert__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tl-space-xs);
+  padding-block-start: var(--tl-space-xs);
+}
+.tl-alert__actions[hidden] { display: none; }
+
+/* Mit Schließen-Knopf eine dritte Spalte; der Knopf steht oben. Die Spalte folgt dem Inhalt (:has), kein
+   Modifier — wie die Kapsel mit Entfernen-Knopf. */
+.tl-alert:has(> .tl-alert__close) {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.tl-alert__close {
+  align-self: start;
+}
 
 /* --- avatar/avatar.css --- */
 /* Avatar — docs/skalen.md „Avatar: die Farbe ist eine Kategorie“.
@@ -75,15 +108,15 @@
 
 /* --- Kategorien -------------------------------------------------------------- */
 
-/* Je Kategorie Fläche und Linie, erzeugt aus src/tokens.json (tools/generate.mjs). */
-.tl-avatar--category-1 { background: var(--tl-category-1-subtle); border-color: var(--tl-category-1-border); }
-.tl-avatar--category-2 { background: var(--tl-category-2-subtle); border-color: var(--tl-category-2-border); }
-.tl-avatar--category-3 { background: var(--tl-category-3-subtle); border-color: var(--tl-category-3-border); }
-.tl-avatar--category-4 { background: var(--tl-category-4-subtle); border-color: var(--tl-category-4-border); }
-.tl-avatar--category-5 { background: var(--tl-category-5-subtle); border-color: var(--tl-category-5-border); }
-.tl-avatar--category-6 { background: var(--tl-category-6-subtle); border-color: var(--tl-category-6-border); }
-.tl-avatar--category-7 { background: var(--tl-category-7-subtle); border-color: var(--tl-category-7-border); }
-.tl-avatar--category-8 { background: var(--tl-category-8-subtle); border-color: var(--tl-category-8-border); }
+/* Je Kategorie (data-tl-role) Fläche und Linie, erzeugt aus src/tokens.json (tools/generate.mjs). */
+.tl-avatar[data-tl-role="category-1"] { background: var(--tl-category-1-subtle); border-color: var(--tl-category-1-border); }
+.tl-avatar[data-tl-role="category-2"] { background: var(--tl-category-2-subtle); border-color: var(--tl-category-2-border); }
+.tl-avatar[data-tl-role="category-3"] { background: var(--tl-category-3-subtle); border-color: var(--tl-category-3-border); }
+.tl-avatar[data-tl-role="category-4"] { background: var(--tl-category-4-subtle); border-color: var(--tl-category-4-border); }
+.tl-avatar[data-tl-role="category-5"] { background: var(--tl-category-5-subtle); border-color: var(--tl-category-5-border); }
+.tl-avatar[data-tl-role="category-6"] { background: var(--tl-category-6-subtle); border-color: var(--tl-category-6-border); }
+.tl-avatar[data-tl-role="category-7"] { background: var(--tl-category-7-subtle); border-color: var(--tl-category-7-border); }
+.tl-avatar[data-tl-role="category-8"] { background: var(--tl-category-8-subtle); border-color: var(--tl-category-8-border); }
 
 /* --- badge/badge.css --- */
 /* Badge — docs/skalen.md „Status: vier Bedeutungen“ (die Marke, nicht eine Bedeutung).
@@ -550,7 +583,7 @@
 }
 
 /* Das Label endet mit Ellipse. text-overflow wirkt nicht über einen Flex-Container auf seine Kinder,
-   darum trägt das Label ein eigenes Element; die Pill einer Option mit Farbrolle darf schrumpfen. */
+   darum trägt das Label ein eigenes Element. */
 .tl-segmented__label,
 .tl-chip__label {
   min-width: 0;
@@ -559,10 +592,20 @@
   white-space: nowrap;
 }
 
-.tl-segmented__segment > .tl-pill,
-.tl-chip > .tl-pill {
-  min-width: 0;
-}
+/* Die Tönung trägt das Segment selbst (data-tl-role), vor Zeigen und Gewählt. */
+.tl-segmented__segment[data-tl-role="brand"] { background: var(--tl-surface-brand-subtle); border-color: var(--tl-border-interactive); }
+.tl-segmented__segment[data-tl-role="error"] { background: var(--tl-status-error-subtle); border-color: var(--tl-status-error-border); }
+.tl-segmented__segment[data-tl-role="warning"] { background: var(--tl-status-warning-subtle); border-color: var(--tl-status-warning-border); }
+.tl-segmented__segment[data-tl-role="success"] { background: var(--tl-status-success-subtle); border-color: var(--tl-status-success-border); }
+.tl-segmented__segment[data-tl-role="info"] { background: var(--tl-status-info-subtle); border-color: var(--tl-status-info-border); }
+.tl-segmented__segment[data-tl-role="category-1"] { background: var(--tl-category-1-subtle); border-color: var(--tl-category-1-border); }
+.tl-segmented__segment[data-tl-role="category-2"] { background: var(--tl-category-2-subtle); border-color: var(--tl-category-2-border); }
+.tl-segmented__segment[data-tl-role="category-3"] { background: var(--tl-category-3-subtle); border-color: var(--tl-category-3-border); }
+.tl-segmented__segment[data-tl-role="category-4"] { background: var(--tl-category-4-subtle); border-color: var(--tl-category-4-border); }
+.tl-segmented__segment[data-tl-role="category-5"] { background: var(--tl-category-5-subtle); border-color: var(--tl-category-5-border); }
+.tl-segmented__segment[data-tl-role="category-6"] { background: var(--tl-category-6-subtle); border-color: var(--tl-category-6-border); }
+.tl-segmented__segment[data-tl-role="category-7"] { background: var(--tl-category-7-subtle); border-color: var(--tl-category-7-border); }
+.tl-segmented__segment[data-tl-role="category-8"] { background: var(--tl-category-8-subtle); border-color: var(--tl-category-8-border); }
 
 .tl-segmented__segment:where(:not(:disabled)):hover {
   background: var(--tl-surface-interactive-hover);
@@ -589,6 +632,13 @@
   cursor: default;
 }
 
+/* Deaktiviert zeigt ein Segment keine Rolle (wie der Chip): ohne Wahl weder Fläche noch Linie der
+   Rolle. Gewählt bleibt es erkennbar. */
+.tl-segmented__segment[data-tl-role]:disabled:not([aria-checked="true"]):not([aria-pressed="true"]) {
+  border-color: transparent;
+  background: transparent;
+}
+
 /* --- Chips -------------------------------------------------------------------- */
 
 .tl-chip-group {
@@ -613,6 +663,22 @@
   cursor: pointer;
 }
 .tl-chip[hidden] { display: none; }
+
+/* Die Tönung trägt der Chip selbst (data-tl-role, 3b §11) — keine Pill in der Kapsel. Die Rollenregeln
+   stehen vor Zeigen und Gewählt: beide schlagen die Tönung bei gleicher Spezifität. */
+.tl-chip[data-tl-role="brand"] { background: var(--tl-surface-brand-subtle); border-color: var(--tl-border-interactive); }
+.tl-chip[data-tl-role="error"] { background: var(--tl-status-error-subtle); border-color: var(--tl-status-error-border); }
+.tl-chip[data-tl-role="warning"] { background: var(--tl-status-warning-subtle); border-color: var(--tl-status-warning-border); }
+.tl-chip[data-tl-role="success"] { background: var(--tl-status-success-subtle); border-color: var(--tl-status-success-border); }
+.tl-chip[data-tl-role="info"] { background: var(--tl-status-info-subtle); border-color: var(--tl-status-info-border); }
+.tl-chip[data-tl-role="category-1"] { background: var(--tl-category-1-subtle); border-color: var(--tl-category-1-border); }
+.tl-chip[data-tl-role="category-2"] { background: var(--tl-category-2-subtle); border-color: var(--tl-category-2-border); }
+.tl-chip[data-tl-role="category-3"] { background: var(--tl-category-3-subtle); border-color: var(--tl-category-3-border); }
+.tl-chip[data-tl-role="category-4"] { background: var(--tl-category-4-subtle); border-color: var(--tl-category-4-border); }
+.tl-chip[data-tl-role="category-5"] { background: var(--tl-category-5-subtle); border-color: var(--tl-category-5-border); }
+.tl-chip[data-tl-role="category-6"] { background: var(--tl-category-6-subtle); border-color: var(--tl-category-6-border); }
+.tl-chip[data-tl-role="category-7"] { background: var(--tl-category-7-subtle); border-color: var(--tl-category-7-border); }
+.tl-chip[data-tl-role="category-8"] { background: var(--tl-category-8-subtle); border-color: var(--tl-category-8-border); }
 
 .tl-chip:where(:not(:disabled)):hover {
   background: var(--tl-surface-interactive-hover);
@@ -1265,24 +1331,21 @@ a.tl-field-value:hover {
 
 /* --- Rollen ---------------------------------------------------------------- */
 
-.tl-pill--brand {
-  background: var(--tl-surface-brand-subtle);
-  border-color: var(--tl-border-interactive);
-}
-
-/* Bedeutungen und Kategorien: je Rolle Fläche und Linie, erzeugt aus src/tokens.json (tools/generate.mjs). */
-.tl-pill--error { background: var(--tl-status-error-subtle); border-color: var(--tl-status-error-border); }
-.tl-pill--warning { background: var(--tl-status-warning-subtle); border-color: var(--tl-status-warning-border); }
-.tl-pill--success { background: var(--tl-status-success-subtle); border-color: var(--tl-status-success-border); }
-.tl-pill--info { background: var(--tl-status-info-subtle); border-color: var(--tl-status-info-border); }
-.tl-pill--category-1 { background: var(--tl-category-1-subtle); border-color: var(--tl-category-1-border); }
-.tl-pill--category-2 { background: var(--tl-category-2-subtle); border-color: var(--tl-category-2-border); }
-.tl-pill--category-3 { background: var(--tl-category-3-subtle); border-color: var(--tl-category-3-border); }
-.tl-pill--category-4 { background: var(--tl-category-4-subtle); border-color: var(--tl-category-4-border); }
-.tl-pill--category-5 { background: var(--tl-category-5-subtle); border-color: var(--tl-category-5-border); }
-.tl-pill--category-6 { background: var(--tl-category-6-subtle); border-color: var(--tl-category-6-border); }
-.tl-pill--category-7 { background: var(--tl-category-7-subtle); border-color: var(--tl-category-7-border); }
-.tl-pill--category-8 { background: var(--tl-category-8-subtle); border-color: var(--tl-category-8-border); }
+/* Die Rolle ist ein Attribut, data-tl-role (3b §11): je Rolle Fläche und Linie, erzeugt aus
+   src/tokens.json (tools/generate.mjs). Ohne Attribut ist die Pill neutral. */
+.tl-pill[data-tl-role="brand"] { background: var(--tl-surface-brand-subtle); border-color: var(--tl-border-interactive); }
+.tl-pill[data-tl-role="error"] { background: var(--tl-status-error-subtle); border-color: var(--tl-status-error-border); }
+.tl-pill[data-tl-role="warning"] { background: var(--tl-status-warning-subtle); border-color: var(--tl-status-warning-border); }
+.tl-pill[data-tl-role="success"] { background: var(--tl-status-success-subtle); border-color: var(--tl-status-success-border); }
+.tl-pill[data-tl-role="info"] { background: var(--tl-status-info-subtle); border-color: var(--tl-status-info-border); }
+.tl-pill[data-tl-role="category-1"] { background: var(--tl-category-1-subtle); border-color: var(--tl-category-1-border); }
+.tl-pill[data-tl-role="category-2"] { background: var(--tl-category-2-subtle); border-color: var(--tl-category-2-border); }
+.tl-pill[data-tl-role="category-3"] { background: var(--tl-category-3-subtle); border-color: var(--tl-category-3-border); }
+.tl-pill[data-tl-role="category-4"] { background: var(--tl-category-4-subtle); border-color: var(--tl-category-4-border); }
+.tl-pill[data-tl-role="category-5"] { background: var(--tl-category-5-subtle); border-color: var(--tl-category-5-border); }
+.tl-pill[data-tl-role="category-6"] { background: var(--tl-category-6-subtle); border-color: var(--tl-category-6-border); }
+.tl-pill[data-tl-role="category-7"] { background: var(--tl-category-7-subtle); border-color: var(--tl-category-7-border); }
+.tl-pill[data-tl-role="category-8"] { background: var(--tl-category-8-subtle); border-color: var(--tl-category-8-border); }
 
 /* --- popover/popover.css --- */
 /* Popover — docs/skalen.md „Scrim und Ebenen“, „Gleiches wird zusammengelegt“ (W1).

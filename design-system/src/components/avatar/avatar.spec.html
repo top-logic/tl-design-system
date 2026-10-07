@@ -23,10 +23,10 @@
   <template id="rows">
     <div class="specimen__row specimen__row--flow">
       <span class="tl-type-label">%NAME%</span>
-      <span class="tl-avatar tl-avatar--sm %MOD% tl-type-label-strong" role="img" aria-label="%LABEL%" title="%LABEL%">%INI%</span>
-      <span class="tl-avatar %MOD% tl-type-body-strong" role="img" aria-label="%LABEL%" title="%LABEL%">%INI%</span>
-      <span class="tl-avatar tl-avatar--lg %MOD% tl-type-heading-md" role="img" aria-label="%LABEL%" title="%LABEL%">%INI%</span>
-      <span class="tl-avatar tl-avatar--xl %MOD% tl-type-heading-lg" role="img" aria-label="%LABEL%" title="%LABEL%">%INI%</span>
+      <span class="tl-avatar tl-avatar--sm tl-type-label-strong" data-tl-role="%ROLE%" role="img" aria-label="%LABEL%" title="%LABEL%">%INI%</span>
+      <span class="tl-avatar tl-type-body-strong" data-tl-role="%ROLE%" role="img" aria-label="%LABEL%" title="%LABEL%">%INI%</span>
+      <span class="tl-avatar tl-avatar--lg tl-type-heading-md" data-tl-role="%ROLE%" role="img" aria-label="%LABEL%" title="%LABEL%">%INI%</span>
+      <span class="tl-avatar tl-avatar--xl tl-type-heading-lg" data-tl-role="%ROLE%" role="img" aria-label="%LABEL%" title="%LABEL%">%INI%</span>
     </div>
   </template>
 
@@ -52,7 +52,7 @@
     <div class="specimen__row specimen__row--flow">
       <span class="tl-type-label">im Kommentarkopf</span>
       <span class="specimen__stack specimen__stack--inline">
-        <span class="tl-avatar tl-avatar--category-3 tl-type-body-strong" role="img" aria-label="Anna Berg" title="Anna Berg">AB</span>
+        <span class="tl-avatar tl-type-body-strong" data-tl-role="category-3" role="img" aria-label="Anna Berg" title="Anna Berg">AB</span>
         <span class="tl-type-body-strong">Anna Berg</span>
         <span class="tl-type-label">vor 3 Minuten</span>
       </span>
@@ -66,15 +66,15 @@
   const NAMEN = ['Anna Berg', 'Bernd Cordes', 'Carla Dietz', 'Dirk Ehlers', 'Eva Frank', 'Falk Grote', 'Gesa Haas', 'Hans Ihde', 'Ida Jung', 'Jan Klee', 'Kim Lund', 'Lars Mohr', 'Mia Nolte', 'Nils Ott', 'Ole Pahl', 'Pia Quast'];
   const proKategorie = new Map();
   for (const n of NAMEN) { const k = categoryOf(n); if (!proKategorie.has(k)) proKategorie.set(k, n); }
-  const KATEGORIEN = ['tl-avatar--category-1', 'tl-avatar--category-2', 'tl-avatar--category-3', 'tl-avatar--category-4',
-    'tl-avatar--category-5', 'tl-avatar--category-6', 'tl-avatar--category-7', 'tl-avatar--category-8'];
+  const KATEGORIEN = ['category-1', 'category-2', 'category-3', 'category-4',
+    'category-5', 'category-6', 'category-7', 'category-8'];
   const tpl = document.getElementById('rows').innerHTML;
   for (const id of ['on-layer', 'on-base']) {
     const host = document.getElementById(id);
     KATEGORIEN.forEach((mod, i) => {
       const k = i + 1;
       const n = proKategorie.get(k) ?? `Kategorie ${k}`;
-      host.insertAdjacentHTML('beforeend', tpl.replaceAll('%NAME%', mod.replace('tl-avatar--', '')).replaceAll('%MOD%', mod).replaceAll('%LABEL%', n).replaceAll('%INI%', initials(n)));
+      host.insertAdjacentHTML('beforeend', tpl.replaceAll('%NAME%', mod).replaceAll('%ROLE%', mod).replaceAll('%LABEL%', n).replaceAll('%INI%', initials(n)));
     });
   }
   const html = document.documentElement;

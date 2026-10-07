@@ -47,11 +47,12 @@ von außen gesetzt wie beim Button; eine Pill im Fließtext erbt die Größe ihr
 
 | Attribut | Wann |
 |---|---|
-| keines | Die Pill ist ein `span` mit Text; die Rolle trägt keine Bedeutung, die der Text nicht auch trägt (WCAG 1.4.1), darum kein `aria-label` und kein `role`. |
+| `data-tl-role` | Die Rolle als Attribut, kein Modifier: `brand`, `error`, `warning`, `success`, `info`, `category-1` … `category-8`. Ohne Attribut ist die Pill neutral. |
+| sonst keines | Die Pill ist ein `span` mit Text; die Rolle trägt keine Bedeutung, die der Text nicht auch trägt (WCAG 1.4.1), darum kein `aria-label` und kein `role`. |
 | `title` / Tooltip | nicht von der Pill; ein abgeschnittener Text bekommt seinen Tooltip vom umgebenden `TLText`. |
 
 ## Konformität
 
 Eine Komponente besteht den Vertrag, wenn sie im Specimen-Harness des Pakets für jede Rolle die
-Klasse `tl-pill--<rolle>` trägt, ohne Rolle die neutrale Pill zeigt, bei leerer Beschriftung nichts
+Attribut `data-tl-role` seiner Rolle trägt, ohne Rolle die neutrale Pill zeigt, bei leerer Beschriftung nichts
 rendert und im Klassen-Gate keine Klasse ohne `tl-`-Präfix hinterlässt.

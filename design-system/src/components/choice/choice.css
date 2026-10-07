@@ -211,7 +211,7 @@
 }
 
 /* Das Label endet mit Ellipse. text-overflow wirkt nicht über einen Flex-Container auf seine Kinder,
-   darum trägt das Label ein eigenes Element; die Pill einer Option mit Farbrolle darf schrumpfen. */
+   darum trägt das Label ein eigenes Element. */
 .tl-segmented__label,
 .tl-chip__label {
   min-width: 0;
@@ -220,10 +220,10 @@
   white-space: nowrap;
 }
 
-.tl-segmented__segment > .tl-pill,
-.tl-chip > .tl-pill {
-  min-width: 0;
-}
+/* Die Tönung trägt das Segment selbst (data-tl-role), vor Zeigen und Gewählt. */
+/* @tl-roles: brand .tl-segmented__segment */
+/* @tl-roles: status .tl-segmented__segment */
+/* @tl-roles: category .tl-segmented__segment */
 
 .tl-segmented__segment:where(:not(:disabled)):hover {
   background: var(--tl-surface-interactive-hover);
@@ -250,6 +250,13 @@
   cursor: default;
 }
 
+/* Deaktiviert zeigt ein Segment keine Rolle (wie der Chip): ohne Wahl weder Fläche noch Linie der
+   Rolle. Gewählt bleibt es erkennbar. */
+.tl-segmented__segment[data-tl-role]:disabled:not([aria-checked="true"]):not([aria-pressed="true"]) {
+  border-color: transparent;
+  background: transparent;
+}
+
 /* --- Chips -------------------------------------------------------------------- */
 
 .tl-chip-group {
@@ -274,6 +281,12 @@
   cursor: pointer;
 }
 .tl-chip[hidden] { display: none; }
+
+/* Die Tönung trägt der Chip selbst (data-tl-role, 3b §11) — keine Pill in der Kapsel. Die Rollenregeln
+   stehen vor Zeigen und Gewählt: beide schlagen die Tönung bei gleicher Spezifität. */
+/* @tl-roles: brand .tl-chip */
+/* @tl-roles: status .tl-chip */
+/* @tl-roles: category .tl-chip */
 
 .tl-chip:where(:not(:disabled)):hover {
   background: var(--tl-surface-interactive-hover);

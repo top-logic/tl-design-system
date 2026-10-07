@@ -78,11 +78,10 @@ const STATE_MODIFIER = /--(active|disabled|loading|hover|focus|focused|pressed|s
 // tl-pill) als Bedeutung trägt. tl-x__y--error ist ein Zustand, der sich als Modifier tarnt.
 const ELEMENT_STATE_MODIFIER = /^tl-[a-z0-9-]+__[a-z0-9-]+--(active|disabled|loading|hover|focus|focused|pressed|selected|open|closed|checked|busy|invalid|dirty|error|warning|immutable|readonly|dragover|dragging|highlighted|collapsed)$/;
 // Punkt 11: Die Modifier eines Blocks sind entschieden (docs/skalen.md), nicht gewachsen.
-const KATEGORIEN = [1, 2, 3, 4, 5, 6, 7, 8].map((k) => `category-${k}`);
 const MODIFIERS = {
   'tl-button': new Set(['primary', 'secondary', 'ghost', 'link', 'danger', 'sm', 'icon']),
-  'tl-pill': new Set(['brand', 'error', 'warning', 'success', 'info', ...KATEGORIEN]),
-  'tl-avatar': new Set(['sm', 'lg', 'xl', ...KATEGORIEN]),
+  'tl-pill': new Set([]), // Die Rolle ist ein Attribut (data-tl-role), kein Modifier.
+  'tl-avatar': new Set(['sm', 'lg', 'xl']), // Die Kategorie ist ein Attribut (data-tl-role).
   'tl-progress': new Set([]), // Unbestimmt ist ein Zustand (aria-busy), keine Klasse.
   'tl-field': new Set(['multiline']), // Fehler, Warnung, Schreibschutz sind Attribute bzw. ein anderes Element.
   'tl-field-group': new Set([]),
@@ -101,7 +100,7 @@ const MODIFIERS = {
   'tl-field-list': new Set([]),
   'tl-upload': new Set([]),
   'tl-file-upload': new Set([]),
-  'tl-alert': new Set(['error', 'warning', 'success', 'info']), // Bedeutung ist Pflicht, kein Zustand.
+  'tl-alert': new Set([]), // Die Bedeutung ist Pflicht und ein Attribut (data-tl-role).
   'tl-badge': new Set([]),
   'tl-divider': new Set(['vertical']),
   'tl-toggle': new Set([]),

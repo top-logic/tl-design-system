@@ -38,7 +38,7 @@
       <span class="tl-type-label">einzeln, mit Rolle</span>
       <div class="tl-field tl-select tl-type-body" role="combobox" tabindex="0" aria-expanded="false" aria-haspopup="listbox" aria-label="Status">
         <span class="tl-select__values">
-          <span class="tl-select__value"><span class="tl-pill tl-pill--warning tl-type-label"><span class="tl-pill__label">In Arbeit</span></span></span>
+          <span class="tl-select__value"><span class="tl-pill tl-type-label" data-tl-role="warning"><span class="tl-pill__label">In Arbeit</span></span></span>
         </span>
         <span class="tl-select__controls">
           <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-type-body" aria-label="Auswahl löschen"><i class="tl-icon-sm bi bi-x-lg" aria-hidden="true"></i></button>
@@ -57,7 +57,7 @@
       <span class="tl-type-label">mehrfach, Ziehen</span>
       <div class="tl-field tl-select tl-type-body" role="combobox" tabindex="0" aria-expanded="false" aria-haspopup="listbox" aria-label="Projekte">
         <span class="tl-select__values">
-          <span class="tl-pill tl-pill--category-6 tl-type-label tl-select__chip">
+          <span class="tl-pill tl-type-label tl-select__chip" data-tl-role="category-6">
             <i class="tl-icon-sm bi bi-grip-vertical tl-select__drag-handle" aria-hidden="true"></i>
             <span class="tl-pill__label">Nordlicht</span>
             <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-type-body" aria-label="Nordlicht entfernen"><i class="tl-icon-sm bi bi-x" aria-hidden="true"></i></button>
@@ -67,7 +67,7 @@
             <span class="tl-pill__label">Südwind</span>
             <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-type-body" aria-label="Südwind entfernen"><i class="tl-icon-sm bi bi-x" aria-hidden="true"></i></button>
           </span>
-          <span class="tl-pill tl-pill--category-2 tl-type-label tl-select__chip" data-tl-state="drop-before">
+          <span class="tl-pill tl-type-label tl-select__chip" data-tl-role="category-2" data-tl-state="drop-before">
             <i class="tl-icon-sm bi bi-grip-vertical tl-select__drag-handle" aria-hidden="true"></i>
             <span class="tl-pill__label">Ostwerk</span>
             <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-type-body" aria-label="Ostwerk entfernen"><i class="tl-icon-sm bi bi-x" aria-hidden="true"></i></button>
@@ -87,15 +87,15 @@
             <span class="tl-pill__label">Neutral</span>
             <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-type-body" aria-label="Neutral entfernen"><i class="tl-icon-sm bi bi-x" aria-hidden="true"></i></button>
           </span>
-          <span class="tl-pill tl-pill--brand tl-type-label tl-select__chip">
+          <span class="tl-pill tl-type-label tl-select__chip" data-tl-role="brand">
             <span class="tl-pill__label">Marke</span>
             <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-type-body" aria-label="Marke entfernen"><i class="tl-icon-sm bi bi-x" aria-hidden="true"></i></button>
           </span>
-          <span class="tl-pill tl-pill--error tl-type-label tl-select__chip">
+          <span class="tl-pill tl-type-label tl-select__chip" data-tl-role="error">
             <span class="tl-pill__label">Fehler</span>
             <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-type-body" aria-label="Fehler entfernen"><i class="tl-icon-sm bi bi-x" aria-hidden="true"></i></button>
           </span>
-          <span class="tl-pill tl-pill--category-4 tl-type-label tl-select__chip">
+          <span class="tl-pill tl-type-label tl-select__chip" data-tl-role="category-4">
             <span class="tl-pill__label">Kategorie</span>
             <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-type-body" aria-label="Kategorie entfernen"><i class="tl-icon-sm bi bi-x" aria-hidden="true"></i></button>
           </span>
@@ -128,7 +128,7 @@
       <span class="tl-type-label">offen, Suche „nor“</span>
       <div class="specimen__stack specimen__stack--tight">
         <div class="tl-field tl-select tl-type-body" role="combobox" tabindex="0" aria-expanded="true" aria-haspopup="listbox" aria-controls="list-open" aria-label="Projekt">
-          <span class="tl-select__values"><span class="tl-select__value"><span class="tl-pill tl-pill--category-6 tl-type-label"><span class="tl-pill__label">Nordlicht</span></span></span></span>
+          <span class="tl-select__values"><span class="tl-select__value"><span class="tl-pill tl-type-label" data-tl-role="category-6"><span class="tl-pill__label">Nordlicht</span></span></span></span>
           <span class="tl-select__controls"><span class="tl-select__arrow" aria-hidden="true"><i class="tl-icon-sm bi bi-chevron-up"></i></span></span>
         </div>
         <div class="tl-popover tl-select__popup specimen__popup">
@@ -137,7 +137,7 @@
           </span>
           <div class="tl-select__list tl-type-body" role="listbox" id="list-open" aria-label="Projekt">
             <div class="tl-select__option" role="option" id="opt-1" aria-selected="false">
-              <span class="tl-pill tl-pill--category-2 tl-type-label"><span class="tl-pill__label"><span class="tl-type-label-strong">Nor</span>dkap</span></span>
+              <span class="tl-pill tl-type-label" data-tl-role="category-2"><span class="tl-pill__label"><span class="tl-type-label-strong">Nor</span>dkap</span></span>
             </div>
             <div class="tl-select__option" role="option" id="opt-2" aria-selected="false" data-tl-state="highlighted">
               <span><span class="tl-type-body-strong">Nor</span>dhafen</span>
@@ -181,7 +181,7 @@
     </div>
     <div class="specimen__row specimen__row--narrow specimen__row--top specimen__row--label-control">
       <span class="tl-type-label">Lesewert mit Pill</span>
-      <span class="tl-field-value tl-type-body"><span class="tl-pill tl-pill--warning tl-type-label"><span class="tl-pill__label">In Arbeit</span></span></span>
+      <span class="tl-field-value tl-type-body"><span class="tl-pill tl-type-label" data-tl-role="warning"><span class="tl-pill__label">In Arbeit</span></span></span>
     </div>
     <div class="specimen__row specimen__row--narrow specimen__row--top specimen__row--label-control">
       <span class="tl-type-label">Lesewert als Link</span>

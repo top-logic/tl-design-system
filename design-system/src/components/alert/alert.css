@@ -1,5 +1,5 @@
 /* Alert — docs/skalen.md „Status: vier Bedeutungen“.
-   Eine Meldung, die im Fluss steht: Icon, Titel, Text. Die Bedeutung ist ein Modifier und Pflicht —
+   Eine Meldung, die im Fluss steht: Icon, Titel, Text. Die Bedeutung ist ein Attribut (data-tl-role) und Pflicht —
    es gibt keinen Alert ohne Bedeutung, darum hat die Basisklasse keine Fläche. Fläche und Linie tragen
    die Bedeutung (subtle, border), der Text bleibt text-primary (4,5 auf jeder subtle-Fläche), allein das
    Icon liest status-text (3,0 als Nicht-Text). Die dickere Linie steht am Zeilenanfang. */
@@ -16,12 +16,45 @@
 }
 .tl-alert[hidden] { display: none; }
 
-/* Je Bedeutung Fläche und Linie, erzeugt aus src/tokens.json (tools/generate.mjs). */
+/* Je Bedeutung (data-tl-role, Pflicht) Fläche und Linie, erzeugt aus src/tokens.json (tools/generate.mjs). */
 /* @tl-roles: status .tl-alert */
 
-.tl-alert--error .tl-alert__icon { color: var(--tl-status-error-text); }
-.tl-alert--warning .tl-alert__icon { color: var(--tl-status-warning-text); }
-.tl-alert--success .tl-alert__icon { color: var(--tl-status-success-text); }
-.tl-alert--info .tl-alert__icon { color: var(--tl-status-info-text); }
+.tl-alert[data-tl-role="error"] .tl-alert__icon { color: var(--tl-status-error-text); }
+.tl-alert[data-tl-role="warning"] .tl-alert__icon { color: var(--tl-status-warning-text); }
+.tl-alert[data-tl-role="success"] .tl-alert__icon { color: var(--tl-status-success-text); }
+.tl-alert[data-tl-role="info"] .tl-alert__icon { color: var(--tl-status-info-text); }
 
-.tl-alert__body { min-width: 0; }
+/* Der Körper stapelt Titel, Text und Aktionen (TLAlert, master #29652); min-width: 0 lässt langen Text
+   umbrechen, statt die Spalte zu weiten. */
+.tl-alert__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tl-space-2xs);
+  min-width: 0;
+}
+.tl-alert__body[hidden] { display: none; }
+
+/* Der Text bricht an jeder Stelle um und behält die Zeilenumbrüche des Servers. */
+.tl-alert__message {
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+/* Was man gegen die Meldung tun kann: Knöpfe in einer umbrechenden Reihe unter dem Text. */
+.tl-alert__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tl-space-xs);
+  padding-block-start: var(--tl-space-xs);
+}
+.tl-alert__actions[hidden] { display: none; }
+
+/* Mit Schließen-Knopf eine dritte Spalte; der Knopf steht oben. Die Spalte folgt dem Inhalt (:has), kein
+   Modifier — wie die Kapsel mit Entfernen-Knopf. */
+.tl-alert:has(> .tl-alert__close) {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.tl-alert__close {
+  align-self: start;
+}

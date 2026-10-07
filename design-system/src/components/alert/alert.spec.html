@@ -27,7 +27,7 @@
   <template id="rows">
     <div class="specimen__row">
       <span class="tl-type-label">Fehler</span>
-      <div class="tl-alert tl-alert--error tl-type-body" role="alert">
+      <div class="tl-alert tl-type-body" data-tl-role="error" role="alert">
         <i class="tl-icon-md bi bi-x-octagon-fill tl-alert__icon" aria-hidden="true"></i>
         <div class="tl-alert__body">
           <p class="tl-type-body-strong tl-alert__title">Speichern fehlgeschlagen</p>
@@ -37,7 +37,7 @@
     </div>
     <div class="specimen__row">
       <span class="tl-type-label">Warnung</span>
-      <div class="tl-alert tl-alert--warning tl-type-body" role="status">
+      <div class="tl-alert tl-type-body" data-tl-role="warning" role="status">
         <i class="tl-icon-md bi bi-exclamation-triangle-fill tl-alert__icon" aria-hidden="true"></i>
         <div class="tl-alert__body">
           <p class="tl-type-body-strong tl-alert__title">Frist läuft ab</p>
@@ -47,7 +47,7 @@
     </div>
     <div class="specimen__row">
       <span class="tl-type-label">Erfolg</span>
-      <div class="tl-alert tl-alert--success tl-type-body" role="status">
+      <div class="tl-alert tl-type-body" data-tl-role="success" role="status">
         <i class="tl-icon-md bi bi-check-circle-fill tl-alert__icon" aria-hidden="true"></i>
         <div class="tl-alert__body">
           <p class="tl-type-body-strong tl-alert__title">Gespeichert</p>
@@ -57,7 +57,7 @@
     </div>
     <div class="specimen__row">
       <span class="tl-type-label">Info</span>
-      <div class="tl-alert tl-alert--info tl-type-body" role="status">
+      <div class="tl-alert tl-type-body" data-tl-role="info" role="status">
         <i class="tl-icon-md bi bi-info-circle-fill tl-alert__icon" aria-hidden="true"></i>
         <div class="tl-alert__body">
           <p class="tl-type-body-strong tl-alert__title">Hinweis</p>
@@ -67,9 +67,25 @@
     </div>
     <div class="specimen__row">
       <span class="tl-type-label">ohne Titel</span>
-      <div class="tl-alert tl-alert--info tl-type-body" role="status">
+      <div class="tl-alert tl-type-body" data-tl-role="info" role="status">
         <i class="tl-icon-md bi bi-info-circle-fill tl-alert__icon" aria-hidden="true"></i>
         <div class="tl-alert__body"><p>Nur ein Satz, ohne Titel.</p></div>
+      </div>
+    </div>
+    <div class="specimen__row">
+      <span class="tl-type-label">mit Aktionen und Schließen</span>
+      <div class="tl-alert tl-type-body" data-tl-role="warning" role="status">
+        <i class="tl-icon-md bi bi-exclamation-triangle-fill tl-alert__icon" aria-hidden="true"></i>
+        <div class="tl-alert__body">
+          <div class="tl-type-body-strong tl-alert__title">Ungespeicherte Änderungen</div>
+          <div class="tl-type-body tl-alert__message">Drei Felder sind geändert, aber noch nicht gespeichert.
+Wer die Seite verlässt, verliert sie.</div>
+          <div class="tl-alert__actions">
+            <button type="button" class="tl-button tl-button--primary tl-button--sm">Speichern</button>
+            <button type="button" class="tl-button tl-button--secondary tl-button--sm">Verwerfen</button>
+          </div>
+        </div>
+        <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-alert__close" aria-label="Dismiss" title="Dismiss"><i class="tl-icon-sm bi bi-x-lg" aria-hidden="true"></i></button>
       </div>
     </div>
   </template>

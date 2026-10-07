@@ -183,13 +183,17 @@ test('pill.css liest je Rolle genau die Fläche und die Linie der PILL-Map, und 
   for (const rolle of belegt) assert.ok(farbTokens.has('--tl-' + rolle), `pill.css liest ${rolle} nicht`);
   assert.ok(!/color-mix|#[0-9a-fA-F]{3}/.test(css), 'kein color-mix, kein Literal');
   for (const k of Object.keys(PILL).filter((n) => n !== 'neutral'))
-    assert.ok(css.includes(`.tl-pill--${k}`), `Modifier --${k} fehlt`);
+    assert.ok(css.includes(`.tl-pill[data-tl-role="${k}"]`), `Rolle ${k} fehlt`);
 });
 
 test('das Pill-Specimen zeigt jede Rolle, Icon und Beschriftung, auf beiden Flächen', () => {
   const html = readFileSync(new URL('../src/components/pill/pill.spec.html', import.meta.url), 'utf8');
+  // Name und Rolle stehen als Paar in VARIANTEN (['brand', 'brand', 'Eigenes']): an der alten Datei
+  // (['brand', 'tl-pill--brand', …]) greift die Prüfung nicht.
   for (const k of Object.keys(PILL).filter((n) => n !== 'neutral'))
-    assert.ok(html.includes(`tl-pill--${k}`), `Rolle ${k} fehlt`);
+    assert.ok(html.includes(`['${k}', '${k}',`), `Rolle ${k} fehlt`);
+  assert.ok(html.includes('data-tl-role="%ROLE%"'), 'Specimen setzt die Rolle nicht als Attribut');
+  assert.doesNotMatch(html, /tl-pill--/, 'Specimen zeigt noch einen Rollen-Modifier');
   assert.ok(html.includes('tl-pill__icon') && html.includes('tl-pill__label'), 'Elemente fehlen');
   assert.ok(html.includes('id="on-layer"') && html.includes('id="on-base"'), 'beide Flächen fehlen');
   assert.ok(html.includes('id="mode"') && html.includes('id="density"'), 'Schalter für Modus und Dichte fehlen');
@@ -250,7 +254,7 @@ test('avatar.css liest je Rolle genau Fläche und Linie der AVATAR-Map, Text nur
   for (const t of farbTokens) assert.ok(belegt.has(t.replace(/^--tl-/, '')), `${t} kommt in keinem AVATAR-Map-Eintrag vor`);
   for (const rolle of belegt) assert.ok(farbTokens.has('--tl-' + rolle), `avatar.css liest ${rolle} nicht`);
   assert.ok(!/color-mix|#[0-9a-fA-F]{3}|hsl\(/.test(css), 'kein color-mix, kein Literal, kein hsl');
-  for (const k of Object.keys(AVATAR).filter((n) => n !== 'neutral')) assert.ok(css.includes(`.tl-avatar--${k}`), `Modifier --${k} fehlt`);
+  for (const k of Object.keys(AVATAR).filter((n) => n !== 'neutral')) assert.ok(css.includes(`.tl-avatar[data-tl-role="${k}"]`), `Modifier --${k} fehlt`);
   for (const s of ['sm', 'lg', 'xl']) assert.ok(css.includes(`.tl-avatar--${s}`), `Größe --${s} fehlt`);
   const masse = [...css.matchAll(/(?:width|height):\s*var\((--tl-[a-z0-9-]+)\)/g)].map((m) => m[1]);
   assert.ok(masse.length >= 8 && masse.every((m) => /^--tl-size-avatar-(sm|md|lg|xl)$/.test(m)), `Maße nur aus size-avatar-*: ${masse}`);

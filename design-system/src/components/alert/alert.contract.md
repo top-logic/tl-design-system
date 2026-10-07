@@ -5,19 +5,26 @@ Zugänglichkeit, nicht das Aussehen; wer ins Bild passen will, liest die Tokens.
 
 ## Zustand
 
-Es gibt noch kein Control; ein Control entsteht, wenn eine Ansicht es braucht, und trägt dann diese Klassen und Attribute.
+Das Control ist `TLAlert` (`ReactAlertControl`, `AlertStateJson`, master #29652; View-Element `<alert>`).
 
-Was ein Alert bekäme:
+Was es bekommt (`AlertStateJson`):
 
 | Schlüssel | Typ | Bedeutung |
 |---|---|---|
-| `meaning` | `error` \| `warning` \| `success` \| `info` | Die Bedeutung, Pflicht. Es gibt keinen Alert ohne Bedeutung; die Basisklasse `tl-alert` trägt darum keine Fläche, erst der Modifier. |
-| `title` | string, optional | Kurzer Titel, Klasse `.tl-type-body-strong`, von außen gesetzt. |
-| `text` | string | Der Text der Meldung. |
+| `variant` | `error` \| `warning` \| `success` \| `info` | Die Bedeutung, gerendert als `data-tl-role`. Pflicht im Markup: es gibt keinen Alert ohne Bedeutung; die Basisklasse `tl-alert` trägt darum keine Fläche, erst die Rolle. Fehlt sie im Zustand, ist es `info`. |
+| `title` | string, optional | Kurzer Titel, Element `tl-alert__title`, Klasse `.tl-type-body-strong`, von außen gesetzt. |
+| `message` | string | Der Text der Meldung, Element `tl-alert__message`; Zeilenumbrüche des Servers bleiben stehen. |
+| `icon` | string | Kodiertes ThemeImage passend zur Bedeutung, Element `tl-alert__icon`. |
+| `actions` | Liste von Controls, optional | Knöpfe, was man gegen die Meldung tun kann, Element `tl-alert__actions`, in dieser Reihenfolge. |
+| `closable` | boolean | Ob der Benutzer die Meldung schließen kann; dann steht der Schließen-Knopf `tl-alert__close` in einer dritten Spalte. |
+| `generation` | number | Die Fassung der Meldung; `dismiss` nennt sie, eine veraltete wird ignoriert. |
+| `hidden` | boolean | Verborgen: der Alert rendert nichts. |
 
 ## Aktionen
 
-Keine.
+| Aktion | Argument | Wann |
+|---|---|---|
+| `dismiss` | `generation` | Klick auf den Schließen-Knopf; schließt die Meldung dieser Fassung. |
 
 ## Tokens
 
@@ -27,19 +34,20 @@ Keine.
 | Linie | `--tl-status-error-border`, `--tl-status-warning-border`, `--tl-status-success-border`, `--tl-status-info-border`; Breite `--tl-border-width-sm`, am Zeilenanfang `--tl-border-width-accent` |
 | Icon | `--tl-status-error-text`, `--tl-status-warning-text`, `--tl-status-success-text`, `--tl-status-info-text` (3,0 auf der Fläche, Nicht-Text) |
 | Text | `--tl-text-primary` (4,5 auf jeder subtle-Fläche) |
-| Form und Abstand | `--tl-radius-md`, `--tl-space-xs` zwischen Icon und Text, `--tl-space-sm` und `--tl-space-md` Innenabstand |
+| Form und Abstand | `--tl-radius-md`, `--tl-space-xs` zwischen Icon und Text, `--tl-space-sm` und `--tl-space-md` Innenabstand; im Körper `--tl-space-2xs` zwischen Titel, Text und Aktionen, über den Aktionen `--tl-space-xs` |
 
 ## Attribute
 
 | Attribut | Wann |
 |---|---|
-| `tl-alert`, `tl-alert--error`, `tl-alert--warning`, `tl-alert--success`, `tl-alert--info` | `tl-alert` immer, genau ein Bedeutungs-Modifier dazu |
-| `tl-alert__icon`, `tl-alert__body`, `tl-alert__title` | Elemente; das Icon ist `aria-hidden="true"`, denn die Bedeutung steht im Text |
+| `tl-alert` + `data-tl-role` | `tl-alert` immer, `data-tl-role` genau eine Bedeutung (`error`, `warning`, `success`, `info`), Pflicht |
+| `tl-alert__icon`, `tl-alert__body`, `tl-alert__title`, `tl-alert__message`, `tl-alert__actions` | Elemente; das Icon ist `aria-hidden="true"`, denn die Bedeutung steht im Text |
+| `tl-alert__close` | Schließen-Knopf, `tl-button tl-button--ghost tl-button--sm`, mit `aria-label` und Tooltip „Dismiss“; die dritte Spalte folgt ihm (`:has`), kein Modifier |
 | `role="alert"` | `error`: die Meldung wird sofort vorgelesen |
 | `role="status"` | `warning`, `success`, `info`: höflich vorgelesen |
 
 ## Konformität
 
-Ein Alert besteht den Vertrag, wenn er genau einen Bedeutungs-Modifier trägt, `role="alert"` bei `error` und
+Ein Alert besteht den Vertrag, wenn er genau eine Bedeutung in `data-tl-role` trägt, `role="alert"` bei `error` und
 sonst `role="status"`, das Icon mit `aria-hidden="true"` rendert, Bedeutung nie allein über die Farbe
 vermittelt (Titel oder Text nennt sie) und im Klassen-Gate keine Klasse ohne `tl-`-Präfix hinterlässt.

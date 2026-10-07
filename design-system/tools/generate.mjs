@@ -19,26 +19,30 @@ export function componentSources(dirUrl) {
   return files.sort().map((p) => ({ name: relative(root, p).split(sep).join('/'), css: readFileSync(p, 'utf8') }));
 }
 
-// Rollenregeln: Pill, Avatar und Alert lesen je Rolle dieselben zwei Tokens, Fläche und Linie. Statt sie
-// in jeder Datei auszuschreiben, steht dort ein Marker-Kommentar `/* @tl-roles: <art> <.tl-block> */`,
-// und hier entsteht je Rolle aus src/tokens.json eine Regel — eine neue Kategorie ist eine Zeile in
-// tokens.json, nicht drei. Kommentar, damit Klassen-Gate und Tests auf src/ ihn überlesen.
-// docs/skalen.md „Gleiches wird zusammengelegt“.
+// Rollenregeln: Pill, Avatar, Alert, Chip und Segment lesen je Rolle dieselben zwei Tokens, Fläche und
+// Linie. Statt sie in jeder Datei auszuschreiben, steht dort ein Marker-Kommentar
+// `/* @tl-roles: <art> <.tl-ziel> */`, und hier entsteht je Rolle aus src/tokens.json eine Regel
+// `<ziel>[data-tl-role="<rolle>"]` — die Tönung ist ein Attribut, kein Modifier (3b §11, W7); eine neue
+// Kategorie ist eine Zeile in tokens.json, nicht fünf. Ziel ist ein Block (tl-chip) oder ein Element
+// (tl-segmented__segment), nie ein Modifier. Kommentar, damit Klassen-Gate und Tests auf src/ ihn
+// überlesen. docs/skalen.md „Gleiches wird zusammengelegt“.
 const ROLLEN = {
+  brand: () => [['brand', 'surface-brand-subtle', 'border-interactive']],
   category: (T) => Object.keys(T.color.light).map((n) => /^(category-\d+)-subtle$/.exec(n)?.[1])
-    .filter((r) => r && `${r}-border` in T.color.light).map((r) => [r, r]),
+    .filter((r) => r && `${r}-border` in T.color.light).map((r) => [r, `${r}-subtle`, `${r}-border`]),
   status: (T) => Object.keys(T.color.light).map((n) => /^status-([a-z]+)-subtle$/.exec(n)?.[1])
-    .filter((s) => s && `status-${s}-border` in T.color.light).map((s) => [s, `status-${s}`]),
+    .filter((s) => s && `status-${s}-border` in T.color.light).map((s) => [s, `status-${s}-subtle`, `status-${s}-border`]),
 };
 const MARKER = /\/\*\s*@tl-roles:\s*(\S+)\s+(\S+)\s*\*\//g;
+const ZIEL = /^\.tl-[a-z0-9]+(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)?$/;
 
-/** Ersetzt jeden Marker `/* @tl-roles: <art> <.tl-block> *\/` durch die Rollenregeln aus T. */
+/** Ersetzt jeden Marker `/* @tl-roles: <art> <.tl-ziel> *\/` durch die Rollenregeln aus T. */
 export function expandRoles(css, T) {
   return css.replace(MARKER, (_, art, sel) => {
     if (!ROLLEN[art]) throw new Error(`@tl-roles: unbekannte Rollenart ${art} (bekannt: ${Object.keys(ROLLEN).join(', ')})`);
-    if (!/^\.tl-[a-z0-9]+(-[a-z0-9]+)*$/.test(sel)) throw new Error(`@tl-roles: ${sel} ist keine Blockklasse`);
-    return ROLLEN[art](T).map(([mod, tok]) =>
-      `${sel}--${mod} { background: var(--tl-${tok}-subtle); border-color: var(--tl-${tok}-border); }`).join('\n');
+    if (!ZIEL.test(sel)) throw new Error(`@tl-roles: ${sel} ist weder Block- noch Elementklasse`);
+    return ROLLEN[art](T).map(([rolle, flaeche, linie]) =>
+      `${sel}[data-tl-role="${rolle}"] { background: var(--tl-${flaeche}); border-color: var(--tl-${linie}); }`).join('\n');
   });
 }
 
