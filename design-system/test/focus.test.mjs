@@ -22,3 +22,21 @@ test('base.css trägt den Ring genau einmal', () => {
   const base = readFileSync(new URL('../dist/base.css', import.meta.url), 'utf8');
   assert.equal((base.match(/outline:\s*var\(--tl-focus-width\) solid var\(--tl-focus-ring\)/g) ?? []).length, 1);
 });
+
+test('der Cursor-Ring: ein Behälter mit aria-activedescendant gibt den Ring an das Cursor-Element ab', () => {
+  const base = readFileSync(new URL('../dist/base.css', import.meta.url), 'utf8');
+  const ring = /([^{}]+)\{\s*outline:\s*var\(--tl-focus-width\) solid var\(--tl-focus-ring\);/.exec(base);
+  assert.ok(ring, 'Ring-Regel fehlt');
+  const selektoren = ring[1].split(/,\n/).map((s) => s.trim());
+  // Ein Feld mit aria-activedescendant (Suchfeld, Select ohne Suchfeld: role=combobox) ist kein Behälter:
+  // sein Cursor steht im Popup, es behält den Ring.
+  assert.ok(selektoren.some((s) => s.includes(':where(:not(:not(input, textarea, [role="combobox"])[aria-activedescendant])):focus-visible')),
+    'der Behälter mit aria-activedescendant trägt den Ring nicht selbst, ein Feld schon');
+  assert.ok(selektoren.some((s) => s === ':where(:not(input, textarea, [role="combobox"])[aria-activedescendant]:focus-visible [data-tl-state~="cursor"])::after'),
+    'das Cursor-Element trägt den Ring');
+  const flaeche = /:where\(:not\(input, textarea, \[role="combobox"\]\)\[aria-activedescendant\] \[data-tl-state~="cursor"\]\)::after\s*\{([^}]*)\}/.exec(base);
+  assert.ok(flaeche, 'Fläche des Cursor-Rings fehlt');
+  for (const d of [/content:\s*""/, /position:\s*absolute/, /inset:\s*0/, /z-index:\s*var\(--tl-layer-sticky\)/,
+    /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/, /pointer-events:\s*none/])
+    assert.match(flaeche[1], d);
+});
