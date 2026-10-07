@@ -25,9 +25,9 @@
     <div class="specimen__row">
       <span class="tl-type-label">lädt</span>
       <div class="tl-status tl-type-body">
-        <div class="tl-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-busy="true" aria-valuetext="Lädt…">
+        <div class="tl-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-busy="true" aria-labelledby="status-loading-label">
           <span class="tl-progress__track"><span class="tl-progress__fill"></span></span>
-          <span class="tl-progress__label tl-type-label">Lädt…</span>
+          <span class="tl-progress__label tl-type-label" id="status-loading-label">Lädt…</span>
         </div>
       </div>
     </div>
@@ -54,6 +54,7 @@
   for (const id of ['on-layer', 'on-base', 'on-overlay']) {
     const rows = tpl.content.cloneNode(true);
     for (const el of rows.querySelectorAll('[id]')) el.id += '-' + id;
+    for (const el of rows.querySelectorAll('[aria-labelledby]')) el.setAttribute('aria-labelledby', el.getAttribute('aria-labelledby') + '-' + id);
     document.getElementById(id).append(rows);
   }
   const html = document.documentElement;

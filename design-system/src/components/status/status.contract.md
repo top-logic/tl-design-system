@@ -45,7 +45,8 @@ der Zeile füllt sie.
 |---|---|
 | `tl-status` | immer; an einem Block-Element |
 | `aria-busy="true"` | am `tl-progress` im Ladezustand |
-| `aria-valuetext` | am `tl-progress`; der Name der Ladezeile für Screenreader („Lädt…“) |
+| `aria-label` | am `tl-progress`; der Name der Ladezeile, Pflicht. Der Text stammt aus dem Resource-Key des Lesers, im Baum `js.tree.loading`. Steht eine sichtbare Beschriftung da, geht stattdessen `aria-labelledby` auf deren `id`. |
+| `aria-valuetext` | am `tl-progress` nur als Wertetext, wenn eine Beschriftung da ist (siehe `progress.contract.md`); nie als Name |
 | `role="alert"` | am `tl-status` des Fehlers |
 | `tl-button--link` | im Fehler, zum Wiederholen |
 | `tl-icon-sm` | am Fehler-Glyph, `aria-hidden` |
@@ -53,5 +54,5 @@ der Zeile füllt sie.
 ## Konformität
 
 Eine Statuszeile besteht den Vertrag, wenn sie im Ladezustand einen `tl-progress` mit
-`aria-busy="true"` und einem Namen (`aria-valuetext`) trägt, im Fehlerzustand `role="alert"` hat und im
+`aria-busy="true"` und einem Namen (`aria-label` oder `aria-labelledby`) trägt, im Fehlerzustand `role="alert"` hat und im
 Klassen-Gate keine Klasse ohne `tl-`-Präfix hinterlässt.
