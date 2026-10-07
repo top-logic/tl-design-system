@@ -447,8 +447,10 @@ Nicht in dieser Welle: Attribut `tone`/`appearance` am Kommando (bewusst nicht),
 
 Spec `docs/superpowers/specs/2026-10-02-welle-3b-daten-design.md`, Branch `CWS/CWS_29617_design_system_welle_3b` von
 master `b29546f2ad`. Abzuschneiden: TLTableView (2693–3178 und 3565–3846), TLTreeView, TLColumnSelect, TLColumns,
-die drei TLText-Blöcke; TLJobStatus fällt dabei auf seinen wahren Stand (118). Konsolidierung W3 (Tabelle/Baum),
-W6, W7, W8, W10, W11, N1; die Tabelle „alt → neu“ entsteht mit dem Bau.
+die drei TLText-Blöcke; TLJobStatus fällt dabei auf seinen wahren Stand (Zahl aus `inventory.mjs`, ≈ 122). Konsolidierung W3 (Tabelle/Baum),
+W6, W7, W8, W10, W11, N1; die Tabelle „alt → neu“ entsteht mit dem Bau. Nach dem Plan-Review (07.10.): Fehler- und
+Warnlinie getauscht, neue Stufe `red-34` (dunkel `status-error-border`) — Anwendungs-Stylesheets, die
+`--tl-status-error-border` lesen, sehen hell `red-41` statt `red-35`.
 
 **Offen nach 3b:**
 
@@ -459,6 +461,7 @@ W6, W7, W8, W10, W11, N1; die Tabelle „alt → neu“ entsteht mit dem Bau.
 | **Ziehen-Optik Dashboard, Kalender, Farbpalette** | eigene Markierungen (leuchtender Balken, Deckkraft 0,7, keine); Welle 4/5 auf `data-tl-state`. |
 | **`TLValueList`-Block** | bekommt in 3b Tastatur und Optik über den Hook, der Block selbst bleibt bis Welle 5. |
 | **Icon-Select** | Status, Spinner und Filter (W10, W8) in Welle 5. |
+| **Nebentext auf ausgewählter Zeile, dunkel** | `text-secondary` 4,27 und `text-helper` 3,64 auf `surface-interactive-selected` (Plan-Review 3b, A1); die Anzahl der Gruppenzeile ist `text-secondary`. Paar und Stufe entscheiden, wenn ein Nebentext in einer ausgewählten Zeile gebraucht wird. |
 
 ## Konsolidierung (01.10.) — Gleiches wird zusammengelegt
 

@@ -191,6 +191,8 @@ Vor jeder Welle: Was tut dasselbe? Prognose auf den Tisch, Entscheidung, dann di
 > Sprechnotiz: Konsolidieren ist der Teil, den ein Styleguide nie erzwingt — er sieht Farben, nicht Verhalten.
 >
 > Sprechnotiz (Welle 3b): Die Tabelle wird ein echtes Raster für Screenreader und folgt der Dichte — kompakt sind die Zeilen 32 statt 36 px, weil der Browser die Höhe misst, nicht der Server.
+>
+> Sprechnotiz (Welle 3b, 07.10.): Ein Fehler bleibt sichtbar, auch in der markierten Zeile — Fehler- und Warnlinie halten dort jetzt den Mindestkontrast, ohne dass eine Farbe zwei Aufgaben bekommt.
 
 ---
 

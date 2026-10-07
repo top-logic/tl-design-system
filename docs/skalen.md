@@ -405,6 +405,18 @@ darum rückt sie auf), dunkel von `amber-44` auf die neue Stufe `amber-43` (`#98
 bleiben, bis ein Feld sie als Rand trägt. Nebenwirkung in `derive`: Ein Kunde, der nur `red-42` liefert,
 bekommt dunkel `red-41` gerechnet — kein Befund, denn Gerechnetes hält die Paarliste.
 
+**Nachgezogen 07.10. (Welle 3b), Linien auf der ausgewählten Zeile:** Ein Zelleditor ist randlos; seine Fehler- oder
+Warnlinie steht direkt auf `surface-interactive-selected` bzw. `-hover`. Gemessen: Fehler 2,88 hell / 2,43 dunkel,
+Warnung 2,71 / 2,44. Lösung: **Tausch der Stufen zwischen den Modi plus eine neue Stufe.** Hell nimmt
+`status-error-border` `red-41` (3,63 ausgewählt / 3,97 Zeigen / 4,45 Layer), `status-warning-border` `amber-43`
+(3,60 / 3,95 / 4,42); dunkel nimmt `status-warning-border` `amber-36` (3,25 / 3,46 / 4,91) und `status-error-border`
+die neue Stufe **`red-34`** (`#F2554A`; 3,18 / 3,39 / 4,81). Der reine Tausch hätte dunkel `red-35` gegeben — das ist
+dort `status-error-surface`, also Rand und Fläche in einem Modus aus einem Primitiv: die Doppelrolle, die diese Datei
+ausschließt. `red-34` liegt eine Stufe heller und trägt nur den Rand. Verworfen: die Doppelrolle hinnehmen (das
+Muster „ein Token, mehrere Aufgaben“, das alle bisherigen Kontrastmängel erzeugt hat); nur die Fehlerlinie paaren
+und die Warnlinie offen lassen (derselbe Zelleditor, dieselbe Zeile). Gate: beide Linien auf ausgewählt und Zeigen
+in der Paarliste, beide Modi, jedes Theme; das Probe-Theme bleibt byte-identisch.
+
 **Die Regel, wann welche Rolle gilt:**
 
 > *Ein Zustand, der als **Text** erscheint, nimmt `text`. Eine Linie, die ihn trägt, nimmt
@@ -1776,6 +1788,28 @@ Spec `docs/superpowers/specs/2026-10-02-welle-3b-daten-design.md`. Neu entschied
   kein Schatten (vgl. „Elevation“).
 * **Die Deckkraft beim Ziehen bleibt eine Zahl** (`0.4`): einheitenlose Werte lässt das Lint bewusst zu; die Regel
   steht jetzt einmal statt dreimal.
+
+**Nach dem Plan-Review entschieden (07.10., Hendrik):**
+
+* **Fehler- und Warnlinie halten auch auf der ausgewählten Zeile 3,0** — Tausch der Stufen und neue Stufe `red-34`,
+  begründet unter „Nachgezogen 07.10. (Welle 3b)“ bei den Status-Rollen. Der Platzhalter auf ausgewählter Fläche ist
+  kein Paar: er müsste dunkel heller werden als `text-secondary`; gepaart wird er auf Grund, Layer und
+  verschachteltem Layer.
+* **„Teilweise“ ist `indeterminate`, kein `aria-checked`.** ARIA in HTML verbietet `aria-checked` am nativen
+  Kästchen; der Browser meldet `indeterminate` selbst als „gemischt“. Eine Quelle statt zwei, die sich widersprechen
+  können.
+* **Die Pill ist die Wurzel.** TLText mit `appearance=pill` rendert `span.tl-pill` direkt und hängt die
+  Text-Attribute daran — keine Hülle `tl-text` um die Pill.
+* **Das Raster ist innen.** `role=grid`/`treegrid` sitzt am Element aus Kopf und Körper (`tl-table__grid`), weil ein
+  Raster nur Zeilen besitzen darf; Filterleiste, Spaltenwahl und Fixiergrenze liegen im Rahmen darum. Das Raster
+  hält auch den Fokus und `aria-activedescendant` (am Körper `rowgroup` wäre es nicht erlaubt).
+* **Stark ist eine Typo-Klasse, Platzhalter ein Ton.** `TextElement` hat kein Form-Attribut: `strong` wird
+  `tl-type-body-strong`, der Platzhalter der neue Ton `placeholder` — das Vokabular gewinnt einen Wert, nachdem es
+  `accent` verloren hat.
+* **Eine Filter-Glyphe.** Font Awesome Free hat keinen leeren Trichter; aktiv heißt `icon-primary` **und**
+  Beschriftung „Filter (aktiv)“, damit der Zustand nicht an der Farbe allein hängt (WCAG 1.4.1).
+* **Historische Pläne sind nicht im Gate.** `docs/plans/` bekommt je Datei einen Vermerk wie in 3a; `docs/faq/` wird
+  umgeschrieben und geprüft.
 
 **Befund dazu:** 282 Zeilen Tabellenregeln (3565–3846) standen ohne Überschrift im alten Stylesheet; die Ratsche
 schlug sie TLJobStatus zu. Die Blockmessung trifft nur, was eine Überschrift trägt — beim Ausschneiden wird TLJobStatus

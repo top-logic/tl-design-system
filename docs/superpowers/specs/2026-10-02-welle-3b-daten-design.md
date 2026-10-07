@@ -7,7 +7,9 @@
 „Konsolidierung (01.10.)“ W3 (Tabelle/Baum), W6, W7, W8, W10, W11, N1
 **Entschieden mit Hendrik:** 01.10. (Welle-3-Brainstorming: `role=grid`, Zustand = ARIA, Konsolidierungszeilen);
 02.10. in dieser Sitzung: TLText mit in 3b, Umsortieren per Tastatur, Zeilenhöhe misst der Client, Ton `accent` fällt;
-Spec freigegeben 02.10.
+Spec freigegeben 02.10.; nach dem Plan-Review entschieden 07.10.: Fehler- und Warnlinie auf ausgewählter Zeile
+(Tausch + `red-34`), Raster innen (A2), `docs/plans` außerhalb des Gates (A3), `strong` als Klasse und Ton
+`placeholder` (A4), eine Filter-Glyphe (A5), nur `indeterminate`, Pill als Wurzel — `docs/skalen.md` „Welle 3b“
 
 ---
 
@@ -44,14 +46,16 @@ Bernhard Reviewer, Trac #29617 CC, Beschreibung englisch mit Migrationsliste alt
 
 ## 3 · Tabelle: Raster, Cursor, Auswahl
 
-**Semantik** (Welle-3-Brainstorming 01.10.): die Wurzel ist `role=grid`, im Baum- und Gruppierungsmodus
-`role=treegrid`; Kopfzeile und Zeilen `role=row`, Kopfzellen `role=columnheader`, Zellen `role=gridcell`. Weil virtuell
-gerendert wird, tragen Wurzel `aria-rowcount` (Zeilen + 1) und `aria-colcount`, jede Zeile `aria-rowindex`
+**Semantik** (Welle-3-Brainstorming 01.10.; Ort entschieden 07.10.): `role=grid`, im Baum- und Gruppierungsmodus
+`role=treegrid`, sitzt am inneren Element `tl-table__grid` (Kopf + Körper) — ein Raster darf nur Zeilen besitzen;
+Filterleiste, Spaltenwahl-Knopf, Fixiergrenze und Vorschau liegen im Rahmen `tl-table__frame` außerhalb. Das Raster
+tragen auch die Zähler: Kopfzeile und Zeilen `role=row`, Kopfzellen `role=columnheader`, Zellen `role=gridcell`. Weil virtuell
+gerendert wird, trägt es `aria-rowcount` (Zeilen + 1) und `aria-colcount`, jede Zeile `aria-rowindex`
 (Kopf = 1). `aria-multiselectable` bei Mehrfachauswahl, `aria-selected` an jeder Zeile, im Baummodus `aria-level` und
 `aria-expanded`. Die Klassen `--selected`, `--group` fallen.
 
-**Cursor** (3a §5.4): Der Körper behält den Fokus (`tabindex=0`) und zeigt mit `aria-activedescendant` auf die
-Cursorzeile; Zeilen bekommen eine `id` (`<controlId>-row-<index>`). Die Zeile trägt `data-tl-state~="cursor"`. Den
+**Cursor** (3a §5.4): Das Raster hält den Fokus (`tabindex=0`) und zeigt mit `aria-activedescendant` auf die
+Cursorzeile (am Körper `rowgroup` wäre das Attribut nicht erlaubt; der Körper scrollt nur, `tabindex=-1`); Zeilen bekommen eine `id` (`<controlId>-row-<index>`). Die Zeile trägt `data-tl-state~="cursor"`. Den
 Ring zeichnet **`base.css`**, nicht die Komponente (3a-Gate: `focus-ring` nur im Basis-Ring): Hat ein Behälter
 `aria-activedescendant` und ist er `:focus-visible`, liegt der Ring innen am Cursor-Element statt außen am Behälter.
 Mit der Maus angeklickt erscheint kein Ring; die Auswahl zeigt die Fläche. Der Inset-Schatten in `--focus` aus vier
@@ -62,7 +66,8 @@ Regeln fällt.
 (skalen.md „Elevation“): kein Schatten.
 
 **Auswahlkästchen** (W6): Kopf und Zeile sind `input.tl-checkbox` aus dem Paket; der Kopf zeigt „teilweise“ mit
-`indeterminate` **und** `aria-checked="mixed"`. Beide bekommen ein `aria-label` über Resource-Keys
+`indeterminate` — **kein** `aria-checked` (ARIA in HTML verbietet es am nativen Kästchen; der Browser meldet
+`indeterminate` als „gemischt“; entschieden 07.10.). Beide bekommen ein `aria-label` über Resource-Keys
 `js.table.selectAll` und `js.table.selectRow` (JavaDoc → `check-messages-en.sh`). Die Zeilenkästchen bleiben
 `tabindex=-1` (Leertaste am Cursor wählt). `accent-color` und `tlTableView__checkbox` fallen.
 
@@ -83,7 +88,8 @@ Damit folgt die Tabelle der Dichte: 36 px normal, 32 px kompakt.
   `0.5625rem`, `999px` fallen.
 - **Filterknopf** `tl-button--icon tl-button--sm tl-button--ghost` mit `aria-label` und Tooltip. Ein aktiver
   Filter ist ein Zustand der Spalte: die Kopfzelle trägt `data-tl-state~="filtered"`, der Knopf zeigt dann die
-  gefüllte Glyphe in `icon-primary`, sonst die leere in `icon-secondary`. Der Inline-Stil mit `#1565c0` fällt.
+  Glyphe `fa-solid fa-filter` in `icon-primary` **und** heißt „Filter (aktiv)“ (`js.table.filterActive`), sonst dieselbe
+  Glyphe in `icon-secondary` (FA Free hat keinen leeren Trichter; WCAG 1.4.1; entschieden 07.10.). Der Inline-Stil mit `#1565c0` fällt.
 - **Spaltenknopf** (Zahnrad) und die drei Knöpfe der Filterleiste: `tl-button--icon --ghost` (Leiste `size-control`,
   in der Kopfzelle `--sm`). Gruppierungsmarke: `ThemeIcon tl-icon-sm` in `icon-secondary`, `aria-hidden`.
 - **Spaltenmenü** bleibt die `Menu`-Instanz aus 3a.
@@ -209,10 +215,11 @@ Filter von Select-Popup und Spaltenwahl. Icon-Select folgt in Welle 5.
   | Ton `success`, `warning`, `error` | `data-tl-tone` → `status-*-text` |
   | Ton `on-color` | `data-tl-tone="on-brand"` → `text-on-brand` |
   | Ton `accent` | **fällt** (Hendrik, 02.10.): `TextTone.ACCENT` aus dem Vokabular, die Styling-Demo nimmt `strong` |
-  | Erscheinung `pill` | `tl-pill` mit `data-tl-role` (Ton → Rolle wie heute `roleOfTone`) |
+  | Erscheinung `pill` | `span.tl-pill` **ist die Wurzel** und trägt `data-tl-role` (Ton → Rolle wie heute `roleOfTone`) samt der übrigen Text-Attribute; keine Hülle `tl-text` (07.10.) |
 
   Die Klassen `tlText--strong` (5 Stellen in `*.view.xml` und `InspectedNodeElement.java`) und `tlText--placeholder`
-  (`ConfigListEditorControl.java`) werden auf die Form-Attribute bzw. `tl-type-*` umgestellt; `--tlText-tone`
+  (`ConfigListEditorControl.java`) werden umgestellt: stark als `css-class` `tl-type-body-strong` (`TextElement` kennt kein Form-Attribut),
+  der Platzhalter als neuer Ton `TextTone.PLACEHOLDER` (07.10.); `--tlText-tone`
   (in `foreignTl`) fällt mit ihnen.
 
 ## 12 · Spalten-Layout, Tokens und Maße
@@ -230,9 +237,10 @@ Filter von Select-Popup und Spaltenwahl. Icon-Select folgt in Welle 5.
 
 Neu, alle im Paket (`node --test`) und im Engine-Gate:
 
-- **Kontrast:** `border-interactive` auf `surface-interactive-selected` (vorhanden, 3a), `status-error-border` auf
-  `surface-layer` und `surface-interactive-selected` (≥ 3,0), `text-placeholder` und `icon-secondary` auf
-  `surface-interactive-selected` (≥ 4,5 bzw. 3,0), beide Modi, jedes Theme.
+- **Kontrast:** `border-interactive` auf `surface-interactive-selected` (vorhanden, 3a), `status-error-border` und
+  `status-warning-border` auf `surface-interactive-selected` und `-hover` (≥ 3,0; dafür Tausch der Stufen und neue
+  Stufe `red-34`, 07.10.), `icon-secondary` auf `surface-interactive-selected` (≥ 3,0), `text-placeholder` auf
+  `surface-base`, `-layer`, `-layer-nested` (≥ 4,5), beide Modi, jedes Theme.
 - **Klassen:** Lint kennt `tl-table`, `tl-tree`, `tl-reorder-list`, `tl-status`, `tl-text`, `tl-columns` und
   `tl-chip__toggle`/`__remove`; keine Zustandsklasse (`--selected`, `--cursor`, `--dragOver-*`, `--active`,
   `--frozen*`, `--pinned*`); `focus-ring` nur in `base.css` (die neue Cursor-Regel liegt dort); `outline` nur
@@ -240,8 +248,8 @@ Neu, alle im Paket (`node --test`) und im Engine-Gate:
 - **Verträge:** neu `table`, `tree`, `reorder-list`, `status`, `text`, `columns`; nachgezogen `pill`, `avatar`, `alert`, `choice`
   (Chip, Segment), `select` (Status, Chip, Filter), `field` (Lesewert, Link-Arten), `skeleton` (erster Aufrufer).
 - **Ratsche:** TLTableView, TLTreeView, TLColumnSelect, TLColumns und die drei Text-Blöcke gestrichen; TLJobStatus
-  auf 118 mit Vermerk; `foreignTl` ohne `--tlText-tone`.
-- **Engine:** `grep` über `react-src`, `tlReactControls.css`, `*.java`, `*.view.xml` und `docs/` findet keine der
+  auf den Stand aus `inventory.mjs` (≈ 122) mit Vermerk; `foreignTl` ohne `--tlText-tone`.
+- **Engine:** `grep` über `react-src`, `tlReactControls.css`, `*.java`, `*.view.xml` und `docs/faq/` findet (`docs/plans/` trägt je Datei einen Vermerk, 07.10.) keine der
   alten Klassen (`tlTableView`, `tlTreeView`, `tlColumnSelect`, `tlColumns`, `tlText`); kein `rowHeight` im
   Zustand; Modul-Tests `layout.react`, `layout.view`, `layout.configedit`, `demo.react` grün;
   `check-messages-en.sh` ohne Diff; `tsc --noEmit` 0 Befunde.
