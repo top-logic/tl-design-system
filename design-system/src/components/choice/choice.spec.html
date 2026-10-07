@@ -14,6 +14,11 @@
   .specimen__wrap { display: flex; flex-wrap: wrap; gap: var(--tl-space-md); }
   /* 160 px: ein langes Label in Segment und Chip endet mit Ellipse. */
   .specimen__narrow { width: 10rem; display: grid; gap: var(--tl-space-xs); }
+  /* Eine Linie durch die Mitte der Marken, wie die Wertlinie eines Schiebers: der Hof ist durchscheinend und
+     lässt sie sehen. Die Linie liegt hinter den Marken (z-index -1 im eigenen Stapelkontext). */
+  .specimen__line { position: relative; isolation: isolate; }
+  .specimen__line::before { content: ""; position: absolute; inset-inline: 0; top: 50%;
+    border-top: var(--tl-border-width-md) solid var(--tl-surface-brand); z-index: -1; }
 </style>
 </head>
 <body>
@@ -64,6 +69,41 @@
         <label class="tl-choice tl-type-body"><input type="checkbox" role="switch" class="tl-checkbox tl-checkbox--switch" checked> Schalter an</label>
         <label class="tl-choice tl-type-body"><input type="checkbox" role="switch" class="tl-checkbox tl-checkbox--switch" aria-invalid="true"> Fehler</label>
         <label class="tl-choice tl-type-body"><input type="checkbox" role="switch" class="tl-checkbox tl-checkbox--switch" disabled checked> deaktiviert</label>
+      </span>
+    </div>
+    <div class="specimen__row specimen__row--wide">
+      <span class="tl-type-label">Hof, Zeigen (data-specimen="hover")</span>
+      <span class="tl-choice-group">
+        <label class="tl-choice tl-type-body" data-specimen="hover"><input type="checkbox" class="tl-checkbox"> aus</label>
+        <label class="tl-choice tl-type-body" data-specimen="hover"><input type="checkbox" class="tl-checkbox" checked> an</label>
+        <label class="tl-choice tl-type-body" data-specimen="hover"><input type="radio" name="h1" class="tl-radio" checked> Radio</label>
+        <label class="tl-choice tl-type-body" data-specimen="hover"><input type="checkbox" role="switch" class="tl-checkbox tl-checkbox--switch" checked> Schalter</label>
+      </span>
+    </div>
+    <div class="specimen__row specimen__row--wide">
+      <span class="tl-type-label">Hof, Drücken (data-specimen="active")</span>
+      <span class="tl-choice-group">
+        <label class="tl-choice tl-type-body" data-specimen="active"><input type="checkbox" class="tl-checkbox"> aus</label>
+        <label class="tl-choice tl-type-body" data-specimen="active"><input type="checkbox" class="tl-checkbox" checked> an</label>
+        <label class="tl-choice tl-type-body" data-specimen="active"><input type="radio" name="h2" class="tl-radio" checked> Radio</label>
+        <label class="tl-choice tl-type-body" data-specimen="active"><input type="checkbox" role="switch" class="tl-checkbox tl-checkbox--switch"> Schalter</label>
+      </span>
+    </div>
+    <div class="specimen__row specimen__row--wide">
+      <span class="tl-type-label">Hof über einer Linie: Zeigen, Drücken — die Linie bleibt sichtbar</span>
+      <span class="tl-choice-group specimen__line">
+        <label class="tl-choice tl-type-body" data-specimen="hover"><input type="radio" name="h4" class="tl-radio" checked> Zeigen</label>
+        <label class="tl-choice tl-type-body" data-specimen="active"><input type="radio" name="h4" class="tl-radio"> Drücken</label>
+        <label class="tl-choice tl-type-body" data-specimen="hover"><input type="checkbox" class="tl-checkbox"> Zeigen</label>
+        <label class="tl-choice tl-type-body" data-specimen="active"><input type="checkbox" class="tl-checkbox" checked> Drücken</label>
+      </span>
+    </div>
+    <div class="specimen__row specimen__row--wide">
+      <span class="tl-type-label">kein Hof: gezeigt, aber deaktiviert / schreibgeschützt</span>
+      <span class="tl-choice-group">
+        <label class="tl-choice tl-type-body" data-specimen="hover"><input type="checkbox" class="tl-checkbox" disabled checked> deaktiviert</label>
+        <label class="tl-choice tl-type-body" data-specimen="hover"><input type="radio" name="h3" class="tl-radio" disabled> deaktiviert</label>
+        <label class="tl-choice tl-type-body" data-specimen="hover"><input type="checkbox" class="tl-checkbox" checked aria-readonly="true"> schreibgeschützt</label>
       </span>
     </div>
     <div class="specimen__row specimen__row--wide">
@@ -172,6 +212,17 @@
     // Radio-Namen je Fläche, sonst bilden die drei Kopien eine einzige Gruppe.
     for (const r of rows.querySelectorAll('input[type="radio"]')) r.name = `${r.name}-${id}`;
     document.getElementById(id).append(rows);
+  }
+  // Hof im Stand: Zeigen und Drücken lassen sich nicht statisch setzen. Die echten Regeln aus components.css
+  // werden kopiert, mit data-specimen statt :hover/:active am Label — keine zweite Fassung, die abweichen kann.
+  for (const sheet of document.styleSheets) {
+    if (!sheet.href || !sheet.href.endsWith('/dist/components.css')) continue;
+    for (const rule of [...sheet.cssRules]) {
+      if (!rule.selectorText || !rule.style.boxShadow || !rule.selectorText.includes('.tl-choice:')) continue;
+      const sel = rule.selectorText.split(',').map((x) => x.trim()).filter((x) => x.startsWith(':where(.tl-choice:'))
+        .map((x) => x.replace(/\.tl-choice:(hover|active)/, '.tl-choice[data-specimen="$1"]')).join(', ');
+      sheet.insertRule(`${sel} { box-shadow: ${rule.style.boxShadow}; }`, sheet.cssRules.length);
+    }
   }
   // Gemischt gibt es nur als Eigenschaft, nicht als HTML-Attribut.
   for (const el of document.querySelectorAll('input[data-indeterminate]')) el.indeterminate = true;

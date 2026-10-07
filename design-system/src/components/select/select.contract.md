@@ -83,7 +83,10 @@ Der Fokus bleibt an der Wurzel bzw. am Suchfeld; die Hervorhebung wandert über
 | Höhe | `--tl-size-control`, Wert-Chips `--tl-size-control-sm`: Innenabstand oben und unten (`--tl-size-control` − `--tl-size-control-sm`) / 2 − `--tl-border-width-sm`, damit eine Reihe Wert-Chips das Feld nicht über `--tl-size-control` wachsen lässt |
 | Werte, Wert-Chips, Knöpfe | Lücke `--tl-space-2xs`; Einzelwert `--tl-space-xs` |
 | Platzhalter | `--tl-text-placeholder` |
-| Entfernen, Löschen | `tl-button--icon` mit `--sm` und `--ghost`: Trefferfläche `--tl-size-control-sm` im Quadrat (WCAG 2.5.8), Farben, Zeigen und Deaktiviert aus `button.contract.md`; der Entfernen-Knopf ragt oben und unten um `--tl-border-width-sm` und am Ende um `--tl-space-2xs` über den Inhalt der Pille, damit sie nicht wächst |
+| Entfernen, Löschen | `tl-button--icon` mit `--sm` und `--ghost`: Trefferfläche `--tl-size-control-sm` im Quadrat (WCAG 2.5.8), Farben, Zeigen und Deaktiviert aus `button.contract.md`. Der Entfernen-Knopf weicht davon ab: er liegt ganz innerhalb des Pillenrandes, ein Kreis (`--tl-radius-round`) mit Durchmesser `--tl-size-control-sm` − 2 × `--tl-border-width-sm` − `--tl-space-2xs` (18 px), konzentrisch zum runden Ende; die Lücke zum Rand ist oben, unten und am Ende `--tl-space-2xs` / 2 (2 px), am Ende als Innenabstand des Chips. Das Icon bleibt `tl-icon-sm` |
+| Knöpfe im Feld: Löschen und Pfeil | am Ende der Wurzel, `--tl-space-2xs` vom Rand (Innenabstand am Ende der Wurzel); beim Zeigen `--tl-surface-interactive-selected`, beim Drücken `--tl-surface-interactive-active` statt der Ghost-Stufen, die auf `surface-field` hell nicht zu sehen sind (`docs/skalen.md` „Knöpfe im Feld zeigen eine Stufe kräftiger“). Nicht am deaktivierten Knopf und nicht in der Wurzel mit `aria-disabled="true"` |
+| Entfernen im Wert-Chip | liegt auf der Pille, nicht auf dem Feld: beim Zeigen **und** beim Drücken `--tl-surface-interactive-active` — die einzige Stufe, die sich auf allen 14 Pillenflächen abhebt (die neutrale Pille ist selbst `--tl-surface-interactive-selected`). Keine kräftigere Drücken-Stufe. Nicht am deaktivierten Knopf |
+| Pfeil | Quadrat `--tl-size-control-sm`, Ecke `--tl-radius-sm`, das Icon mittig; Übergang der Fläche `--tl-duration-fast`, `--tl-easing-standard`. Er bleibt `aria-hidden` und ohne Fokus; der Klick trifft die Wurzel |
 | Ziehgriff, Pfeil | `--tl-icon-secondary` |
 | Einfügemarke beim Ziehen | Linie `--tl-border-width-accent` in `--tl-border-interactive` |
 | Popup | aus `tl-popover` (`popover.contract.md`): Fläche, Schatten, Ebene, Ecke, Rand, Innenabstand, Text; `tl-select__popup` setzt nur Spalte und Höhe |
@@ -137,7 +140,7 @@ Klassen:
 | `tl-select__chip` | der Wert-Chip bei `multiSelect`: eine `tl-pill` mit dieser Klasse, darin Label und Entfernen-Knopf |
 | `tl-select__drag-handle` | Ziehgriff im Wert-Chip, nur bei `customOrder` |
 | `tl-select__controls` | `span` um Löschen-Knopf und Pfeil; Entfernen- und Löschen-Knopf sind `button type="button"` mit `tl-button--icon` (oben) |
-| `tl-select__arrow` | das Pfeil-Icon |
+| `tl-select__arrow` | `span` mit `aria-hidden="true"` um das Pfeil-Icon: das Quadrat, das beim Zeigen die Fläche trägt |
 | `tl-select__popup` | das schwebende Popup, zusammen mit `tl-popover` |
 | `tl-select__search-group` | `span.tl-field-group` um Lupe und Suchfeld; trägt den Abstand zur Liste |
 | `tl-select__search` | das Suchfeld, zusammen mit `tl-field` |

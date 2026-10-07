@@ -2,7 +2,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { ratio } from '../tools/lib/contrast.mjs';
+import { ratio, rgba, ueberlagert } from '../tools/lib/contrast.mjs';
 import { farbtonAbstand, FARBTON_ABSTAND_MIN, hexZuOklch } from '../tools/lib/color.mjs';
 import { resolve } from '../tools/resolve.mjs';
 
@@ -121,6 +121,28 @@ test('Schatten trägt nur, was schwebt — drei Stufen je Modus, keine raised', 
   for (const m of MODES) {
     const names = Object.keys(R.effect[m]).filter((n) => n.startsWith('shadow-')).sort();
     assert.deepEqual(names, ['shadow-dialog', 'shadow-drag', 'shadow-popover']);
+  }
+});
+
+// docs/skalen.md „Höfe sind durchscheinend“: eine Deckkraft hat keinen Kontrast für sich; gemessen wird die Schicht
+// über jedem Grund, auf dem ein Hof liegt, gegen diesen Grund.
+test('die Zustandsschichten sind durchscheinend und heben sich auf jedem Grund ab, Drücken kräftiger als Zeigen', () => {
+  const gruende = ['surface-base', 'surface-layer', 'surface-layer-nested', 'surface-overlay', 'surface-field'];
+  for (const m of MODES) {
+    for (const s of ['surface-state-hover', 'surface-state-active']) {
+      const { a } = rgba(R.effect[m][s]);
+      assert.ok(a > 0 && a < 1, `${m}: ${s} ist nicht durchscheinend (${a})`);
+      // Durchscheinend heißt: eine Linie darunter bleibt eine Linie. Mehr als ein Viertel Deckung wäre eine Fläche.
+      assert.ok(a <= 0.25, `${m}: ${s} deckt ${a}`);
+    }
+    for (const g of gruende) {
+      const grund = R.color[m][g];
+      const zeigen = ueberlagert(R.effect[m]['surface-state-hover'], grund);
+      const druecken = ueberlagert(R.effect[m]['surface-state-active'], grund);
+      assert.ok(ratio(zeigen, grund) >= 1.1, `${m}: surface-state-hover auf ${g} = ${ratio(zeigen, grund).toFixed(2)}`);
+      assert.ok(ratio(druecken, grund) >= 1.2, `${m}: surface-state-active auf ${g} = ${ratio(druecken, grund).toFixed(2)}`);
+      assert.ok(ratio(druecken, zeigen) >= 1.1, `${m}: Drücken gegen Zeigen auf ${g} = ${ratio(druecken, zeigen).toFixed(2)}`);
+    }
   }
 });
 
@@ -258,4 +280,27 @@ test('Zeigen auf allen Gründen (01.10.): dunkel liegen hover, selected, active 
   assert.ok(ratio(C['border-interactive'], C['surface-interactive-selected']) >= 3.0);
   assert.equal(T.measure['size-popover-min'], '{size-11}');
   assert.equal(T.measure['size-popover-max'], '{view-1}');
+});
+
+test('Knöpfe im Feld (06.10.): Zeigen und Drücken heben sich von surface-field ab, Drücken vom Zeigen', () => {
+  for (const m of MODES) {
+    const C = R.color[m];
+    const zeigen = ratio(C['surface-interactive-selected'], C['surface-field']);
+    const druecken = ratio(C['surface-interactive-active'], C['surface-interactive-selected']);
+    assert.ok(zeigen >= 1.1, `${m}: surface-interactive-selected auf surface-field = ${zeigen.toFixed(2)}, gefordert 1,1`);
+    assert.ok(druecken >= 1.1, `${m}: surface-interactive-active auf -selected = ${druecken.toFixed(2)}, gefordert 1,1`);
+  }
+  // Der Befund: die Zeigen-Stufe des Ghost-Knopfs verschwindet hell auf dem Feld.
+  assert.ok(ratio(R.color.light['surface-interactive-hover'], R.color.light['surface-field']) < 1.1);
+});
+
+test('Knöpfe im Feld (06.10.): der Entfernen-Knopf im Chip hebt sich auf jeder der 14 Pillenflächen ab', () => {
+  const pillen = ['surface-interactive-selected', 'surface-brand-subtle',
+    ...['error', 'warning', 'success', 'info'].map((s) => `status-${s}-subtle`),
+    ...[1, 2, 3, 4, 5, 6, 7, 8].map((k) => `category-${k}-subtle`)];
+  assert.equal(pillen.length, 14);
+  for (const m of MODES) for (const bg of pillen) {
+    const ist = ratio(R.color[m]['surface-interactive-active'], R.color[m][bg]);
+    assert.ok(ist >= 1.1, `${m}: surface-interactive-active auf ${bg} = ${ist.toFixed(2)}, gefordert 1,1`);
+  }
 });

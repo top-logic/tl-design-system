@@ -73,14 +73,12 @@
     "Element picker: click an element in this window to report it": 47,
     "TLCalendar": 254
   },
-  "_foreignTl": "Custom Properties im Namensraum --tl, die der Altbestand selbst DEFINIERT (nicht: liest). Lesen ist erlaubt — dafuer sind Tokens da; fremd ist nur, was hier auftaucht oder was kein Paket-Token ist. Einfang-Liste: jede Welle streicht, was sie ins Paket holt; Neues bricht den Test. --tl-toolbar-trigger-size und --tl-toolbar-shrink-priority (#29626) sind mit Welle 3a (Toolbar) gestrichen; die Host-Regeln lesen --tl-size-control. --tlText-tone kam mit #29596 (Text-Toene) und gehoert zur Typo (Welle 2/4). 07.10. aus #29752: --tlSlider-fill, -fill-color, -rest-color, -thumb und --tlSnackbar-bg, -fg (Welle 4/5); --tl-surface-state-hover und -active werden nur GELESEN, sind aber kein Paket-Token - der Slider-Halo bekommt keine Farbe (Befund an #29752).",
+  "_foreignTl": "Custom Properties im Namensraum --tl, die der Altbestand selbst DEFINIERT (nicht: liest). Lesen ist erlaubt — dafuer sind Tokens da; fremd ist nur, was hier auftaucht oder was kein Paket-Token ist. Einfang-Liste: jede Welle streicht, was sie ins Paket holt; Neues bricht den Test. --tl-toolbar-trigger-size und --tl-toolbar-shrink-priority (#29626) sind mit Welle 3a (Toolbar) gestrichen; die Host-Regeln lesen --tl-size-control. --tlText-tone kam mit #29596 (Text-Toene) und gehoert zur Typo (Welle 2/4). 07.10. aus #29752: --tlSlider-fill, -fill-color, -rest-color, -thumb und --tlSnackbar-bg, -fg (Welle 4/5); --tl-surface-state-hover und -active liest der Slider; sie sind Paket-Tokens aus Bernhards Branch CWS/CWS_29752_hoefe (nach main gemergt 07.10.), also nicht fremd.",
   "foreignTl": [
     "--tl-item-index",
     "--tl-tt-padding",
     "--tlGrid-gap",
     "--tlText-tone",
-    "--tl-surface-state-active",
-    "--tl-surface-state-hover",
     "--tlSlider-fill",
     "--tlSlider-fill-color",
     "--tlSlider-rest-color",

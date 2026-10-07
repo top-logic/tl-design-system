@@ -59,3 +59,26 @@ export function ratio(foreground, background) {
   const dunkler = Math.min(eine, andere);
   return (heller + STREULICHT) / (dunkler + STREULICHT);
 }
+
+const RGBA = /^rgba\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*([\d.]+)\s*\)$/;
+
+/** Die Kanäle und die Deckkraft eines Werts `rgba(r, g, b, a)`, wie die Primitive ihn schreiben; ein Hexwert deckt. */
+export function rgba(cssValue) {
+  if (/^#/.test(String(cssValue).trim())) return { ...color(cssValue), a: 1 };
+  const m = RGBA.exec(String(cssValue).trim());
+  if (!m) throw new Error(`Kein rgba-Wert: '${cssValue}'`);
+  return { r: Number(m[1]), g: Number(m[2]), b: Number(m[3]), a: Number(m[4]) };
+}
+
+/**
+ * Die Farbe, die eine durchscheinende Schicht über einem deckenden Grund ergibt, als Hex.
+ *
+ * Eine Deckkraft hat keinen Kontrast für sich; gemessen wird, was gezeichnet wird: die Schicht über
+ * dem Grund, gemischt im sRGB-Raum wie der Browser (docs/skalen.md „Höfe sind durchscheinend“).
+ */
+export function ueberlagert(schicht, grundHex) {
+  const s = rgba(schicht);
+  const g = color(grundHex);
+  const kanal = (k) => Math.round(s[k] * s.a + g[k] * (1 - s.a)).toString(16).padStart(2, '0');
+  return `#${kanal('r')}${kanal('g')}${kanal('b')}`.toUpperCase();
+}

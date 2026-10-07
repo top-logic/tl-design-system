@@ -63,6 +63,13 @@ const REDUCED_MOTION_SELECTOR = '*, *::before, *::after';
 const REDUCED_MOTION_PROPS = /^(animation-duration|animation-iteration-count|transition-duration|scroll-behavior)$/;
 // Punkt 8: Kurven nur aus --tl-easing-*, nie als Literal in transition*/animation*.
 const EASING_WORDS = /\b(ease-in-out|ease-in|ease-out|ease|linear)\b/;
+// Der Hof (docs/skalen.md „Auswahlmarken zeigen einen Hof“, „Höfe sind durchscheinend“): ein Schatten ohne
+// Versatz und Unschärfe, nur Ausdehnung aus Tokens, in der durchscheinenden Zeigen- oder Drücken-Schicht. Kein
+// dritter Schatten, kein Fokusersatz. Die Deckkraft steht im Token, nie in der Komponente.
+const HOF = /^0 0 0 (calc\((?:[^;]*)\)|var\(--tl-[a-z0-9-]+\)) var\(--tl-surface-state-(hover|active)\)$/;
+// Die Zustandsschichten sind durchscheinend und darum nur als Hof erlaubt; eine Fläche, ein Rand oder Text aus
+// ihnen hätte keinen messbaren Kontrast. Zeigen auf einer Fläche bleibt deckend (surface-interactive-*).
+const SCHICHT = /var\(--tl-surface-state-[a-z0-9-]+\)/;
 // Punkt 9: Attributselektoren, die auf Klassen zielen, umgehen das BEM/Prefix-Gate.
 const CLASS_ATTR_SELECTOR = /\[class[*^~]=/;
 // Punkt 10: Zustände sind Attribute (:disabled, [aria-pressed], [aria-busy], :focus-visible), nie Klassen.
@@ -162,8 +169,10 @@ export function lint(css, { known, file }) {
       say(d, 'line-height außerhalb einer Typo-Klasse');
 
     if (d.property === 'z-index' && !/^var\(--tl-layer-/.test(d.value)) say(d, 'z-index nur aus --tl-layer-*');
-    if (d.property === 'box-shadow' && !/^var\(--tl-shadow-/.test(d.value) && !/^inset\b/.test(d.value))
-      say(d, 'box-shadow nur --tl-shadow-* oder inset-Linie');
+    if (d.property === 'box-shadow' && !/^var\(--tl-shadow-/.test(d.value) && !/^inset\b/.test(d.value) && !HOF.test(d.value.trim()))
+      say(d, 'box-shadow nur --tl-shadow-*, inset-Linie oder Hof (0 0 0 <Maß> surface-state-hover/-active)');
+    if (SCHICHT.test(d.value) && !(d.property === 'box-shadow' && HOF.test(d.value.trim())))
+      say(d, 'surface-state-* ist durchscheinend und nur als Hof erlaubt (box-shadow 0 0 0 <Maß> <Schicht>)');
 
     // Punkt 8: Kurve nur aus --tl-easing-* — Literale in transition*/animation* geprüft
     // NACH Entfernen von var(...), sonst matcht "linear" aus --tl-easing-linear.

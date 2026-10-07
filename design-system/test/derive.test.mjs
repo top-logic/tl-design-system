@@ -10,7 +10,7 @@ import { join } from 'node:path';
 import { derive } from '../tools/derive.mjs';
 import { resolve } from '../tools/resolve.mjs';
 import { kontrastPaare, werte } from '../tools/lib/pairs.mjs';
-import { ratio } from '../tools/lib/contrast.mjs';
+import { ratio, rgba, ueberlagert } from '../tools/lib/contrast.mjs';
 import { farbtonAbstand, hexZuOklch } from '../tools/lib/color.mjs';
 
 const P = JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.url)));
@@ -65,6 +65,22 @@ test('5 warm liegt auf den Helligkeiten von TopLogic-Grau; neutral trägt keine 
   assert.ok(Math.abs(hexZuOklch(ergebnis.ergebnis.color.light['text-primary']).L - hexZuOklch(R0.color.light['text-primary']).L) < 0.01);
   const neutral = derive(P, T, { ...probe, color: { ...probe.color, gray: 'neutral' } });
   assert.ok(hexZuOklch(neutral.ergebnis.color.light['text-secondary']).C < 0.002);
+});
+
+test('die Schleier folgen dem Kundengrau und behalten ihre Deckkraft; ein gelieferter Schleier bleibt', () => {
+  for (const mode of MODES) for (const s of ['surface-state-hover', 'surface-state-active']) {
+    const vorher = rgba(R0.effect[mode][s]);
+    const nachher = rgba(ergebnis.ergebnis.effect[mode][s]);
+    assert.equal(nachher.a, vorher.a, `${mode}: ${s} Deckkraft`);
+    // Die Farbe ist die Stufe des Textes, aus der Rampe des Kunden.
+    const text = ergebnis.ergebnis.color[mode]['text-primary'];
+    assert.equal(ueberlagert(`rgba(${nachher.r}, ${nachher.g}, ${nachher.b}, 1)`, '#000000'), text, `${mode}: ${s} folgt nicht dem Grau`);
+    assert.ok(ergebnis.css.includes(`--tl-${s}: ${ergebnis.ergebnis.effect[mode][s]};`), `${mode}: ${s} fehlt in der Datei`);
+  }
+  const eigen = derive(P, T, { theme: 'eigen', color: { gray: 'warm' }, effect: { 'veil-1': 'rgba(0, 0, 0, 0.1)' } });
+  assert.equal(eigen.ergebnis.effect.light['surface-state-hover'], 'rgba(0, 0, 0, 0.1)');
+  // Ohne Grau bleibt der Schleier der von TopLogic und erscheint nicht in der Datei.
+  assert.doesNotMatch(derive(P, T, { theme: 'marke', color: { brand: '#7A1FA2' } }).css, /surface-state-/);
 });
 
 test('eine Saat mittlerer Helligkeit macht ihre Beschriftung zum Befund, nicht zum Abbruch', () => {

@@ -31,7 +31,7 @@
   --tl-border-emphasis: #75716D;
   --tl-border-interactive: #E6521C;
   --tl-border-disabled: #C7C3BE;
-  --tl-focus-ring: #E8541E;
+  --tl-focus-ring: #DB4809;
   --tl-status-error-text: #F07070;
   --tl-status-warning-text: #916D00;
   --tl-category-1-subtle: #F1F2DC;
@@ -59,6 +59,8 @@
   --tl-text-on-status-warning: #1F1C19;
   --tl-text-on-status-success: #1F1C19;
   --tl-text-on-status-info: #1F1C19;
+  --tl-surface-state-hover: rgba(31, 28, 25, 0.06);
+  --tl-surface-state-active: rgba(31, 28, 25, 0.12);
   --tl-font-family-sans: 'Probe Sans', system-ui, sans-serif;
   --tl-radius-sm: 0;
   --tl-radius-md: 0;
@@ -121,6 +123,8 @@
   --tl-text-on-status-warning: #1F1C19;
   --tl-text-on-status-success: #1F1C19;
   --tl-text-on-status-info: #1F1C19;
+  --tl-surface-state-hover: rgba(247, 242, 237, 0.06);
+  --tl-surface-state-active: rgba(247, 242, 237, 0.12);
 }
 
 /* Report
@@ -131,5 +135,6 @@
    note     light: text-link in der Helligkeit nachgeführt, damit 4,5 auf dem Grund hält (#E8541E → #BE3B00)
    note     die Marke liegt 10° neben einer Bedeutung; Stufe B entscheidet, ob die Bedeutung einen anderen Ton bekommt
    note     light: border-interactive in der Helligkeit nachgeführt, damit es auf seinem Grund hält (#E8541E → #E6521C)
+   note     light: focus-ring in der Helligkeit nachgeführt, damit es auf seinem Grund hält (#E8541E → #DB4809)
    note     light: status-warning-text in der Helligkeit nachgeführt, damit es auf seinem Grund hält (#936E00 → #916D00)
 */

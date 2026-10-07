@@ -1,9 +1,16 @@
+import { ueberlagert } from './contrast.mjs';
+
 // Die Paarliste des Kontrast-Gates als Daten. tokens.test.mjs prüft das Paket damit, derive das
 // Kundentheme — dieselben Paare, dieselben Schwellen (docs/skalen.md).
 const GRUENDE_TEXT = ['surface-layer', 'surface-layer-nested', 'surface-overlay',
   'surface-interactive-hover', 'surface-interactive-selected', 'surface-interactive-active'];
+// Ein durchscheinender Hof liegt unter dem Ring, wenn eine fokussierte Marke gezeigt oder gedrückt wird. Er hat
+// keine eigene Farbe: gemessen wird die Schicht über jedem Grund, auf dem eine Marke stehen kann, als
+// Zusammensetzung `<Schicht>/<Grund>` (siehe werte).
+const SCHICHTEN = ['surface-state-hover', 'surface-state-active'];
+const GRUENDE_HOF = ['surface-base', 'surface-layer', 'surface-layer-nested', 'surface-overlay', 'surface-field'];
 const GRUENDE_FOKUS = ['surface-base', 'surface-layer', 'surface-layer-nested', 'surface-overlay',
-  'surface-field', 'surface-brand-subtle'];
+  'surface-field', 'surface-brand-subtle', ...SCHICHTEN.flatMap((s) => GRUENDE_HOF.map((g) => `${s}/${g}`))];
 // Wo ein Feld liegt: auf dem Grund, auf Panels, verschachtelt, im Dialog — und seine eigene Fläche,
 // denn der Rand grenzt beides ab (WCAG 1.4.11, „angrenzende Farben“).
 const GRUENDE_FELD = ['surface-field', 'surface-base', 'surface-layer', 'surface-layer-nested', 'surface-overlay'];
@@ -53,6 +60,8 @@ export function kontrastPaare(T) {
   // Hervorhebung im Select-Popup und Link im Status
   paar('border-interactive', 'surface-overlay', 3.0); paar('border-interactive', 'surface-interactive-selected', 3.0); paar('text-link', 'surface-overlay', 4.5);
   paar('text-primary', 'surface-field', 4.5); paar('icon-secondary', 'surface-field', 3.0); // Schalterknopf
+  // Knöpfe im Feld: der Pfeil des Select steht beim Zeigen und Drücken auf der Fläche seines Quadrats.
+  paar('icon-secondary', 'surface-interactive-selected', 3.0); paar('icon-secondary', 'surface-interactive-active', 3.0);
   paar('border-interactive', 'surface-brand-subtle', 3.0); // gewählter Chip, gewähltes Segment
   for (const bg of GRUENDE_FOKUS) paar('focus-ring', bg, 3.0);
   for (const k of KATEGORIEN) {
@@ -64,8 +73,17 @@ export function kontrastPaare(T) {
   return p;
 }
 
-/** Hex einer Rolle aus einem aufgelösten Ergebnis, Farbe oder Beschriftung. */
+/**
+ * Hex einer Rolle aus einem aufgelösten Ergebnis, Farbe oder Beschriftung — oder einer Zusammensetzung
+ * `<Schicht>/<Grund>`: die durchscheinende Effekt-Rolle über der deckenden Fläche, so wie sie gezeichnet wird.
+ */
 export function werte(R, mode, name) {
+  const teile = name.split('/');
+  if (teile.length === 2) {
+    const [schicht, grund] = teile;
+    if (!(schicht in R.effect[mode])) throw new Error(`${mode}: Schicht ${schicht} unbekannt`);
+    return ueberlagert(R.effect[mode][schicht], werte(R, mode, grund));
+  }
   if (name in R.color[mode]) return R.color[mode][name];
   if (name in R.derived[mode]) return R.derived[mode][name];
   throw new Error(`${mode}: Rolle ${name} unbekannt`);

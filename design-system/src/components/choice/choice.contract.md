@@ -43,6 +43,7 @@ Feldes (`field.contract.md`, Abschnitt Zustand) und gelten hier unverändert. Zu
 |---|---|
 | Kästchen, Kreis | Maß `--tl-size-choice` (folgt nicht der Dichte); Ecke `--tl-radius-sm` bzw. `--tl-radius-round` |
 | Rand | `--tl-border-control`, Breite `--tl-border-width-sm`; beim Zeigen `--tl-border-emphasis` |
+| Hof (Kästchen, Radio, Schalter) | beim Zeigen `--tl-surface-state-hover`, beim Drücken `--tl-surface-state-active` — durchscheinende Schichten, was darunter liegt bleibt sichtbar; angekreuzt wie leer; als `box-shadow` ohne Versatz und Unschärfe, Ausdehnung (`--tl-size-control` − `--tl-size-choice`) / 2, folgt der Form der Marke (Quadrat mit `--tl-radius-sm`, Kreis, Pille um die Spur); Übergang `--tl-duration-fast`, `--tl-easing-standard` |
 | Fläche | `--tl-surface-field` |
 | Angekreuzt, gemischt, gewähltes Radio | Fläche und Rand `--tl-surface-brand`; Haken, Strich, Punkt `--tl-text-on-brand`, Strichstärke `--tl-border-width-md` |
 | Schalter | Spur `--tl-size-switch` × `--tl-size-choice`, Ecke `--tl-radius-full`; Knopf `--tl-size-switch-knob`, rund `--tl-radius-round`, aus `--tl-icon-secondary`, an `--tl-text-on-brand`; Bewegung `--tl-duration-fast`, `--tl-easing-standard` (Reduced Motion über den globalen Schalter) |
@@ -77,11 +78,18 @@ gesetzt; die Auswahl hat keine Schriftregel.
 | `tabIndex` | roving in Segmenten mit Einfachwahl: nur das gewählte (ohne Wahl das erste) hat `0`, die übrigen `-1`; Pfeiltasten wechseln die Wahl. Bei Mehrfachwahl und an Chips ist jedes Element erreichbar. |
 | `aria-readonly="true"` | `editable: false` an `TLCheckbox`: das Kästchen bzw. der Schalter rendert **ohne** `disabled`, mit `aria-readonly="true"` und einem Änderungs-Handler, der nichts tut — die Angekreuzt-Füllung behält den Kontrast der Marke. Kein Zeigen, Zeiger `default`. |
 | `disabled` | der inaktive Zustand, nicht der schreibgeschützte: der Client liest `state.disabled`, wie beim Button (`button.contract.md`), und setzt `disabled` an Kästchen, Schalter, Radio, Segment und Chip. |
-| `:focus-visible` | den Ring liefert `base.css`; die Auswahl setzt und entfernt keinen Fokusstil. |
+| `:focus-visible` | den Ring liefert `base.css`; die Auswahl setzt und entfernt keinen Fokusstil. Fokus allein zeigt keinen Hof; wird eine fokussierte Marke gezeigt oder gedrückt, liegt der Ring auf dem Hof. |
+| `:hover`, `:active` | an der Marke oder am `tl-choice` um sie: der Hof. Nicht bei `disabled` und nicht bei `aria-readonly="true"`. |
 
 Deaktiviert schlägt Fehler und Warnung: ein `disabled` Kästchen, Radio, Segment oder Chip zeigt keinen
 Fehler- oder Warnrand, auch wenn seine Gruppe `aria-invalid="true"` bzw. `data-tl-state` trägt, und
 kein Zeigen.
+
+Der Hof gehört den Auswahlmarken: Kästchen, Radio und Schalter zeigen beim Zeigen und Drücken eine Fläche
+um die Marke, in ihrer Form und bis zur Trefferfläche — wie MUI, durchscheinend: eine Linie unter dem Hof bleibt
+sichtbar, und er hebt sich auf jedem Grund gleich stark ab (`docs/skalen.md` „Höfe sind durchscheinend“). Segmente, Chips, Toggles und Icon-Knöpfe haben keinen —
+sie tragen das Zeigen als eigene Fläche. Der Hof verschiebt nichts; ein Behälter mit `overflow: hidden`
+schneidet ihn wie den Fokusring.
 
 Bei `editable: false` rendert `TLBooleanChoice` die Beschriftung seines Werts als Lesewert
 (`tl-field-value`, siehe `field.contract.md`). `TLSegmentedChoice` und `TLOptionChips` rendern wie der

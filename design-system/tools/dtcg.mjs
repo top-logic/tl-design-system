@@ -101,7 +101,7 @@ function primValue(type, raw) {
     }
     case 'color':
       if (/^#/.test(raw)) return { $value: raw };
-      // scrim-*: rgba in CSS-Notation, keine DTCG-Hex-Farbe — bewusst so exportiert.
+      // scrim-*, veil-*: rgba in CSS-Notation, keine DTCG-Hex-Farbe — bewusst so exportiert.
       return { $value: raw, $extensions: { 'com.top-logic.note': 'alpha, CSS notation' } };
     default:
       return { $value: raw };

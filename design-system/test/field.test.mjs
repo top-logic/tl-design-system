@@ -12,7 +12,7 @@ test('field.css liest genau die Farbrollen des Feldes', () => {
   assert.deepEqual(colorVarsOf(css), [
     'border-control', 'border-disabled', 'border-emphasis', 'icon-secondary',
     'status-error-border', 'status-warning-border', 'surface-disabled', 'surface-field',
-    'text-disabled', 'text-link', 'text-link-hover',
+    'surface-interactive-active', 'surface-interactive-selected', 'text-disabled', 'text-link', 'text-link-hover',
     'text-placeholder', 'text-primary',
   ]);
 });
@@ -114,4 +114,28 @@ test('die Aktion in der Gruppe ist ein tl-button--icon: tl-field-group__action g
   assert.match(declarationsOf(css, '.tl-field-group:has(> .tl-button) > .tl-field') ?? '', /padding-inline-end:[^;]*var\(--tl-size-control-sm\)/);
   const md = readComponent('field', 'field.contract.md');
   assert.deepEqual(missingInContract(md, ['tl-button--icon']), []);
+});
+
+test('Knöpfe im Feld (06.10.): Endknopf und Kalenderknopf zeigen selected und drücken active', () => {
+  assert.match(declarationsOf(css, '.tl-field-group > .tl-button--ghost:not(:disabled):hover') ?? '', /background:\s*var\(--tl-surface-interactive-selected\)/);
+  assert.match(declarationsOf(css, '.tl-field-group > .tl-button--ghost:not(:disabled):active') ?? '', /background:\s*var\(--tl-surface-interactive-active\)/);
+  const knopf = declarationsOf(css, '.tl-field::-webkit-calendar-picker-indicator') ?? '';
+  for (const r of [/width:\s*var\(--tl-size-control-sm\)/, /height:\s*var\(--tl-size-control-sm\)/,
+    /border-radius:\s*var\(--tl-radius-sm\)/, /cursor:\s*pointer/, /padding:\s*calc\(\(var\(--tl-size-control-sm\) - var\(--tl-size-icon-sm\)\) \/ 2\)/])
+    assert.match(knopf, r);
+  assert.match(declarationsOf(css, '.tl-field:enabled::-webkit-calendar-picker-indicator:hover') ?? '', /background-color:\s*var\(--tl-surface-interactive-selected\)/);
+  assert.match(declarationsOf(css, '.tl-field:enabled::-webkit-calendar-picker-indicator:active') ?? '', /background-color:\s*var\(--tl-surface-interactive-active\)/);
+  assert.match(declarationsOf(css, '.tl-field:disabled::-webkit-calendar-picker-indicator') ?? '', /cursor:\s*default/);
+});
+
+test('der Kalenderknopf steht in eigenen Regeln und lässt das native Icon stehen', () => {
+  // Ein unbekanntes Pseudo-Element verwirft die ganze Selektorliste (Firefox); die Kurzform background
+  // löschte das Icon, das Chromium als Hintergrundbild malt.
+  const regeln = [...css.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/([^{}]+)\{([^}]*)\}/g)]
+    .filter((m) => m[1].includes('::-webkit-'));
+  assert.ok(regeln.length >= 4, 'Kalenderknopf fehlt');
+  for (const [, sel, block] of regeln) {
+    assert.ok(!sel.includes(','), `${sel.trim()} teilt die Regel mit anderen Selektoren`);
+    assert.doesNotMatch(block, /(^|[\s;])background\s*:/, `${sel.trim()} setzt die Kurzform background`);
+  }
 });

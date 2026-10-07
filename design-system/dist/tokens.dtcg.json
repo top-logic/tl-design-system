@@ -839,6 +839,34 @@
         "$extensions": {
           "com.top-logic.note": "alpha, CSS notation"
         }
+      },
+      "veil-1": {
+        "$type": "color",
+        "$value": "rgba(27, 29, 33, 0.06)",
+        "$extensions": {
+          "com.top-logic.note": "alpha, CSS notation"
+        }
+      },
+      "veil-2": {
+        "$type": "color",
+        "$value": "rgba(27, 29, 33, 0.12)",
+        "$extensions": {
+          "com.top-logic.note": "alpha, CSS notation"
+        }
+      },
+      "veil-3": {
+        "$type": "color",
+        "$value": "rgba(240, 243, 249, 0.06)",
+        "$extensions": {
+          "com.top-logic.note": "alpha, CSS notation"
+        }
+      },
+      "veil-4": {
+        "$type": "color",
+        "$value": "rgba(240, 243, 249, 0.12)",
+        "$extensions": {
+          "com.top-logic.note": "alpha, CSS notation"
+        }
       }
     }
   },
@@ -1191,6 +1219,14 @@
         "surface-scrim": {
           "$type": "color",
           "$value": "{primitive.effect.scrim-1}"
+        },
+        "surface-state-hover": {
+          "$type": "color",
+          "$value": "{primitive.effect.veil-1}"
+        },
+        "surface-state-active": {
+          "$type": "color",
+          "$value": "{primitive.effect.veil-2}"
         }
       }
     },
@@ -1542,6 +1578,14 @@
         "surface-scrim": {
           "$type": "color",
           "$value": "{primitive.effect.scrim-2}"
+        },
+        "surface-state-hover": {
+          "$type": "color",
+          "$value": "{primitive.effect.veil-3}"
+        },
+        "surface-state-active": {
+          "$type": "color",
+          "$value": "{primitive.effect.veil-4}"
         }
       }
     },

@@ -1815,6 +1815,237 @@ Spec `docs/superpowers/specs/2026-10-02-welle-3b-daten-design.md`. Neu entschied
 schlug sie TLJobStatus zu. Die Blockmessung trifft nur, was eine Überschrift trägt — beim Ausschneiden wird TLJobStatus
 auf seinen wahren Stand gesetzt.
 
+### Auswahlmarken zeigen einen Hof (06.10.)
+
+> **Farbe des Hofs geändert (06.10., Bernhard):** der Hof ist durchscheinend, `surface-state-hover` /
+> `surface-state-active` statt der deckenden `surface-interactive-hover` / `-active`. Begründung, Werte und
+> Messung unter „Höfe sind durchscheinend“ (06.10.). Wer, Auslöser, Größe, Form, Wächter und Fokus unten gelten
+> weiter; „Warum deckend und neutral“ und der verworfene durchscheinende Hof sind damit überholt.
+
+**Der Befund zuerst.** Kästchen, Radio und Schalter zeigten das Zeigen nur am Rand (`border-control` →
+`border-emphasis`), und am angekreuzten Kästchen gar nicht — dort ist der Rand die Marke. Die Trefferfläche ist
+das Label (`size-control`), gezeichnet sind 16 px (`size-choice`): wer über den Text fährt, sah an der Marke
+nichts. MUI, Material und Fluent zeigen an derselben Stelle eine Fläche um die Marke. Anlass: Trac #29752
+(„kleine React-UI-Verbesserungen“).
+
+**Entschieden (06.10.):**
+
+| Achse | Regel |
+|---|---|
+| Wer | `.tl-checkbox`, `.tl-radio`, der Schalter (`.tl-checkbox--switch`) — sonst niemand |
+| Auslöser | `:hover`/`:active` an der Marke **und** am `tl-choice` um sie; die Trefferfläche ist das Label |
+| Farbe | Zeigen `surface-interactive-hover`, Drücken `surface-interactive-active` — deckend, angekreuzt wie leer |
+| Größe | Ausdehnung (`size-control` − `size-choice`) / 2: der Hof füllt die Marke auf die Trefferfläche auf, folgt damit der Dichte (8 px normal, 6 px kompakt) |
+| Zeichnung | `box-shadow: 0 0 0 <Ausdehnung> <Fläche>` — zeichnet nur außerhalb der Marke, verschiebt nichts, braucht kein Pseudo-Element; Übergang `duration-fast`, `easing-standard` |
+| Form | die der Marke: Kreis am Radio, Quadrat mit `radius-sm` + Ausdehnung am Kästchen, Pille um die Spur am Schalter |
+| Wächter | kein Hof bei `:disabled` und `aria-readonly="true"`, dieselbe `:where`-Klammer wie beim Rand |
+| Fokus | Fokus allein zeigt keinen Hof; der Fokus bleibt der eine Ring aus `base.css` |
+
+**Warum deckend und neutral.** Das Lint verbietet `color-mix`, `rgba` und Farbliterale in Komponenten, und Zeigen
+ist hier eine deckende Fläche. „Zeigen auf allen Gründen“ (01.10.) hat `surface-interactive-hover` genau dafür
+gestimmt, auf allen vier Gründen sichtbar zu sein (hell 1,07–1,12, dunkel 1,17–1,54; Drücken 1,31–1,36 bzw.
+1,46–1,93). Der Markenton für angekreuzte Marken, wie MUI ihn tönt, fällt an genau dieser Regel durch:
+`surface-brand-subtle-hover` misst dunkel auf `surface-overlay` **1,00**, `surface-brand-subtle` dunkel auf
+`surface-layer` 1,04 — im Dialog wäre der Hof weg. Ein Drücken-Gegenstück dazu gäbe es auch nicht; es wäre ein
+neues Token für eine schwächere Lösung.
+
+**Warum die Form der Marke und kein Kreis am Kästchen.** Ein echter Kreis um ein Quadrat braucht ein eigenes,
+positioniertes Pseudo-Element (`::after` trägt den Haken), und es müsste mit negativem `z-index` hinter der Marke
+liegen. Dann malt es unter dem Hintergrund jedes Vorfahren im selben Stapelkontext — TLCheckbox rendert das
+Kästchen ohne Label in Tabellenzellen und Formularen, dort verschwände der Hof hinter der Zeile. Der Schatten hat
+das Problem nicht. 4 + 8 px Ecke an 32 px wirken ohnehin fast rund.
+
+**Warum am Schalter die Spur, nicht der Knopf.** MUI legt den Hof um den Knopf, durchscheinend über die Spur. Ein
+deckender Hof um den 12-px-Knopf mit 32 px Durchmesser verdeckte die 16 px hohe Spur fast ganz; hinter die Spur
+legen ginge nur mit dem `z-index`-Weg oben. Der Hof umschließt darum die ganze Marke — beim Schalter ist das die
+Spur.
+
+**Fokus und Hof.** Der Ring liegt mit Abstand und Breite 4 px außerhalb der Marke, der Hof reicht 6–8 px: wird
+eine fokussierte Marke gezeigt oder gedrückt, liegt der Ring ganz auf dem Hof. Die Paarliste hält deshalb
+`focus-ring` mit 3,0 auch auf `surface-interactive-hover` und `-active` (hell 5,21 / 4,28, dunkel 3,87 / 3,10);
+`derive` führt den Ring im Probe-Theme dafür nach (`#E8541E` → `#DD4A0D`). Fokus allein bekommt keinen Hof, anders
+als bei MUI: der Fokus ist ein Ring, und „jede Fokusdarstellung, die nicht `outline` ist“, bleibt ein Verstoß.
+
+**Verworfen:**
+
+* ~~**Durchscheinender Hof aus `currentColor` wie MUI** (`alpha(primary, 0.04)`): verbietet das Lint, und zu Recht —
+  eine Deckkraft über unbekanntem Grund hat keinen messbaren Kontrast.~~ Umgekehrt am 06.10.: der Grund ist
+  bekannt (die vier Gründe und das Feld), gemessen wird die Schicht über ihm — „Höfe sind durchscheinend“.
+* **Hof auch an Icon-Knöpfen, Toggles, Chips, Toolbar-Knöpfen:** die sind in W4/W5 (`altlast.md`) quadratisch
+  zusammengelegt und zeigen das Zeigen als eigene Fläche. Ein Hof dort wäre eine zweite Zeigen-Form für dasselbe.
+* **Ein eigenes Token für die Ausdehnung:** sie ist eine Rechnung aus zwei bestehenden Maßen und folgt so der
+  Dichte von selbst; ein drittes Maß könnte davon abweichen.
+
+**Preis:** Der Hof ragt 6–8 px über die Marke hinaus — links über die Kante des Labels, rechts bis an den Text
+(`space-xs` = 8 px Abstand). Er verschiebt nichts, aber ein Behälter mit `overflow: hidden` schneidet ihn, wie den
+Fokusring (siehe „Fokus“).
+
+**Als Test:** `choice.test.mjs` hält die acht Auslöser (Marke und Label, Zeigen und Drücken, Kästchen und Radio)
+mit Ausdehnung und Fläche, den Wächter an jedem, Drücken nach Zeigen, keinen Hof an Fokus, Knopf, Segment oder
+Chip und den Hof über dem Ring in beiden Dichten; ein zweiter Test hält den Hof aus jedem anderen Block heraus. Das
+Lint kennt den Hof als dritte erlaubte `box-shadow`-Form (`0 0 0 <Maß aus Tokens>` in `surface-interactive-hover`
+oder `-active`), `lint-css.test.mjs` prüft Literal, Unschärfe, Versatz und Fokusfarbe als Verstöße. `pairs.mjs`
+führt die zwei neuen Fokus-Gründe.
+
+### Knöpfe im Feld zeigen eine Stufe kräftiger (06.10.)
+
+**Der Befund zuerst.** Die Icon-Knöpfe im Feld — Löschen im Select (`tl-select__controls`), Löschen und Link
+öffnen im Textfeld (`tl-field-group`), der Entfernen-Knopf im Chip — sind `tl-button--icon --sm --ghost` und
+zeigen beim Zeigen `surface-interactive-hover`. „Zeigen auf allen Gründen“ (01.10.) hat diese Stufe auf
+`surface-base`, `-layer`, `-nested` und `-overlay` gestimmt, nicht auf `surface-field`. Hell liegt sie dort
+bei **1,01** (`gray-4` auf `gray-3`): kein sichtbares Zeigen. Dunkel 1,26 — sichtbar. Der Pfeil des Select
+(`tl-select__arrow`) zeigte gar nichts, der Kalenderknopf des Datumsfelds war das ungestaltete
+`::-webkit-calendar-picker-indicator`. Anlass: Trac #29752.
+
+| auf `surface-field` | hell | dunkel |
+|---|---|---|
+| `surface-interactive-hover` | **1,01** | 1,26 |
+| `surface-interactive-selected` | 1,11 | 1,35 |
+| `surface-interactive-active` | 1,23 | 1,58 |
+| `-active` auf `-selected` (Drücken gegen Zeigen) | 1,11 | 1,17 |
+
+**Entschieden (06.10.): im Feld rückt die Skala eine Stufe vor** — Zeigen `surface-interactive-selected`,
+Drücken `surface-interactive-active`. Vorhandene Rollen, kein neues Token; 1,11 hell entspricht dem, was
+Zeigen auf den anderen Gründen hat (1,07–1,12). Es gilt für jedes Icon im Feld, das man treffen kann:
+
+| Wer | Selektor | Form |
+|---|---|---|
+| Endknopf des Textfelds | `.tl-field-group > .tl-button--ghost:not(:disabled)` | der Knopf selbst |
+| Löschen im Select | `.tl-select__controls > .tl-button--ghost:not(:disabled)` | der Knopf selbst |
+| Pfeil des Select | `.tl-select:not([aria-disabled="true"]) .tl-select__arrow` | `span` wird ein Quadrat `size-control-sm`, Ecke `radius-sm`, Icon mittig; bleibt `aria-hidden`, ohne Fokus, der Klick trifft die Wurzel |
+| Kalenderknopf (Datum, Zeit, Zeitpunkt) | `.tl-field:enabled::-webkit-calendar-picker-indicator` | Quadrat `size-control-sm`, Ecke `radius-sm`, natives Icon auf `size-icon-sm` eingerückt, `cursor: pointer`; `background-color`, weil das Icon das Hintergrundbild ist |
+
+Am Ende des Feldes stehen die Knöpfe `space-2xs` vom Rand: im Select als `padding-inline-end` der Wurzel, am
+Kalenderknopf als negativer Rand um `space-control-x` − `space-2xs`. Der Wächter `:not(:disabled)` ist
+Pflicht: `field.css` und `select.css` stehen nach `button.css` und schlügen sonst dessen leeren
+Deaktiviert-Zustand bei gleicher Spezifität. Das Pfeil-Icon (`icon-secondary`) hält auf beiden Flächen 3,0
+(hell 5,98 / 5,39, dunkel 4,27 / 3,64); die Paarliste führt die zwei Paare. Die Sichtbarkeit selbst hält
+`tokens.test.mjs` (≥ 1,1 auf `surface-field` und Drücken gegen Zeigen, wie der Test vom 01.10.) — nicht die
+Paarliste: dort ist jede `surface-interactive-*` ein Grund, und ein Grund darf kein Vordergrund sein.
+
+Das Icon des Kalenderknopfs zeichnet der Browser; es folgt `color-scheme`, das `tokens.css` je Modus setzt
+(dunkel hell gezeichnet, im Specimen geprüft). Jede Regel mit dem Pseudo-Element steht allein: ein
+unbekanntes Pseudo-Element verwirft die ganze Selektorliste. **Firefox** kennt es nicht und zeichnet einen
+eigenen Knopf, den kein Stylesheet erreicht — dort bleibt das native Bild, ohne Ersatz.
+
+**Der Entfernen-Knopf im Chip liegt auf der Pille, nicht auf dem Feld.** Die neutrale Pille *ist*
+`surface-interactive-selected`: die Feld-Stufe misst darauf 1,00. Auf allen 14 Pillenflächen (neutral, Marke,
+vier Bedeutungen, acht Kategorien):
+
+| auf den Pillenflächen | hell | dunkel |
+|---|---|---|
+| `surface-interactive-hover` (Ghost-Stufe) | 1,00–1,10 | 1,07–1,47 |
+| `surface-interactive-selected` | 1,00–1,09 (neutral 1,00, Marke 1,02) | 1,00–1,57 |
+| `surface-interactive-active` | 1,11–1,21 | 1,17–1,84 |
+
+**Entschieden (06.10.): am Chip zeigen und drücken beide `surface-interactive-active`** — die einzige
+vorhandene Stufe, die sich auf jeder Pille abhebt. Selektor `.tl-select__chip > .tl-button--ghost:not(:disabled)`
+mit `:hover` und `:active` in einer Regel. Drücken hat am Chip keine eigene, kräftigere Stufe; der Knopf
+entfernt den Chip beim Loslassen ohnehin, ein Drücken-Bild sieht man kaum.
+
+**Form am Chip (06.10., nach Sichtprüfung):** der Knopf liegt ganz innerhalb des Pillenrandes — ein Kreis
+(`radius-round`), konzentrisch zum runden Ende, Durchmesser `size-control-sm` − 2 × `border-width-sm` −
+`space-2xs` (18 px in beiden Dichten), Lücke `space-2xs` / 2 (2 px; ein `space-3xs` gibt es nicht) oben, unten
+und als Innenabstand am Ende. Das Icon bleibt `size-icon-sm`. Die Trefferfläche sinkt damit von 24 auf 18 px;
+WCAG 2.5.8 hält über die Ausnahme „Abstand“, denn der nächste Knopf liegt um das Label der Nachbarpille weiter.
+
+**Verworfen:**
+
+* **Der quadratische Icon-Knopf mit negativem Rand über dem Pillenrand** (24 px, `radius-sm`): beim Zeigen
+  übermalte die Fläche den Rand oben und unten und schnitt das runde Ende ab.
+* **Eine neue Rolle `surface-interactive-strong` für das Drücken am Chip** (hell `gray-18`, dunkel `gray-55`;
+  1,28 / 1,26 über `-active`, auf den Pillen 1,42–1,55 bzw. 1,47–2,31): eine vierte Stufe der Interaktionsskala
+  für einen einzigen Knopf. Die Kategorie bleibt geschlossen; Zeigen und Drücken teilen sich am Chip `-active`.
+* **Der Hof aus „Auswahlmarken zeigen einen Hof“:** die Knöpfe sind in W4/W5 (`altlast.md`) quadratisch
+  zusammengelegt und zeigen das Zeigen als eigene Fläche; ein Hof wäre eine zweite Form für dasselbe.
+* **Die Ghost-Stufe für alle Knöpfe anheben:** auf `surface-layer` und `-overlay` wäre Zeigen dann 1,23 statt
+  1,12 — in Menü und Toolbar kräftiger als entschieden, nur um das Feld zu retten.
+* **Eine eigene Rolle für „Zeigen im Feld“:** die vorhandene Stufe trägt; die Kategorie bleibt geschlossen.
+* **Zeigen am Pfeil über die ganze Wurzel** (`.tl-select:hover .tl-select__arrow`): die Wurzel zeigt ihr
+  Zeigen schon am Rand (`border-emphasis`); der Pfeil soll nur aufleuchten, wenn der Zeiger auf ihm steht.
+
+**Als Test:** `field.test.mjs` und `select.test.mjs` halten Selektoren, Flächen, Quadrat und Wächter, auch am Chip; `tokens.test.mjs` hält `-active` mit ≥ 1,1 auf allen 14 Pillenflächen; ein
+Test hält jede Regel mit `::-webkit-` allein und ohne die Kurzform `background`; das Specimen rendert den
+Pfeil als `span` um das Icon wie `TLDropdownSelect`. `lint-css.test.mjs` prüft, dass Literale am
+Pseudo-Element so brechen wie an der Klasse.
+
+### Höfe sind durchscheinend (06.10.)
+
+**Der Befund zuerst.** Der deckende Hof aus „Auswahlmarken zeigen einen Hof“ verdeckt, was unter ihm liegt. Am
+Schieberegler der Engine sitzt der Hof um den Knopf auf der Wertlinie: deckend schneidet er die Linie rechts und
+links des Knopfes 8 px weit heraus — die Linie bricht am Knopf ab, das sieht falsch aus (Linie unter dem Hof:
+1,00 gegen den Hof). Dazu streut der deckende Hof je Grund: hell 1,01 (Feld) bis 1,12, dunkel 1,17 (Dialog) bis
+1,54.
+
+**Entschieden (Bernhard, 06.10.): ein Hof ist durchscheinend.** Eine bewusste Änderung der Regel „Zeigen ist eine
+deckende Fläche, kein `rgba`“ — für den Hof, nicht für Flächen. Zwei neue Rollen, je Modus, unter den Effekten
+wie `surface-scrim` (die einzigen Rollen mit Deckkraft):
+
+| Rolle | hell | dunkel |
+|---|---|---|
+| `surface-state-hover` | `{veil-1}` = `rgba(27, 29, 33, 0.06)` | `{veil-3}` = `rgba(240, 243, 249, 0.06)` |
+| `surface-state-active` | `{veil-2}` = `rgba(27, 29, 33, 0.12)` | `{veil-4}` = `rgba(240, 243, 249, 0.12)` |
+
+Die Farbe ist die Textstufe des Modus (`gray-77` hell, `gray-5` dunkel), die Deckkraft 6 % / 12 % — MUI nimmt
+4–8 % fürs Zeigen und 12 % für Fokus und Drücken; 4 % misst hell 1,08 und fällt unter die Schwelle 1,1, die
+„Zeigen auf allen Gründen“ (01.10.) und „Knöpfe im Feld“ (06.10.) für Zeigen halten. Die Primitive heißen
+`veil-*` (Familie plus Stufe, keine Rolle), die Werte stehen in `primitives.json`, `tokens.json` trägt nur die
+Referenz. CSS: `--tl-surface-state-hover`, `--tl-surface-state-active`.
+
+**Gemessen als Zusammensetzung:** die Schicht über dem Grund gegen den Grund (`ueberlagert` in
+`tools/lib/contrast.mjs`, sRGB wie der Browser).
+
+| | `surface-base` | `-layer` | `-layer-nested` | `-overlay` | `surface-field` |
+|---|---|---|---|---|---|
+| hell Zeigen | 1,12 | 1,13 | 1,13 | 1,13 | 1,12 |
+| hell Drücken | 1,28 | 1,27 | 1,27 | 1,27 | 1,27 |
+| hell Drücken gegen Zeigen | 1,14 | 1,13 | 1,13 | 1,13 | 1,13 |
+| dunkel Zeigen | 1,16 | 1,18 | 1,18 | 1,19 | 1,19 |
+| dunkel Drücken | 1,39 | 1,41 | 1,42 | 1,44 | 1,42 |
+| dunkel Drücken gegen Zeigen | 1,20 | 1,19 | 1,20 | 1,21 | 1,20 |
+| `focus-ring` auf dem Drücken-Hof | hell 4,16–4,59 | | | dunkel 3,14–4,31 | |
+
+Durchscheinend heißt auch: der Hof hebt sich auf **jedem** Grund gleich stark ab (hell 1,12–1,13 statt 1,01–1,12),
+und eine Linie darunter bleibt eine Linie — `surface-brand` auf `surface-layer` 5,84 / unter dem Zeigen-Hof
+5,55 / unter dem Drücken-Hof 5,30 (dunkel 5,49 / 4,96 / 4,40), `border-control` 3,42 → 3,20 (dunkel 3,69 → 3,22).
+
+**Regeln:**
+
+* Das Lint erlaubt `--tl-surface-state-*` **nur** im Hof (`box-shadow: 0 0 0 <Maß aus Tokens> var(--tl-surface-state-hover|-active)`)
+  und den Hof **nur** aus diesen Rollen; als Fläche, Rand oder Text ist eine Deckkraft ein Verstoß. Zeigen auf einer
+  Fläche (Knopf, Zeile, Chip) bleibt deckend, `surface-interactive-*`.
+* `color-mix`, `rgba` und Farbliterale bleiben in Komponenten verboten: die Deckkraft steht im Token, nie im CSS.
+* Die Paarliste misst den Ring auf dem Hof als Zusammensetzung `<Schicht>/<Grund>` über allen fünf Gründen, statt
+  auf `surface-interactive-hover`/`-active`. Im Probe-Theme führt `derive` den Ring dafür etwas weiter nach
+  (`#E8541E` → `#DB4809` statt `#DD4A0D`).
+* `derive` färbt die Schleier mit dem Kundengrau nach: ein Schleier ist eine Graustufe mit Deckkraft; ändert der
+  Kunde das Grau, folgt er seiner Stufe und behält die Deckkraft (Probe warm: `rgba(31, 28, 25, …)` /
+  `rgba(247, 242, 237, …)`). Einen gelieferten `veil-*` lässt `derive` stehen.
+* Der Schieberegler der Engine liest dieselben zwei Rollen — ein Hof-Begriff überall.
+
+**Die Knöpfe im Feld bleiben deckend** (`surface-interactive-selected`/`-active`, „Knöpfe im Feld zeigen eine
+Stufe kräftiger“): sie zeigen das Zeigen als ihre eigene Fläche, nicht als Hof um etwas, und unter ihnen liegt nur
+das Feld — es gibt nichts zu durchscheinen.
+
+**Am Schalter bleibt der Hof um die Spur.** Der Grund für „Spur, nicht Knopf“ war die Deckkraft; der durchscheinende
+Hof ließe sich nun wie bei MUI um den Knopf legen. Offen gelassen: der Hof folgt bei allen drei Marken der Form der
+Marke, und ein Hof am `::after`-Knopf wäre eine zweite Form.
+
+**Verworfen:**
+
+* **Der deckende Hof:** verdeckt die Linie unter dem Knopf des Schiebers und streut je Grund (siehe Befund).
+* **`color-mix(in srgb, var(--tl-text-primary) 8%, transparent)` in der Komponente:** die Deckkraft stünde in jeder
+  Komponente neu, ein Kunde könnte sie nicht über die Primitive ändern, und das Lint verlöre die Regel
+  „kein Farbwert im CSS“. Die Durchsicht gehört ins Token.
+* **Deckkraft aus `currentColor` wie MUI:** die Farbe hinge an der Textfarbe des Elements — am angekreuzten
+  Kästchen `text-on-brand`, am deaktivierten Label `text-disabled`; der Hof wäre je Zustand ein anderer.
+
+**Als Test:** `tokens.test.mjs` hält die Deckkraft (0 < a ≤ 0,25), Zeigen ≥ 1,1, Drücken ≥ 1,2 und Drücken gegen
+Zeigen ≥ 1,1 auf allen fünf Gründen in beiden Modi; `lint-css.test.mjs` den deckenden Hof, `color-mix` und
+`rgba` im Hof sowie `surface-state-*` als Fläche, Rand, Text und `inset`-Linie als Verstöße; `choice.test.mjs` den
+Hof aus den Schichten und keinen anderen Leser im Paket; `pairs.test.mjs` die Zusammensetzungen;
+`derive.test.mjs` die Schleier im Kundengrau. Das Specimen zeigt den Hof über einer Linie.
+
 ## Befunde aus dem Specimen
 
 ### Inter trägt nur zwei Gewichte
