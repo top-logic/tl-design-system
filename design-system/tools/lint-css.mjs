@@ -89,7 +89,7 @@ const MODIFIERS = {
   'tl-checkbox': new Set(['switch']),
   'tl-radio': new Set([]),
   'tl-choice': new Set([]),
-  'tl-choice-group': new Set([]),
+  'tl-choice-group': new Set(['vertical']), // Untereinander (TLChoiceGroup, #29654).
   'tl-segmented': new Set([]),
   'tl-chip-group': new Set([]),
   'tl-chip': new Set([]),

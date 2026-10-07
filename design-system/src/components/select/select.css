@@ -62,12 +62,15 @@
 /* Der Entfernen-Knopf ist ein tl-button--icon --sm --ghost, liegt aber ganz innerhalb des Pillenrandes: ein
    Kreis, konzentrisch zum runden Ende der Pille, mit einer Lücke von space-2xs / 2 zum Rand oben, unten und am
    Ende. Durchmesser = Pillenhöhe size-control-sm − 2 × Rand − 2 × Lücke; das Ende der Pille trägt nur die
-   Lücke als Innenabstand. Ein Quadrat über dem Rand verdeckte beim Zeigen Rand und rundes Ende. */
-.tl-select__chip:has(> .tl-button) {
+   Lücke als Innenabstand. Ein Quadrat über dem Rand verdeckte beim Zeigen Rand und rundes Ende. Dasselbe Modell
+   trägt das Entfernen der Filterkapsel (tl-chip__remove, choice.css): eine Regel für beide (07.10.). */
+.tl-select__chip:has(> .tl-button),
+.tl-chip:has(> .tl-chip__remove) {
   padding-inline-end: calc(var(--tl-space-2xs) / 2);
 }
 
-.tl-select__chip > .tl-button {
+.tl-select__chip > .tl-button,
+.tl-chip__remove {
   width: calc(var(--tl-size-control-sm) - 2 * var(--tl-border-width-sm) - var(--tl-space-2xs));
   height: calc(var(--tl-size-control-sm) - 2 * var(--tl-border-width-sm) - var(--tl-space-2xs));
   min-height: 0;
@@ -80,7 +83,9 @@
    Pillenflächen abhebt (docs/skalen.md „Knöpfe im Feld zeigen eine Stufe kräftiger“). Eine kräftigere
    Drücken-Stufe gibt es nicht; die Kategorie bleibt geschlossen. */
 .tl-select__chip > .tl-button--ghost:not(:disabled):hover,
-.tl-select__chip > .tl-button--ghost:not(:disabled):active {
+.tl-select__chip > .tl-button--ghost:not(:disabled):active,
+.tl-chip__remove:not(:disabled):hover,
+.tl-chip__remove:not(:disabled):active {
   background: var(--tl-surface-interactive-active);
 }
 

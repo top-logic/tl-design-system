@@ -18,8 +18,9 @@ test('drei Maße der Auswahl sind Tokens der Skala und folgen nicht der Dichte',
 test('choice.css liest genau diese Farbrollen', () => {
   assert.deepEqual(colorVarsOf(css), [
     'border-control', 'border-disabled', 'border-emphasis', 'border-interactive', 'icon-secondary',
-    'status-error-border', 'status-warning-border', 'surface-brand', 'surface-brand-hover', 'surface-brand-subtle',
-    'surface-disabled', 'surface-field', 'surface-interactive-hover', 'surface-state-active', 'surface-state-hover', 'text-disabled', 'text-on-brand', 'text-on-brand-hover', 'text-primary',
+    'status-error-border', 'status-warning-border', 'surface-brand', 'surface-brand-active', 'surface-brand-hover', 'surface-brand-subtle',
+    'surface-disabled', 'surface-field', 'surface-interactive-hover', 'surface-state-active', 'surface-state-hover', 'text-disabled', 'text-on-brand',
+    'text-on-brand-active', 'text-on-brand-hover', 'text-primary',
   ]);
 });
 
@@ -169,6 +170,41 @@ test('das Auswahl-Specimen zeigt jede Form in jedem Zustand', () => {
 test('der Auswahl-Vertrag nennt jedes Token, jede Klasse und jedes Attribut', () => {
   const md = readComponent('choice', 'choice.contract.md');
   const names = [...varsOf(css), 'tl-checkbox', 'tl-checkbox--switch', 'tl-radio', 'tl-choice', 'tl-choice-group',
-    'tl-segmented', 'tl-segmented__label', 'tl-chip', 'tl-chip__label', 'aria-checked', 'aria-pressed', 'aria-invalid', 'data-tl-state', 'role="switch"', 'role="radiogroup"'];
+    'tl-segmented', 'tl-segmented__label', 'tl-chip', 'tl-chip__label', 'tl-chip__toggle', 'tl-chip__remove', 'data-tl-role', 'tl-choice-group--vertical', 'aria-checked', 'aria-pressed', 'aria-invalid', 'data-tl-state', 'role="switch"', 'role="radiogroup"'];
   assert.deepEqual(missingInContract(md, names), []);
+});
+
+test('entfernbare Kapsel: umschalten und entfernen in einem span.tl-chip, gedrückt wie ein gedrückter Chip', () => {
+  assert.match(declarationsOf(css, '.tl-chip:has(> .tl-chip__toggle)') ?? '', /padding:\s*0/);
+  assert.match(declarationsOf(css, '.tl-chip__toggle') ?? '', /border-radius:\s*var\(--tl-radius-full\)/);
+  // Der Knopf setzt display: [hidden] des Browsers verlöre sonst (3a-Regel, auch am Element).
+  assert.match(declarationsOf(css, '.tl-chip__toggle[hidden]') ?? '', /display:\s*none/);
+  // Folgt das Entfernen, endet der Umschalt-Knopf am Label: der Abstand zum Kreis ist der gap der Kapsel.
+  assert.match(declarationsOf(css, '.tl-chip__toggle:has(+ .tl-chip__remove)') ?? '', /padding-inline-end:\s*0/);
+  const gedrueckt = declarationsOf(css, '.tl-chip:has(> .tl-chip__toggle[aria-pressed="true"])') ?? '';
+  assert.match(gedrueckt, /background:\s*var\(--tl-surface-brand\)/);
+  assert.match(gedrueckt, /color:\s*var\(--tl-text-on-brand\)/);
+  assert.match(declarationsOf(css, '.tl-chip:has(> .tl-chip__toggle[aria-pressed="true"]) > .tl-chip__remove') ?? '', /color:\s*inherit/);
+});
+
+// Entscheidung 07.10.: Filterkapsel und Select-Chip teilen ein Modell für das Entfernen (Bernhards Kreis,
+// select.css) — eine Regel, zwei Selektoren, keine zweite Fassung in choice.css.
+test('Entfernen in der Kapsel ist derselbe Kreis wie im Select-Chip: eine Regel für beide', () => {
+  const select = readComponent('select', 'select.css');
+  const kreis = declarationsOf(select, '.tl-chip__remove') ?? '';
+  assert.equal(kreis, declarationsOf(select, '.tl-select__chip > .tl-button'), 'dieselbe Regel');
+  assert.match(kreis, /border-radius:\s*var\(--tl-radius-round\)/);
+  assert.doesNotMatch(kreis, /margin/);
+  assert.equal(declarationsOf(select, '.tl-chip:has(> .tl-chip__remove)'), declarationsOf(select, '.tl-select__chip:has(> .tl-button)'));
+  assert.equal(declarationsOf(select, '.tl-chip__remove:not(:disabled):hover'),
+    declarationsOf(select, '.tl-select__chip > .tl-button--ghost:not(:disabled):hover'));
+  assert.equal(declarationsOf(css, '.tl-chip__remove'), null, 'keine zweite Fassung in choice.css');
+});
+
+// master #29654 (TLChoiceGroup) definierte den Modifier im TLTableView-Block des alten Stylesheets;
+// E7 löscht diesen Bereich, das Paket trägt ihn (neu verankert 07.10.).
+test('eine Auswahlgruppe steht untereinander mit --vertical', () => {
+  const v = declarationsOf(css, '.tl-choice-group--vertical') ?? '';
+  assert.match(v, /flex-direction:\s*column/);
+  assert.match(v, /align-items:\s*flex-start/);
 });

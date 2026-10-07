@@ -1,6 +1,6 @@
 # Vertrag: Auswahl
 
-Eine Kundenkomponente, die unter einem der TopLogic-Namen `TLCheckbox`, `TLBooleanChoice`,
+Eine Kundenkomponente, die unter einem der TopLogic-Namen `TLCheckbox`, `TLChoiceGroup`,
 `TLSegmentedChoice` oder `TLOptionChips` registriert ist (Stufe C der Spec), bekommt vom Server den
 Zustand unten, löst die genannten Aktionen aus und trägt die genannten Attribute. TopLogic garantiert
 dann Funktion, Tastatur und Fokus — nicht das Aussehen. Wer ins Bild passen will, liest die Tokens.
@@ -18,8 +18,8 @@ Feldes (`field.contract.md`, Abschnitt Zustand) und gelten hier unverändert. Zu
 | `TLCheckbox` (`ReactCheckboxControl`) | `value` | boolean oder `null` | Angekreuzt, nicht angekreuzt; `null` nur bei `triState`: kein Wert. |
 | `TLCheckbox` | `triState` | boolean, optional | Das Kästchen hat einen dritten Zustand „kein Wert“: gemischt dargestellt, Klick läuft angekreuzt → nicht angekreuzt → kein Wert. Fehlt er, gilt zweiwertig. |
 | `TLCheckbox` | `display` | string, optional | Die Form: `switch` für den Schalter, `tl-checkbox--switch`. Fehlt er, ist es das Kästchen. Mit `triState` nie `switch` — ein Schalter hat keine dritte Stellung. |
-| `TLBooleanChoice` (`ReactBooleanChoiceControl`) | `presentation` | string | `radio`: zwei oder drei `tl-radio` in einer `tl-choice-group`; `select`: ein `tl-field`. |
-| `TLBooleanChoice` | `options` | Liste | Die angebotenen Werte, je `value` (boolean oder `null` für „kein Wert“) und `label`. |
+| `TLChoiceGroup` (`ReactDropdownSelectControl` mit `SelectDisplay.RADIO`) | `presentation` | string | Radios bei einem Wert, Kästchen bei mehreren, je in `label.tl-choice` in einer `tl-choice-group`, Rolle `radiogroup` bzw. `group`. |
+| `TLChoiceGroup` | `options` | Liste | Die angebotenen Werte, je `value` (boolean oder `null` für „kein Wert“) und `label`. |
 | `TLSegmentedChoice`, `TLOptionChips` (`ReactDropdownSelectControl`) | `display` | string | `segmented` bzw. `chips`: welche Form die Auswahl hat. |
 | `TLSegmentedChoice`, `TLOptionChips` | `options` | Liste | Jede Option als Deskriptor: `value` (Id), `label`, optional `image` (kodiertes ThemeImage), `colorRole`, `link`. |
 | `TLSegmentedChoice`, `TLOptionChips` | `value` | Liste | Die gewählten Optionen als Deskriptoren. |
@@ -33,7 +33,7 @@ Feldes (`field.contract.md`, Abschnitt Zustand) und gelten hier unverändert. Zu
 | Auslöser | Aktion |
 |---|---|
 | Klick auf Kästchen oder Schalter | `sendCommand('valueChanged', { value })`, `value` boolean oder bei `triState` `null`. |
-| Wahl eines Radio (`TLBooleanChoice`) | `sendCommand('valueChanged', { value })`, `value` der Option (boolean oder `null`). |
+| Wahl eines Radio (`TLChoiceGroup`) | `sendCommand('valueChanged', { value })`, `value` der Option (boolean oder `null`). |
 | Wahl eines Segments oder Chips | `sendCommand('valueChanged', { value })`, `value` die Liste der gewählten Options-Ids. |
 | Link einer Option im Lesewert | `sendCommand('goto', { option })`, nur bei `editable: false` und `link` im Deskriptor. |
 
@@ -50,6 +50,7 @@ Feldes (`field.contract.md`, Abschnitt Zustand) und gelten hier unverändert. Zu
 | Trefferfläche `tl-choice` | Höhe `--tl-size-control` (folgt der Dichte), als `min-height`; Abstand zum Label `--tl-space-xs`; Text `--tl-text-primary` |
 | Gruppe `tl-choice-group` | Abstand `--tl-space-control-gap` |
 | Segmente | Rahmen `--tl-border-control`, `--tl-radius-sm`, `--tl-surface-field`; Segment `--tl-size-control` abzüglich 2 × `--tl-border-width-sm`, Innenabstand `--tl-space-control-x`, Text `--tl-text-primary`; beim Zeigen `--tl-surface-interactive-hover` |
+| Entfernbare Kapsel | Rahmen und Fläche wie der Chip; gedrückt `--tl-surface-brand`, Text `--tl-text-on-brand`, Zeigen `--tl-surface-brand-hover`/`--tl-text-on-brand-hover`; Entfernen gedrückt beim Zeigen `--tl-surface-brand-active`/`--tl-text-on-brand-active`. Das Entfernen ist derselbe Kreis wie im Select-Chip (eine Regel, `select.css`): Durchmesser `--tl-size-control-sm` − 2 × `--tl-border-width-sm` − `--tl-space-2xs`, `--tl-radius-round`, Lücke `--tl-space-2xs` / 2 am Ende; Zeigen und Drücken `--tl-surface-interactive-active` |
 | Chips | Höhe `--tl-size-control-sm`, Innenabstand `--tl-space-sm`, Lücke `--tl-space-2xs` (auch im Segment zwischen Bild und Label), Ecke `--tl-radius-full`; Gruppe `--tl-space-xs`; beim Zeigen `--tl-surface-interactive-hover` |
 | Gewähltes Segment | Fläche `--tl-surface-brand-subtle`, Rand `--tl-border-interactive` |
 | Gewählter Chip | wie angekreuzt: Fläche und Rand `--tl-surface-brand`, Text `--tl-text-on-brand`; beim Zeigen Fläche `--tl-surface-brand-hover`, Text `--tl-text-on-brand-hover` |
@@ -67,7 +68,7 @@ gesetzt; die Auswahl hat keine Schriftregel.
 | `:checked` | `value: true` an Kästchen, Schalter, Radio — der native Zustand des `input`, kein Attribut von Hand. |
 | `:indeterminate` | `triState` und `value: null`. `indeterminate` ist eine Eigenschaft des `input` (kein HTML-Attribut); der Browser meldet es dem Screenreader als „gemischt“. **Kein** `aria-checked` am nativen Kästchen (ARIA in HTML; entschieden 07.10.). |
 | `role="switch"` + `aria-checked` | `display: switch`; am `input type="checkbox"` mit `tl-checkbox tl-checkbox--switch`. |
-| `role="radiogroup"` | an der `tl-choice-group` der Radios (`TLBooleanChoice`) und an `tl-segmented` bei Einfachwahl. |
+| `role="radiogroup"` | an der `tl-choice-group` der Radios (`TLChoiceGroup`) und an `tl-segmented` bei Einfachwahl. |
 | `role="group"` | an `tl-chip-group` und an `tl-segmented` bei `multiSelect`. |
 | `aria-checked` | am Segment (`role="radio"`) bei Einfachwahl: `"true"` für das gewählte. |
 | `aria-pressed` | am Segment bei Mehrfachwahl und an jedem Chip: `"true"` für die gewählten. |
@@ -91,7 +92,7 @@ sichtbar, und er hebt sich auf jedem Grund gleich stark ab (`docs/skalen.md` „
 sie tragen das Zeigen als eigene Fläche. Der Hof verschiebt nichts; ein Behälter mit `overflow: hidden`
 schneidet ihn wie den Fokusring.
 
-Bei `editable: false` rendert `TLBooleanChoice` die Beschriftung seines Werts als Lesewert
+Bei `editable: false` rendert `TLChoiceGroup` die Beschriftung seines Werts als Lesewert
 (`tl-field-value`, siehe `field.contract.md`). `TLSegmentedChoice` und `TLOptionChips` rendern wie der
 DropdownSelect (`select.contract.md`) eine Liste von `tl-field-value`-Einträgen in `tl-select__values`:
 je gewählter Wert Text oder `tl-pill` mit `data-tl-role` seiner `colorRole`, mit Bild, Werte mit `link` als `a`, das
@@ -115,6 +116,9 @@ Klassen:
 | `tl-chip` | `button type="button"` je Option, mit `aria-pressed` |
 | `tl-chip` + `data-tl-role` | die Rolle des Werts (`colorRole`); keine Pill im Chip oder Segment, Bild und Beschriftung stehen nebeneinander mit `--tl-space-2xs` |
 | `tl-chip__label` | `span` um das Label im Chip; endet mit Ellipse |
+| `tl-chip__toggle` | `button` in einem `span.tl-chip`, `aria-pressed`; trägt das Label |
+| `tl-chip__remove` | `tl-button tl-button--ghost tl-button--sm tl-button--icon`, `aria-label` und Tooltip Pflicht; Kreis innerhalb der Kapsellinie wie im Select-Chip |
+| `tl-choice-group--vertical` | die Optionen untereinander; ohne den Modifier nebeneinander mit Umbruch, Zustand `orientation` |
 
 ## Konformität
 

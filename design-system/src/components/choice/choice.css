@@ -181,6 +181,13 @@
 }
 .tl-choice-group[hidden] { display: none; }
 
+/* Untereinander statt nebeneinander (TLChoiceGroup, master #29654): jede Option so breit wie ihr Label,
+   keine umbrechende Reihe. */
+.tl-choice-group--vertical {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 /* --- Segmente ----------------------------------------------------------------- */
 
 /* Einfachwahl: role="radiogroup", Segmente role="radio" mit aria-checked. Mehrfachwahl:
@@ -328,4 +335,63 @@
   border-color: var(--tl-border-disabled);
   background: var(--tl-border-disabled);
   color: var(--tl-text-disabled);
+}
+
+/* --- Entfernbare Kapsel -------------------------------------------------------- */
+
+/* Zwei Knöpfe in einer Kapsel (Filterleiste der Tabelle, 3b §11): span.tl-chip mit dem Umschalt-Knopf
+   tl-chip__toggle (aria-pressed) und dem Entfernen-Knopf tl-chip__remove (tl-button--icon --sm --ghost).
+   Die Kapsel zeichnet Rahmen und Fläche; gedrückt sieht sie aus wie ein gedrückter Knopf-Chip, und der
+   Entfernen-Knopf liest dann die Beschriftung auf der Marke. Das Entfernen ist derselbe Kreis innerhalb der
+   Kapsellinie wie im Select-Chip — eine Regel für beide in select.css (Entscheidung 07.10., „Gleiches wird
+   zusammengelegt“). */
+.tl-chip:has(> .tl-chip__toggle) {
+  padding: 0;
+  cursor: default;
+}
+
+:where(.tl-chip__toggle) {
+  font: inherit;
+}
+
+.tl-chip__toggle {
+  display: inline-flex;
+  align-items: center;
+  align-self: stretch;
+  gap: var(--tl-space-2xs);
+  min-width: 0;
+  padding: 0 var(--tl-space-sm);
+  border: 0;
+  border-radius: var(--tl-radius-full);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.tl-chip__toggle[hidden] { display: none; }
+
+/* Folgt das Entfernen, endet der Umschalt-Knopf am Label: der Abstand zum Kreis ist der gap der Kapsel
+   (space-2xs), wie zwischen Label und Kreis im Select-Chip. */
+.tl-chip__toggle:has(+ .tl-chip__remove) {
+  padding-inline-end: 0;
+}
+
+.tl-chip:has(> .tl-chip__toggle[aria-pressed="true"]) {
+  border-color: var(--tl-surface-brand);
+  background: var(--tl-surface-brand);
+  color: var(--tl-text-on-brand);
+}
+
+.tl-chip:has(> .tl-chip__toggle[aria-pressed="true"]):hover {
+  border-color: var(--tl-surface-brand-hover);
+  background: var(--tl-surface-brand-hover);
+  color: var(--tl-text-on-brand-hover);
+}
+
+.tl-chip:has(> .tl-chip__toggle[aria-pressed="true"]) > .tl-chip__remove {
+  color: inherit;
+}
+
+.tl-chip:has(> .tl-chip__toggle[aria-pressed="true"]) > .tl-chip__remove:hover {
+  background: var(--tl-surface-brand-active);
+  color: var(--tl-text-on-brand-active);
 }
