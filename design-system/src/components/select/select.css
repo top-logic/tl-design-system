@@ -63,14 +63,16 @@
    Kreis, konzentrisch zum runden Ende der Pille, mit einer Lücke von space-2xs / 2 zum Rand oben, unten und am
    Ende. Durchmesser = Pillenhöhe size-control-sm − 2 × Rand − 2 × Lücke; das Ende der Pille trägt nur die
    Lücke als Innenabstand. Ein Quadrat über dem Rand verdeckte beim Zeigen Rand und rundes Ende. Dasselbe Modell
-   trägt das Entfernen der Filterkapsel (tl-chip__remove, choice.css): eine Regel für beide (07.10.). */
+   trägt das Entfernen der Filterkapsel (tl-chip__remove, choice.css): eine Regel für beide (07.10.).
+   Der Kind-Kombinator hebt die Spezifität auf (0,2,0): `.tl-button--icon.tl-button--sm` (button.css) setzt Größe und
+   min-height des Knopfs sonst wieder auf size-control-sm. */
 .tl-select__chip:has(> .tl-button),
 .tl-chip:has(> .tl-chip__remove) {
   padding-inline-end: calc(var(--tl-space-2xs) / 2);
 }
 
 .tl-select__chip > .tl-button,
-.tl-chip__remove {
+.tl-chip > .tl-chip__remove {
   width: calc(var(--tl-size-control-sm) - 2 * var(--tl-border-width-sm) - var(--tl-space-2xs));
   height: calc(var(--tl-size-control-sm) - 2 * var(--tl-border-width-sm) - var(--tl-space-2xs));
   min-height: 0;
@@ -84,8 +86,8 @@
    Drücken-Stufe gibt es nicht; die Kategorie bleibt geschlossen. */
 .tl-select__chip > .tl-button--ghost:not(:disabled):hover,
 .tl-select__chip > .tl-button--ghost:not(:disabled):active,
-.tl-chip__remove:not(:disabled):hover,
-.tl-chip__remove:not(:disabled):active {
+.tl-chip > .tl-chip__remove:not(:disabled):hover,
+.tl-chip > .tl-chip__remove:not(:disabled):active {
   background: var(--tl-surface-interactive-active);
 }
 

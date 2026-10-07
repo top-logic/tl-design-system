@@ -191,13 +191,18 @@ test('entfernbare Kapsel: umschalten und entfernen in einem span.tl-chip, gedrü
 // select.css) — eine Regel, zwei Selektoren, keine zweite Fassung in choice.css.
 test('Entfernen in der Kapsel ist derselbe Kreis wie im Select-Chip: eine Regel für beide', () => {
   const select = readComponent('select', 'select.css');
-  const kreis = declarationsOf(select, '.tl-chip__remove') ?? '';
+  const kreis = declarationsOf(select, '.tl-chip > .tl-chip__remove') ?? '';
   assert.equal(kreis, declarationsOf(select, '.tl-select__chip > .tl-button'), 'dieselbe Regel');
   assert.match(kreis, /border-radius:\s*var\(--tl-radius-round\)/);
   assert.doesNotMatch(kreis, /margin/);
   assert.equal(declarationsOf(select, '.tl-chip:has(> .tl-chip__remove)'), declarationsOf(select, '.tl-select__chip:has(> .tl-button)'));
-  assert.equal(declarationsOf(select, '.tl-chip__remove:not(:disabled):hover'),
+  assert.equal(declarationsOf(select, '.tl-chip > .tl-chip__remove:not(:disabled):hover'),
     declarationsOf(select, '.tl-select__chip > .tl-button--ghost:not(:disabled):hover'));
+  // Spezifität: .tl-button--icon.tl-button--sm (button.css, 0,2,0) setzt Größe und min-height; der Kreis muss
+  // mindestens gleich stark sein, darum der Kind-Kombinator statt des bloßen .tl-chip__remove (0,1,0).
+  assert.equal(declarationsOf(select, '.tl-chip__remove'), null, 'bloßes .tl-chip__remove (0,1,0) verlöre gegen button.css');
+  assert.match(kreis, /width:\s*calc\(/);
+  assert.match(kreis, /min-height:\s*0/);
   assert.equal(declarationsOf(css, '.tl-chip__remove'), null, 'keine zweite Fassung in choice.css');
 });
 
