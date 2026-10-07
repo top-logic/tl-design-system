@@ -1,0 +1,105 @@
+# Vertrag: Baum
+
+Eine flache Liste von Knoten, die Ebene steht in `aria-level` (3b §7); Leser ist `TLTreeView`. Cursor und
+Auswahl wie in der Tabelle: der Cursor ist ein Attribut mit Ring, die Auswahl eine Fläche, kein Balken.
+TopLogic garantiert Funktion, Tastatur und Fokus, nicht das Aussehen; wer ins Bild passen will, liest
+die Tokens.
+
+## Zustand
+
+| Schlüssel | Typ | Bedeutung |
+|---|---|---|
+| `nodes` | Liste | Die sichtbaren Knoten in Reihenfolge, je Knoten: |
+| `nodes[].id` | string | Kennung; Grundlage der Id `<controlId>-node-<id>`. |
+| `nodes[].depth` | number | Ebene ab 0; `aria-level` = `depth` + 1, Einzug = Ebene × `--tl-size-control-sm`. |
+| `nodes[].expandable` | boolean | Der Knoten trägt einen `tl-toggle`; sonst hält `tl-tree__spacer` seinen Platz. |
+| `nodes[].expanded` | boolean | `aria-expanded` an Knoten und Toggle. |
+| `nodes[].loading` | boolean | Die Kinder kommen: `aria-busy="true"` am Knoten, darunter die Ladezeile. |
+| `nodes[].selected` | boolean | `aria-selected="true"`. |
+| `nodes[].content` | Server-Control | Inhalt des Knotens (`tl-tree__content`). |
+| `selectionMode` | `single` \| `multi` | Bei `multi` `aria-multiselectable="true"`. |
+| `dragEnabled` | boolean | Knoten lassen sich ziehen (`draggable="true"`). |
+| `dropEnabled` | boolean | Auf Knoten darf abgelegt werden. |
+| `dropIndicatorNodeId` | string | Knoten, an dem die Einfügemarke steht. |
+| `dropIndicatorPosition` | `above` \| `within` \| `below` | Wird zu `data-tl-state` `drop-before` \| `drop-onto` \| `drop-after`. |
+
+## Aktionen
+
+| Aktion | Auslöser |
+|---|---|
+| `expand` | Toggle, Pfeil rechts an einem zugeklappten Knoten |
+| `collapse` | Toggle, Pfeil links an einem aufgeklappten Knoten |
+| `select` | Klick auf einen Knoten, Leertaste am Cursor |
+| `activate` | Doppelklick, Enter |
+| `contextMenu` | Kontextmenü eines Knotens |
+| `dragOver` | Ziehen über einen Knoten |
+| `drop` | Ablegen auf, vor oder hinter einem Knoten |
+| `dragEnd` | Ziehen beendet oder abgebrochen |
+
+## Tastatur
+
+Der Baum `tl-tree` ist fokussierbar (`tabindex="0"`) und hält den Fokus; der Cursor ist virtuell
+(`aria-activedescendant`). Der Toggle in einem Knoten trägt `tabindex="-1"`.
+
+| Taste | im Baum |
+|---|---|
+| `ArrowUp` / `ArrowDown` | Cursor einen Knoten |
+| `ArrowRight` | klappt einen zugeklappten Knoten auf; an einem aufgeklappten springt der Cursor zum ersten Kind |
+| `ArrowLeft` | klappt einen aufgeklappten Knoten zu; an einem zugeklappten springt der Cursor zum Elternknoten |
+| `Home` / `End` | erster bzw. letzter Knoten |
+| `Enter` | öffnet den Cursorknoten (`activate`) |
+| `Space` | wählt den Cursorknoten |
+
+## Semantik
+
+| Element | Rolle und Attribute |
+|---|---|
+| `tl-tree` | `ul` mit `role="tree"`, `aria-label` = `js.tree.label`; `aria-multiselectable="true"` bei `multi`; `aria-activedescendant` = `<controlId>-node-<id>` |
+| `tl-tree__node` | `li` mit `role="treeitem"`, `id`, `aria-level`, `aria-selected`; an aufklappbaren Knoten `aria-expanded`; `aria-busy="true"`, solange die Kinder kommen |
+| Ladezeile | `li.tl-status` mit `role="treeitem"`, `aria-level` = Ebene des Knotens + 1, `aria-label` = `js.tree.loading`; darin der unbestimmte `tl-progress` |
+
+**Cursor und Fokus (WCAG 2.4.7).** `tl-tree` setzt `aria-activedescendant` nur, solange ein Knoten mit
+dieser Id gerendert ist und `data-tl-state~="cursor"` trägt. Im leeren Baum oder ohne Cursor fehlt das
+Attribut — dann zeigt der Baum selbst den Ring aus `base.css`. Mit dem Attribut gibt er den Ring an den
+Cursorknoten ab: `base.css` zeichnet ihn innen auf dessen `::after`, darum ist der Knoten positioniert.
+Ein `aria-activedescendant` auf eine Id, die es nicht gibt, ließe den Fokus unsichtbar.
+
+## Tokens
+
+| Teil | Token |
+|---|---|
+| Schrift | `--tl-text-primary` |
+| Knoten | `--tl-size-row` hoch (`min-height`), Lücke `--tl-space-2xs`, rechts `--tl-space-control-x`; gezeigt `--tl-surface-interactive-hover`, ausgewählt `--tl-surface-interactive-selected` |
+| Einzug, Platzhalter | `--tl-size-control-sm` breit |
+| Stapel | `tl-tree` isoliert (`isolation: isolate`); Ring und Marke eines Knotens liegen auf `--tl-layer-sticky` |
+
+Schrift: `.tl-type-body` am Baum, von außen gesetzt. Ein Knoten schwebt nicht: kein Schatten, kein
+Balken links. Ziehen und Ablegen zeichnet `drag.css` (`drag.contract.md`), den Cursor-Ring `base.css`.
+
+## Attribute
+
+| Attribut | Wann |
+|---|---|
+| `aria-selected` | an jedem Knoten: `"true"` ausgewählt, sonst `"false"` |
+| `aria-expanded` | an aufklappbaren Knoten und ihrem `tl-toggle` |
+| `aria-busy` | am Knoten, dessen Kinder kommen |
+| `data-tl-state~="cursor"` | am Cursorknoten (genau einer, die Id aus `aria-activedescendant`) |
+| `data-tl-state~="dragging"`, `"drop-before"`, `"drop-after"`, `"drop-onto"` | am Knoten (`drag.contract.md`) |
+| `draggable="true"` | an ziehbaren Knoten |
+| `hidden` | an jedem Element, das gerade nicht steht |
+
+Bauteile anderer Blöcke:
+
+| Bauteil | Wo und wie |
+|---|---|
+| `tl-toggle` | Auf-/Zuklapper: `tabindex="-1"`, `aria-expanded`, `aria-label` wie jeder Toggle, ohne `aria-controls` — er zeigte auf den eigenen Knoten. Zeigen und Drücken mit dem Schleier (`toggle.contract.md`). |
+| `tl-status` | Ladezeile unter einem ladenden Knoten: `li` mit `role="treeitem"`, benannt über `aria-label`; darin `tl-progress` unbestimmt. |
+
+Klassen:
+
+| Klasse | Element |
+|---|---|
+| `tl-tree` | die Wurzel (`ul`) |
+| `tl-tree__node` | ein Knoten (`li`) |
+| `tl-tree__spacer` | hält den Platz des Toggles an einem Blatt frei |
+| `tl-tree__content` | der Inhalt des Knotens, endet mit Ellipse |

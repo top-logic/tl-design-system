@@ -1,0 +1,50 @@
+/* Baum — docs/skalen.md „Gleiches wird zusammengelegt“ (W3, W4, W10), 3b §7.
+   ul.tl-tree[role=tree] > li.tl-tree__node[role=treeitem], flach, die Ebene in aria-level. Cursor und
+   Auswahl wie in der Tabelle: data-tl-state~="cursor" (den Ring zeichnet base.css über ::after, darum
+   ist der Knoten positioniert), aria-selected die Fläche — kein Balken links. Der Einzug je Ebene ist die
+   Breite des Toggles, inline aus dem TSX; ein Blatt hält ihren Platz mit tl-tree__spacer frei. Ein
+   Knoten, dessen Kinder kommen, trägt aria-busy; unter ihm steht eine tl-status-Zeile mit unbestimmtem
+   tl-progress — selbst ein treeitem eine Ebene tiefer, benannt „Lädt“ (js.tree.loading). Ziehen und
+   Ablegen zeichnet drag.css. */
+
+.tl-tree {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  isolation: isolate;
+  list-style: none;
+  color: var(--tl-text-primary);
+}
+
+.tl-tree__node {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--tl-space-2xs);
+  min-height: var(--tl-size-row);
+  padding-inline-end: var(--tl-space-control-x);
+  cursor: pointer;
+}
+.tl-tree__node[hidden] { display: none; }
+
+.tl-tree__node:hover {
+  background: var(--tl-surface-interactive-hover);
+}
+
+.tl-tree__node[aria-selected="true"] {
+  background: var(--tl-surface-interactive-selected);
+}
+
+.tl-tree__spacer {
+  flex-shrink: 0;
+  width: var(--tl-size-control-sm);
+}
+
+.tl-tree__content {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

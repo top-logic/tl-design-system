@@ -120,6 +120,7 @@ const MODIFIERS = {
   'tl-skeleton': new Set([]),
   'tl-status': new Set([]),
   'tl-table': new Set([]),
+  'tl-tree': new Set([]),
 };
 
 // Die einzige Ausnahme vom Ring: der Behälter mit virtuellem Cursor, nur in base.css (Spec 3b §3).

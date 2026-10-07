@@ -1,0 +1,32 @@
+// Der Baum — 3b §7: Cursor und Auswahl wie in der Tabelle, kein Balken, kein eigener Spinner.
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readGenerated, readComponent, declarationsOf, colorVarsOf, specimenProblems, missingInContract } from './lib/component.mjs';
+
+test('tl-tree: Knoten size-row, positioniert für den Cursor-Ring, Auswahl als Fläche ohne Balken', () => {
+  const css = readGenerated('tree', 'tree.css');
+  const knoten = declarationsOf(css, '.tl-tree__node') ?? '';
+  assert.match(knoten, /min-height:\s*var\(--tl-size-row\)/);
+  assert.match(knoten, /position:\s*relative/);
+  assert.match(declarationsOf(css, '.tl-tree__node[aria-selected="true"]') ?? '', /background:\s*var\(--tl-surface-interactive-selected\)/);
+  assert.match(declarationsOf(css, '.tl-tree') ?? '', /isolation:\s*isolate/);
+  assert.match(declarationsOf(css, '.tl-tree__spacer') ?? '', /width:\s*var\(--tl-size-control-sm\)/);
+  assert.doesNotMatch(css, /border-left|outline|--(selected|focused|cursor)\b|@keyframes/);
+  assert.deepEqual(colorVarsOf(css), ['surface-interactive-hover', 'surface-interactive-selected', 'text-primary']);
+});
+
+test('tl-tree: Vertrag nennt Cursor ohne Knoten (aria-activedescendant nur mit Knoten) und die Ladezeile als treeitem', () => {
+  const md = readComponent('tree', 'tree.contract.md');
+  assert.deepEqual(missingInContract(md, ['tl-tree', 'tl-tree__node', 'tl-tree__spacer', 'tl-tree__content', 'aria-activedescendant', 'aria-busy', 'js.tree.loading', 'js.tree.label']), []);
+  assert.match(md, /nur, solange ein Knoten mit\s+dieser Id/);
+  assert.match(md, /Ebene des Knotens \+ 1/);
+  assert.match(md, /ohne `aria-controls`/);
+});
+
+test('tl-tree: Specimen — Ladezeile ist ein treeitem mit Namen, Ids tragen das Suffix', () => {
+  const html = readComponent('tree', 'tree.spec.html');
+  assert.deepEqual(specimenProblems(html), []);
+  assert.match(html, /<li class="tl-status[^"]*" role="treeitem" aria-level="\d+" aria-label="Lädt">/);
+  assert.match(html, /aria-busy="true"/);
+  assert.doesNotMatch(html, /aria-valuetext|aria-controls/);
+});
