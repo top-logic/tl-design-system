@@ -198,17 +198,3 @@
   background: var(--tl-surface-interactive-selected);
   box-shadow: inset var(--tl-border-width-accent) 0 0 0 var(--tl-border-interactive);
 }
-
-/* Laden, keine Treffer, Ladefehler: eine Zeile im Popup. */
-.tl-select__status {
-  display: flex;
-  align-items: center;
-  gap: var(--tl-space-xs);
-  min-height: var(--tl-size-row);
-  padding: 0 var(--tl-space-control-x);
-  color: var(--tl-text-secondary);
-}
-
-.tl-select__status[role="alert"] {
-  color: var(--tl-status-error-text);
-}

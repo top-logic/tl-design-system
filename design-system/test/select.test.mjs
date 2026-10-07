@@ -10,8 +10,8 @@ const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)
 
 test('select.css liest genau diese Farbrollen', () => {
   assert.deepEqual(colorVarsOf(css), [
-    'border-interactive', 'icon-secondary', 'status-error-text', 'surface-interactive-active', 'surface-interactive-hover',
-    'surface-interactive-selected', 'text-placeholder', 'text-secondary',
+    'border-interactive', 'icon-secondary', 'surface-interactive-active', 'surface-interactive-hover',
+    'surface-interactive-selected', 'text-placeholder',
   ]);
 });
 
@@ -47,7 +47,7 @@ test('das Select-Specimen zeigt leer, einzeln mit Pill, mehrfach, offen, laden, 
   const html = readComponent('select', 'select.spec.html');
   assert.deepEqual(specimenProblems(html), []);
   for (const s of ['tl-select__placeholder', 'tl-select__value', 'tl-pill', 'tl-select__chip', 'aria-expanded="true"',
-    'tl-popover tl-select__popup', 'tl-button--icon', 'data-tl-state="highlighted"', 'aria-busy="true"', 'tl-select__status', 'aria-invalid="true"',
+    'tl-popover tl-select__popup', 'tl-button--icon', 'data-tl-state="highlighted"', 'aria-busy="true"', 'tl-status', 'aria-invalid="true"',
     'tl-field-value', 'aria-activedescendant'])
     assert.ok(html.includes(s), `Specimen zeigt ${s} nicht`);
   // Die Liste führt nur ungewählte Optionen: keine trägt aria-selected="true", jede aria-selected="false".

@@ -94,12 +94,11 @@ Der Fokus bleibt an der Wurzel bzw. am Suchfeld; die Hervorhebung wandert über
 | Suchfeld | ein `tl-field`; Abstand zur Liste `--tl-space-xs` |
 | Option | Höhe `--tl-size-row` (als `min-height`), Innenabstand `--tl-space-control-x`, Ecke `--tl-radius-sm`, Lücke `--tl-space-xs`; beim Zeigen `--tl-surface-interactive-hover` |
 | hervorgehobene Option | Fläche `--tl-surface-interactive-selected`, Akzentlinie `--tl-border-width-accent` in `--tl-border-interactive` |
-| Status (Laden, keine Treffer) | Text `--tl-text-secondary`, Höhe `--tl-size-row` |
-| Ladefehler | Text `--tl-status-error-text` |
+| Status (Laden, keine Treffer, Ladefehler) | eine `tl-status`-Zeile, siehe `status.contract.md` |
 
 Schrift: Klasse `.tl-type-body` an Wurzel, Suchfeld und Liste, `.tl-type-label` an Pill und Wert-Chip, von
-außen gesetzt; `tl-select` hat keine Schriftregel. `--tl-status-error-text` und `--tl-text-secondary`
-halten am Gate 4,5 auf `surface-overlay`.
+außen gesetzt; `tl-select` hat keine Schriftregel. Laden, keine Treffer und Ladefehler sind eine
+`tl-status`-Zeile; deren Farben halten am Gate 4,5 auf `surface-overlay`.
 
 ## Attribute
 
@@ -119,8 +118,8 @@ halten am Gate 4,5 auf `surface-overlay`.
 | `aria-invalid="true"` | `hasError`, an der Wurzel. Das CSS von `tl-field` liest es selbst. |
 | `data-tl-state="warning"` | `hasWarnings && !hasError`, an der Wurzel. Der Fehler verdrängt die Warnung. |
 | `aria-required="true"` | `mandatory`, an der Wurzel. |
-| `aria-busy="true"` | am `tl-progress` im `tl-select__status`, solange `optionsLoaded: false`. |
-| `role="alert"` | am `tl-select__status` des Ladefehlers; darin ein Link „Erneut versuchen“. |
+| `aria-busy="true"` | am `tl-progress` im `tl-status`, solange `optionsLoaded: false`. |
+| `role="alert"` | am `tl-status` des Ladefehlers; darin ein Link „Erneut versuchen“. |
 | `aria-label` | an Entfernen- und Löschen-Knopf, am Suchfeld. |
 | `aria-disabled="true"` | `state.disabled`, wie beim Button. Die Wurzel ist ein `div` und kennt `:disabled` nicht: sie trägt `aria-disabled="true"` und `tabindex="-1"`, öffnet kein Popup und zeigt weder Entfernen- noch Löschen-Knopf. Offen: `aria-disabled` bekommt in dieser Welle keine Regel. |
 | `:focus-visible` | den Ring liefert `base.css`; Wurzel und Suchfeld setzen und entfernen keinen Fokusstil. |
@@ -146,7 +145,7 @@ Klassen:
 | `tl-select__search` | das Suchfeld, zusammen mit `tl-field` |
 | `tl-select__list` | die Liste, `role="listbox"` |
 | `tl-select__option` | eine Option, `role="option"` |
-| `tl-select__status` | Laden, keine Treffer, Ladefehler |
+| `tl-status` | Laden, keine Treffer, Ladefehler |
 
 Symbole (Pfeil, Löschen, Entfernen, Suche, Ziehgriff) sind `ThemeIcon` in `tl-icon-sm`. Das Control
 setzt feste ThemeImages (`css:fa-solid fa-chevron-down` / `fa-chevron-up`, `fa-xmark`,
