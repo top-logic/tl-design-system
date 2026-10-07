@@ -13,3 +13,6 @@ eclipse-ws/
 
 # tl-engine-7-Worktrees und ihr Hauptrepo -- liegen im Projekt, damit die Sandbox sie sieht.
 _Working-Tree/
+
+# oh-my-claudecode (Plugin, lokaler Zustand)
+.omc/
