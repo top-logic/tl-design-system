@@ -1,7 +1,7 @@
 // Die Tabelle — 3b §3–§6: Zeile size-row, Kopf size-bar, Lage und Cursor als Attribute.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readGenerated, declarationsOf } from './lib/component.mjs';
+import { readGenerated, declarationsOf, rulesOf } from './lib/component.mjs';
 
 const css = readGenerated('table', 'table.css');
 
@@ -42,4 +42,23 @@ test('der Körper isoliert seinen Stapel, Spaltenwahl und Fixiergrenze sind so h
   assert.match(declarationsOf(css, '.tl-table__columns') ?? '', /height:\s*var\(--tl-size-bar\)/);
   assert.match(declarationsOf(css, '.tl-table__freeze') ?? '', /height:\s*var\(--tl-size-bar\)/);
   assert.match(declarationsOf(css, '.tl-table__hint') ?? '', /status-error-border/);
+});
+
+// Fix-Runde 1 (07.10.): Füllen ist für Lesewerte ohne eigene Form. Eine Kapsel (Pill — seit P6 die Wurzel eines
+// TLText als Pill —, Badge, Chip) direkt in der Zelle würde sonst zum Block über die ganze Zellbreite.
+test('der Lesewert füllt die Zelle: nur span ohne Klasse und tl-text, keine Kapsel', () => {
+  assert.equal(declarationsOf(css, '.tl-table__cell > span'), null, 'keine Füll-Regel für jeden span');
+  for (const sel of ['.tl-table__cell > :where(span):not([class])', '.tl-table__cell > .tl-text']) {
+    const d = declarationsOf(css, sel) ?? '';
+    for (const re of [/display:\s*block/, /width:\s*100%/, /text-overflow:\s*ellipsis/, /white-space:\s*nowrap/]) assert.match(d, re, sel);
+  }
+  for (const [sels, body] of rulesOf(css))
+    if (/\.tl-(pill|badge|chip)\b/.test(sels)) assert.doesNotMatch(body, /display\s*:|(^|[^-])width\s*:\s*100%/, sels);
+});
+
+test('Kapseln in der Zelle behalten ihre Form und bleiben in der Zelle (max-width), die Pill kürzt mit Ellipse', () => {
+  const kapsel = declarationsOf(css, '.tl-table__cell > .tl-pill') ?? '';
+  assert.match(kapsel, /max-width:\s*100%/);
+  for (const k of ['.tl-table__cell > .tl-badge', '.tl-table__cell > .tl-chip']) assert.equal(declarationsOf(css, k), kapsel, k);
+  assert.match(declarationsOf(css, '.tl-table__cell > .tl-pill > .tl-pill__label') ?? '', /min-width:\s*0/);
 });

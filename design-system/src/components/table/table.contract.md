@@ -216,12 +216,22 @@ Klassen:
 | `tl-table__row` | jede Zeile |
 | `tl-table__cell` | jede Zelle |
 | `tl-table__select` | die Zelle der Auswahlspalte (mit `tl-table__cell` bzw. `tl-table__header-cell`) |
-| `tl-table__tree` | Toggle, Einzug und Wert in der Baumspalte; ein `div`, kein `span` — ein `span` als Kind der Zelle ist ein Lesewert und wird Block (`.tl-table__cell > span`) |
+| `tl-table__tree` | Toggle, Einzug und Wert in der Baumspalte; ein `div`, kein `span`: er ist eine Flex-Reihe, kein Lesewert — als Lesewert füllt die Zelle nur ein `span` ohne Klasse oder ein `tl-text` (siehe „Zellinhalt“) |
 | `tl-table__spacer` | Platzhalter eines Blatts an der Stelle des Toggles |
 | `tl-table__value` | der Wert neben dem Toggle; endet mit Ellipse |
 | `tl-table__count` | Anzahl der Gruppenzeile |
 | `tl-table__placeholder` | Zeile, die noch lädt |
 | `tl-table__hint` | der Grund einer Ablehnung (am `tl-popover`) |
+
+## Zellinhalt
+
+| Wurzel in der Zelle | Wie |
+|---|---|
+| `span` ohne Klasse, `tl-text` | Lesewert ohne eigene Form: füllt die Zelle als Block (volle Breite, `nowrap`), endet mit Ellipse. Spezifität (0,2,0), damit `text.css`, das im Bundle danach steht, das Füllen nicht kippt; ein leerer `tl-text` und `hidden` blenden weiterhin aus. |
+| `tl-pill`, `tl-badge`, `tl-chip` | Kapsel: behält ihr `display` und ihre Form, an die Zelle gebunden mit `max-width: 100%`. Die Pill (auch die Wurzel eines Texts als Pill, `text.contract.md`) kürzt ihre Beschriftung `tl-pill__label` mit Ellipse. |
+| `a` | so breit wie sein Text, höchstens die Zelle, endet mit Ellipse. |
+| `tl-field-value`, `tl-select__values`, `tl-choice-group` | bleibt eine Reihe und bricht nicht um; eine Werteliste wird an der Spaltenkante abgeschnitten. |
+| `tl-field`, `tl-field-group` | ist die Zelle: randlos, so hoch wie die Zeile (siehe Tokens). |
 
 Breiten, Versätze haftender Zellen, Einzug und die Lage der Zeilen sind Daten und stehen inline
 (`style`), alles andere in `table.css`. Inline wird nichts im Namensraum `--tl` definiert.

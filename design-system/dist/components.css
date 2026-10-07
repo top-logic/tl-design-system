@@ -2231,17 +2231,33 @@ a.tl-field-value:hover {
 
 /* --- Zellinhalt ------------------------------------------------------------------ */
 
-/* Der Wurzelknoten eines Lesewerts füllt die Zelle: ein Wert, breiter als seine Spalte, endet mit
-   Ellipse. Ein Link bleibt so breit wie sein Text — sonst folgte ein Klick irgendwo in der Zelle der
-   Adresse, wo der Nutzer die Zeile meint. Eine eigene Flex-Reihe (Wert mit Icon, Werteliste, Radios)
-   bleibt eine Reihe und bricht nicht um; eine Liste von Werten wird an der Spaltenkante abgeschnitten. */
-.tl-table__cell > span {
+/* Der Wurzelknoten eines Lesewerts ohne eigene Form (span ohne Klasse, tl-text) füllt die Zelle: ein
+   Wert, breiter als seine Spalte, endet mit Ellipse. (0,2,0): text.css steht im Bundle danach, und seine
+   Regeln mit (0,1,0) kippen das Füllen nicht; die mit mehr — leerer Text, hidden — sollen es. Ein Link
+   bleibt so breit wie sein Text — sonst folgte ein Klick irgendwo in der Zelle der Adresse, wo der Nutzer
+   die Zeile meint. Eine eigene Flex-Reihe (Wert mit Icon, Werteliste, Radios) bleibt eine Reihe und
+   bricht nicht um; eine Liste von Werten wird an der Spaltenkante abgeschnitten. */
+.tl-table__cell > :where(span):not([class]),
+.tl-table__cell > .tl-text {
   display: block;
   width: 100%;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Eine Kapsel (Pill — die Wurzel eines Texts als Pill —, Badge, Chip) behält ihre Form und ihr display; sie
+   wird nur an die Zelle gebunden (kein min-width: der Badge behält sein Mindestmaß). Die Pill kürzt dann ihre Beschriftung mit Ellipse: die Beschriftung
+   darf unter ihre Textbreite schrumpfen (min-width 0), Abschneiden und Ellipse trägt tl-pill__label. */
+.tl-table__cell > .tl-pill,
+.tl-table__cell > .tl-badge,
+.tl-table__cell > .tl-chip {
+  max-width: 100%;
+}
+
+.tl-table__cell > .tl-pill > .tl-pill__label {
+  min-width: 0;
 }
 
 .tl-table__cell > a {

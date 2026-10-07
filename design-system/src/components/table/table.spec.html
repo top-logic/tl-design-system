@@ -29,7 +29,8 @@
     <p class="tl-type-heading-sm">Gruppiert, mit Filterleiste</p>
     <p class="tl-type-label">Kopf: „Name“ fixiert (frozen-last) und erste Sortierstufe, „Status“ gefiltert, „Region“ zweite
       Stufe, „Aktion“ angeheftet. Zeilen: Gruppe mit Anzahl, gezogen-über (drop-before), ausgewählt, Cursor mit Feld im
-      Fehler, Baumzeile zu, darunter eine Zeile, die noch lädt. Das Raster hat beim Laden den Fokus; Tab ins Raster
+      Fehler, Baumzeile zu, darunter eine Zeile, die noch lädt. Zellen: Lesewert ohne Klasse und tl-text füllen die
+      Zelle und enden mit Ellipse (Verantwortlich, unten); Pills behalten ihre Form, die lange endet mit Ellipse (Status). Das Raster hat beim Laden den Fokus; Tab ins Raster
       zeigt den Ring auf der Cursorzeile.</p>
 
     <div class="specimen__table">
@@ -99,7 +100,7 @@
                   <div class="tl-table__cell" role="gridcell" data-tl-state="frozen frozen-last"><div class="tl-table__tree"><span class="tl-table__spacer"></span><span class="tl-table__value">Auftrag 1041</span></div></div>
                   <div class="tl-table__cell" role="gridcell"><span>Offen</span></div>
                   <div class="tl-table__cell" role="gridcell"><span>Nord</span></div>
-                  <div class="tl-table__cell" role="gridcell"><span class="tl-nums">1.250,00</span></div>
+                  <div class="tl-table__cell" role="gridcell"><span class="tl-text tl-nums">1.250,00</span></div>
                   <div class="tl-table__cell" role="gridcell"><span>A. Becker</span></div>
                   <div class="tl-table__cell" role="gridcell" data-tl-state="pinned pinned-first"><button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon" tabindex="-1" aria-label="Öffnen" title="Öffnen"><i class="tl-icon-sm bi bi-box-arrow-up-right tl-button__icon" aria-hidden="true"></i></button></div>
                 </div>
@@ -107,9 +108,9 @@
                 <div class="tl-table__row" role="row" id="tbl-row-2" aria-rowindex="4" aria-selected="true" aria-level="2" draggable="true">
                   <div class="tl-table__cell tl-table__select" role="gridcell" data-tl-state="frozen"><input type="checkbox" class="tl-checkbox" tabindex="-1" aria-label="Zeile auswählen" checked></div>
                   <div class="tl-table__cell" role="gridcell" data-tl-state="frozen frozen-last"><div class="tl-table__tree"><span class="tl-table__spacer"></span><span class="tl-table__value">Auftrag 1042, ein Name, der mit Ellipse endet</span></div></div>
-                  <div class="tl-table__cell" role="gridcell"><span>Offen</span></div>
+                  <div class="tl-table__cell" role="gridcell"><span class="tl-pill tl-type-label"><span class="tl-pill__label">Offen</span></span></div>
                   <div class="tl-table__cell" role="gridcell"><span>Nord</span></div>
-                  <div class="tl-table__cell" role="gridcell"><span class="tl-nums">980,50</span></div>
+                  <div class="tl-table__cell" role="gridcell"><span class="tl-text tl-nums">980,50</span></div>
                   <div class="tl-table__cell" role="gridcell"><span>C. Dorn</span></div>
                   <div class="tl-table__cell" role="gridcell" data-tl-state="pinned pinned-first"><button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon" tabindex="-1" aria-label="Öffnen" title="Öffnen"><i class="tl-icon-sm bi bi-box-arrow-up-right tl-button__icon" aria-hidden="true"></i></button></div>
                 </div>
@@ -117,7 +118,7 @@
                 <div class="tl-table__row" role="row" id="tbl-row-3" aria-rowindex="5" aria-selected="false" aria-level="2" draggable="true" data-tl-state="cursor">
                   <div class="tl-table__cell tl-table__select" role="gridcell" data-tl-state="frozen"><input type="checkbox" class="tl-checkbox" tabindex="-1" aria-label="Zeile auswählen"></div>
                   <div class="tl-table__cell" role="gridcell" data-tl-state="frozen frozen-last"><div class="tl-table__tree"><span class="tl-table__spacer"></span><span class="tl-table__value">Auftrag 1043</span></div></div>
-                  <div class="tl-table__cell" role="gridcell"><span>In Arbeit</span></div>
+                  <div class="tl-table__cell" role="gridcell"><span class="tl-pill tl-type-label" data-tl-role="warning"><span class="tl-pill__label">Wartet auf Freigabe durch den Kunden</span></span></div>
                   <div class="tl-table__cell" role="gridcell"><span>Nord</span></div>
                   <div class="tl-table__cell" role="gridcell"><input class="tl-field tl-type-body tl-nums" tabindex="-1" value="-12,00" aria-label="Betrag" aria-invalid="true"></div>
                   <div class="tl-table__cell" role="gridcell"><span>E. Falk</span></div>
@@ -129,8 +130,8 @@
                   <div class="tl-table__cell" role="gridcell" data-tl-state="frozen frozen-last"><div class="tl-table__tree"><button type="button" class="tl-toggle" tabindex="-1" aria-expanded="false" aria-label="Rahmenvertrag 7 aufklappen"><i class="tl-icon-sm bi bi-chevron-right" aria-hidden="true"></i></button><span class="tl-table__value">Rahmenvertrag 7</span></div></div>
                   <div class="tl-table__cell" role="gridcell"><span>Offen</span></div>
                   <div class="tl-table__cell" role="gridcell"><span>Nord</span></div>
-                  <div class="tl-table__cell" role="gridcell"><span class="tl-nums">14.000,00</span></div>
-                  <div class="tl-table__cell" role="gridcell"><span>G. Hahn</span></div>
+                  <div class="tl-table__cell" role="gridcell"><span class="tl-text tl-nums">14.000,00</span></div>
+                  <div class="tl-table__cell" role="gridcell"><span class="tl-text tl-type-body" data-tl-tone="secondary">G. Hahn, in Vertretung durch A. Becker bis zum Quartalsende</span></div>
                   <div class="tl-table__cell" role="gridcell" data-tl-state="pinned pinned-first"><button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon" tabindex="-1" aria-label="Öffnen" title="Öffnen"><i class="tl-icon-sm bi bi-box-arrow-up-right tl-button__icon" aria-hidden="true"></i></button></div>
                 </div>
                 <!-- noch nicht geschickt: Skeleton in Zeilenhöhe -->
