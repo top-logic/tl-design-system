@@ -4,7 +4,7 @@
    components.css nach .tl-field und überschreibt dessen display bei gleicher Spezifität.
    Ein gewählter Wert mit Rolle ist eine tl-pill — im Einzelwert, im Chip und im Lesewert.
    Zustände sind Attribute: aria-expanded offen, aria-selected gewählt, data-tl-state~="highlighted"
-   die Tastatur-Hervorhebung, data-tl-state~="dragging" / "drop-before" / "drop-after" das Umordnen.
+   die Tastatur-Hervorhebung; Ziehen zeichnet drag.css.
    Das Popup ist ein tl-popover (Fläche, Schatten, Ebene, Radius radius-md um die Optionen mit
    radius-sm); hier steht nur sein Innenaufbau. Entfernen und Löschen sind tl-button--icon, Löschen und
    Chevron zeigen als Knöpfe im Feld eine Stufe kräftiger. */
@@ -96,17 +96,12 @@
   cursor: grab;
 }
 
-.tl-select__chip[data-tl-state~="dragging"] {
-  opacity: 0.4;
-}
-
-/* Die Einfügemarke beim Ziehen: eine Linie der Akzentbreite an der Kante, an der der Chip landet. */
-.tl-select__chip[data-tl-state~="drop-before"] {
-  box-shadow: inset var(--tl-border-width-accent) 0 0 0 var(--tl-border-interactive);
-}
-
-.tl-select__chip[data-tl-state~="drop-after"] {
-  box-shadow: inset calc(-1 * var(--tl-border-width-accent)) 0 0 0 var(--tl-border-interactive);
+/* Der Griff ist ein tl-button--icon --sm --ghost (Ziehen und Alt + Pfeil, 3b §8) und derselbe Kreis wie das
+   Entfernen (.tl-select__chip > .tl-button oben); am Anfang der Pille trägt sie dieselbe Lücke als
+   Innenabstand wie am Ende. Gezogen, Einfügemarke: drag.css; tl-select__values trägt
+   data-tl-axis="horizontal", die Marke steht links oder rechts. */
+.tl-select__chip:has(> .tl-select__drag-handle) {
+  padding-inline-start: calc(var(--tl-space-2xs) / 2);
 }
 
 .tl-select__controls {

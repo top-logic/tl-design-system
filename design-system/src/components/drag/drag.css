@@ -1,0 +1,65 @@
+/* Ziehen und Ablegen — docs/skalen.md „Gleiches wird zusammengelegt“ (W11), 3b §9.
+   Eine Optik für jedes Ziel, einmal gezeichnet und nur über Zustände (data-tl-state): Tabellenzeile,
+   Baumknoten, Spaltenkopf, Eintrag der Spaltenwahl, Select-Chip, die Tabelle als Ganzes. Einträge, die
+   nebeneinander stehen, haben einen Behälter mit data-tl-axis="horizontal": ihre Einfügemarke steht
+   links und rechts statt oben und unten. Ein Drop-Ziel ist kein Fokus (3a §5): kein outline, kein
+   focus-ring.
+   Marke und Rahmen liegen auf einer Fläche ::before über dem Ziel: ein inset-Schatten am Ziel selbst
+   läge unter den Hintergründen seiner Kinder — an der Tabellenwurzel unter Filterleiste, Kopf und
+   Zeilen, an einer Zeile unter ihren haftenden Zellen (layer-raised). ::after ist der Cursor-Ring
+   (base.css). Die Fläche von drop-onto steht am Ziel; eine Fläche, die sie übermalen soll, steht beim
+   Block in :where (Tabellenzeile). */
+
+/* Die Fläche braucht ein positioniertes Ziel. :where hat keine Spezifität: eine Lage, die der Block
+   setzt (absolute Zeile, haftende Kopfzelle), bleibt. */
+:where([data-tl-state~="drop-before"]),
+:where([data-tl-state~="drop-after"]),
+:where([data-tl-state~="drop-onto"]),
+:where([data-tl-state~="drop-refused"]) {
+  position: relative;
+}
+
+[data-tl-state~="drop-before"]::before,
+[data-tl-state~="drop-after"]::before,
+[data-tl-state~="drop-onto"]::before,
+[data-tl-state~="drop-refused"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: var(--tl-layer-sticky);
+  pointer-events: none;
+}
+
+[data-tl-state~="drop-before"]::before {
+  box-shadow: inset 0 var(--tl-border-width-accent) 0 0 var(--tl-border-interactive);
+}
+
+[data-tl-state~="drop-after"]::before {
+  box-shadow: inset 0 calc(-1 * var(--tl-border-width-accent)) 0 0 var(--tl-border-interactive);
+}
+
+[data-tl-axis="horizontal"] > [data-tl-state~="drop-before"]::before {
+  box-shadow: inset var(--tl-border-width-accent) 0 0 0 var(--tl-border-interactive);
+}
+
+[data-tl-axis="horizontal"] > [data-tl-state~="drop-after"]::before {
+  box-shadow: inset calc(-1 * var(--tl-border-width-accent)) 0 0 0 var(--tl-border-interactive);
+}
+
+[data-tl-state~="drop-onto"] {
+  background: var(--tl-surface-interactive-selected);
+}
+
+[data-tl-state~="drop-onto"]::before {
+  box-shadow: inset 0 0 0 var(--tl-border-width-md) var(--tl-border-interactive);
+}
+
+[data-tl-state~="drop-refused"]::before {
+  box-shadow: inset 0 0 0 var(--tl-border-width-md) var(--tl-status-error-border);
+}
+
+/* Die gezogene Quelle wird blass. 0.4 ist ein Anteil, kein Maß (lint-css.mjs, Punkt 10) — und steht
+   hier einmal statt in jedem Block. */
+[data-tl-state~="dragging"] {
+  opacity: 0.4;
+}

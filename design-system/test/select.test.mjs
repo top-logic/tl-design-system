@@ -27,9 +27,12 @@ test('das Select-Popup trägt die Fläche nicht selbst: tl-popover liefert sie',
   assert.match(d, /max-height:\s*calc\(8 \* var\(--tl-size-row\)/);
 });
 
-test('Hervorhebung und Ziehen sind data-tl-state, gewählt ist aria-selected', () => {
+test('Hervorhebung ist data-tl-state, das Ziehen zeichnet drag.css, gewählt ist aria-selected', () => {
   assert.ok(declarationsOf(css, '.tl-select__option[data-tl-state~="highlighted"]'), 'Hervorhebung fehlt');
-  assert.ok(declarationsOf(css, '.tl-select__chip[data-tl-state~="dragging"]'), 'Ziehen fehlt');
+  assert.doesNotMatch(css.replace(/\/\*[\s\S]*?\*\//g, ''), /data-tl-state~="(dragging|drop-)/, 'die Ziehen-Optik steht in drag.css');
+  // Der Griff ist ein Kreis wie das Entfernen (eine Regel .tl-select__chip > .tl-button); am Anfang der Pille
+  // trägt sie dieselbe Lücke als Innenabstand wie am Ende (Entscheidung 07.10.: ein Modell).
+  assert.match(declarationsOf(css, '.tl-select__chip:has(> .tl-select__drag-handle)') ?? '', /padding-inline-start:\s*calc\(var\(--tl-space-2xs\) \/ 2\)/);
   assert.doesNotMatch(css, /--highlighted|--dragging|--open|--drop/);
 });
 

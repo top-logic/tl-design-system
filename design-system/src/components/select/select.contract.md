@@ -20,7 +20,7 @@ Feldes (`field.contract.md`, Abschnitt Zustand) und gelten hier. Aus `ReactDropd
 | `options` | Liste von Deskriptoren | Alle Optionen; erst nach `loadOptions` aktuell. |
 | `optionsLoaded` | boolean | Ob `options` aktuell ist. `false`: der Client fordert die Liste beim Öffnen an und zeigt solange den Ladezustand. Der Server setzt es zurück, wenn der Wert oder die Optionen sich ändern. |
 | `multiSelect` | boolean | Mehrfachwahl: die Werte erscheinen als Wert-Chips, jeder mit Entfernen-Knopf. |
-| `customOrder` | boolean | Die Wahl behält ihre Reihenfolge: Wert-Chips lassen sich ziehen (`tl-select__drag-handle`). Sonst sortiert der Server. |
+| `customOrder` | boolean | Die Wahl behält ihre Reihenfolge: Wert-Chips lassen sich ziehen und mit der Tastatur verschieben (`tl-select__drag-handle`). Sonst sortiert der Server. |
 | `emptyOptionLabel` | string | Beschriftung für „nichts gewählt“: Platzhalter der Wurzel. |
 | `display` | string, optional | Fehlt bei `TLDropdownSelect`; `chips` bzw. `segmented` wählen die anderen Formen. |
 | `editable` | boolean | `false`: kein Combobox, sondern der Lesewert `tl-field-value` (unten). |
@@ -73,6 +73,7 @@ Der Fokus bleibt an der Wurzel bzw. am Suchfeld; die Hervorhebung wandert über
 | `Escape` | — | schließt, der Fokus kehrt zur Wurzel zurück |
 | `Tab` | verlässt das Feld | schließt und verlässt das Feld |
 | `Backspace` | — | im leeren Suchfeld bei `multiSelect`: entfernt den letzten Wert-Chip |
+| `Alt` + `ArrowLeft` / `ArrowRight` | auf dem Ziehgriff eines Wert-Chips (`customOrder`): verschiebt den Chip um eine Stelle und sendet dasselbe `valueChanged` wie das Ziehen; an den Enden nichts | — |
 | Tippen | — | filtert die Optionen im Suchfeld; der Treffer im Label nimmt die kräftige Variante der Typo-Klasse seines Trägers: `tl-type-body-strong` in einem schlichten Label, `tl-type-label-strong` in einer Pill |
 
 ## Tokens
@@ -88,7 +89,8 @@ Der Fokus bleibt an der Wurzel bzw. am Suchfeld; die Hervorhebung wandert über
 | Entfernen im Wert-Chip | liegt auf der Pille, nicht auf dem Feld: beim Zeigen **und** beim Drücken `--tl-surface-interactive-active` — die einzige Stufe, die sich auf allen 14 Pillenflächen abhebt (die neutrale Pille ist selbst `--tl-surface-interactive-selected`). Keine kräftigere Drücken-Stufe. Nicht am deaktivierten Knopf |
 | Pfeil | Quadrat `--tl-size-control-sm`, Ecke `--tl-radius-sm`, das Icon mittig; Übergang der Fläche `--tl-duration-fast`, `--tl-easing-standard`. Er bleibt `aria-hidden` und ohne Fokus; der Klick trifft die Wurzel |
 | Ziehgriff, Pfeil | `--tl-icon-secondary` |
-| Einfügemarke beim Ziehen | Linie `--tl-border-width-accent` in `--tl-border-interactive` |
+| Ziehgriff im Wert-Chip | Der Chip-Griff ist ein Knopf (`useListReorder`, Alt + Pfeil links/rechts): `tl-button--icon --sm --ghost` und derselbe Kreis wie das Entfernen (Durchmesser, `--tl-radius-round`, Zeigen und Drücken `--tl-surface-interactive-active`); am Anfang der Pille trägt der Chip dieselbe Lücke `--tl-space-2xs` / 2 als Innenabstand wie am Ende |
+| Gezogen, Einfügemarke | aus `drag.css` (`drag.contract.md`); `tl-select__values` trägt `data-tl-axis="horizontal"`, die Marke steht links oder rechts |
 | Popup | aus `tl-popover` (`popover.contract.md`): Fläche, Schatten, Ebene, Ecke, Rand, Innenabstand, Text; `tl-select__popup` setzt nur Spalte und Höhe |
 | Popup-Höhe | höchstens 8 × `--tl-size-row` + `--tl-size-control` + 2 × `--tl-space-xs` (acht Optionen und das Suchfeld) |
 | Suchfeld | ein `tl-field`; Abstand zur Liste `--tl-space-xs` |
@@ -113,14 +115,15 @@ außen gesetzt; `tl-select` hat keine Schriftregel. Laden, keine Treffer und Lad
 | `role="option"` | an jeder `tl-select__option`. |
 | `aria-selected` | `"false"` an jeder `tl-select__option`: die Liste führt nur ungewählte Optionen; Gewähltes steht als Wert oder Wert-Chip in der Wurzel. Hervorgehoben ist nicht gewählt. |
 | `data-tl-state="highlighted"` | an der hervorgehobenen Option (Tastatur oder Zeiger). Der Indikator ist die Akzentlinie (`--tl-border-interactive`, Gate 3,0 auf `surface-overlay` und `surface-interactive-selected`); die Tönung ist ein Zusatz, weil `--tl-surface-interactive-selected` auf `surface-layer` abgestimmt ist, nicht auf die gehobene Overlay-Fläche. |
-| `data-tl-state="dragging"` | am Wert-Chip, der gerade gezogen wird. |
-| `data-tl-state="drop-before"` / `"drop-after"` | am Wert-Chip, vor bzw. hinter dem der gezogene landet. |
+| `data-tl-state="dragging"` | am Wert-Chip, der gerade gezogen wird; die Optik zeichnet `drag.css`. |
+| `data-tl-state="drop-before"` / `"drop-after"` | am Wert-Chip, vor bzw. hinter dem der gezogene landet; die Optik zeichnet `drag.css`. |
+| `data-tl-axis="horizontal"` | an `tl-select__values`: die Wert-Chips stehen nebeneinander, die Einfügemarke links oder rechts. |
 | `aria-invalid="true"` | `hasError`, an der Wurzel. Das CSS von `tl-field` liest es selbst. |
 | `data-tl-state="warning"` | `hasWarnings && !hasError`, an der Wurzel. Der Fehler verdrängt die Warnung. |
 | `aria-required="true"` | `mandatory`, an der Wurzel. |
 | `aria-busy="true"` | am `tl-progress` im `tl-status`, solange `optionsLoaded: false`. |
 | `role="alert"` | am `tl-status` des Ladefehlers; darin ein Link „Erneut versuchen“. |
-| `aria-label` | an Entfernen- und Löschen-Knopf, am Suchfeld. |
+| `aria-label` | an Entfernen- und Löschen-Knopf, am Ziehgriff, am Suchfeld. |
 | `aria-disabled="true"` | `state.disabled`, wie beim Button. Die Wurzel ist ein `div` und kennt `:disabled` nicht: sie trägt `aria-disabled="true"` und `tabindex="-1"`, öffnet kein Popup und zeigt weder Entfernen- noch Löschen-Knopf. Offen: `aria-disabled` bekommt in dieser Welle keine Regel. |
 | `:focus-visible` | den Ring liefert `base.css`; Wurzel und Suchfeld setzen und entfernen keinen Fokusstil. |
 
@@ -137,7 +140,7 @@ Klassen:
 | `tl-select__placeholder` | `span` mit `emptyOptionLabel` |
 | `tl-select__value` | `span` um den gewählten Einzelwert: Text oder `tl-pill` |
 | `tl-select__chip` | der Wert-Chip bei `multiSelect`: eine `tl-pill` mit dieser Klasse, darin Label und Entfernen-Knopf |
-| `tl-select__drag-handle` | Ziehgriff im Wert-Chip, nur bei `customOrder` |
+| `tl-select__drag-handle` | Ziehgriff im Wert-Chip, nur bei `customOrder`: ein `button type="button"` mit `tl-button--icon --sm --ghost` vor dem Label |
 | `tl-select__controls` | `span` um Löschen-Knopf und Pfeil; Entfernen- und Löschen-Knopf sind `button type="button"` mit `tl-button--icon` (oben) |
 | `tl-select__arrow` | `span` mit `aria-hidden="true"` um das Pfeil-Icon: das Quadrat, das beim Zeigen die Fläche trägt |
 | `tl-select__popup` | das schwebende Popup, zusammen mit `tl-popover` |

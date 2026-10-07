@@ -805,6 +805,73 @@
   border-inline-start: var(--tl-border-width-sm) solid var(--tl-border-separator);
 }
 
+/* --- drag/drag.css --- */
+/* Ziehen und Ablegen — docs/skalen.md „Gleiches wird zusammengelegt“ (W11), 3b §9.
+   Eine Optik für jedes Ziel, einmal gezeichnet und nur über Zustände (data-tl-state): Tabellenzeile,
+   Baumknoten, Spaltenkopf, Eintrag der Spaltenwahl, Select-Chip, die Tabelle als Ganzes. Einträge, die
+   nebeneinander stehen, haben einen Behälter mit data-tl-axis="horizontal": ihre Einfügemarke steht
+   links und rechts statt oben und unten. Ein Drop-Ziel ist kein Fokus (3a §5): kein outline, kein
+   focus-ring.
+   Marke und Rahmen liegen auf einer Fläche ::before über dem Ziel: ein inset-Schatten am Ziel selbst
+   läge unter den Hintergründen seiner Kinder — an der Tabellenwurzel unter Filterleiste, Kopf und
+   Zeilen, an einer Zeile unter ihren haftenden Zellen (layer-raised). ::after ist der Cursor-Ring
+   (base.css). Die Fläche von drop-onto steht am Ziel; eine Fläche, die sie übermalen soll, steht beim
+   Block in :where (Tabellenzeile). */
+
+/* Die Fläche braucht ein positioniertes Ziel. :where hat keine Spezifität: eine Lage, die der Block
+   setzt (absolute Zeile, haftende Kopfzelle), bleibt. */
+:where([data-tl-state~="drop-before"]),
+:where([data-tl-state~="drop-after"]),
+:where([data-tl-state~="drop-onto"]),
+:where([data-tl-state~="drop-refused"]) {
+  position: relative;
+}
+
+[data-tl-state~="drop-before"]::before,
+[data-tl-state~="drop-after"]::before,
+[data-tl-state~="drop-onto"]::before,
+[data-tl-state~="drop-refused"]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: var(--tl-layer-sticky);
+  pointer-events: none;
+}
+
+[data-tl-state~="drop-before"]::before {
+  box-shadow: inset 0 var(--tl-border-width-accent) 0 0 var(--tl-border-interactive);
+}
+
+[data-tl-state~="drop-after"]::before {
+  box-shadow: inset 0 calc(-1 * var(--tl-border-width-accent)) 0 0 var(--tl-border-interactive);
+}
+
+[data-tl-axis="horizontal"] > [data-tl-state~="drop-before"]::before {
+  box-shadow: inset var(--tl-border-width-accent) 0 0 0 var(--tl-border-interactive);
+}
+
+[data-tl-axis="horizontal"] > [data-tl-state~="drop-after"]::before {
+  box-shadow: inset calc(-1 * var(--tl-border-width-accent)) 0 0 0 var(--tl-border-interactive);
+}
+
+[data-tl-state~="drop-onto"] {
+  background: var(--tl-surface-interactive-selected);
+}
+
+[data-tl-state~="drop-onto"]::before {
+  box-shadow: inset 0 0 0 var(--tl-border-width-md) var(--tl-border-interactive);
+}
+
+[data-tl-state~="drop-refused"]::before {
+  box-shadow: inset 0 0 0 var(--tl-border-width-md) var(--tl-status-error-border);
+}
+
+/* Die gezogene Quelle wird blass. 0.4 ist ein Anteil, kein Maß (lint-css.mjs, Punkt 10) — und steht
+   hier einmal statt in jedem Block. */
+[data-tl-state~="dragging"] {
+  opacity: 0.4;
+}
+
 /* --- field/field.css --- */
 /* Feld — docs/skalen.md „Formulare: ein Feldrahmen, Zustände als Attribute“.
    Ein Rahmen für jedes Eingabefeld: Text, Passwort, Zahl, Datum, Select, die Wurzel des
@@ -1491,6 +1558,70 @@ a.tl-field-value:hover {
   to { transform: translateX(calc(2.5 * 100%)); }
 }
 
+/* --- reorder-list/reorder-list.css --- */
+/* Umsortierbare Liste — docs/skalen.md „Gleiches wird zusammengelegt“ (W2, W11), 3b §8.
+   ul.tl-reorder-list > li.tl-reorder-list__item: vorn der Griff (tl-reorder-list__handle, ein
+   tl-button--icon --sm --ghost: Ziehen mit der Maus, Alt + Pfeil mit der Tastatur), dahinter, was der
+   Eintrag trägt (Gruppierungsknopf, label.tl-choice mit tl-checkbox). Die Ziehen-Optik zeichnet
+   drag.css, den Ring base.css — am Griff innen, weil die Liste scrollt. Höchstens size-popover-max
+   hoch; dann scrollt die Liste in sich, und ein Dialog um sie springt nicht beim Suchen. */
+
+.tl-reorder-list {
+  display: flex;
+  flex-direction: column;
+  max-height: var(--tl-size-popover-max);
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+.tl-reorder-list[hidden] { display: none; }
+
+.tl-reorder-list__item {
+  display: flex;
+  align-items: center;
+  gap: var(--tl-space-xs);
+  min-height: var(--tl-size-row);
+  padding: 0 var(--tl-space-control-x);
+}
+.tl-reorder-list__item[hidden] { display: none; }
+
+.tl-reorder-list__item:hover {
+  background: var(--tl-surface-interactive-hover);
+}
+
+.tl-reorder-list__handle {
+  color: var(--tl-icon-secondary);
+  cursor: grab;
+}
+
+.tl-reorder-list__handle:active {
+  cursor: grabbing;
+}
+
+.tl-reorder-list__handle:focus-visible {
+  outline-offset: calc(-1 * var(--tl-focus-offset));
+}
+
+/* Das Kästchen mit seiner Beschriftung nimmt den Rest der Zeile; die Beschriftung endet mit Ellipse. */
+.tl-reorder-list__item > .tl-choice {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tl-reorder-list__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Die Suche ab elf Einträgen steht vor der Liste: eine tl-field-group mit Lupe; der Abstand sitzt an
+   der Gruppe, nicht am Feld (wie im Select-Popup). */
+.tl-reorder-list__search {
+  margin-bottom: var(--tl-space-xs);
+}
+
 /* --- select/select.css --- */
 /* Select — docs/skalen.md „Formulare: ein Feldrahmen, Zustände als Attribute“.
    Die Wurzel ist div.tl-field.tl-select[role="combobox"]: Rahmen, Fehler, Warnung, Zeigen und
@@ -1498,7 +1629,7 @@ a.tl-field-value:hover {
    components.css nach .tl-field und überschreibt dessen display bei gleicher Spezifität.
    Ein gewählter Wert mit Rolle ist eine tl-pill — im Einzelwert, im Chip und im Lesewert.
    Zustände sind Attribute: aria-expanded offen, aria-selected gewählt, data-tl-state~="highlighted"
-   die Tastatur-Hervorhebung, data-tl-state~="dragging" / "drop-before" / "drop-after" das Umordnen.
+   die Tastatur-Hervorhebung; Ziehen zeichnet drag.css.
    Das Popup ist ein tl-popover (Fläche, Schatten, Ebene, Radius radius-md um die Optionen mit
    radius-sm); hier steht nur sein Innenaufbau. Entfernen und Löschen sind tl-button--icon, Löschen und
    Chevron zeigen als Knöpfe im Feld eine Stufe kräftiger. */
@@ -1590,17 +1721,12 @@ a.tl-field-value:hover {
   cursor: grab;
 }
 
-.tl-select__chip[data-tl-state~="dragging"] {
-  opacity: 0.4;
-}
-
-/* Die Einfügemarke beim Ziehen: eine Linie der Akzentbreite an der Kante, an der der Chip landet. */
-.tl-select__chip[data-tl-state~="drop-before"] {
-  box-shadow: inset var(--tl-border-width-accent) 0 0 0 var(--tl-border-interactive);
-}
-
-.tl-select__chip[data-tl-state~="drop-after"] {
-  box-shadow: inset calc(-1 * var(--tl-border-width-accent)) 0 0 0 var(--tl-border-interactive);
+/* Der Griff ist ein tl-button--icon --sm --ghost (Ziehen und Alt + Pfeil, 3b §8) und derselbe Kreis wie das
+   Entfernen (.tl-select__chip > .tl-button oben); am Anfang der Pille trägt sie dieselbe Lücke als
+   Innenabstand wie am Ende. Gezogen, Einfügemarke: drag.css; tl-select__values trägt
+   data-tl-axis="horizontal", die Marke steht links oder rechts. */
+.tl-select__chip:has(> .tl-select__drag-handle) {
+  padding-inline-start: calc(var(--tl-space-2xs) / 2);
 }
 
 .tl-select__controls {

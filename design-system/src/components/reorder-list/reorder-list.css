@@ -1,0 +1,62 @@
+/* Umsortierbare Liste — docs/skalen.md „Gleiches wird zusammengelegt“ (W2, W11), 3b §8.
+   ul.tl-reorder-list > li.tl-reorder-list__item: vorn der Griff (tl-reorder-list__handle, ein
+   tl-button--icon --sm --ghost: Ziehen mit der Maus, Alt + Pfeil mit der Tastatur), dahinter, was der
+   Eintrag trägt (Gruppierungsknopf, label.tl-choice mit tl-checkbox). Die Ziehen-Optik zeichnet
+   drag.css, den Ring base.css — am Griff innen, weil die Liste scrollt. Höchstens size-popover-max
+   hoch; dann scrollt die Liste in sich, und ein Dialog um sie springt nicht beim Suchen. */
+
+.tl-reorder-list {
+  display: flex;
+  flex-direction: column;
+  max-height: var(--tl-size-popover-max);
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+.tl-reorder-list[hidden] { display: none; }
+
+.tl-reorder-list__item {
+  display: flex;
+  align-items: center;
+  gap: var(--tl-space-xs);
+  min-height: var(--tl-size-row);
+  padding: 0 var(--tl-space-control-x);
+}
+.tl-reorder-list__item[hidden] { display: none; }
+
+.tl-reorder-list__item:hover {
+  background: var(--tl-surface-interactive-hover);
+}
+
+.tl-reorder-list__handle {
+  color: var(--tl-icon-secondary);
+  cursor: grab;
+}
+
+.tl-reorder-list__handle:active {
+  cursor: grabbing;
+}
+
+.tl-reorder-list__handle:focus-visible {
+  outline-offset: calc(-1 * var(--tl-focus-offset));
+}
+
+/* Das Kästchen mit seiner Beschriftung nimmt den Rest der Zeile; die Beschriftung endet mit Ellipse. */
+.tl-reorder-list__item > .tl-choice {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.tl-reorder-list__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Die Suche ab elf Einträgen steht vor der Liste: eine tl-field-group mit Lupe; der Abstand sitzt an
+   der Gruppe, nicht am Feld (wie im Select-Popup). */
+.tl-reorder-list__search {
+  margin-bottom: var(--tl-space-xs);
+}

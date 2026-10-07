@@ -94,6 +94,7 @@ const MODIFIERS = {
   'tl-chip-group': new Set([]),
   'tl-chip': new Set([]),
   'tl-select': new Set([]),
+  'tl-reorder-list': new Set([]),
   'tl-form-field': new Set(['side', 'top', 'after', 'hidden', 'full']),
   'tl-form-group': new Set(['separator', 'outlined', 'full']),
   'tl-form-layout': new Set(['fill']),

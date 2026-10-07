@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="de" data-tl-mode="light" data-tl-density="normal">
+<head>
+<meta charset="utf-8">
+<title>TopLogic Design System — Umsortierbare Liste</title>
+<link rel="stylesheet" href="/fonts/style/interFonts.css">
+<link rel="stylesheet" href="/fonts/style/bootstrap-icons.css">
+<link rel="stylesheet" href="/dist/primitives.css">
+<link rel="stylesheet" href="/dist/tokens.css">
+<link rel="stylesheet" href="/dist/base.css">
+<link rel="stylesheet" href="/dist/components.css">
+<link rel="stylesheet" href="/specimen/specimen.css">
+</head>
+<body>
+<main class="specimen">
+  <div class="specimen__bar">
+    <a class="tl-type-label" href="/">← Grundklassen</a>
+    <span class="tl-type-heading-lg">Umsortierbare Liste</span>
+    <label class="tl-type-label"><input type="checkbox" id="mode"> dunkel</label>
+    <label class="tl-type-label"><input type="checkbox" id="density"> kompakt</label>
+  </div>
+
+  <!-- Die Spaltenwahl: vor der Liste die Suche, dann fünf Einträge — einer wird gezogen, vor einem landet
+       er, einer ist gruppiert, einer darf nicht ausgeblendet werden. Das Skript setzt sie auf jede Fläche. -->
+  <template id="rows">
+    <div class="specimen__row specimen__row--narrow specimen__row--top">
+      <span class="tl-type-label">Spaltenwahl</span>
+      <div>
+        <span class="tl-field-group tl-reorder-list__search"><span class="tl-field-group__icon" aria-hidden="true"><i class="tl-icon-sm bi bi-search"></i></span>
+          <input class="tl-field tl-type-body" aria-label="Spalten filtern">
+        </span>
+        <span class="tl-visually-hidden" id="reorder-hint">Alt + Pfeil verschiebt</span>
+        <ul class="tl-reorder-list tl-type-body" aria-label="Spalten">
+          <li class="tl-reorder-list__item">
+            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__handle" aria-label="Name verschieben" aria-describedby="reorder-hint"><i class="tl-icon-sm bi bi-grip-vertical tl-button__icon" aria-hidden="true"></i></button>
+            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon" aria-label="Nach Name gruppieren" aria-pressed="false"><i class="tl-icon-sm bi bi-diagram-3 tl-button__icon" aria-hidden="true"></i></button>
+            <label class="tl-choice tl-type-body"><input type="checkbox" class="tl-checkbox" checked disabled> <span class="tl-reorder-list__label">Name</span></label>
+          </li>
+          <li class="tl-reorder-list__item" data-tl-state="dragging">
+            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__handle" aria-label="Status verschieben" aria-describedby="reorder-hint"><i class="tl-icon-sm bi bi-grip-vertical tl-button__icon" aria-hidden="true"></i></button>
+            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon" aria-label="Nach Status gruppieren" aria-pressed="false"><i class="tl-icon-sm bi bi-diagram-3 tl-button__icon" aria-hidden="true"></i></button>
+            <label class="tl-choice tl-type-body"><input type="checkbox" class="tl-checkbox" checked> <span class="tl-reorder-list__label">Status</span></label>
+          </li>
+          <li class="tl-reorder-list__item">
+            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__handle" aria-label="Region verschieben" aria-describedby="reorder-hint"><i class="tl-icon-sm bi bi-grip-vertical tl-button__icon" aria-hidden="true"></i></button>
+            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon" aria-label="Nach Region gruppieren" aria-pressed="true"><i class="tl-icon-sm bi bi-diagram-3 tl-button__icon" aria-hidden="true"></i></button>
+            <label class="tl-choice tl-type-body"><input type="checkbox" class="tl-checkbox" checked> <span class="tl-reorder-list__label">Region</span></label>
+          </li>
+          <li class="tl-reorder-list__item" data-tl-state="drop-before">
+            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__handle" aria-label="Verantwortlich verschieben" aria-describedby="reorder-hint"><i class="tl-icon-sm bi bi-grip-vertical tl-button__icon" aria-hidden="true"></i></button>
+            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon" aria-label="Nach Verantwortlich gruppieren" aria-pressed="false"><i class="tl-icon-sm bi bi-diagram-3 tl-button__icon" aria-hidden="true"></i></button>
+            <label class="tl-choice tl-type-body"><input type="checkbox" class="tl-checkbox" checked> <span class="tl-reorder-list__label">Verantwortlich</span></label>
+          </li>
+          <li class="tl-reorder-list__item">
+            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__handle" aria-label="Zuletzt geändert am verschieben" aria-describedby="reorder-hint"><i class="tl-icon-sm bi bi-grip-vertical tl-button__icon" aria-hidden="true"></i></button>
+            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon" aria-label="Nach Zuletzt geändert am gruppieren" aria-pressed="false"><i class="tl-icon-sm bi bi-diagram-3 tl-button__icon" aria-hidden="true"></i></button>
+            <label class="tl-choice tl-type-body"><input type="checkbox" class="tl-checkbox"> <span class="tl-reorder-list__label">Zuletzt geändert am, mit einer Beschriftung, die mit Ellipse endet</span></label>
+          </li>
+        </ul>
+        <span class="tl-visually-hidden" role="status">Status, Position 2 von 5</span>
+      </div>
+    </div>
+  </template>
+
+  <section class="specimen__panel" id="on-layer"><p class="tl-type-heading-sm">Auf surface-layer</p></section>
+  <section class="specimen__base" id="on-base"><p class="tl-type-heading-sm">Auf surface-base</p></section>
+  <section class="specimen__overlay" id="on-overlay"><p class="tl-type-heading-sm">Auf surface-overlay</p></section>
+</main>
+<script>
+  const tpl = document.getElementById('rows');
+  for (const id of ['on-layer', 'on-base', 'on-overlay']) {
+    const rows = tpl.content.cloneNode(true);
+    for (const el of rows.querySelectorAll('[id]')) el.id += '-' + id;
+    for (const a of ['aria-describedby', 'aria-labelledby', 'aria-controls'])
+      for (const el of rows.querySelectorAll('[' + a + ']')) el.setAttribute(a, el.getAttribute(a) + '-' + id);
+    document.getElementById(id).append(rows);
+  }
+  const html = document.documentElement;
+  document.getElementById('mode').addEventListener('change', (e) => html.setAttribute('data-tl-mode', e.target.checked ? 'dark' : 'light'));
+  document.getElementById('density').addEventListener('change', (e) => html.setAttribute('data-tl-density', e.target.checked ? 'compact' : 'normal'));
+</script>
+</body>
+</html>
