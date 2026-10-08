@@ -15,7 +15,9 @@ das Aussehen; wer ins Bild passen will, liest die Tokens.
 | `entries[].visible` | boolean | Sichtbar: das Kästchen ist gesetzt. Ein Eintrag, der nicht ausgeblendet werden darf, trägt ein deaktiviertes Kästchen. |
 | `entries[].grouped` | boolean | Gruppiert: der Gruppierungsknopf trägt `aria-pressed="true"`. |
 
-Ab elf Einträgen steht vor der Liste eine Suche; sie filtert mit `filterOptions` (3b §9), und die
+Ab elf Einträgen steht vor der Liste eine Suche — dieselbe wie in der Tabelle: `tl-field-group` mit Lupe,
+`input.tl-field type="search"` und, solange Text steht, Löschknopf (`js.textInput.clear`), nach dem Löschen
+bleibt der Fokus im Feld. Sie filtert mit `filterOptions` (3b §9), und die
 Liste rendert nur die passenden Einträge. Jeder behält seine Position in der ganzen Liste: Ziehen und
 Alt + Pfeil rechnen mit ihr, ein Eintrag lässt sich also neben einen ausgefilterten ablegen. Mit der Suche
 davor ist die Liste fest `--tl-size-popover-max` hoch, damit ein Dialog um sie beim Tippen nicht
@@ -84,7 +86,7 @@ Klassen:
 | `tl-choice` | das Kästchen: `label.tl-choice` > `input` mit `tl-checkbox` und die Beschriftung |
 | `tl-visually-hidden` | der Live-Bereich: gelesen, nicht gezeigt (der Hinweis trägt `hidden`, siehe Attribute) |
 
-Symbole (Griff, Gruppieren, Suche) sind `ThemeIcon` in `tl-icon-sm`, Knopf-Icons mit `tl-button__icon`.
+Symbole (Griff, Gruppieren, Suche, Löschen) sind `ThemeIcon` in `tl-icon-sm`, Knopf-Icons mit `tl-button__icon`.
 
 ## Konformität
 

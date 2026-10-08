@@ -64,7 +64,9 @@ mit `aria-label` (`button.contract.md`); das Popup trägt `tl-popover tl-select_
 ## Tastatur
 
 Der Fokus bleibt an der Wurzel bzw. am Suchfeld; die Hervorhebung wandert über
-`aria-activedescendant`, nicht der Fokus.
+`aria-activedescendant`, nicht der Fokus. Verschwindet ein Wert-Chip mit seinem fokussierten
+Entfernen-Knopf, geht der Fokus zum Entfernen-Knopf des Nachbarn (gleicher Platz, sonst der vorige), ohne
+Chip an die Wurzel (WCAG 2.4.3; derselbe Helfer wie bei der Filterkapsel der Tabelle).
 
 | Taste | geschlossen | offen |
 |---|---|---|

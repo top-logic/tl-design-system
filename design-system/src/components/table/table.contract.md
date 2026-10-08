@@ -167,8 +167,9 @@ Körper scrollen waagerecht gemeinsam: das TSX überträgt `scrollLeft` des Kör
 | Platzhalter | Innenabstand `--tl-space-control-x`, Linie darunter wie die Zeile |
 | Ablehnung | Rand `--tl-status-error-border`, Text `--tl-status-error-text` |
 
-Schrift: `.tl-type-body` an der Tabelle, von außen gesetzt; Gruppenzeile `tl-type-body-strong`, ihre
-Anzahl `tl-type-label`. Eine Zeile schwebt nicht: kein Schatten, Kanten sind Linien. Ziehen und Ablegen
+Schrift: `.tl-type-body` an der Tabelle, von außen gesetzt. Die Gruppenzeile ist stark, wo ihre Schrift
+entsteht: der Server gibt dem Text jeder ihrer Zellen `css-class` `tl-type-body-strong` (`text.contract.md`);
+die Zeile selbst trägt keine Typo-Klasse. Ihre Anzahl ist `tl-type-label`. Eine Zeile schwebt nicht: kein Schatten, Kanten sind Linien. Ziehen und Ablegen
 zeichnet `drag.css` (`drag.contract.md`), den Cursor-Ring `base.css`.
 
 ## Attribute
@@ -199,10 +200,10 @@ Bauteile anderer Blöcke:
 | `tl-toggle` | Auf-/Zuklapper in Baum- und Gruppenzeilen: `tabindex="-1"`, `aria-expanded`, `aria-label` wie jeder Toggle, **ohne** `aria-controls` — er zeigte auf die eigene Zeile. Zeigen und Drücken mit dem Schleier (`toggle.contract.md`): sichtbar auch auf gezeigter und ausgewählter Zeile. Ein Druck mit der Maus lässt den Fokus, wo er ist (`mousedown` ohne Standardaktion): am Raster, dessen Ring an der Cursorzeile bleibt. |
 | `tl-button--icon` | Trichter (`--sm --ghost`, `aria-label` und Tooltip `js.table.filter`, bei aktivem Filter `js.table.filterActive`), Spaltenwahl (`--ghost`, `js.table.columns`, in angehefteter letzter Kopfzelle `--sm`), Speichern; Icons `tl-icon-sm` |
 | `tl-badge` | Stufe einer mehrstufigen Sortierung im Sortierknopf |
-| `tl-status` | statt Zeilen in der leeren Tabelle: `role="row"` `aria-rowindex="2"` > `role="gridcell"`, Text `js.table.empty`. Die Tabelle hat keine Ladezeile: Zeilen im Fenster, die noch fehlen, sind `tl-table__placeholder` (`aria-hidden`), das Raster trägt `aria-busy`. |
+| `tl-status` | statt Zeilen in der leeren Tabelle: `role="row"` `aria-rowindex="2"` (im `treegrid` mit `aria-level="1"`) > `div.tl-status` mit `role="gridcell"` — die Zelle ist die Statuszeile —, Text `js.table.empty`. Die Tabelle hat keine Ladezeile: Zeilen im Fenster, die noch fehlen, sind `tl-table__placeholder` (`aria-hidden`), das Raster trägt `aria-busy`. |
 | `tl-skeleton` | in `tl-table__placeholder` für Zeilen im Fenster, die der Server noch nicht geschickt hat; der Platzhalter ist `aria-hidden`, das Raster trägt `aria-busy` |
-| `tl-chip` | benannter Filter in der Filterleiste: `span.tl-chip` > `tl-chip__toggle` (`aria-pressed`) und, wenn löschbar, `tl-chip__remove` |
-| `tl-field-group` | Suche (`tl-table__search`) mit Lupe und, solange Text steht, Löschknopf (`js.textInput.clear`); der Name beim Speichern ist ein `tl-field` in `tl-table__save` |
+| `tl-chip` | benannter Filter in der Filterleiste: `span.tl-chip` > `tl-chip__toggle` (`aria-pressed`) und, wenn löschbar, `tl-chip__remove`. Verschwindet die Kapsel mit ihrem fokussierten `tl-chip__remove`, geht der Fokus zum Entfernen-Knopf der Nachbarkapsel (gleicher Platz, sonst der vorige), ohne einen ins Suchfeld, sonst ins Raster (WCAG 2.4.3; derselbe Helfer wie beim Wert-Chip des Select) |
+| `tl-field-group` | Suche (`tl-table__search`) mit Lupe und, solange Text steht, Löschknopf (`js.textInput.clear`), nach dem Löschen bleibt der Fokus im Feld — dieselbe Suche wie in der Spaltenwahl (`reorder-list.contract.md`); der Name beim Speichern ist ein `tl-field` in `tl-table__save` |
 | `tl-popover` | Grund einer Ablehnung beim Ziehen (`tl-table__hint`), Lage aus `bridge/popover.ts` |
 
 Klassen:

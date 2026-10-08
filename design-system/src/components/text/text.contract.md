@@ -20,7 +20,7 @@ Als Pill (`appearance: pill` oder eine Farbrolle) ist `span.tl-pill` **selbst di
 (entschieden 07.10.). Ton und Rolle: `success`, `warning`, `error` behalten ihren Namen, alles andere
 bleibt ohne `data-tl-role` (neutral: die Pill ohne Attribut ist neutral, siehe `pill.contract.md`).
 
-Stark ist die `-strong`-Klasse der Variante als `css-class`: `tl-type-body-strong` oder `tl-type-label-strong`. Überschriften sind schon fett genug und brauchen keine.
+Stark ist die `-strong`-Klasse der Variante als `css-class`: `tl-type-body-strong` oder `tl-type-label-strong`. Überschriften sind schon fett genug und brauchen keine. Die Varianten-Klasse bleibt daneben stehen: `base.css` stellt jede `-strong`-Klasse hinter ihre Grundklasse, bei gleicher Spezifität gewinnt sie (Test `text.test.mjs`). So macht die Tabelle ihre Gruppenzeile stark: der Server gibt dem Text jeder Zelle der Gruppenzeile `tl-type-body-strong` (`table.contract.md`).
 
 Ein Text ohne Wert (`text` leer) nimmt keinen Platz, außer er trägt `role` (Live-Bereich); master #29752.
 

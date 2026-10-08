@@ -1,6 +1,7 @@
 // Text und Spalten-Layout — 3b §11, §12.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { readGenerated, declarationsOf } from './lib/component.mjs';
 
 test('tl-text: Ton als data-tl-tone, ohne Ton erbt der Text; Ellipse ist --truncate; leer nimmt keinen Platz', () => {
@@ -14,6 +15,19 @@ test('tl-text: Ton als data-tl-tone, ohne Ton erbt der Text; Ellipse ist --trunc
   assert.match(declarationsOf(css, '.tl-text--truncate') ?? '', /text-overflow:\s*ellipsis/);
   // master #29752: ein Text ohne Wert nimmt keinen Platz, einer mit Rolle (Live-Bereich) bleibt.
   assert.match(declarationsOf(css, '.tl-text:empty:not([role])') ?? '', /display:\s*none/);
+});
+
+// Fix-Welle 3b (1): Stark ist die -strong-Klasse als css-class neben der Varianten-Klasse, die der Text
+// selbst setzt (tl-type-body). Beide haben dieselbe Spezifität; -strong gewinnt nur, weil es in base.css
+// hinter seiner Grundklasse steht. Die Gruppenzeile der Tabelle verlässt sich darauf.
+test('tl-type-*-strong steht in base.css hinter seiner Grundklasse und gewinnt neben ihr', () => {
+  const base = readFileSync(new URL('../dist/base.css', import.meta.url), 'utf8');
+  for (const grund of ['body', 'label']) {
+    const vorn = base.search(new RegExp(`^\\.tl-type-${grund}\\s*\\{`, 'm'));
+    const stark = base.search(new RegExp(`^\\.tl-type-${grund}-strong\\s*\\{`, 'm'));
+    assert.ok(vorn >= 0 && stark >= 0, `tl-type-${grund} und -strong in base.css`);
+    assert.ok(stark > vorn, `tl-type-${grund}-strong muss hinter tl-type-${grund} stehen`);
+  }
 });
 
 test('tl-columns: drei Abstände aus der Skala, Spalten schrumpfen', () => {

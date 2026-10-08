@@ -34,6 +34,8 @@ test('tl-table: Zeile size-row, Kopf size-bar, Zustände als Attribute, keine Li
 });
 
 test('der Körper isoliert seinen Stapel, Spaltenwahl und Fixiergrenze sind so hoch wie die Kopfzeile', () => {
+  // Fix-Welle 3b (7): die Wurzel isoliert ebenso — ihre Ablage-Marke (layer-sticky) bleibt in der Tabelle.
+  assert.match(declarationsOf(css, '.tl-table') ?? '', /isolation:\s*isolate/);
   assert.match(declarationsOf(css, '.tl-table__body') ?? '', /isolation:\s*isolate/);
   // Der Rahmen isoliert die Ebenen von Kopf, Griff und Vorschau: eine haftende Kopfzelle (layer-raised)
   // liegt nie über einem Popover oder einem Nachbarn der Seite (E7, Orchestrator-Entscheid 6).

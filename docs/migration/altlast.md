@@ -482,7 +482,7 @@ Tabelle), `drag` (eine Ziehen-Optik für alle Leser über `data-tl-state~="dragg
 waagerecht mit `data-tl-axis="horizontal"`), `reorder-list` (`tl-reorder-list`, `__item`, `__handle`, `__label`,
 `__search`), `text` (`tl-text`, `tl-text--truncate`, `data-tl-tone`), `columns` (`tl-columns`, `__column`,
 `--gap-compact|default|loose`), `table` (`tl-table`, `__frame`, `__grid`, `__header`, `__header-row`, `__header-cell`,
-`__body`, `__row`, `__cell`, `__select`, `__sort`, `__filter`, `__columns`, `__resize`, `__freeze`, `__freeze-preview`,
+`__body`, `__row`, `__cell`, `__label`, `__select`, `__sort`, `__filter`, `__columns`, `__resize`, `__freeze`, `__freeze-preview`,
 `__mark`, `__tree`, `__spacer`, `__value`, `__count`, `__placeholder`, `__filter-bar`, `__search`, `__save`, `__hint`;
 Lage über `data-tl-state~="frozen|frozen-last|pinned|pinned-first|filtered|cursor"`), `tree` (`tl-tree`, `__node`,
 `__content`, `__spacer`). Je `*.css`, `*.contract.md`, Specimen; nachgezogen die Verträge `pill`, `avatar`, `alert`,
@@ -499,7 +499,9 @@ Lage über `data-tl-state~="frozen|frozen-last|pinned|pinned-first|filtered|curs
   `space-xs`, Ebenen `layer-raised`/`-sticky`/`-popover`. Neue Primitive `red-34`.
 - **Engine-Helfer** (kein Paket): `tokenPx`/`useTokenPx` (Zeilenhöhe und Einzug aus den Tokens), `filterOptions`,
   `useListReorder` (Alt + Pfeil mit Live-Bereich, Zeiger mit Hälften-Regel), `FieldValue` (Lesewert mit zwei
-  Link-Arten), `isEditorTarget` (Tasten aus Editoren im Raster und Baum).
+  Link-Arten), `isEditorTarget` (Tasten aus Editoren im Raster und Baum), `useFocusAfterRemove` (Fokus nach dem
+  Entfernen einer Kapsel: Select-Chip und Filterkapsel), `SearchField` (eine Suche mit Löschknopf für Tabelle und
+  Spaltenwahl), `bridge/icons.ts` (die Glyphnamen als Konstanten, kein roher Glyph-String in den Controls der Welle).
 
 ### Alt → neu für Anwendungs-Stylesheets
 
@@ -527,7 +529,7 @@ Grep-Gate `test/engine-classes.test.mjs` aus der Engine fern; für die Paketklas
 | `tlTableView__cell--pinnedEnd`, `--pinnedEndFirst`, `__headerCell--pinnedEnd`, `--pinnedEndFirst` | `[data-tl-state~="pinned"]`, `[data-tl-state~="pinned-first"]` |
 | `tlTableView__checkboxCell`, `__checkbox` | `tl-table__select` mit `tl-checkbox` |
 | `tlTableView__treeCell`, `__treeToggle`, `__treeToggleSpacer`, `__treeValue` | `tl-table__tree`, `tl-toggle`, `tl-table__spacer`, `tl-table__value` |
-| `tlTableView__row--group`, `__groupCount` | Gruppenzeile `tl-table__row tl-type-body-strong`, Anzahl `tl-table__count` |
+| `tlTableView__row--group`, `__groupCount` | Gruppenzeile `tl-table__row`, stark über den Text jeder Zelle (`css-class` `tl-type-body-strong` vom Server), Anzahl `tl-table__count` |
 | `tlTableView__filterBar`, `__filterChips` | `tl-table__filter-bar` |
 | `tlTableView__chip`, `--active`, `__chipLabel`, `__chipRemove` | `tl-chip` mit `tl-chip__toggle` (`aria-pressed="true"`) und `tl-chip__remove` |
 | `tlTableView__search`, `__searchInput` | `tl-table__search` (`tl-field-group` mit Löschknopf) |
@@ -589,9 +591,8 @@ Grep-Gate `test/engine-classes.test.mjs` aus der Engine fern; für die Paketklas
 | **Icon-Select** | Status, Spinner und Filter (W10, W8) in Welle 5. |
 | **Nebentext auf ausgewählter Zeile** | Nachgerechnet 08.10.: dunkel `text-secondary` 4,27 und `text-helper` 3,64 auf `surface-interactive-selected`, hell `text-helper` 4,42 — alle unter 4,5 (Plan-Review 3b, A1); die Anzahl der Gruppenzeile ist `text-secondary`. Paar und Stufe entscheiden, wenn ein Nebentext in einer ausgewählten Zeile gebraucht wird. |
 | **Hilfstechnik am Tabellenkopf** | Die Gruppierungsmarke hat keinen Namen; Sortierstufen ab 2 sind nur sichtbar (Badge `aria-hidden`). |
-| **`progress.contract.md` (Welle 1)** | keine Namensregel für `progressbar` — ARIA 1.2 verlangt einen Namen. |
 | **Messen** | `windowRange` der Tabelle ohne `ResizeObserver` (nach Größenänderung kann der Ring am Raster statt an der Zeile stehen); `useTokenPx` misst nur neu, wenn sich `data-tl-density`, `-theme` oder `-mode` an `<html>` ändert — ein Schalter tiefer im Baum bleibt ungesehen. |
-| **Ziehen** | Ein bei `dragstart` von außen abgebrochener Zug lässt `dragging` stehen (vorbestehend); in der Tabelle fehlt `afterDragImage` der `runningDrag()`-Wächter; die Spaltenmarke bleibt bis `dragend`, wenn ein Zug die Tabelle ohne Ablage verlässt; der Spaltenzug legt den Index statt des Namens als `text/plain` ab. |
+| **Ziehen** | Ein bei `dragstart` von außen abgebrochener Zug lässt `dragging` stehen (vorbestehend); die Spaltenmarke bleibt bis `dragend`, wenn ein Zug die Tabelle ohne Ablage verlässt; der Spaltenzug legt den Index statt des Namens als `text/plain` ab. |
 | **Kleines aus den Reviews** | `isEditorTarget` sucht mit `closest()` über den Behälter hinaus; kein Test für den Helfer und keiner für „Spalte über dem Körper losgelassen“; Platzhalter-Ton in `ConfigListEditorControl` ungetestet; Shift-Klick aufs Kästchen ohne Bereichsauswahl (vorbestehend). |
 | **Sichtprüfung (mit dem PR)** | Spaltenwahl: Liste ohne Wurzel-Innenabstand, Specimen mit Suche und fünf Einträgen zeigt Leerraum; Breite der Tabellensuche (alt 16rem, min. 8rem, neu auto) und Höchstbreite des Ablehnungshinweises (alt `min(400px, …)`); `TLRelativeTime` außerhalb von Zellen ohne `nowrap`. |
 | **Befund an master, #29651** (Bernhard) | `TestAccordionElement.testSectionsReachTheClient` hängt an der JVM-Locale: erwartet „General“, die deutsche Locale liefert „Allgemein“ — einziger roter Test in `layout.view` (1217 Tests). |

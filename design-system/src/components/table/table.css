@@ -6,8 +6,12 @@
    drag.css. Breiten, Versätze und die Lage der Zeilen sind Daten und stehen inline; alles andere hier.
    Eine Zeile schwebt nicht (skalen.md „Elevation“): kein Schatten, Kanten sind Linien. */
 
+/* isolation hält die Marke an der Wurzel (drop-onto, drop-refused: Fläche ::before auf layer-sticky,
+   drag.css) im Stapel der Tabelle: sie liegt über Filterleiste, Kopf und Zeilen, nie über einem Nachbarn
+   der Seite. */
 .tl-table {
   position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   width: 100%;

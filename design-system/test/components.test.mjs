@@ -329,6 +329,9 @@ test('das Progress-Specimen zeigt Anteile, unbestimmt, ohne Beschriftung und ein
   const html = readFileSync(new URL('../src/components/progress/progress.spec.html', import.meta.url), 'utf8');
   for (const s of ['role="progressbar"', 'aria-valuemin="0"', 'aria-valuemax="100"', 'aria-valuenow=', 'aria-valuetext=', 'aria-busy="true"'])
     assert.ok(html.includes(s), `${s} fehlt`);
+  // Fix-Welle 3b (2): jeder beschriftete Balken ist über aria-labelledby nach seiner Beschriftung benannt.
+  for (const bar of html.match(/<div class="tl-progress"[^>]*aria-valuetext=[^>]*>/g) ?? [])
+    assert.match(bar, /aria-labelledby="[^"]+"/, `beschrifteter Balken ohne Namen: ${bar}`);
   for (const c of ['tl-progress__track', 'tl-progress__fill', 'tl-progress__label', 'tl-nums']) assert.ok(html.includes(c), `${c} fehlt`);
   assert.ok(html.includes(".style.width = Math.round("), 'Breite nicht als Daten gesetzt');
   assert.ok(html.includes('id="on-layer"') && html.includes('id="on-base"'), 'beide Flächen fehlen');
@@ -342,7 +345,7 @@ test('der Progress-Vertrag nennt jedes Token, das progress.css liest, die Custom
   const md = readFileSync(new URL('../src/components/progress/progress.contract.md', import.meta.url), 'utf8');
   for (const t of new Set([...css.matchAll(/var\((--tl-[a-z0-9-]+)\)/g)].map((m) => m[1])))
     assert.ok(md.includes('`' + t + '`'), `Vertrag nennt ${t} nicht`);
-  for (const a of ['role="progressbar"', 'aria-valuemin', 'aria-valuemax', 'aria-valuenow', 'aria-valuetext', 'aria-busy', 'style="width:'])
+  for (const a of ['role="progressbar"', 'aria-valuemin', 'aria-valuemax', 'aria-valuenow', 'aria-valuetext', 'aria-labelledby', 'aria-hidden', 'aria-busy', 'style="width:'])
     assert.ok(md.includes(a), `Vertrag nennt ${a} nicht`);
   for (const h of ['## Zustand', '## Aktionen', '## Tokens', '## Attribute', '## Konformität'])
     assert.ok(md.includes(h), `Abschnitt ${h} fehlt`);

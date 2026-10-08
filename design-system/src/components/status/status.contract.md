@@ -36,8 +36,8 @@ der Zeile füllt sie.
 | Ort | Form |
 |---|---|
 | Select-Popup | eine `tl-status`-Zeile statt der Optionen |
-| Baum | eine `li` mit `role="treeitem"`, eine Ebene unter einem Knoten mit `aria-busy`; die `li` trägt den Namen (`aria-label` aus `js.tree.loading`), der `tl-progress` darin ist `aria-hidden="true"` |
-| Tabelle | nur leer: eine `role="row"` mit einer `role="gridcell"`, die die `tl-status`-Zeile mit `js.table.empty` trägt. Laden zeigt die Tabelle mit Platzhalterzeilen (`tl-skeleton`), nicht mit einer Statuszeile (`table.contract.md`). |
+| Baum | eine `li` mit `role="treeitem"`, eine Ebene unter einem Knoten mit `aria-busy`; im Baum mit `aria-multiselectable` trägt sie `aria-selected="false"` (sie ist nie wählbar); die `li` trägt den Namen (`aria-label` aus `js.tree.loading`), der `tl-progress` darin ist `aria-hidden="true"` |
+| Tabelle | nur leer: eine `role="row"` (im `treegrid` mit `aria-level="1"`), deren einzige `role="gridcell"` selbst die `tl-status`-Zeile ist, Text `js.table.empty`. Laden zeigt die Tabelle mit Platzhalterzeilen (`tl-skeleton`), nicht mit einer Statuszeile (`table.contract.md`). |
 
 ## Attribute
 
