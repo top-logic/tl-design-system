@@ -47,6 +47,20 @@ test('der Körper isoliert seinen Stapel, Spaltenwahl und Fixiergrenze sind so h
   assert.match(declarationsOf(css, '.tl-table__hint') ?? '', /status-error-border/);
 });
 
+// E8 (08.10.): fixierte und angeheftete Kopfzellen sind deckend — sie erben die Fläche der Kopfzeile, über die
+// scrollende Überschriften laufen. Jede Kopfzelle isoliert ihren Stapel: die Einfügemarke eines Spaltenzugs
+// (::before, layer-sticky) einer Überschrift, die unter die fixierten rollt, malt nicht über deren Zellen.
+test('Kopf: haftende Zellen deckend, Einfügemarke einer Überschrift bleibt in ihrer Zelle', () => {
+  assert.match(declarationsOf(css, '.tl-table__header-row') ?? '', /background:\s*var\(--tl-surface-layer\)/);
+  for (const lage of ['frozen', 'pinned']) {
+    const d = declarationsOf(css, `.tl-table__header-cell[data-tl-state~="${lage}"]`) ?? '';
+    assert.match(d, /position:\s*sticky/, lage);
+    assert.match(d, /z-index:\s*var\(--tl-layer-raised\)/, lage);
+    assert.match(d, /background:\s*inherit/, lage);
+  }
+  assert.match(declarationsOf(css, '.tl-table__header-cell') ?? '', /isolation:\s*isolate/);
+});
+
 // Fix-Runde 1 (07.10.): Füllen ist für Lesewerte ohne eigene Form. Eine Kapsel (Pill — seit P6 die Wurzel eines
 // TLText als Pill —, Badge, Chip) direkt in der Zelle würde sonst zum Block über die ganze Zellbreite.
 test('der Lesewert füllt die Zelle: nur span ohne Klasse und tl-text, keine Kapsel', () => {

@@ -12,7 +12,7 @@ const SOLL = {
   'columns/columns.contract.md': ['tl-columns', 'tl-columns--gap-compact', 'tl-columns--gap-default', 'tl-columns--gap-loose', 'tl-columns__column'],
   'table/table.contract.md': ['tl-table', 'tl-table__grid', 'role="grid"', 'role="treegrid"', 'aria-rowcount', 'aria-rowindex', 'aria-activedescendant',
     'aria-selected', 'aria-sort', 'data-tl-state', 'cursor', 'frozen', 'pinned', 'filtered', 'tl-checkbox', 'indeterminate',
-    'js.table.selectAll', 'js.table.selectRow', 'js.table.empty', 'tl-toggle', 'tl-skeleton', 'tl-status', 'tl-chip__toggle', 'tl-field-group',
+    'js.table.selectAll', 'js.table.selectRow', 'js.table.empty', 'js.table.filterActive', 'js.table.columnWidth', 'js.table.freezeSplitter', 'tl-toggle', 'tl-skeleton', 'tl-status', 'tl-chip__toggle', 'tl-field-group',
     '--tl-size-row', '--tl-size-bar'],
   'tree/tree.contract.md': ['tl-tree', 'role="tree"', 'role="treeitem"', 'aria-level', 'aria-expanded', 'aria-selected', 'aria-busy',
     'aria-activedescendant', 'js.tree.label', 'js.tree.loading', 'tl-toggle', 'tl-status', 'cursor'],

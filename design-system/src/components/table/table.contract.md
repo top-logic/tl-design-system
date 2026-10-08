@@ -21,7 +21,7 @@ rechnet sie aus `--tl-size-row` (`useTokenPx`).
 | `columns[].sortDirection` | `asc` \| `desc` | Richtung, solange nach der Spalte sortiert wird. |
 | `columns[].sortPriority` | number | Stufe einer mehrstufigen Sortierung (1 = erste); ab zwei Stufen als `tl-badge`. |
 | `columns[].filterable` | boolean | Die Kopfzelle trägt den Trichter (`tl-table__filter`). |
-| `columns[].filterActive` | boolean | Ein Filter der Spalte wirkt: `data-tl-state~="filtered"`. |
+| `columns[].filterActive` | boolean | Ein Filter der Spalte wirkt: `data-tl-state~="filtered"`, der Trichter heißt `js.table.filterActive` statt `js.table.filter`. |
 | `columns[].groupable` | boolean | Nach der Spalte darf gruppiert werden. |
 | `columns[].pinnedEnd` | boolean | Angeheftet am rechten Ende: `data-tl-state~="pinned"`, die erste davon `"pinned-first"`. |
 | `columns[].cssClass` | string | Klasse an jeder Zelle der Spalte, Kopf eingeschlossen. |
@@ -67,7 +67,7 @@ rechnet sie aus `--tl-size-row` (`useTokenPx`).
 | `expand` | Toggle, Pfeil rechts/links an einer Baum- oder Gruppenzeile |
 | `sort` | Sortierknopf; mit Umschalt eine Stufe dazu |
 | `columnResize` | Griff `tl-table__resize` losgelassen |
-| `columnReorder` | Kopfzelle an eine neue Stelle gezogen |
+| `columnReorder` | Kopfzelle an eine neue Stelle gezogen: die Hälfte der Überschrift unter dem Zeiger entscheidet die Seite (`useListReorder`, `data-tl-axis="horizontal"`); angeheftete Spalten ziehen nicht und nehmen nichts an |
 | `setFrozenColumnCount` | Griff `tl-table__freeze` losgelassen, Kontextmenü „Bis hier fixieren“ / „Alle lösen“ |
 | `openFilter` | Trichter |
 | `openColumnSelect` | Spaltenwahl |
@@ -139,7 +139,10 @@ Fixiergrenze. Der Rahmen `tl-table__frame` isoliert ebenso (`isolation: isolate`
 oder einem Nachbarn der Seite. Was die Tabelle öffnet (Kontextmenü, Grund einer Ablehnung), steht als
 Portal im `body`, nicht im Rahmen. Der Kopf liegt **außerhalb** des Rollbehälters `tl-table__body`, der seine Zeilen
 abschneidet (`overflow: auto`): Ring und Marke einer Zeile, die unter den Kopf rollt, werden mit ihr
-abgeschnitten und können den Kopf nicht übermalen. Darum braucht der Kopf keine eigene Ebene. Kopf und
+abgeschnitten und können den Kopf nicht übermalen. Darum braucht der Kopf keine eigene Ebene. Jede
+Kopfzelle isoliert ihren Stapel (`isolation: isolate`): die Einfügemarke eines Spaltenzugs (`::before`,
+`drag.css`) bleibt in ihrer Zelle und malt nicht über fixierte Kopfzellen, unter die die Überschrift
+gerollt ist. Fixierte und angeheftete Kopfzellen sind deckend: sie erben die Fläche der Kopfzeile. Kopf und
 Körper scrollen waagerecht gemeinsam: das TSX überträgt `scrollLeft` des Körpers auf den Kopf
 (`overflow: hidden`).
 
@@ -152,7 +155,7 @@ Körper scrollen waagerecht gemeinsam: das TSX überträgt `scrollLeft` des Kör
 | Kopf | Linie darunter `--tl-border-width-sm` in `--tl-border-emphasis`; Kopfzeile `--tl-size-bar` hoch auf `--tl-surface-layer` |
 | Kopfzelle | Innenabstand `--tl-space-control-x`, Lücke `--tl-space-2xs`, Trennlinie `--tl-border-separator`; Sortierknopf unter dem Zeiger `--tl-surface-interactive-hover` |
 | Sortiermarke, Trichter | `--tl-icon-secondary`; Trichter bei aktivem Filter `--tl-icon-primary` |
-| Spaltenwahl | `--tl-size-bar` hoch, Fläche `--tl-surface-layer`, unter dem Zeiger `--tl-surface-interactive-hover` |
+| Spaltenwahl | `--tl-size-control` breit (`tl-button--icon`), `--tl-size-bar` hoch, Fläche `--tl-surface-layer`, unter dem Zeiger `--tl-surface-interactive-hover`; die Reserve, mit der Kopf und Körper hinter der letzten Spalte enden, ist dasselbe Token (das TSX liest `--tl-size-control`) und passt so in jeder Dichte |
 | Griffe (Breite, Fixiergrenze) | `--tl-space-xs` breit, Fixiergrenze `--tl-size-bar` hoch; unter dem Zeiger und beim Ziehen eine Linie `--tl-border-width-md` in `--tl-border-interactive` |
 | Vorschau der Fixiergrenze | `--tl-border-width-md` in `--tl-border-interactive` |
 | Ebenen | Griff der Breite, haftende Zellen `--tl-layer-raised`; Fixiergrenze, Vorschau, Ring und Marke der Zeile `--tl-layer-sticky` |
@@ -182,7 +185,7 @@ zeichnet `drag.css` (`drag.contract.md`), den Cursor-Ring `base.css`.
 | `data-tl-state~="filtered"` | an der Kopfzelle einer Spalte mit aktivem Filter |
 | `data-tl-state~="dragging"`, `"drop-before"`, `"drop-after"`, `"drop-onto"`, `"drop-refused"` | an Zeile, Kopfzelle oder `tl-table` als Ganzem (`drag.contract.md`) |
 | `draggable="true"` | an ziehbaren Zeilen und verschiebbaren Kopfzellen |
-| `role="separator"` | an `tl-table__resize` und `tl-table__freeze`, mit `aria-label` (`js.table.freezeSplitter`); Zeigerbedienung |
+| `role="separator"` | an `tl-table__resize` mit `aria-label` `js.table.columnWidth` („Breite von {0} ändern“, {0} die Überschrift der Spalte) und an `tl-table__freeze` mit `aria-label` `js.table.freezeSplitter`; `aria-orientation="vertical"`, Zeigerbedienung |
 | `hidden` | an jedem Element, das gerade nicht steht |
 
 Cursor, Lage, Filter und Ziehen sind Zustände: die Wörter `cursor`, `frozen`, `frozen-last`, `pinned`,
@@ -194,7 +197,7 @@ Bauteile anderer Blöcke:
 |---|---|
 | `tl-checkbox` | Auswahlspalte (`tl-table__select`): im Kopf mit `aria-label` `js.table.selectAll`, in der Zeile `js.table.selectRow` und `tabindex="-1"`. Kopf „teilweise“ nur als `indeterminate` — **kein** `aria-checked`: ARIA in HTML verbietet es am nativen Kästchen, der Browser meldet `indeterminate` als „gemischt“ (entschieden 07.10.). |
 | `tl-toggle` | Auf-/Zuklapper in Baum- und Gruppenzeilen: `tabindex="-1"`, `aria-expanded`, `aria-label` wie jeder Toggle, **ohne** `aria-controls` — er zeigte auf die eigene Zeile. Zeigen und Drücken mit dem Schleier (`toggle.contract.md`): sichtbar auch auf gezeigter und ausgewählter Zeile. Ein Druck mit der Maus lässt den Fokus, wo er ist (`mousedown` ohne Standardaktion): am Raster, dessen Ring an der Cursorzeile bleibt. |
-| `tl-button--icon` | Trichter (`--sm --ghost`), Spaltenwahl (`--ghost`, in angehefteter letzter Kopfzelle `--sm`), Speichern |
+| `tl-button--icon` | Trichter (`--sm --ghost`, `aria-label` und Tooltip `js.table.filter`, bei aktivem Filter `js.table.filterActive`), Spaltenwahl (`--ghost`, `js.table.columns`, in angehefteter letzter Kopfzelle `--sm`), Speichern; Icons `tl-icon-sm` |
 | `tl-badge` | Stufe einer mehrstufigen Sortierung im Sortierknopf |
 | `tl-status` | statt Zeilen in der leeren Tabelle: `role="row"` `aria-rowindex="2"` > `role="gridcell"`, Text `js.table.empty`. Die Tabelle hat keine Ladezeile: Zeilen im Fenster, die noch fehlen, sind `tl-table__placeholder` (`aria-hidden`), das Raster trägt `aria-busy`. |
 | `tl-skeleton` | in `tl-table__placeholder` für Zeilen im Fenster, die der Server noch nicht geschickt hat; der Platzhalter ist `aria-hidden`, das Raster trägt `aria-busy` |
