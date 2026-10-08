@@ -13,8 +13,8 @@ test('tl-table: Zeile size-row, Kopf size-bar, Zustände als Attribute, keine Li
   for (const el of ['filter-bar', 'save', 'frame', 'grid', 'header-row', 'header-cell', 'sort', 'row', 'cell', 'tree', 'placeholder'])
     assert.match(declarationsOf(css, `.tl-table__${el}[hidden]`) ?? '', /display:\s*none/, el);
   assert.match(declarationsOf(css, '.tl-table__row') ?? '', /border-bottom:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-separator\)/);
-  assert.match(declarationsOf(css, '.tl-table__row:hover') ?? '', /surface-interactive-hover/);
-  assert.match(declarationsOf(css, '.tl-table__row[aria-selected="true"]') ?? '', /surface-interactive-selected/);
+  assert.match(declarationsOf(css, ':where(.tl-table__row:hover)') ?? '', /surface-interactive-hover/);
+  assert.match(declarationsOf(css, ':where(.tl-table__row[aria-selected="true"])') ?? '', /surface-interactive-selected/);
   assert.match(declarationsOf(css, ':where(.tl-table__row)') ?? '', /background:\s*var\(--tl-surface-layer\)/);
   assert.match(declarationsOf(css, '.tl-table__header-row') ?? '', /min-height:\s*var\(--tl-size-bar\)/);
   assert.match(declarationsOf(css, '.tl-table__header') ?? '', /border-bottom:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-emphasis\)/);
@@ -78,4 +78,23 @@ test('Kapseln in der Zelle behalten ihre Form und bleiben in der Zelle (max-widt
   assert.match(kapsel, /max-width:\s*100%/);
   for (const k of ['.tl-table__cell > .tl-badge', '.tl-table__cell > .tl-chip']) assert.equal(declarationsOf(css, k), kapsel, k);
   assert.match(declarationsOf(css, '.tl-table__cell > .tl-pill > .tl-pill__label') ?? '', /min-width:\s*0/);
+});
+
+// Ablegen auf eine Zeile färbt sie surface-interactive-selected (drag.css, [data-tl-state~="drop-onto"], eine
+// Attribut-Spezifität). Eine Fläche der Zeile selbst — Grund, gezeigt, ausgewählt — stünde mit
+// Klasse plus Pseudo-Klasse oder Attribut darüber und verdeckte das Ziel unter dem Zeiger (drag.contract.md
+// „Bild“): jede Regel, die der Zeile selbst eine Fläche gibt, steht darum ganz in :where.
+test('tl-table: jede Fläche der Zeile steht in :where, Ablegen darauf übermalt sie', () => {
+  const ohne = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  const offen = [];
+  for (const m of ohne.matchAll(/([^{}]+)\{([^}]*)\}/g)) {
+    if (!/(^|;)\s*background(-color)?\s*:/.test(m[2])) continue;
+    for (const sel of m[1].split(',').map((x) => x.trim())) {
+      // Die Zeile selbst ist das Subjekt: kein Kombinator hinter .tl-table__row.
+      const subjekt = sel.replace(/^:where\((.*)\)$/, '$1');
+      if (!/\.tl-table__row(?![\w-])[^\s>+~]*$/.test(subjekt)) continue;
+      if (!/^:where\(.*\)$/.test(sel)) offen.push(sel);
+    }
+  }
+  assert.deepEqual(offen, []);
 });

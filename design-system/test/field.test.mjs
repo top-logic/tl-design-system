@@ -139,3 +139,10 @@ test('der Kalenderknopf steht in eigenen Regeln und lässt das native Icon stehe
     assert.doesNotMatch(block, /(^|[\s;])background\s*:/, `${sel.trim()} setzt die Kurzform background`);
   }
 });
+
+// Ein Suchfeld mit eigenem Löschknopf (Filterleiste der Tabelle) zeigte in Chromium und WebKit daneben das
+// Löschen des Browsers: zwei Kreuze an einem Feld.
+test('ein Suchfeld mit Endknopf zeigt das Löschen des Browsers nicht', () => {
+  assert.match(declarationsOf(css, '.tl-field-group:has(> .tl-button) > .tl-field::-webkit-search-cancel-button') ?? '',
+    /appearance:\s*none/);
+});

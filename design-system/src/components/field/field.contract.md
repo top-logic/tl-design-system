@@ -102,7 +102,8 @@ Jeden Lesewert — im Formular, im Select und in der Tabellenzelle — zeichnet 
 Die Aktion in der Gruppe ist ein `tl-button--icon --sm --ghost` (`tl-button tl-button--ghost tl-button--sm tl-button--icon`),
 unmittelbares Kind von `tl-field-group`: `button type="button"` (Löschen) oder `a` (Öffnen), mit
 `aria-label`. Die Feldgruppe hat **einen** Endplatz: solange Text steht und `clearable` gilt, ersetzt der
-Löschknopf den Öffnen-Link. Icon und Endknopf ändern nur die Klasse der Gruppe, nicht die Lage des
+Löschknopf den Öffnen-Link. Ein Suchfeld (`type="search"`) mit Endknopf zeigt das Löschen des Browsers
+nicht daneben. Icon und Endknopf ändern nur die Klasse der Gruppe, nicht die Lage des
 Feldes im DOM, damit das Feld beim Tippen den Fokus behält.
 
 Klassen:

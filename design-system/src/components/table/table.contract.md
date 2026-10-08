@@ -159,7 +159,7 @@ Körper scrollen waagerecht gemeinsam: das TSX überträgt `scrollLeft` des Kör
 | Griffe (Breite, Fixiergrenze) | `--tl-space-xs` breit, Fixiergrenze `--tl-size-bar` hoch; unter dem Zeiger und beim Ziehen eine Linie `--tl-border-width-md` in `--tl-border-interactive` |
 | Vorschau der Fixiergrenze | `--tl-border-width-md` in `--tl-border-interactive` |
 | Ebenen | Griff der Breite, haftende Zellen `--tl-layer-raised`; Fixiergrenze, Vorschau, Ring und Marke der Zeile `--tl-layer-sticky` |
-| Zeile | `--tl-size-row` hoch (`min-height`), Fläche `--tl-surface-layer`, Linie darunter `--tl-border-width-sm` in `--tl-border-separator`; gezeigt `--tl-surface-interactive-hover`, ausgewählt `--tl-surface-interactive-selected` |
+| Zeile | `--tl-size-row` hoch (`min-height`), Fläche `--tl-surface-layer`, Linie darunter `--tl-border-width-sm` in `--tl-border-separator`; gezeigt `--tl-surface-interactive-hover`, ausgewählt `--tl-surface-interactive-selected`; jede Fläche der Zeile steht in `:where`, Ablegen darauf (`drop-onto`, `drag.css`) übermalt sie |
 | Zelle | Innenabstand `--tl-space-control-x`, Trennlinie `--tl-border-separator` |
 | Kante zur scrollenden Fläche | `frozen-last` rechts, `pinned-first` links: `--tl-border-width-sm` in `--tl-border-emphasis` |
 | Feld in der Zelle | randlos; Fokusring innen (`outline-offset` −`--tl-focus-offset`); Warnung innere Linie `--tl-border-width-md` in `--tl-status-warning-border`, Fehler in `--tl-status-error-border` |
@@ -202,7 +202,7 @@ Bauteile anderer Blöcke:
 | `tl-status` | statt Zeilen in der leeren Tabelle: `role="row"` `aria-rowindex="2"` > `role="gridcell"`, Text `js.table.empty`. Die Tabelle hat keine Ladezeile: Zeilen im Fenster, die noch fehlen, sind `tl-table__placeholder` (`aria-hidden`), das Raster trägt `aria-busy`. |
 | `tl-skeleton` | in `tl-table__placeholder` für Zeilen im Fenster, die der Server noch nicht geschickt hat; der Platzhalter ist `aria-hidden`, das Raster trägt `aria-busy` |
 | `tl-chip` | benannter Filter in der Filterleiste: `span.tl-chip` > `tl-chip__toggle` (`aria-pressed`) und, wenn löschbar, `tl-chip__remove` |
-| `tl-field-group` | Suche (`tl-table__search`) und Name beim Speichern |
+| `tl-field-group` | Suche (`tl-table__search`) mit Lupe und, solange Text steht, Löschknopf (`js.textInput.clear`); der Name beim Speichern ist ein `tl-field` in `tl-table__save` |
 | `tl-popover` | Grund einer Ablehnung beim Ziehen (`tl-table__hint`), Lage aus `bridge/popover.ts` |
 
 Klassen:
