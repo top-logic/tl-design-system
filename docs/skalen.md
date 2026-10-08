@@ -1822,6 +1822,33 @@ Spec `docs/superpowers/specs/2026-10-02-welle-3b-daten-design.md`. Neu entschied
   Fläche, die der Toggle zum Zeigen nähme; deckend wäre er dort unsichtbar. `surface-state-hover`/`-active` ist
   durchscheinend und trägt auf jedem Zeilengrund (Bernhards Höfe, „Höfe sind durchscheinend“).
 
+**Beim Bau entschieden (07.–08.10., Orchestrator, aus den Task-Reviews):**
+
+* **Kein Browser-Outline am Behälter mit Cursor.** Tabelle und Baum führen den Fokus am Behälter, den Ring zeichnet
+  der Cursor. `base.css` setzt genau dort `outline-style: none` — die einzige Ausnahme vom Lint „der Ring ist
+  Pflicht“, an einem Selektor, mit Test, der den Cursor-Ring daneben verlangt. Ohne gerenderte, **sichtbare**
+  Cursorzeile setzt die Engine `aria-activedescendant` nicht; dann trägt der Behälter den gewöhnlichen Ring (WCAG
+  2.4.7).
+* **Ablageziele haben ihre eigene Fläche in `:where`.** Zeigen und Auswahl an Zeile, Knoten und Listeneintrag dürfen
+  die Ablage-Marke nicht verdecken; ein gemeinsamer Test hält das für alle Ziele von `drag.css`.
+* **Stapel:** Tabellenwurzel, Rahmen, Körper und jede Kopfzelle isolieren ihren Stapel. Marke (`::before`) und Ring
+  (`::after`) liegen auf `layer-sticky`, haftende Zellen auf `layer-raised`; der Kopf liegt außerhalb des
+  Rollbehälters und wird darum nie übermalt.
+* **Gleiches zusammengelegt, beim Bauen gefunden:** ein Helfer für „ist das ein Editor“ (Tabelle, Baum), einer für
+  den Zeitpunkt von „wird gezogen“ (`afterDragImage`: Tabelle, Baum, Liste), einer für „Fokus nach Entfernen“
+  (Select-Chip, Filterkapsel), ein `SearchField` (Tabellensuche, Spaltenwahl), eine Datei für Glyphnamen
+  (`bridge/icons.ts`) — Letztere auch für den späteren Wechsel der Icon-Bibliothek.
+* **Fokus geht nie verloren:** Löschen, Entfernen, Formular schließen geben den Fokus an Feld, Nachbarn oder Raster.
+* **Die Liste mit Suche hält ihre Höhe** (`size-popover-max`), damit der Dialog beim Tippen nicht springt.
+* **`aria-sort` nur an der ersten Sortierstufe** (ARIA: eine Spalte zur Zeit); weitere Stufen zeigt das Badge.
+* **Die Tabelle hat keine Ladezeile**: fehlende Zeilen sind Platzhalter (`aria-hidden`), das Raster ist `aria-busy`.
+  Wo eine Ladezeile eine eigene Rolle mit Namen hat (Baum), ist der Fortschritt darin `aria-hidden`; sonst trägt der
+  Fortschritt den Namen (`aria-labelledby` auf seine Beschriftung).
+* **Alert ohne Modifier:** Spalten folgen dem Inhalt (`:has` für Icon und Schließen), das Icon darf fehlen; der
+  Schließen-Knopf ist derselbe Icon-Knopf wie Entfernen im Select.
+* **Gruppenzeile stark** über `css-class` `tl-type-body-strong` am Text der Zelle (A4-Muster). Offen: Gruppenwerte
+  aus Fabrik-Zellen (Lesewert) bleiben normal, bis Lesewerte eine Typo-Klasse von außen annehmen.
+
 **Befund dazu:** 282 Zeilen Tabellenregeln (3565–3846) standen ohne Überschrift im alten Stylesheet; die Ratsche
 schlug sie TLJobStatus zu. Die Blockmessung trifft nur, was eine Überschrift trägt — beim Ausschneiden wird TLJobStatus
 auf seinen wahren Stand gesetzt.

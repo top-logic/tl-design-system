@@ -197,6 +197,8 @@ Vor jeder Welle: Was tut dasselbe? Prognose auf den Tisch, Entscheidung, dann di
 > Sprechnotiz (Welle 3b, 07.10.): Ein Fehler bleibt sichtbar, auch in der markierten Zeile — Fehler- und Warnlinie halten dort jetzt den Mindestkontrast, ohne dass eine Farbe zwei Aufgaben bekommt.
 >
 > Sprechnotiz (Welle 3b, 07.10.): Was Kollegen parallel gebaut haben — Höfe, der runde Entfernen-Knopf, die Hinweisbox — wird nicht ein zweites Mal erfunden, sondern übernommen. Ein Knopf, eine Regel.
+>
+> Sprechnotiz (Welle 3b gebaut, 08.10.): Tabelle, Baum und Listen teilen sich Fokus, Ziehen und Suchen — fünf Helfer statt fünfzehn Fassungen; der Fokus geht nirgends mehr verloren.
 
 ---
 
