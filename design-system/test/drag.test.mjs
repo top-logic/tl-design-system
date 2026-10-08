@@ -59,3 +59,11 @@ test('tl-reorder-list: Liste ohne Aufzählung, Einträge size-row, Griff innen f
   assert.match(declarationsOf(liste, '.tl-reorder-list__handle:focus-visible') ?? '', /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/);
   assert.doesNotMatch(liste, /--(dragover|drag-over|group-by|fixed|active)\b/);
 });
+
+// Fix E5: mit Suche davor hat die Liste eine feste Höhe, damit ein Dialog um sie beim Tippen nicht
+// unter dem Zeiger schrumpft — dasselbe Token wie die Höchsthöhe, kein neues.
+test('tl-reorder-list: mit Suche davor feste Höhe size-popover-max', () => {
+  const liste = readGenerated('reorder-list', 'reorder-list.css');
+  const d = declarationsOf(liste, '.tl-reorder-list__search ~ .tl-reorder-list') ?? '';
+  assert.match(d, /block-size:\s*var\(--tl-size-popover-max\)/);
+});
