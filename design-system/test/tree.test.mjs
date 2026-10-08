@@ -8,7 +8,7 @@ test('tl-tree: Knoten size-row, positioniert für den Cursor-Ring, Auswahl als F
   const knoten = declarationsOf(css, '.tl-tree__node') ?? '';
   assert.match(knoten, /min-height:\s*var\(--tl-size-row\)/);
   assert.match(knoten, /position:\s*relative/);
-  assert.match(declarationsOf(css, '.tl-tree__node[aria-selected="true"]') ?? '', /background:\s*var\(--tl-surface-interactive-selected\)/);
+  assert.match(declarationsOf(css, ':where(.tl-tree__node[aria-selected="true"])') ?? '', /background:\s*var\(--tl-surface-interactive-selected\)/);
   assert.match(declarationsOf(css, '.tl-tree') ?? '', /isolation:\s*isolate/);
   assert.match(declarationsOf(css, '.tl-tree__spacer') ?? '', /width:\s*var\(--tl-size-control-sm\)/);
   assert.doesNotMatch(css, /border-left|outline|--(selected|focused|cursor)\b|@keyframes/);

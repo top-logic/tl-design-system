@@ -32,7 +32,8 @@
 }
 .tl-reorder-list__item[hidden] { display: none; }
 
-.tl-reorder-list__item:hover {
+/* In :where wie jede Fläche eines Ablage-Ziels (drag.css übermalt sie). */
+:where(.tl-reorder-list__item:hover) {
   background: var(--tl-surface-interactive-hover);
 }
 

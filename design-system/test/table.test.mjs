@@ -80,21 +80,3 @@ test('Kapseln in der Zelle behalten ihre Form und bleiben in der Zelle (max-widt
   assert.match(declarationsOf(css, '.tl-table__cell > .tl-pill > .tl-pill__label') ?? '', /min-width:\s*0/);
 });
 
-// Ablegen auf eine Zeile färbt sie surface-interactive-selected (drag.css, [data-tl-state~="drop-onto"], eine
-// Attribut-Spezifität). Eine Fläche der Zeile selbst — Grund, gezeigt, ausgewählt — stünde mit
-// Klasse plus Pseudo-Klasse oder Attribut darüber und verdeckte das Ziel unter dem Zeiger (drag.contract.md
-// „Bild“): jede Regel, die der Zeile selbst eine Fläche gibt, steht darum ganz in :where.
-test('tl-table: jede Fläche der Zeile steht in :where, Ablegen darauf übermalt sie', () => {
-  const ohne = css.replace(/\/\*[\s\S]*?\*\//g, '');
-  const offen = [];
-  for (const m of ohne.matchAll(/([^{}]+)\{([^}]*)\}/g)) {
-    if (!/(^|;)\s*background(-color)?\s*:/.test(m[2])) continue;
-    for (const sel of m[1].split(',').map((x) => x.trim())) {
-      // Die Zeile selbst ist das Subjekt: kein Kombinator hinter .tl-table__row.
-      const subjekt = sel.replace(/^:where\((.*)\)$/, '$1');
-      if (!/\.tl-table__row(?![\w-])[^\s>+~]*$/.test(subjekt)) continue;
-      if (!/^:where\(.*\)$/.test(sel)) offen.push(sel);
-    }
-  }
-  assert.deepEqual(offen, []);
-});

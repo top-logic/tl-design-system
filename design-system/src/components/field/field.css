@@ -133,9 +133,10 @@
   padding-inline-end: calc(var(--tl-space-2xs) + var(--tl-size-control-sm) + var(--tl-space-xs));
 }
 
-/* Der Endplatz gehört dem Endknopf: ein Suchfeld (type="search") zeigt daneben nicht auch das Löschen des
-   Browsers. Nur Chromium und WebKit kennen das Pseudo-Element; die Regel steht darum allein. */
-.tl-field-group:has(> .tl-button) > .tl-field::-webkit-search-cancel-button {
+/* Der Endplatz gehört dem Löschknopf (button, nicht der Öffnen-Link a): ein Suchfeld (type="search") zeigt
+   daneben nicht auch das Löschen des Browsers. Nur Chromium und WebKit kennen das Pseudo-Element; die Regel
+   steht darum allein. */
+.tl-field-group:has(> button.tl-button) > .tl-field::-webkit-search-cancel-button {
   appearance: none;
 }
 

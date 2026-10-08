@@ -28,11 +28,13 @@
 }
 .tl-tree__node[hidden] { display: none; }
 
-.tl-tree__node:hover {
+/* Gezeigt und ausgewählt stehen in :where: Ablegen darauf (drag.css, eine Attribut-Spezifität) übermalt
+   sie, wie in der Tabelle. */
+:where(.tl-tree__node:hover) {
   background: var(--tl-surface-interactive-hover);
 }
 
-.tl-tree__node[aria-selected="true"] {
+:where(.tl-tree__node[aria-selected="true"]) {
   background: var(--tl-surface-interactive-selected);
 }
 

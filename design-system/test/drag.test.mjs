@@ -67,3 +67,34 @@ test('tl-reorder-list: mit Suche davor feste Höhe size-popover-max', () => {
   const d = declarationsOf(liste, '.tl-reorder-list__search ~ .tl-reorder-list') ?? '';
   assert.match(d, /block-size:\s*var\(--tl-size-popover-max\)/);
 });
+
+// Ablegen darauf färbt das Ziel surface-interactive-selected ([data-tl-state~="drop-onto"], eine
+// Attribut-Spezifität). Eine Fläche des Ziels selbst — Grund, gezeigt, ausgewählt — stünde mit Klasse plus
+// Pseudo-Klasse oder Attribut darüber und verdeckte das Ziel unter dem Zeiger (drag.contract.md „Bild“).
+// Jede Regel eines Blocks, dessen Ziele drag.css bedient, die dem Ziel selbst eine Fläche gibt, steht darum
+// ganz in :where.
+test('jede Fläche eines Ablage-Ziels steht in :where, Ablegen darauf übermalt sie', () => {
+  const ziele = [
+    ['table', 'table.css', 'tl-table__row'],
+    ['tree', 'tree.css', 'tl-tree__node'],
+    ['reorder-list', 'reorder-list.css', 'tl-reorder-list__item'],
+  ];
+  const offen = [];
+  for (const [komp, datei, ziel] of ziele) {
+    const ohne = readGenerated(komp, datei).replace(/\/\*[\s\S]*?\*\//g, '');
+    const subjekt = new RegExp(`\\.${ziel}(?![\\w-])[^\\s>+~]*$`);
+    let gesehen = 0;
+    for (const m of ohne.matchAll(/([^{}]+)\{([^}]*)\}/g)) {
+      if (!/(^|;)\s*background(-color)?\s*:/.test(m[2])) continue;
+      for (const sel of m[1].split(',').map((x) => x.trim())) {
+        // Das Ziel selbst ist das Subjekt: kein Kombinator hinter seiner Klasse.
+        if (!subjekt.test(sel.replace(/^:where\((.*)\)$/, '$1'))) continue;
+        gesehen++;
+        if (!/^:where\(.*\)$/.test(sel)) offen.push(`${datei}: ${sel}`);
+      }
+    }
+    // Der Test greift nur, wenn er die Flächen des Ziels auch findet.
+    assert.ok(gesehen > 0, `${datei}: keine Fläche an .${ziel} gefunden`);
+  }
+  assert.deepEqual(offen, []);
+});
