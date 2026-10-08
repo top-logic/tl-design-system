@@ -121,8 +121,9 @@ oder Kästchen im Raster gehören sie dem Bedienelement.
 | `tl-table__cell` | `role="gridcell"` |
 
 **Cursor und Fokus (WCAG 2.4.7).** Das Raster setzt `aria-activedescendant` nur, solange eine Zeile
-mit dieser Id gerendert ist und `data-tl-state~="cursor"` trägt. Ohne Cursor (`cursorIndex` −1), in der
-leeren Tabelle oder solange die Cursorzeile außerhalb des Fensters liegt, fehlt das Attribut — dann
+mit dieser Id gerendert und im sichtbaren Bereich des Körpers ist und `data-tl-state~="cursor"` trägt.
+Ohne Cursor (`cursorIndex` −1), in der leeren Tabelle oder solange die Cursorzeile nicht sichtbar ist
+(gerollt oder noch nicht geschickt), fehlt das Attribut — dann
 zeigt das Raster selbst den Ring aus `base.css`. Mit dem Attribut gibt das Raster den Ring an die
 Cursorzeile ab: `base.css` zeichnet ihn innen auf ihrem `::after`. Ein `aria-activedescendant` auf eine
 Id, die es nicht gibt, ließe den Fokus unsichtbar.
@@ -195,7 +196,7 @@ Bauteile anderer Blöcke:
 | `tl-toggle` | Auf-/Zuklapper in Baum- und Gruppenzeilen: `tabindex="-1"`, `aria-expanded`, `aria-label` wie jeder Toggle, **ohne** `aria-controls` — er zeigte auf die eigene Zeile. Zeigen und Drücken mit dem Schleier (`toggle.contract.md`): sichtbar auch auf gezeigter und ausgewählter Zeile. Ein Druck mit der Maus lässt den Fokus, wo er ist (`mousedown` ohne Standardaktion): am Raster, dessen Ring an der Cursorzeile bleibt. |
 | `tl-button--icon` | Trichter (`--sm --ghost`), Spaltenwahl (`--ghost`, in angehefteter letzter Kopfzelle `--sm`), Speichern |
 | `tl-badge` | Stufe einer mehrstufigen Sortierung im Sortierknopf |
-| `tl-status` | statt Zeilen in der leeren Tabelle: `role="row"` `aria-rowindex="2"` > `role="gridcell"`, Text `js.table.empty`. Eine Ladezeile (`role="row"` > `role="gridcell"` > `tl-status`) trägt ihren Namen am `tl-progress` (`aria-label`): Zeile und Zelle haben keinen eigenen Namen (`status.contract.md`). |
+| `tl-status` | statt Zeilen in der leeren Tabelle: `role="row"` `aria-rowindex="2"` > `role="gridcell"`, Text `js.table.empty`. Die Tabelle hat keine Ladezeile: Zeilen im Fenster, die noch fehlen, sind `tl-table__placeholder` (`aria-hidden`), das Raster trägt `aria-busy`. |
 | `tl-skeleton` | in `tl-table__placeholder` für Zeilen im Fenster, die der Server noch nicht geschickt hat; der Platzhalter ist `aria-hidden`, das Raster trägt `aria-busy` |
 | `tl-chip` | benannter Filter in der Filterleiste: `span.tl-chip` > `tl-chip__toggle` (`aria-pressed`) und, wenn löschbar, `tl-chip__remove` |
 | `tl-field-group` | Suche (`tl-table__search`) und Name beim Speichern |
@@ -231,7 +232,7 @@ Klassen:
 | `tl-table__spacer` | Platzhalter eines Blatts an der Stelle des Toggles |
 | `tl-table__value` | der Wert neben dem Toggle; endet mit Ellipse |
 | `tl-table__count` | Anzahl der Gruppenzeile |
-| `tl-table__placeholder` | Zeile, die noch lädt |
+| `tl-table__placeholder` | Zeile im Fenster, die der Server noch nicht geschickt hat: `aria-hidden`, trägt ein `tl-skeleton`; keine Ladezeile mit `tl-progress` |
 | `tl-table__hint` | der Grund einer Ablehnung (am `tl-popover`) |
 
 ## Zellinhalt
@@ -250,7 +251,7 @@ Breiten, Versätze haftender Zellen, Einzug und die Lage der Zeilen sind Daten u
 ## Konformität
 
 Eine Tabelle besteht den Vertrag, wenn das Raster fokussierbar ist und `aria-activedescendant` nur auf
-eine gerenderte Cursorzeile setzt, jede Zeile `aria-selected` und `aria-rowindex` trägt, Sortierung,
+eine gerenderte, sichtbare Cursorzeile setzt, jede Zeile `aria-selected` und `aria-rowindex` trägt, Sortierung,
 Auswahl, Lage, Filter und Ziehen allein über `aria-*` und `data-tl-state` ausgedrückt sind, das
 Kopf-Kästchen „teilweise“ nur als `indeterminate` meldet und im Klassen-Gate keine Klasse ohne
 `tl`-Präfix bleibt.

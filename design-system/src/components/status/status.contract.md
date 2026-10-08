@@ -37,7 +37,7 @@ der Zeile füllt sie.
 |---|---|
 | Select-Popup | eine `tl-status`-Zeile statt der Optionen |
 | Baum | eine `li` mit `role="treeitem"`, eine Ebene unter einem Knoten mit `aria-busy`; die `li` trägt den Namen (`aria-label` aus `js.tree.loading`), der `tl-progress` darin ist `aria-hidden="true"` |
-| Tabelle | eine `role="row"` mit einer `role="gridcell"`, die die `tl-status`-Zeile trägt |
+| Tabelle | nur leer: eine `role="row"` mit einer `role="gridcell"`, die die `tl-status`-Zeile mit `js.table.empty` trägt. Laden zeigt die Tabelle mit Platzhalterzeilen (`tl-skeleton`), nicht mit einer Statuszeile (`table.contract.md`). |
 
 ## Attribute
 
@@ -45,7 +45,7 @@ der Zeile füllt sie.
 |---|---|
 | `tl-status` | immer; an einem Block-Element |
 | `aria-busy="true"` | am `tl-progress` im Ladezustand |
-| `aria-label` | Der Name der Ladezeile, Pflicht — am Element, das der Screenreader ansagt. Hat die Zeile selbst eine Rolle mit Namen (im Baum die `li role="treeitem"`), trägt sie den Namen, und der `tl-progress` darin ist `aria-hidden="true"` ohne eigenen Namen; sonst trägt ihn der `tl-progress` (Select-Popup, Tabellenzeile). Der Text stammt aus dem Resource-Key des Lesers, im Baum `js.tree.loading`. Steht eine sichtbare Beschriftung da, geht stattdessen `aria-labelledby` auf deren `id`. |
+| `aria-label` | Der Name der Ladezeile, Pflicht — am Element, das der Screenreader ansagt. Hat die Zeile selbst eine Rolle mit Namen (im Baum die `li role="treeitem"`), trägt sie den Namen, und der `tl-progress` darin ist `aria-hidden="true"` ohne eigenen Namen; sonst trägt ihn der `tl-progress` (Select-Popup). Der Text stammt aus dem Resource-Key des Lesers, im Baum `js.tree.loading`. Steht eine sichtbare Beschriftung da, geht stattdessen `aria-labelledby` auf deren `id`. |
 | `aria-valuetext` | am `tl-progress` nur als Wertetext, wenn eine Beschriftung da ist (siehe `progress.contract.md`); nie als Name |
 | `role="alert"` | am `tl-status` des Fehlers |
 | `tl-button--link` | im Fehler, zum Wiederholen |
