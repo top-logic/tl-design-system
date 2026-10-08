@@ -443,25 +443,159 @@ Nicht in dieser Welle: Attribut `tone`/`appearance` am Kommando (bewusst nicht),
 | **Kleines aus dem Schluss-Review** | `TLTabBar.tsx`: `aria-labelledby` des Panels zeigt ins Leere, wenn `activeTabId` keinen Reiter trifft; Fix: nur setzen, wenn der Reiter existiert. `TLMenuRegion.tsx`: `buttonRef` und `regionRef` werden gesetzt, aber nie gelesen; Fix: entfernen. |
 | **Sichtprüfung (mit dem PR)** | Popup-Mindestbreite `size-popover-min` schlägt Felder unter 10rem; `max-height` des Select-Popups lässt weniger als acht Zeilen sichtbar — die Formel `8·row + control + 2·xs` übersieht Popover-Innenabstand (2·xs) und Rand (2·`border-width-sm`) unter `border-box` sowie den `margin-bottom: xs` der Suchgruppe, es fehlen rund 0,3 Zeilen; Fix nach der Sichtprüfung: `+ var(--tl-space-xs) + 2 * var(--tl-border-width-sm)`; `Shift+F10` kann ein zweites natives Kontextmenü auslösen; Panelkopf `+2·space-2xs` höher, Trigger in der primären App-Bar; Toggle-Drehung; Specimen `progress`/`icon` im Browser. |
 
-## Welle 3b · Daten — Spec 02.10.2026
+## Welle 3b · Daten — gebaut 08.10.2026
 
 Spec `docs/superpowers/specs/2026-10-02-welle-3b-daten-design.md`, Branch `CWS/CWS_29617_design_system_welle_3b` von
-master `b29546f2ad`. Abzuschneiden: TLTableView (2693–3178 und 3565–3846), TLTreeView, TLColumnSelect, TLColumns,
-die drei TLText-Blöcke; TLJobStatus fällt dabei auf seinen wahren Stand (Zahl aus `inventory.mjs`, ≈ 122). Konsolidierung W3 (Tabelle/Baum),
-W6, W7, W8, W10, W11, N1; die Tabelle „alt → neu“ entsteht mit dem Bau. Nach dem Plan-Review (07.10.): Fehler- und
-Warnlinie getauscht, neue Stufe `red-34` (dunkel `status-error-border`) — Anwendungs-Stylesheets, die
-`--tl-status-error-border` lesen, sehen hell `red-41` statt `red-35`.
+master `eef176e2ad` (Engine `394d1154d9..7b491f5f66`, Suiten grün bis auf den fremden Accordion-Test unten, `messages_en`
+ohne Diff) und Paket `80749da..` (Ratsche je Task). Noch **nicht gepusht** (Push-Sperre bis 09.10.); die Sichtprüfung
+steht aus und läuft mit dem PR. Konsolidierung W3 (Tabelle/Baum), W6, W7, W8, W10, W11, N1 (unten). Nach dem Plan-Review
+(07.10.): Fehler- und Warnlinie getauscht, neue Stufe `red-34` (dunkel `status-error-border`) — Anwendungs-Stylesheets,
+die `--tl-status-error-border` lesen, sehen hell `red-41` statt `red-35`, die Warnlinie hell `amber-43` statt `amber-36`.
 
-**Offen nach 3b:**
+### Gestrichene Blöcke
+
+| Block (`tlReactControls.css`) | Zeilen alt | Nachfolger |
+|---|---|---|
+| TLTableView | 511 | `tl-table` (`table.css`), Filterleiste mit `tl-chip`, `tl-field-group`, `tl-table__save` |
+| TLTableView, zweiter Teil unter der TLJobStatus-Überschrift | 283 (TLJobStatus 400→117) | `tl-table` (Kopf, Griffe, Vorschau, Marke), Ziehen über `drag.css`, Hinweis `tl-popover tl-table__hint` |
+| TLTreeView | 121 | `tl-tree` (`tree.css`), `tl-toggle`, Ladezeile `tl-status` |
+| TLColumnSelect | 113 | `tl-reorder-list` (`reorder-list.css`) |
+| TLColumns | 27 | `tl-columns` (`columns.css`) |
+| What the text is for | 41 | `tl-text` mit `tl-type-*` (`text.css`) |
+| What the color of the text means | 34 | `data-tl-tone` |
+| The shape the text takes | 19 | `tl-text--truncate`, `tl-pill` als Wurzel |
+| Controls placed on the primary (accent) app bar | 14 | — (Text ohne Ton erbt die Farbe der App-Bar) |
+| TLRelativeTime | 10 | `tl-text tl-type-label` mit `data-tl-tone="secondary"` |
+| TLAlert (unlisted, #29652) | 32 | `alert.css` |
+
+**Ratsche: 5636 → 4490** (`test/ratchet.json`, `lines` = Summe der Budgets = gemessen). Gesenkt: TLValueList 117→101
+(Zieh- und Ablagezustände zeichnet `drag.css`), TLHtml 164→162 (gemessen, gesunken mit #29752). Neu ein Übergangsblock
+**„Table cells holding legacy controls (until waves 4 and 5)“ (43)**: Zellregeln, die Klassen noch nicht migrierter
+Controls lesen (`tlStack`, `tlValueList`, `tlRowCommandCell`) an `tl-table__cell`; sie gehen mit ihren Controls. Kein
+Block gewachsen. `foreignTl` 10→9: `--tlText-tone` fällt, der Ton ist `data-tl-tone`. Literale `fontSize` 47→40,
+`duration` 33→32, `zIndex` 22→15 (darunter die `13000` des Ablehnungshinweises), `outlineNone` 20→16.
+
+### Neu im Paket
+
+`status` (`tl-status`: lädt, leer, Fehler — herausgelöst aus `tl-select__status`; Leser Select, Baum-Ladezeile, leere
+Tabelle), `drag` (eine Ziehen-Optik für alle Leser über `data-tl-state~="dragging|drop-before|drop-after|drop-onto|drop-refused"`,
+waagerecht mit `data-tl-axis="horizontal"`), `reorder-list` (`tl-reorder-list`, `__item`, `__handle`, `__label`,
+`__search`), `text` (`tl-text`, `tl-text--truncate`, `data-tl-tone`), `columns` (`tl-columns`, `__column`,
+`--gap-compact|default|loose`), `table` (`tl-table`, `__frame`, `__grid`, `__header`, `__header-row`, `__header-cell`,
+`__body`, `__row`, `__cell`, `__select`, `__sort`, `__filter`, `__columns`, `__resize`, `__freeze`, `__freeze-preview`,
+`__mark`, `__tree`, `__spacer`, `__value`, `__count`, `__placeholder`, `__filter-bar`, `__search`, `__save`, `__hint`;
+Lage über `data-tl-state~="frozen|frozen-last|pinned|pinned-first|filtered|cursor"`), `tree` (`tl-tree`, `__node`,
+`__content`, `__spacer`). Je `*.css`, `*.contract.md`, Specimen; nachgezogen die Verträge `pill`, `avatar`, `alert`,
+`choice`, `select`, `field`, `skeleton` (erster Aufrufer: Platzhalterzeilen der Tabelle).
+
+- **Kapsel:** `span.tl-chip` mit `tl-chip__toggle` (`aria-pressed`) und `tl-chip__remove`
+  (`tl-button--icon --sm --ghost`); keine Pill mehr in Chip, Segment und Select-Chip (`withPill` fällt).
+- **Rolle als Attribut:** `data-tl-role="error|warning|success|info|brand|category-1…8"` an Pill, Chip, Segment,
+  Select-Chip, Avatar und Alert; `generate.mjs` erzeugt die Regeln je Block über `@tl-roles`. `pillClassName` fällt.
+- **Cursor-Ring:** `base.css` zeichnet den Ring innen auf dem `::after` des Elements mit `data-tl-state~="cursor"`,
+  solange sein Behälter (`aria-activedescendant`) den Tastaturfokus hat (Ebene `layer-sticky`, der Behälter isoliert
+  den Stapel); ohne Cursor trägt der Behälter selbst den Ring. Tabelle und Baum; Auswahl ist eine Fläche, kein Balken.
+- **Maße:** keine neuen Tokens — Zeile `size-row`, Kopf `size-bar`, Einzug und Toggle `size-control-sm`, Griffe
+  `space-xs`, Ebenen `layer-raised`/`-sticky`/`-popover`. Neue Primitive `red-34`.
+- **Engine-Helfer** (kein Paket): `tokenPx`/`useTokenPx` (Zeilenhöhe und Einzug aus den Tokens), `filterOptions`,
+  `useListReorder` (Alt + Pfeil mit Live-Bereich, Zeiger mit Hälften-Regel), `FieldValue` (Lesewert mit zwei
+  Link-Arten), `isEditorTarget` (Tasten aus Editoren im Raster und Baum).
+
+### Alt → neu für Anwendungs-Stylesheets
+
+Kunden- und Anwendungs-CSS, das die alten Klassen anspricht, liest künftig diese. Die camelCase-Namen links hält das
+Grep-Gate `test/engine-classes.test.mjs` aus der Engine fern; für die Paketklassen (`tl-pill--…`, `tl-avatar--…`,
+`tl-alert--…`, `tl-select__status`) gilt, was `dist` erzeugt — die gefallenen erzeugt es nicht mehr.
+
+**Tabelle**
+
+| Alt | Neu |
+|---|---|
+| `tlTableView` | `tl-table` (Wurzel), darin `tl-table__frame` und das Raster `tl-table__grid` (`role="grid"`, im Baum und gruppiert `"treegrid"`) |
+| `tlTableView__headerArea`, `__header`, `__headerRow`, `__headerCell`, `__headerLabel` | `tl-table__frame` (Rahmen um Raster, Spaltenwahl und Fixiergrenze), `tl-table__header`, `__header-row`, `__header-cell`, `__label` |
+| `tlTableView__headerCell--sortable`, `__sortIndicator` | Sortierknopf `tl-table__sort`; Richtung `aria-sort` an der ersten Stufe |
+| `tlTableView__sortPriority` | `tl-badge` (ab zwei Stufen) |
+| `tlTableView__filterButton` | `tl-table__filter`; aktiv `[data-tl-state~="filtered"]` an der Kopfzelle |
+| `tlTableView__columnsButton`, `--inCell` | `tl-table__columns` (`tl-button--icon`) |
+| `tlTableView__resizeHandle` | `tl-table__resize` (`role="separator"`) |
+| `tlTableView__frozenSplitter`, `--active`, `__frozenPreview` | `tl-table__freeze`, `tl-table__freeze-preview` |
+| `tlTableView__groupMark` | `tl-table__mark` |
+| `tlTableView__body`, `__row`, `__cell` | `tl-table__body`, `__row`, `__cell` |
+| `tlTableView__row--selected` | `.tl-table__row[aria-selected="true"]` |
+| `tlTableView__row--cursor` | `.tl-table__row[data-tl-state~="cursor"]` (Ring aus `base.css`) |
+| `tlTableView__cell--frozen`, `--frozenLast`, `__headerCell--frozen`, `--frozenLast` | `[data-tl-state~="frozen"]`, `[data-tl-state~="frozen-last"]` |
+| `tlTableView__cell--pinnedEnd`, `--pinnedEndFirst`, `__headerCell--pinnedEnd`, `--pinnedEndFirst` | `[data-tl-state~="pinned"]`, `[data-tl-state~="pinned-first"]` |
+| `tlTableView__checkboxCell`, `__checkbox` | `tl-table__select` mit `tl-checkbox` |
+| `tlTableView__treeCell`, `__treeToggle`, `__treeToggleSpacer`, `__treeValue` | `tl-table__tree`, `tl-toggle`, `tl-table__spacer`, `tl-table__value` |
+| `tlTableView__row--group`, `__groupCount` | Gruppenzeile `tl-table__row tl-type-body-strong`, Anzahl `tl-table__count` |
+| `tlTableView__filterBar`, `__filterChips` | `tl-table__filter-bar` |
+| `tlTableView__chip`, `--active`, `__chipLabel`, `__chipRemove` | `tl-chip` mit `tl-chip__toggle` (`aria-pressed="true"`) und `tl-chip__remove` |
+| `tlTableView__search`, `__searchInput` | `tl-table__search` (`tl-field-group` mit Löschknopf) |
+| `tlTableView__saveForm`, `__saveInput`, `__barButton` | `tl-table__save` mit `tl-field` und `tl-button` |
+| `tlTableView__row--dragOver-before`, `-after`, `-onto` | `[data-tl-state~="drop-before"]`, `"drop-after"`, `"drop-onto"` (`drag.css`) |
+| `tlTableView__headerCell--dragOver-left`, `-right` | `[data-tl-state~="drop-before"]`, `"drop-after"` in der Kopfzeile mit `data-tl-axis="horizontal"` |
+| `tlTableView--dragover`, `--dropRefused`, `__row--dropRefused` | `.tl-table[data-tl-state~="drop-onto"]`, `[data-tl-state~="drop-refused"]` |
+| `tlTableView__dropHint` | `tl-popover tl-table__hint` |
+| Zustand `rowHeight` | `--tl-size-row` (das TSX misst das Token; das Dashboard behält seinen eigenen Schlüssel für die Kachelhöhe) |
+
+**Baum, Spaltenwahl, Spalten**
+
+| Alt | Neu |
+|---|---|
+| `tlTreeView`, `__node`, `__content` | `tl-tree`, `__node`, `__content` |
+| `tlTreeView__node--selected` | `.tl-tree__node[aria-selected="true"]` |
+| `tlTreeView__node--focused` | `.tl-tree__node[data-tl-state~="cursor"]` (Ring aus `base.css`) |
+| `tlTreeView__toggle`, `__chevron--down`, `--right` | `tl-toggle` (Chevron dreht mit `aria-expanded`) |
+| `tlTreeView__toggleSpacer` | `tl-tree__spacer` |
+| `tlTreeView__spinner` | Ladezeile `li.tl-status` (`role="treeitem"`) mit `tl-progress` |
+| `tlTreeView__node--drop-above`, `-below`, `-within` | `[data-tl-state~="drop-before"]`, `"drop-after"`, `"drop-onto"` |
+| `tlTreeView__node--no-drop` | fällt (das TSX setzte die Klasse nie) |
+| `tlColumnSelect`, `__list`, `__row`, `__handle`, `__label` | `tl-reorder-list`, `__item`, `__handle`, `__label` |
+| `tlColumnSelect__search`, `__searchInput` | `tl-reorder-list__search` (`tl-field-group`) |
+| `tlColumnSelect__list--fixed` | feste Höhe `size-popover-max`, sobald ein Suchfeld vor der Liste steht |
+| `tlColumnSelect__groupBy`, `--active` | `tl-button--icon --sm --ghost` mit `aria-pressed` |
+| `tlColumnSelect__row--dragOver-before`, `-after` | `[data-tl-state~="drop-before"]`, `"drop-after"` |
+| `tlColumns`, `__column`, `--gap-compact`, `--gap-default`, `--gap-loose` | `tl-columns`, `__column`, `--gap-compact`, `--gap-default`, `--gap-loose` |
+
+**Text, Kapseln, Status**
+
+| Alt | Neu | Bruch |
+|---|---|---|
+| `tlText` | `tl-text` | still |
+| `tlText--<variante>` (`display`, `headline`, `title`, `body`, `label`, `caption`) | `tl-type-display`, `-heading-lg`, `-heading-sm`, `-body`, `-label`, `-label` | still |
+| `tlText--tone-<t>` | `[data-tl-tone="<t>"]`; `primary` ohne Attribut, `on-color` → `on-brand` | still |
+| `tone="accent"` | `css-class="tl-type-body-strong"` | **Ladefehler** ab `TL_8.0.0-alpha9`: `ConfigurationException` mit der Liste der erlaubten Werte |
+| `css-class="tlText--strong"` | `tl-type-body-strong` (Variante `label`: `tl-type-label-strong`) | still wirkungslos |
+| `tlText--placeholder` | `tone="placeholder"` (ohne Kursiv) | still |
+| `tlText--ellipsis` | `overflow="ellipsis"` → `tl-text--truncate` | still |
+| `tlText--pill` | `appearance="pill"` → `span.tl-pill` als Wurzel mit `data-tl-role` | still |
+| `.tlRelativeTime` | `tl-text tl-type-label` mit `data-tl-tone="secondary"` | still |
+| `tl-pill--<rolle>` (auch `--brand`) | `.tl-pill[data-tl-role="<rolle>"]` | still |
+| `tl-avatar--category-<n>` | `.tl-avatar[data-tl-role="category-<n>"]` | still |
+| `tl-alert--<status>` | `.tl-alert[data-tl-role="<status>"]` | still |
+| `tl-alert--closable` | fällt — die Spalte folgt dem Inhalt | still |
+| `tl-select__status` | `tl-status` | still |
+
+### Offen nach 3b
 
 | Gruppe | Stand |
 |---|---|
-| **Spaltenbreite und Fixiergrenze per Tastatur** | `role=separator` ohne Tastatur; Pfeile am fokussierten Griff wären der Weg (WAI-ARIA Window Splitter). |
-| **Senkrechtes Auto-Scrollen beim Zeilenziehen** | fehlt heute; waagerecht gibt es zwei Fassungen (Spaltenzug, Breite ziehen) — beim Nachholen zusammenlegen. |
-| **Ziehen-Optik Dashboard, Kalender, Farbpalette** | eigene Markierungen (leuchtender Balken, Deckkraft 0,7, keine); Welle 4/5 auf `data-tl-state`. |
-| **`TLValueList`-Block** | bekommt in 3b Tastatur und Optik über den Hook, der Block selbst bleibt bis Welle 5. |
+| **Spaltenbreite und Fixiergrenze per Tastatur** | `role=separator` ohne Tastatur; Pfeile am fokussierten Griff wären der Weg (WAI-ARIA Window Splitter). Spec §16. |
+| **Senkrechtes Auto-Scrollen beim Zeilenziehen** | fehlt heute; waagerecht gibt es zwei Fassungen (Spaltenzug, Breite ziehen) — beim Nachholen zusammenlegen. Spec §16. |
+| **Ziehen-Optik Dashboard, Kalender, Farbpalette** | eigene Markierungen (leuchtender Balken, Deckkraft 0,7, keine); Welle 4/5 auf `data-tl-state`. Spec §16. |
+| **Spaltenzug ohne Sonderzonen** | Mit `useListReorder` fallen die Ablagezonen „vor der ersten Spalte“ (Kopfzelle der Auswahl) und „hinter der letzten“; die Hälften der ersten und letzten Spalte leisten dasselbe. In der Sichtprüfung ansehen, ob die Ränder vermisst werden. |
+| **Übergangsblock „Table cells holding legacy controls“** | 43 Zeilen im alten Stylesheet, lesen `tl-table__cell` und die Altklassen `tlStack`, `tlValueList`, `tlRowCommandCell`; jede Regel fällt mit ihrem Control (Welle 4/5). |
+| **`TLValueList`-Block** | bekommt in 3b Tastatur und Optik über den Hook, der Block selbst bleibt bis Welle 5. Griff und Ansage nennen den Eintrag nicht (kein Name des Eintrags). |
 | **Icon-Select** | Status, Spinner und Filter (W10, W8) in Welle 5. |
-| **Nebentext auf ausgewählter Zeile, dunkel** | `text-secondary` 4,27 und `text-helper` 3,64 auf `surface-interactive-selected` (Plan-Review 3b, A1); die Anzahl der Gruppenzeile ist `text-secondary`. Paar und Stufe entscheiden, wenn ein Nebentext in einer ausgewählten Zeile gebraucht wird. |
+| **Nebentext auf ausgewählter Zeile** | Nachgerechnet 08.10.: dunkel `text-secondary` 4,27 und `text-helper` 3,64 auf `surface-interactive-selected`, hell `text-helper` 4,42 — alle unter 4,5 (Plan-Review 3b, A1); die Anzahl der Gruppenzeile ist `text-secondary`. Paar und Stufe entscheiden, wenn ein Nebentext in einer ausgewählten Zeile gebraucht wird. |
+| **Hilfstechnik am Tabellenkopf** | Die Gruppierungsmarke hat keinen Namen; Sortierstufen ab 2 sind nur sichtbar (Badge `aria-hidden`). |
+| **`progress.contract.md` (Welle 1)** | keine Namensregel für `progressbar` — ARIA 1.2 verlangt einen Namen. |
+| **Messen** | `windowRange` der Tabelle ohne `ResizeObserver` (nach Größenänderung kann der Ring am Raster statt an der Zeile stehen); `useTokenPx` misst nur neu, wenn sich `data-tl-density`, `-theme` oder `-mode` an `<html>` ändert — ein Schalter tiefer im Baum bleibt ungesehen. |
+| **Ziehen** | Ein bei `dragstart` von außen abgebrochener Zug lässt `dragging` stehen (vorbestehend); in der Tabelle fehlt `afterDragImage` der `runningDrag()`-Wächter; die Spaltenmarke bleibt bis `dragend`, wenn ein Zug die Tabelle ohne Ablage verlässt; der Spaltenzug legt den Index statt des Namens als `text/plain` ab. |
+| **Kleines aus den Reviews** | `isEditorTarget` sucht mit `closest()` über den Behälter hinaus; kein Test für den Helfer und keiner für „Spalte über dem Körper losgelassen“; Platzhalter-Ton in `ConfigListEditorControl` ungetestet; Shift-Klick aufs Kästchen ohne Bereichsauswahl (vorbestehend). |
+| **Sichtprüfung (mit dem PR)** | Spaltenwahl: Liste ohne Wurzel-Innenabstand, Specimen mit Suche und fünf Einträgen zeigt Leerraum; Breite der Tabellensuche (alt 16rem, min. 8rem, neu auto) und Höchstbreite des Ablehnungshinweises (alt `min(400px, …)`); `TLRelativeTime` außerhalb von Zellen ohne `nowrap`. |
+| **Befund an master, #29651** (Bernhard) | `TestAccordionElement.testSectionsReachTheClient` hängt an der JVM-Locale: erwartet „General“, die deutsche Locale liefert „Allgemein“ — einziger roter Test in `layout.view` (1217 Tests). |
+| **Befund an master, #29743** | Tooltip-Ebene `calc(var(--tl-layer-popover) + 1)` — eine Ebene, die die Skala nicht kennt. |
 
 ## Konsolidierung (01.10.) — Gleiches wird zusammengelegt
 
