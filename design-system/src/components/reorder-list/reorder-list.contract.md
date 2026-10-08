@@ -10,12 +10,14 @@ das Aussehen; wer ins Bild passen will, liest die Tokens.
 | Schlüssel | Typ | Bedeutung |
 |---|---|---|
 | `entries` | Liste | Die Einträge in ihrer Reihenfolge, je Eintrag: |
-| `entries[].name` | string | Name des Eintrags (Spaltenname); Beschriftung des Kästchens und Teil des Griff-Namens. |
+| `entries[].name` | string | Name des Eintrags (Spaltenname); er steht in den Befehlen und ist der Schlüssel des Eintrags. |
+| `entries[].label` | string | Beschriftung des Kästchens und Teil des Griff-Namens. |
 | `entries[].visible` | boolean | Sichtbar: das Kästchen ist gesetzt. Ein Eintrag, der nicht ausgeblendet werden darf, trägt ein deaktiviertes Kästchen. |
 | `entries[].grouped` | boolean | Gruppiert: der Gruppierungsknopf trägt `aria-pressed="true"`. |
 
-Ab elf Einträgen steht vor der Liste eine Suche; sie filtert mit `filterOptions` (3b §9) und blendet
-nicht passende Einträge mit `hidden` aus.
+Ab elf Einträgen steht vor der Liste eine Suche; sie filtert mit `filterOptions` (3b §9), und die
+Liste rendert nur die passenden Einträge. Jeder behält seine Position in der ganzen Liste: Ziehen und
+Alt + Pfeil rechnen mit ihr, ein Eintrag lässt sich also neben einen ausgefilterten ablegen.
 
 ## Aktionen
 
@@ -58,9 +60,9 @@ Die Beschriftung endet mit Ellipse.
 |---|---|
 | `aria-label` | am Griff: „<Name> verschieben“; am Gruppierungsknopf; am Suchfeld. |
 | `aria-describedby` | am Griff: die Id des Hinweises „Alt + Pfeil verschiebt“. |
+| `hidden` | am Hinweis: nie gezeigt; `aria-describedby` liest ihn trotzdem vor. |
 | `aria-pressed` | am Gruppierungsknopf: `"true"`, solange nach dem Eintrag gruppiert wird. |
 | `disabled` | am Kästchen eines Eintrags, der nicht ausgeblendet werden darf. |
-| `hidden` | an einem Eintrag, den die Suche ausfiltert. |
 | `role="status"` | am Live-Bereich, der das Verschieben ansagt. |
 | `data-tl-state="dragging"` | am Eintrag, der gerade gezogen wird (`drag.contract.md`). |
 | `data-tl-state="drop-before"` / `"drop-after"` | am Eintrag, vor bzw. hinter dem der gezogene landet (`drag.contract.md`). |
@@ -77,7 +79,7 @@ Klassen:
 | `tl-reorder-list__search` | an der `tl-field-group` der Suche vor der Liste |
 | `tl-button--icon` | der Gruppierungsknopf, mit `--sm` und `--ghost` und `aria-pressed` |
 | `tl-choice` | das Kästchen: `label.tl-choice` > `input` mit `tl-checkbox` und die Beschriftung |
-| `tl-visually-hidden` | Hinweis „Alt + Pfeil verschiebt“ und Live-Bereich: gelesen, nicht gezeigt |
+| `tl-visually-hidden` | der Live-Bereich: gelesen, nicht gezeigt (der Hinweis trägt `hidden`, siehe Attribute) |
 
 Symbole (Griff, Gruppieren, Suche) sind `ThemeIcon` in `tl-icon-sm`, Knopf-Icons mit `tl-button__icon`.
 
