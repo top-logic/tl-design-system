@@ -11,7 +11,7 @@ Zugänglichkeit, nicht das Aussehen; wer ins Bild passen will, liest die Tokens.
 | `text` | string | Der Wert. Ein leerer Wert nimmt keinen Platz (siehe unten). |
 | `variant` | `display` \| `headline` \| `title` \| `body` \| `label` \| `caption` | Wird zur Typo-Klasse: `display` → `tl-type-display`, `headline` → `tl-type-heading-lg`, `title` → `tl-type-heading-sm`, `body` → `tl-type-body`, `label` → `tl-type-label`, `caption` → `tl-type-label`. |
 | `tone` | `primary` \| `secondary` \| `helper` \| `placeholder` \| `success` \| `warning` \| `error` \| `on-color` | `primary` setzt kein Attribut, der Text erbt. `on-color` wird `data-tl-tone="on-brand"`. Alle anderen werden `data-tl-tone` mit ihrem Namen. `accent` gibt es nicht (02.10.). Platzhalter ist ein Ton, keine Kursive: die Typo kennt keinen Schriftstil. |
-| `overflow` | `truncate` | Wird zur Klasse `tl-text--truncate`: eine Zeile, die mit Ellipse endet. |
+| `overflow` | `ellipsis` | Wird zur Klasse `tl-text--truncate`: eine Zeile, die mit Ellipse endet. Ohne Wert bricht der Text um. |
 | `appearance` | `pill` | Oder eine Farbrolle: der Text wird als Pill gezeichnet. |
 
 Als Pill (`appearance: pill` oder eine Farbrolle) ist `span.tl-pill` **selbst die Wurzel**, mit
