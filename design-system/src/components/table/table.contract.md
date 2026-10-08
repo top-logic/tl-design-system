@@ -89,6 +89,11 @@ Das Raster `tl-table__grid` ist fokussierbar (`tabindex="0"`) und hält den Foku
 virtuell (`aria-activedescendant`). Knöpfe im Kopf (Kopf-Kästchen, Sortieren, Trichter, Spaltenwahl)
 sind eigene Tab-Halte; Kästchen und Toggles in Zeilen tragen `tabindex="-1"`.
 
+Ein Editor im Raster (`input`, `textarea`, `select`, `contenteditable`) behält seine Tasten: steht der
+Fokus auf ihm, lehnt das Raster Pfeile, Pos1/Ende, Bild auf/ab, Enter und Strg + A ab. Pfeil
+links/rechts und die Leertaste wirken nur, solange das Raster selbst den Fokus hat — an einem Knopf
+oder Kästchen im Raster gehören sie dem Bedienelement.
+
 | Taste | im Raster |
 |---|---|
 | `ArrowUp` / `ArrowDown` | Cursor eine Zeile; mit Umschalt erweitert sich die Auswahl, mit Strg bewegt sich nur der Cursor |
@@ -128,7 +133,10 @@ Ring (`::after`, `base.css`) und Einfügemarke (`::before`, `drag.css`) einer Ze
 `--tl-layer-sticky`, über den haftenden Zellen ihrer Zeile (`--tl-layer-raised`). Die Zeile ist
 positioniert (`position: relative`, im TSX `absolute`), bildet aber keinen eigenen Stapel; der Körper
 isoliert ihn (`isolation: isolate`): nichts aus einer Zeile liegt über Filterleiste, Spaltenwahl oder
-Fixiergrenze. Der Kopf liegt **außerhalb** des Rollbehälters `tl-table__body`, der seine Zeilen
+Fixiergrenze. Der Rahmen `tl-table__frame` isoliert ebenso (`isolation: isolate`): haftende Kopfzellen
+(`--tl-layer-raised`), Fixiergrenze und Vorschau (`--tl-layer-sticky`) liegen nie über einem Popover
+oder einem Nachbarn der Seite. Was die Tabelle öffnet (Kontextmenü, Grund einer Ablehnung), steht als
+Portal im `body`, nicht im Rahmen. Der Kopf liegt **außerhalb** des Rollbehälters `tl-table__body`, der seine Zeilen
 abschneidet (`overflow: auto`): Ring und Marke einer Zeile, die unter den Kopf rollt, werden mit ihr
 abgeschnitten und können den Kopf nicht übermalen. Darum braucht der Kopf keine eigene Ebene. Kopf und
 Körper scrollen waagerecht gemeinsam: das TSX überträgt `scrollLeft` des Körpers auf den Kopf
@@ -184,10 +192,10 @@ Bauteile anderer Blöcke:
 | Bauteil | Wo und wie |
 |---|---|
 | `tl-checkbox` | Auswahlspalte (`tl-table__select`): im Kopf mit `aria-label` `js.table.selectAll`, in der Zeile `js.table.selectRow` und `tabindex="-1"`. Kopf „teilweise“ nur als `indeterminate` — **kein** `aria-checked`: ARIA in HTML verbietet es am nativen Kästchen, der Browser meldet `indeterminate` als „gemischt“ (entschieden 07.10.). |
-| `tl-toggle` | Auf-/Zuklapper in Baum- und Gruppenzeilen: `tabindex="-1"`, `aria-expanded`, `aria-label` wie jeder Toggle, **ohne** `aria-controls` — er zeigte auf die eigene Zeile. Zeigen und Drücken mit dem Schleier (`toggle.contract.md`): sichtbar auch auf gezeigter und ausgewählter Zeile. |
+| `tl-toggle` | Auf-/Zuklapper in Baum- und Gruppenzeilen: `tabindex="-1"`, `aria-expanded`, `aria-label` wie jeder Toggle, **ohne** `aria-controls` — er zeigte auf die eigene Zeile. Zeigen und Drücken mit dem Schleier (`toggle.contract.md`): sichtbar auch auf gezeigter und ausgewählter Zeile. Ein Druck mit der Maus lässt den Fokus, wo er ist (`mousedown` ohne Standardaktion): am Raster, dessen Ring an der Cursorzeile bleibt. |
 | `tl-button--icon` | Trichter (`--sm --ghost`), Spaltenwahl (`--ghost`, in angehefteter letzter Kopfzelle `--sm`), Speichern |
 | `tl-badge` | Stufe einer mehrstufigen Sortierung im Sortierknopf |
-| `tl-status` | statt Zeilen in der leeren Tabelle: `role="row"` `aria-rowindex="2"` > `role="gridcell"`, Text `js.table.empty` |
+| `tl-status` | statt Zeilen in der leeren Tabelle: `role="row"` `aria-rowindex="2"` > `role="gridcell"`, Text `js.table.empty`. Eine Ladezeile (`role="row"` > `role="gridcell"` > `tl-status`) trägt ihren Namen am `tl-progress` (`aria-label`): Zeile und Zelle haben keinen eigenen Namen (`status.contract.md`). |
 | `tl-skeleton` | in `tl-table__placeholder` für Zeilen im Fenster, die der Server noch nicht geschickt hat; der Platzhalter ist `aria-hidden`, das Raster trägt `aria-busy` |
 | `tl-chip` | benannter Filter in der Filterleiste: `span.tl-chip` > `tl-chip__toggle` (`aria-pressed`) und, wenn löschbar, `tl-chip__remove` |
 | `tl-field-group` | Suche (`tl-table__search`) und Name beim Speichern |

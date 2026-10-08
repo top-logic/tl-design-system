@@ -35,6 +35,9 @@ test('tl-table: Zeile size-row, Kopf size-bar, Zustände als Attribute, keine Li
 
 test('der Körper isoliert seinen Stapel, Spaltenwahl und Fixiergrenze sind so hoch wie die Kopfzeile', () => {
   assert.match(declarationsOf(css, '.tl-table__body') ?? '', /isolation:\s*isolate/);
+  // Der Rahmen isoliert die Ebenen von Kopf, Griff und Vorschau: eine haftende Kopfzelle (layer-raised)
+  // liegt nie über einem Popover oder einem Nachbarn der Seite (E7, Orchestrator-Entscheid 6).
+  assert.match(declarationsOf(css, '.tl-table__frame') ?? '', /isolation:\s*isolate/);
   // Der Kopf steht außerhalb des Rollbehälters: der Körper schneidet Ring (::after) und Marke (::before) seiner
   // Zeilen ab, die unter den Kopf rollen. Darum braucht der Kopf keine eigene Ebene (table.contract.md „Stapel“).
   assert.match(declarationsOf(css, '.tl-table__body') ?? '', /overflow:\s*auto/);
