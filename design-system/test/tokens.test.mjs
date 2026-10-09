@@ -340,3 +340,12 @@ test('das Status-Gate meldet den verworfenen Tausch (dunkel Rand und Fläche bei
   assert.deepEqual(statusDoppelbelegungen(kaputt),
     ['dark/error: {red-35} trägt status-error-border und status-error-surface']);
 });
+
+test('hell: Hilfetext steht auch auf der ausgewählten Zeile (09.10., Hendrik)', () => {
+  // Dunkel verfehlen text-helper (3,64) und text-secondary (4,27) dieses Paar noch; entschieden wird dort,
+  // wenn ein Nebentext in einer ausgewählten Zeile gebraucht wird (docs/migration/altlast.md „Offen nach 3b“).
+  const ist = ratio(R.color.light['text-helper'], R.color.light['surface-interactive-selected']);
+  assert.ok(ist >= 4.5, `hell: text-helper auf surface-interactive-selected = ${ist.toFixed(2)}`);
+  assert.ok(ratio(R.color.light['text-secondary'], R.color.light['surface-base'])
+    > ratio(R.color.light['text-helper'], R.color.light['surface-base']), 'Hilfetext nicht heller als Nebentext');
+});

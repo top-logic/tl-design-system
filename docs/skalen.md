@@ -278,11 +278,19 @@ ist der hellste Wert, der ihre Anforderung noch erfüllt.
 |---|---|---|---|---|
 | `text-primary` | `#1B1D21` | `#F0F3F9` | 16,0 | Grund |
 | `text-secondary` | `#54565B` | `#A0A3A8` | 7,0 | Grund |
-| `text-helper` | `#676A6F` | `#93969B` | 4,5 auf vier Flächen (Grund 5,2) | `surface-base`, `surface-layer`, `surface-layer-nested`, `surface-overlay` |
+| `text-helper` | `#64676B` (seit 09.10., vorher `#676A6F`) | `#93969B` | 4,5 auf vier Flächen (Grund 5,2), hell auch auf `surface-interactive-selected` | `surface-base`, `surface-layer`, `surface-layer-nested`, `surface-overlay` |
 | `text-placeholder` | `#6B6E73` | `#8E9196` | 4,6 | **`surface-field`**, nicht Grund |
 | `border-emphasis` | `#6F7277` | `#7F8286` | 4,6 | Grund |
 | `border-control` | `#888B90` | `#75787D` | 3,0 | alle fünf Feldgründe (knappstes Paar hell `surface-field` 3,10, dunkel `surface-overlay` 3,04) |
 | `border-separator` | `#C1C4C9` | `#34383C` | — | trennt nur |
+
+**Nachgezogen 09.10. (Hendrik): Hilfetext hell eine Stufe dunkler, `gray-48` → `gray-49`.** Auf der ausgewählten Zeile
+(`surface-interactive-selected`, `gray-7`) hielt `text-helper` hell nur 4,42; mit `gray-49` sind es 4,63, auf dem Grund
+5,45 statt 5,20, und der Hilfetext bleibt heller als `text-secondary` (7,04). `gray-48` hat damit keinen Leser mehr und ist
+gestrichen. Dunkel bleibt offen: dort verfehlen `text-helper` (3,64) und `text-secondary` (4,27) die ausgewählte Zeile,
+und eine Stufe genügt nicht, ohne die Rangfolge Primär–Nebentext–Hilfe zu verwischen; entschieden wird, wenn ein Nebentext
+in einer ausgewählten Zeile gebraucht wird. `derive` zieht die Stufe im Kundentheme mit (Probe `#6D6965` → `#6A6662`).
+Als Test: `tokens.test.mjs` „hell: Hilfetext steht auch auf der ausgewählten Zeile“.
 
 `text-placeholder` und `border-emphasis` landen im hellen Modus dicht beieinander. Das sind
 trotzdem zwei Tokens: Sie messen gegen **verschiedene** Flächen und würden auseinanderlaufen,
