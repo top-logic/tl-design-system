@@ -327,10 +327,14 @@ test('duration-loop ist die vierte Dauer, nur für Endlos-Animationen, und size-
 
 test('das Progress-Specimen zeigt Anteile, unbestimmt, ohne Beschriftung und eine schmale Zelle, auf beiden Flächen', () => {
   const html = readFileSync(new URL('../src/components/progress/progress.spec.html', import.meta.url), 'utf8');
-  for (const s of ['role="progressbar"', 'aria-valuemin="0"', 'aria-valuemax="100"', 'aria-valuenow=', 'aria-valuetext=', 'aria-busy="true"'])
+  for (const s of ['role="progressbar"', 'aria-valuemin="0"', 'aria-valuemax="100"', 'aria-valuenow=', 'aria-busy="true"'])
     assert.ok(html.includes(s), `${s} fehlt`);
   // Fix-Welle 3b (2): jeder beschriftete Balken ist über aria-labelledby nach seiner Beschriftung benannt.
-  for (const bar of html.match(/<div class="tl-progress"[^>]*aria-valuetext=[^>]*>/g) ?? [])
+  // 09.10.: und trägt keinen Wertetext — er wäre derselbe Text wie der Name und würde doppelt angesagt.
+  assert.doesNotMatch(html, /aria-valuetext/, 'Wertetext neben dem Namen');
+  const bars = html.match(/<div class="tl-progress"[^>]*>[\s\S]*?<\/div>/g) ?? [];
+  assert.ok(bars.some((b) => b.includes('tl-progress__label')), 'kein beschrifteter Balken');
+  for (const bar of bars.filter((b) => b.includes('tl-progress__label')))
     assert.match(bar, /aria-labelledby="[^"]+"/, `beschrifteter Balken ohne Namen: ${bar}`);
   for (const c of ['tl-progress__track', 'tl-progress__fill', 'tl-progress__label', 'tl-nums']) assert.ok(html.includes(c), `${c} fehlt`);
   assert.ok(html.includes(".style.width = Math.round("), 'Breite nicht als Daten gesetzt');

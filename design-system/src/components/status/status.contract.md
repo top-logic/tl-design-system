@@ -46,7 +46,7 @@ der Zeile füllt sie.
 | `tl-status` | immer; an einem Block-Element |
 | `aria-busy="true"` | am `tl-progress` im Ladezustand |
 | `aria-label` | Der Name der Ladezeile, Pflicht — am Element, das der Screenreader ansagt. Hat die Zeile selbst eine Rolle mit Namen (im Baum die `li role="treeitem"`), trägt sie den Namen, und der `tl-progress` darin ist `aria-hidden="true"` ohne eigenen Namen; sonst trägt ihn der `tl-progress` (Select-Popup). Der Text stammt aus dem Resource-Key des Lesers, im Baum `js.tree.loading`. Steht eine sichtbare Beschriftung da, geht stattdessen `aria-labelledby` auf deren `id`. |
-| `aria-valuetext` | am `tl-progress` nur als Wertetext, wenn eine Beschriftung da ist (siehe `progress.contract.md`); nie als Name |
+| `aria-valuetext` | nie am `tl-progress` (siehe `progress.contract.md`): die Beschriftung ist der Name, der Wert kommt aus `aria-valuenow` |
 | `role="alert"` | am `tl-status` des Fehlers |
 | `tl-button--link` | im Fehler, zum Wiederholen |
 | `tl-icon-sm` | am Fehler-Glyph, `aria-hidden` |

@@ -1490,6 +1490,12 @@ Breite, keine eigene Variable, den Schwung nur aus `duration-loop`, keinen eigen
 `duration-loop` ist `dur-4` = 1200 ms; das Specimen zeigt fünf Anteile, unbestimmt, ohne Beschriftung
 und eine schmale Zelle, auf beiden Flächen.
 
+**Nachgezogen 09.10. (Hendrik): kein Wertetext neben dem Namen.** Seit der Fix-Welle 3b ist die
+Beschriftung der Name (`aria-labelledby`). Stand derselbe Text zusätzlich in `aria-valuetext`, sagte der
+Screenreader ihn zweimal an („2 / 8, Fortschritt, 2 / 8“). Der Wert kommt jetzt allein aus
+`aria-valuenow` (unbestimmt `aria-busy`). Als Test: das Specimen trägt kein `aria-valuetext`, jeder
+beschriftete Balken ein `aria-labelledby`.
+
 ### Icon: die Stufe ist die Rolle, das Control trägt keine eigene Klasse
 
 **Der Befund.** Die Icon-Skala ist seit Welle 0 entschieden und liegt als vier Klassen in `base.css`
