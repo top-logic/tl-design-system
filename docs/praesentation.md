@@ -194,6 +194,10 @@ Vor jeder Welle: Was tut dasselbe? Prognose auf den Tisch, Entscheidung, dann di
 >
 > Sprechnotiz (Welle 3b): Die Tabelle wird ein echtes Raster für Screenreader und folgt der Dichte — kompakt sind die Zeilen 32 statt 36 px, weil der Browser die Höhe misst, nicht der Server.
 >
+> Sprechnotiz (09.10.): Der Fortschrittsbalken sagt seinen Namen einmal, nicht zweimal — die Beschriftung ist der Name, den Wert nennt der Balken selbst; zeigt sie nur „42 %“, heißt der Balken nach dem, was voranschreitet.
+>
+> Sprechnotiz (09.10.): Ein Lesewert bringt keine eigene Schrift mit, er nimmt die seines Ortes an — darum wird eine Gruppenzeile überall fett, auch mit Werten aus dem Modell.
+>
 > Sprechnotiz (Welle 3b, 07.10.): Ein Fehler bleibt sichtbar, auch in der markierten Zeile — Fehler- und Warnlinie halten dort jetzt den Mindestkontrast, ohne dass eine Farbe zwei Aufgaben bekommt.
 >
 > Sprechnotiz (Welle 3b, 07.10.): Was Kollegen parallel gebaut haben — Höfe, der runde Entfernen-Knopf, die Hinweisbox — wird nicht ein zweites Mal erfunden, sondern übernommen. Ein Knopf, eine Regel.

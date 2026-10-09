@@ -95,6 +95,11 @@ leere Zeile behält ihre Höhe. Mehrzeilig bricht jede Zeile um, statt mit Ellip
 Tabellenzelle stellt die Engine die Zeilen in eine Reihe ohne Umbruch. Ein Link-Lesewert ist unterstrichen — Farbe allein kennzeichnet keinen
 Link.
 
+**Schrift vom Ort (09.10., Hendrik).** Der Lesewert setzt keine Typo-Klasse; er erbt sie von dem Ort, an dem er
+steht: `tl-form-field__input` und der Tabellenkörper tragen `tl-type-body`, der Baum ebenso, eine Gruppenzeile
+`tl-type-body-strong`. So nimmt ein Lesewert die Schrift seines Ortes an, ohne dass jeder Ort sie ihm einzeln
+durchreicht. Ein Eingabefeld (`tl-field`) setzt seine Klasse weiter selbst: Eingaben erben die Schrift nicht.
+
 Jeden Lesewert — im Formular, im Select und in der Tabellenzelle — zeichnet ein Renderer (`FieldValue`):
 äußerer Link `href` (neuer Tab), innerer Link `onGoto` (Kommando `goto`), Icon über `ThemeIcon`, Tönung als
 `tl-pill` mit `data-tl-role`.

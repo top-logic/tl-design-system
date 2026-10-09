@@ -325,7 +325,7 @@ test('duration-loop ist die vierte Dauer, nur für Endlos-Animationen, und size-
   assert.equal(T.measure['size-progress'], '{size-2}');
 });
 
-test('das Progress-Specimen zeigt Anteile, unbestimmt, ohne Beschriftung und eine schmale Zelle, auf beiden Flächen', () => {
+test('das Progress-Specimen zeigt Anteile, unbestimmt, vom Ort benannt und eine schmale Zelle, auf beiden Flächen', () => {
   const html = readFileSync(new URL('../src/components/progress/progress.spec.html', import.meta.url), 'utf8');
   for (const s of ['role="progressbar"', 'aria-valuemin="0"', 'aria-valuemax="100"', 'aria-valuenow=', 'aria-busy="true"'])
     assert.ok(html.includes(s), `${s} fehlt`);
@@ -336,6 +336,19 @@ test('das Progress-Specimen zeigt Anteile, unbestimmt, ohne Beschriftung und ein
   assert.ok(bars.some((b) => b.includes('tl-progress__label')), 'kein beschrifteter Balken');
   for (const bar of bars.filter((b) => b.includes('tl-progress__label')))
     assert.match(bar, /aria-labelledby="[^"]+"/, `beschrifteter Balken ohne Namen: ${bar}`);
+  // 09.10. (Hendrik): jeder Balken ist benannt; ist die Beschriftung nur der Wert, gibt der Ort den Namen, und
+  // die Beschriftung ist aria-hidden — den Wert sagt aria-valuenow.
+  for (const bar of bars) {
+    const name = bar.match(/aria-labelledby="([^"]+)"/)?.[1];
+    assert.ok(name, `Balken ohne Namen: ${bar.slice(0, 120)}`);
+    const label = bar.match(/<span class="tl-progress__label[^>]*>/)?.[0];
+    if (label && !label.includes(`id="${name}"`)) {
+      assert.match(label, /aria-hidden="true"/, `Wert-Beschriftung nicht aria-hidden: ${label}`);
+      assert.ok(html.includes(`id="${name}"`), `Name ${name} steht nicht am Ort`);
+    }
+  }
+  assert.ok(bars.some((b) => /aria-labelledby="([^"]+)"/.test(b) && /tl-progress__label[^>]*aria-hidden="true"/.test(b)),
+    'kein Balken mit Namen vom Ort');
   for (const c of ['tl-progress__track', 'tl-progress__fill', 'tl-progress__label', 'tl-nums']) assert.ok(html.includes(c), `${c} fehlt`);
   assert.ok(html.includes(".style.width = Math.round("), 'Breite nicht als Daten gesetzt');
   assert.ok(html.includes('id="on-layer"') && html.includes('id="on-base"'), 'beide Flächen fehlen');

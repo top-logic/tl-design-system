@@ -122,7 +122,7 @@ Klassen:
 | `tl-form-field__label-text` | das `label for="…"` mit dem Beschriftungstext, endet mit Ellipse |
 | `tl-form-field__required` | der Pflichtstern, `aria-hidden="true"`, im `tl-form-field__label` neben dem Text |
 | `tl-form-field__dirty` | der Geändert-Punkt, `aria-hidden="true"`, nur sichtbar unter `data-tl-state="dirty"` |
-| `tl-form-field__input` | der Platz der Eingabe |
+| `tl-form-field__input` | der Platz der Eingabe; trägt `tl-type-body`, die Schrift, die ein Lesewert darin erbt (`field.contract.md`) |
 | `tl-form-field__message` | der Fehler oder je eine Warnung |
 | `tl-form-field__help` | der Hilfeknopf in der Beschriftung |
 | `tl-form-field__help-text` | der Hilfetext |

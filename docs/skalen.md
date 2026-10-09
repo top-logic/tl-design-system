@@ -1504,6 +1504,14 @@ Screenreader ihn zweimal an („2 / 8, Fortschritt, 2 / 8“). Der Wert kommt je
 `aria-valuenow` (unbestimmt `aria-busy`). Als Test: das Specimen trägt kein `aria-valuetext`, jeder
 beschriftete Balken ein `aria-labelledby`.
 
+**Nachgezogen 09.10. (Hendrik): jeder Balken hat einen Namen; ist die Beschriftung der Wert, kommt der Name vom
+Ort.** Der Balken des Job-Status stand ohne Beschriftung und ohne Namen. Er zeigt jetzt den Anteil („42 %“, in der
+Sprache des Browsers), und benannt ist er nach dem Status darüber („Läuft“) — sonst sagte der Screenreader
+„42 %, Fortschritt, 42 %“. Eine Beschriftung, die nur den Wert zeigt, ist `aria-hidden`: den Wert sagt
+`aria-valuenow`, und in der Live-Region des Status würde jede Änderung angesagt. Unbestimmt, ohne Wert, steht der
+Balken ohne Beschriftung, vom Ort benannt. Verworfen: die Prozentzahl als Name (doppelte Ansage). Als Test: jeder
+Balken im Specimen hat `aria-labelledby`, eine Wert-Beschriftung ist `aria-hidden`, ihr Name steht am Ort.
+
 ### Icon: die Stufe ist die Rolle, das Control trägt keine eigene Klasse
 
 **Der Befund.** Die Icon-Skala ist seit Welle 0 entschieden und liegt als vier Klassen in `base.css`
@@ -1860,8 +1868,13 @@ Spec `docs/superpowers/specs/2026-10-02-welle-3b-daten-design.md`. Neu entschied
   Fortschritt den Namen (`aria-labelledby` auf seine Beschriftung).
 * **Alert ohne Modifier:** Spalten folgen dem Inhalt (`:has` für Icon und Schließen), das Icon darf fehlen; der
   Schließen-Knopf ist derselbe Icon-Knopf wie Entfernen im Select.
-* **Gruppenzeile stark** über `css-class` `tl-type-body-strong` am Text der Zelle (A4-Muster). Offen: Gruppenwerte
-  aus Fabrik-Zellen (Lesewert) bleiben normal, bis Lesewerte eine Typo-Klasse von außen annehmen.
+* **Gruppenzeile stark** über `css-class` `tl-type-body-strong` am Text der Zelle (A4-Muster). Gruppenwerte
+  aus Fabrik-Zellen (Lesewert) blieben normal — **entschieden 09.10. (Hendrik): der Lesewert erbt die Schrift vom
+  Ort.** `tl-field-value` setzt keine Typo-Klasse; `tl-form-field__input`, Tabellenkörper und Baum tragen
+  `tl-type-body`, jede Zelle einer Gruppenzeile `tl-type-body-strong`. Verworfen: der Server reicht jedem Lesewert
+  die Klasse einzeln durch (eine Leitung je Control, wie heute beim Text). Ein Eingabefeld behält seine Klasse —
+  Eingaben erben die Schrift nicht —, ein Text (`tl-text`) auch: er setzt seine Variante selbst und bekommt die
+  starke Klasse weiter vom Server. Als Test: `field.test.mjs` „der Lesewert erbt die Schrift vom Ort“.
 
 **Befund dazu:** 282 Zeilen Tabellenregeln (3565–3846) standen ohne Überschrift im alten Stylesheet; die Ratsche
 schlug sie TLJobStatus zu. Die Blockmessung trifft nur, was eine Überschrift trägt — beim Ausschneiden wird TLJobStatus

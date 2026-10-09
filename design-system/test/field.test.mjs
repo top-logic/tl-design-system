@@ -148,3 +148,16 @@ test('ein Suchfeld mit Löschknopf zeigt das Löschen des Browsers nicht, ein Ö
     /appearance:\s*none/);
   assert.equal(declarationsOf(css, '.tl-field-group:has(> .tl-button) > .tl-field::-webkit-search-cancel-button'), null);
 });
+
+test('der Lesewert erbt die Schrift vom Ort: keine Typo-Klasse am tl-field-value, der Ort trägt sie (09.10.)', () => {
+  for (const name of ['field', 'select']) {
+    const html = readFileSync(new URL(`../src/components/${name}/${name}.spec.html`, import.meta.url), 'utf8');
+    assert.doesNotMatch(html, /class="tl-field-value[^"]*\btl-type-/, `${name}.spec.html: Lesewert mit eigener Typo-Klasse`);
+  }
+  const field = readFileSync(new URL('../src/components/field/field.contract.md', import.meta.url), 'utf8');
+  assert.match(field, /setzt keine Typo-Klasse/);
+  const form = readFileSync(new URL('../src/components/form/form.contract.md', import.meta.url), 'utf8');
+  assert.match(form, /`tl-form-field__input` \| der Platz der Eingabe; trägt `tl-type-body`/);
+  const table = readFileSync(new URL('../src/components/table/table.contract.md', import.meta.url), 'utf8');
+  assert.match(table, /jede ihrer Zellen\nträgt `tl-type-body-strong`/);
+});
