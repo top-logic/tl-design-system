@@ -1,9 +1,21 @@
-**Letzte Sitzung:** 2026-10-12 (E11: Review-Befunde behoben, Welle 3b auf eigenes Ticket #29821, Push und PR) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-12 (3b gepusht als !1838 mit Sichtprüfung lokal; #29825 Spaltenwahl: Spec und Plan fertig, Plan-Review eingearbeitet — Ausführung in frischer Sitzung) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
 
 ## Zuerst
+
+**Jetzt (12.10.): #29825 „Spaltenwahl als Ebenen-Panel“ ausführen — in einer frischen Sitzung.**
+1. Lesen: Plan `docs/superpowers/plans/2026-10-12-spaltenwahl-ebenen.md` (sechs Tasks, Plan-Review eingearbeitet, von
+   Hendrik freigegeben) und Spec `docs/superpowers/specs/2026-10-12-spaltenwahl-ebenen-design.md` mit Bildern
+   `docs/bilder/2026-10-12-spaltenwahl-*.png`.
+2. Hendrik nach der Ausführungsart fragen (Empfehlung: Subagent je Task mit Review, weil Java und TSX an einem Vertrag
+   hängen), dann Task 1: Ticket annehmen, Branch `CWS/CWS_29825_design_system_spaltenwahl` auf `welle_3b` stapeln.
+3. Rundherum offen: !1838 (3b) wartet auf Bernhards Review; Ziehen von Hand prüfen (7, 13, 17, 18) entfällt bis !1825;
+   #29826 „Ziehen sichtbar machen“ nach Bernhards !1825; #29827 Spaltengruppen und Pivot bei Bernhard (Owner bhu);
+   !1825/!1801/!1830 kollidieren mit !1838 (wer zweiter merged, löst auf). Lokale Demo: Memory „Lokale Demo statt
+   Docker“ (H2-Autoconf je Sitzung neu im Scratchpad).
+
 
 **Entschieden (28.09.): eine Linie, drei Stränge.** Plan `docs/superpowers/plans/2026-09-28-konsolidierung.md`.
 Strang 0 schließt Welle 1 (**!1694 gemerged am 28.09.**, Merge-Commit `c38ad05ddd`, Pill-Branch gelöscht; !1695

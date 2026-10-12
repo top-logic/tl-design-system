@@ -16,6 +16,12 @@ JUnit 3 `TestCase`), React/TSX über `tl-react-bridge`, Vite, Maven.
 
 **Spec:** `docs/superpowers/specs/2026-10-12-spaltenwahl-ebenen-design.md`
 
+**Plan-Review:** 12.10. durch einen frischen Agenten (Fable), Probelauf des Pakets in einer Kopie, Java-Erwartungen von
+Hand nachgerechnet. Befunde 1–12 sind eingearbeitet (Grundregel des Griffs, Backticks im Vertrag, Reihenfolge der
+Messages-Läufe, Ring innen, Fertig-Test, Vorrichtung, Fehlererwartung, `margin-inline-start`, Tooltip-Präfix,
+`section-end` über die gezeigten Einträge, Firefox-Tooltip). Freigegeben von Hendrik („plan passt so“); Ausführung in
+einer frischen Sitzung.
+
 So soll es aussehen (Bildquelle `design-system/specimen/mock/spaltenwahl-ebenen.html`):
 
 ![Stufe 1, hell](../../bilder/2026-10-12-spaltenwahl-stufe1-hell.png)
@@ -141,6 +147,9 @@ test('tl-reorder-list: ausgeblendet blass, Block mit Linie, Überschrift, Knöpf
     /border-bottom:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-separator\)/);
   assert.match(declarationsOf(liste, '.tl-reorder-list__section') ?? '', /color:\s*var\(--tl-text-secondary\)/);
   assert.match(declarationsOf(liste, '.tl-reorder-list__actions') ?? '', /gap:\s*var\(--tl-space-2xs\)/);
+  assert.match(declarationsOf(liste, '.tl-reorder-list__actions') ?? '', /margin-inline-start:\s*auto/);
+  assert.match(declarationsOf(liste, '.tl-reorder-list__actions > .tl-button:focus-visible') ?? '',
+    /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/, 'der Ring der Knöpfe liegt innen wie am Griff');
   assert.match(declarationsOf(liste, '.tl-reorder-list__label') ?? '', /flex:\s*1 1 auto/);
   assert.equal(declarationsOf(liste, '.tl-reorder-list__item > .tl-choice'), null, 'das Kästchen fällt');
 });
@@ -163,7 +172,20 @@ Expected: FAIL — die beiden neuen Tests in `drag.test.mjs` und „reorder-list
      ersetzen durch „dahinter die Beschriftung und rechts Schloss und Auge (tl-reorder-list__actions); Griff und Knöpfe
      erscheinen beim Zeigen oder Fokus (Spec 2026-10-12, #29825)“.
   2. Die Regel `.tl-reorder-list__item > .tl-choice { … }` samt Kommentar löschen.
-  3. Die Regel `.tl-reorder-list__label` ersetzen und dahinter einfügen:
+  3. Die **bestehende** Regel `.tl-reorder-list__handle { color: …; cursor: grab; }` um die beiden Zeilen
+     `opacity: 0;` und `transition: opacity var(--tl-duration-fast) var(--tl-easing-standard);` ergänzen — nicht in
+     eine zweite Regel: `declarationsOf` im Test liest die **erste** Regel, deren Selektorliste den Selektor enthält
+     (Plan-Review, Befund 1). Die bestehende Regel `.tl-reorder-list__handle:focus-visible { outline-offset: … }` auf
+     die Knöpfe erweitern (sie sitzen am rechten Rand der scrollenden Liste, `base.css` legt den Ring sonst außen):
+
+```css
+.tl-reorder-list__handle:focus-visible,
+.tl-reorder-list__actions > .tl-button:focus-visible {
+  outline-offset: calc(-1 * var(--tl-focus-offset));
+}
+```
+
+  4. Die Regel `.tl-reorder-list__label` ersetzen und dahinter einfügen:
 
 ```css
 /* Die Beschriftung nimmt den Rest der Zeile und endet mit Ellipse. */
@@ -182,11 +204,12 @@ Expected: FAIL — die beiden neuen Tests in `drag.test.mjs` und „reorder-list
   flex: 0 0 auto;
   align-items: center;
   gap: var(--tl-space-2xs);
+  margin-inline-start: auto;
 }
 
-/* Griff und Knöpfe erscheinen beim Zeigen oder wenn ein Element der Zeile den Fokus hat. opacity, nicht visibility:
-   ein unsichtbarer Knopf bleibt mit Tab erreichbar und erscheint, sobald er den Fokus hat. */
-.tl-reorder-list__handle,
+/* Die Knöpfe erscheinen beim Zeigen oder wenn ein Element der Zeile den Fokus hat (der Griff ebenso, seine opacity
+   steht in seiner Grundregel oben). opacity, nicht visibility: ein unsichtbarer Knopf bleibt mit Tab erreichbar und
+   erscheint, sobald er den Fokus hat. */
 .tl-reorder-list__actions > .tl-button {
   opacity: 0;
   transition: opacity var(--tl-duration-fast) var(--tl-easing-standard);
@@ -235,19 +258,24 @@ Expected: FAIL — die beiden neuen Tests in `drag.test.mjs` und „reorder-list
     und Knöpfe erscheinen beim Zeigen oder Fokus.“
   - Zustand: Zeilen `entries[].visible` (falls vorhanden) und `entries[].grouped` ersetzen durch
     `| entries[].visible | boolean | Sichtbar; ausgeblendet trägt der Eintrag data-tl-state="off". |` und
-    `| entries[].locked | boolean | Fixiert; fixierte Einträge stehen als Block vorn (data-tl-state="locked"), der letzte trägt section-end. |`
+    `` | `entries[].locked` | boolean | Fixiert (Zustand `locked`); fixierte Einträge stehen als Block vorn, der letzte trägt `section-end`. | ``
   - Aktionen: Zeilen „Kästchen umschalten“ und „Gruppierungsknopf“ ersetzen durch
     `| Auge (tl-reorder-list__eye) | sendCommand('columnVisible', …) für diesen Eintrag; an der letzten sichtbaren Spalte disabled mit Tooltip js.table.columnLastVisible. |` und
-    `| Schloss (tl-reorder-list__lock) | sendCommand('columnLock', …): zu stellt den Eintrag ans Ende des Blocks, auf direkt dahinter. |`
+    `` | Schloss (`tl-reorder-list__lock`) | Befehl `columnLock` (`sendCommand('columnLock', …)`): zu stellt den Eintrag ans Ende des Blocks, auf direkt dahinter. | ``
+
+  **Wichtig:** `missingInContract` verlangt den Backtick **unmittelbar** vor dem Begriff — `columnLock`, `locked`,
+  `section-end` müssen je einmal als eigener Code-Span im Vertrag stehen (Plan-Review, Befund 2). Nach Step 4 prüfen:
+  `grep -c '`columnLock\|`locked\|`section-end' src/components/reorder-list/reorder-list.contract.md` ≥ 3.
   - Tastatur: `Tab`-Zeile → „weiter zu Schloss und Auge des Eintrags, dann zum nächsten Griff; ein unsichtbarer Knopf
     erscheint mit dem Fokus.“
+  - Tokens, Zeile `Griff`: „der Fokusring … liegt innen“ gilt auch für Schloss und Auge.
   - Tokens: Zeile `Eintrag` ergänzen um „Beschriftung blass `--tl-text-disabled` bei `off`“; neue Zeilen
     `| Knöpfe rechts | tl-reorder-list__actions, Lücke --tl-space-2xs; Griff und Knöpfe opacity 0, beim Zeigen und bei :focus-within 1, Übergang --tl-duration-fast; ohne Zeigen (hover: none) immer 1 |`,
     `| Block „Fixiert“ | Überschrift tl-reorder-list__section in tl-type-label, --tl-text-secondary; Linie unter section-end --tl-border-width-sm --tl-border-separator |`.
   - Attribute: Zeilen `aria-pressed` (Gruppierungsknopf) und `disabled` (Kästchen) ersetzen durch
     `| aria-label | an Schloss und Auge: was der Klick tut („<Name> fixieren“/„lösen“, „<Name> ausblenden“/„einblenden“); kein aria-pressed. |`,
     `| disabled | am Auge der letzten sichtbaren Spalte. |`,
-    `| data-tl-state="off" / "locked" / "section-end" | am Eintrag: ausgeblendet, fixiert, letzter des Blocks. |`
+    `` | `data-tl-state="off"` / `locked` / `section-end` | am Eintrag: ausgeblendet, fixiert, letzter des Blocks. | ``
   - Klassen: Zeilen `tl-button--icon` (Gruppierungsknopf) und `tl-choice` löschen, neu:
     `| tl-reorder-list__actions | span am Zeilenende um Schloss und Auge |`, `| tl-reorder-list__lock | das Schloss, mit tl-button tl-button--ghost tl-button--sm tl-button--icon |`,
     `| tl-reorder-list__eye | das Auge, ebenso |`, `| tl-reorder-list__section | li mit der Überschrift „Fixiert“, role="presentation", tl-type-label |`.
@@ -264,7 +292,7 @@ Expected: FAIL — die beiden neuen Tests in `drag.test.mjs` und „reorder-list
             <span class="tl-reorder-list__label">Name</span>
             <span class="tl-reorder-list__actions">
               <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__lock" aria-label="Name lösen"><i class="tl-icon-sm bi bi-lock-fill tl-button__icon" aria-hidden="true"></i></button>
-              <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__eye" aria-label="Name ausblenden" disabled data-tooltip="Mindestens eine Spalte bleibt sichtbar"><i class="tl-icon-sm bi bi-eye tl-button__icon" aria-hidden="true"></i></button>
+              <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__eye" aria-label="Name ausblenden" disabled data-tooltip="text:Mindestens eine Spalte bleibt sichtbar"><i class="tl-icon-sm bi bi-eye tl-button__icon" aria-hidden="true"></i></button>
             </span>
           </li>
           <li class="tl-reorder-list__item" data-tl-state="dragging">
@@ -813,9 +841,13 @@ committet (Task 4 Step 6). Andere Fehler hier beheben.
 - Produces: `protected void applyColumns(List<String> columns, List<String> lockedColumns)` — setzt Reihenfolge
   und `frozenColumnCount` in einem Patch.
 
-- [ ] **Step 1: Failing test schreiben** — `TestColumnSelectionApply.java`: dieselbe Vorrichtung wie
-  `TestColumnCommandArguments` (Klasse `TestTable extends TableViewControl<Item>`, `control()`, `table()`, `columns()`
-  mit den Spalten `name`, `amount`, `state`, `suite()`), dazu:
+- [ ] **Step 1: Failing test schreiben** — `TestColumnSelectionApply.java`: die Vorrichtung aus
+  `TestColumnCommandArguments` vollständig übernehmen — Konstanten `COLUMN_NAME`, `COLUMN_AMOUNT`, `COLUMN_STATE`,
+  `INITIAL_WIDTH`, der Record `Item`, die Hilfen `displayedColumns(TestTable)`, `initialOrder()`, `control()` (gibt
+  `TestTable` zurück), `table()`, `columns()`, `suite()` (mit `TestColumnSelectionApply.class`) samt ihrer Importe
+  (`DefaultColumn`, `DefaultTableView`, `ListRowSource`, `TableViewState`, `SortSpec`, `ColumnView`, `Column`,
+  `TableView`, `DefaultReactContext`, `ReactContext`, `SSEUpdateQueue`, `ReactWindowRegistry`, `ThreadContextManager`,
+  `ResourcesModule`, `ModuleTestSetup`, `ServiceTestSetup`) — und dazu:
 
 ```java
 	private static final class TestTable extends TableViewControl<Item> {
@@ -856,7 +888,8 @@ committet (Task 4 Step 6). Andere Fehler hier beheben.
 - [ ] **Step 2: Test laufen lassen, er scheitert**
 
 Run: `mvn -q test -DskipTests=false -pl com.top_logic.layout.react -Dtest=test.com.top_logic.layout.react.control.table.TestColumnSelectionApply`
-Expected: Kompilierfehler (`applyColumns(List, List)` fehlt).
+Expected: Kompilierfehler im **Hauptcode** `TableViewControl` (alter Konstruktoraufruf von
+`ReactColumnSelectControl`, `groupedColumn()` fehlt — Folge von Task 3); der Test selbst kommt noch nicht zum Zug.
 
 - [ ] **Step 3: Implementieren** — in `TableViewControl.java`:
 
@@ -935,10 +968,13 @@ Expected: Kompilierfehler (`applyColumns(List, List)` fehlt).
 Run: `mvn -q test -DskipTests=false -pl com.top_logic.layout.react -Dtest='test.com.top_logic.layout.react.control.table.TestColumnSelectionApply,test.com.top_logic.layout.react.control.table.TestReactColumnSelect'`
 Expected: alle grün (2 + 9).
 
-- [ ] **Step 5: Messages** — `bash ../design-system/tools/check-messages-en.sh` (aus `design-system/` aufgerufen:
-  `cd design-system && bash tools/check-messages-en.sh`). Erwartet: Diff in `messages_en.properties` (neue Schlüssel
-  von `ColumnLockArguments`, entfernte von `GroupByArguments`). In `messages_de.properties` die Zeilen
-  `…GroupByArguments…` löschen und ergänzen:
+- [ ] **Step 5: Messages, Lauf 1** — vorher installieren, was das Skript offline braucht: es läuft mit `mvn -o` und
+  prüft auf dem gestapelten Branch **jedes** Modul mit Java-Diff gegen `origin/master`, auch die aus 3b
+  (Memory „Gate nach master-Merge: offline install“):
+  `mvn -q install -DskipTests -pl com.top_logic.layout.react,com.top_logic.layout.view,com.top_logic.layout.configedit`
+  (online, falls offline Abhängigkeiten fehlen). Dann `cd design-system && bash tools/check-messages-en.sh`.
+  Erwartet: Diff in `messages_en.properties` (neue Schlüssel von `ColumnLockArguments`, entfernte von
+  `GroupByArguments`). In `messages_de.properties` die Zeilen `…GroupByArguments…` löschen und ergänzen:
 
 ```properties
 com.top_logic.layout.react.control.table.ColumnLockArguments = Spalte '{column}' fixieren: {locked}
@@ -949,8 +985,9 @@ com.top_logic.layout.react.control.table.ColumnLockArguments.locked.tooltip = Ob
 com.top_logic.layout.react.control.table.ColumnLockArguments.tooltip = Typisierte Argumente des Befehls „columnLock“ der <i>Spaltenauswahl</i>: welche Spalte fixiert oder gelöst werden soll. <p> Die <i>Bezeichnung</i> dient gleichzeitig als Vorlage für die Berechnung <i>des Konfigurations-Label-Providers</i>, der einen aufgezeichneten Schritt für Menschen darstellt. </p>
 ```
 
-  Die genauen Schlüssel nimmt der Ausführende aus dem erzeugten `messages_en`-Diff, nicht aus diesem Plan. Erneut
-  `check-messages-en.sh` → „stimmt mit dem JavaDoc überein“.
+  Die genauen Schlüssel nimmt der Ausführende aus dem erzeugten `messages_en`-Diff, nicht aus diesem Plan. **Lauf 2
+  erst nach dem Commit (Step 6)**: das Skript bricht ab, solange `messages_en.properties` ungespeicherte Änderungen hat
+  (Plan-Review, Befund 3).
 
 - [ ] **Step 6: Commit (Engine)**
 
@@ -960,6 +997,9 @@ git commit -m "Ticket #29825: Design System column selection -- lock freezes a c
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ```
+
+- [ ] **Step 7: Messages, Lauf 2** — `cd design-system && bash tools/check-messages-en.sh` → „stimmt mit dem JavaDoc
+  überein“.
 
 ---
 
@@ -1112,7 +1152,6 @@ const TLColumnSelect: React.FC<TLCellProps> = ({ controlId }) => {
 
   const entries = (state.entries as ColumnEntry[] | undefined) ?? [];
   const visibleCount = entries.filter((entry) => entry.visible).length;
-  const hasUnlocked = entries.some((entry) => !entry.locked);
 
   // A table over a large type offers a column per attribute, which is a long list to scroll. The search narrows what
   // is rendered; the full list stays the reference for the drop position, so a row can be dropped next to a row the
@@ -1121,6 +1160,8 @@ const TLColumnSelect: React.FC<TLCellProps> = ({ controlId }) => {
   const matches = new Set(filterOptions(entries, search));
   const shown = entries.map((entry, index) => ({ entry, index })).filter(({ entry }) => matches.has(entry));
   const lastLockedShown = shown.filter(({ entry }) => entry.locked).pop()?.index;
+  // The line under the block only where something follows it: a search can leave the block alone.
+  const hasUnlockedShown = shown.some(({ entry }) => !entry.locked);
 
   const handleToggle = React.useCallback((name: string, visible: boolean) => {
     sendCommand(CMD_COLUMN_VISIBLE, { [ARG_COLUMN]: name, [ARG_VISIBLE]: visible });
@@ -1180,7 +1221,7 @@ const TLColumnSelect: React.FC<TLCellProps> = ({ controlId }) => {
                 reorderState(reorder.itemState(index)),
                 !entry.visible && 'off',
                 entry.locked && 'locked',
-                index === lastLockedShown && hasUnlocked && 'section-end',
+                index === lastLockedShown && hasUnlockedShown && 'section-end',
               )}
               {...reorder.itemProps(index)}
             >
@@ -1235,7 +1276,16 @@ export default TLColumnSelect;
 Run: `cd com.top_logic.layout.react && npm run build`
 Expected: `tsc` ohne Fehler, zwei Vite-Builds „built in …“.
 
-- [ ] **Step 5: Engine-Gate alte Klassen und Messages**
+- [ ] **Step 5: Fertig-Bedingung als Test, Engine-Gate, Messages** — an `design-system/test/engine-classes.test.mjs`
+  anhängen (Paket-Repo, eigener Commit `Ticket #29825: Gate -- die Spaltenwahl trägt kein Kästchen, kein
+  Gruppieren, kein aria-pressed`):
+
+```js
+test('die Spaltenwahl ist ein Ebenen-Panel: kein Kästchen, kein Zeilen-Gruppieren, kein aria-pressed (#29825)', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+  const tsx = readFileSync(join(M, 'react-src/controls/TLColumnSelect.tsx'), 'utf8');
+  assert.doesNotMatch(tsx, /aria-pressed|tl-checkbox|tl-choice|grouped|groupBy/);
+});
+```
 
 ```bash
 cd design-system && node --test test/engine-classes.test.mjs 2>&1 | grep -E '^ℹ (pass|fail)'
@@ -1281,7 +1331,8 @@ Expected: Paket grün; `layout.react` 0 Failures (bisher 601 Tests, jetzt 612); 
      waagerechten Scrollen links.
   5. Auge an „Text“: Name blass, Auge zu; Ok → Spalte fehlt in der Tabelle; Dialog erneut → Text am selben Platz.
   6. Alle Spalten bis auf eine ausblenden: das Auge der letzten ist gesperrt, Tooltip „Mindestens eine Spalte bleibt
-     sichtbar“.
+     sichtbar“ — in Chrome **und Firefox** (Firefox meldet kein `pointerover` an deaktivierten Knöpfen; fehlt der
+     Tooltip dort, `aria-disabled` statt `disabled` und den Klick im Handler abfangen).
   7. Suche „Dat“: Überschrift „Fixiert“ nur, wenn ein Treffer fixiert ist; Schloss an einem Treffer trifft ihn.
   8. „Standard wiederherstellen“: Spalten wie definiert, nichts fixiert, nicht gruppiert.
   9. Spaltenkopf → Kontextmenü „Nach dieser Spalte gruppieren“ funktioniert weiter.
