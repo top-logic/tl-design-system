@@ -20,14 +20,16 @@ Alle in `design-system/`, alle mit `node` ohne Abhängigkeiten:
 | `node tools/generate.mjs` | Erzeugt `dist/` aus `src/`. Nach jeder Änderung an `src/` aufrufen; ein Test hält `dist/` byte-identisch. |
 | `node tools/lint-css.mjs` | **Klassen-Gate** über `dist/*.css` und `src/components/*.css`: kein Literal, kein `:focus` ohne `-visible`, kein `outline: none`, nur Tokens. |
 | `node tools/inventory.mjs` | Zählt das alte `tlReactControls.css` im Worktree je Block (Ratsche). Budget in `test/ratchet.json` unter `blocks`: kein Block wächst, ein abgeschnittener wird gestrichen, Fremdzuwachs hebt seinen Block mit Ticketvermerk. |
-| `node tools/publish-to-worktree.mjs` | Kopiert `dist/` in den Worktree, bis das Paket einen Maven-Wrapper hat. |
+| `node tools/publish-to-worktree.mjs` | Kopiert `dist/` in den Worktree, bis das Paket einen Maven-Wrapper hat. Nach jedem `generate` aufrufen; `test/published.test.mjs` hält die Kopie byte-gleich. |
 | `node tools/serve.mjs` | Specimen auf `http://localhost:8137/` |
 | `node tools/derive.mjs <theme>.primitives.json [<ausgabe>.css] [--strict]` | **Kundenstufe A.** Rechnet aus Hausfarbe und Grauwahl ein Theme und schreibt `<theme>.theme.css` mit Rollen unter `[data-tl-theme]`. Gerechnetes hält die Paarliste, Geliefertes darf sie verfehlen (Befund im Kopf). Beispiel: `test/fixtures/probe.primitives.json` → `specimen/probe.theme.css`. |
 | `tools/check-messages-en.sh` | **Push-Gate für den Worktree.** Erzeugt `messages_en.properties` aus dem JavaDoc für jedes Modul mit Java-Änderungen und schlägt fehl, wenn ein Diff bleibt. Jenkins scheitert sonst mit „Files have been changed during build“. Vor **jedem** Push in den Worktree aufrufen — auch nach reinen JavaDoc-Änderungen. |
 
 Der Worktree liegt unter `_Working-Tree/tl8-wt-29584` im Projektordner (ignoriert; oder `TL_WORKTREE`), das
 Hauptrepo daneben. Beides muss dort liegen: die Sandbox sieht nur den Projektordner und `~/.m2`, nicht `~/git`. Welle 0 ist auf `master`; jede weitere
-Welle arbeitet auf einem eigenen Branch `CWS/CWS_29617_design_system_welle_<n>` (Trac #29617).
+Welle arbeitet auf einem eigenen Branch `CWS/CWS_<ticket>_design_system_welle_<n>` mit eigenem Trac-Ticket (Wellen 0–3a
+#29617, mit alpha10 geschlossen; 3b #29821). Ein Release schließt jedes Ticket, dessen Arbeit auf master liegt — darum
+vor jeder Welle ein neues Ticket anlegen und annehmen.
 
 ## Die zwei Schichten
 
@@ -77,7 +79,8 @@ Keine Zeit- oder Aufwandsangaben — weder in Docs noch in Antworten; das übers
 Schätz-Regel des ADHD-Skills. Pläne gliedern sich nach Reihenfolge und Fertig-Bedingung.
 Änderungen an `docs/skalen.md` ziehen `docs/praesentation.md` und `STATUS.md` mit.
 
-Jedes Arbeitspaket endet committet (Präfix `Ticket #29617:`), nichts Halbfertiges bleibt liegen.
+Jedes Arbeitspaket endet committet (Präfix `Ticket #<Wellenticket>:`, für 3b `Ticket #29821:`), nichts Halbfertiges
+bleibt liegen.
 
 **Kein Plan geht ohne Plan-Review in die Ausführung.** Die Selbstprüfung des Autors (`writing-plans`) prüft
 gegen die Spec; sie findet nicht, was am Code scheitert. Vor dem Start der SDD prüft ein **frischer Agent**
