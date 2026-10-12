@@ -1,7 +1,7 @@
 // Die Tabelle — 3b §3–§6: Zeile size-row, Kopf size-bar, Lage und Cursor als Attribute.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readGenerated, declarationsOf, rulesOf } from './lib/component.mjs';
+import { readComponent, readGenerated, declarationsOf, rulesOf } from './lib/component.mjs';
 
 const css = readGenerated('table', 'table.css');
 
@@ -82,3 +82,13 @@ test('Kapseln in der Zelle behalten ihre Form und bleiben in der Zelle (max-widt
   assert.match(declarationsOf(css, '.tl-table__cell > .tl-pill > .tl-pill__label') ?? '', /min-width:\s*0/);
 });
 
+
+test('die Leerzeile klebt am linken Rand des Körpers, auch waagerecht gescrollt (Sichtprüfung 12.10.)', () => {
+  // Befund: Filter nimmt die letzte Zeile, der Körper steht bei scrollLeft 500 — „Keine Einträge" lag links
+  // außerhalb des Bildes. Die Zeile ist der einzige Block im Körper, der nicht mit den Spalten wandern soll.
+  const d = declarationsOf(css, '.tl-table__body > [role="row"]:has(> .tl-status)') ?? '';
+  assert.match(d, /position:\s*sticky/);
+  assert.match(d, /inset-inline-start:\s*0/);
+  const md = readComponent('table', 'table.contract.md');
+  assert.match(md, /klebt am linken Rand des Körpers/);
+});
