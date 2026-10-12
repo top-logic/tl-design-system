@@ -82,6 +82,10 @@ Schätz-Regel des ADHD-Skills. Pläne gliedern sich nach Reihenfolge und Fertig-
 Jedes Arbeitspaket endet committet (Präfix `Ticket #<Wellenticket>:`, für 3b `Ticket #29821:`), nichts Halbfertiges
 bleibt liegen.
 
+**Gepusht wird nur nach Hendriks ausdrücklicher Freigabe** — Engine-Branches im Worktree wie Projekt-`main`; eine
+Freigabe gilt für einen Push. **Subagenten pushen nie**, auch nicht mit Freigabe: sie committen lokal und melden; den
+freigegebenen Push macht der Orchestrator. Steht „push“ als Schritt in einem Plan, ist das ein Vorschlag, keine Freigabe.
+
 **Kein Plan geht ohne Plan-Review in die Ausführung.** Die Selbstprüfung des Autors (`writing-plans`) prüft
 gegen die Spec; sie findet nicht, was am Code scheitert. Vor dem Start der SDD prüft ein **frischer Agent**
 (Opus, oder Fable selbst, wenn Opus geplant hat) jeden Plan gegen die Gates: jedes geplante CSS gegen
