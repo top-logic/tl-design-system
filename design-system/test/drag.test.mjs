@@ -121,6 +121,9 @@ test('tl-reorder-list: Griff, Schloss und Auge erscheinen beim Zeigen oder Fokus
     '.tl-reorder-list__item[data-tl-state~="off"] .tl-reorder-list__eye',
     '.tl-reorder-list__item[data-tl-state~="locked"] .tl-reorder-list__lock',
   ]) assert.match(declarationsOf(liste, sel) ?? '', /opacity:\s*1/, sel);
+  // Die Übergangsliste ersetzt die von .tl-button: opacity kommt dazu, die weichen Hover-Übergänge bleiben.
+  for (const sel of ['.tl-reorder-list__handle', '.tl-reorder-list__actions > .tl-button'])
+    assert.match(declarationsOf(liste, sel) ?? '', /transition:[^;]*opacity[^;]*background-color/, `${sel}: transition`);
   assert.doesNotMatch(ohne, /visibility:\s*hidden/);
   assert.match(ohne, /@media \(hover: none\)/, 'ohne Zeigen (Touch) bleibt alles sichtbar');
 });

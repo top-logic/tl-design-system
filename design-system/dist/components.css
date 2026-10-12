@@ -1677,7 +1677,11 @@ a.tl-field-value:hover {
   color: var(--tl-icon-secondary);
   cursor: grab;
   opacity: 0;
-  transition: opacity var(--tl-duration-fast) var(--tl-easing-standard);
+  transition:
+    opacity var(--tl-duration-fast) var(--tl-easing-standard),
+    background-color var(--tl-duration-fast) var(--tl-easing-standard),
+    border-color var(--tl-duration-fast) var(--tl-easing-standard),
+    color var(--tl-duration-fast) var(--tl-easing-standard);
 }
 
 .tl-reorder-list__handle:active {
@@ -1713,7 +1717,11 @@ a.tl-field-value:hover {
    erscheint, sobald er den Fokus hat. */
 .tl-reorder-list__actions > .tl-button {
   opacity: 0;
-  transition: opacity var(--tl-duration-fast) var(--tl-easing-standard);
+  transition:
+    opacity var(--tl-duration-fast) var(--tl-easing-standard),
+    background-color var(--tl-duration-fast) var(--tl-easing-standard),
+    border-color var(--tl-duration-fast) var(--tl-easing-standard),
+    color var(--tl-duration-fast) var(--tl-easing-standard);
 }
 
 .tl-reorder-list__item:hover > .tl-reorder-list__handle,
