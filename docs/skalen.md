@@ -1908,26 +1908,27 @@ sein Versuch, ein Ticket auf eine andere Gruppe derselben Tabelle zu legen, lief
 
 **Verworfen:** Griff immer sichtbar (unruhig bei vielen Zeilen); nur der Mauszeiger (reicht nicht, gezeigt).
 
-#### Die Spaltenwahl neu (entschieden 12.10., Hendrik — gebaut mit eigenem Ticket #29825)
+#### Die Spaltenwahl neu: ein Ebenen-Panel (entschieden 12.10., Hendrik — #29825, Spec `2026-10-12-spaltenwahl-ebenen-design.md`)
 
 **Befund der Sichtprüfung.** Die Zeile der Spaltenwahl liest sich verkehrt herum: vorn der Griff, dann ein
 Ebenen-Icon „nach dieser Spalte gruppieren“, erst an dritter Stelle das Kästchen, dann der Name. Griffe stehen in jeder
-der 54 Zeilen, auch bei ausgeblendeten Spalten, deren Reihenfolge niemand sieht; das Gruppier-Icon steht 54-mal für
-eine Wahl, die nur eine Spalte haben kann, und sagt nicht, was es tut.
+der 54 Zeilen; das Gruppier-Icon steht 54-mal für eine Wahl, die nur eine Spalte haben kann, und sagt nicht, was es tut.
 
-**Entschieden:**
-* **Gruppieren ist ein Select über der Liste** — „Gruppieren nach: Keine / Spalte …“, einmal statt je Zeile; das
-  Ebenen-Icon fällt aus der Liste.
-* **Die Zeile ist Griff, Kästchen, Name:** der Griff vorn, sichtbar nur beim Zeigen oder bei Fokus — wie bei der
-  ziehbaren Tabellenzeile („Ziehen sichtbar machen“); dahinter Kästchen und Name als eine Klickfläche (`tl-choice`,
-  die ganze Zeile schaltet). Alt + Pfeil bleibt. **Nachgezogen 12.10. (Hendrik): erst „Griff rechts“ entschieden, dann
-  verworfen** — ein Griff vorn an der Tabellenzeile und hinten in der Spaltenwahl wäre zweierlei für dasselbe.
-* **Zwei Bereiche:** „Sichtbar“ in Tabellenreihenfolge, ziehbar; „Ausgeblendet“ alphabetisch, ohne Griff. Ein Haken
-  holt eine Spalte nach oben, ein entfernter Haken schiebt sie nach unten.
+**Entschieden — die Spaltenwahl wird ein Ebenen-Panel wie in Figma:**
+* **Zeile = Griff · Name · Schloss · Auge.** Der Griff vorn („Ein Griff steht vorn, überall“), Schloss und Auge
+  rechtsbündig; alle drei erscheinen beim Zeigen oder bei Fokus, ein gesetzter Zustand (Auge zu, Schloss zu) bleibt
+  sichtbar. Kein Kästchen mehr.
+* **Ausgeblendet bleibt am Platz,** der Name blass — keine getrennten Bereiche Sichtbar/Ausgeblendet.
+* **Das Schloss fixiert die Spalte:** fixierte Spalten stehen als Block „Fixiert“ oben; Schloss und Fixiergriff
+  zwischen den Köpfen schreiben dieselbe Anzahl.
+* **Das Gruppieren der Zeilen verlässt den Dialog;** es bleibt im Kontextmenü am Spaltenkopf.
+* **Stufe 2: Spaltengruppen** — Spalten aufeinanderziehen ergibt eine benannte Gruppe, in der Tabelle ein Band über
+  ihren Köpfen. Die Logik baut Bernhard, das Aussehen wir; ein Pivot (Zeilen über mehrere Ebenen gruppieren) geht als
+  Idee an ihn.
 
-**Verworfen:** der Griff am rechten Ende (12.10. zuerst gewählt, dann zugunsten „Griff vorn, überall“ verworfen);
-Gruppieren ins Kopf-Menü der Spalte (der Dialog bliebe der Ort, an dem man die Tabelle einrichtet);
-das Icon behalten und nur erklären (54 Icons für eine Einfachwahl); eine Liste mit Ausgeblendeten dazwischen.
+**Verworfen (am selben Tag zuerst entschieden, dann ersetzt):** Gruppieren als ein Select über der Liste; Kästchen vorn
+und Griff rechts; zwei Bereiche Sichtbar/Ausgeblendet. Ebenso verworfen: Gruppieren ins Kopf-Menü allein ohne
+Spaltengruppen, das Icon behalten und nur erklären.
 
 ### Auswahlmarken zeigen einen Hof (06.10.)
 
