@@ -1,12 +1,13 @@
-**Letzte Sitzung:** 2026-10-12 (#29825 Spaltenwahl als Ebenen-Panel gebaut, reviewt, lokal sichtgeprüft; lokal committet, nicht gepusht; Folgeticket #29828) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-12 (#29825 Spaltenwahl als Ebenen-Panel gebaut, reviewt, lokal sichtgeprüft, gepusht als !1852; Folgeticket #29828) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
 
 ## Zuerst
 
-**Jetzt (12.10.): #29825 „Spaltenwahl als Ebenen-Panel“ ist gebaut, lokal committet, nicht gepusht.** Push und PR nur
-nach Hendriks Freigabe (CLAUDE.md, seit 12.10.: kein Push ohne Freigabe, Subagenten pushen nie).
+**Jetzt (12.10.): #29825 „Spaltenwahl als Ebenen-Panel“ ist gebaut und gepusht als PR [!1852](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1852)**
+(gegen `welle_3b`, Reviewer bhu, Trac-Kommentar; nach dem Merge von !1838 Basis auf master). Push nur nach Hendriks
+Freigabe (CLAUDE.md, seit 12.10.; Subagenten pushen nie).
 1. **Engine** Branch `CWS/CWS_29825_design_system_spaltenwahl` auf `welle_3b` (Bernhards master-Merge `2af20a4447`),
    Commits `26e1c73a0f..05a7db4cb7` (sieben): Server mit Schloss und Block „Fixiert“ (`columnLock`, ohne
    Zustandswechsel wirkungslos), Übernehmen setzt Reihenfolge und `frozenColumnCount` in einem Patch, `groupBy` fällt;
@@ -23,9 +24,8 @@ nach Hendriks Freigabe (CLAUDE.md, seit 12.10.: kein Push ohne Freigabe, Subagen
    und Block, Fokus nach Lösen, Auge, Ok → fixiert und ausgeblendet in der Tabelle, Suche mit „Fixiert“, letzte
    sichtbare Spalte gesperrt mit Tooltip, Standard → nichts fixiert, Kontextmenü gruppiert und sagt „Bis hier
    fixieren“. Offen: Firefox (Tooltip am gesperrten Auge), axe auf `li role="presentation"` (altlast.md).
-5. **Nächstes, mit Freigabe:** Push des Engine-Branches, PR gegen `welle_3b` (Titel „Ticket #29825: Design System --
-   column selection as a layer panel“, Bilder als Raw-URL, Reviewer bhu), Push `main`. Der Trac-Text von #29825
-   beschreibt noch die verworfene Fassung (Select, Kästchen vorn, zwei Bereiche) — mit Hendrik nachziehen.
+5. **Nächstes:** Bernhards Review auf !1852 abwarten; nach jeder Antwort `add_reviewers bhu`. Die verworfene Fassung im
+   Trac-Text von #29825 ist per Kommentar richtiggestellt (Beschreibung selbst unverändert).
 6. Rundherum offen: !1838 (3b) wartet auf Bernhards Review; #29826 „Ziehen sichtbar machen“ nach !1825; #29827
    Spaltengruppen und Pivot bei Bernhard; !1825/!1801/!1830 kollidieren mit !1838. Lokale Demo: Memory „Lokale Demo
    statt Docker“ (Maven aus `tl-parent-engine` mit `-pl ../<modul>`).
