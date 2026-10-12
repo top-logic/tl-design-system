@@ -1869,6 +1869,9 @@ Spec `docs/superpowers/specs/2026-10-02-welle-3b-daten-design.md`. Neu entschied
   Scrollbereiche ineinander, die Suche scrollte nach einer Pause weg. Jetzt füllen Suche und Liste ihren Behälter als
   Spalte mit Innenabstand `space-md` (der Fokusring der Suche steht ganz im Bild), nur die Liste scrollt, und die
   Spaltenwahl öffnet ihr Fenster 70 % hoch — so springt es beim Tippen nicht.
+* **Kopf und Körper scrollen gemeinsam** (12.10., Sichtprüfung, Hendrik): der Kopf folgte nur dem Körper — ein Tab auf
+  einen Kopfknopf außerhalb des Bildes verschob ihn gegen die Zeilen (auch master), und über dem Kopf tat das Mausrad
+  nichts. Jetzt scrollt der Kopf selbst (ohne eigenen Balken), und der Körper folgt ihm.
 * **`aria-sort` nur an der ersten Sortierstufe** (ARIA: eine Spalte zur Zeit); weitere Stufen zeigt das Badge.
 * **Die Tabelle hat keine Ladezeile**: fehlende Zeilen sind Platzhalter (`aria-hidden`), das Raster ist `aria-busy`.
   Wo eine Ladezeile eine eigene Rolle mit Namen hat (Baum), ist der Fortschritt darin `aria-hidden`; sonst trägt der

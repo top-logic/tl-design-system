@@ -92,3 +92,12 @@ test('die Leerzeile klebt am linken Rand des Körpers, auch waagerecht gescrollt
   const md = readComponent('table', 'table.contract.md');
   assert.match(md, /klebt am linken Rand des Körpers/);
 });
+
+test('der Kopf scrollt waagerecht ohne eigenen Balken (Hendrik 12.10.)', () => {
+  // Vorher overflow: hidden — Mausrad und Trackpad über dem Kopf taten nichts; seit der Körper dem Kopf folgt,
+  // darf der Kopf selbst scrollen.
+  const d = declarationsOf(css, '.tl-table__header') ?? '';
+  assert.match(d, /overflow-x:\s*auto/);
+  assert.match(d, /overflow-y:\s*hidden/);
+  assert.match(d, /scrollbar-width:\s*none/);
+});

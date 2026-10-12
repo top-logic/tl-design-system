@@ -167,7 +167,7 @@ Körper scrollen waagerecht gemeinsam: das TSX überträgt `scrollLeft` des Kör
 | Platzhalter | Innenabstand `--tl-space-control-x`, Linie darunter wie die Zeile |
 | Ablehnung | Rand `--tl-status-error-border`, Text `--tl-status-error-text` |
 
-Schrift: `.tl-type-body` am `tl-table__body`, von der Komponente gesetzt. Die Gruppenzeile ist stark: jede ihrer Zellen
+Der Kopf scrollt waagerecht ohne eigenen Balken (`scrollbar-width: none`); Kopf und Körper folgen einander in beide Richtungen (12.10.). Schrift: `.tl-type-body` am `tl-table__body`, von der Komponente gesetzt. Die Gruppenzeile ist stark: jede ihrer Zellen
 trägt `tl-type-body-strong`, und ein Lesewert darin erbt sie (`field.contract.md`, 09.10.). Ein Text setzt seine
 Variante selbst; ihm gibt der Server dieselbe Klasse als `css-class` (`text.contract.md`). Ihre Anzahl ist `tl-type-label`. Eine Zeile schwebt nicht: kein Schatten, Kanten sind Linien. Ziehen und Ablegen
 zeichnet `drag.css` (`drag.contract.md`), den Cursor-Ring `base.css`.
