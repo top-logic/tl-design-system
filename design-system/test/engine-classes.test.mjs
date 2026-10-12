@@ -38,7 +38,7 @@ test('keine alte Klasse der Wellen 2, 3a und 3b in react-src eines Moduls und in
   assert.deepEqual(hits, []);
 });
 
-test('die Spaltenwahl ist ein Ebenen-Panel: kein Kästchen, kein Zeilen-Gruppieren, kein aria-pressed (#29825)', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+test('die Spaltenwahl ist ein Ebenen-Panel: kein Kästchen, kein Zeilen-Gruppieren, kein Gruppier-Icon, kein aria-pressed (#29825)', { skip: !existsSync(M) && 'kein Worktree' }, () => {
   const tsx = readFileSync(join(M, 'react-src/controls/TLColumnSelect.tsx'), 'utf8');
-  assert.doesNotMatch(tsx, /aria-pressed|tl-checkbox|tl-choice|grouped|groupBy/);
+  assert.doesNotMatch(tsx, /aria-pressed|tl-checkbox|tl-choice|grouped|groupBy|ICON_GROUP/);
 });

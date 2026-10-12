@@ -128,10 +128,12 @@ test('tl-reorder-list: Griff, Schloss und Auge erscheinen beim Zeigen oder Fokus
   assert.match(ohne, /@media \(hover: none\)/, 'ohne Zeigen (Touch) bleibt alles sichtbar');
 });
 
-test('tl-reorder-list: ausgeblendet blass, Block mit Linie, Überschrift, Knöpfe rechts; kein Kästchen mehr', () => {
+test('tl-reorder-list: ausgeblendet gedämpft (text-secondary), Block mit Linie, Überschrift, Knöpfe rechts; kein Kästchen mehr', () => {
   const liste = readGenerated('reorder-list', 'reorder-list.css');
-  assert.match(declarationsOf(liste, '.tl-reorder-list__item[data-tl-state~="off"] > .tl-reorder-list__label') ?? '',
-    /color:\s*var\(--tl-text-disabled\)/);
+  // Der ausgeblendete Eintrag bleibt bedienbar: text-disabled (WCAG-Ausnahme nur für Inaktives) wäre zu blass.
+  const aus = declarationsOf(liste, '.tl-reorder-list__item[data-tl-state~="off"] > .tl-reorder-list__label') ?? '';
+  assert.match(aus, /color:\s*var\(--tl-text-secondary\)/);
+  assert.doesNotMatch(aus, /text-disabled/);
   assert.match(declarationsOf(liste, '.tl-reorder-list__item[data-tl-state~="section-end"]') ?? '',
     /border-bottom:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-separator\)/);
   assert.match(declarationsOf(liste, '.tl-reorder-list__section') ?? '', /color:\s*var\(--tl-text-secondary\)/);

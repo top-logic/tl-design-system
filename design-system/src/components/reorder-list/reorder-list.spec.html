@@ -20,8 +20,9 @@
     <label class="tl-type-label"><input type="checkbox" id="density"> kompakt</label>
   </div>
 
-  <!-- Die Spaltenwahl: vor der Liste die Suche, dann fünf Einträge — einer wird gezogen, vor einem landet
-       er, einer ist gruppiert, einer darf nicht ausgeblendet werden. Das Skript setzt sie auf jede Fläche. -->
+  <!-- Die Spaltenwahl: vor der Liste die Suche, dann fünf Einträge — einer ist fixiert, einer wird gezogen, vor
+       einem landet er, einer ist ausgeblendet. Darunter eine kleine Liste mit der letzten sichtbaren Spalte, deren
+       Auge gesperrt ist. Das Skript setzt beide auf jede Fläche. -->
   <template id="rows">
     <div class="specimen__row specimen__row--narrow specimen__row--top">
       <span class="tl-type-label">Spaltenwahl</span>
@@ -39,7 +40,7 @@
             <span class="tl-reorder-list__label">Name</span>
             <span class="tl-reorder-list__actions">
               <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__lock" aria-label="Name lösen"><i class="tl-icon-sm bi bi-lock-fill tl-button__icon" aria-hidden="true"></i></button>
-              <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__eye" aria-label="Name ausblenden" disabled data-tooltip="text:Mindestens eine Spalte bleibt sichtbar"><i class="tl-icon-sm bi bi-eye tl-button__icon" aria-hidden="true"></i></button>
+              <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__eye" aria-label="Name ausblenden"><i class="tl-icon-sm bi bi-eye tl-button__icon" aria-hidden="true"></i></button>
             </span>
           </li>
           <li class="tl-reorder-list__item" data-tl-state="dragging">
@@ -77,6 +78,28 @@
         </ul>
         <span class="tl-visually-hidden" role="status">Status, Position 2 von 5</span>
       </div>
+    </div>
+    <div class="specimen__row specimen__row--narrow specimen__row--top">
+      <span class="tl-type-label">Letzte sichtbare Spalte</span>
+      <!-- Nur noch Name ist sichtbar: sein Auge ist gesperrt und sagt, warum; Status daneben ist ausgeblendet. -->
+      <ul class="tl-reorder-list tl-type-body" aria-label="Spalten">
+        <li class="tl-reorder-list__item">
+          <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__handle" aria-label="Name verschieben" aria-describedby="reorder-hint"><i class="tl-icon-sm bi bi-grip-vertical tl-button__icon" aria-hidden="true"></i></button>
+          <span class="tl-reorder-list__label">Name</span>
+          <span class="tl-reorder-list__actions">
+            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__lock" aria-label="Name fixieren"><i class="tl-icon-sm bi bi-unlock tl-button__icon" aria-hidden="true"></i></button>
+            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__eye" aria-label="Mindestens eine Spalte bleibt sichtbar" disabled data-tooltip="text:Mindestens eine Spalte bleibt sichtbar"><i class="tl-icon-sm bi bi-eye tl-button__icon" aria-hidden="true"></i></button>
+          </span>
+        </li>
+        <li class="tl-reorder-list__item" data-tl-state="off">
+          <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__handle" aria-label="Status verschieben" aria-describedby="reorder-hint"><i class="tl-icon-sm bi bi-grip-vertical tl-button__icon" aria-hidden="true"></i></button>
+          <span class="tl-reorder-list__label">Status</span>
+          <span class="tl-reorder-list__actions">
+            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__lock" aria-label="Status fixieren"><i class="tl-icon-sm bi bi-unlock tl-button__icon" aria-hidden="true"></i></button>
+            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__eye" aria-label="Status einblenden"><i class="tl-icon-sm bi bi-eye-slash tl-button__icon" aria-hidden="true"></i></button>
+          </span>
+        </li>
+      </ul>
     </div>
   </template>
 
