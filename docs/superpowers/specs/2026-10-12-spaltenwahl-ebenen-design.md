@@ -76,16 +76,21 @@ ist `disabled` (wie heute das Kästchen), mit Tooltip „Mindestens eine Spalte 
   löst bzw. fixiert ebenso: wer in den Block zieht, fixiert, wer herauszieht, löst.
 - Die Anzahl fixierter Spalten der Tabelle (`frozenColumnCount`) ist beim Übernehmen die Zahl der **sichtbaren**
   Einträge im Block. Eine ausgeblendete fixierte Spalte bleibt im Block, zählt aber nicht.
-- Spalten, die die Tabelle ans Ende heftet (`pinnedEnd`), zählen nie zum Block. Stehen sie in
-  `TableView.columnOptions()`, bekommen sie kein Schloss; der Plan prüft das als ersten Schritt und erweitert
-  `ColumnOption` um `pinnedEnd`, falls nötig.
+- Spalten, die die Tabelle ans Ende heftet (`pinnedEnd`), sind immer sichtbar, stehen immer am Ende und zählen nie
+  zum Block. In der Liste stehen sie zuletzt, nur mit ihrem Namen — ohne Griff, Schloss und Auge
+  (`data-tl-state~="pinned"`). Woher: `ColumnView.pinnedEnd()` der sichtbaren Spalten; `ColumnOption` bleibt, wie es
+  ist.
+- **Ziehen an die Linie:** die Position entscheidet — im Block fixiert, dahinter gelöst; die Stelle direkt an der
+  Linie behält den bisherigen Zustand des gezogenen Eintrags (ein fixierter landet am Ende des Blocks, ein gelöster
+  am Anfang des Rests).
 
 ### 2.4 Suche, Tastatur, Ziehen
 
 - Die Suche bleibt (ab elf Einträgen, wie heute). Bei aktiver Suche bleibt die Überschrift „Fixiert“ stehen, solange
   ein Treffer im Block liegt.
 - Tab-Reihenfolge je Zeile: Griff, Schloss, Auge. Leertaste oder Enter schalten Schloss und Auge, Alt + Pfeil am Griff
-  verschiebt — auch über die Grenze des Blocks, mit Ansage „{Spalte} fixiert, Position 2 von 54“ bzw. „gelöst“.
+  verschiebt — auch über die Grenze des Blocks. Die Ansage bleibt „{Spalte}, Position n von m“ (`js.reorder.moved`);
+  ob die Spalte jetzt fixiert ist, sagt der Name ihres Schlosses („lösen“ statt „fixieren“).
 - Die Ziehen-Optik bleibt `drag.css` (Marke davor/danach). Ein Zug zwischen zwei Einträgen bleibt ein Zug zwischen
   Einträgen; „auf einen Eintrag“ gibt es erst in Stufe 2.
 
