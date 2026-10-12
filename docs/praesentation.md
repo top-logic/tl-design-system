@@ -308,7 +308,7 @@ Innerhalb einer Welle keine Reihenfolge — parallel ist möglich. Der Button is
 
 > Sprechnotiz: Nebenbei fallen Dinge, die niemand angefordert hat: ein Tree-Umschalter unter der Mindesttrefferfläche, 22 fehlende Fokusringe, der Schatten auf der Tabellenzeile.
 
-> Sprechnotiz (12.10., Sichtprüfung): Zeigen muss man sehen — auch auf der Feldfläche. Kapsel und Segment rücken dort eine Stufe vor wie die Knöpfe im Feld. Und eine Liste mit Suche hat genau einen Scrollbereich; die Spaltenwahl wird ein Ebenen-Panel wie in Figma: Griff vorn, Auge und Schloss rechts beim Zeigen, später benannte Spaltengruppen.
+> Sprechnotiz (12.10., Sichtprüfung): Zeigen muss man sehen — auch auf der Feldfläche. Kapsel und Segment rücken dort eine Stufe vor wie die Knöpfe im Feld. Und eine Liste mit Suche hat genau einen Scrollbereich; die Spaltenwahl wird ein Ebenen-Panel wie in Figma: Griff vorn, Auge und Schloss rechts beim Zeigen, später benannte Spaltengruppen. Blass heißt dort nicht „deaktiviert“: eine ausgeblendete Spalte bleibt bedienbar, also bleibt sie lesbar.
 
 > Sprechnotiz (12.10.): Was man ziehen kann, muss man sehen — ein Griff beim Zeigen, und mit dem Zugbeginn leuchten die Ziele auf.
 

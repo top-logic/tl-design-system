@@ -1930,6 +1930,19 @@ der 54 Zeilen; das Gruppier-Icon steht 54-mal für eine Wahl, die nur eine Spalt
 und Griff rechts; zwei Bereiche Sichtbar/Ausgeblendet. Ebenso verworfen: Gruppieren ins Kopf-Menü allein ohne
 Spaltengruppen, das Icon behalten und nur erklären.
 
+**Nachgetragen beim Bau (12.10., Hendrik):**
+* **Ausgeblendet ist blass, nicht deaktiviert:** der Name steht in `--tl-text-secondary`, nicht in `--tl-text-disabled`.
+  Der Eintrag bleibt bedienbar — ziehen, fixieren, einblenden —, und die WCAG-Ausnahme, unter der `text-disabled` ohne
+  Gate steht, gilt nur für inaktive Elemente; mit `text-disabled` (hell etwa 1,7:1) wären bei vielen ausgeblendeten
+  Spalten große Teile der Liste kaum lesbar. Das zugeklappte Auge trägt den Zustand mit. Wieder das Muster „ein Token,
+  mehrere Aufgaben“: `text-disabled` heißt „nicht bedienbar“, nicht „blass“.
+* **„Am Platz“ gilt im Dialog.** Die Tabelle merkt sich nur die gezeigten Spalten: nach „Ok“ und erneutem Öffnen stehen
+  ausgeblendete Spalten hinten, eine ausgeblendete fixierte verliert ihr Schloss. Dass der Tabellenzustand die volle
+  Reihenfolge samt ausgeblendeter und fixierter Spalten trägt, ist ein Eingriff in den Kern (`TableViewState`,
+  Persistenz je Person) und geht als eigenes Ticket an Bernhard — kein zweiter Zustand in `layout.react`.
+* **Ein Wort fürs Fixieren:** auch das Kontextmenü am Spaltenkopf sagt „Bis hier fixieren“ / „Fixierung aufheben“
+  statt „feststellen“.
+
 ### Auswahlmarken zeigen einen Hof (06.10.)
 
 > **Farbe des Hofs geändert (06.10., Bernhard):** der Hof ist durchscheinend, `surface-state-hover` /

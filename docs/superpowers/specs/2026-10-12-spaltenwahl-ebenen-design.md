@@ -64,7 +64,10 @@ zu einem blauen Kästchen (im Bildentwurf gesehen, 12.10.). Den Zustand trägt d
 ### 2.2 Ausgeblendet
 
 Eine ausgeblendete Spalte behält ihren Platz in der Liste. Der Eintrag trägt `data-tl-state~="off"`; der Name steht
-in `--tl-text-disabled`, das Auge zu bleibt sichtbar. Die letzte sichtbare Spalte lässt sich nicht ausblenden: ihr Auge
+in `--tl-text-secondary` (nachgetragen 12.10.: nicht `--tl-text-disabled` — der Eintrag bleibt bedienbar, siehe
+`skalen.md`), das Auge zu bleibt sichtbar. **Der Platz gilt im Dialog** (nachgetragen 12.10.): die Tabelle merkt sich
+nur die gezeigten Spalten, nach „Ok“ und erneutem Öffnen stehen ausgeblendete hinten und eine ausgeblendete fixierte
+ist gelöst; die volle Reihenfolge im Tabellenzustand ist ein eigenes Ticket (Kern, Bernhard). Die letzte sichtbare Spalte lässt sich nicht ausblenden: ihr Auge
 ist `disabled` (wie heute das Kästchen), mit Tooltip „Mindestens eine Spalte bleibt sichtbar“.
 
 ### 2.3 Fixiert
@@ -75,7 +78,7 @@ ist `disabled` (wie heute das Kästchen), mit Tooltip „Mindestens eine Spalte 
 - **Schloss zu** stellt die Spalte ans Ende des Blocks, **Schloss auf** direkt dahinter. Ziehen über die Linie hinweg
   löst bzw. fixiert ebenso: wer in den Block zieht, fixiert, wer herauszieht, löst.
 - Die Anzahl fixierter Spalten der Tabelle (`frozenColumnCount`) ist beim Übernehmen die Zahl der **sichtbaren**
-  Einträge im Block. Eine ausgeblendete fixierte Spalte bleibt im Block, zählt aber nicht.
+  Einträge im Block. Eine ausgeblendete fixierte Spalte bleibt im Block, zählt aber nicht (im Dialog, siehe §2.2).
 - Spalten, die die Tabelle ans Ende heftet (`pinnedEnd`, Aktionsspalten), stehen nicht in der Liste: sie sind weder
   wählbar noch fixierbar (`Column#selectable`, `#frozenEligible`) und fehlen in `TableView.columnOptions()`.
 - Die Tabelle zählt fixierte Spalten über ihre ganze Spaltenreihenfolge (`frozenColumnCount`, nicht wählbare führende
@@ -112,7 +115,7 @@ ist `disabled` (wie heute das Kästchen), mit Tooltip „Mindestens eine Spalte 
 |---|---|
 | `tl-reorder-list__actions` | `margin-inline-start: auto`, `display: flex`, Lücke `--tl-space-2xs` |
 | Beim Zeigen sichtbar | Griff und Knöpfe in `__actions` haben `opacity: 0`; `.tl-reorder-list__item:hover` und `:focus-within` setzen 1; `[data-tl-state~="off"]` hält das Auge, `[data-tl-state~="locked"]` das Schloss bei 1. Übergang `--tl-duration-fast`, `prefers-reduced-motion` aus `base.css` |
-| `[data-tl-state~="off"]` | ausgeblendet: Name `--tl-text-disabled`; das Auge bleibt sichtbar |
+| `[data-tl-state~="off"]` | ausgeblendet: Name `--tl-text-secondary` (nicht `--tl-text-disabled`, nachgetragen 12.10.); das Auge bleibt sichtbar |
 | `[data-tl-state~="locked"]` | fixiert: das Schloss bleibt sichtbar |
 | `tl-reorder-list__lock`, `tl-reorder-list__eye` | die beiden Knöpfe in `__actions`, damit die Regeln sie unterscheiden |
 | `tl-reorder-list__section` | Überschrift des Bereichs: `tl-type-label`, `--tl-text-secondary`, Innenabstand wie der Eintrag, darunter keine Linie |
