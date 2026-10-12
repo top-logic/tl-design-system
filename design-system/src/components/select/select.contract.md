@@ -141,6 +141,7 @@ Klassen:
 | `tl-select__values` | `span` um Platzhalter, Einzelwert oder Wert-Chips |
 | `tl-select__placeholder` | `span` mit `emptyOptionLabel` |
 | `tl-select__value` | `span` um den gewählten Einzelwert: Text oder `tl-pill` |
+| `tl-select__separator` | `span` mit „, “ zwischen zwei schreibgeschützten Werten, die beide Text sind (keine Pill); folgt dem Wert davor ohne Spalt, der Spalt der Reihe steht danach |
 | `tl-select__chip` | der Wert-Chip bei `multiSelect`: eine `tl-pill` mit dieser Klasse, darin Label und Entfernen-Knopf |
 | `tl-select__drag-handle` | Ziehgriff im Wert-Chip, nur bei `customOrder`: ein `button type="button"` mit `tl-button--icon --sm --ghost` vor dem Label |
 | `tl-select__controls` | `span` um Löschen-Knopf und Pfeil; Entfernen- und Löschen-Knopf sind `button type="button"` mit `tl-button--icon` (oben) |

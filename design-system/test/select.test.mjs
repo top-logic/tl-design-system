@@ -147,3 +147,13 @@ test('der Entfernen-Knopf liegt ganz im Pillenrand: Kreis ohne negativen Rand, k
     assert.ok(luecke > 0 && kreis >= px(R.measure['size-icon-sm']), `${dichte}: Kreis ${kreis}px kleiner als das Icon`);
   }
 });
+
+test('das Komma zwischen zwei Lesewerten folgt dem Wert davor: der Trenner nimmt den Spalt der Reihe zurück (12.10.)', () => {
+  // master #29693 rendert "Alpha, Beta" als tl-select__separator in der Flex-Reihe; ohne die Regel stünde der
+  // Spalt vor dem Komma ("Alpha , Beta"). Die Regel ging beim master-Merge vom 09.10. verloren.
+  const md = readComponent('select', 'select.contract.md');
+  assert.deepEqual(missingInContract(md, ['tl-select__separator']), []);
+  assert.match(declarationsOf(css, '.tl-select__values > .tl-select__separator') ?? '',
+    /margin-inline-start:\s*calc\(-1 \* var\(--tl-space-2xs\)\)/);
+  assert.match(declarationsOf(css, '.tl-select__values') ?? '', /gap:\s*var\(--tl-space-2xs\)/, 'der Spalt, den der Trenner zurücknimmt');
+});
