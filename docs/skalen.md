@@ -1890,6 +1890,22 @@ Spec `docs/superpowers/specs/2026-10-02-welle-3b-daten-design.md`. Neu entschied
 schlug sie TLJobStatus zu. Die Blockmessung trifft nur, was eine Überschrift trägt — beim Ausschneiden wird TLJobStatus
 auf seinen wahren Stand gesetzt.
 
+#### Ziehen sichtbar machen (entschieden 12.10., Hendrik — gebaut mit #29826 nach Bernhards !1825)
+
+**Befund der Sichtprüfung.** Eine ziehbare Zeile zeigt nur den Mauszeiger `grab`; es gibt keinen Griff, und kein Ziel
+zeigt sich, bevor der Zeiger es berührt. Hendrik fand nicht heraus, wo er ein Ticket fassen und wohin er es legen kann;
+sein Versuch, ein Ticket auf eine andere Gruppe derselben Tabelle zu legen, lief ins Leere (die Gruppe ist kein Ziel).
+
+**Entschieden:**
+* **Griff beim Zeigen:** eine ziehbare Zeile (Tabelle, Baum, Baumtabelle) zeigt vorn den Griff der Spaltenwahl, solange
+  der Zeiger über ihr steht oder sie den Tastatur-Cursor hat; der Mauszeiger `grab` bleibt.
+* **Ziele zeigen sich mit dem Zugbeginn:** jedes Element, das die gezogene Art annimmt, trägt einen ruhigen gestrichelten
+  Rand (neuer Zustand in `drag.css`); über dem Ziel übernehmen die Marken davor/danach/darauf/abgelehnt wie bisher.
+* **Gebaut nach !1825** auf Bernhards Ablage-Protokoll, nicht davor. Vorschlag an Bernhard: Ablegen auf eine
+  Gruppenzeile setzt den Gruppenwert.
+
+**Verworfen:** Griff immer sichtbar (unruhig bei vielen Zeilen); nur der Mauszeiger (reicht nicht, gezeigt).
+
 #### Die Spaltenwahl neu (entschieden 12.10., Hendrik — gebaut mit eigenem Ticket #29825)
 
 **Befund der Sichtprüfung.** Die Zeile der Spaltenwahl liest sich verkehrt herum: vorn der Griff, dann ein

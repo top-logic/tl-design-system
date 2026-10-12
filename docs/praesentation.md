@@ -310,6 +310,8 @@ Innerhalb einer Welle keine Reihenfolge — parallel ist möglich. Der Button is
 
 > Sprechnotiz (12.10., Sichtprüfung): Zeigen muss man sehen — auch auf der Feldfläche. Kapsel und Segment rücken dort eine Stufe vor wie die Knöpfe im Feld. Und eine Liste mit Suche hat genau einen Scrollbereich; die Spaltenwahl bekommt dazu eine neue Ordnung: Gruppieren als ein Select, Kästchen vorn, Sichtbar und Ausgeblendet getrennt.
 
+> Sprechnotiz (12.10.): Was man ziehen kann, muss man sehen — ein Griff beim Zeigen, und mit dem Zugbeginn leuchten die Ziele auf.
+
 ---
 
 ## 15 · Was das für den Alltag heißt
