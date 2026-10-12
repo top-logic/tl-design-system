@@ -1,20 +1,34 @@
-**Letzte Sitzung:** 2026-10-12 (3b gepusht als !1838 mit Sichtprüfung lokal; #29825 Spaltenwahl: Spec und Plan fertig, Plan-Review eingearbeitet — Ausführung in frischer Sitzung) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-12 (#29825 Spaltenwahl als Ebenen-Panel gebaut, reviewt, lokal sichtgeprüft; lokal committet, nicht gepusht; Folgeticket #29828) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
 
 ## Zuerst
 
-**Jetzt (12.10.): #29825 „Spaltenwahl als Ebenen-Panel“ ausführen — in einer frischen Sitzung.**
-1. Lesen: Plan `docs/superpowers/plans/2026-10-12-spaltenwahl-ebenen.md` (sechs Tasks, Plan-Review eingearbeitet, von
-   Hendrik freigegeben) und Spec `docs/superpowers/specs/2026-10-12-spaltenwahl-ebenen-design.md` mit Bildern
-   `docs/bilder/2026-10-12-spaltenwahl-*.png`.
-2. Hendrik nach der Ausführungsart fragen (Empfehlung: Subagent je Task mit Review, weil Java und TSX an einem Vertrag
-   hängen), dann Task 1: Ticket annehmen, Branch `CWS/CWS_29825_design_system_spaltenwahl` auf `welle_3b` stapeln.
-3. Rundherum offen: !1838 (3b) wartet auf Bernhards Review; Ziehen von Hand prüfen (7, 13, 17, 18) entfällt bis !1825;
-   #29826 „Ziehen sichtbar machen“ nach Bernhards !1825; #29827 Spaltengruppen und Pivot bei Bernhard (Owner bhu);
-   !1825/!1801/!1830 kollidieren mit !1838 (wer zweiter merged, löst auf). Lokale Demo: Memory „Lokale Demo statt
-   Docker“ (H2-Autoconf je Sitzung neu im Scratchpad).
+**Jetzt (12.10.): #29825 „Spaltenwahl als Ebenen-Panel“ ist gebaut, lokal committet, nicht gepusht.** Push und PR nur
+nach Hendriks Freigabe (CLAUDE.md, seit 12.10.: kein Push ohne Freigabe, Subagenten pushen nie).
+1. **Engine** Branch `CWS/CWS_29825_design_system_spaltenwahl` auf `welle_3b` (Bernhards master-Merge `2af20a4447`),
+   Commits `26e1c73a0f..05a7db4cb7` (sieben): Server mit Schloss und Block „Fixiert“ (`columnLock`, ohne
+   Zustandswechsel wirkungslos), Übernehmen setzt Reihenfolge und `frozenColumnCount` in einem Patch, `groupBy` fällt;
+   `TLColumnSelect.tsx` als Ebenen-Panel (Fokus bleibt nach Umordnen am Schloss, nur wenn der Klick ihn gab);
+   Deutsch einheitlich „fixieren“ (auch Kontextmenü); Paketkopie. Gates: `layout.react` 612/0, `tsc` + Vite grün,
+   `check-messages-en.sh` ohne Diff, check-resources ohne „Not normalized“.
+2. **Paket** `main` `9b0d21e..a4d189c`: `tl-reorder-list` mit `__actions/__lock/__eye/__section`, Zuständen
+   `off/locked/section-end`, Beim-Zeigen-Regel (opacity, Touch immer), ausgeblendet in `text-secondary`; Vertrag,
+   Specimen, Gate gegen Kästchen/Gruppieren/`aria-pressed`/`ICON_GROUP`; Doku `skalen.md` „Nachgetragen beim Bau“.
+   Gates 357/0, Lint grün.
+3. **Entschieden 12.10. beim Bau (Hendrik):** ausgeblendet `--tl-text-secondary` statt `--tl-text-disabled` (der Eintrag
+   bleibt bedienbar); „am Platz“ gilt im Dialog — volle Reihenfolge im Tabellenzustand ist **Trac #29828** (CC bhu).
+4. **Sichtprüfung lokal** (Chrome, dunkel/normal und hell/kompakt): Zeigen, Tab-Reihenfolge mit Ring innen, Schloss
+   und Block, Fokus nach Lösen, Auge, Ok → fixiert und ausgeblendet in der Tabelle, Suche mit „Fixiert“, letzte
+   sichtbare Spalte gesperrt mit Tooltip, Standard → nichts fixiert, Kontextmenü gruppiert und sagt „Bis hier
+   fixieren“. Offen: Firefox (Tooltip am gesperrten Auge), axe auf `li role="presentation"` (altlast.md).
+5. **Nächstes, mit Freigabe:** Push des Engine-Branches, PR gegen `welle_3b` (Titel „Ticket #29825: Design System --
+   column selection as a layer panel“, Bilder als Raw-URL, Reviewer bhu), Push `main`. Der Trac-Text von #29825
+   beschreibt noch die verworfene Fassung (Select, Kästchen vorn, zwei Bereiche) — mit Hendrik nachziehen.
+6. Rundherum offen: !1838 (3b) wartet auf Bernhards Review; #29826 „Ziehen sichtbar machen“ nach !1825; #29827
+   Spaltengruppen und Pivot bei Bernhard; !1825/!1801/!1830 kollidieren mit !1838. Lokale Demo: Memory „Lokale Demo
+   statt Docker“ (Maven aus `tl-parent-engine` mit `-pl ../<modul>`).
 
 
 **Entschieden (28.09.): eine Linie, drei Stränge.** Plan `docs/superpowers/plans/2026-09-28-konsolidierung.md`.
