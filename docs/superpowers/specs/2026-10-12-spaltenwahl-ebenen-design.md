@@ -1,6 +1,6 @@
 # Spaltenwahl als Ebenen-Panel: Griff vorn, Auge und Schloss rechts
 
-**Stand:** 2026-10-12 · Trac #29825 (Stufe 1) · Folge-Ticket für Stufe 2 (Spaltengruppen, Logik Bernhard)
+**Stand:** 2026-10-12 · Trac #29825 (Stufe 1) · #29827 Stufe 2 (Spaltengruppen, Pivot-Idee; Logik Bernhard)
 **Baut auf:** Welle 3b (#29821, PR tl-engine-7!1838): `tl-reorder-list`, `useListReorder`, `SearchField`,
 Spaltenwahl im Fenster mit fester Höhe; `docs/skalen.md` „Die Spaltenwahl neu“, „Ziehen sichtbar machen“ (Ein Griff
 steht vorn, überall), „Knöpfe im Feld“, „Zeigen auf allen Gründen“
@@ -22,7 +22,7 @@ bei 54 Spalten.
 | Stufe | Inhalt | Wer | Ticket |
 |---|---|---|---|
 | **1** | Zeile = Griff · Name · Schloss · Auge; ausgeblendet am Platz; Bereich „Fixiert“; Zeilen-Gruppieren aus dem Dialog | wir (Paket, TSX, kleine Java-Änderung) | #29825 |
-| **2** | Spaltengruppen: aufeinanderziehen, benennen, auf- und zuklappen, Band über den Köpfen der Tabelle | Logik Bernhard, Aussehen wir | Folge-Ticket |
+| **2** | Spaltengruppen: aufeinanderziehen, benennen, auf- und zuklappen, Band über den Köpfen der Tabelle | Logik Bernhard, Aussehen wir | #29827 |
 | — | Pivot: Zeilen nach mehreren Spalten gruppieren | Idee an Bernhard | — |
 
 **Fertig (Stufe 1), wenn:** der Dialog wie in §2 aussieht und sich so bedienen lässt, die Gates grün sind
