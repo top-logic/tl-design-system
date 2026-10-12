@@ -105,3 +105,37 @@ test('jede Fläche eines Ablage-Ziels steht in :where, Ablegen darauf übermalt 
   }
   assert.deepEqual(offen, []);
 });
+
+// Spaltenwahl als Ebenen-Panel (#29825, Spec 2026-10-12 §3): Griff und Knöpfe erscheinen beim Zeigen oder Fokus,
+// über opacity — ein Knopf bleibt mit Tab erreichbar; gesetzte Zustände halten ihr Icon sichtbar.
+test('tl-reorder-list: Griff, Schloss und Auge erscheinen beim Zeigen oder Fokus, nie über visibility', () => {
+  const liste = readGenerated('reorder-list', 'reorder-list.css');
+  const ohne = liste.replace(/\/\*[\s\S]*?\*\//g, '');
+  assert.match(declarationsOf(liste, '.tl-reorder-list__handle') ?? '', /opacity:\s*0/);
+  assert.match(declarationsOf(liste, '.tl-reorder-list__actions > .tl-button') ?? '', /opacity:\s*0/);
+  for (const sel of [
+    '.tl-reorder-list__item:hover > .tl-reorder-list__handle',
+    '.tl-reorder-list__item:focus-within > .tl-reorder-list__handle',
+    '.tl-reorder-list__item:hover > .tl-reorder-list__actions > .tl-button',
+    '.tl-reorder-list__item:focus-within > .tl-reorder-list__actions > .tl-button',
+    '.tl-reorder-list__item[data-tl-state~="off"] .tl-reorder-list__eye',
+    '.tl-reorder-list__item[data-tl-state~="locked"] .tl-reorder-list__lock',
+  ]) assert.match(declarationsOf(liste, sel) ?? '', /opacity:\s*1/, sel);
+  assert.doesNotMatch(ohne, /visibility:\s*hidden/);
+  assert.match(ohne, /@media \(hover: none\)/, 'ohne Zeigen (Touch) bleibt alles sichtbar');
+});
+
+test('tl-reorder-list: ausgeblendet blass, Block mit Linie, Überschrift, Knöpfe rechts; kein Kästchen mehr', () => {
+  const liste = readGenerated('reorder-list', 'reorder-list.css');
+  assert.match(declarationsOf(liste, '.tl-reorder-list__item[data-tl-state~="off"] > .tl-reorder-list__label') ?? '',
+    /color:\s*var\(--tl-text-disabled\)/);
+  assert.match(declarationsOf(liste, '.tl-reorder-list__item[data-tl-state~="section-end"]') ?? '',
+    /border-bottom:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-separator\)/);
+  assert.match(declarationsOf(liste, '.tl-reorder-list__section') ?? '', /color:\s*var\(--tl-text-secondary\)/);
+  assert.match(declarationsOf(liste, '.tl-reorder-list__actions') ?? '', /gap:\s*var\(--tl-space-2xs\)/);
+  assert.match(declarationsOf(liste, '.tl-reorder-list__actions') ?? '', /margin-inline-start:\s*auto/);
+  assert.match(declarationsOf(liste, '.tl-reorder-list__actions > .tl-button:focus-visible') ?? '',
+    /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/, 'der Ring der Knöpfe liegt innen wie am Griff');
+  assert.match(declarationsOf(liste, '.tl-reorder-list__label') ?? '', /flex:\s*1 1 auto/);
+  assert.equal(declarationsOf(liste, '.tl-reorder-list__item > .tl-choice'), null, 'das Kästchen fällt');
+});

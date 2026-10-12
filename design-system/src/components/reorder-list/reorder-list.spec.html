@@ -31,30 +31,48 @@
         </span>
         <span id="reorder-hint" hidden>Alt + Pfeil verschiebt</span>
         <ul class="tl-reorder-list tl-type-body" aria-label="Spalten">
-          <li class="tl-reorder-list__item">
+          <!-- Die Spaltenwahl als Ebenen-Panel: Block Fixiert mit Name (zuletzt im Block), Status wird gezogen, Region
+               landet davor, Verantwortlich ausgeblendet, „Zuletzt geändert am“ mit Ellipse. -->
+          <li class="tl-reorder-list__section tl-type-label" role="presentation">Fixiert</li>
+          <li class="tl-reorder-list__item" data-tl-state="locked section-end">
             <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__handle" aria-label="Name verschieben" aria-describedby="reorder-hint"><i class="tl-icon-sm bi bi-grip-vertical tl-button__icon" aria-hidden="true"></i></button>
-            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon" aria-label="Nach Name gruppieren" aria-pressed="false"><i class="tl-icon-sm bi bi-diagram-3 tl-button__icon" aria-hidden="true"></i></button>
-            <label class="tl-choice tl-type-body"><input type="checkbox" class="tl-checkbox" checked disabled> <span class="tl-reorder-list__label">Name</span></label>
+            <span class="tl-reorder-list__label">Name</span>
+            <span class="tl-reorder-list__actions">
+              <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__lock" aria-label="Name lösen"><i class="tl-icon-sm bi bi-lock-fill tl-button__icon" aria-hidden="true"></i></button>
+              <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__eye" aria-label="Name ausblenden" disabled data-tooltip="text:Mindestens eine Spalte bleibt sichtbar"><i class="tl-icon-sm bi bi-eye tl-button__icon" aria-hidden="true"></i></button>
+            </span>
           </li>
           <li class="tl-reorder-list__item" data-tl-state="dragging">
             <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__handle" aria-label="Status verschieben" aria-describedby="reorder-hint"><i class="tl-icon-sm bi bi-grip-vertical tl-button__icon" aria-hidden="true"></i></button>
-            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon" aria-label="Nach Status gruppieren" aria-pressed="false"><i class="tl-icon-sm bi bi-diagram-3 tl-button__icon" aria-hidden="true"></i></button>
-            <label class="tl-choice tl-type-body"><input type="checkbox" class="tl-checkbox" checked> <span class="tl-reorder-list__label">Status</span></label>
-          </li>
-          <li class="tl-reorder-list__item">
-            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__handle" aria-label="Region verschieben" aria-describedby="reorder-hint"><i class="tl-icon-sm bi bi-grip-vertical tl-button__icon" aria-hidden="true"></i></button>
-            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon" aria-label="Nach Region gruppieren" aria-pressed="true"><i class="tl-icon-sm bi bi-diagram-3 tl-button__icon" aria-hidden="true"></i></button>
-            <label class="tl-choice tl-type-body"><input type="checkbox" class="tl-checkbox" checked> <span class="tl-reorder-list__label">Region</span></label>
+            <span class="tl-reorder-list__label">Status</span>
+            <span class="tl-reorder-list__actions">
+              <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__lock" aria-label="Status fixieren"><i class="tl-icon-sm bi bi-unlock tl-button__icon" aria-hidden="true"></i></button>
+              <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__eye" aria-label="Status ausblenden"><i class="tl-icon-sm bi bi-eye tl-button__icon" aria-hidden="true"></i></button>
+            </span>
           </li>
           <li class="tl-reorder-list__item" data-tl-state="drop-before">
+            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__handle" aria-label="Region verschieben" aria-describedby="reorder-hint"><i class="tl-icon-sm bi bi-grip-vertical tl-button__icon" aria-hidden="true"></i></button>
+            <span class="tl-reorder-list__label">Region</span>
+            <span class="tl-reorder-list__actions">
+              <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__lock" aria-label="Region fixieren"><i class="tl-icon-sm bi bi-unlock tl-button__icon" aria-hidden="true"></i></button>
+              <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__eye" aria-label="Region ausblenden"><i class="tl-icon-sm bi bi-eye tl-button__icon" aria-hidden="true"></i></button>
+            </span>
+          </li>
+          <li class="tl-reorder-list__item" data-tl-state="off">
             <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__handle" aria-label="Verantwortlich verschieben" aria-describedby="reorder-hint"><i class="tl-icon-sm bi bi-grip-vertical tl-button__icon" aria-hidden="true"></i></button>
-            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon" aria-label="Nach Verantwortlich gruppieren" aria-pressed="false"><i class="tl-icon-sm bi bi-diagram-3 tl-button__icon" aria-hidden="true"></i></button>
-            <label class="tl-choice tl-type-body"><input type="checkbox" class="tl-checkbox" checked> <span class="tl-reorder-list__label">Verantwortlich</span></label>
+            <span class="tl-reorder-list__label">Verantwortlich</span>
+            <span class="tl-reorder-list__actions">
+              <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__lock" aria-label="Verantwortlich fixieren"><i class="tl-icon-sm bi bi-unlock tl-button__icon" aria-hidden="true"></i></button>
+              <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__eye" aria-label="Verantwortlich einblenden"><i class="tl-icon-sm bi bi-eye-slash tl-button__icon" aria-hidden="true"></i></button>
+            </span>
           </li>
           <li class="tl-reorder-list__item">
             <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__handle" aria-label="Zuletzt geändert am verschieben" aria-describedby="reorder-hint"><i class="tl-icon-sm bi bi-grip-vertical tl-button__icon" aria-hidden="true"></i></button>
-            <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon" aria-label="Nach Zuletzt geändert am gruppieren" aria-pressed="false"><i class="tl-icon-sm bi bi-diagram-3 tl-button__icon" aria-hidden="true"></i></button>
-            <label class="tl-choice tl-type-body"><input type="checkbox" class="tl-checkbox"> <span class="tl-reorder-list__label">Zuletzt geändert am, mit einer Beschriftung, die mit Ellipse endet</span></label>
+            <span class="tl-reorder-list__label">Zuletzt geändert am, mit einer Beschriftung, die mit Ellipse endet</span>
+            <span class="tl-reorder-list__actions">
+              <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__lock" aria-label="Zuletzt geändert am fixieren"><i class="tl-icon-sm bi bi-unlock tl-button__icon" aria-hidden="true"></i></button>
+              <button type="button" class="tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reorder-list__eye" aria-label="Zuletzt geändert am ausblenden"><i class="tl-icon-sm bi bi-eye tl-button__icon" aria-hidden="true"></i></button>
+            </span>
           </li>
         </ul>
         <span class="tl-visually-hidden" role="status">Status, Position 2 von 5</span>

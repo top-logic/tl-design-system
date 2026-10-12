@@ -1,8 +1,8 @@
 # Vertrag: Umsortierbare Liste
 
 Eine Liste, deren Einträge sich ziehen und mit der Tastatur verschieben lassen; ihr erster Leser ist die
-Spaltenwahl der Tabelle (3b §8). Jeder Eintrag trägt vorn einen Griff, dahinter, was er braucht:
-Gruppierungsknopf, Kästchen mit Beschriftung. TopLogic garantiert Funktion, Tastatur und Fokus, nicht
+Spaltenwahl der Tabelle (3b §8). Jeder Eintrag trägt vorn einen Griff, dahinter die Beschriftung und rechts Schloss und Auge; Griff
+und Knöpfe erscheinen beim Zeigen oder Fokus. TopLogic garantiert Funktion, Tastatur und Fokus, nicht
 das Aussehen; wer ins Bild passen will, liest die Tokens.
 
 ## Zustand
@@ -12,8 +12,8 @@ das Aussehen; wer ins Bild passen will, liest die Tokens.
 | `entries` | Liste | Die Einträge in ihrer Reihenfolge, je Eintrag: |
 | `entries[].name` | string | Name des Eintrags (Spaltenname); er steht in den Befehlen und ist der Schlüssel des Eintrags. |
 | `entries[].label` | string | Beschriftung des Kästchens und Teil des Griff-Namens. |
-| `entries[].visible` | boolean | Sichtbar: das Kästchen ist gesetzt. Ein Eintrag, der nicht ausgeblendet werden darf, trägt ein deaktiviertes Kästchen. |
-| `entries[].grouped` | boolean | Gruppiert: der Gruppierungsknopf trägt `aria-pressed="true"`. |
+| `entries[].visible` | boolean | Sichtbar; ausgeblendet trägt der Eintrag data-tl-state="off". |
+| `entries[].locked` | boolean | Fixiert (Zustand `locked`); fixierte Einträge stehen als Block vorn, der letzte trägt `section-end`. |
 
 Ab elf Einträgen steht vor der Liste eine Suche — dieselbe wie in der Tabelle: `tl-field-group` mit Lupe,
 `input.tl-field type="search"` und, solange Text steht, Löschknopf (`js.textInput.clear`), nach dem Löschen
@@ -31,8 +31,8 @@ liegt ein ausgefilterter Eintrag dazwischen, ändert sich sichtbar nichts, nur d
 | Auslöser | Aktion |
 |---|---|
 | Ziehen eines Eintrags an eine neue Stelle, Alt + Pfeil auf dem Griff | `sendCommand('columnReorder', …)` mit der neuen Reihenfolge — derselbe Befehl für Maus und Tastatur. |
-| Kästchen umschalten | `sendCommand('columnVisible', …)` für diesen Eintrag. |
-| Gruppierungsknopf | `sendCommand('groupBy', …)` für diesen Eintrag. |
+| Auge (`tl-reorder-list__eye`) | sendCommand('columnVisible', …) für diesen Eintrag; an der letzten sichtbaren Spalte disabled mit Tooltip `js.table.columnLastVisible`. |
+| Schloss (`tl-reorder-list__lock`) | Befehl `columnLock` (`sendCommand('columnLock', …)`): zu stellt den Eintrag ans Ende des Blocks, auf direkt dahinter. |
 
 ## Tastatur
 
@@ -43,7 +43,7 @@ Hinweis („Alt + Pfeil verschiebt“); er ist fokussierbar wie jeder Knopf.
 |---|---|
 | `Alt` + `ArrowUp` / `ArrowDown` | verschiebt den Eintrag um eine Stelle nach oben bzw. unten und sendet denselben Befehl wie das Ziehen (`columnReorder`); der Fokus bleibt am Griff. Waagerecht (`data-tl-axis="horizontal"`): `Alt` + `ArrowLeft` / `ArrowRight`. |
 | an den Enden | nichts: der erste Eintrag geht nicht weiter nach oben, der letzte nicht weiter nach unten. |
-| `Tab` | weiter zu Gruppierungsknopf und Kästchen des Eintrags, dann zum nächsten Griff. |
+| `Tab` | weiter zu Schloss und Auge des Eintrags, dann zum nächsten Griff; ein unsichtbarer Knopf erscheint mit dem Fokus. |
 
 Nach jedem Verschieben sagt ein Live-Bereich mit `role="status"` „<Name>, Position n von m“ an
 (Resource-Key `js.reorder.moved`).
@@ -54,8 +54,10 @@ Nach jedem Verschieben sagt ein Live-Bereich mit `role="status"` „<Name>, Posi
 |---|---|
 | Liste | höchstens `--tl-size-popover-max` hoch, dann scrollt sie in sich; mit Suche davor füllt sie den Rest ihres Behälters (`flex: 1 1 auto`, `min-block-size: 0`) |
 | Behälter mit Suche | Spalte, Abstand `--tl-space-xs`, Innenabstand `--tl-space-md` oben und seitlich, so hoch wie sein Behälter |
-| Eintrag | Höhe `--tl-size-row` (als `min-height`), Innenabstand seitlich `--tl-space-control-x`, Lücke `--tl-space-xs`; beim Zeigen `--tl-surface-interactive-hover` |
-| Griff | `tl-button--icon --sm --ghost`, Icon in `--tl-icon-secondary`; der Fokusring aus `base.css` liegt innen (`outline-offset` −`--tl-focus-offset`), weil die Liste scrollt |
+| Eintrag | Höhe `--tl-size-row` (als `min-height`), Innenabstand seitlich `--tl-space-control-x`, Lücke `--tl-space-xs`; beim Zeigen `--tl-surface-interactive-hover`; Beschriftung blass `--tl-text-disabled` bei `off` |
+| Knöpfe rechts | tl-reorder-list__actions, Lücke --tl-space-2xs; Griff und Knöpfe opacity 0, beim Zeigen und bei :focus-within 1, Übergang --tl-duration-fast; ohne Zeigen (hover: none) immer 1 |
+| Block „Fixiert“ | Überschrift tl-reorder-list__section in tl-type-label, --tl-text-secondary; Linie unter section-end --tl-border-width-sm --tl-border-separator |
+| Griff | `tl-button--icon --sm --ghost`, Icon in `--tl-icon-secondary`; der Fokusring aus `base.css` liegt innen (`outline-offset` −`--tl-focus-offset`), weil die Liste scrollt; das gilt auch für Schloss und Auge |
 | Suche | Abstand zur Liste `--tl-space-xs`, an der `tl-field-group` |
 | Gezogen, Einfügemarke | aus `drag.css` (`drag.contract.md`) |
 
@@ -66,11 +68,12 @@ Die Beschriftung endet mit Ellipse.
 
 | Attribut | Wann |
 |---|---|
-| `aria-label` | am Griff: „<Name> verschieben“; am Gruppierungsknopf; am Suchfeld. |
+| `aria-label` | am Griff: „<Name> verschieben“; am Suchfeld. |
+| aria-label | an Schloss und Auge: was der Klick tut („<Name> fixieren“/„lösen“, „<Name> ausblenden“/„einblenden“); kein aria-pressed. |
 | `aria-describedby` | am Griff: die Id des Hinweises „Alt + Pfeil verschiebt“. |
 | `hidden` | am Hinweis: nie gezeigt; `aria-describedby` liest ihn trotzdem vor. |
-| `aria-pressed` | am Gruppierungsknopf: `"true"`, solange nach dem Eintrag gruppiert wird. |
-| `disabled` | am Kästchen eines Eintrags, der nicht ausgeblendet werden darf. |
+| `disabled` | am Auge der letzten sichtbaren Spalte. |
+| `data-tl-state="off"` / `locked` / `section-end` | am Eintrag: ausgeblendet, fixiert, letzter des Blocks. |
 | `role="status"` | am Live-Bereich, der das Verschieben ansagt. |
 | `data-tl-state="dragging"` | am Eintrag, der gerade gezogen wird (`drag.contract.md`). |
 | `data-tl-state="drop-before"` / `"drop-after"` | am Eintrag, vor bzw. hinter dem der gezogene landet (`drag.contract.md`). |
@@ -83,13 +86,15 @@ Klassen:
 | `tl-reorder-list` | das `ul` |
 | `tl-reorder-list__item` | jedes `li` |
 | `tl-reorder-list__handle` | der Griff, zusammen mit `tl-button tl-button--ghost tl-button--sm tl-button--icon` |
-| `tl-reorder-list__label` | die Beschriftung im Kästchen |
+| `tl-reorder-list__label` | die Beschriftung |
 | `tl-reorder-list__search` | an der `tl-field-group` der Suche vor der Liste |
-| `tl-button--icon` | der Gruppierungsknopf, mit `--sm` und `--ghost` und `aria-pressed` |
-| `tl-choice` | das Kästchen: `label.tl-choice` > `input` mit `tl-checkbox` und die Beschriftung |
+| `tl-reorder-list__actions` | span am Zeilenende um Schloss und Auge |
+| `tl-reorder-list__lock` | das Schloss, mit tl-button tl-button--ghost tl-button--sm tl-button--icon |
+| `tl-reorder-list__eye` | das Auge, ebenso |
+| `tl-reorder-list__section` | li mit der Überschrift „Fixiert“, role="presentation", tl-type-label |
 | `tl-visually-hidden` | der Live-Bereich: gelesen, nicht gezeigt (der Hinweis trägt `hidden`, siehe Attribute) |
 
-Symbole (Griff, Gruppieren, Suche, Löschen) sind `ThemeIcon` in `tl-icon-sm`, Knopf-Icons mit `tl-button__icon`.
+Symbole (Griff, Schloss, Auge, Suche, Löschen) sind `ThemeIcon` in `tl-icon-sm`, Knopf-Icons mit `tl-button__icon`.
 
 ## Konformität
 
