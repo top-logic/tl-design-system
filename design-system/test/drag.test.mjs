@@ -60,12 +60,19 @@ test('tl-reorder-list: Liste ohne Aufzählung, Einträge size-row, Griff innen f
   assert.doesNotMatch(liste, /--(dragover|drag-over|group-by|fixed|active)\b/);
 });
 
-// Fix E5: mit Suche davor hat die Liste eine feste Höhe, damit ein Dialog um sie beim Tippen nicht
-// unter dem Zeiger schrumpft — dasselbe Token wie die Höchsthöhe, kein neues.
-test('tl-reorder-list: mit Suche davor feste Höhe size-popover-max', () => {
+// Sichtprüfung 12.10.: mit Suche davor füllen Suche und Liste ihren Behälter, nur die Liste scrollt. Die
+// feste Höhe size-popover-max (Fix E5) lief im kleineren Fensterkörper über — zwei Scrollbereiche, die
+// Suche scrollte weg. Die Höhe hält jetzt der Behälter (das Fenster der Spaltenwahl, 70 %).
+test('tl-reorder-list: mit Suche davor füllt sie den Behälter, keine feste Höhe, Suche mit Innenabstand', () => {
   const liste = readGenerated('reorder-list', 'reorder-list.css');
   const d = declarationsOf(liste, '.tl-reorder-list__search ~ .tl-reorder-list') ?? '';
-  assert.match(d, /block-size:\s*var\(--tl-size-popover-max\)/);
+  assert.match(d, /flex:\s*1 1 auto/);
+  assert.match(d, /min-block-size:\s*0/);
+  assert.doesNotMatch(d, /block-size:\s*var\(--tl-size-popover-max\)/, 'keine feste Höhe mehr');
+  const behaelter = declarationsOf(liste, ':where(:has(> .tl-reorder-list__search))') ?? '';
+  assert.match(behaelter, /flex-direction:\s*column/);
+  assert.match(behaelter, /block-size:\s*100%/);
+  assert.match(behaelter, /padding:\s*var\(--tl-space-md\) var\(--tl-space-md\) 0/);
 });
 
 // Ablegen darauf färbt das Ziel surface-interactive-selected ([data-tl-state~="drop-onto"], eine

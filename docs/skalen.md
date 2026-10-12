@@ -1864,7 +1864,11 @@ Spec `docs/superpowers/specs/2026-10-02-welle-3b-daten-design.md`. Neu entschied
   (Select-Chip, Filterkapsel), ein `SearchField` (Tabellensuche, Spaltenwahl), eine Datei für Glyphnamen
   (`bridge/icons.ts`) — Letztere auch für den späteren Wechsel der Icon-Bibliothek.
 * **Fokus geht nie verloren:** Löschen, Entfernen, Formular schließen geben den Fokus an Feld, Nachbarn oder Raster.
-* **Die Liste mit Suche hält ihre Höhe** (`size-popover-max`), damit der Dialog beim Tippen nicht springt.
+* **Die Liste mit Suche hält ihre Höhe** — **nachgezogen 12.10. (Sichtprüfung):** nicht mehr die Liste selbst
+  (`size-popover-max`), sondern ihr Behälter. Die feste Listenhöhe lief im kleineren Fensterkörper über: zwei
+  Scrollbereiche ineinander, die Suche scrollte nach einer Pause weg. Jetzt füllen Suche und Liste ihren Behälter als
+  Spalte mit Innenabstand `space-md` (der Fokusring der Suche steht ganz im Bild), nur die Liste scrollt, und die
+  Spaltenwahl öffnet ihr Fenster 70 % hoch — so springt es beim Tippen nicht.
 * **`aria-sort` nur an der ersten Sortierstufe** (ARIA: eine Spalte zur Zeit); weitere Stufen zeigt das Badge.
 * **Die Tabelle hat keine Ladezeile**: fehlende Zeilen sind Platzhalter (`aria-hidden`), das Raster ist `aria-busy`.
   Wo eine Ladezeile eine eigene Rolle mit Namen hat (Baum), ist der Fortschritt darin `aria-hidden`; sonst trägt der
@@ -1882,6 +1886,24 @@ Spec `docs/superpowers/specs/2026-10-02-welle-3b-daten-design.md`. Neu entschied
 **Befund dazu:** 282 Zeilen Tabellenregeln (3565–3846) standen ohne Überschrift im alten Stylesheet; die Ratsche
 schlug sie TLJobStatus zu. Die Blockmessung trifft nur, was eine Überschrift trägt — beim Ausschneiden wird TLJobStatus
 auf seinen wahren Stand gesetzt.
+
+#### Die Spaltenwahl neu (entschieden 12.10., Hendrik — gebaut mit eigenem Ticket #29825)
+
+**Befund der Sichtprüfung.** Die Zeile der Spaltenwahl liest sich verkehrt herum: vorn der Griff, dann ein
+Ebenen-Icon „nach dieser Spalte gruppieren“, erst an dritter Stelle das Kästchen, dann der Name. Griffe stehen in jeder
+der 54 Zeilen, auch bei ausgeblendeten Spalten, deren Reihenfolge niemand sieht; das Gruppier-Icon steht 54-mal für
+eine Wahl, die nur eine Spalte haben kann, und sagt nicht, was es tut.
+
+**Entschieden:**
+* **Gruppieren ist ein Select über der Liste** — „Gruppieren nach: Keine / Spalte …“, einmal statt je Zeile; das
+  Ebenen-Icon fällt aus der Liste.
+* **Die Zeile ist Kästchen plus Name** (`tl-choice`, die ganze Zeile schaltet); der Griff steht am rechten Ende und
+  zeigt sich nur beim Zeigen oder bei Fokus. Alt + Pfeil bleibt.
+* **Zwei Bereiche:** „Sichtbar“ in Tabellenreihenfolge, ziehbar; „Ausgeblendet“ alphabetisch, ohne Griff. Ein Haken
+  holt eine Spalte nach oben, ein entfernter Haken schiebt sie nach unten.
+
+**Verworfen:** Gruppieren ins Kopf-Menü der Spalte (der Dialog bliebe der Ort, an dem man die Tabelle einrichtet);
+das Icon behalten und nur erklären (54 Icons für eine Einfachwahl); eine Liste mit Ausgeblendeten dazwischen.
 
 ### Auswahlmarken zeigen einen Hof (06.10.)
 
@@ -2031,6 +2053,14 @@ WCAG 2.5.8 hält über die Ausnahme „Abstand“, denn der nächste Knopf liegt
 * **Eine eigene Rolle für „Zeigen im Feld“:** die vorhandene Stufe trägt; die Kategorie bleibt geschlossen.
 * **Zeigen am Pfeil über die ganze Wurzel** (`.tl-select:hover .tl-select__arrow`): die Wurzel zeigt ihr
   Zeigen schon am Rand (`border-emphasis`); der Pfeil soll nur aufleuchten, wenn der Zeiger auf ihm steht.
+
+**Nachgezogen 12.10. (Hendrik, Sichtprüfung): Kapsel und Segment folgen derselben Regel.** Beide sind selbst
+Feldfläche (`surface-field`, das Segment auf der Spur der Leiste) und zeigten mit `surface-interactive-hover` hell
+1,01 — nichts. Zeigen ist jetzt `-selected`, Drücken `-active`, wie die Knöpfe im Feld; der gedrückte Chip und das
+gewählte Segment bleiben bei Marke bzw. `surface-brand-subtle`. Test: `choice.test.mjs` „Kapsel und Segment zeigen
+auf der Feldfläche eine Stufe kräftiger“. Dabei gesehen: das Kästchen „Felder gesperrt“ sprang beim Ankreuzen um
+2,6 px — `inline-grid` nimmt die Grundlinie vom ersten Kind, und das ist erst mit Haken das `::after`. Kästchen und
+Kreis stehen jetzt mittig auf der Zeile (`vertical-align: middle`); Test „springen beim Ankreuzen nicht“.
 
 **Als Test:** `field.test.mjs` und `select.test.mjs` halten Selektoren, Flächen, Quadrat und Wächter, auch am Chip; `tokens.test.mjs` hält `-active` mit ≥ 1,1 auf allen 14 Pillenflächen; ein
 Test hält jede Regel mit `::-webkit-` allein und ohne die Kurzform `background`; das Specimen rendert den

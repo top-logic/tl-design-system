@@ -19,7 +19,7 @@ test('choice.css liest genau diese Farbrollen', () => {
   assert.deepEqual(colorVarsOf(css), [
     'border-control', 'border-disabled', 'border-emphasis', 'border-interactive', 'icon-secondary',
     'status-error-border', 'status-warning-border', 'surface-brand', 'surface-brand-active', 'surface-brand-hover', 'surface-brand-subtle',
-    'surface-disabled', 'surface-field', 'surface-interactive-hover', 'surface-state-active', 'surface-state-hover', 'text-disabled', 'text-on-brand',
+    'surface-disabled', 'surface-field', 'surface-interactive-active', 'surface-interactive-selected', 'surface-state-active', 'surface-state-hover', 'text-disabled', 'text-on-brand',
     'text-on-brand-active', 'text-on-brand-hover', 'text-primary',
   ]);
 });
@@ -213,4 +213,21 @@ test('eine Auswahlgruppe steht untereinander mit --vertical', () => {
   const v = declarationsOf(css, '.tl-choice-group--vertical') ?? '';
   assert.match(v, /flex-direction:\s*column/);
   assert.match(v, /align-items:\s*flex-start/);
+});
+
+test('Kapsel und Segment zeigen auf der Feldfläche eine Stufe kräftiger: -selected, Drücken -active (12.10.)', () => {
+  // Sichtprüfung 12.10.: surface-interactive-hover auf surface-field hielt hell 1,01 — kein sichtbares Zeigen.
+  // Dieselbe Regel wie die Knöpfe im Feld (06.10.); der Kontrast der Stufen steht in tokens.test.mjs.
+  for (const sel of ['.tl-chip', '.tl-segmented__segment']) {
+    assert.match(declarationsOf(css, `${sel}:where(:not(:disabled)):hover`) ?? '', /background:\s*var\(--tl-surface-interactive-selected\)/, `${sel} Zeigen`);
+    assert.match(declarationsOf(css, `${sel}:where(:not(:disabled)):active`) ?? '', /background:\s*var\(--tl-surface-interactive-active\)/, `${sel} Drücken`);
+  }
+});
+
+test('Kästchen und Kreis springen beim Ankreuzen nicht: mittig statt auf der Grundlinie (12.10.)', () => {
+  // inline-grid nimmt die Grundlinie vom ersten Kind; das ist erst mit Haken das ::after. In der Eingabezeile
+  // des Formularfelds rutschte das Kästchen dadurch um 2,6 px (Sichtprüfung 12.10., „Felder gesperrt“).
+  for (const sel of ['.tl-checkbox', '.tl-radio']) {
+    assert.match(declarationsOf(css, sel) ?? '', /vertical-align:\s*middle/, sel);
+  }
 });

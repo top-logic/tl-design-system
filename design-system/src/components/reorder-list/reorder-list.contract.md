@@ -20,8 +20,10 @@ Ab elf Einträgen steht vor der Liste eine Suche — dieselbe wie in der Tabelle
 bleibt der Fokus im Feld. Sie filtert mit `filterOptions` (3b §9), und die
 Liste rendert nur die passenden Einträge. Jeder behält seine Position in der ganzen Liste: Ziehen und
 Alt + Pfeil rechnen mit ihr, ein Eintrag lässt sich also neben einen ausgefilterten ablegen. Mit der Suche
-davor ist die Liste fest `--tl-size-popover-max` hoch, damit ein Dialog um sie beim Tippen nicht
-schrumpft. Alt + Pfeil verschiebt in einer gefilterten Liste um eine Stelle der **ganzen** Liste;
+davor füllen Suche und Liste ihren Behälter als Spalte mit Innenabstand `--tl-space-md` (oben und
+seitlich): die Suche bleibt stehen, nur die Liste scrollt. Die Höhe gibt der Behälter — die Spaltenwahl
+öffnet ihr Fenster 70 % hoch, so schrumpft es beim Tippen nicht (Sichtprüfung 12.10.; vorher war die
+Liste fest `--tl-size-popover-max` hoch und lief im kleineren Fensterkörper über). Alt + Pfeil verschiebt in einer gefilterten Liste um eine Stelle der **ganzen** Liste;
 liegt ein ausgefilterter Eintrag dazwischen, ändert sich sichtbar nichts, nur die Ansage.
 
 ## Aktionen
@@ -50,7 +52,8 @@ Nach jedem Verschieben sagt ein Live-Bereich mit `role="status"` „<Name>, Posi
 
 | Teil | Token |
 |---|---|
-| Liste | höchstens `--tl-size-popover-max` hoch, dann scrollt sie in sich; mit Suche davor genau so hoch (`block-size`) |
+| Liste | höchstens `--tl-size-popover-max` hoch, dann scrollt sie in sich; mit Suche davor füllt sie den Rest ihres Behälters (`flex: 1 1 auto`, `min-block-size: 0`) |
+| Behälter mit Suche | Spalte, Abstand `--tl-space-xs`, Innenabstand `--tl-space-md` oben und seitlich, so hoch wie sein Behälter |
 | Eintrag | Höhe `--tl-size-row` (als `min-height`), Innenabstand seitlich `--tl-space-control-x`, Lücke `--tl-space-xs`; beim Zeigen `--tl-surface-interactive-hover` |
 | Griff | `tl-button--icon --sm --ghost`, Icon in `--tl-icon-secondary`; der Fokusring aus `base.css` liegt innen (`outline-offset` −`--tl-focus-offset`), weil die Liste scrollt |
 | Suche | Abstand zur Liste `--tl-space-xs`, an der `tl-field-group` |

@@ -11,6 +11,10 @@
   flex: 0 0 auto;
   display: inline-grid;
   place-content: center;
+  /* Auf einer Textzeile (die Eingabe im Formularfeld) mittig statt auf der Grundlinie: die eines
+     inline-grid kommt vom ersten Kind, und das ist erst mit Haken das ::after — ohne diese Zeile sprang
+     das Kästchen beim Ankreuzen um 2,6 px (Sichtprüfung 12.10.). */
+  vertical-align: middle;
   width: var(--tl-size-choice);
   height: var(--tl-size-choice);
   margin: 0;
@@ -233,7 +237,13 @@
 /* @tl-roles: category .tl-segmented__segment */
 
 .tl-segmented__segment:where(:not(:disabled)):hover {
-  background: var(--tl-surface-interactive-hover);
+  background: var(--tl-surface-interactive-selected);
+}
+
+/* Das Segment liegt auf der Feldfläche: dort rückt die Skala eine Stufe vor wie bei den Knöpfen im Feld
+   (06.10.) — Zeigen -selected, Drücken -active; -hover hielte hell nur 1,01 (Sichtprüfung 12.10.). */
+.tl-segmented__segment:where(:not(:disabled)):active {
+  background: var(--tl-surface-interactive-active);
 }
 
 .tl-segmented__segment[aria-checked="true"],
@@ -296,7 +306,13 @@
 /* @tl-roles: category .tl-chip */
 
 .tl-chip:where(:not(:disabled)):hover {
-  background: var(--tl-surface-interactive-hover);
+  background: var(--tl-surface-interactive-selected);
+}
+
+/* Die Kapsel ist selbst Feldfläche (surface-field): Zeigen und Drücken rücken eine Stufe vor wie bei den
+   Knöpfen im Feld (06.10.); -hover hielte hell nur 1,01 (Sichtprüfung 12.10.). */
+.tl-chip:where(:not(:disabled)):active {
+  background: var(--tl-surface-interactive-active);
 }
 
 /* Gewählt sieht aus wie angekreuzt: die Marke als Fläche, die Beschriftung auf der Marke. */
