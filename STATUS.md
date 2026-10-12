@@ -319,8 +319,10 @@ Siehe `CLAUDE.md`. Alles in `design-system/`, alles mit `node`, keine Abhängigk
 ## Offene Fäden
 
 * PRs **!1618** und **!1621** im Framework sind verifiziert, aber weiterhin ungemergt.
-* Issue **#13** hält fest, dass Kunden-Theming, Storybook und Accessibility beim Umschreiben ihr
-  Issue verloren haben. Der Scope-Teil des Kunden-Themings ist seit 24.09. Issue #16 (dritte Achse).
+* **Gitea-Issues abgeglichen (12.10., Hendrik):** geschlossen #2, #3, #4, #5, #6, #8 (erledigt bzw. durch den Schnitt
+  überholt), #10 (`@layer` nicht geplant), #13 (Theming → #16, Accessibility → Welle 4, Storybook gestrichen — das
+  Specimen ist das Schaufenster). Neu gefasst: #7 Figma-Push, #9 TSX-Lint, #12 Kunden-Typografie, #16 Themes (Paket
+  fertig, Engine offen). Neu: #18 Dichte-Schalter. Issues im Design-System-Repo sind deutsch wie ihre Docs.
 * Zwei Commits von Welle 0 (`5ab2ae3`, `6d709f4`) tragen den Trailer eines anderen Modells; ein
   Umschreiben der Historie wurde nicht durchgeführt.
 
