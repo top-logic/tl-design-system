@@ -1901,6 +1901,8 @@ sein Versuch, ein Ticket auf eine andere Gruppe derselben Tabelle zu legen, lief
   der Zeiger über ihr steht oder sie den Tastatur-Cursor hat; der Mauszeiger `grab` bleibt.
 * **Ziele zeigen sich mit dem Zugbeginn:** jedes Element, das die gezogene Art annimmt, trägt einen ruhigen gestrichelten
   Rand (neuer Zustand in `drag.css`); über dem Ziel übernehmen die Marken davor/danach/darauf/abgelehnt wie bisher.
+* **Ein Griff steht vorn, überall** (Hendrik 12.10., Konsistenz): Tabellenzeile, Baumknoten, Eintrag der Spaltenwahl,
+  Werteliste, Select-Chip. Zeilen und Listeneinträge zeigen ihn beim Zeigen oder bei Fokus.
 * **Gebaut nach !1825** auf Bernhards Ablage-Protokoll, nicht davor. Vorschlag an Bernhard: Ablegen auf eine
   Gruppenzeile setzt den Gruppenwert.
 
@@ -1916,12 +1918,15 @@ eine Wahl, die nur eine Spalte haben kann, und sagt nicht, was es tut.
 **Entschieden:**
 * **Gruppieren ist ein Select über der Liste** — „Gruppieren nach: Keine / Spalte …“, einmal statt je Zeile; das
   Ebenen-Icon fällt aus der Liste.
-* **Die Zeile ist Kästchen plus Name** (`tl-choice`, die ganze Zeile schaltet); der Griff steht am rechten Ende und
-  zeigt sich nur beim Zeigen oder bei Fokus. Alt + Pfeil bleibt.
+* **Die Zeile ist Griff, Kästchen, Name:** der Griff vorn, sichtbar nur beim Zeigen oder bei Fokus — wie bei der
+  ziehbaren Tabellenzeile („Ziehen sichtbar machen“); dahinter Kästchen und Name als eine Klickfläche (`tl-choice`,
+  die ganze Zeile schaltet). Alt + Pfeil bleibt. **Nachgezogen 12.10. (Hendrik): erst „Griff rechts“ entschieden, dann
+  verworfen** — ein Griff vorn an der Tabellenzeile und hinten in der Spaltenwahl wäre zweierlei für dasselbe.
 * **Zwei Bereiche:** „Sichtbar“ in Tabellenreihenfolge, ziehbar; „Ausgeblendet“ alphabetisch, ohne Griff. Ein Haken
   holt eine Spalte nach oben, ein entfernter Haken schiebt sie nach unten.
 
-**Verworfen:** Gruppieren ins Kopf-Menü der Spalte (der Dialog bliebe der Ort, an dem man die Tabelle einrichtet);
+**Verworfen:** der Griff am rechten Ende (12.10. zuerst gewählt, dann zugunsten „Griff vorn, überall“ verworfen);
+Gruppieren ins Kopf-Menü der Spalte (der Dialog bliebe der Ort, an dem man die Tabelle einrichtet);
 das Icon behalten und nur erklären (54 Icons für eine Einfachwahl); eine Liste mit Ausgeblendeten dazwischen.
 
 ### Auswahlmarken zeigen einen Hof (06.10.)
