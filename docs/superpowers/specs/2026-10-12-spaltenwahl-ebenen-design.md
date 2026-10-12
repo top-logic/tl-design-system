@@ -35,20 +35,13 @@ Spaltenköpfen bleibt, wie er ist.
 
 ## 2 · Stufe 1: der Dialog
 
-```
-┌ Spalten ─────────────────────────── □ ✕ ┐
-│ [🔍 Spalte finden                    ]   │
-│ FIXIERT                                  │
-│ ⠿  Name                      🔒  👁      │  ← Griff, Schloss, Auge beim Zeigen; gesetzt: dauerhaft
-│ ──────────────────────────────────────── │
-│ ⠿  Text                          👁      │
-│    Aliasnamen                    ⊘       │  ← ausgeblendet: Name blass, Auge zu, dauerhaft
-│ ⠿  Status                        👁      │
-│ …                                        │
-├──────────────────────────────────────────┤
-│        Standard wiederherstellen  Abbrechen  Ok │
-└──────────────────────────────────────────┘
-```
+![Stufe 1, hell: Fixiert-Block mit Name und Nummer, gezeigte Zeilen mit Griff, Schloss und Auge, ausgeblendete Spalten blass mit Auge zu, Tastaturfokus am Auge von Priorität](../../bilder/2026-10-12-spaltenwahl-stufe1-hell.png)
+
+![Stufe 1, dunkel: dieselben Zustände](../../bilder/2026-10-12-spaltenwahl-stufe1-dunkel.png)
+
+Die Bilder entstehen aus `design-system/specimen/mock/spaltenwahl-ebenen.html` (echtes Paket-CSS, der Vorschlag als
+markierter Style-Block); neu rendern: `node tools/serve.mjs`, dann Chrome headless auf
+`/specimen/mock/spaltenwahl-ebenen.html` (`?mode=dark`, `?stage=2`).
 
 ### 2.1 Die Zeile
 
@@ -56,16 +49,17 @@ Spaltenköpfen bleibt, wie er ist.
 |---|---|---|
 | Griff | `button.tl-button--icon --sm --ghost.tl-reorder-list__handle`, `ICON_HANDLE`; Ziehen mit der Maus an der ganzen Zeile, Alt + Pfeil am Griff | beim Zeigen der Zeile oder wenn ein Element der Zeile den Fokus hat |
 | Name | `span.tl-reorder-list__label`, Ellipse | immer |
-| Schloss | `button.tl-button--icon --sm --ghost` mit `aria-pressed`, `ICON_LOCK` / `ICON_UNLOCK` | beim Zeigen oder Fokus; **gesetzt immer** |
-| Auge | `button.tl-button--icon --sm --ghost` mit `aria-pressed` (gedrückt = ausgeblendet), `ICON_VISIBLE` / `ICON_HIDDEN` | beim Zeigen oder Fokus; **ausgeblendet immer** |
+| Schloss | `button.tl-button--icon --sm --ghost.tl-reorder-list__lock`, `ICON_LOCK` (fixiert) / `ICON_UNLOCK` | beim Zeigen oder Fokus; **fixiert immer** |
+| Auge | `button.tl-button--icon --sm --ghost.tl-reorder-list__eye`, `ICON_VISIBLE` / `ICON_HIDDEN` (ausgeblendet) | beim Zeigen oder Fokus; **ausgeblendet immer** |
 
 Schloss und Auge stehen in `span.tl-reorder-list__actions` am rechten Ende der Zeile; ihre Plätze sind immer
 reserviert, damit die Zeile beim Zeigen nicht springt. „Beim Zeigen sichtbar“ heißt `opacity`, **nicht**
 `visibility` oder `display`: ein unsichtbarer Knopf bleibt mit Tab erreichbar und erscheint, sobald er den Fokus hat.
 
 **Namen für Hilfstechnik:** Auge „{Spalte} ausblenden“ / „{Spalte} einblenden“, Schloss „{Spalte} fixieren“ /
-„{Spalte} lösen“, Griff „{Spalte} verschieben“ (wie heute). `aria-pressed` sagt den Zustand; der Name sagt, was der
-Klick tut.
+„{Spalte} lösen“, Griff „{Spalte} verschieben“ (wie heute). Der Name sagt, was der Klick tut; **kein `aria-pressed`**
+— beides zusammen sagte den Zustand doppelt, und die gedrückte Fläche des Ghost-Knopfs machte jede ausgeblendete Zeile
+zu einem blauen Kästchen (im Bildentwurf gesehen, 12.10.). Den Zustand trägt der Eintrag (`data-tl-state`, §3).
 
 ### 2.2 Ausgeblendet
 
@@ -105,13 +99,15 @@ ist `disabled` (wie heute das Kästchen), mit Tooltip „Mindestens eine Spalte 
 
 ## 3 · Paket
 
-`tl-reorder-list` bekommt drei Teile und einen Zustand; keine neue Komponente.
+`tl-reorder-list` bekommt fünf Teile und drei Zustände; keine neue Komponente.
 
 | Teil / Zustand | Regel |
 |---|---|
 | `tl-reorder-list__actions` | `margin-inline-start: auto`, `display: flex`, Lücke `--tl-space-2xs` |
-| Beim Zeigen sichtbar | Griff und Knöpfe in `__actions` haben `opacity: 0`; `.tl-reorder-list__item:hover` und `:focus-within` setzen 1; ein gedrückter Knopf (`aria-pressed="true"`) bleibt 1. Übergang `--tl-duration-fast`, `prefers-reduced-motion` aus `base.css` |
-| `[data-tl-state~="off"]` | Name `--tl-text-disabled`; das Auge bleibt sichtbar |
+| Beim Zeigen sichtbar | Griff und Knöpfe in `__actions` haben `opacity: 0`; `.tl-reorder-list__item:hover` und `:focus-within` setzen 1; `[data-tl-state~="off"]` hält das Auge, `[data-tl-state~="locked"]` das Schloss bei 1. Übergang `--tl-duration-fast`, `prefers-reduced-motion` aus `base.css` |
+| `[data-tl-state~="off"]` | ausgeblendet: Name `--tl-text-disabled`; das Auge bleibt sichtbar |
+| `[data-tl-state~="locked"]` | fixiert: das Schloss bleibt sichtbar |
+| `tl-reorder-list__lock`, `tl-reorder-list__eye` | die beiden Knöpfe in `__actions`, damit die Regeln sie unterscheiden |
 | `tl-reorder-list__section` | Überschrift des Bereichs: `tl-type-label`, `--tl-text-secondary`, Innenabstand wie der Eintrag, darunter keine Linie |
 | Grenze des Blocks | der letzte Eintrag des Blocks trägt `data-tl-state~="section-end"`: Linie unten `--tl-border-width-sm` `--tl-border-separator` |
 
@@ -147,6 +143,8 @@ erzeugt, Deutsch nachgezogen.
 
 ## 5 · Stufe 2: Vorlage für Bernhard (Spaltengruppen)
 
+![Stufe 2: Gruppe Adresse aufgeklappt mit Straße, PLZ, Ort; Gruppe Kontakt wird gerade benannt; Telefon trägt die Marke „darauf“; rechts die Tabelle mit dem Band Adresse über drei Köpfen](../../bilder/2026-10-12-spaltenwahl-stufe2-gruppen.png)
+
 Das Aussehen liefern wir, die Logik Bernhard. Was der Dialog dafür braucht:
 
 - **Gesten:** eine Spalte auf eine andere ziehen (mittleres Drittel des Eintrags, Marke `drop-onto`) erzeugt eine
@@ -176,8 +174,8 @@ der Tabelle verschachtelte Gruppenzeilen. Die Engine kennt heute eine Ebene.
 
 ## 7 · Prüfung
 
-- **Paket:** Tests für die Teile und Zustände aus §3 (Beim-Zeigen-Regel über `opacity` und `:focus-within`, gedrückt
-  bleibt sichtbar, `off`, `section-end`), Lint grün, Vertrag nennt jede Klasse, Specimen; `published.test.mjs` hält die
+- **Paket:** Tests für die Teile und Zustände aus §3 (Beim-Zeigen-Regel über `opacity` und `:focus-within`, `off` und
+  `locked` halten ihr Icon sichtbar, `section-end`, kein `aria-pressed` in der Spaltenwahl), Lint grün, Vertrag nennt jede Klasse, Specimen; `published.test.mjs` hält die
   Kopie im Worktree.
 - **Engine:** `TestReactColumnSelect` (neu oder erweitert): Schloss zu/auf ordnet um, Ziehen über die Grenze fixiert
   und löst, ausgeblendete fixierte Spalte zählt nicht, die letzte sichtbare bleibt, Reset setzt 0; `tsc`, Vite,
