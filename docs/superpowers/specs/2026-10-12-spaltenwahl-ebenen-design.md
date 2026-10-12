@@ -76,10 +76,12 @@ ist `disabled` (wie heute das Kästchen), mit Tooltip „Mindestens eine Spalte 
   löst bzw. fixiert ebenso: wer in den Block zieht, fixiert, wer herauszieht, löst.
 - Die Anzahl fixierter Spalten der Tabelle (`frozenColumnCount`) ist beim Übernehmen die Zahl der **sichtbaren**
   Einträge im Block. Eine ausgeblendete fixierte Spalte bleibt im Block, zählt aber nicht.
-- Spalten, die die Tabelle ans Ende heftet (`pinnedEnd`), sind immer sichtbar, stehen immer am Ende und zählen nie
-  zum Block. In der Liste stehen sie zuletzt, nur mit ihrem Namen — ohne Griff, Schloss und Auge
-  (`data-tl-state~="pinned"`). Woher: `ColumnView.pinnedEnd()` der sichtbaren Spalten; `ColumnOption` bleibt, wie es
-  ist.
+- Spalten, die die Tabelle ans Ende heftet (`pinnedEnd`, Aktionsspalten), stehen nicht in der Liste: sie sind weder
+  wählbar noch fixierbar (`Column#selectable`, `#frozenEligible`) und fehlen in `TableView.columnOptions()`.
+- Die Tabelle zählt fixierte Spalten über ihre ganze Spaltenreihenfolge (`frozenColumnCount`, nicht wählbare führende
+  Spalten eingeschlossen). Der Dialog arbeitet darum mit **Namen**: beim Öffnen gelten die Spalten unter den ersten
+  `frozenColumnCount` der Tabelle als fixiert, beim Übernehmen ist die Anzahl die Position der letzten fixierten
+  sichtbaren Spalte in der neuen Reihenfolge.
 - **Ziehen an die Linie:** die Position entscheidet — im Block fixiert, dahinter gelöst; die Stelle direkt an der
   Linie behält den bisherigen Zustand des gezogenen Eintrags (ein fixierter landet am Ende des Blocks, ein gelöster
   am Anfang des Rests).
@@ -138,10 +140,10 @@ hält das).
 | `columnReorder` | wie heute; ein Ziel im Block fixiert, ein Ziel dahinter löst (der Server leitet `locked` aus der Position ab) |
 | `columnLock` (neu) | Argumente `column`, `locked`: zu → ans Ende des Blocks, auf → direkt dahinter |
 | `groupBy` | fällt |
-| `lockedVisibleCount()` (neu) | die Anzahl, die `TableViewControl` beim Übernehmen als `setFrozenColumnCount` setzt |
+| `lockedColumns()` (neu) | die fixierten sichtbaren Spalten in Reihenfolge; `TableViewControl` setzt daraus `frozenColumnCount` |
 
-Der Konstruktor bekommt statt `groupedColumn` die Anzahl fixierter Spalten der Tabelle und markiert danach die
-ersten so vielen **sichtbaren** Einträge als `locked`. **`TableViewControl`:** Ok setzt Spaltenreihenfolge und
+Der Konstruktor bekommt statt `groupedColumn` die Namen der fixierten Spalten (`Set<String>`) und markiert diese
+Einträge als `locked`; der Block steht danach vorn. **`TableViewControl`:** Ok setzt Spaltenreihenfolge und
 `frozenColumnCount` in einem Patch; Reset wie §2.5. Neue Ressourcen über JavaDoc in `I18NConstants`
 (`js.table.columnShow`, `…Hide`, `…Lock`, `…Unlock`, `…Locked` für die Überschrift, `…LastVisible`), `messages_en`
 erzeugt, Deutsch nachgezogen.
