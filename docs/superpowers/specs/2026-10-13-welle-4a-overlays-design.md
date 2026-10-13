@@ -1,7 +1,7 @@
 # Welle 4a · Overlays — Design
 
-**Ticket:** Trac #29836 · **Branch:** `CWS/CWS_29836_design_system_welle_4a` auf `CWS/CWS_29821_design_system_welle_3b`
-(nach dem Merge von !1838 auf master) · **Entschieden:** 13.10.2026 mit Hendrik, Abschnitt für Abschnitt ·
+**Ticket:** Trac #29836 · **Branch:** `CWS/CWS_29836_design_system_welle_4a` auf `CWS/CWS_29825_design_system_spaltenwahl`
+(!1852 auf !1838; Merge-Reihenfolge 3b → Spaltenwahl → 4a, entschieden 13.10. nach dem Plan-Review) · **Entschieden:** 13.10.2026 mit Hendrik, Abschnitt für Abschnitt ·
 **Grundlage:** Konsolidierungs-Prognose Q1–Q19 in `docs/migration/altlast.md` „Welle 4“ (alle wie vorgeschlagen).
 
 ## 1 · Ziel und Abgrenzung
@@ -207,7 +207,7 @@ Neu im Paket (`node --test`) und im Engine-Gate:
    hinein und zurück; Snackbar vier Rollen, Fehler sofort angesagt, Pause beim Zeigen, Tooltip am Schließen-Knopf
    (Ebene 1101 unter 1200 — verdeckt er, folgt eine Regel); NoticeBar mit Countdown und klickbar mit Ring; Foto-Overlay;
    Rückfrage „Ungespeicherte Änderungen“.
-7. **Lokal committen, melden.** Push nur nach Freigabe; PR gegen `welle_3b` (nach dessen Merge gegen master),
+7. **Lokal committen, melden.** Push nur nach Freigabe; PR gegen die Spaltenwahl (nach deren Merge gegen master),
    Reviewer bhu, danach `add_reviewers bhu` nach jeder Antwort.
 
 Vor dem Start: Plan-Review durch einen frischen Agenten gegen die Gates (CLAUDE.md), dann SDD.

@@ -52,8 +52,9 @@ Kommentar im Dialog-Stapel). Befund 1 (Branch-Basis) entscheidet Hendrik.
 
 - Ticket **#29836**; Commits beider Repos mit Präfix `Ticket #29836:`, Paket-Commits deutsch, Engine-Commits englisch,
   Trailer `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>` (bzw. das Modell des Subagenten).
-- Engine-Branch `CWS/CWS_29836_design_system_welle_4a`, **gestapelt auf** `origin/CWS/CWS_29821_design_system_welle_3b`
-  (!1838 offen). **Kein Push** — weder Engine noch Paket; Subagenten committen lokal und melden.
+- Engine-Branch `CWS/CWS_29836_design_system_welle_4a`, **gestapelt auf** `origin/CWS/CWS_29825_design_system_spaltenwahl`
+  (!1852 auf !1838; entschieden 13.10. nach Plan-Review, Befund 1: auf 3b wäre das Paket-Gate der Spaltenwahl rot).
+  Merge-Reihenfolge 3b → Spaltenwahl → 4a. **Kein Push** — weder Engine noch Paket; Subagenten committen lokal und melden.
 - Paket: `tokens.json` nur Referenzen; im CSS nur Tokens (Lint); `dist/` nur über `node tools/generate.mjs`, danach
   `node tools/publish-to-worktree.mjs` (`test/published.test.mjs` hält die Kopie byte-gleich).
 - Zustände sind Attribute: `data-tl-state` als Wortliste (`~=`), nie `--open`, `--exiting`, `--maximized`, `--clickable`.
@@ -123,18 +124,18 @@ Pfade der Engine relativ zu `_Working-Tree/tl8-wt-29584/com.top_logic.layout.rea
 cd _Working-Tree/tl8-wt-29584
 git fetch origin
 git status --porcelain | grep -v corporate   # muss leer sein
-git switch -c CWS/CWS_29836_design_system_welle_4a origin/CWS/CWS_29821_design_system_welle_3b
-git log --oneline -1   # erwartet: 2af20a4447 oder neuer (Bernhards master-Merge in 3b)
+git switch -c CWS/CWS_29836_design_system_welle_4a origin/CWS/CWS_29825_design_system_spaltenwahl
+git log --oneline -1   # erwartet: 00f3c902e4 oder neuer (Spaltenwahl, Review-Fix)
 ```
 
-- [ ] **Step 3: Paket auf den Branch veröffentlichen** — der 3b-Branch trägt eine ältere Paketkopie als `main`:
+- [ ] **Step 3: Paket auf den Branch veröffentlichen** — prüfen, dass die Kopie dem Stand von `main` entspricht:
 
 ```bash
 cd ../../design-system && node tools/generate.mjs && node tools/publish-to-worktree.mjs && node --test test/published.test.mjs
 ```
 
 Expected: PASS. Zeigt `git -C ../_Working-Tree/tl8-wt-29584 status` eine geänderte Paketkopie, ist das der Stand von
-`main` (Spaltenwahl, Trenner); sie wird mit dem ersten Engine-Commit (Task 7) eingecheckt.
+`main`; sie wird mit dem ersten Engine-Commit (Task 7) eingecheckt.
 
 ---
 
@@ -2162,7 +2163,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 
 ### Task 11: Abschluss — melden, nicht pushen
 
-- [ ] **Step 1:** `git log --oneline origin/CWS/CWS_29821_design_system_welle_3b..HEAD` (Engine) und
+- [ ] **Step 1:** `git log --oneline origin/CWS/CWS_29825_design_system_spaltenwahl..HEAD` (Engine) und
   `git log --oneline origin/main..HEAD` (Paket) zusammenfassen.
 - [ ] **Step 2:** Hendrik melden: Branch, Commits, Gates, Sichtprüfung, offene Befunde. **Push nur nach seiner
-  ausdrücklichen Freigabe**, je Repo und Branch benannt; PR gegen `welle_3b`, Reviewer bhu, danach `add_reviewers bhu`.
+  ausdrücklichen Freigabe**, je Repo und Branch benannt; PR gegen `CWS/CWS_29825_design_system_spaltenwahl`, Reviewer bhu, danach `add_reviewers bhu`.
