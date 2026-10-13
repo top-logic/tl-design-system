@@ -644,3 +644,41 @@ Urteile: **lohnt** = eigener Grund; **lohnt mit der Welle** = die Stelle wird oh
 
 Querbefund ohne Konsolidierung: der Altbestand liest `--focus` = `#2968C8`, das Paket `focus-ring` = `#0B5ED7` —
 zwei Blautöne nebeneinander, bis die Welle-3-Blöcke leer sind.
+
+### Welle 4 (13.10.) — entschieden: alle Zeilen wie vorgeschlagen
+
+Drei Erkundungen (Overlays, Gerüst und Layout, Nachprüfung der Wellen 0–3b gegen Welle 4) und ein Graphify-Lauf über
+`react-src/`, die Java-Controls und `tlReactControls.css` (AST, 3252 Knoten; brachte keine neue Gruppe, bestätigte
+`EscapeToClose` doppelt und zählte 15 handgezeichnete SVG-Icons in sieben Welle-4-Dateien; danach gelöscht).
+**Entschieden 13.10. (Hendrik): alle Zeilen wie vorgeschlagen, Schnitt in zwei gestapelte PRs** — **4a Overlays**
+(Dialog, DialogManager, Window, Drawer, Snackbar, NoticeBar, Overlay; Trac #29836), **4b Gerüst** (AppShell, AppBar,
+Sidebar, BottomBar, Panel, SplitPanel, Card, Stack, Grid, DeckPane, TileStack, Inset, AdaptiveDetail, Accordion,
+Wizard, ViewError, Kopfblöcke; eigenes Ticket beim Start).
+
+| # | Befund | Sichtbar heute | Zusammenlegen zu | Urteil · PR |
+|---|---|---|---|---|
+| Q1 | **Dialog:** zwei Schichten — `TLDialog` (Backdrop, Außenklick, Escape, kein `role`), `TLWindow` (`role=dialog`, `aria-modal`, Falle, Rahmen); `TLPhotoCapture` baut einen dritten Vollbild-Dialog ohne Falle und Fokusrückgabe | ja (Photo) | ein Dialog im Paket (Scrim, Fläche, Kopf, Fuß); die fünf Java-Aufrufer über `ReactWindowControl` bleiben unverändert; Photo darauf | lohnt · 4a |
+| Q2 | **Scrim:** 3 Fassungen — Dialog mit Blur, Sidebar-Drawer ohne, Photo `rgba(0,0,0,.85)` | ja | eine Fläche auf `--tl-surface-scrim` und `layer-overlay` | lohnt · 4a |
+| Q3 | **Kopfzeile Titel + Aktionen:** 6 Fassungen (Panel, Card, AppBar, Window, Drawer; Accordion schon `tl-*`), Titel `bold`/`600`, vier Abstände, vier Höhen | ja | ein Kopf-Muster: Titel mit Typo-Klasse, Aktionen als `tl-toolbar`, Schließen nach Q4 | lohnt · 4a (Panel/Card/AppBar 4b) |
+| Q4 | **Kopfknöpfe:** 7 Eigenbauten (Window ×2, Drawer, Panel ×3, Sidebar-Einklappen, Hamburger) in 28/32/40 px; 15 Inline-SVGs in Welle 4, das X dreimal | ja | `tl-button--icon --sm` mit `ThemeIcon` (W5 ausgedehnt) | lohnt · 4a/4b |
+| Q5 | **Fokus:** `useFocusTrap` zentral, der Drawer kopiert die Hälfte ohne Falle; Photo, Color, Icon und Sidebar-Flyout geben den Fokus nicht zurück | ja | `useFocusTrap` mit Modus „ohne Falle“, alle Overlays darauf | lohnt · 4a |
+| Q6 | **Escape:** 3 Wege; `EscapeToClose` zweimal kopiert; Sidebar fängt Escape doppelt | nein | ein `useDismiss` (Escape + Außenklick) | mit der Welle · 4a |
+| Q7 | **Meldungen:** Snackbar und NoticeBar färben mit `#fff`/`#000` und `--tlSnackbar-*`; Fehler dort `status`, im Alert `alert`; `tlViewError` und `tlHtml__error` dieselbe Box | ja | Rollenfarben und Ansage-Regel von `tl-alert`; Lage, Timer, Countdown bleiben eigene Hülle; ViewError und Html-Fehler werden `tl-alert` | lohnt · 4a (ViewError 4b) |
+| Q8 | **Ebenen:** Literale — Flyout 1000 (Ebene der Dialoge), Sidebar-Drawer 50/49, Drawer-Container und maximiertes Panel 10 | nein | Flyout `popover`, Sidebar-Drawer `overlay`, die 10er `raised` | mit der Welle · 4a/4b |
+| Q9 | **Dauern:** 0,15–0,25 s als Literale; Snackbar `200` im TSX ungekoppelt ans CSS | kaum | `--tl-duration-*`, `--tl-easing-*` | mit der Welle · 4a/4b |
+| Q10 | **Off-Canvas-Sidebar gegen `TLDrawer`:** zwei Schubladen; die der Sidebar ohne Escape, Fokuswechsel, `aria-hidden`, `top: 3.5rem` an die AppBar gekoppelt | ja | ein Drawer-Muster mit optionalem Scrim; die Sidebar wird mobil dieser Drawer | lohnt · 4b |
+| Q11 | **Sidebar-Flyout:** eigene Positionsrechnung ohne Flip und ohne Nachführen, `role=menu` von Hand | ja: läuft aus dem Fenster | `Menu.tsx` mit `usePopover`; der Hook bekommt `right-start` (N4, Sidebar-Teil) | lohnt · 4b |
+| Q12 | **Navigationseinträge:** Sidebar-, Flyout-, BottomBar-Eintrag drei Anatomien; aktiv nur Klasse, kein `aria-current`; Badge doppelt; `<hr>` dreimal (Rest W9) | ja | Anatomie wie `tl-menu__item` mit `aria-current`; `tl-badge`; `tl-divider` | lohnt · 4b |
+| Q13 | **Ein-/Ausklappen:** Sidebar-Gruppe dreht 180° (unten = zu), Accordion und `tl-toggle` rechts = zu; Sidebar-Einklappen und Panel-Minimieren ohne `aria-expanded` | ja | eine Chevron-Regel, `aria-expanded` an jedem Auslöser | lohnt · 4b |
+| Q14 | **Leisten:** AppBar, BottomBar, Panel-Knopfleiste, Window-Fuß; Höhe `3.5rem` dreimal literal | ja | eine Leistenfläche auf einem Größen-Token, Befehle als `tl-toolbar` | mit der Welle · 4b |
+| Q15 | **Flächen:** `TLCard`, `.tlPanel--card`, Accordion — drei Kartenflächen | ja: klein | eine Kartenfläche nach `tl-accordion` | mit der Welle · 4b |
+| Q16 | **Abstände:** Stack und Grid führen die 3-Stufen-Skala von `tl-columns` auf Alt-Tokens; `--tlGrid-gap` (Fremdgut), `--page-inset` | nein | eine Gap-Skala aus `space-*` | mit der Welle · 4b |
+| Q17 | **Teiler:** SplitPanel-Teiler ohne `role` und Tastatur, Spaltengriff der Tabelle mit `role=separator` | ja | ein Griff mit `role=separator`, `aria-valuenow`, Pfeiltasten; erledigt „Spaltenbreite per Tastatur“ aus „Offen nach 3b“ | lohnt · 4b |
+| Q18 | **Breadcrumb:** `TLAdaptiveDetail` eigene Fassung mit `›`, ohne `aria-current`, festes englisches `aria-label` | ja | `TLBreadcrumb` | mit der Welle · 4b |
+| Q19 | **Wizard-Schritte** gegen Tabs und Breadcrumb | ja | eigenes Muster bleibt, nur die Disc auf Tokens | lohnt nicht |
+
+Mitfallend in 4b ohne Zusammenlegen: kein `<main>`-Landmark; `aria-label="Bottom navigation"` fest englisch;
+Breakpoint `768` in `TLAppShell.tsx` und im CSS getrennt. Nicht Welle 4: Color- und Icon-Popup (N4), Kanban
+`drop-hint` und `DropState` (Welle 5), `LocalStatus` viermal in den Upload-Controls (N3, Welle 5); Drag-Schild,
+Touch-Bild, Element-Picker und Kanban-Hinweis bleiben bei Literalen 10000–13000 (Token `layer-drag` in Welle 5
+entscheiden). Kleinkram: `getContextPath()` steht gleichlautend in `route-sync.ts` und `window-manager.ts`.
