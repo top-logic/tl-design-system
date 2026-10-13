@@ -682,3 +682,9 @@ Breakpoint `768` in `TLAppShell.tsx` und im CSS getrennt. Nicht Welle 4: Color- 
 `drop-hint` und `DropState` (Welle 5), `LocalStatus` viermal in den Upload-Controls (N3, Welle 5); Drag-Schild,
 Touch-Bild, Element-Picker und Kanban-Hinweis bleiben bei Literalen 10000–13000 (Token `layer-drag` in Welle 5
 entscheiden). Kleinkram: `getContextPath()` steht gleichlautend in `route-sync.ts` und `window-manager.ts`.
+
+**Nachgetragen beim Planen von 4a (13.10.)** — Spec 4a §13, Plan „Abweichungen“: Q3 wird der Block `tl-titlebar`
+(statt je ein `__header`); Q6 wird eine gemeinsame Komponente `EscapeToClose` in `bridge/` statt eines Hooks
+`useDismiss` (ein Hook bindet nicht in den Scope, den dieselbe Komponente öffnet); Q1 nimmt bei der Fotoaufnahme nur
+Scrim, Fokus und Escape — die Kamera-Knöpfe bleiben bis Welle 5; Q7 ohne Icon in der Snackbar (der Zustand liefert
+keins). 4a setzt auf die Spaltenwahl (!1852) auf.
