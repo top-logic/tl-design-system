@@ -1,11 +1,37 @@
-**Letzte Sitzung:** 2026-10-12 (#29825 Spaltenwahl als Ebenen-Panel gebaut, reviewt, lokal sichtgeprüft, gepusht als !1852; Folgeticket #29828) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-13 (#29825: Bernhards Request Changes behoben und gepusht, Review erneut angefordert; Lagebild-Dashboard mit Morgen-Check; Kommentar zu !1841) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
 
 ## Zuerst
 
-**Jetzt (12.10.): #29825 „Spaltenwahl als Ebenen-Panel“ ist gebaut und gepusht als PR [!1852](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1852)**
+**Neue Sitzung (13.10.):** Der erste Prompt des Tages stößt per Hook den Lagebild-Check an
+(`.superpowers/lagebild/CHECK.md`, Dashboard https://claude.ai/artifact/AyFsE8FVHcL7qw7WmSQLZe). Erst dessen Ergebnis
+lesen, dann hier weiter.
+
+**Wartet auf Bernhard (nichts selbst tun, außer er antwortet):**
+1. **!1838** (Welle 3b, #29821): Review fehlt, erneut angefordert 12.10.
+2. **!1852** (#29825 Spaltenwahl): sein Request Changes (12.10. 18:23, Schloss/Auge blieben nach Klick sichtbar) ist
+   behoben — Knöpfe nur bei Tastaturfokus `:has(:focus-visible)`; Engine `00f3c902e4`, Paket `87aa99e`; geantwortet
+   und Review erneut angefordert 13.10.
+3. **!1841** (#29815, sein PR): Kommentar 12.10. — `tl-status-*` als Klassen und Regeln auf `tlTableView__row`
+   kollidieren mit 3b; Vorschlag `row-role` → `data-tl-role` am `tl-table__row`, Paket zeichnet die Tönung. Stimmt er zu,
+   bauen wir Paket und TSX auf 3b.
+
+**Wenn er antwortet:** Befunde einarbeiten, Gates, lokal committen, Push nur mit Hendriks Freigabe (Repo und Branch
+nennen; nie tl-engine-7 master), danach `add_reviewers bhu`.
+
+**Bekannte Konflikte beim nächsten master-Merge in 3b:** #29808 (seit 12.10. auf master) ändert `bridge-entry.ts`,
+`control-state.ts`, `state.proto`; offene PRs !1825, !1801, !1841, !1845 berühren 3b-Dateien. Bernhard merged master
+selbst in 3b (zuletzt `2af20a4447`) — vor eigener Arbeit dort `git fetch`.
+
+**Kandidaten, solange gewartet wird (Hendrik entscheidet):** Welle 4 (Dialog, Window, Drawer, Snackbar, AppShell,
+Sidebar; neues Ticket, Konsolidierungs-Prognose vor der Spec); #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
+#29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
+axe auf `li role="presentation"`, `format()` dreifach).
+
+
+**Stand 12.10.: #29825 „Spaltenwahl als Ebenen-Panel“ ist gebaut und gepusht als PR [!1852](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1852)**
 (gegen `welle_3b`, Reviewer bhu, Trac-Kommentar; nach dem Merge von !1838 Basis auf master). Push nur nach Hendriks
 Freigabe (CLAUDE.md, seit 12.10.; Subagenten pushen nie).
 1. **Engine** Branch `CWS/CWS_29825_design_system_spaltenwahl` auf `welle_3b` (Bernhards master-Merge `2af20a4447`),
