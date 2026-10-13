@@ -25,8 +25,13 @@ nennen; nie tl-engine-7 master), danach `add_reviewers bhu`.
 `control-state.ts`, `state.proto`; offene PRs !1825, !1801, !1841, !1845 berühren 3b-Dateien. Bernhard merged master
 selbst in 3b (zuletzt `2af20a4447`) — vor eigener Arbeit dort `git fetch`.
 
-**Kandidaten, solange gewartet wird (Hendrik entscheidet):** Welle 4 (Dialog, Window, Drawer, Snackbar, AppShell,
-Sidebar; neues Ticket, Konsolidierungs-Prognose vor der Spec); #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
+**Welle 4 begonnen (13.10.):** Konsolidierungs-Prognose Q1–Q19 in `altlast.md` („Welle 4“), entschieden „alle wie
+vorgeschlagen“; Schnitt **4a Overlays** (Trac **#29836**, accepted, CC bhu) und **4b Gerüst** (eigenes Ticket beim
+Start). Graphify einmal gelaufen, ohne neuen Befund, gelöscht. **Nächstes:** Brainstorming 4a → Spec
+`docs/superpowers/specs/2026-10-13-welle-4a-overlays-design.md` → Plan → Plan-Review → SDD; Branch
+`CWS/CWS_29836_design_system_welle_4a` auf `welle_3b` (bzw. master nach dessen Merge).
+
+**Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
 axe auf `li role="presentation"`, `format()` dreifach).
 
