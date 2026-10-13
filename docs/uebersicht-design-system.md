@@ -1,7 +1,7 @@
 # Das Design System, kurz erklärt
 
 Was wir mit dem Paket `tl-design-system` erreichen wollen, welche Regeln gelten, wie wir in Wellen
-dahin kommen, wo wir stehen, und was das für TL Views bedeutet. Trac #29617.
+dahin kommen, wo wir stehen, und was das für TL Views bedeutet. Tickets je Welle siehe §6.
 
 ## 1 · Der Anlass
 
@@ -156,10 +156,10 @@ es und lässt es nur schrumpfen.
 | Welle | Komponenten | Stand |
 |---|---|---|
 | 0 | Paket, `primitives.css`, `tokens.css`, `base.css`, DTCG, Gates, Einbindung in die Demo-App, `data-tl-mode` und `data-tl-density` am `html` | gemerged, PR !1641 |
-| 1 | Button, ToggleButton, Pill, Avatar, Progress, FontIcon | Button gemerged (!1649); Pill !1694 und Avatar/Progress/Icon !1695 im Review |
-| 2 | Felder, Checkbox, BooleanChoice, DropdownSelect, FormField, FormGroup, FormLayout, dazu Chips, Segmented, Slider, Switch | geplant |
-| 3 | TableView, TreeView, Menu, Toolbar, TabBar, Breadcrumb, Tooltip | geplant |
-| 4 | Dialog, Window, Drawer, Snackbar, NoticeBar, Shell, Layoutcontainer, Übergangszustände | geplant |
+| 1 | Button, ToggleButton, Pill, Avatar, Progress, FontIcon | auf master (!1649, !1694, !1695) |
+| 2 | Felder, Checkbox, BooleanChoice, DropdownSelect, FormField, FormGroup, FormLayout, dazu Chips, Segmented, Slider, Switch | auf master (!1740, mit 3a) |
+| 3 | TableView, TreeView, Menu, Toolbar, TabBar, Breadcrumb, Tooltip | 3a Navigation und Popups auf master (!1760); 3b Daten im Review (!1838), darauf die Spaltenwahl als Ebenen-Panel (!1852) |
+| 4 | Dialog, Window, Drawer, Snackbar, NoticeBar, Shell, Layoutcontainer, Übergangszustände | Konsolidierung entschieden (13.10.); 4a Overlays: Spec und Plan stehen (#29836); 4b Gerüst folgt |
 | 5 | Calendar, ColorInput, IconSelect, Medien, Dashboard, dann `tlReactControls.css` löschen | geplant |
 
 **Der Rhythmus je Komponente**
@@ -203,6 +203,6 @@ Beide Systeme koexistieren, bis die letzte Welle durch ist: die alte XML-Tokenko
 | Entscheidungen | `docs/skalen.md`, jede mit Begründung; folienweise in `docs/praesentation.md` |
 | Spec | `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md` |
 | Arbeitsliste | `docs/migration/altlast.md`: alte Tokens → neue, Befunde aus der laufenden App je Welle, Einfang-Liste |
-| Ticket | Trac #29617, ein Branch je Welle: `CWS/CWS_29617_design_system_welle_<n>` |
+| Ticket | Eins je Welle: Wellen 0–3a Trac #29617 (mit alpha10 geschlossen), 3b #29821, 4a #29836; Branch `CWS/CWS_<ticket>_design_system_welle_<n>` |
 | Einbindung | `com.top_logic.layout.react`: `style/tl-design-system/*.css` als `ClientResources`, `UIThemeService` setzt `data-tl-mode` und `data-tl-density` |
 | Anleitung für Claude | `docs/anleitung-claude-komponenten.md`, Regeldatei `docs/claude/tl-design-system-SKILL.md` |
