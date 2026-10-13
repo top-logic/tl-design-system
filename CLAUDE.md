@@ -108,16 +108,26 @@ wenn Hendrik es sagt. `STATUS.md` auf `main` gehört der Sitzung, die dort arbei
 
 ## Modelle
 
-Fable oder Opus 5.5 orchestriert (seit 02.10.: beide gleichwertig), Opus und Sonnet arbeiten zu.
-Entscheidungen brauchen den Sitzungskontext, und der liegt nur im Orchestrator; Handwerk ist
-abgrenzbar und darf leer starten. **Bedingung für jeden Orchestrator: alles wird verifiziert** —
-jedes Ergebnis eines Subagenten gegen Gates, Datei und laufende Instanz geprüft, bevor es als fertig gilt.
+Fable oder Opus 5.5 orchestriert (seit 02.10.: beide gleichwertig). Verteilt wird nach der Art der
+Arbeit, nicht nach ihrem Umfang (13.10.): Entscheidungen und Analysen mit Tragweite bleiben beim
+Orchestrator, denn sie brauchen den Sitzungskontext, und der liegt nur dort; Produktion geht an Sonnet,
+Menge ohne Urteil an Haiku. **Bedingung für jeden Orchestrator: alles wird verifiziert** — jedes
+Ergebnis eines Subagenten gegen Gates, Datei und laufende Instanz geprüft, bevor es als fertig gilt.
 
-| Aufgabe | Modell | Wie |
+| Art | Modell | Beispiele |
 |---|---|---|
-| Entscheiden, Spec, `docs/skalen.md`, Review-Antworten, `derive`-Design | Fable oder Opus 5.5 | Orchestrator selbst |
-| Java-Migration im Worktree, Ratsche, Tests, Tickets | Opus | Subagent `model: opus` |
-| Umbenennen nach `altlast.md`, Bildexport, Wiki-Spiegelung, Suche | Sonnet | Subagent `model: sonnet` |
+| Entscheiden, Analysieren mit Tragweite | Orchestrator selbst | Spec, `docs/skalen.md`, Review-Antworten, `derive`-Design, Konsolidierungsprognosen, Merge-Konflikte mit Entwurfsfolgen, Ursache eines roten Builds |
+| Prüfen mit Tragweite | frischer Agent `model: opus` (Fable, wenn Opus geplant hat) | Plan-Review vor SDD, Code-Review von Rechenkernen (`derive`, Kontrast) |
+| Alltägliche Produktion nach geprüftem Plan | Sonnet | Java-/TSX-Migration im Worktree, Ratsche, Tests, Tickets, Gates laufen lassen und berichten |
+| Viel Menge, wenig Urteil | Haiku | Umbenennen nach `altlast.md`, Bildexport, Wiki-Spiegelung, Suche, Zählungen |
+
+- **Ein Auftrag an Sonnet oder Haiku ist vollständig:** Dateien, Ziel, Gates, Fertig-Bedingung, bekannte
+  Fehler. Was zu entscheiden wäre, entscheidet der Orchestrator vorher; stößt der Subagent auf eine
+  Entscheidung, meldet er sie, statt sie zu treffen.
+- **Haiku nur, wo das Ergebnis mechanisch prüfbar ist** (Gate, Test, Diff, Zählung) — sonst frisst die
+  Nachprüfung die Ersparnis.
+- **Gates gibt der Orchestrator standardmäßig ab**; ihre Logs gehören nicht in seinen Kontext.
+- **Kleiner als der Auftrag → selbst:** was in wenigen Handgriffen erledigt ist, wird nicht delegiert.
 
 Ein Fork erbt das Orchestrator-Modell; für ein anderes Modell einen frischen Agenten mit
 vollständigem Auftrag starten. Das Plan-Review bleibt bei einem frischen Agenten, nicht beim Autor.
