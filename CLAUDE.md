@@ -85,6 +85,8 @@ bleibt liegen.
 **Gepusht wird nur nach Hendriks ausdrücklicher Freigabe** — Engine-Branches im Worktree wie Projekt-`main`; eine
 Freigabe gilt für einen Push. **Subagenten pushen nie**, auch nicht mit Freigabe: sie committen lokal und melden; den
 freigegebenen Push macht der Orchestrator. Steht „push“ als Schritt in einem Plan, ist das ein Vorschlag, keine Freigabe.
+**Nie direkt auf `master` von tl-engine-7** — dort nur über PR und Merge in Gitea; gepusht werden nur die
+`CWS/CWS_<ticket>_…`-Branches und `main` dieses Repos (`TopLogic/tl-design-system`). Jede Push-Frage nennt Repo und Branch.
 
 **Kein Plan geht ohne Plan-Review in die Ausführung.** Die Selbstprüfung des Autors (`writing-plans`) prüft
 gegen die Spec; sie findet nicht, was am Code scheitert. Vor dem Start der SDD prüft ein **frischer Agent**
