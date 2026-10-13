@@ -990,7 +990,6 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 - Create: `design-system/src/components/notice-bar/notice-bar.css`, `notice-bar.contract.md`, `notice-bar.spec.html`
 - Modify: `design-system/src/components/alert/alert.contract.md`, `design-system/test/overlays.test.mjs`
 - Create: `design-system/test/contracts-4a.test.mjs`
-- Modify: `docs/skalen.md`, `docs/praesentation.md`
 
 **Interfaces:**
 - Consumes: `tl-alert` (Fläche, Linie, Rolle, `__body`, `__title`, `__message`, `__close`).
@@ -1287,47 +1286,17 @@ Ansage-Regel: nur `error` ist `role="alert"`.
 
   dazu `info` (`role="status"`) und `error` (`role="alert"`).
 
-- [ ] **Step 7: `skalen.md` und Präsentation** — in `docs/skalen.md` (Zeilen 438–439, **über einen Zeilenumbruch**:
-  „…Marke. Das korrigiert nebenbei den Fehler in der Snackbar: Erfolg bekommt dunkle Schrift, nicht⏎weiße.“) den Satz
-  ab „Das korrigiert“ bis „weiße.“ ersetzen durch
-  „Die Snackbar hatte hier ihren Fehler (weiße Schrift auf Erfolg); seit Welle 4a ist sie ein getönter Alert und trägt
-  gewöhnlichen Text (siehe ‚Welle 4a‘).“ Am Ende der Welle-Abschnitte einen Abschnitt anlegen:
-
-```markdown
-### Welle 4a: Overlays (entschieden 13.10., Hendrik — #29836, Spec `2026-10-13-welle-4a-overlays-design.md`)
-
-- **Ein Dialog, zwei Controls.** `TLDialog` zeichnet den Scrim (`tl-dialog`), `TLWindow` die Fläche
-  (`tl-dialog__surface`); Java bleibt. Verworfen: die Controls verschmelzen (Java-Umbau), natives `<dialog>`
-  (Top-Layer legt Popups im Dialog darunter).
-- **Scrim ohne Blur.** Die Skala kennt keinen; Blur kostet beim Ziehen. Das Glass-Theme der Demo verliert damit den
-  Weichzeichner hinter Dialogen.
-- **Ein Kopf** (`tl-titlebar`) für Dialog und Drawer, Panel und Card in 4b; Kopfknöpfe `tl-button--icon --sm` mit
-  Theme-Icons (Q3, Q4).
-- **Drawer: mit Scrim modal, ohne nicht.** Ohne Scrim Fokus hinein und zurück, keine Falle, geschlossen `inert`.
-- **Meldungen sind Alerts.** Snackbar und NoticeBar sind getönte Alerts mit eigener Hülle; nur `error` unterbricht
-  (`role="alert"`) — auch in der Snackbar, die bisher jeden Fehler höflich ansagte.
-- **Bewegung als Standard des Pakets** auf `data-tl-state` (`entering`, `exiting`, `open`); eine Anwendung
-  überschreibt sie. Reduzierte Bewegung regelt der Hook (keine Markierung) und `base.css`.
-```
-
-  In `docs/praesentation.md` eine Folie anhängen (kurz, als Botschaft):
-
-```markdown
-## Overlays: ein Dialog, eine Meldung
-
-- Jeder Dialog sieht gleich aus und verhält sich gleich: Fokus bleibt drin und kommt zurück, Escape schließt von innen
-  nach außen.
-- Kopfknöpfe sind überall 24 px und benannt — vorher drei Größen, drei handgezeichnete Kreuze.
-- Snackbar und Systemhinweis sind Alerts: dieselben Farben, dieselbe Ansage — ein Fehler unterbricht, alles andere nicht.
-- Bewegung kommt aus dem Paket, Anwendungen dürfen sie überschreiben.
-```
+- [ ] **Step 7: `skalen.md` und Präsentation prüfen** — beide sind am 13.10. vor der Umsetzung nachgezogen
+  (`skalen.md` „Welle 4: Gerüst und Overlays — Schnitt, Konsolidierung, 4a“ und der korrigierte Snackbar-Satz unter
+  „Die Regel, wann welche Rolle gilt“; `praesentation.md` §10a drei Zeilen und §14 Welle 4). Nur ändern, was der Bau
+  anders entschieden hat; sonst nichts tun.
 
 - [ ] **Step 8: Erzeugen, Lint, Tests, Veröffentlichen** — wie Task 2 Step 9; alle grün.
 - [ ] **Step 9: Commit (Paket)**
 
 ```bash
-git add design-system docs/skalen.md docs/praesentation.md   # enthält button.contract.md
-git commit -m "Ticket #29836: Snackbar und NoticeBar als Alert mit Hülle, Verträge der Welle 4a, skalen.md Welle 4a
+git add design-system   # enthält button.contract.md
+git commit -m "Ticket #29836: Snackbar und NoticeBar als Alert mit Hülle, Verträge der Welle 4a
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ```

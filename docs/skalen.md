@@ -435,8 +435,8 @@ in der Paarliste, beide Modi, jedes Theme; das Probe-Theme bleibt byte-identisch
 > geschrieben. Ein getönter Hinweisstreifen nimmt `subtle` und trägt gewöhnlichen Text.*
 
 **Die Beschriftung auf einer Semantikfläche wird abgeleitet**, nach derselben Regel wie auf der
-Marke. Das korrigiert nebenbei den Fehler in der Snackbar: Erfolg bekommt dunkle Schrift, nicht
-weiße.
+Marke. Die Snackbar hatte hier ihren Fehler (weiße Schrift auf Erfolg); seit Welle 4a ist sie ein getönter Alert
+und trägt gewöhnlichen Text (siehe „Welle 4“).
 
 #### Zwei Anmerkungen
 
@@ -2185,6 +2185,40 @@ Zeigen ≥ 1,1 auf allen fünf Gründen in beiden Modi; `lint-css.test.mjs` den 
 `rgba` im Hof sowie `surface-state-*` als Fläche, Rand, Text und `inset`-Linie als Verstöße; `choice.test.mjs` den
 Hof aus den Schichten und keinen anderen Leser im Paket; `pairs.test.mjs` die Zusammensetzungen;
 `derive.test.mjs` die Schleier im Kundengrau. Das Specimen zeigt den Hof über einer Linie.
+
+### Welle 4: Gerüst und Overlays — Schnitt, Konsolidierung, 4a (13.10.)
+
+Erkundung mit drei Agenten (Overlays, Gerüst und Layout, Nachprüfung der Wellen 0–3b) und einem Graphify-Lauf über die
+React-Controls; die Prognose Q1–Q19 steht in `docs/migration/altlast.md` „Welle 4“, entschieden „alle wie
+vorgeschlagen“ (Hendrik). Spec 4a `docs/superpowers/specs/2026-10-13-welle-4a-overlays-design.md`.
+
+* **Zwei PRs wie bei Welle 3.** Rund 1.900 Zeilen in etwa 30 Blöcken: **4a Overlays** (Dialog, Fenster, Drawer,
+  Snackbar, NoticeBar, Overlay; Trac #29836) und **4b Gerüst** (Shell, AppBar, Sidebar, BottomBar, Panel,
+  SplitPanel, Card, Stack, Grid, Wizard …; eigenes Ticket beim Start, damit ein Release zwischen den Merges das Ticket
+  der offenen nicht schließt). 4a setzt auf die Spaltenwahl (!1852) auf; Merge-Reihenfolge 3b → Spaltenwahl → 4a.
+* **Ein Dialog, zwei Controls.** `TLDialog` zeichnet den Scrim (`tl-dialog`), `TLWindow` die Fläche
+  (`tl-dialog__surface`); Java bleibt, die fünf Aufrufer merken nichts. Verworfen: die Controls verschmelzen
+  (Java-Umbau, mehr Fläche fürs Review), natives `<dialog>` (Top-Layer legt Menüs und Selects im Dialog darunter).
+  Die Fotoaufnahme bekommt denselben Scrim und dieselbe Fokusfalle.
+* **Scrim ohne Blur.** Die Skala kennt keinen (siehe „Scrim und Ebenen“), und Blur kostet beim Ziehen des Fensters.
+  Das Glass-Theme der Demo verliert damit den Weichzeichner hinter Dialogen.
+* **Ein Kopf.** `tl-titlebar` (Titel `h2` mit Ellipse, Aktionen, Linie) trägt Dialog und Drawer, in 4b Panel und Card —
+  vorher sechs Kopfzeilen mit zwei Gewichten, vier Abständen, vier Höhen. Kopfknöpfe sind `tl-button--icon --sm` mit
+  Theme-Icons, 24 px — vorher sieben Eigenbauten in 28, 32 und 40 px, das Kreuz dreimal von Hand gezeichnet.
+* **Drawer: mit Scrim modal, ohne nicht.** Ohne Scrim geht der Fokus hinein und zurück, ohne Falle; geschlossen ist er
+  `inert`. Mit Scrim (die mobile Sidebar in 4b) fängt er den Fokus. Die Seiten heißen `start`/`end`.
+* **Meldungen sind Alerts.** Snackbar und NoticeBar sind getönte Alerts mit eigener Hülle (Lage, Timer, Countdown);
+  `#fff`/`#000` und `--tlSnackbar-*` fallen. **Nur ein Fehler unterbricht** — auch in der Snackbar, die bisher jeden
+  Fehler höflich ansagte (`role="status"`).
+* **Bewegung als Standard des Pakets** auf `data-tl-state` (`entering`, `exiting`, `open`). Bisher war das Ein- und
+  Ausblenden des Dialogs allein Sache der Anwendung (`tlDialog__backdrop--entering`); eine Anwendung überschreibt den
+  Standard auf denselben Attributen. Reduzierte Bewegung regelt der Hook (keine Markierung) und `base.css`.
+* **Lint kennt die Zustandswörter der Overlays** (`entering`, `exiting`, `maximized`, `clickable`, `visible`) als
+  Verstoß, auch an Elementen.
+
+**Als Test (mit dem Bau):** `overlays.test.mjs` hält Scrim, Fläche, Kopf, Griffe, Drawer, Snackbar und NoticeBar fest,
+`contracts-4a.test.mjs` die Verträge, `engine-classes.test.mjs` sperrt die alten Klassen in TSX, Stylesheets, Java,
+Entwickler-Artikeln und Views; die Ratsche streicht sieben Blöcke.
 
 ## Befunde aus dem Specimen
 

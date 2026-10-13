@@ -187,6 +187,9 @@ Jede Komponente geht denselben Weg: CSS ins Paket, Klassen umbenennen, Zustände
 | **Ziehen und Ablegen** | fünf Implementierungen, fünf Markierungen, Lage dreimal anders gerechnet | zwei Rechner, **eine** Markierung — und Umsortieren auch mit Alt + Pfeil |
 | **Laden und Leer** | vier Spinner, eine leere Tabelle ist eine leere Fläche | ein Fortschrittsbalken, „Keine Einträge“, Platzhalterzeilen beim Scrollen |
 | **Kapseln** | Pille in der Kapsel, drei Höhen, Farben dreimal erzeugt | eine Kapsel, die Bedeutung als Attribut |
+| **Dialoge** (Welle 4) | zwei Schichten, die Fotoaufnahme baut eine dritte; drei Hintergründe | **ein** Dialog: Fokus bleibt drin und kommt zurück, Escape schließt von innen nach außen |
+| **Kopfzeilen und ihre Knöpfe** | sechs Kopfzeilen, sieben Knopf-Eigenbauten in 28–40 px, das Kreuz dreimal von Hand gezeichnet | eine Titelleiste, Knöpfe 24 px mit Namen und Tooltip |
+| **Meldungen** | Snackbar und Systemhinweis voll gefärbt mit Weiß/Schwarz, ein Fehler wird nur „höflich“ angesagt | getönte Alerts: dieselben Farben, ein Fehler unterbricht, alles andere nicht |
 
 Vor jeder Welle: Was tut dasselbe? Prognose auf den Tisch, Entscheidung, dann die Spec. Gebautes wird mitgeprüft.
 
@@ -203,6 +206,8 @@ Vor jeder Welle: Was tut dasselbe? Prognose auf den Tisch, Entscheidung, dann di
 > Sprechnotiz (Welle 3b, 07.10.): Was Kollegen parallel gebaut haben — Höfe, der runde Entfernen-Knopf, die Hinweisbox — wird nicht ein zweites Mal erfunden, sondern übernommen. Ein Knopf, eine Regel.
 >
 > Sprechnotiz (Welle 3b gebaut, 08.10.): Tabelle, Baum und Listen teilen sich Fokus, Ziehen und Suchen — fünf Helfer statt fünfzehn Fassungen; der Fokus geht nirgends mehr verloren.
+>
+> Sprechnotiz (Welle 4, 13.10.): Neunzehn Doppelungen im Gerüst gefunden, achtzehn werden zusammengelegt. Der Dialog bewegt sich jetzt aus dem Paket — Anwendungen dürfen die Bewegung überschreiben, müssen sie aber nicht mehr selbst bauen.
 
 ---
 
@@ -301,7 +306,7 @@ Einen vierten Weg gibt es nicht: Shell nutzen und den Draht ignorieren. Und es g
 | 1 | Button, Pill, Avatar, Progress, FontIcon | auf master |
 | 2 | Felder, Checkbox, Select, Formular | gebaut, PR folgt — ein Feldrahmen für alle; Fehler ist `aria-invalid`, dasselbe Attribut für Auge und Screenreader; ein deaktiviertes Feld zeigt nie einen Fehler; gewählt sieht überall gleich aus (Chip wie Kästchen); schreibgeschützt bleibt lesbar, nicht grau; Ratsche 7.252 → 5.994 Zeilen, zwölf alte Blöcke gestrichen |
 | 3 | Tabelle, Baum, Menü, Toolbar, Reiter | Datendarstellung und Navigation |
-| 4 | Dialog, Fenster, Drawer, Snackbar, Shell | Gerüst und Overlays |
+| 4 | Dialog, Fenster, Drawer, Snackbar, Shell | zwei PRs: **4a Overlays** (Spec und Plan stehen) — ein Dialog, eine Titelleiste, Meldungen als Alerts; **4b Gerüst** (Shell, Sidebar, Panel) folgt |
 | 5 | Kalender, Farbwahl, Medien, Dashboard | fachlich, zuletzt |
 
 Innerhalb einer Welle keine Reihenfolge — parallel ist möglich. Der Button ist die Vorlage für alle Muster.
