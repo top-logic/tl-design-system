@@ -37,6 +37,16 @@ Java 17 (eine Konstante), Maven.
    `tl-alert` erlaubt kein Icon (die Spalten folgen dem Inhalt); die Bedeutung steht im Text.
 8. **Modaler Drawer nur im Paket.** `ReactDrawerControl` kennt keine Scrim-Option (Java bleibt); die Variante mit Scrim
    steht in CSS, Vertrag und Specimen und wird in 4b von der mobilen Sidebar gerendert.
+9. **Rahmen der Snackbar ist die Linie der Bedeutung** (aus `tl-alert`), nicht `border-separator` (Spec §5): ein
+   getönter Alert mit Statuslinie ist schon abgegrenzt; ein zweiter Rahmen wäre doppelt.
+10. **Drawer-Körper behält Innenabstand und `overscroll-behavior: contain`** wie bisher (`--tl-space-md`); das
+    Abstandsmodell „Behälter sind bündig“ gilt für den Dialog-Körper schon, für den Drawer prüft 4b es mit Panel/Card.
+
+**Plan-Review** 13.10. durch einen frischen Agenten (Fable): Probelauf des Pakets in einer Kopie (Lint grün, 379/380,
+nur `published` erwartet rot), Engine-Änderungen in einer Kopie (`tsc` 0, beide Vite-Builds grün), Ratsche gegen eine
+Nachbildung. Befunde 2–12 eingearbeitet (Grep mit `-P`, Zustandswörter im Lint, `*.view.xml` im Gate, Button-Vertrag,
+Snackbar-Rahmen, Umbruch in `skalen.md`, Ratschenzahlen, Drawer-Körper, Kommentare im Blur-Test, `useEffect` im Drawer,
+Kommentar im Dialog-Stapel). Befund 1 (Branch-Basis) entscheidet Hendrik.
 
 ## Global Constraints
 
@@ -207,6 +217,17 @@ Expected: FAIL — drei Tests (Maße fehlen, `overlay.css` und `titlebar.css` fe
   'tl-drawer': new Set(['start', 'end', 'bottom', 'narrow', 'medium', 'wide', 'container']), // offen: data-tl-state.
   'tl-snackbar': new Set([]), // Die Bedeutung trägt tl-alert (data-tl-role).
   'tl-notice-bar': new Set([]), // klickbar: role="button", kein Modifier.
+```
+
+- [ ] **Step 4a: Zustandswörter im Lint** — in `tools/lint-css.mjs` in **beiden** Regexen `STATE_MODIFIER` und
+  `ELEMENT_STATE_MODIFIER` hinter `|open|closed` die Wörter `|entering|exiting|maximized|clickable|visible` einfügen.
+  In `test/lint-css.test.mjs` anhängen:
+
+```js
+test('Zustände der Overlays als Modifier brechen das Gate (Welle 4a)', () => {
+  for (const sel of ['.tl-dialog--entering', '.tl-dialog__surface--maximized', '.tl-notice-bar--clickable', '.tl-snackbar--visible', '.tl-x__y--exiting'])
+    assert.ok(lint(`${sel} { display: none; }`, { known, file: 'x.css' }).some((v) => /Zustand als/.test(v)), sel);
+});
 ```
 
 - [ ] **Step 5: `overlay.css`** anlegen:
@@ -397,7 +418,7 @@ Referenz aus Step 3.
 - [ ] **Step 10: Commit (Paket-Repo)**
 
 ```bash
-git add design-system/src design-system/dist design-system/tools/lint-css.mjs design-system/test/overlays.test.mjs
+git add design-system/src design-system/dist design-system/tools/lint-css.mjs design-system/test/overlays.test.mjs design-system/test/lint-css.test.mjs
 git commit -m "Ticket #29836: Overlay und Titelleiste im Paket, Maße für Drawer und Toast, Lint kennt die Blöcke der Welle 4a
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
@@ -427,7 +448,7 @@ test('tl-dialog: Scrim deckt den Viewport auf der Overlay-Ebene, ohne Blur, mit 
   assert.match(d, /z-index:\s*var\(--tl-layer-overlay\)/);
   assert.match(d, /background:\s*var\(--tl-surface-scrim\)/);
   assert.match(d, /padding:\s*var\(--tl-space-lg\)/);
-  assert.doesNotMatch(readGenerated('dialog', 'dialog.css'), /backdrop-filter|blur/);
+  assert.doesNotMatch(readGenerated('dialog', 'dialog.css').replace(/\/\*[\s\S]*?\*\//g, ''), /backdrop-filter|blur/i);
 });
 
 test('tl-dialog: Ein- und Ausblenden über data-tl-state mit Tokens; die Kopie lässt den Zeiger durch', () => {
@@ -839,6 +860,10 @@ test('tl-drawer: Overlay-Ebene am Viewport, raised im Behälter, schiebt mit Tok
   flex-direction: column;
   min-height: 0;
   overflow: auto;
+  /* Wischen im Drawer läuft nicht in die Seite weiter. Der Innenabstand bleibt wie bisher; ob der Drawer bündig wird
+     wie der Dialog-Körper, prüft 4b mit Panel und Card. */
+  overscroll-behavior: contain;
+  padding: var(--tl-space-md);
 }
 ```
 
@@ -1232,6 +1257,11 @@ Zwei Controls tragen den Alert mit eigener Hülle (Welle 4a): `tl-snackbar` (sch
 Ansage-Regel: nur `error` ist `role="alert"`.
 ```
 
+  In `button/button.contract.md` unter „Attribute“ eine Zeile ergänzen:
+  `` | Kopfknopf | `tl-button--ghost tl-button--sm tl-button--icon` mit `ThemeIcon` in `tl-titlebar` (Maximieren, Schließen) und als `tl-alert__close`: 24 px (`--tl-size-control-sm`), `aria-label` und Tooltip Pflicht | ``
+  und in `contracts-4a.test.mjs` `SOLL` um `'button/button.contract.md': ['tl-titlebar', '--tl-size-control-sm'],`
+  erweitern.
+
 - [ ] **Step 6: Specimen** — `snackbar.spec.html` (Titel „Snackbar“) mit Bühne wie im Dialog
   (`.stage { position: relative; height: 8rem; transform: translateZ(0); }`), vier Snackbars je Rolle
   übereinander in vier Bühnen, Beispiel `error`:
@@ -1256,8 +1286,9 @@ Ansage-Regel: nur `error` ist `role="alert"`.
 
   dazu `info` (`role="status"`) und `error` (`role="alert"`).
 
-- [ ] **Step 7: `skalen.md` und Präsentation** — in `docs/skalen.md` den Satz
-  „Das korrigiert nebenbei den Fehler in der Snackbar: Erfolg bekommt dunkle Schrift, nicht weiße.“ ersetzen durch
+- [ ] **Step 7: `skalen.md` und Präsentation** — in `docs/skalen.md` (Zeilen 438–439, **über einen Zeilenumbruch**:
+  „…Marke. Das korrigiert nebenbei den Fehler in der Snackbar: Erfolg bekommt dunkle Schrift, nicht⏎weiße.“) den Satz
+  ab „Das korrigiert“ bis „weiße.“ ersetzen durch
   „Die Snackbar hatte hier ihren Fehler (weiße Schrift auf Erfolg); seit Welle 4a ist sie ein getönter Alert und trägt
   gewöhnlichen Text (siehe ‚Welle 4a‘).“ Am Ende der Welle-Abschnitte einen Abschnitt anlegen:
 
@@ -1294,7 +1325,7 @@ Ansage-Regel: nur `error` ist `role="alert"`.
 - [ ] **Step 9: Commit (Paket)**
 
 ```bash
-git add design-system docs/skalen.md docs/praesentation.md
+git add design-system docs/skalen.md docs/praesentation.md   # enthält button.contract.md
 git commit -m "Ticket #29836: Snackbar und NoticeBar als Alert mit Hülle, Verträge der Welle 4a, skalen.md Welle 4a
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
@@ -1566,7 +1597,8 @@ const TLDialog: React.FC<TLCellProps> = ({ controlId }) => {
 export default TLDialog;
 ```
 
-- [ ] **Step 2: `TLDialogManager.tsx`** — im Kommentar die Sätze über `tlDialog__backdrop--entering`/`--exiting`
+- [ ] **Step 2: `TLDialogManager.tsx`** — **Pflicht, sonst trifft das Engine-Gate die Kommentarzeilen 13/14:** im
+  Kommentar die Sätze über `tlDialog__backdrop--entering`/`--exiting`
   ersetzen durch „the scrim of a dialog that opened carries `entering` in `data-tl-state` while it arrives, and a
   dialog that closed is held on screen as an inert copy of its scrim marked `exiting` while it leaves; the design
   system package animates both, an application may override it“. Im Hook die zwei Zeilen
@@ -1757,7 +1789,8 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
   Task 2, 4, 5.
 
 - [ ] **Step 1: `TLDrawer.tsx`** — Importe: `firstFocusable` raus, `useFocusTrap`, `ThemeIcon`, `ICON_CLOSE` rein,
-  `import { buttonClassName } from './button/buttonClassName';`. Den `useEffect` (Fokus hinein und zurück, Zeilen
+  `import { buttonClassName } from './button/buttonClassName';`; `const { useCallback, useEffect, useRef } = React;` →
+  `const { useCallback, useRef } = React;`. Den `useEffect` (Fokus hinein und zurück, Zeilen
   51–73) und `restoreRef` ersetzen durch:
 
 ```tsx
@@ -1948,10 +1981,11 @@ const FADEOUT_FALLBACK_MS = 150;
 cd _Working-Tree/tl8-wt-29584/com.top_logic.layout.react
 npx tsc --noEmit -p tsconfig.json
 npx vite build --config vite.config.bridge.ts && npx vite build --config vite.config.controls.ts
-cd .. && git grep -n -E 'tl(Dialog|DialogManager|Window|Drawer|Snackbar|NoticeBar|Overlay)(__|--|[^A-Za-z])|tlPhotoCapture__overlay(Backdrop)?\b' -- ':!docs/plans' ':!*.jar'
+cd .. && git grep -n -P '\btl(Dialog|DialogManager|Window|Drawer|Snackbar|NoticeBar|Overlay)(__|--|\b)|\btlPhotoCapture__overlay(Backdrop)?\b' -- ':!docs/' ':!*.jar'
 ```
 
-Expected: 0 Fehler, Builds grün, `git grep` leer (React-Modulnamen wie `TLWindow` treffen nicht: großes `TL`).
+Expected: 0 Fehler, Builds grün, `git grep` leer (React-Modulnamen wie `TLWindow` treffen nicht: großes `TL`;
+`-P`, weil `git grep -E` auf macOS `\b` nicht kennt; `docs/` hält Pläne der Engine mit alten Namen).
 
 - [ ] **Step 10: Commit (Engine)**
 
@@ -1987,13 +2021,15 @@ function* tree(dir, pattern) {
   }
 }
 
-test('keine alte Klasse der Welle 4a in react-src, Stylesheets, Java und tl-docs', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+test('keine alte Klasse der Welle 4a in react-src, Stylesheets, Java, tl-docs und Views', { skip: !existsSync(M) && 'kein Worktree' }, () => {
   const quellen = [
     ...reactSources(),
     join(M, 'src/main/webapp/style/tlReactControls.css'),
     join(WT, 'com.top_logic.demo.react/src/main/webapp/style/tl-demo-react.css'),
     ...tree(join(M, 'src/main/java'), /\.java$/),
     ...tree(join(WT, 'com.top_logic.layout.view/src/main/java/META-INF/tl-docs'), /\.md$/),
+    ...tree(join(WT, 'com.top_logic.demo.react/src/main/webapp'), /\.view\.xml$/),
+    ...tree(join(WT, 'com.top_logic.layout.view/src/main/webapp'), /\.view\.xml$/),
   ];
   const hits = [];
   for (const p of quellen) readFileSync(p, 'utf8').split('\n').forEach((line, i) => { if (ALT_4A.test(line)) hits.push(`${p.slice(WT.length + 1)}:${i + 1}`); });
@@ -2004,9 +2040,11 @@ test('keine alte Klasse der Welle 4a in react-src, Stylesheets, Java und tl-docs
 - [ ] **Step 2: Ratsche** — `node tools/inventory.mjs` laufen lassen und `test/ratchet.json` nachziehen:
   - aus `blocks` streichen: `TLOverlay`, `TLDialog (overlay-only)`, `TLDialogManager`, `TLWindow`, `TLDrawer`,
     `TLSnackbar`, `TLNoticeBar (system-wide notice)`;
-  - `TLPhotoCapture` und `TLAppShell` auf die gemessenen Zahlen;
-  - `literals` auf die gemessenen Zahlen (sie sinken: Farben `#fff`/`#000`, Dauern, `z-index: 10`, `outline: none`);
-  - `lines` = Summe der Budgets = gemessen;
+  - `TLPhotoCapture` und `TLAppShell` auf die gemessenen Zahlen (Plan-Review, Nachbildung: TLPhotoCapture 242→224,
+    TLAppShell 33→37 — Regel und Leerzeile);
+  - `literals` auf die gemessenen Zahlen (Nachbildung: color 74→68, fontSize 41, duration 32→29, zIndex 15→14,
+    outlineNone 16→13);
+  - `lines` = Summe der Budgets = gemessen (Nachbildung: 4010);
   - `foreignTl` ohne `--tlSnackbar-bg`, `--tlSnackbar-fg`;
   - Vermerk an `_blocks` anhängen: „13.10. Welle 4a (#29836): TLOverlay, TLDialog (overlay-only), TLDialogManager,
     TLWindow, TLDrawer, TLSnackbar, TLNoticeBar gestrichen — dialog.css, titlebar.css, drawer.css, snackbar.css,
