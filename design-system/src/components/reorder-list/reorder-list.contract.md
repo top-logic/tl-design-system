@@ -55,7 +55,7 @@ Nach jedem Verschieben sagt ein Live-Bereich mit `role="status"` „<Name>, Posi
 | Liste | höchstens `--tl-size-popover-max` hoch, dann scrollt sie in sich; mit Suche davor füllt sie den Rest ihres Behälters (`flex: 1 1 auto`, `min-block-size: 0`) |
 | Behälter mit Suche | Spalte, Abstand `--tl-space-xs`, Innenabstand `--tl-space-md` oben und seitlich, so hoch wie sein Behälter |
 | Eintrag | Höhe `--tl-size-row` (als `min-height`), Innenabstand seitlich `--tl-space-control-x`, Lücke `--tl-space-xs`; beim Zeigen `--tl-surface-interactive-hover`; Beschriftung `--tl-text-secondary` bei `off` |
-| Knöpfe rechts | `tl-reorder-list__actions`, Lücke `--tl-space-2xs`; Griff und Knöpfe `opacity` 0, beim Zeigen und bei `:focus-within` 1, Übergang `--tl-duration-fast`; ohne Zeigen (`hover: none`) immer 1 |
+| Knöpfe rechts | `tl-reorder-list__actions`, Lücke `--tl-space-2xs`; Griff und Knöpfe `opacity` 0, beim Zeigen und bei Tastaturfokus in der Zeile (`:has(:focus-visible)`, nicht `:focus-within`) 1, Übergang `--tl-duration-fast`; ohne Zeigen (`hover: none`) immer 1 |
 | Block „Fixiert“ | Überschrift `tl-reorder-list__section` in `tl-type-label`, `--tl-text-secondary`; Linie unter `section-end` `--tl-border-width-sm` `--tl-border-separator` |
 | Griff | `tl-button--icon --sm --ghost`, Icon in `--tl-icon-secondary`; der Fokusring aus `base.css` liegt innen (`outline-offset` −`--tl-focus-offset`), weil die Liste scrollt; das gilt auch für Schloss und Auge |
 | Suche | Abstand zur Liste `--tl-space-xs`, an der `tl-field-group` |

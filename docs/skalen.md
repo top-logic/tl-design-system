@@ -1940,6 +1940,10 @@ Spaltengruppen, das Icon behalten und nur erklären.
   ausgeblendete Spalten hinten, eine ausgeblendete fixierte verliert ihr Schloss. Dass der Tabellenzustand die volle
   Reihenfolge samt ausgeblendeter und fixierter Spalten trägt, ist ein Eingriff in den Kern (`TableViewState`,
   Persistenz je Person) und geht als eigenes Ticket an Bernhard — kein zweiter Zustand in `layout.react`.
+* **Fokus heißt Tastaturfokus (Review !1852, Bernhard):** Griff, Schloss und Auge erscheinen beim Zeigen oder wenn ein
+  Element der Zeile den *Tastatur*fokus hat (`:has(:focus-visible)`), nicht bei jedem Fokus (`:focus-within`). Nach einem
+  Mausklick bleibt der Fokus im Knopf; mit `:focus-within` blieben Auge und Schloss der Zeile stehen, auch wenn der Zeiger
+  weg ist — dauerhaft sichtbar sind aber nur gesetzte Zustände (Schloss zu, Auge zu).
 * **Ein Wort fürs Fixieren:** auch das Kontextmenü am Spaltenkopf sagt „Bis hier fixieren“ / „Fixierung aufheben“
   statt „feststellen“.
 

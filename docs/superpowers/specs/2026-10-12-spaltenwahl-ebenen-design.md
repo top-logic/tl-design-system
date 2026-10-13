@@ -114,7 +114,7 @@ ist `disabled` (wie heute das Kästchen), mit Tooltip „Mindestens eine Spalte 
 | Teil / Zustand | Regel |
 |---|---|
 | `tl-reorder-list__actions` | `margin-inline-start: auto`, `display: flex`, Lücke `--tl-space-2xs` |
-| Beim Zeigen sichtbar | Griff und Knöpfe in `__actions` haben `opacity: 0`; `.tl-reorder-list__item:hover` und `:focus-within` setzen 1; `[data-tl-state~="off"]` hält das Auge, `[data-tl-state~="locked"]` das Schloss bei 1. Übergang `--tl-duration-fast`, `prefers-reduced-motion` aus `base.css` |
+| Beim Zeigen sichtbar | Griff und Knöpfe in `__actions` haben `opacity: 0`; `.tl-reorder-list__item:hover` und Tastaturfokus in der Zeile (`:has(:focus-visible)`; nachgetragen 12.10. nach Bernhards Review: nicht `:focus-within`, sonst hielte ein Mausklick Auge und Schloss sichtbar) setzen 1; `[data-tl-state~="off"]` hält das Auge, `[data-tl-state~="locked"]` das Schloss bei 1. Übergang `--tl-duration-fast`, `prefers-reduced-motion` aus `base.css` |
 | `[data-tl-state~="off"]` | ausgeblendet: Name `--tl-text-secondary` (nicht `--tl-text-disabled`, nachgetragen 12.10.); das Auge bleibt sichtbar |
 | `[data-tl-state~="locked"]` | fixiert: das Schloss bleibt sichtbar |
 | `tl-reorder-list__lock`, `tl-reorder-list__eye` | die beiden Knöpfe in `__actions`, damit die Regeln sie unterscheiden |
@@ -184,7 +184,7 @@ der Tabelle verschachtelte Gruppenzeilen. Die Engine kennt heute eine Ebene.
 
 ## 7 · Prüfung
 
-- **Paket:** Tests für die Teile und Zustände aus §3 (Beim-Zeigen-Regel über `opacity` und `:focus-within`, `off` und
+- **Paket:** Tests für die Teile und Zustände aus §3 (Beim-Zeigen-Regel über `opacity` und `:has(:focus-visible)`, `off` und
   `locked` halten ihr Icon sichtbar, `section-end`, kein `aria-pressed` in der Spaltenwahl), Lint grün, Vertrag nennt jede Klasse, Specimen; `published.test.mjs` hält die
   Kopie im Worktree.
 - **Engine:** `TestReactColumnSelect` (neu oder erweitert): Schloss zu/auf ordnet um, Ziehen über die Grenze fixiert

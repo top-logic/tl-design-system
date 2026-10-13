@@ -115,15 +115,18 @@ test('tl-reorder-list: Griff, Schloss und Auge erscheinen beim Zeigen oder Fokus
   assert.match(declarationsOf(liste, '.tl-reorder-list__actions > .tl-button') ?? '', /opacity:\s*0/);
   for (const sel of [
     '.tl-reorder-list__item:hover > .tl-reorder-list__handle',
-    '.tl-reorder-list__item:focus-within > .tl-reorder-list__handle',
+    '.tl-reorder-list__item:has(:focus-visible) > .tl-reorder-list__handle',
     '.tl-reorder-list__item:hover > .tl-reorder-list__actions > .tl-button',
-    '.tl-reorder-list__item:focus-within > .tl-reorder-list__actions > .tl-button',
+    '.tl-reorder-list__item:has(:focus-visible) > .tl-reorder-list__actions > .tl-button',
     '.tl-reorder-list__item[data-tl-state~="off"] .tl-reorder-list__eye',
     '.tl-reorder-list__item[data-tl-state~="locked"] .tl-reorder-list__lock',
   ]) assert.match(declarationsOf(liste, sel) ?? '', /opacity:\s*1/, sel);
   // Die Übergangsliste ersetzt die von .tl-button: opacity kommt dazu, die weichen Hover-Übergänge bleiben.
   for (const sel of ['.tl-reorder-list__handle', '.tl-reorder-list__actions > .tl-button'])
     assert.match(declarationsOf(liste, sel) ?? '', /transition:[^;]*opacity[^;]*background-color/, `${sel}: transition`);
+  // Nur der Tastaturfokus zeigt die Knöpfe: nach einem Mausklick bleibt der Fokus im Knopf, und :focus-within hielte
+  // dann Auge und Schloss der Zeile sichtbar, auch wenn der Zeiger längst weg ist (Bernhard, !1852, 12.10.).
+  assert.doesNotMatch(ohne, /:focus-within/, 'Zeigen bei Fokus nur über :focus-visible');
   assert.doesNotMatch(ohne, /visibility:\s*hidden/);
   assert.match(ohne, /@media \(hover: none\)/, 'ohne Zeigen (Touch) bleibt alles sichtbar');
 });
