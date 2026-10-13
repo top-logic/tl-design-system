@@ -233,3 +233,29 @@ Steht im Trac-Text unter `== Migration ==` (Keyword `RequiresMigration`) und als
 - **Offen bis zur Sichtprüfung:** Tooltip des Snackbar-Schließen-Knopfs unter der Toast-Ebene.
 - **Offen für 4b:** Klassenart von `useKeyedTransition` streichen (Wizard, TileStack); mobile Sidebar auf den modalen
   Drawer; `tlViewError` auf `tl-alert`.
+
+## 13 · Nachgetragen beim Planen (13.10.)
+
+Am Code und im Plan-Review gefunden; der Plan (`docs/superpowers/plans/2026-10-13-welle-4a-overlays.md`, „Abweichungen
+von der Spec“) setzt sie um. Wo dieser Abschnitt den Abschnitten oben widerspricht, gilt er.
+
+1. **`EscapeToClose` statt `useDismiss` (§6.1).** Escape von Dialog und Fenster muss in den Scope binden, den die
+   Komponente selbst öffnet; ein Hook derselben Komponente bindet in den Scope darum herum. Die Komponente steht einmal
+   in `bridge/` statt zweimal kopiert. Drawer und Fotoaufnahme bleiben bei `useStandaloneKeyboardScope`.
+2. **Fuß mit `:empty` (§3).** Die Toolbar im Fuß rendert ohne Befehl nichts; das TSX weiß das vorher nicht.
+3. **`tl-titlebar` statt `tl-dialog__header`/`tl-drawer__header` (§3, §4).** Ein Kopf-Block mit `__title` und
+   `__actions` für Dialog und Drawer (Q3); 4b nimmt ihn für Panel und Card.
+4. **Maximieren ohne `aria-pressed` (§3).** Das Label wechselt („Maximieren“/„Wiederherstellen“) wie heute.
+5. **Rahmen der Dialogfläche in beiden Modi (§3)**, wie beim Popover.
+6. **Kamera-Knöpfe bleiben bis Welle 5 (§3).** Die Fotoaufnahme bekommt Scrim, Fokusfalle und Escape; Spiegeln,
+   Auslösen und Schließen bleiben runde Kamera-Knöpfe auf dem Video.
+7. **Snackbar ohne Icon (§5).** `SnackbarStateJson` liefert keins; ein im TSX gewähltes Icon umginge das Theme.
+8. **Modaler Drawer nur im Paket (§4).** `ReactDrawerControl` kennt keine Scrim-Option; die mobile Sidebar (4b) rendert
+   die modale Variante.
+9. **Rahmen der Snackbar ist die Linie der Bedeutung (§5)**, kein zusätzlicher `border-separator`.
+10. **Drawer-Körper behält Innenabstand `--tl-space-md` und `overscroll-behavior: contain` (§4)**; ob er bündig wird,
+    prüft 4b mit Panel und Card.
+11. **Lint kennt die Zustandswörter** `entering`, `exiting`, `maximized`, `clickable`, `visible` als Verstoß, auch an
+    Elementen (§9).
+12. **Branch-Basis ist die Spaltenwahl (§2)**, entschieden 13.10. nach dem Plan-Review: auf 3b wäre das Paket-Gate der
+    Spaltenwahl rot gewesen.

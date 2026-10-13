@@ -1,13 +1,11 @@
-**Letzte Sitzung:** 2026-10-13 (#29825: Bernhards Request Changes behoben und gepusht, Review erneut angefordert; Lagebild-Dashboard mit Morgen-Check; Kommentar zu !1841) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-13 (#29825: Bernhards Request Changes behoben und gepusht, Review erneut angefordert; Kommentar zu !1841; Welle 4: Prognose, Ticket #29836, Spec und Plan 4a mit Plan-Review — Umsetzung in frischer Sitzung) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
 
 ## Zuerst
 
-**Neue Sitzung (13.10.):** Der erste Prompt des Tages stößt per Hook den Lagebild-Check an
-(`.superpowers/lagebild/CHECK.md`, Dashboard https://claude.ai/artifact/AyFsE8FVHcL7qw7WmSQLZe). Erst dessen Ergebnis
-lesen, dann hier weiter.
+Lagebild: http://localhost:8138/
 
 **Wartet auf Bernhard (nichts selbst tun, außer er antwortet):**
 1. **!1838** (Welle 3b, #29821): Review fehlt, erneut angefordert 12.10.
@@ -27,9 +25,14 @@ selbst in 3b (zuletzt `2af20a4447`) — vor eigener Arbeit dort `git fetch`.
 
 **Welle 4 begonnen (13.10.):** Konsolidierungs-Prognose Q1–Q19 in `altlast.md` („Welle 4“), entschieden „alle wie
 vorgeschlagen“; Schnitt **4a Overlays** (Trac **#29836**, accepted, CC bhu) und **4b Gerüst** (eigenes Ticket beim
-Start). Graphify einmal gelaufen, ohne neuen Befund, gelöscht. **Nächstes:** Brainstorming 4a → Spec
-`docs/superpowers/specs/2026-10-13-welle-4a-overlays-design.md` → Plan → Plan-Review → SDD; Branch
-`CWS/CWS_29836_design_system_welle_4a` auf `welle_3b` (bzw. master nach dessen Merge).
+Start). Graphify einmal gelaufen, ohne neuen Befund, gelöscht. **Fertig zur Umsetzung:** Spec
+`docs/superpowers/specs/2026-10-13-welle-4a-overlays-design.md` (von Hendrik abschnittsweise freigegeben, §13 trägt die
+Nachträge aus dem Planen), Plan `docs/superpowers/plans/2026-10-13-welle-4a-overlays.md` (elf Tasks, Plan-Review durch
+Fable mit Probelauf: Lint grün, `tsc` 0, Befunde eingearbeitet). **Entschieden:** Branch
+`CWS/CWS_29836_design_system_welle_4a` auf `origin/CWS/CWS_29825_design_system_spaltenwahl` (auf 3b wäre das
+Paket-Gate der Spaltenwahl rot), Merge-Reihenfolge 3b → Spaltenwahl → 4a; Ausführung **Subagent-driven**.
+**Nächstes (frische Sitzung):** `superpowers:subagent-driven-development` mit dem Plan; der Arbeitsordner
+`.superpowers/sdd/2026-10-13-welle-4a-overlays/` hat noch kein Ledger. Kein Push ohne Freigabe.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
