@@ -33,6 +33,7 @@ test('tl-titlebar: Leistenhöhe, Linie unten, Titel mit Ellipse, Aktionen am End
   assert.match(decl('titlebar', '.tl-titlebar__title'), /flex:\s*1 1 auto/);
   assert.match(decl('titlebar', '.tl-titlebar__title'), /margin:\s*0/);
   assert.match(decl('titlebar', '.tl-titlebar__actions'), /display:\s*flex/);
+  assert.match(decl('titlebar', '.tl-titlebar > .tl-button'), /flex:\s*none/);
 });
 
 test('tl-dialog: Scrim deckt den Viewport auf der Overlay-Ebene, ohne Blur, mit Rand space-lg', () => {

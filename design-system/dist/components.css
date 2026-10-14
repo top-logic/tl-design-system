@@ -2965,6 +2965,9 @@ a.tl-field-value:hover {
   white-space: nowrap;
 }
 
+/* Alles außer dem Titel schrumpft nicht: Kopfknöpfe behalten ihre Maße bei langem Titel. */
+.tl-titlebar > .tl-button { flex: none; }
+
 .tl-titlebar__actions {
   display: flex;
   flex: 0 1 auto;
