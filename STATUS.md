@@ -17,6 +17,8 @@ Lagebild: http://localhost:8138/
    kollidieren mit 3b; Vorschlag `row-role` → `data-tl-role` am `tl-table__row`, Paket zeichnet die Tönung. Stimmt er zu,
    bauen wir Paket und TSX auf 3b.
 
+5. **#29850** (Entwicklerdoc): drei Fragen im Ticket, 14.10. — die wichtigste: wo Kundenthemes leben.
+
 **Wenn er antwortet:** Befunde einarbeiten, Gates, lokal committen, Push nur mit Hendriks Freigabe (Repo und Branch
 nennen; nie tl-engine-7 master), danach `add_reviewers bhu`.
 
@@ -47,8 +49,8 @@ Altbestand, eine Zeile in der Engine-`CLAUDE.md`. Die Regeldatei wird **nicht** 
 `theme-tokens.md`, setzt das Paket-Repo voraus, schließt MUI nicht aus); die Anleitung empfiehlt sie als persönlichen
 Skill. **Entwurf steht (14.10.):** `docs/uebergabe/2026-10-14-29850-entwicklerdoc/` (Artikel `design-system.md`,
 überarbeitete `theme-tokens.md` mit Diff, Zeile für die Engine-`CLAUDE.md`, drei offene Fragen an Bernhard — die
-wichtigste: Kundenthemes in `tl-react-theme.config.xml` erreichen umgestellte Controls nicht mehr). **Nächstes:** Hendrik
-liest, dann Kommentar in #29850 an Bernhard; nach Abstimmung Engine-Branch `CWS/CWS_29850_…`.
+wichtigste: Kundenthemes in `tl-react-theme.config.xml` erreichen umgestellte Controls nicht mehr). Gepusht, Fragen
+als Kommentar in #29850 an Bernhard (14.10.). **Nächstes:** seine Antwort; nach Abstimmung Engine-Branch `CWS/CWS_29850_…`.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
