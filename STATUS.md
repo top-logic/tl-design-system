@@ -81,7 +81,6 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
   `publish-to-worktree`); `derive`-Hinweise aus dem Abschluss-Review (Kollaps-Hinweis, achromatische Flächen).
 * DOM-Test im Specimen für `overflow: hidden` an Behältern mit fokussierbaren Kindern (Spec §5).
 * Kleinpunkte je Welle: `altlast.md` „Offen für spätere Wellen und Pakete“ und „Offen nach 3b“.
-* Framework-PRs !1618 und !1621 verifiziert, ungemergt.
 
 
 **Stand 12.10.: #29825 „Spaltenwahl als Ebenen-Panel“ ist gebaut und gepusht als PR [!1852](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1852)**
@@ -423,7 +422,8 @@ Siehe `CLAUDE.md`. Alles in `design-system/`, alles mit `node`, keine Abhängigk
 
 ## Offene Fäden
 
-* PRs **!1618** und **!1621** im Framework sind verifiziert, aber weiterhin ungemergt.
+* **!1618** (#29576, `createPortal` aus der Bridge) am 25.09. gemergt; **!1621** (#29579, Marke als Token im alten
+  Theme-XML) am 24.09. ohne Merge geschlossen — durch das Paket überholt.
 * **Gitea-Issues abgeglichen (12.10., Hendrik):** geschlossen #2, #3, #4, #5, #6, #8 (erledigt bzw. durch den Schnitt
   überholt), #10 (`@layer` nicht geplant), #13 (Theming → #16, Accessibility → Welle 4, Storybook gestrichen — das
   Specimen ist das Schaufenster). Neu gefasst: #7 Figma-Push, #9 TSX-Lint, #12 Kunden-Typografie, #16 Themes (Paket
