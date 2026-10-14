@@ -42,7 +42,7 @@ test('tl-dialog: Scrim deckt den Viewport auf der Overlay-Ebene, ohne Blur, mit 
   assert.match(d, /inset:\s*0/);
   assert.match(d, /z-index:\s*var\(--tl-layer-overlay\)/);
   assert.match(d, /background:\s*var\(--tl-surface-scrim\)/);
-  assert.match(d, /padding:\s*var\(--tl-space-lg\)/);
+  assert.doesNotMatch(d, /padding/);
   assert.doesNotMatch(readGenerated('dialog', 'dialog.css').replace(/\/\*[\s\S]*?\*\//g, ''), /backdrop-filter|blur/i);
 });
 
@@ -59,9 +59,12 @@ test('tl-dialog__surface: Overlay-Fläche mit Rahmen, Schatten dialog, Ecke md; 
   assert.match(s, /border:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-separator\)/);
   assert.match(s, /box-shadow:\s*var\(--tl-shadow-dialog\)/);
   assert.match(s, /border-radius:\s*var\(--tl-radius-md\)/);
-  assert.match(s, /max-height:\s*100%/);
+  assert.match(s, /max-width:\s*calc\(100% - 2 \* var\(--tl-space-lg\)\)/);
+  assert.match(s, /max-height:\s*calc\(100% - 2 \* var\(--tl-space-lg\)\)/);
   const m = decl('dialog', '.tl-dialog__surface[data-tl-state~="maximized"]');
   assert.match(m, /inset:\s*0/);
+  assert.match(m, /max-width:\s*none/);
+  assert.match(m, /max-height:\s*none/);
   assert.match(m, /border-radius:\s*0/);
 });
 

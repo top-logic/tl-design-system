@@ -42,7 +42,7 @@ Zwei Controls, ein Baustein: `TLDialog` (`ReactDialogControl`) rendert den Scrim
 
 | Teil | Token |
 |---|---|
-| Scrim | `--tl-surface-scrim`, Ebene `--tl-layer-overlay`, Rand `--tl-space-lg` |
+| Scrim | `--tl-surface-scrim`, Ebene `--tl-layer-overlay`; der Rand `--tl-space-lg` steckt in den Höchstmaßen der Fläche, nicht im Scrim |
 | Fläche | `--tl-surface-overlay`, Rahmen `--tl-border-width-sm` `--tl-border-separator`, Ecke `--tl-radius-md`, Schatten `--tl-shadow-dialog` |
 | Kopf | `tl-titlebar` |
 | Fuß | Abstand `--tl-space-sm` `--tl-space-md`, Lücke `--tl-space-xs`, Linie oben `--tl-border-separator` |
