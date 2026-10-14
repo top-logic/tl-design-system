@@ -72,3 +72,16 @@ test('tl-dialog: Kopf zum Ziehen, Fuß rechtsbündig und leer verborgen, acht Gr
   for (const e of ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'])
     assert.match(decl('dialog', `.tl-dialog__resize[data-tl-edge="${e}"]`), /cursor:\s*[a-z]+-resize/, e);
 });
+
+test('tl-drawer: Overlay-Ebene am Viewport, raised im Behälter, schiebt mit Tokens, offen ohne Versatz', () => {
+  const d = decl('drawer', '.tl-drawer');
+  assert.match(d, /position:\s*fixed/);
+  assert.match(d, /z-index:\s*var\(--tl-layer-overlay\)/);
+  assert.match(d, /background:\s*var\(--tl-surface-overlay\)/);
+  assert.match(d, /box-shadow:\s*var\(--tl-shadow-dialog\)/);
+  assert.match(d, /transition:\s*transform var\(--tl-duration-base\) var\(--tl-easing-exit\)/);
+  assert.match(decl('drawer', '.tl-drawer[data-tl-state~="open"]'), /transform:\s*none/);
+  assert.match(decl('drawer', '.tl-drawer--container'), /z-index:\s*var\(--tl-layer-raised\)/);
+  assert.match(decl('drawer', '.tl-drawer--narrow'), /width:\s*var\(--tl-size-drawer-narrow\)/);
+  assert.match(decl('drawer', '.tl-drawer--bottom.tl-drawer--wide'), /height:\s*var\(--tl-size-drawer-wide\)/);
+});

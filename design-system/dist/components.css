@@ -1062,6 +1062,75 @@
   opacity: 0.4;
 }
 
+/* --- drawer/drawer.css --- */
+/* Drawer — Spec 2026-10-13 Welle 4a §4. Eine Schublade vom Rand des Viewports oder des Behälters, in dem sie steht
+   (tl-drawer--container). Ohne Scrim ist sie nicht modal: Fokus hinein und zurück, keine Falle. Mit Scrim (die
+   Schublade steht dann in einem .tl-dialog) ist sie modal: Falle, role="dialog", aria-modal — die mobile Sidebar in
+   Welle 4b. Die Seiten heißen nach der Schreibrichtung (start, end), die Breiten sind Maße. */
+
+.tl-drawer {
+  position: fixed;
+  z-index: var(--tl-layer-overlay);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: var(--tl-surface-overlay);
+  box-shadow: var(--tl-shadow-dialog);
+  color: var(--tl-text-primary);
+  transition: transform var(--tl-duration-base) var(--tl-easing-exit);
+}
+.tl-drawer[hidden] { display: none; }
+
+.tl-drawer--start,
+.tl-drawer--end {
+  top: 0;
+  bottom: 0;
+  max-width: 100%;
+}
+
+.tl-drawer--start { inset-inline-start: 0; transform: translateX(-100%); }
+.tl-drawer--end { inset-inline-end: 0; transform: translateX(100%); }
+
+.tl-drawer--bottom {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 100%;
+  transform: translateY(100%);
+}
+
+/* Offen: an seinem Platz, kommend mit der Eingangskurve. */
+.tl-drawer[data-tl-state~="open"] {
+  transform: none;
+  transition-timing-function: var(--tl-easing-entrance);
+}
+
+.tl-drawer--narrow { width: var(--tl-size-drawer-narrow); }
+.tl-drawer--medium { width: var(--tl-size-drawer-medium); }
+.tl-drawer--wide { width: var(--tl-size-drawer-wide); }
+.tl-drawer--bottom.tl-drawer--narrow { width: auto; height: var(--tl-size-drawer-narrow); }
+.tl-drawer--bottom.tl-drawer--medium { width: auto; height: var(--tl-size-drawer-medium); }
+.tl-drawer--bottom.tl-drawer--wide { width: auto; height: var(--tl-size-drawer-wide); }
+
+/* Im Behälter verankert: deckt nur ihn, liegt über seinem Inhalt und unter Dialog und Snackbar. Die Grenzen
+   (max-width/-height 100 %) gelten dann gegen den Behälter. */
+.tl-drawer--container {
+  position: absolute;
+  z-index: var(--tl-layer-raised);
+}
+
+.tl-drawer__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow: auto;
+  /* Wischen im Drawer läuft nicht in die Seite weiter. Der Innenabstand bleibt wie bisher; ob der Drawer bündig wird
+     wie der Dialog-Körper, prüft 4b mit Panel und Card. */
+  overscroll-behavior: contain;
+  padding: var(--tl-space-md);
+}
+
 /* --- field/field.css --- */
 /* Feld — docs/skalen.md „Formulare: ein Feldrahmen, Zustände als Attribute“.
    Ein Rahmen für jedes Eingabefeld: Text, Passwort, Zahl, Datum, Select, die Wurzel des
