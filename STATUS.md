@@ -33,11 +33,11 @@ Fable mit Probelauf: Lint grün, `tsc` 0, Befunde eingearbeitet). **Entschieden:
 `CWS/CWS_29836_design_system_welle_4a` auf `origin/CWS/CWS_29825_design_system_spaltenwahl` (auf 3b wäre das
 Paket-Gate der Spaltenwahl rot), Merge-Reihenfolge 3b → Spaltenwahl → 4a; Ausführung **Subagent-driven**.
 **Stand 14.10.: 4a gebaut, gepusht, PR [!1882](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1882)** gegen
-`CWS/CWS_29825_design_system_spaltenwahl` (Engine-Head `8b4d2f6d4f`, Paket `main` bis `15044ee`), Reviewer bhu und
+`CWS/CWS_29825_design_system_spaltenwahl` (Engine-Head `e29345b7a8`, Paket `main` bis `70f5b3e`), Reviewer bhu und
 `jenkins`. Gates: Paket 386/0, Lint grün, `tsc` 0, Vite grün, Maven `layout.react` 612, `demo.react` 13, `layout.view`
 nur #29651 rot, Messages ohne Diff. Sichtprüfung lokal erledigt (Befund S1 Dialoghöhe behoben). Trac #29836 hat
 `== Migration ==` und `RequiresMigration`. Rulings stehen in `altlast.md` „Welle 4a“, der Ledger ist gelöscht.
-**Entschieden 14.10.:** Startfokus verlegt (Engine `e29345b7a8`, nicht gepusht; skalen.md „Der Startfokus liegt dort,
+**Entschieden 14.10.:** Startfokus verlegt (Engine `e29345b7a8`, gepusht, PR-Text nachgezogen, bhu und `jenkins` erneut angefragt; skalen.md „Der Startfokus liegt dort,
 wo Enter wirkt“); Snackbar-Ansage als Folgeticket **#29851** (CC bhu). Rest-Minor: Kommentar `tlReactControls.css:2263` zur leeren
 NoticeBar veraltet. **Nächstes:** Review von Bernhard; nach Merge von !1838 und !1852 die Basis von !1882 auf master.
 
