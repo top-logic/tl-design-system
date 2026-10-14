@@ -16,7 +16,6 @@ Lagebild: http://localhost:8138/
 4. **!1841** (#29815, sein PR): Kommentar 12.10. — `tl-status-*` als Klassen und Regeln auf `tlTableView__row`
    kollidieren mit 3b; Vorschlag `row-role` → `data-tl-role` am `tl-table__row`, Paket zeichnet die Tönung. Stimmt er zu,
    bauen wir Paket und TSX auf 3b.
-
 5. **#29850** (Entwicklerdoc): drei Fragen im Ticket, 14.10. — die wichtigste: wo Kundenthemes leben.
 
 **Wenn er antwortet:** Befunde einarbeiten, Gates, lokal committen, Push nur mit Hendriks Freigabe (Repo und Branch
