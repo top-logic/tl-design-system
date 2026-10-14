@@ -13,8 +13,8 @@ Lagebild: http://localhost:8138/
    `4c2441f470` (Tönung als `data-tl-role`, Zeilenzahl, Verlauf vor der Spaltenwahl; Paket `4fe3a9c`, `48573d0`,
    skalen.md „Nachgetragen beim master-Merge in 3b“) und `1bd64cace7` (Modi je Art, `dropModesByKind`). Gates: react
    659/0, view 1429/1 (#29651), configedit 341/0, demo.react 13/0, Messages ohne Diff; JDK 21 nötig (Homebrew-Default 27
-   bricht `ext.com.meterware.httpunit`). **Durchgereicht 14.10. (lokal, nicht gepusht):** 3b → Spaltenwahl `6a6d1cdbdc` (Konflikt `TableViewControl`: `applyColumns` über masters `rearrange`, Zurücksetzen = `resetToDefaults`), Spaltenwahl → 4a `9626e67a15` (Overlay-Blöcke bleiben gestrichen, `display: contents` am Dialogbehälter selbst). Gates beider: react 672/0, configedit 341/0, view 1429/1 (#29651), demo.react 13/0, Messages ohne Diff; Paket 357/0 bzw. 386/0. **Danach war geplant:** 3b → Spaltenwahl → 4a mergen und je Branch
-   publizieren, jeweils Push mit Freigabe; `jenkins` nur einmal am Ende je PR (seit 14.10., Hendrik), Build 116 von !1882 abgebrochen.
+   bricht `ext.com.meterware.httpunit`). **Durchgereicht 14.10. (lokal, nicht gepusht):** 3b → Spaltenwahl `6a6d1cdbdc` (Konflikt `TableViewControl`: `applyColumns` über masters `rearrange`, Zurücksetzen = `resetToDefaults`), Spaltenwahl → 4a `9626e67a15` (Overlay-Blöcke bleiben gestrichen, `display: contents` am Dialogbehälter selbst). Gates beider: react 672/0, configedit 341/0, view 1429/1 (#29651), demo.react 13/0, Messages ohne Diff; Paket 357/0 bzw. 386/0. **Nächstes:** Push beider Branches mit Freigabe, danach
+   `bhu` neu anfragen; `jenkins` nur einmal am Ende je PR (seit 14.10., Hendrik), Build 116 von !1882 abgebrochen.
 2. **!1852** (#29825 Spaltenwahl): sein Request Changes (12.10. 18:23, Schloss/Auge blieben nach Klick sichtbar) ist
    behoben — Knöpfe nur bei Tastaturfokus `:has(:focus-visible)`; Engine `00f3c902e4`, Paket `87aa99e`; geantwortet
    und Review erneut angefordert 13.10.
