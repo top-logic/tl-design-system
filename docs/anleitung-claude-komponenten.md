@@ -13,17 +13,12 @@ so prompten, und die Regeldatei, die Claude dabei selbst liest.
    ```
    Die Werkzeuge brauchen nur `node` (22+), keine Installation. `TL_WORKTREE` sagt der Ratsche und
    dem Kopierwerkzeug, wo TopLogic liegt.
-2. **Regeldatei als Skill in tl-engine-7 ablegen.** `docs/claude/tl-design-system-SKILL.md` aus diesem
-   Repo nach `.claude/skills/tl-design-system/SKILL.md` in tl-engine-7 kopieren. Claude lädt sie von
-   selbst, sobald ein Auftrag CSS, Klassen, Farben, Maße oder eine neue Komponente betrifft; die
-   `description` im Kopf ist der Auslöser. Eingecheckt gilt sie für jeden, der im Repo mit Claude arbeitet.
-3. **Zwei Zeilen in die `CLAUDE.md` von tl-engine-7**, Abschnitt „Development Patterns“:
-   ```
-   ### Styling React controls
-   Any CSS, className, color, size or state on a React control follows the skill
-   `tl-design-system` (.claude/skills/tl-design-system/SKILL.md). Styling never goes
-   into tlReactControls.css; new components are built in the design-system package.
-   ```
+2. **Regeldatei als persönlichen Skill ablegen.** `docs/claude/tl-design-system-SKILL.md` aus diesem
+   Repo nach `~/.claude/skills/tl-design-system/SKILL.md` kopieren. Claude lädt sie von selbst, sobald
+   ein Auftrag CSS, Klassen, Farben, Maße oder eine neue Komponente betrifft; die `description` im Kopf
+   ist der Auslöser. In tl-engine-7 wird sie **nicht** eingecheckt: dort liest Claude
+   `view-layer/theme-tokens.md`, das noch das alte Token-Modell lehrt, und zwei Regelwerke widersprächen
+   sich. Die Regeln kommen mit Trac #29850 als Entwicklerdoc in die Engine, abgestimmt mit Bernhard.
 
 ## 2 · Je Komponente: so prompten
 
@@ -70,4 +65,5 @@ Der eine Satz, der alles trägt: Aussehen entsteht im Paket, Verhalten in tl-eng
 
 ## 4 · Die Regeldatei
 
-Inhalt und Pflege: `docs/claude/tl-design-system-SKILL.md`. Bei Änderungen dort nach tl-engine-7 neu kopieren.
+Inhalt und Pflege: `docs/claude/tl-design-system-SKILL.md`. Wer sie als persönlichen Skill nutzt, kopiert sie nach
+Änderungen neu. In tl-engine-7 kommt sie nicht als Datei, sondern mit #29850 als Entwicklerdoc.

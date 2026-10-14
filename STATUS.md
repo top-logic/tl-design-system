@@ -41,6 +41,12 @@ nur #29651 rot, Messages ohne Diff. Sichtprüfung lokal erledigt (Befund S1 Dial
 Snackbar-Rollenwechsel `status` → `alert` als Folgeticket? Rest-Minor: Kommentar `tlReactControls.css:2263` zur leeren
 NoticeBar veraltet. **Nächstes:** Review von Bernhard; nach Merge von !1838 und !1852 die Basis von !1882 auf master.
 
+**#29850 (angelegt 14.10., accepted, CC bhu):** Die Regeln fürs Stylen von React-Controls kommen als Entwicklerdoc
+nach tl-engine-7 (`view-layer/design-system.md`), `theme-tokens.md` verweist darauf und führt die alten Tokens als
+Altbestand, eine Zeile in der Engine-`CLAUDE.md`. Die Regeldatei wird **nicht** in die Engine kopiert (widerspräche
+`theme-tokens.md`, setzt das Paket-Repo voraus, schließt MUI nicht aus); die Anleitung empfiehlt sie als persönlichen
+Skill. **Nächstes:** Entwurf im Paket-Repo, mit Bernhard abstimmen, dann Engine-Branch `CWS/CWS_29850_…`.
+
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
 axe auf `li role="presentation"`, `format()` dreifach).
