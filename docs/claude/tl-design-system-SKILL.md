@@ -19,7 +19,7 @@ Das Aussehen der React-Oberfläche kommt aus dem Paket `tl-design-system`
    liegt neben dem Worktree, sonst `git clone https://git.top-logic.com/TopLogic/tl-design-system.git`.
 2. Prüfe, ob die Komponente schon im Paket ist: `ls design-system/src/components/`. Wenn ja, ändere
    sie dort. Wenn nein, entsteht sie dort — nie in `tlReactControls.css`.
-3. Ist die Komponente in einer späteren Welle geplant (`docs/praesentation.md`, Folie 30) und du
+3. Ist die Komponente in einer späteren Welle geplant (`docs/praesentation.md`, Abschnitt 14 „Der Weg: fünf Wellen“) und du
    brauchst sie jetzt: baue sie trotzdem gleich im Paket, nach diesen Regeln, und sag dem
    Design-System-Verantwortlichen (hpe) Bescheid. Das spart die zweite Umstellung.
 
@@ -28,7 +28,7 @@ Das Aussehen der React-Oberfläche kommt aus dem Paket `tl-design-system`
 | Regel | Konkret |
 |---|---|
 | Nur Tokens | Farbe, Maß, Dauer, Kurve, `z-index`, Schatten nur als `var(--tl-…)`. Kein Hex, kein `px`/`rem`, kein `ms`, kein `rgba`. Erlaubte Schlüsselwörter: `0`, `1`, `auto`, `none`, `100%`, `currentColor`, `inherit`, `transparent`. |
-| Fehlendes Token | Wird in `design-system/src/tokens.json` angelegt (nur als `{referenz}` auf `primitives.json`), nie lokal in einer Klasse deklariert. Kategorien sind geschlossen: `surface text icon border focus shadow space radius size font duration easing layer status`. |
+| Fehlendes Token | Wird in `design-system/src/tokens.json` angelegt (nur als `{referenz}` auf `primitives.json`), nie lokal in einer Klasse deklariert. Kategorien sind geschlossen: `surface text icon border focus shadow space radius size font duration easing layer status category`. |
 | Namen | Englisch, kebab-case, BEM: `.tl-<block>`, `.tl-<block>__<element>`, `.tl-<block>--<modifier>`. Modifier nur für Varianten, die der Autor wählt (`--primary`, `--danger`), nie für Zustände. |
 | Zustände | Attribute: `:disabled`, `[aria-pressed="true"]`, `[aria-busy="true"]`, `[aria-expanded]`, `[aria-selected]`, `[aria-invalid]`, `:focus-visible`; sonst `data-tl-state="…"`. Eine Klasse `--active`/`--open`/`--loading` bricht das Gate. |
 | Schrift | `font-size`, `font-weight`, `line-height` nur über die Klassen `.tl-type-*` aus `base.css`; Icons über `.tl-icon-glyph|sm|md|lg`. Die Komponente setzt höchstens `font: inherit`. |
@@ -58,7 +58,7 @@ Das Aussehen der React-Oberfläche kommt aus dem Paket `tl-design-system`
    Attribute, Icon mit `.tl-icon-sm|md`, Text mit `.tl-type-label`. Keine Inline-Styles für Farbe
    oder Maß.
 8. Commit im Design-System-Repo (`Ticket #<nr>: …`, deutsch) und im Worktree (Branch
-   `CWS/CWS_<nr>_…`); PR in tl-engine-7 mit `hpe` als Reviewer, Design-System-PR mit `bhu`.
+   `CWS/CWS_<nr>_…`); PR in tl-engine-7 mit `hpe` als Reviewer und `jenkins` (ohne diese Anfrage baut Jenkins den PR nicht), Design-System-PR mit `bhu`.
 
 ## Wenn etwas nicht passt
 

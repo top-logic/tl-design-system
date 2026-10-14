@@ -58,12 +58,12 @@ Jeder dieser Punkte ist ein Testfehler im Paket; die Gates sind die Prüfung, ni
 
 | Situation | So geht es ohne Doppelarbeit |
 |---|---|
-| Neue Komponente, die in keiner Welle steht (Chips, Segmented, Slider) | Gleich im Paket bauen, nach dem Skill. Kurz an hpe: Name und Welle, dann steht sie in der Wellentabelle und in `altlast.md`. |
+| Neue Komponente, die in keiner Welle steht (etwa ein Steuerelement aus einem Kundenprojekt) | Gleich im Paket bauen, nach dem Skill. Kurz an hpe: Name und Welle, dann steht sie in der Wellentabelle und in `altlast.md`. |
 | Änderung an einer Komponente, die schon im Paket ist (Button ab Welle 1) | Im Paket ändern, Gates laufen lassen, `publish-to-worktree`, beide Repos committen. Der Kontrasttest der Komponente ist der Review. |
 | Änderung an einer alten Komponente, deren Welle noch nicht dran ist (Tabelle, Dialog) | (a) klein und dringend: im alten CSS, aber ohne neue Literale und ohne eigene `--tl`-Definitionen, Ratsche darf nicht steigen; (b) größer: die Komponente vorziehen und nach dem Skill komplett ins Paket holen. (b) ist fast immer billiger als zweimal anfassen. |
 | App-spezifischer Look (Glas, Serifen, Hintergrundbild) | App-Stylesheet über `css-class` am Element. Keine Engine-Tokens dafür; eine Display-Schrift kommt als Primitive. |
 | Ein Token fehlt oder ein Wert wirkt falsch | Nicht lokal überschreiben. In `tokens.json` anlegen oder in `docs/skalen.md` entscheiden; Beschriftungen auf Flächen werden gerechnet, nicht geschrieben. |
-| PR | tl-engine-7-PR mit `hpe` als Reviewer, Design-System-PR mit `bhu`. Beide Repos nennen dieselbe Ticketnummer. |
+| PR | tl-engine-7-PR mit `hpe` und `jenkins` als Reviewer (ohne `jenkins` baut Jenkins den PR nicht), Design-System-PR mit `bhu`. Beide Repos nennen dieselbe Ticketnummer. |
 
 Der eine Satz, der alles trägt: Aussehen entsteht im Paket, Verhalten in tl-engine-7. Wer CSS in
 `tlReactControls.css` schreibt, baut gegen die Ratsche.

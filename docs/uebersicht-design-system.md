@@ -37,7 +37,7 @@ Ein eigenes npm-Paket ohne Abhängigkeiten, gebaut mit `node`, dessen Ausgabe To
 | `primitives.css` | Reine Werte: `--tl-blue-49: #0B5ED7`. Die einzige Stelle mit Zahlen, und die Stelle, an der Kundenprojekte eingreifen. |
 | `tokens.css` | Rollen, die nur auf Primitive zeigen: `--tl-surface-brand: var(--tl-blue-49)`. Hell, dunkel über `data-tl-mode`, Dichte über `data-tl-density`. |
 | `base.css` | Reset, Typografieklassen `.tl-type-*`, Icon-Größen `.tl-icon-*`, ein Fokusring für alles, Reduced Motion, Druck. |
-| `components.css` | Die Komponenten, eine nach der anderen: `.tl-button`, bald `.tl-pill` … |
+| `components.css` | Die Komponenten, eine nach der anderen: `.tl-button`, `.tl-pill`, `.tl-field`, `.tl-table`, `.tl-dialog` … (Quelle je Komponente unter `src/components/`) |
 | `tokens.dtcg.json` | W3C Design Tokens für Figma und Kundenwerkzeuge. |
 
 **Zwei Schichten, und warum das mehr als Ordnung ist.** Der erste Entwurf schrieb Hex-Werte direkt an
@@ -85,7 +85,7 @@ Das Design System besteht aus drei Dingen, und nur eines davon ist Gestaltung:
 
 **Warum acht genug sind.** Eine Kategorie ist ein Farbtopf, in den die Anwendung ihre eigenen Werte legt: Ein Enum `Fachbereich` mit zwölf Werten bekommt je Wert `<color role="category-N"/>`, und bei acht Töpfen teilen sich einige Werte einen. Das ist in Ordnung, weil auf der Pille der Name steht — man liest „Vertrieb“, nicht „blau“. Zwölf oder zwanzig Töpfe würden das Auge überfordern und beim nächsten Kunden wieder nicht reichen. Darum darf Farbe nie das Einzige sein, woran man einen Wert erkennt (WCAG 1.4.1); sie hilft beim Wiedererkennen, sie identifiziert nicht. Pill, Avatar und die Diagramme der Welle 5 lesen dieselben acht Töpfe, ein Wert sieht überall gleich aus.
 
-**Und wenn ein Kunde eine eigene Marke mitbringt?** Dann wandert der Punkt „Marke“ auf dem Kreis, und das Tool der Stufe A (`tl-ds derive`) muss die acht Kategorien um ihn herum neu verteilen — die vier Bedeutungen bleiben, wo sie sind, weil Rot, Gelb, Grün und Cyan ihre Bedeutung aus dem Farbton beziehen. Das Gate prüft danach dieselben Abstände wie bei uns. Eine Marke, die auf einer Bedeutung liegt (ein rotes Logo), meldet das Gate; der Kunde entscheidet dann in Stufe B, ob seine Fehlerfarbe ein anderes Rot wird. So gebaut in `derive` (25.09.): die Lücken zwischen den festen Tönen bekommen reihum den nächsten Punkt, immer die Lücke mit dem größten verbleibenden Abstand; reicht der Kreis nicht für 20°, sinkt der Abstand in 2°-Schritten, und das steht als Hinweis im Bericht. Das Grau bleibt dabei auf unseren 28 Helligkeiten und wechselt nur den Ton — warm 70°, kühl 250°, neutral ohne Chroma.
+**Und wenn ein Kunde eine eigene Marke mitbringt?** Dann wandert der Punkt „Marke“ auf dem Kreis, und das Tool der Stufe A (`node tools/derive.mjs`) muss die acht Kategorien um ihn herum neu verteilen — die vier Bedeutungen bleiben, wo sie sind, weil Rot, Gelb, Grün und Cyan ihre Bedeutung aus dem Farbton beziehen. Das Gate prüft danach dieselben Abstände wie bei uns. Eine Marke, die auf einer Bedeutung liegt (ein rotes Logo), meldet das Gate; der Kunde entscheidet dann in Stufe B, ob seine Fehlerfarbe ein anderes Rot wird. So gebaut in `derive` (25.09.): die Lücken zwischen den festen Tönen bekommen reihum den nächsten Punkt, immer die Lücke mit dem größten verbleibenden Abstand; reicht der Kreis nicht für 20°, sinkt der Abstand in 2°-Schritten, und das steht als Hinweis im Bericht. Das Grau bleibt dabei auf unseren 28 Helligkeiten und wechselt nur den Ton — warm 70°, kühl 250°, neutral ohne Chroma.
 
 **Dynamisch heißt: eine Rolle wählen.** `x -> if($x.overdue, 'error', 'category-3')` ist dynamisch und bleibt im Vokabular. Ein Ausdruck, der einen Hex-Wert liefert, verlässt es — und mit ihm Dunkelmodus, Kontrast und Kundenstufe A, die den Wert nie zu sehen bekommt.
 
@@ -135,7 +135,7 @@ Framework neben `demo.react.corporate`. Begründung in `docs/skalen.md` „Ein V
 |---|---|
 | Der Bestand ist kein Maßstab | Dass ein Wert 48-mal im CSS steht, belegt nur, dass niemand entschieden hat. Ablauf immer: Inventar, Befund als Muster, Entscheidung *gegen* den Befund, Regel als Test. |
 | Namen | Englisch, kebab-case, Präfix `tl`: `--tl-surface-brand`, `.tl-button--primary`, `data-tl-mode`. BEM für Klassen, Modifier nur für Varianten, die der Autor wählt. |
-| Geschlossene Kategorien | `surface`, `text`, `icon`, `border`, `focus`, `shadow`, `space`, `radius`, `size`, `font`, `duration`, `easing`, `layer`, `status`. Eine neue Kategorie ist eine Entscheidung, kein Nebeneffekt. |
+| Geschlossene Kategorien | `surface`, `text`, `icon`, `border`, `focus`, `shadow`, `space`, `radius`, `size`, `font`, `duration`, `easing`, `layer`, `status`, `category`. Eine neue Kategorie ist eine Entscheidung, kein Nebeneffekt. |
 | Zustände sind Attribute | `:disabled`, `[aria-pressed]`, `[aria-busy]`, `:focus-visible`, sonst `data-tl-state`. Eine Klasse `--active` bricht das Gate. Kundenkomponenten bekommen dieselben Zustände geschenkt. |
 | Kein Literal in einer Klasse | Farben, Maße, Dauern, `z-index`, Kurven nur aus Tokens. Schriftgröße und -gewicht nur in `.tl-type-*`. Kein `:focus` ohne `-visible`, kein `outline: none`. |
 | Der Namensraum `--tl` gehört dem Paket | Jede Custom Property, die so beginnt, ist Design System. Außerhalb von `dist/` wird darin nichts definiert; lesen darf der Altbestand, was das Paket definiert. Was er heute selbst darin führt (`--tl-item-index`, `--tlGrid-gap`, `--tlPill-color`, `--tl-tt-padding`), steht auf einer Einfang-Liste und wird in seiner Welle zum Token mit Kategorie oder umbenannt. Neues bricht den Test. |
@@ -159,7 +159,7 @@ es und lässt es nur schrumpfen.
 | 1 | Button, ToggleButton, Pill, Avatar, Progress, FontIcon | auf master (!1649, !1694, !1695) |
 | 2 | Felder, Checkbox, BooleanChoice, DropdownSelect, FormField, FormGroup, FormLayout, dazu Chips, Segmented, Slider, Switch | auf master (!1740, mit 3a) |
 | 3 | TableView, TreeView, Menu, Toolbar, TabBar, Breadcrumb, Tooltip | 3a Navigation und Popups auf master (!1760); 3b Daten im Review (!1838), darauf die Spaltenwahl als Ebenen-Panel (!1852) |
-| 4 | Dialog, Window, Drawer, Snackbar, NoticeBar, Shell, Layoutcontainer, Übergangszustände | Konsolidierung entschieden (13.10.); 4a Overlays: Spec und Plan stehen (#29836); 4b Gerüst folgt |
+| 4 | 4a Overlays: Dialog, DialogManager, Window, Drawer, Snackbar, NoticeBar, Overlay · 4b Gerüst: AppShell, AppBar, Sidebar, BottomBar, Panel, SplitPanel, Card, Stack, Grid, Wizard | 4a im Review (!1882, auf der Spaltenwahl); 4b folgt |
 | 5 | Calendar, ColorInput, IconSelect, Medien, Dashboard, dann `tlReactControls.css` löschen | geplant |
 
 **Der Rhythmus je Komponente**
@@ -193,16 +193,16 @@ Beide Systeme koexistieren, bis die letzte Welle durch ist: die alte XML-Tokenko
 | Chips, Segmented, Slider, Switch (Phase 4) | Das sind Komponenten der Welle 2. Im Paket bauen, nicht in `tlReactControls.css`. |
 | Übergangs-Zustandsklassen (Phase 6) | **Entschieden 13.10. (Welle 4):** `data-tl-state~="entering"`/`~="exiting"` statt Klassen — die Wörter, die `useKeyedTransition` schon kennt —, Dauern und Kurven aus den Motion-Tokens; das Paket bringt eine Standardbewegung, eine Anwendung überschreibt sie. Dialog in 4a, Wizard und TileStack in 4b. |
 | `<color token>` validieren (#29606) | **Überholt am 24.09. durch „Rolle statt Farbe“** (Welle 1, Pill, PR !1694): Eine Konfiguration benennt kein Token mehr, sondern eine Rolle aus dem Vokabular (§2a). Das Token-Register fällt mit seinem letzten Leser; die Rollen bietet das Enum `ValueColor` im Modell-Editor an. Begründung: `docs/skalen.md` „Pill: Rolle statt Farbe“. |
-| Namensraum `--tl` | `--tl-item-index` und `--tlGrid-gap` aus #29597 stehen auf der Einfang-Liste; sie werden in Welle 4 zu Tokens oder umbenannt. Neues bitte ohne `--tl`-Präfix, sonst schlägt die Ratsche an. |
+| Namensraum `--tl` | `--tl-item-index` und `--tlGrid-gap` aus #29597 stehen auf der Einfang-Liste; sie werden in Welle 4b zu Tokens oder umbenannt. Neues bitte ohne `--tl`-Präfix, sonst schlägt die Ratsche an. |
 
 ## 6 · Wo alles liegt
 
 | | |
 |---|---|
-| Paket | Gitea `TopLogic/tl-design-system`, Ordner `design-system/`; `node --test`, `node tools/generate.mjs`, `node tools/lint-css.mjs`, `node tools/serve.mjs` für das Specimen |
+| Paket | Gitea `TopLogic/tl-design-system`, Ordner `design-system/`; `node --test`, `node tools/generate.mjs`, `node tools/lint-css.mjs`, `node tools/derive.mjs` für Kundenthemes, `node tools/serve.mjs` für das Specimen |
 | Entscheidungen | `docs/skalen.md`, jede mit Begründung; folienweise in `docs/praesentation.md` |
 | Spec | `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md` |
 | Arbeitsliste | `docs/migration/altlast.md`: alte Tokens → neue, Befunde aus der laufenden App je Welle, Einfang-Liste |
-| Ticket | Eins je Welle: Wellen 0–3a Trac #29617 (mit alpha10 geschlossen), 3b #29821, 4a #29836; Branch `CWS/CWS_<ticket>_design_system_welle_<n>` |
+| Ticket | Eins je Welle: Wellen 0–3a Trac #29617 (mit alpha10 geschlossen), 3b #29821, Spaltenwahl #29825, 4a #29836; Branch `CWS/CWS_<ticket>_design_system_welle_<n>` |
 | Einbindung | `com.top_logic.layout.react`: `style/tl-design-system/*.css` als `ClientResources`, `UIThemeService` setzt `data-tl-mode` und `data-tl-density` |
 | Anleitung für Claude | `docs/anleitung-claude-komponenten.md`, Regeldatei `docs/claude/tl-design-system-SKILL.md` |
