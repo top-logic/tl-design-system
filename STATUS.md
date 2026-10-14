@@ -38,6 +38,51 @@ Paket-Gate der Spaltenwahl rot), Merge-Reihenfolge 3b → Spaltenwahl → 4a; Au
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
 axe auf `li role="presentation"`, `format()` dreifach).
 
+## Gesamtplan: alles, was bis zur Abnahme offen ist
+
+Das Lagebild (http://localhost:8138/) liest diesen Abschnitt für Fortschritt und Gesamtkontext. Bei jeder Änderung des
+Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4“, `altlast.md`.
+
+**Wellen** (Phase: master · PR · gebaut · geplant · offen; Teile = Komponenten laut Spec §4 und Schnitt, Gewicht im Fortschrittsbalken):
+
+| Welle | Inhalt | Teile | Phase | Ticket |
+|---|---|---|---|---|
+| 0 | Paket: Primitive, Tokens, Base | 3 | master | #29617 |
+| 1 | Button, ToggleButton, Pill, Avatar, Progress, Icon | 6 | master | #29617 |
+| 2 | Formulare (Felder, Select, Checkbox, FormField, FormLayout …) | 11 | master | #29617 |
+| 3a | Menü, Toolbar, Reiter, Breadcrumb, Popups, Ton folgt der Aktion | 5 | master | #29617 |
+| 3b | Tabelle, Baum, Text, Spaltenwahl als Ebenen-Panel (!1838, !1852) | 3 | PR | #29821, #29825 |
+| 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay | 7 | geplant | #29836 |
+| 4b | Gerüst: AppShell, AppBar, Sidebar, BottomBar, Panel, SplitPanel, Card, Stack, Grid, Wizard; Q10–Q18 | 10 | offen | eigenes beim Start |
+| 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | offen | — |
+
+**Abnahme außerhalb der Wellen** (Spec „Abnahme“):
+
+| Punkt | Teile | Phase | Wo |
+|---|---|---|---|
+| Kundenprojekt Stufe A in der Demo-App gezeigt (JSON mit Hausfarbe → `derive` → Gate grün → Kundenlook) | 1 | offen | Spec §3 |
+| Themes in der Engine: `UIThemeService` setzt `data-tl-theme` (Paketseite fertig) | 1 | offen | Issue #16 |
+| Tokens in Figma, Modi Hell/Dunkel, Blattnamen = Tokennamen | 1 | offen | Issue #7 |
+| TSX-Lint: kein Hex, kein `style={{ color }}`, nur `tl-`-Klassen | 1 | offen | Issue #9 |
+
+**Offen zu entscheiden** (Hendrik):
+
+* Wo `derive` rechnet — Bauzeit, Browser oder Theme-Editor (Bernhards TL-Script-Einwand 25.09.; Empfehlung
+  Theme-Editor; Übergabe `docs/uebergabe/`).
+* Dichte-Schalter in der Oberfläche (Issue #18; Kandidat Benutzermenü unter der Themewahl).
+* Icon-Bibliothek: Wechsel z. B. auf Lucide prüfen; bis dahin bindet nichts an Glyphnamen.
+* Kunden-Typografie: was bricht, wenn ein Kunde die Schrift tauscht (Issue #12).
+
+**Nebenstränge** (ohne eigene Welle):
+
+* #29826 „Ziehen sichtbar machen“ nach Merge von !1825; #29828 Tabellenzustand mit Bernhard; #29827 Spaltengruppen
+  und Pivot bei Bernhard.
+* Token-Mapper (Browserwerkzeug für Kunden-Styleguides, Spec §3); Maven-Wrapper für das Paket (bis dahin
+  `publish-to-worktree`); `derive`-Hinweise aus dem Abschluss-Review (Kollaps-Hinweis, achromatische Flächen).
+* DOM-Test im Specimen für `overflow: hidden` an Behältern mit fokussierbaren Kindern (Spec §5).
+* Kleinpunkte je Welle: `altlast.md` „Offen für spätere Wellen und Pakete“ und „Offen nach 3b“.
+* Framework-PRs !1618 und !1621 verifiziert, ungemergt.
+
 
 **Stand 12.10.: #29825 „Spaltenwahl als Ebenen-Panel“ ist gebaut und gepusht als PR [!1852](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1852)**
 (gegen `welle_3b`, Reviewer bhu, Trac-Kommentar; nach dem Merge von !1838 Basis auf master). Push nur nach Hendriks
