@@ -7,6 +7,10 @@ Zugänglichkeit, nicht das Aussehen; wer ins Bild passen will, liest die Tokens.
 
 Das Control ist `TLAlert` (`ReactAlertControl`, `AlertStateJson`, master #29652; View-Element `<alert>`).
 
+Zwei Controls tragen den Alert mit eigener Hülle (Welle 4a): `tl-snackbar` (schwebend, geht von selbst; Vertrag
+`snackbar`) und `tl-notice-bar` (Balken über die volle Breite; Vertrag `notice-bar`). Für alle drei gilt dieselbe
+Ansage-Regel: nur `error` ist `role="alert"`.
+
 Was es bekommt (`AlertStateJson`):
 
 | Schlüssel | Typ | Bedeutung |

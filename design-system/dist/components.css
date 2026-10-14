@@ -1702,6 +1702,26 @@ a.tl-field-value:hover {
 }
 .tl-menu-region[hidden] { display: none; }
 
+/* --- notice-bar/notice-bar.css --- */
+/* NoticeBar — Spec 2026-10-13 Welle 4a §5, Konsolidierung Q7. Ein Alert als Balken über die volle Breite: ohne Ecke,
+   Linie unten und am Zeilenanfang (die Linie der Bedeutung). Farbe, Ansage und Text aus tl-alert. Klickbar ist der
+   Balken ein role="button"; den Ring gibt base.css jedem [tabindex]. */
+
+.tl-notice-bar {
+  border-radius: 0;
+  border-block-start-width: 0;
+  border-inline-end-width: 0;
+}
+
+.tl-notice-bar[role="button"] {
+  cursor: pointer;
+}
+
+/* Der Countdown springt nicht, weil seine Ziffern gleich breit sind (tl-nums im Markup). */
+.tl-notice-bar__countdown {
+  white-space: nowrap;
+}
+
 /* --- overlay/overlay.css --- */
 /* Overlay — Spec 2026-10-13 Welle 4a §8. Ein Stapel aus Basis und Ebenen, kein Overlay im Sinn eines Dialogs:
    die Basis gibt die Höhe, das umgebende Layout die Breite; jede Ebene deckt genau diese Fläche und legt ihren
@@ -2241,6 +2261,53 @@ a.tl-field-value:hover {
 @keyframes tl-skeleton-pulse {
   from { opacity: 1; }
   to { opacity: 0.5; }
+}
+
+/* --- snackbar/snackbar.css --- */
+/* Snackbar — Spec 2026-10-13 Welle 4a §5, Konsolidierung Q7. Ein Alert mit eigener Hülle: Farbe, Linie, Titel, Text,
+   Schließen-Knopf und Ansage kommen aus tl-alert (data-tl-role, role="alert" nur bei error); hier stehen Lage,
+   Ebene, Schatten und Bewegung. Toast: Schatten und Rahmen (skalen.md) — der Rahmen ist die Linie der Bedeutung. */
+
+.tl-snackbar {
+  position: fixed;
+  inset-inline: 0;
+  bottom: var(--tl-space-md);
+  z-index: var(--tl-layer-toast);
+  box-sizing: border-box;
+  width: fit-content;
+  max-width: min(var(--tl-size-toast-max), calc(100% - 2 * var(--tl-space-md)));
+  margin-inline: auto;
+  box-shadow: var(--tl-shadow-drag);
+  animation: tl-snackbar-in var(--tl-duration-base) var(--tl-easing-entrance);
+}
+
+.tl-snackbar[data-tl-state~="exiting"] {
+  animation: tl-snackbar-out var(--tl-duration-base) var(--tl-easing-exit) forwards;
+}
+
+@keyframes tl-snackbar-in {
+  from { opacity: 0; transform: translateY(var(--tl-space-sm)); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes tl-snackbar-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Die Meldung kann HTML sein (CommandErrors: Titel und eine Liste der Einzelmeldungen); deren Umbrüche stehen im
+   Markup, nicht im Text. */
+.tl-snackbar .tl-alert__message {
+  white-space: normal;
+}
+
+.tl-snackbar .tl-alert__message ul {
+  margin: var(--tl-space-2xs) 0 0;
+  padding-inline-start: var(--tl-space-lg);
+}
+
+.tl-snackbar .tl-alert__message li + li {
+  margin-top: var(--tl-space-2xs);
 }
 
 /* --- status/status.css --- */

@@ -62,6 +62,7 @@ Hinweisstreifen vorbehalten (siehe Kommentarkopf in `button.css`).
 | `aria-pressed="true"` | `state.active`. Fehlt sonst ganz (nicht `false`), damit ein gewöhnlicher Button kein Umschalter wird. |
 | `aria-busy="true"` | während einer laufenden Aktion (Upload). Das Icon pulsiert (`tl-button-busy`, `duration-loop`); der Zeiger zeigt Fortschritt nur dort, wo der Knopf nicht `disabled` ist — bei `disabled` ist der Puls der einzige Hinweis, weil `:disabled:hover` den Zeiger auf `default` hält. Der Handler ignoriert Klicks, solange die Aktion läuft. |
 | `tl-button--icon` | quadratisch, ohne `__label`; Pflicht `aria-label` und Tooltip; mit `--sm` 24 px |
+| Kopfknopf | `tl-button--ghost tl-button--sm tl-button--icon` mit `ThemeIcon` in `tl-titlebar` (Maximieren, Schließen) und als `tl-alert__close`: 24 px (`--tl-size-control-sm`), `aria-label` und Tooltip Pflicht |
 | `aria-label` | bei icon-only oder wenn ein Icon gesetzt ist: der `label`. |
 | `data-tooltip` | `text:<tooltip>`; das Tooltip-System liest es. |
 | `:focus-visible` | den Ring liefert `base.css`; die Komponente setzt und entfernt keinen Fokusstil. |

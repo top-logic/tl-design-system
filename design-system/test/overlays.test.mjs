@@ -99,3 +99,32 @@ test('tl-drawer: geschlossen aus dem Rand geschoben, im RTL gespiegelt, Spiegelu
   assert.ok(open > css.indexOf('.tl-drawer--start:dir(rtl) {'));
   assert.ok(open > css.indexOf('.tl-drawer--end:dir(rtl) {'));
 });
+
+test('tl-snackbar: schwebt unten mittig auf der Toast-Ebene, Schatten drag, steigt und blendet mit Tokens', () => {
+  const s = decl('snackbar', '.tl-snackbar');
+  assert.match(s, /position:\s*fixed/);
+  assert.match(s, /z-index:\s*var\(--tl-layer-toast\)/);
+  assert.match(s, /bottom:\s*var\(--tl-space-md\)/);
+  assert.match(s, /margin-inline:\s*auto/);
+  assert.match(s, /max-width:\s*min\(var\(--tl-size-toast-max\)/);
+  assert.match(s, /box-shadow:\s*var\(--tl-shadow-drag\)/);
+  assert.match(s, /animation:\s*tl-snackbar-in var\(--tl-duration-base\) var\(--tl-easing-entrance\)/);
+  assert.match(decl('snackbar', '.tl-snackbar[data-tl-state~="exiting"]'), /animation:\s*tl-snackbar-out var\(--tl-duration-base\) var\(--tl-easing-exit\) forwards/);
+  assert.match(decl('snackbar', '.tl-snackbar .tl-alert__message'), /white-space:\s*normal/);
+});
+
+test('tl-notice-bar: Balken ohne Ecke, Linie nur unten und am Anfang, klickbar zeigt den Zeiger', () => {
+  const n = decl('notice-bar', '.tl-notice-bar');
+  assert.match(n, /border-radius:\s*0/);
+  assert.match(n, /border-block-start-width:\s*0/);
+  assert.match(n, /border-inline-end-width:\s*0/);
+  assert.match(decl('notice-bar', '.tl-notice-bar[role="button"]'), /cursor:\s*pointer/);
+  assert.match(decl('notice-bar', '.tl-notice-bar__countdown'), /white-space:\s*nowrap/);
+});
+
+test('keine Farbe, kein Literal: Snackbar und NoticeBar lesen ihre Farben nur aus tl-alert', () => {
+  for (const d of ['snackbar', 'notice-bar']) {
+    const css = readGenerated(d, `${d}.css`).replace(/\/\*[\s\S]*?\*\//g, '');
+    assert.doesNotMatch(css, /--tl-(status|surface|text)-/, d);
+  }
+});
