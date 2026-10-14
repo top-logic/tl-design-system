@@ -38,8 +38,12 @@ rechnet sie aus `--tl-size-row` (`useTokenPx`).
 | `rows[].expanded` | boolean | `aria-expanded` an Zeile und Toggle. |
 | `rows[].groupCount` | number | Nur an einer Gruppenzeile: wie viele Zeilen die Gruppe hält (`tl-table__count`). |
 | `rows[].draggable` | boolean | Die Zeile lässt sich ziehen (`draggable="true"`). |
+| `rows[].cssClass` | string | Klasse der Anwendung an der Zeile (`row-class`, #29815); `tl-status-error\|warning\|success\|info` tönt sie. |
+| `rows[].cellClasses` | Objekt | Klasse je Spaltenname an einzelnen Zellen der Zeile, zusätzlich zur Klasse der Spalte; dieselben vier tönen. |
 | `selectionMode` | `single` \| `multi` | Bei `multi` die Auswahlspalte mit `tl-checkbox` und `aria-multiselectable="true"`. |
-| `selectedCount` | number | Ausgewählte Zeilen; steuert das Kopf-Kästchen (gesetzt, teilweise, leer). |
+| `selectAllState` | `none` \| `some` \| `all` | Was das Kopf-Kästchen zeigt (leer, teilweise, gesetzt); der Server zählt die Zeilen, auf die „alle auswählen“ wirkt — die der Filter durchlässt, eingeklappte Gruppen eingeschlossen (#29757). |
+| `rowCount` | string | Zeilenzahl unter der Tabelle (`tl-table__row-count`), „von …“ solange gefiltert; leer: keine Zeilenzahl. |
+| `rowCountSelected` | string | Ausgewählte Zeilen (`tl-table__selection-count`); leer, solange keine oder nur Einzelauswahl. |
 | `cursorIndex` | number | Zeile des Tastatur-Cursors; −1: kein Cursor. |
 | `frozenColumnCount` | number | Wie viele Spalten links fixiert sind (`frozen`, die letzte `frozen-last`). |
 | `treeMode` | boolean | Baum: `role="treegrid"`. |
@@ -119,6 +123,7 @@ oder Kästchen im Raster gehören sie dem Bedienelement.
 | `tl-table__body` | `role="rowgroup"`, `tabindex="-1"`: er scrollt nur und ist kein eigener Tab-Halt |
 | `tl-table__row` | `role="row"` mit `id="<controlId>-row-<index>"`, `aria-rowindex`, `aria-selected`; im Baum `aria-level` und an aufklappbaren Zeilen `aria-expanded` |
 | `tl-table__cell` | `role="gridcell"` |
+| `tl-table__footer` | `role="status"`, `aria-live="polite"`: ein Screenreader hört die Zahl, die ein Filter übrig lässt |
 
 **Cursor und Fokus (WCAG 2.4.7).** Das Raster setzt `aria-activedescendant` nur, solange eine Zeile
 mit dieser Id gerendert und im sichtbaren Bereich des Körpers ist und `data-tl-state~="cursor"` trägt.
@@ -184,13 +189,14 @@ zeichnet `drag.css` (`drag.contract.md`), den Cursor-Ring `base.css`.
 | `data-tl-state~="frozen"` | an Kopf- und Zellen der fixierten Spalten; die letzte zusätzlich `"frozen-last"` |
 | `data-tl-state~="pinned"` | an Kopf- und Zellen der angehefteten Spalten; die erste zusätzlich `"pinned-first"` |
 | `data-tl-state~="filtered"` | an der Kopfzelle einer Spalte mit aktivem Filter |
+| `data-tl-state~="covered"` | am Kopf, solange Spalten unter der Spaltenwahl weiterlaufen (Kopf breiter als sein Fenster, nicht ganz nach rechts gescrollt); vor der Spaltenwahl blenden die Überschriften dann aus |
 | `data-tl-state~="dragging"`, `"drop-before"`, `"drop-after"`, `"drop-onto"`, `"drop-refused"` | an Zeile, Kopfzelle oder `tl-table` als Ganzem (`drag.contract.md`) |
 | `draggable="true"` | an ziehbaren Zeilen und verschiebbaren Kopfzellen |
 | `role="separator"` | an `tl-table__resize` mit `aria-label` `js.table.columnWidth` („Breite von {0} ändern“, {0} die Überschrift der Spalte) und an `tl-table__freeze` mit `aria-label` `js.table.freezeSplitter`; `aria-orientation="vertical"`, Zeigerbedienung |
 | `hidden` | an jedem Element, das gerade nicht steht |
 
-Cursor, Lage, Filter und Ziehen sind Zustände: die Wörter `cursor`, `frozen`, `frozen-last`, `pinned`,
-`pinned-first`, `filtered` und die des Ziehens stehen in `data-tl-state`, nie als Modifier (Klassen-Gate).
+Cursor, Lage, Filter, Überdeckung und Ziehen sind Zustände: die Wörter `cursor`, `frozen`, `frozen-last`, `pinned`,
+`pinned-first`, `filtered`, `covered` und die des Ziehens stehen in `data-tl-state`, nie als Modifier (Klassen-Gate).
 
 Bauteile anderer Blöcke:
 
@@ -238,6 +244,16 @@ Klassen:
 | `tl-table__count` | Anzahl der Gruppenzeile |
 | `tl-table__placeholder` | Zeile im Fenster, die der Server noch nicht geschickt hat: `aria-hidden`, trägt ein `tl-skeleton`; keine Ladezeile mit `tl-progress` |
 | `tl-table__hint` | der Grund einer Ablehnung (am `tl-popover`) |
+| `tl-table__footer` | die Zeilenzahl unter dem Rahmen, `tl-type-label`; steht nur, solange `rowCount` nicht leer ist |
+| `tl-table__row-count` | wie viele Zeilen (von wie vielen) |
+| `tl-table__selection-count` | wie viele ausgewählt, nach einem Mittelpunkt |
+
+Klassen der Anwendung (#29815): `row-class` und die Klasse je Zelle stehen zusätzlich an `tl-table__row` bzw.
+`tl-table__cell`. Vier davon übersetzt `TLTableView` in eine Rolle: `tl-status-error|warning|success|info` →
+`data-tl-role="error|warning|success|info"` an Zeile bzw. Zelle, gezeichnet über `@tl-roles: status` (Fläche
+`--tl-status-<rolle>-subtle`, Linie `--tl-status-<rolle>-border`). An einer ausgewählten Zeile und ihren Zellen
+steht keine Rolle: die Auswahl gewinnt. Zeigen ändert die Tönung nicht, haftende Zellen erben die Tönung ihrer
+Zeile.
 
 ## Zellinhalt
 

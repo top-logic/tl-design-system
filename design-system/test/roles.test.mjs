@@ -72,6 +72,9 @@ test('der Marker wird ersetzt, ein unbekannter Marker bricht den Build', () => {
   assert.ok(!css.includes('@tl-roles'), 'Marker steht noch im Generat');
   assert.ok(css.includes('.tl-x[data-tl-role="info"] { background: var(--tl-status-info-subtle); border-color: var(--tl-status-info-border); }'));
   assert.ok(css.includes('.tl-x__y[data-tl-role="brand"] { background: var(--tl-surface-brand-subtle); border-color: var(--tl-border-interactive); }'));
+  assert.ok(expandRoles('/* @tl-roles: status :where(.tl-x__y) */', T)
+    .includes(':where(.tl-x__y[data-tl-role="info"]) { background: var(--tl-status-info-subtle);'), ':where-Form');
+  assert.throws(() => expandRoles('/* @tl-roles: status :where(.tl-x--y) */', T), /weder Block- noch Elementklasse/);
   assert.throws(() => expandRoles('/* @tl-roles: farbe .tl-x */', T), /farbe/);
   assert.throws(() => expandRoles('/* @tl-roles: status .tl-x--y */', T), /weder Block- noch Elementklasse/);
   assert.ok(!OUT.includes('@tl-roles'), 'Marker im dist-Generat');

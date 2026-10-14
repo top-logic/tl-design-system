@@ -25,7 +25,8 @@ export function componentSources(dirUrl) {
 // `<ziel>[data-tl-role="<rolle>"]` — die Tönung ist ein Attribut, kein Modifier (3b §11, W7); eine neue
 // Kategorie ist eine Zeile in tokens.json, nicht fünf. Ziel ist ein Block (tl-chip) oder ein Element
 // (tl-segmented__segment), nie ein Modifier. Kommentar, damit Klassen-Gate und Tests auf src/ ihn
-// überlesen. docs/skalen.md „Gleiches wird zusammengelegt“.
+// überlesen. docs/skalen.md „Gleiches wird zusammengelegt“. In `:where(<ziel>)` gesetzt, erzeugt der Marker
+// die Regeln ohne Spezifität: für ein Ablage-Ziel, dessen Fläche das Ablegen übermalt (Tabellenzeile, #29815).
 const ROLLEN = {
   brand: () => [['brand', 'surface-brand-subtle', 'border-interactive']],
   category: (T) => Object.keys(T.color.light).map((n) => /^(category-\d+)-subtle$/.exec(n)?.[1])
@@ -40,9 +41,13 @@ const ZIEL = /^\.tl-[a-z0-9]+(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)?$/;
 export function expandRoles(css, T) {
   return css.replace(MARKER, (_, art, sel) => {
     if (!ROLLEN[art]) throw new Error(`@tl-roles: unbekannte Rollenart ${art} (bekannt: ${Object.keys(ROLLEN).join(', ')})`);
-    if (!ZIEL.test(sel)) throw new Error(`@tl-roles: ${sel} ist weder Block- noch Elementklasse`);
-    return ROLLEN[art](T).map(([rolle, flaeche, linie]) =>
-      `${sel}[data-tl-role="${rolle}"] { background: var(--tl-${flaeche}); border-color: var(--tl-${linie}); }`).join('\n');
+    const ohne = /^:where\((.*)\)$/.exec(sel);
+    const ziel = ohne ? ohne[1] : sel;
+    if (!ZIEL.test(ziel)) throw new Error(`@tl-roles: ${sel} ist weder Block- noch Elementklasse`);
+    return ROLLEN[art](T).map(([rolle, flaeche, linie]) => {
+      const auswahl = `${ziel}[data-tl-role="${rolle}"]`;
+      return `${ohne ? `:where(${auswahl})` : auswahl} { background: var(--tl-${flaeche}); border-color: var(--tl-${linie}); }`;
+    }).join('\n');
   });
 }
 

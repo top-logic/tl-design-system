@@ -1947,6 +1947,26 @@ Spaltengruppen, das Icon behalten und nur erklären.
 * **Ein Wort fürs Fixieren:** auch das Kontextmenü am Spaltenkopf sagt „Bis hier fixieren“ / „Fixierung aufheben“
   statt „feststellen“.
 
+**Nachgetragen beim master-Merge in 3b (14.10.):**
+* **Hervorgehobene Zeilen sind eine Rolle, die API bleibt eine Klasse (#29815).** Auf master gibt `row-class` einer
+  Zeile oder Zelle eine Klasse; `tl-status-error|warning|success|info` tönen sie. Die Klassen bleiben die API — sie
+  stehen in Bernhards Doku und in Anwendungen —, aber `TLTableView` übersetzt sie in `data-tl-role` an Zeile bzw.
+  Zelle, und das Paket zeichnet die Rolle über `@tl-roles: status` wie Pill, Chip und Alert. So bleibt „Rollen sind
+  Attribute“ ohne Ausnahme, und kein Status steht zweimal als Regel. Die Auswahl gewinnt (an einer ausgewählten Zeile
+  setzt das TSX keine Rolle), Zeigen ändert die Tönung nicht, haftende Zellen erben sie. Sichtbar anders als auf master:
+  die Linie unter einer getönten Zeile nimmt `status-<rolle>-border` an. Der Generator kennt dafür die Form
+  `@tl-roles: <art> :where(<ziel>)` — Regeln ohne Spezifität für ein Ablage-Ziel, dessen Fläche das Ablegen übermalt.
+* **Verlauf statt Maske vor der Spaltenwahl (#29757).** Laufen Spalten unter der Spaltenwahl weiter (Kopf
+  `data-tl-state~="covered"`), blenden die Überschriften vor ihr aus. master tut das mit einer Maske am Kopf, weil seine
+  Zeilen durchsichtig sind und die Fläche darunter je Ort wechselt. Im Paket ist die Tabelle immer `surface-layer`:
+  ein Verlauf in dieser Fläche vor dem Knopf genügt, und die Linie unter dem Kopf bleibt stehen (eine Maske nähme sie
+  mit).
+* **Kein `--tl-current-surface` (#29757).** master malt haftende Zellen in der Fläche „unter“ der Tabelle, die jeder
+  Behälter als `--tl-current-surface` setzt. Im Paket malt jede Zeile ihre Fläche selbst und haftende Zellen erben
+  sie (`background: inherit`) — die Variable hätte keinen Leser und stünde im Namensraum `--tl` außerhalb des Pakets.
+* **Zeilenzahl unter der Tabelle (#29757)** als `tl-table__footer` (Live-Bereich) mit `tl-table__row-count` und
+  `tl-table__selection-count`, in `surface-layer` wie die Filterleiste.
+
 ### Auswahlmarken zeigen einen Hof (06.10.)
 
 > **Farbe des Hofs geändert (06.10., Bernhard):** der Hof ist durchscheinend, `surface-state-hover` /
