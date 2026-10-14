@@ -45,7 +45,10 @@ NoticeBar veraltet. **Nächstes:** Review von Bernhard; nach Merge von !1838 und
 nach tl-engine-7 (`view-layer/design-system.md`), `theme-tokens.md` verweist darauf und führt die alten Tokens als
 Altbestand, eine Zeile in der Engine-`CLAUDE.md`. Die Regeldatei wird **nicht** in die Engine kopiert (widerspräche
 `theme-tokens.md`, setzt das Paket-Repo voraus, schließt MUI nicht aus); die Anleitung empfiehlt sie als persönlichen
-Skill. **Nächstes:** Entwurf im Paket-Repo, mit Bernhard abstimmen, dann Engine-Branch `CWS/CWS_29850_…`.
+Skill. **Entwurf steht (14.10.):** `docs/uebergabe/2026-10-14-29850-entwicklerdoc/` (Artikel `design-system.md`,
+überarbeitete `theme-tokens.md` mit Diff, Zeile für die Engine-`CLAUDE.md`, drei offene Fragen an Bernhard — die
+wichtigste: Kundenthemes in `tl-react-theme.config.xml` erreichen umgestellte Controls nicht mehr). **Nächstes:** Hendrik
+liest, dann Kommentar in #29850 an Bernhard; nach Abstimmung Engine-Branch `CWS/CWS_29850_…`.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
