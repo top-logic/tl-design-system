@@ -31,8 +31,15 @@ Nachträge aus dem Planen), Plan `docs/superpowers/plans/2026-10-13-welle-4a-ove
 Fable mit Probelauf: Lint grün, `tsc` 0, Befunde eingearbeitet). **Entschieden:** Branch
 `CWS/CWS_29836_design_system_welle_4a` auf `origin/CWS/CWS_29825_design_system_spaltenwahl` (auf 3b wäre das
 Paket-Gate der Spaltenwahl rot), Merge-Reihenfolge 3b → Spaltenwahl → 4a; Ausführung **Subagent-driven**.
-**Nächstes (frische Sitzung):** `superpowers:subagent-driven-development` mit dem Plan; der Arbeitsordner
-`.superpowers/sdd/2026-10-13-welle-4a-overlays/` hat noch kein Ledger. Kein Push ohne Freigabe.
+**Stand 14.10. (pausiert): 4a gebaut, lokal committet, nicht gepusht.** Tasks 1–10 fertig, Schluss-Review (Opus)
+durch, Fixwelle committet (Paket `623fd4d`, Engine `8b4d2f6d4f` auf `CWS/CWS_29836_design_system_welle_4a`, Upstream
+gelöst). Gates: Paket 386/0, Lint grün, `tsc` 0, Vite grün, Maven `layout.react` 612, `demo.react` 13, `layout.view`
+nur #29651 rot, Messages ohne Diff. Sichtprüfung lokal erledigt (Befund S1 Dialoghöhe behoben). Trac #29836 hat
+`== Migration ==` und `RequiresMigration`. Ledger mit allen Rulings: `.superpowers/sdd/2026-10-13-welle-4a-overlays/progress.md`.
+**Nächstes:** (1) Re-Review der Fixwelle prüfen (lief beim Pausieren; Diffs `review-81543d5..623fd4d.diff`,
+`review-815143cf5a..8b4d2f6d4f.diff` im Ledger-Ordner) · (2) Hendrik entscheidet: Fokusring um die ganze Dialogfläche
+bei Tastaturöffnung (lassen oder Fallback-Fokus verlegen) · (3) „Rulings“ aus dem Ledger an Hendrik melden, Ledger-Ordner
+löschen · (4) Push nur mit Freigabe (Engine-Branch und Paket-`main`), PR gegen die Spaltenwahl, Reviewer bhu, `jenkins`.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
@@ -52,7 +59,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 | 2 | Formulare (Felder, Select, Checkbox, FormField, FormLayout …) | 11 | master | #29617 |
 | 3a | Menü, Toolbar, Reiter, Breadcrumb, Popups, Ton folgt der Aktion | 5 | master | #29617 |
 | 3b | Tabelle, Baum, Text, Spaltenwahl als Ebenen-Panel (!1838, !1852) | 3 | PR | #29821, #29825 |
-| 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay | 7 | geplant | #29836 |
+| 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay | 7 | gebaut | #29836 |
 | 4b | Gerüst: AppShell, AppBar, Sidebar, BottomBar, Panel, SplitPanel, Card, Stack, Grid, Wizard; Q10–Q18 | 10 | offen | eigenes beim Start |
 | 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | offen | — |
 
