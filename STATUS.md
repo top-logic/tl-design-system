@@ -37,8 +37,8 @@ Paket-Gate der Spaltenwahl rot), Merge-Reihenfolge 3b → Spaltenwahl → 4a; Au
 `jenkins`. Gates: Paket 386/0, Lint grün, `tsc` 0, Vite grün, Maven `layout.react` 612, `demo.react` 13, `layout.view`
 nur #29651 rot, Messages ohne Diff. Sichtprüfung lokal erledigt (Befund S1 Dialoghöhe behoben). Trac #29836 hat
 `== Migration ==` und `RequiresMigration`. Rulings stehen in `altlast.md` „Welle 4a“, der Ledger ist gelöscht.
-**Offen für Hendrik:** Fokusring um die ganze Dialogfläche bei Tastaturöffnung (lassen oder Fallback-Fokus verlegen);
-Snackbar-Rollenwechsel `status` → `alert` als Folgeticket? Rest-Minor: Kommentar `tlReactControls.css:2263` zur leeren
+**Entschieden 14.10.:** Startfokus verlegt (Engine `e29345b7a8`, nicht gepusht; skalen.md „Der Startfokus liegt dort,
+wo Enter wirkt“); Snackbar-Ansage als Folgeticket **#29851** (CC bhu). Rest-Minor: Kommentar `tlReactControls.css:2263` zur leeren
 NoticeBar veraltet. **Nächstes:** Review von Bernhard; nach Merge von !1838 und !1852 die Basis von !1882 auf master.
 
 **#29850 (angelegt 14.10., accepted, CC bhu):** Die Regeln fürs Stylen von React-Controls kommen als Entwicklerdoc

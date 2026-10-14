@@ -187,7 +187,7 @@ Jede Komponente geht denselben Weg: CSS ins Paket, Klassen umbenennen, Zustände
 | **Ziehen und Ablegen** | fünf Implementierungen, fünf Markierungen, Lage dreimal anders gerechnet | zwei Rechner, **eine** Markierung — und Umsortieren auch mit Alt + Pfeil |
 | **Laden und Leer** | vier Spinner, eine leere Tabelle ist eine leere Fläche | ein Fortschrittsbalken, „Keine Einträge“, Platzhalterzeilen beim Scrollen |
 | **Kapseln** | Pille in der Kapsel, drei Höhen, Farben dreimal erzeugt | eine Kapsel, die Bedeutung als Attribut |
-| **Dialoge** (Welle 4) | zwei Schichten, die Fotoaufnahme baut eine dritte; drei Hintergründe | **ein** Dialog: Fokus bleibt drin und kommt zurück, Escape schließt von innen nach außen |
+| **Dialoge** (Welle 4) | zwei Schichten, die Fotoaufnahme baut eine dritte; drei Hintergründe | **ein** Dialog: Fokus startet dort, wo Enter wirkt, bleibt drin und kommt zurück, Escape schließt von innen nach außen |
 | **Kopfzeilen und ihre Knöpfe** | sechs Kopfzeilen, sieben Knopf-Eigenbauten in 28–40 px, das Kreuz dreimal von Hand gezeichnet | eine Titelleiste, Knöpfe 24 px mit Namen und Tooltip |
 | **Meldungen** | Snackbar und Systemhinweis voll gefärbt mit Weiß/Schwarz, ein Fehler wird nur „höflich“ angesagt | getönte Alerts: dieselben Farben, ein Fehler unterbricht, alles andere nicht |
 

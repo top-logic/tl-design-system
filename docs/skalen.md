@@ -2229,6 +2229,16 @@ vorgeschlagen“ (Hendrik). Spec 4a `docs/superpowers/specs/2026-10-13-welle-4a-
   nicht; ein Fehler (`role="alert"`) unterbräche sonst jede Sekunde. Die Rolle sitzt auf einer bleibenden Hülle
   (`div[role=status|alert]`, leer ohne Balken), nicht auf dem Balken: ein klickbarer Balken ist ein Knopf, und eine
   Region, die schon gefüllt eingefügt wird, wird oft nicht angesagt.
+* **Der Startfokus liegt dort, wo Enter wirkt (Hendrik, 14.10.).** Ein Dialog ohne Feld fokussierte seine ganze Fläche;
+  per Tastatur geöffnet, zeigte sie einen Ring um alles. Jetzt: erstes Feld, sonst der primäre Knopf im Fuß, sonst das
+  erste Bedienelement im Körper, sonst der erste Fußknopf, der nicht destruktiv ist; die Fläche nur, wenn nichts davon
+  da ist. Begründung: ein fokussierter Knopf nimmt Enter für sich (`keyboard-dispatcher`), und der Server koppelt
+  „primär“ und „Enter“ fest (`ReactButtonControl.markAsDefault`) — nur der primäre Knopf behält also, was Enter
+  vorher tat. Hat der Dialog keinen Standard (die Rückfrage „Ungespeicherte Änderungen“: Abbrechen, Verwerfen,
+  Speichern, alle sekundär), bekommt Enter die harmloseste Antwort statt keiner. Der Material-UI-Adapter behält sein
+  `'field'` — er folgt nur dem Vertrag in `state.proto`.
+* **Die Snackbar sagt noch nicht zuverlässig an** — Rollenwechsel `status` → `alert` am lebenden Element, Einfügen schon
+  gefüllt. Wie bei der NoticeBar zu lösen, Folgeticket #29851.
 
 **Als Test (mit dem Bau):** `overlays.test.mjs` hält Scrim, Fläche, Kopf, Griffe, Drawer, Snackbar und NoticeBar fest,
 `contracts-4a.test.mjs` die Verträge, `engine-classes.test.mjs` sperrt die alten Klassen in TSX, Stylesheets, Java,

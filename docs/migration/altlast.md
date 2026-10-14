@@ -679,8 +679,10 @@ in `tokens.json`: `size-drawer-narrow|medium|wide` und `size-toast-max`.
 
 ### Offen
 
-* Ring um die ganze Dialogfläche bei Tastaturöffnung — Entscheidung Hendrik.
-* Snackbar: Rollenwechsel `status` → `alert` am lebenden Element wird nicht zuverlässig angesagt — Folgeticket.
+* ~~Ring um die ganze Dialogfläche bei Tastaturöffnung~~ — entschieden 14.10. (Hendrik: Fokus verlegen), gebaut
+  (Engine `e29345b7a8`): erstes Feld, primärer Fußknopf, erstes Bedienelement im Körper, erster nicht destruktiver
+  Fußknopf, erst dann die Fläche; live geprüft an „Ungespeicherte Änderungen“ (Fokus auf Abbrechen, Enter bricht ab).
+* Snackbar: Rollenwechsel `status` → `alert` am lebenden Element wird nicht zuverlässig angesagt — Folgeticket **#29851**.
 
 ### Offen für 4b
 

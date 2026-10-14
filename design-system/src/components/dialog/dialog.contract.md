@@ -29,8 +29,10 @@ Zwei Controls, ein Baustein: `TLDialog` (`ReactDialogControl`) rendert den Scrim
 
 ## Verhalten
 
-- Beim Öffnen geht der Fokus auf das erste Feld, sonst auf die Fläche; Tab bleibt in der Fläche; beim Schließen kehrt
-  er zum Auslöser zurück.
+- Beim Öffnen geht der Fokus auf das erste Feld; ohne Feld auf den primären Knopf im Fuß (er ist der Enter-Standard),
+  sonst auf das erste Bedienelement im Körper, sonst auf den ersten Fußknopf, der nicht `--danger` ist; erst ohne all
+  das auf die Fläche. Nie auf einen Knopf der Titelleiste. Tab bleibt in der Fläche; beim Schließen kehrt er zum
+  Auslöser zurück.
 - Escape schließt den obersten Dialog; ein Popup darin (Select, Menü) schließt zuerst.
 - Ziehen am Kopf verschiebt die Fläche im Viewport; die Griffe ändern die Größe (mindestens 200 × 100 px, höchstens
   Viewport minus Rand); Doppelklick auf den Kopf maximiert.
