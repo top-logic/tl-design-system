@@ -25,7 +25,7 @@ Das Control ist `TLNoticeBar` (`ReactNoticeBarControl`).
 
 - Ohne Aktion: `role="alert"` bei `error`, sonst `role="status"`.
 - Mit Aktion: `role="button"`, `tabindex="0"`, Enter und Leertaste lösen aus; der Ring kommt aus `base.css`.
-- Der Countdown steht in `tl-notice-bar__countdown` mit `tl-nums` und `tl-type-body-strong`.
+- Der Countdown steht in `tl-notice-bar__countdown` mit `tl-nums` und `tl-type-body-strong` und trägt `aria-live="off"`: die erste Ansage nennt die Zeit, das Ticken wird nicht angesagt.
 
 ## Tokens
 
@@ -38,7 +38,7 @@ Aus `tl-alert`; der Balken hat keine Ecke und die Linie nur unten und am Zeilena
 | `tl-alert` + `tl-notice-bar` + `data-tl-role` | immer |
 | `role="button"` + `tabindex="0"` + `aria-label` | mit Aktion |
 | `role="alert"` / `role="status"` | ohne Aktion |
-| `tl-notice-bar__countdown` | mit Frist |
+| `tl-notice-bar__countdown` + `aria-live="off"` | mit Frist |
 
 ## Konformität
 

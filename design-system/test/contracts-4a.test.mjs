@@ -13,7 +13,7 @@ const SOLL = {
   'snackbar/snackbar.contract.md': ['tl-snackbar', 'tl-alert', 'data-tl-role', 'role="alert"', 'role="status"',
     'data-tl-state~="exiting"', '--tl-layer-toast', '--tl-shadow-drag', 'dismiss', 'generation'],
   'notice-bar/notice-bar.contract.md': ['tl-notice-bar', 'tl-alert', 'data-tl-role', 'role="button"', 'role="alert"',
-    'tl-notice-bar__countdown', 'tl-nums', 'action', 'deadlinePassed'],
+    'tl-notice-bar__countdown', 'aria-live="off"', 'tl-nums', 'action', 'deadlinePassed'],
   'overlay/overlay.contract.md': ['tl-overlay', 'tl-overlay__base', 'tl-overlay__layer'],
   'titlebar/titlebar.contract.md': ['tl-titlebar', 'tl-titlebar__title', 'tl-titlebar__actions', '--tl-size-bar'],
   'alert/alert.contract.md': ['tl-snackbar', 'tl-notice-bar'],
