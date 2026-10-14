@@ -36,7 +36,7 @@ durch, Fixwelle committet (Paket `623fd4d`, Engine `8b4d2f6d4f` auf `CWS/CWS_298
 gelöst). Gates: Paket 386/0, Lint grün, `tsc` 0, Vite grün, Maven `layout.react` 612, `demo.react` 13, `layout.view`
 nur #29651 rot, Messages ohne Diff. Sichtprüfung lokal erledigt (Befund S1 Dialoghöhe behoben). Trac #29836 hat
 `== Migration ==` und `RequiresMigration`. Ledger mit allen Rulings: `.superpowers/sdd/2026-10-13-welle-4a-overlays/progress.md`.
-**Nächstes:** (1) Re-Review der Fixwelle prüfen (lief beim Pausieren; Diffs `review-81543d5..623fd4d.diff`,
+**Nächstes:** (1) erledigt: Re-Review der Fixwelle sauber (Rest-Minor: Kommentar `tlReactControls.css:2263` zur leeren NoticeBar veraltet; Diffs `review-81543d5..623fd4d.diff`,
 `review-815143cf5a..8b4d2f6d4f.diff` im Ledger-Ordner) · (2) Hendrik entscheidet: Fokusring um die ganze Dialogfläche
 bei Tastaturöffnung (lassen oder Fallback-Fokus verlegen) · (3) „Rulings“ aus dem Ledger an Hendrik melden, Ledger-Ordner
 löschen · (4) Push nur mit Freigabe (Engine-Branch und Paket-`main`), PR gegen die Spaltenwahl, Reviewer bhu, `jenkins`.
