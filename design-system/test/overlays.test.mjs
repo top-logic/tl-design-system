@@ -30,7 +30,7 @@ test('tl-overlay: Ebenen decken die Basis, lassen den Zeiger durch, zehn Anker, 
 test('tl-titlebar: Leistenhöhe, Linie unten, Titel mit Ellipse, Aktionen am Ende', () => {
   assert.match(decl('titlebar', '.tl-titlebar'), /min-height:\s*var\(--tl-size-bar\)/);
   assert.match(decl('titlebar', '.tl-titlebar'), /border-bottom:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-separator\)/);
-  assert.match(decl('titlebar', '.tl-titlebar__title'), /flex:\s*1 1 auto/);
+  assert.match(decl('titlebar', '.tl-titlebar__title'), /flex:\s*1 1 0;/);
   assert.match(decl('titlebar', '.tl-titlebar__title'), /margin:\s*0/);
   assert.match(decl('titlebar', '.tl-titlebar__actions'), /display:\s*flex/);
   assert.match(decl('titlebar', '.tl-titlebar > .tl-button'), /flex:\s*none/);

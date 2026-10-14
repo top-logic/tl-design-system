@@ -2957,7 +2957,7 @@ a.tl-field-value:hover {
 .tl-titlebar[hidden] { display: none; }
 
 .tl-titlebar__title {
-  flex: 1 1 auto;
+  flex: 1 1 0; /* Basis 0: der Titel kürzt zuerst, die Aktionen behalten ihre Breite. */
   min-width: 0;
   margin: 0;
   overflow: hidden;
