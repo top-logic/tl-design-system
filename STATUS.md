@@ -8,7 +8,13 @@
 Lagebild: http://localhost:8138/
 
 **Wartet auf Bernhard (nichts selbst tun, außer er antwortet):**
-1. **!1838** (Welle 3b, #29821): Review fehlt, erneut angefordert 12.10.
+1. **!1838** (Welle 3b, #29821): Bernhards Request Changes (14.10. 09:28, Ziehen in der geordneten Liste lehnt in der
+   Zeilenmitte ab) und Konflikte mit master (!1841 #29815, #29757) — **lokal erledigt 14.10., nicht gepusht**: Merge
+   `4c2441f470` (Tönung als `data-tl-role`, Zeilenzahl, Verlauf vor der Spaltenwahl; Paket `4fe3a9c`, `48573d0`,
+   skalen.md „Nachgetragen beim master-Merge in 3b“) und `1bd64cace7` (Modi je Art, `dropModesByKind`). Gates: react
+   659/0, view 1429/1 (#29651), configedit 341/0, demo.react 13/0, Messages ohne Diff; JDK 21 nötig (Homebrew-Default 27
+   bricht `ext.com.meterware.httpunit`). **Danach:** Push 3b, dann 3b → Spaltenwahl → 4a mergen und je Branch
+   publizieren, jeweils Push mit Freigabe; `jenkins` je PR entfernen und neu anfragen (nur eine neue Anfrage baut).
 2. **!1852** (#29825 Spaltenwahl): sein Request Changes (12.10. 18:23, Schloss/Auge blieben nach Klick sichtbar) ist
    behoben — Knöpfe nur bei Tastaturfokus `:has(:focus-visible)`; Engine `00f3c902e4`, Paket `87aa99e`; geantwortet
    und Review erneut angefordert 13.10.

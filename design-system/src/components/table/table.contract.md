@@ -55,9 +55,11 @@ rechnet sie aus `--tl-size-row` (`useTokenPx`).
 | `search` | string | Suchtext über die angezeigten Spalten. |
 | `filterSaving` | boolean | Die aktuellen Kriterien lassen sich speichern (`tl-table__save`). |
 | `dragEnabled` | boolean | Zeilen lassen sich ziehen. |
-| `dragType` | string | Art der gezogenen Daten. |
+| `dragKind` | string | Art der gezogenen Daten (#29776). |
+| `dropAcceptsAny` | boolean | Die Tabelle nimmt jede Art an. |
 | `dropAccepts` | Liste | Arten, die die Tabelle als Ziel annimmt. |
-| `dropOnRows` | boolean | Abgelegt wird auf, vor oder hinter Zeilen; sonst auf der Tabelle als Ganzes. |
+| `dropModes` | Liste | Modi der Ablage-Operationen: `ordered` (vor/hinter einer Zeile), `onto` (auf eine Zeile), `control` (auf die Tabelle als Ganzes). Danach teilt das TSX eine Zeile: beide → Drittel, nur `ordered` → Hälften, nur `onto` → ganz. |
+| `dropModesByKind` | Objekt | Die Modi je angenommener Art. Geteilt wird nach den Modi der gezogenen Art; eine Art, die hier fehlt, nach `dropModes`. So bekommt eine Liste, die Knoten einordnet und Notizen auf eine Zeile legt, für Knoten Hälften und für Notizen die ganze Zeile — nicht Drittel, deren Mitte den Knoten ablehnte (Review !1838). |
 | `dropVerdicts` | Objekt | Antwort des Servers je Probe: angenommen oder abgelehnt mit Grund (`tl-table__hint`). |
 
 ## Aktionen
