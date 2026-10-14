@@ -202,6 +202,11 @@ test('ein Prozent-Literal ist ein Maß-Literal — 50 % zum Zentrieren und 100 %
   assert.deepEqual(lint('.tl-x { top: 50%; translate: 0 -50%; max-width: 100%; }', { known, file: 'x.css' }), []);
 });
 
+test('dynamische Viewport-Einheiten (dvh, dvw, svh, lvw …) sind Maß-Literale', () => {
+  assert.equal(lint('.tl-x { max-height: 100dvh; }', { known, file: 'x.css' }).length, 1);
+  assert.equal(lint('.tl-x { width: 50svw; }', { known, file: 'x.css' }).length, 1);
+});
+
 test('ein Pseudo-Element des Browsers fällt unter dasselbe Gate wie seine Klasse', () => {
   // Der Kalenderknopf (field.css) liegt hinter ::-webkit-calendar-picker-indicator: Literale dort brechen.
   const sel = '.tl-field:enabled::-webkit-calendar-picker-indicator:hover';

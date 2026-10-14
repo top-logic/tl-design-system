@@ -40,7 +40,7 @@ const NAMED_COLORS = new Set([
 const COLOR = /#[0-9a-fA-F]{3,8}\b|\b(rgba?|hsla?|oklch|color-mix)\(/;
 // Nach `%` liegt keine Wortgrenze — darum eine eigene Alternative, die auf Leerraum, `;`, `)` oder das
 // Wertende schaut. Sonst ginge `width: 37%` unbemerkt durch.
-const LENGTH = /(^|\s)-?\d*\.?\d+(px|rem|em|vh|vw|ch|pt)\b|(^|\s)-?\d*\.?\d+%(?=\s|;|$|\))/;
+const LENGTH = /(^|\s)-?\d*\.?\d+(px|rem|em|vh|vw|dvh|dvw|svh|svw|lvh|lvw|ch|pt)\b|(^|\s)-?\d*\.?\d+%(?=\s|;|$|\))/;
 // Einheitenlose Literale (Punkt 10): opacity, flex, order und grid-* nehmen bewusst
 // dimensionslose Zahlen entgegen (0.5, 2, -1 …) — das ist keine Maß-Angabe und wird darum
 // nicht verschärft. LENGTH greift ohnehin nur bei einer Einheit, hier nur dokumentiert.

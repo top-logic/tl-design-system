@@ -2226,7 +2226,9 @@ vorgeschlagen“ (Hendrik). Spec 4a `docs/superpowers/specs/2026-10-13-welle-4a-
 * **Drawer: Richtung und Schatten.** Das Hinausschieben folgt der Schreibrichtung (`:dir(rtl)`), der Schatten erscheint nur
   offen — sonst schien der Schatten eines geschlossenen Drawers vom Rand herein.
 * **Der Countdown der NoticeBar schweigt.** Er trägt `aria-live="off"`: die Rolle sagt den Hinweis einmal an, das Ticken
-  nicht; ein Fehler (`role="alert"`) unterbräche sonst jede Sekunde.
+  nicht; ein Fehler (`role="alert"`) unterbräche sonst jede Sekunde. Die Rolle sitzt auf einer bleibenden Hülle
+  (`div[role=status|alert]`, leer ohne Balken), nicht auf dem Balken: ein klickbarer Balken ist ein Knopf, und eine
+  Region, die schon gefüllt eingefügt wird, wird oft nicht angesagt.
 
 **Als Test (mit dem Bau):** `overlays.test.mjs` hält Scrim, Fläche, Kopf, Griffe, Drawer, Snackbar und NoticeBar fest,
 `contracts-4a.test.mjs` die Verträge, `engine-classes.test.mjs` sperrt die alten Klassen in TSX, Stylesheets, Java,

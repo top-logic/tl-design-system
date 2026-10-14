@@ -608,7 +608,12 @@ Grep-Gate `test/engine-classes.test.mjs` aus der Engine fern; für die Paketklas
 
 Spec `docs/superpowers/specs/2026-10-13-welle-4a-overlays-design.md`, Branch `CWS/CWS_29836_design_system_welle_4a` (Engine,
 Suiten grün bis auf den fremden Accordion-Test #29651, `messages_en` ohne Diff) und Paket (`main`, Ratsche je Task). Noch
-**nicht gepusht**; die Sichtprüfung steht aus. Ratsche: `lines` 4505 → 4010.
+**nicht gepusht**. Ratsche: `lines` 4505 → 4010.
+
+Sichtprüfung lokal 14.10. (`tl-demo-react`, dunkel/hell/kompakt): Dialoge (Spaltenwahl, Neu, Hinweis, Rückfrage), Escape
+in Schichten, Fokus zurück, Ziehen/Größe/Maximieren, Drawer, Snackbar mit Fehlerliste. Der Tooltip am Snackbar-Schließen
+liegt über der Snackbar (Spec §12 erledigt, keine Regel). Nicht live geprüft: NoticeBar, Fotoaufnahme, reduzierte
+Bewegung.
 
 ### Gestrichene Blöcke
 
@@ -668,7 +673,14 @@ in `tokens.json`: `size-drawer-narrow|medium|wide` und `size-toast-max`.
 * **Drawer:** das Hinausschieben folgt der Schreibrichtung (`:dir(rtl)`), der Schatten erscheint nur offen — sonst schien
   der Schatten eines geschlossenen Drawers vom Rand herein.
 * **NoticeBar:** der Countdown trägt `aria-live="off"` — die Rolle sagt den Hinweis einmal an, das Ticken nicht; ein
-  Fehler (`role="alert"`) unterbräche sonst jede Sekunde.
+  Fehler (`role="alert"`) unterbräche sonst jede Sekunde. Die Rolle sitzt auf einer bleibenden Hülle
+  (`div[role=status|alert]`, leer ohne Balken): ein klickbarer Balken ist ein Knopf, und eine Region, die schon gefüllt
+  eingefügt wird, wird oft nicht angesagt.
+
+### Offen
+
+* Ring um die ganze Dialogfläche bei Tastaturöffnung — Entscheidung Hendrik.
+* Snackbar: Rollenwechsel `status` → `alert` am lebenden Element wird nicht zuverlässig angesagt — Folgeticket.
 
 ### Offen für 4b
 

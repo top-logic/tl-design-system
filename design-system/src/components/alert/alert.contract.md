@@ -9,7 +9,8 @@ Das Control ist `TLAlert` (`ReactAlertControl`, `AlertStateJson`, master #29652;
 
 Zwei Controls tragen den Alert mit eigener Hülle (Welle 4a): `tl-snackbar` (schwebend, geht von selbst; Vertrag
 `snackbar`) und `tl-notice-bar` (Balken über die volle Breite; Vertrag `notice-bar`). Für alle drei gilt dieselbe
-Ansage-Regel: nur `error` ist `role="alert"`.
+Ansage-Regel: nur `error` ist `role="alert"`. Bei der NoticeBar sitzt die Rolle auf einer bleibenden Hülle um den Balken
+(ein klickbarer Balken ist ein Knopf, `role="button"`); bei Snackbar und Alert am Alert selbst.
 
 Was es bekommt (`AlertStateJson`):
 

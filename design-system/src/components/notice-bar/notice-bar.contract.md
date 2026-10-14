@@ -1,7 +1,8 @@
 # Vertrag: NoticeBar
 
 Ein Hinweis der ganzen Anwendung als Balken über die volle Breite, z. B. eine angekündigte Wartung mit Countdown. Ein
-`tl-alert` mit eigener Hülle.
+`tl-alert` mit eigener Hülle. Um den Balken steht eine bleibende Hülle, `div[role="status"]` (bei `error`:
+`role="alert"`); sie ist die Live-Region und bleibt leer, solange nichts zu zeigen ist.
 
 ## Zustand
 
@@ -23,8 +24,12 @@ Das Control ist `TLNoticeBar` (`ReactNoticeBarControl`).
 
 ## Verhalten
 
-- Ohne Aktion: `role="alert"` bei `error`, sonst `role="status"`.
-- Mit Aktion: `role="button"`, `tabindex="0"`, Enter und Leertaste lösen aus; der Ring kommt aus `base.css`.
+- Die Ansage sitzt auf der Hülle: `role="alert"` bei `error`, sonst `role="status"` — mit und ohne Aktion. Die Hülle
+  bleibt im DOM, auch wenn nichts gezeigt wird (unsichtbar oder vor dem Vorlauf); der Balken kommt in sie hinein. Grund:
+  ein klickbarer Balken ist ein Knopf und keine Live-Region, und eine Region, die schon gefüllt eingefügt wird, wird oft
+  nicht angesagt.
+- Ohne Aktion trägt der Balken keine Rolle.
+- Mit Aktion: der Balken trägt `role="button"`, `tabindex="0"`, Enter und Leertaste lösen aus; der Ring kommt aus `base.css`.
 - Der Countdown steht in `tl-notice-bar__countdown` mit `tl-nums` und `tl-type-body-strong` und trägt `aria-live="off"`: die erste Ansage nennt die Zeit, das Ticken wird nicht angesagt.
 
 ## Tokens
@@ -35,9 +40,9 @@ Aus `tl-alert`; der Balken hat keine Ecke und die Linie nur unten und am Zeilena
 
 | Attribut | Wann |
 |---|---|
-| `tl-alert` + `tl-notice-bar` + `data-tl-role` | immer |
-| `role="button"` + `tabindex="0"` + `aria-label` | mit Aktion |
-| `role="alert"` / `role="status"` | ohne Aktion |
+| `div[role="status"]` / `div[role="alert"]` (bei `error`) | immer, bleibende Hülle um den Balken, leer ohne Balken |
+| `tl-alert` + `tl-notice-bar` + `data-tl-role` | am Balken, wenn er gezeigt wird |
+| `role="button"` + `tabindex="0"` + `aria-label` | am Balken, nur mit Aktion |
 | `tl-notice-bar__countdown` + `aria-live="off"` | mit Frist |
 
 ## Konformität

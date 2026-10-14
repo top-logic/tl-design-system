@@ -306,7 +306,7 @@ Einen vierten Weg gibt es nicht: Shell nutzen und den Draht ignorieren. Und es g
 | 1 | Button, Pill, Avatar, Progress, FontIcon | auf master |
 | 2 | Felder, Checkbox, Select, Formular | gebaut, PR folgt — ein Feldrahmen für alle; Fehler ist `aria-invalid`, dasselbe Attribut für Auge und Screenreader; ein deaktiviertes Feld zeigt nie einen Fehler; gewählt sieht überall gleich aus (Chip wie Kästchen); schreibgeschützt bleibt lesbar, nicht grau; Ratsche 7.252 → 5.994 Zeilen, zwölf alte Blöcke gestrichen |
 | 3 | Tabelle, Baum, Menü, Toolbar, Reiter | Datendarstellung und Navigation |
-| 4 | Dialog, Fenster, Drawer, Snackbar, Shell | zwei PRs: **4a Overlays** (Spec und Plan stehen) — ein Dialog, eine Titelleiste, Meldungen als Alerts; **4b Gerüst** (Shell, Sidebar, Panel) folgt |
+| 4 | Dialog, Fenster, Drawer, Snackbar, Shell | zwei PRs: **4a Overlays** (gebaut, lokal; PR folgt) — ein Dialog, eine Titelleiste, Meldungen als Alerts; **4b Gerüst** (Shell, Sidebar, Panel) folgt |
 | 5 | Kalender, Farbwahl, Medien, Dashboard | fachlich, zuletzt |
 
 Innerhalb einer Welle keine Reihenfolge — parallel ist möglich. Der Button ist die Vorlage für alle Muster.
