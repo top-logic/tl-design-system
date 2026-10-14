@@ -607,8 +607,8 @@ Grep-Gate `test/engine-classes.test.mjs` aus der Engine fern; für die Paketklas
 ## Welle 4a · Overlays — gebaut 14.10.2026
 
 Spec `docs/superpowers/specs/2026-10-13-welle-4a-overlays-design.md`, Branch `CWS/CWS_29836_design_system_welle_4a` (Engine,
-Suiten grün bis auf den fremden Accordion-Test #29651, `messages_en` ohne Diff) und Paket (`main`, Ratsche je Task). Noch
-**nicht gepusht**. Ratsche: `lines` 4505 → 4010.
+Suiten grün bis auf den fremden Accordion-Test #29651, `messages_en` ohne Diff) und Paket (`main`, Ratsche je Task).
+Gepusht 14.10., PR [!1882](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1882) gegen die Spaltenwahl. Ratsche: `lines` 4505 → 4010.
 
 Sichtprüfung lokal 14.10. (`tl-demo-react`, dunkel/hell/kompakt): Dialoge (Spaltenwahl, Neu, Hinweis, Rückfrage), Escape
 in Schichten, Fokus zurück, Ziehen/Größe/Maximieren, Drawer, Snackbar mit Fehlerliste. Der Tooltip am Snackbar-Schließen

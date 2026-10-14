@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-13 (#29825: Bernhards Request Changes behoben und gepusht, Review erneut angefordert; Kommentar zu !1841; Welle 4: Prognose, Ticket #29836, Spec und Plan 4a mit Plan-Review — Umsetzung in frischer Sitzung) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-14 (Welle 4a gebaut per SDD, gepusht, PR !1882 gegen die Spaltenwahl; Doku- und Wiki-Abgleich) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -12,7 +12,8 @@ Lagebild: http://localhost:8138/
 2. **!1852** (#29825 Spaltenwahl): sein Request Changes (12.10. 18:23, Schloss/Auge blieben nach Klick sichtbar) ist
    behoben — Knöpfe nur bei Tastaturfokus `:has(:focus-visible)`; Engine `00f3c902e4`, Paket `87aa99e`; geantwortet
    und Review erneut angefordert 13.10.
-3. **!1841** (#29815, sein PR): Kommentar 12.10. — `tl-status-*` als Klassen und Regeln auf `tlTableView__row`
+3. **!1882** (#29836 Welle 4a, gestapelt auf !1852): angelegt 14.10., Reviewer bhu und `jenkins`.
+4. **!1841** (#29815, sein PR): Kommentar 12.10. — `tl-status-*` als Klassen und Regeln auf `tlTableView__row`
    kollidieren mit 3b; Vorschlag `row-role` → `data-tl-role` am `tl-table__row`, Paket zeichnet die Tönung. Stimmt er zu,
    bauen wir Paket und TSX auf 3b.
 
@@ -31,15 +32,14 @@ Nachträge aus dem Planen), Plan `docs/superpowers/plans/2026-10-13-welle-4a-ove
 Fable mit Probelauf: Lint grün, `tsc` 0, Befunde eingearbeitet). **Entschieden:** Branch
 `CWS/CWS_29836_design_system_welle_4a` auf `origin/CWS/CWS_29825_design_system_spaltenwahl` (auf 3b wäre das
 Paket-Gate der Spaltenwahl rot), Merge-Reihenfolge 3b → Spaltenwahl → 4a; Ausführung **Subagent-driven**.
-**Stand 14.10. (pausiert): 4a gebaut, lokal committet, nicht gepusht.** Tasks 1–10 fertig, Schluss-Review (Opus)
-durch, Fixwelle committet (Paket `623fd4d`, Engine `8b4d2f6d4f` auf `CWS/CWS_29836_design_system_welle_4a`, Upstream
-gelöst). Gates: Paket 386/0, Lint grün, `tsc` 0, Vite grün, Maven `layout.react` 612, `demo.react` 13, `layout.view`
+**Stand 14.10.: 4a gebaut, gepusht, PR [!1882](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1882)** gegen
+`CWS/CWS_29825_design_system_spaltenwahl` (Engine-Head `8b4d2f6d4f`, Paket `main` bis `15044ee`), Reviewer bhu und
+`jenkins`. Gates: Paket 386/0, Lint grün, `tsc` 0, Vite grün, Maven `layout.react` 612, `demo.react` 13, `layout.view`
 nur #29651 rot, Messages ohne Diff. Sichtprüfung lokal erledigt (Befund S1 Dialoghöhe behoben). Trac #29836 hat
-`== Migration ==` und `RequiresMigration`. Ledger mit allen Rulings: `.superpowers/sdd/2026-10-13-welle-4a-overlays/progress.md`.
-**Nächstes:** (1) erledigt: Re-Review der Fixwelle sauber (Rest-Minor: Kommentar `tlReactControls.css:2263` zur leeren NoticeBar veraltet; Diffs `review-81543d5..623fd4d.diff`,
-`review-815143cf5a..8b4d2f6d4f.diff` im Ledger-Ordner) · (2) Hendrik entscheidet: Fokusring um die ganze Dialogfläche
-bei Tastaturöffnung (lassen oder Fallback-Fokus verlegen) · (3) „Rulings“ aus dem Ledger an Hendrik melden, Ledger-Ordner
-löschen · (4) Push nur mit Freigabe (Engine-Branch und Paket-`main`), PR gegen die Spaltenwahl, Reviewer bhu, `jenkins`.
+`== Migration ==` und `RequiresMigration`. Rulings stehen in `altlast.md` „Welle 4a“, der Ledger ist gelöscht.
+**Offen für Hendrik:** Fokusring um die ganze Dialogfläche bei Tastaturöffnung (lassen oder Fallback-Fokus verlegen);
+Snackbar-Rollenwechsel `status` → `alert` als Folgeticket? Rest-Minor: Kommentar `tlReactControls.css:2263` zur leeren
+NoticeBar veraltet. **Nächstes:** Review von Bernhard; nach Merge von !1838 und !1852 die Basis von !1882 auf master.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
@@ -59,7 +59,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 | 2 | Formulare (Felder, Select, Checkbox, FormField, FormLayout …) | 11 | master | #29617 |
 | 3a | Menü, Toolbar, Reiter, Breadcrumb, Popups, Ton folgt der Aktion | 5 | master | #29617 |
 | 3b | Tabelle, Baum, Text, Spaltenwahl als Ebenen-Panel (!1838, !1852) | 3 | PR | #29821, #29825 |
-| 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay | 7 | gebaut | #29836 |
+| 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay (!1882) | 7 | PR | #29836 |
 | 4b | Gerüst: AppShell, AppBar, Sidebar, BottomBar, Panel, SplitPanel, Card, Stack, Grid, Wizard; Q10–Q18 | 10 | offen | eigenes beim Start |
 | 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | offen | — |
 
