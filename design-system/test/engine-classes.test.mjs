@@ -42,3 +42,31 @@ test('die Spaltenwahl ist ein Ebenen-Panel: kein Kästchen, kein Zeilen-Gruppier
   const tsx = readFileSync(join(M, 'react-src/controls/TLColumnSelect.tsx'), 'utf8');
   assert.doesNotMatch(tsx, /aria-pressed|tl-checkbox|tl-choice|grouped|groupBy|ICON_GROUP/);
 });
+
+// Welle 4a (#29836): keine alte Overlay-Klasse mehr — im TSX jedes Moduls, im alten Stylesheet, in den Java-Quellen,
+// den Entwickler-Artikeln (tl-docs) und im Stylesheet der Demo. Modulnamen (TLWindow) treffen nicht: großes TL.
+const ALT_4A = /\btl(Dialog|DialogManager|Window|Drawer|Snackbar|NoticeBar|Overlay)(__|--|\b)|\btlPhotoCapture__overlay(Backdrop)?\b/;
+
+function* tree(dir, pattern) {
+  if (!existsSync(dir)) return;
+  for (const f of readdirSync(dir)) {
+    const p = join(dir, f);
+    if (statSync(p).isDirectory()) yield* tree(p, pattern);
+    else if (pattern.test(f)) yield p;
+  }
+}
+
+test('keine alte Klasse der Welle 4a in react-src, Stylesheets, Java, tl-docs und Views', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+  const quellen = [
+    ...reactSources(),
+    join(M, 'src/main/webapp/style/tlReactControls.css'),
+    join(WT, 'com.top_logic.demo.react/src/main/webapp/style/tl-demo-react.css'),
+    ...tree(join(M, 'src/main/java'), /\.java$/),
+    ...tree(join(WT, 'com.top_logic.layout.view/src/main/java/META-INF/tl-docs'), /\.md$/),
+    ...tree(join(WT, 'com.top_logic.demo.react/src/main/webapp'), /\.view\.xml$/),
+    ...tree(join(WT, 'com.top_logic.layout.view/src/main/webapp'), /\.view\.xml$/),
+  ];
+  const hits = [];
+  for (const p of quellen) readFileSync(p, 'utf8').split('\n').forEach((line, i) => { if (ALT_4A.test(line)) hits.push(`${p.slice(WT.length + 1)}:${i + 1}`); });
+  assert.deepEqual(hits, []);
+});

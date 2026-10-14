@@ -604,6 +604,80 @@ Grep-Gate `test/engine-classes.test.mjs` aus der Engine fern; für die Paketklas
 | **Befund an master, #29743** | Tooltip-Ebene `calc(var(--tl-layer-popover) + 1)` — eine Ebene, die die Skala nicht kennt. |
 | **Befund an master, #29730 (Kanban), 09.10.** | Kandidat für die Konsolidierung, Prognose vor der Spec der Welle, die das Board holt: `controls/drop-hint.ts` `placeDropHint` ist die neunte handgeschriebene Positionsrechnung (W1 löste acht durch `usePopover`); der Ablehnungshinweis `.tlKanbanBoard__dropHint` (z-index 13000, `--support-error`) ist die alte Fassung, die die Tabelle seit E9 als `tl-popover tl-table__hint` zeichnet; die Einfügelinie zwischen Karten (`--dropBefore/--dropAfter`) ist eine eigene Ablage-Optik neben `drag.css`. Dazu Touch-Ziehen (`startPointerDrag`, eigener Block „Touch drag“). |
 
+## Welle 4a · Overlays — gebaut 14.10.2026
+
+Spec `docs/superpowers/specs/2026-10-13-welle-4a-overlays-design.md`, Branch `CWS/CWS_29836_design_system_welle_4a` (Engine,
+Suiten grün bis auf den fremden Accordion-Test #29651, `messages_en` ohne Diff) und Paket (`main`, Ratsche je Task). Noch
+**nicht gepusht**; die Sichtprüfung steht aus. Ratsche: `lines` 4505 → 4010.
+
+### Gestrichene Blöcke
+
+| Block (`tlReactControls.css`) | Zeilen alt | Nachfolger |
+|---|---|---|
+| TLOverlay | 34 | `tl-overlay` (`overlay.css`) |
+| TLDialog (overlay-only) | 26 | `tl-dialog` (`dialog.css`), Scrim |
+| TLDialogManager | 6 | `tl-dialog` |
+| TLWindow | 183 | `tl-dialog__surface`, `tl-titlebar` (`titlebar.css`), acht Griffe `tl-dialog__resize` |
+| TLDrawer | 98 | `tl-drawer` (`drawer.css`), `tl-titlebar` |
+| TLSnackbar | 101 | `tl-alert tl-snackbar` (`snackbar.css`) |
+| TLNoticeBar (system-wide notice) | 33 | `tl-alert tl-notice-bar` (`notice-bar.css`) |
+
+Dazu: TLPhotoCapture 242→224 (`.tlPhotoCapture__overlay` und `__overlayBackdrop` gestrichen; Scrim und Hülle sind `tl-dialog`,
+die Kamera-Knöpfe bleiben bis Welle 5) und TLAppShell 33→37 (die Übergangsregel `.tlAppShell .tl-breadcrumb` stand im Block
+TLNoticeBar und zieht hierher; sie fällt in 4b). Literale: color 74→68, duration 32→29, zIndex 15→14, outlineNone 16→13.
+`foreignTl` ohne `--tlSnackbar-bg`, `--tlSnackbar-fg`.
+
+### Neu im Paket
+
+Sechs Bausteine: `overlay.css`, `titlebar.css`, `dialog.css`, `drawer.css`, `snackbar.css`, `notice-bar.css`. Zwei Maß-Gruppen
+in `tokens.json`: `size-drawer-narrow|medium|wide` und `size-toast-max`.
+
+### Alt → neu für Anwendungs-Stylesheets
+
+| Alt | Neu |
+|---|---|
+| `.tlDialog__backdrop` | `.tl-dialog` |
+| `.tlDialog__backdrop--entering` / `--exiting` | `.tl-dialog[data-tl-state~="entering"]` / `~="exiting"` |
+| `.tlWindow` | `.tl-dialog__surface` |
+| `.tlWindow__header`, `__title`, `__toolbar` | `.tl-titlebar`, `.tl-titlebar__title`, `.tl-titlebar__actions` |
+| `.tlWindow__maximizeBtn`, `__closeBtn` | `.tl-titlebar .tl-button--icon` |
+| `.tlWindow__body`, `__footer` | `.tl-dialog__body`, `.tl-dialog__footer` |
+| `.tlWindow__resizeHandle--<r>` | `.tl-dialog__resize[data-tl-edge="<r>"]` |
+| `.tlDrawer--left` / `--right` / `--bottom` | `.tl-drawer--start` / `--end` / `--bottom` |
+| `.tlDrawer--open` | `.tl-drawer[data-tl-state~="open"]` |
+| `.tlDrawer--container`, `--narrow|--medium|--wide` | `.tl-drawer--container`, `.tl-drawer--narrow|--medium|--wide` |
+| `.tlDrawer__header`, `__title`, `__closeBtn`, `__body` | `.tl-titlebar`, `.tl-titlebar__title`, `.tl-titlebar .tl-button--icon`, `.tl-drawer__body` |
+| `.tlSnackbar.tlSnackbar--<v>` | `.tl-alert.tl-snackbar[data-tl-role="<v>"]` |
+| `.tlSnackbar--exiting` | `.tl-snackbar[data-tl-state~="exiting"]` |
+| `.tlSnackbar__message`, `__title`, `__close` | `.tl-alert__message`, `.tl-alert__title`, `.tl-alert__close` |
+| `--tlSnackbar-bg`, `--tlSnackbar-fg` | entfällt (Rolle über `data-tl-role`) |
+| `.tlNoticeBar.tlNoticeBar--<s>` | `.tl-alert.tl-notice-bar[data-tl-role="<s>"]` |
+| `.tlNoticeBar--clickable` | `.tl-notice-bar[role="button"]` |
+| `.tlNoticeBar__text`, `__countdown` | `.tl-alert__message`, `.tl-notice-bar__countdown` |
+| `.tlOverlay`, `__base`, `__layer`, `__layer--<a>` | `.tl-overlay`, `__base`, `__layer`, `__layer--<a>` |
+| `.tlPhotoCapture__overlay`, `__overlayBackdrop` | `.tl-dialog` (Scrim; Kamera-Knöpfe bleiben bis Welle 5) |
+
+### Nachgetragen beim Bau (14.10.)
+
+* **Titelleiste:** der Titel kürzt zuerst (`flex: 1 1 0`), Kopfknöpfe schrumpfen nicht (`flex: none`) — sonst liefen bei
+  langem Titel die Fensteraktionen über die Kopfknöpfe, und die Knöpfe fielen unter 24 px.
+* **Dialog:** der Scrim hat keinen Innenabstand; die Fläche begrenzt sich selbst auf `calc(100% - 2 * var(--tl-space-lg))`,
+  maximiert ohne Grenze — sonst wuchs ein Fenster beim ersten Ziehen um den Rand (Prozent gegen eine andere Box); `vw`/`vh`
+  sind im Lint Literale.
+* **Drawer:** das Hinausschieben folgt der Schreibrichtung (`:dir(rtl)`), der Schatten erscheint nur offen — sonst schien
+  der Schatten eines geschlossenen Drawers vom Rand herein.
+* **NoticeBar:** der Countdown trägt `aria-live="off"` — die Rolle sagt den Hinweis einmal an, das Ticken nicht; ein
+  Fehler (`role="alert"`) unterbräche sonst jede Sekunde.
+
+### Offen für 4b
+
+`useKeyedTransition` ohne Klassenart (Wizard, TileStack); mobile Sidebar auf den modalen Drawer; `tlViewError` auf
+`tl-alert`; `.tlAppShell .tl-breadcrumb` fällt.
+
+### Sichtbar
+
+Das Glass-Theme zeigt keinen Blur mehr hinter Dialogen; die Snackbar hat kein Icon (der State liefert keins).
+
 ## Konsolidierung (01.10.) — Gleiches wird zusammengelegt
 
 Regel (CLAUDE.md „Arbeitsweise“, skalen.md „Gleiches wird zusammengelegt“): findet eine Erkundung zwei Stellen, die
