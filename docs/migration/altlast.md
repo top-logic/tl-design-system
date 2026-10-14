@@ -677,6 +677,10 @@ in `tokens.json`: `size-drawer-narrow|medium|wide` und `size-toast-max`.
   (`div[role=status|alert]`, leer ohne Balken): ein klickbarer Balken ist ein Knopf, und eine Region, die schon gefüllt
   eingefügt wird, wird oft nicht angesagt.
 
+* **Dialogbehälter (#29757, master-Merge 14.10.):** master gibt `.tlDialogManager` `display: contents`, damit der
+  Behälter der Dialoge in der Fensterwurzel keinen Platz (und keinen Spalt des Stapels) beansprucht. In 4a trägt das
+  Element keine Klasse mehr; `TLDialogManager` setzt `display: contents` am Element selbst.
+
 ### Offen
 
 * ~~Ring um die ganze Dialogfläche bei Tastaturöffnung~~ — entschieden 14.10. (Hendrik: Fokus verlegen), gebaut
