@@ -280,6 +280,10 @@ test('Zeigen auf allen Gründen (01.10.): dunkel liegen hover, selected, active 
   assert.ok(ratio(C['border-interactive'], C['surface-interactive-selected']) >= 3.0);
   assert.equal(T.measure['size-popover-min'], '{size-11}');
   assert.equal(T.measure['size-popover-max'], '{view-1}');
+  assert.equal(P.measure['view-2'], '100dvw');
+  assert.equal(P.measure['view-3'], '100dvh');
+  assert.equal(T.measure['size-viewport-width'], '{view-2}');
+  assert.equal(T.measure['size-viewport-height'], '{view-3}');
 });
 
 test('Knöpfe im Feld (06.10.): Zeigen und Drücken heben sich von surface-field ab, Drücken vom Zeigen', () => {

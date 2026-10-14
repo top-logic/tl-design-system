@@ -531,6 +531,26 @@
           "com.top-logic.note": "viewport unit, not a DTCG dimension"
         }
       },
+      "view-2": {
+        "$type": "dimension",
+        "$value": {
+          "value": 100,
+          "unit": "dvw"
+        },
+        "$extensions": {
+          "com.top-logic.note": "viewport unit, not a DTCG dimension"
+        }
+      },
+      "view-3": {
+        "$type": "dimension",
+        "$value": {
+          "value": 100,
+          "unit": "dvh"
+        },
+        "$extensions": {
+          "com.top-logic.note": "viewport unit, not a DTCG dimension"
+        }
+      },
       "text-1": {
         "$type": "dimension",
         "$value": {
@@ -1749,6 +1769,14 @@
       "size-popover-max": {
         "$type": "dimension",
         "$value": "{primitive.measure.view-1}"
+      },
+      "size-viewport-width": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.view-2}"
+      },
+      "size-viewport-height": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.view-3}"
       },
       "size-drawer-narrow": {
         "$type": "dimension",

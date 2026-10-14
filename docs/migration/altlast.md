@@ -661,9 +661,10 @@ in `tokens.json`: `size-drawer-narrow|medium|wide` und `size-toast-max`.
 
 * **Titelleiste:** der Titel kürzt zuerst (`flex: 1 1 0`), Kopfknöpfe schrumpfen nicht (`flex: none`) — sonst liefen bei
   langem Titel die Fensteraktionen über die Kopfknöpfe, und die Knöpfe fielen unter 24 px.
-* **Dialog:** der Scrim hat keinen Innenabstand; die Fläche begrenzt sich selbst auf `calc(100% - 2 * var(--tl-space-lg))`,
-  maximiert ohne Grenze — sonst wuchs ein Fenster beim ersten Ziehen um den Rand (Prozent gegen eine andere Box); `vw`/`vh`
-  sind im Lint Literale.
+* **Dialog:** der Scrim hat keinen Innenabstand; die Fläche begrenzt sich selbst auf
+  `calc(var(--tl-size-viewport-width) - 2 * var(--tl-space-lg))` (und Höhe; Primitive `view-2`/`view-3`), maximiert ohne
+  Grenze — Prozent scheiden aus: sie wuchsen beim ersten Ziehen um den Rand (andere Box), und zwischen Scrim und Fläche
+  kann ein Behälter der Anwendung liegen (Demo „Neu“: 3,6-fache Viewporthöhe); `vw`/`vh` sind im Lint Literale, daher Tokens.
 * **Drawer:** das Hinausschieben folgt der Schreibrichtung (`:dir(rtl)`), der Schatten erscheint nur offen — sonst schien
   der Schatten eines geschlossenen Drawers vom Rand herein.
 * **NoticeBar:** der Countdown trägt `aria-live="off"` — die Rolle sagt den Hinweis einmal an, das Ticken nicht; ein

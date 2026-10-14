@@ -62,6 +62,8 @@ test('Wertformen je $type: cubicBezier, number, shadow, duration, dimension, fon
   const viewport = D.primitive.measure['view-1'];
   assert.deepEqual(viewport.$value, { value: 70, unit: 'vh' });
   assert.equal(viewport.$extensions?.['com.top-logic.note'], 'viewport unit, not a DTCG dimension');
+  assert.deepEqual(D.primitive.measure['view-2'].$value, { value: 100, unit: 'dvw' });
+  assert.deepEqual(D.primitive.measure['view-3'].$value, { value: 100, unit: 'dvh' });
 });
 
 test('jeder Name aus T.derived.light steht im Export', () => {

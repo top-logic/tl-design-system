@@ -2220,8 +2220,9 @@ vorgeschlagen“ (Hendrik). Spec 4a `docs/superpowers/specs/2026-10-13-welle-4a-
 * **Der Titel kürzt zuerst.** In der Titelleiste hat der Titel `flex: 1 1 0`, Kopfknöpfe `flex: none` — sonst liefen bei
   langem Titel die Fensteraktionen über die Kopfknöpfe, und die Knöpfe fielen unter 24 px.
 * **Die Dialogfläche begrenzt sich selbst.** Der Scrim hat keinen Innenabstand; die Fläche nimmt höchstens
-  `calc(100% - 2 * var(--tl-space-lg))`, maximiert ohne Grenze — sonst wuchs ein Fenster beim ersten Ziehen um den Rand
-  (Prozent gegen eine andere Box), und `vw`/`vh` sind im Lint Literale.
+  `calc(var(--tl-size-viewport-width) - 2 * var(--tl-space-lg))` (und Höhe; `view-2`/`view-3`), maximiert ohne Grenze.
+  Prozent scheiden aus: sie wuchsen beim ersten Ziehen um den Rand (andere Box), und zwischen Scrim und Fläche kann ein
+  Behälter der Anwendung liegen; `vw`/`vh` sind im Lint Literale, darum Tokens wie `size-popover-max`.
 * **Drawer: Richtung und Schatten.** Das Hinausschieben folgt der Schreibrichtung (`:dir(rtl)`), der Schatten erscheint nur
   offen — sonst schien der Schatten eines geschlossenen Drawers vom Rand herein.
 * **Der Countdown der NoticeBar schweigt.** Er trägt `aria-live="off"`: die Rolle sagt den Hinweis einmal an, das Ticken

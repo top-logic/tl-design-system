@@ -63,7 +63,7 @@ function parseDuration(raw) {
 }
 
 function parseDimension(raw) {
-  const m = /^(-?[\d.]+)(rem|px|em|%|vh)$/.exec(raw.trim());
+  const m = /^(-?[\d.]+)(rem|px|em|%|vh|dvw|dvh)$/.exec(raw.trim());
   if (!m) throw new Error(`dimension nicht lesbar: ${raw}`);
   return { value: parseFloat(m[1]), unit: m[2] };
 }
@@ -95,7 +95,7 @@ function primValue(type, raw) {
       const d = parseDimension(raw);
       if (d.unit === '%')
         return { $value: d, $extensions: { 'com.top-logic.note': 'percent, not a DTCG dimension' } };
-      if (d.unit === 'vh')
+      if (d.unit === 'vh' || d.unit === 'dvw' || d.unit === 'dvh')
         return { $value: d, $extensions: { 'com.top-logic.note': 'viewport unit, not a DTCG dimension' } };
       return { $value: d };
     }
