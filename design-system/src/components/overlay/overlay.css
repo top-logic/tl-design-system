@@ -1,0 +1,34 @@
+/* Overlay — Spec 2026-10-13 Welle 4a §8. Ein Stapel aus Basis und Ebenen, kein Overlay im Sinn eines Dialogs:
+   die Basis gibt die Höhe, das umgebende Layout die Breite; jede Ebene deckt genau diese Fläche und legt ihren
+   Inhalt an einen Rand, eine Ecke oder die Mitte. Wo eine Ebene nichts zeigt, geht der Zeiger zur Basis durch.
+   Keine Fläche, keine Ebene (z-index): das Aussehen gibt die Anwendung über die Klasse der Ebene. */
+
+.tl-overlay {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+.tl-overlay[hidden] { display: none; }
+
+.tl-overlay__layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  pointer-events: none;
+}
+
+/* Was die Ebene zeigt, nimmt den Zeiger zurück. */
+.tl-overlay__layer > * {
+  pointer-events: auto;
+}
+
+.tl-overlay__layer--fill { align-items: stretch; justify-content: stretch; }
+.tl-overlay__layer--top-left { align-items: start; justify-content: start; }
+.tl-overlay__layer--top { align-items: start; justify-content: center; }
+.tl-overlay__layer--top-right { align-items: start; justify-content: end; }
+.tl-overlay__layer--left { align-items: center; justify-content: start; }
+.tl-overlay__layer--center { align-items: center; justify-content: center; }
+.tl-overlay__layer--right { align-items: center; justify-content: end; }
+.tl-overlay__layer--bottom-left { align-items: end; justify-content: start; }
+.tl-overlay__layer--bottom { align-items: end; justify-content: center; }
+.tl-overlay__layer--bottom-right { align-items: end; justify-content: end; }

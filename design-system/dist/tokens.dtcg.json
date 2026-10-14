@@ -493,6 +493,34 @@
           "unit": "rem"
         }
       },
+      "size-12": {
+        "$type": "dimension",
+        "$value": {
+          "value": 16,
+          "unit": "rem"
+        }
+      },
+      "size-13": {
+        "$type": "dimension",
+        "$value": {
+          "value": 24,
+          "unit": "rem"
+        }
+      },
+      "size-14": {
+        "$type": "dimension",
+        "$value": {
+          "value": 36,
+          "unit": "rem"
+        }
+      },
+      "size-15": {
+        "$type": "dimension",
+        "$value": {
+          "value": 40,
+          "unit": "rem"
+        }
+      },
       "view-1": {
         "$type": "dimension",
         "$value": {
@@ -1721,6 +1749,22 @@
       "size-popover-max": {
         "$type": "dimension",
         "$value": "{primitive.measure.view-1}"
+      },
+      "size-drawer-narrow": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-12}"
+      },
+      "size-drawer-medium": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-13}"
+      },
+      "size-drawer-wide": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-14}"
+      },
+      "size-toast-max": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-15}"
       },
       "size-choice": {
         "$type": "dimension",

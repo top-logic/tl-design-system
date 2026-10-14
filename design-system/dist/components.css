@@ -1491,6 +1491,42 @@ a.tl-field-value:hover {
 }
 .tl-menu-region[hidden] { display: none; }
 
+/* --- overlay/overlay.css --- */
+/* Overlay — Spec 2026-10-13 Welle 4a §8. Ein Stapel aus Basis und Ebenen, kein Overlay im Sinn eines Dialogs:
+   die Basis gibt die Höhe, das umgebende Layout die Breite; jede Ebene deckt genau diese Fläche und legt ihren
+   Inhalt an einen Rand, eine Ecke oder die Mitte. Wo eine Ebene nichts zeigt, geht der Zeiger zur Basis durch.
+   Keine Fläche, keine Ebene (z-index): das Aussehen gibt die Anwendung über die Klasse der Ebene. */
+
+.tl-overlay {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+.tl-overlay[hidden] { display: none; }
+
+.tl-overlay__layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  pointer-events: none;
+}
+
+/* Was die Ebene zeigt, nimmt den Zeiger zurück. */
+.tl-overlay__layer > * {
+  pointer-events: auto;
+}
+
+.tl-overlay__layer--fill { align-items: stretch; justify-content: stretch; }
+.tl-overlay__layer--top-left { align-items: start; justify-content: start; }
+.tl-overlay__layer--top { align-items: start; justify-content: center; }
+.tl-overlay__layer--top-right { align-items: start; justify-content: end; }
+.tl-overlay__layer--left { align-items: center; justify-content: start; }
+.tl-overlay__layer--center { align-items: center; justify-content: center; }
+.tl-overlay__layer--right { align-items: center; justify-content: end; }
+.tl-overlay__layer--bottom-left { align-items: end; justify-content: start; }
+.tl-overlay__layer--bottom { align-items: end; justify-content: center; }
+.tl-overlay__layer--bottom-right { align-items: end; justify-content: end; }
+
 /* --- pill/pill.css --- */
 /* Pill — docs/skalen.md „Pill: Rolle statt Farbe“.
    Ein Wert, der sich von anderen abheben soll, als getönte Kapsel. Die Farbe ist eine Rolle aus
@@ -2625,6 +2661,38 @@ a.tl-field-value:hover {
   white-space: nowrap;
 }
 .tl-text--truncate[hidden] { display: none; }
+
+/* --- titlebar/titlebar.css --- */
+/* Titelleiste — Spec 2026-10-13 Welle 4a §3, Konsolidierung Q3. Der eine Kopf über einer Fläche: Titel links mit
+   Ellipse, Aktionen (Toolbar, Kopfknöpfe tl-button--icon --sm) rechts, eine Linie darunter. Dialog und Drawer
+   tragen ihn; Panel und Card folgen in 4b. Die Typo-Klasse des Titels (tl-type-heading-sm) setzt das Markup. */
+
+.tl-titlebar {
+  display: flex;
+  align-items: center;
+  gap: var(--tl-space-xs);
+  box-sizing: border-box;
+  min-height: var(--tl-size-bar);
+  padding: var(--tl-space-2xs) var(--tl-space-xs) var(--tl-space-2xs) var(--tl-space-md);
+  border-bottom: var(--tl-border-width-sm) solid var(--tl-border-separator);
+}
+.tl-titlebar[hidden] { display: none; }
+
+.tl-titlebar__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tl-titlebar__actions {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  min-width: 0;
+}
 
 /* --- toggle/toggle.css --- */
 /* Toggle — docs/skalen.md „Gleiches wird zusammengelegt“ (W4).

@@ -245,3 +245,8 @@ test('3b: Cursor, Lage, Filter und Ziehen sind Zustände, keine Modifier — an 
   }
   assert.deepEqual(lint('.tl-table__row[data-tl-state~="cursor"] { color: var(--tl-text-primary); }', { known, file: 'x.css' }), []);
 });
+
+test('Zustände der Overlays als Modifier brechen das Gate (Welle 4a)', () => {
+  for (const sel of ['.tl-dialog--entering', '.tl-dialog__surface--maximized', '.tl-notice-bar--clickable', '.tl-snackbar--visible', '.tl-x__y--exiting'])
+    assert.ok(lint(`${sel} { display: none; }`, { known, file: 'x.css' }).some((v) => /Zustand als/.test(v)), sel);
+});
