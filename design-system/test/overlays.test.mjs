@@ -78,10 +78,24 @@ test('tl-drawer: Overlay-Ebene am Viewport, raised im Behälter, schiebt mit Tok
   assert.match(d, /position:\s*fixed/);
   assert.match(d, /z-index:\s*var\(--tl-layer-overlay\)/);
   assert.match(d, /background:\s*var\(--tl-surface-overlay\)/);
-  assert.match(d, /box-shadow:\s*var\(--tl-shadow-dialog\)/);
+  assert.doesNotMatch(d, /box-shadow/);
   assert.match(d, /transition:\s*transform var\(--tl-duration-base\) var\(--tl-easing-exit\)/);
-  assert.match(decl('drawer', '.tl-drawer[data-tl-state~="open"]'), /transform:\s*none/);
+  const open = decl('drawer', '.tl-drawer[data-tl-state~="open"]');
+  assert.match(open, /transform:\s*none/);
+  assert.match(open, /box-shadow:\s*var\(--tl-shadow-dialog\)/);
   assert.match(decl('drawer', '.tl-drawer--container'), /z-index:\s*var\(--tl-layer-raised\)/);
   assert.match(decl('drawer', '.tl-drawer--narrow'), /width:\s*var\(--tl-size-drawer-narrow\)/);
   assert.match(decl('drawer', '.tl-drawer--bottom.tl-drawer--wide'), /height:\s*var\(--tl-size-drawer-wide\)/);
+});
+
+test('tl-drawer: geschlossen aus dem Rand geschoben, im RTL gespiegelt, Spiegelung vor der Offen-Regel', () => {
+  assert.match(decl('drawer', '.tl-drawer--bottom'), /transform:\s*translateY\(100%\)/);
+  assert.match(decl('drawer', '.tl-drawer--start:dir(rtl)'), /transform:\s*translateX\(100%\)/);
+  assert.match(decl('drawer', '.tl-drawer--end:dir(rtl)'), /transform:\s*translateX\(-100%\)/);
+  const css = readGenerated('drawer', 'drawer.css');
+  assert.match(css, /\.tl-drawer--start \{[^}]*transform:\s*translateX\(-100%\)/);
+  assert.match(css, /\.tl-drawer--end \{[^}]*transform:\s*translateX\(100%\)/);
+  const open = css.indexOf('.tl-drawer[data-tl-state~="open"] {');
+  assert.ok(open > css.indexOf('.tl-drawer--start:dir(rtl) {'));
+  assert.ok(open > css.indexOf('.tl-drawer--end:dir(rtl) {'));
 });

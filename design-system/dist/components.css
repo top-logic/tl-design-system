@@ -1075,7 +1075,6 @@
   flex-direction: column;
   box-sizing: border-box;
   background: var(--tl-surface-overlay);
-  box-shadow: var(--tl-shadow-dialog);
   color: var(--tl-text-primary);
   transition: transform var(--tl-duration-base) var(--tl-easing-exit);
 }
@@ -1091,6 +1090,11 @@
 .tl-drawer--start { inset-inline-start: 0; transform: translateX(-100%); }
 .tl-drawer--end { inset-inline-end: 0; transform: translateX(100%); }
 
+/* Rechts-nach-links: start liegt rechts, end links; geschlossen schiebt jede Seite zu ihrem eigenen Rand hinaus.
+   Muss vor der Offen-Regel stehen (gleiche Spezifität), damit offen gewinnt. */
+.tl-drawer--start:dir(rtl) { transform: translateX(100%); }
+.tl-drawer--end:dir(rtl) { transform: translateX(-100%); }
+
 .tl-drawer--bottom {
   left: 0;
   right: 0;
@@ -1099,9 +1103,11 @@
   transform: translateY(100%);
 }
 
-/* Offen: an seinem Platz, kommend mit der Eingangskurve. */
+/* Offen: an seinem Platz, kommend mit der Eingangskurve. Den Schatten trägt nur die offene Schublade: geschlossen
+   steht sie genau außerhalb des Randes, und ihr Schatten risse sonst in die Seite. */
 .tl-drawer[data-tl-state~="open"] {
   transform: none;
+  box-shadow: var(--tl-shadow-dialog);
   transition-timing-function: var(--tl-easing-entrance);
 }
 
