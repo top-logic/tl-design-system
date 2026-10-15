@@ -20,7 +20,7 @@ test('choice.css liest genau diese Farbrollen', () => {
     'border-control', 'border-disabled', 'border-emphasis', 'border-interactive', 'icon-secondary',
     'status-error-border', 'status-warning-border', 'surface-brand', 'surface-brand-active', 'surface-brand-hover', 'surface-brand-subtle',
     'surface-disabled', 'surface-field', 'surface-interactive-active', 'surface-interactive-selected', 'surface-state-active', 'surface-state-hover', 'text-disabled', 'text-on-brand',
-    'text-on-brand-active', 'text-on-brand-hover', 'text-primary',
+    'text-on-brand-active', 'text-on-brand-hover', 'text-primary', 'text-secondary',
   ]);
 });
 

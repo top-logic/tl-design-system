@@ -690,6 +690,8 @@ in `tokens.json`: `size-drawer-narrow|medium|wide` und `size-toast-max`.
 
 ### Offen für 4b
 
+**Seit #29787 (15.10.):** Panel, Sidebar, BottomBar, Toolbar und Menü zeichnen Knöpfe, Trenner und Badges über Parts
+(`usePart`); 4b migriert die Hüllen um die Parts, nicht die Knöpfe selbst. Neue Atome kommen als Part mit Paketklasse.
 `useKeyedTransition` ohne Klassenart (Wizard, TileStack) — deren Standard-Slides stehen seit #29792 (master-Merge in die
 Spaltenwahl, 15.10.) in `tlReactControls.css` auf den Bewegungstokens und ziehen dann als `data-tl-state`-Regeln ins Paket; mobile Sidebar auf den modalen Drawer; `tlViewError` auf
 `tl-alert`; `.tlAppShell .tl-breadcrumb` fällt.

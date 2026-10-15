@@ -66,5 +66,6 @@
 }
 
 .tl-alert__close {
+  display: flex;
   align-self: start;
 }

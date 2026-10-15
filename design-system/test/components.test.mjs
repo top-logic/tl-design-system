@@ -309,7 +309,7 @@ for (const mode of ['light', 'dark']) {
 
 test('progress.css liest Spur, Füllung und Beschriftung der PROGRESS-Map und sonst keine Farbe; keine Breite, keine eigene Variable', () => {
   const css = readFileSync(new URL('../src/components/progress/progress.css', import.meta.url), 'utf8');
-  const farbTokens = new Set([...css.matchAll(/var\((--tl-(?:surface|text|icon|border|status|category)-[a-z0-9-]+)\)/g)].map((m) => m[1]));
+  const farbTokens = new Set([...css.matchAll(/var\((--tl-(?:surface|text|icon|border(?!-width)|status|category)-[a-z0-9-]+)\)/g)].map((m) => m[1]));
   assert.deepEqual([...farbTokens].sort(), Object.values(PROGRESS).map((r) => '--tl-' + r).sort());
   assert.ok(!/--tl-progress-[a-z]+:/.test(css), 'keine komponenteneigene Variable');
   assert.ok(!/^\.tl-progress__fill\s*\{[^}]*\bwidth:/m.test(css), 'die Breite der Füllung ist Daten und kommt vom Control');

@@ -47,6 +47,7 @@ Den Fokusring liefert `base.css` über `:focus-visible`.
 | `aria-controls` | immer; Id des gesteuerten Bereichs — außer in Tabellenzeile und Baumknoten: dort klappt er die eigene Zeile auf (`table.contract.md`) |
 | `aria-label` | immer; der Knopf trägt keinen Text, dazu ein Tooltip |
 | `tl-icon-sm` | am Kind; der Chevron-rechts-Glyph der Theme-Konfiguration |
+| `tl-toggle--end` | Variante: der Inhalt öffnet zum Zeilenende (Seitenleiste); offen zeigt der Chevron zum Anfang |
 
 ## Konformität
 

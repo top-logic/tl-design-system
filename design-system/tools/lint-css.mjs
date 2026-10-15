@@ -110,7 +110,8 @@ const MODIFIERS = {
   'tl-alert': new Set([]), // Die Bedeutung ist Pflicht und ein Attribut (data-tl-role).
   'tl-badge': new Set([]),
   'tl-divider': new Set(['vertical']),
-  'tl-toggle': new Set([]),
+  'tl-toggle': new Set(['end']), // Öffnet zum Zeilenende (Seitenleiste, #29787): eine Form, kein Zustand.
+  'tl-spinner': new Set(['sm']),
   'tl-popover': new Set([]),
   'tl-menu': new Set([]),
   'tl-menu-region': new Set([]),

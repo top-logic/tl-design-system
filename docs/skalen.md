@@ -2279,6 +2279,38 @@ vorgeschlagen“ (Hendrik). Spec 4a `docs/superpowers/specs/2026-10-13-welle-4a-
 `contracts-4a.test.mjs` die Verträge, `engine-classes.test.mjs` sperrt die alten Klassen in TSX, Stylesheets, Java,
 Entwickler-Artikeln und Views; die Ratsche streicht sieben Blöcke.
 
+### Parts: Bernhards Atome zeichnen mit dem Paket (15.10., Hendrik — #29787)
+
+**Befund.** Auf master zeichnet seit #29787 ein austauschbares **Part** jedes Atom der Oberfläche: `Button`,
+`MenuTrigger`, `DisclosureToggle`, `Checkbox`, `TextInput`, `FieldValue`, `Chip`, `Badge`, `Divider`,
+`ProgressBar`, `Spinner` (`view-layer/parts.md`). Jede Stelle, die einen Knopf zeigt, zieht `usePart('Button')`;
+eine Komponentenbibliothek (MUI) ersetzt das Part einmal und erreicht alle Stellen. Die Default-Parts zeichnen
+mit den Paketklassen (`tl-button`, `tl-checkbox`, `tl-chip`, `tl-pill`, `tl-field`, `tl-divider`, `tl-badge`,
+`tl-progress`, `tl-toggle`).
+
+**Entschieden — das passt zu uns und gilt:** Parts sind die Umsetzung von „Gleiches wird zusammengelegt“ für die
+Atome, und der typisierte Props-Vertrag ist „MUI-Adapter nur Vertrag“. Ab jetzt zeichnen unsere Komponenten ihre
+Atome über Parts, nicht mit `buttonClassName` und eigenem `<button>`.
+
+**Entschieden — was #29787 außerhalb des Pakets definierte, zieht ins Paket (Hendrik: „2“):** Die Paket-Gates
+fanden sechs Stellen; sie laufen nicht im Engine-Jenkins, darum sah Bernhard sie nicht.
+* `tlSpinner` (eigener Block, feste `0.8s`) → `tl-spinner`/`--sm` in `progress.css`, Dauer `--tl-duration-loop`,
+  Kurve `--tl-easing-linear`.
+* `tlDisclosureToggle--end` → Variante `tl-toggle--end` (`toggle.css`): eine Form, kein Zustand.
+* `tlChip__detail` → `tl-chip__detail` (`choice.css`).
+* Hüllen der Trenner `tlMenu__separator`, `tlToolbar__separator` (alte Klassen der Welle 3a) → `tl-menu__separator`
+  (`menu.css`), `tl-toolbar__separator` (Marke ohne Regel, an ihr misst die Toolbar).
+* `tlTableView__columns` (alte Klasse der Welle 3b) → das Zentrieren steht an `tl-table__columns` (`table.css`).
+* `.tl-alert__close { display: flex }` im alten Stylesheet → `alert.css`.
+* Feste Icons `css:fa-solid fa-xmark` an Alert und Drawer → Theme-Icon `ICON_CLOSE` (Welle 4a).
+
+Gehoben, weil echt fremd: TLHtml 182→184 (Hülle des Druckknopf-Parts). Gesenkt, weil Bernhard abschnitt: TLDownload,
+TLPanel, TLFileChips, TLColorInput, TLIconSelect und vier Literale (`ratchet.json`).
+
+**Folge für Welle 4b:** Panel, Sidebar und BottomBar zeichnen ihre Knöpfe, Trenner und Badges schon über Parts; 4b
+baut darauf auf und migriert die Hüllen. **Vorschlag an Bernhard:** die Paket-Gates (`node --test` gegen den
+Worktree) in den Engine-Jenkins hängen, damit ein Bruch vor dem Merge auffällt.
+
 ## Befunde aus dem Specimen
 
 ### Inter trägt nur zwei Gewichte

@@ -317,6 +317,8 @@ Innerhalb einer Welle keine Reihenfolge — parallel ist möglich. Der Button is
 
 > Sprechnotiz (15.10., Review): Fixiert heißt vorerst sichtbar — wer eine fixierte Spalte ausblendet, löst sie; wer eine ausgeblendete fixiert, blendet sie ein. Der Dialog verspricht nichts, was die Tabelle vergisst. Unabhängig wie in Figma wird es, sobald die Tabelle sich ausgeblendete Spalten merkt (#29828).
 
+> Sprechnotiz (15.10., Parts): Ein Knopf ist überall derselbe Knopf — auch für MUI. Bernhards Parts zeichnen jedes Atom an einer Stelle mit den Klassen des Pakets; eine Kundenbibliothek ersetzt es einmal und trifft alle Orte. Was er dafür neu brauchte, wohnt jetzt im Paket.
+
 > Sprechnotiz (12.10.): Was man ziehen kann, muss man sehen — ein Griff beim Zeigen, und mit dem Zugbeginn leuchten die Ziele auf.
 
 ---

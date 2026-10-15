@@ -83,7 +83,8 @@
   color: var(--tl-text-secondary);
 }
 
-.tl-menu > .tl-divider {
+.tl-menu > .tl-divider,
+.tl-menu > .tl-menu__separator {
   margin-block: var(--tl-space-2xs);
 }
 

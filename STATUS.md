@@ -25,8 +25,15 @@ Lagebild: http://localhost:8138/
    Fixieren (Schloss oder Ablegen im Block) blendet ein, Namen „… einblenden und fixieren“ / „… ausblenden und Fixierung
    lösen“, Fokus bleibt auch am Auge; `62aec19ae3`/`c7879859bb`: Tooltips an Auge und Schloss ohne Spaltennamen (Hendrik); gepusht bis `62aec19ae3`, Antwort an Bernhard steht (Hendrik aktualisiert sie selbst). Gates: react 677/0, Messages-Diff erzeugt und committet, Paket 386/0, `tsc` 0;
    Sichtprüfung lokal (Name fixiert → Auge zu → gelöst, Schloss → eingeblendet und fixiert, Ok und neu öffnen hält).
-   **Nächstes:** Push mit Freigabe, Antwort an Bernhard (deutsch, als Hendrik), `bhu` neu anfragen; `jenkins` nur auf
-   Hendriks Wort.
+   Gepusht bis `c7879859bb`, Antwort an Bernhard steht.
+   **master-Merge mit #29787 (Parts, 15.10.):** Konflikte in TLColumnSelect, TLDrawer, TLSnackbar, tlReactControls.css;
+   Merge `39a6657d37` (Schloss, Auge, Schließknöpfe über den Part `Button`), `9a5cab25c9` (sechs Fremdstellen aus
+   #29787 ins Paket: tl-spinner, tl-toggle--end, tl-chip__detail, tl-menu__separator/tl-toolbar__separator,
+   tl-table__columns, tl-alert__close; MUI-Tests nachgezogen). Hendrik: „2“ = gleich sauber ins Paket. `skalen.md`
+   „Parts: Bernhards Atome zeichnen mit dem Paket“. Gates: Paket 386/0, react 677/0, configedit 341/0, view 1457/1
+   (#29651), demo.react 13/0, MUI-Vitest 506/506 (mit `NODE_OPTIONS=--no-experimental-webstorage`), Messages ohne Diff.
+   **Nächstes:** Push mit Freigabe, Kommentar an Bernhard (Entwurf im Scratchpad: Tabelle der sechs Stellen, Vorschlag
+   Paket-Gates in den Engine-Jenkins), `bhu` neu anfragen.
 2. Branch `CWS/CWS_29836_design_system_welle_4a`: erledigt, 4a steckt über !1882 in der Spaltenwahl; der lokale
    Merge `9626e67a15` wird nicht gepusht. Ticket #29836 schließt mit dem Release, sobald !1852 auf master ist.
 3. **#29851** (Snackbar-Ansage): wartet.

@@ -43,3 +43,9 @@
 .tl-toggle[aria-expanded="true"] > .tl-icon-sm {
   rotate: 90deg;
 }
+
+/* Öffnet der Inhalt zum Zeilenende hin (Seitenleiste, Part DisclosureToggle, #29787), dreht der Chevron offen
+   zurück zum Anfang. Eine Form des Toggles, kein Zustand: darum eine Variante. */
+.tl-toggle--end[aria-expanded="true"] > .tl-icon-sm {
+  rotate: 180deg;
+}

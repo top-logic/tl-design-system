@@ -60,3 +60,12 @@ drei Wertattributen trägt, inline nur die Breite des `__fill` setzt, unbestimmt
 ohne `aria-valuenow` trägt, die Beschriftung als `tl-progress__label` rendert, über `aria-labelledby`
 benannt oder `aria-hidden` ist, kein `aria-valuetext` trägt und im Klassen-Gate keine
 Klasse ohne `tl-`-Präfix hinterlässt.
+
+## Spinner (Part `Spinner`, #29787)
+
+Beschäftigt ohne Anteil: ein Ring, auf dem ein Bogen in der Marke kreist (`tl-spinner`). Klein (`tl-spinner--sm`)
+steht er an der Stelle eines kleinen Icons und dreht den Bogen in der Textfarbe. Mit eigenem Namen trägt er
+`role="progressbar"` und `aria-label`; als Verzierung neben einem Text, der den Zustand sagt, ist er
+`aria-hidden="true"`. Maße: `--tl-size-icon-lg`, klein `--tl-size-icon-sm`; Ring `--tl-border-width-md` in der Spur
+(`--tl-surface-interactive-selected`), Bogen `--tl-surface-brand`, klein `currentColor`; rund `--tl-radius-full`.
+Dauer und Kurve sind `--tl-duration-loop` und `--tl-easing-linear`.

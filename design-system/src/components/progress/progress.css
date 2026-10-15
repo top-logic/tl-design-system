@@ -52,3 +52,32 @@
   from { transform: translateX(calc(-1 * 100%)); }
   to { transform: translateX(calc(2.5 * 100%)); }
 }
+
+/* --- Spinner (Part Spinner, #29787) ----------------------------------------- */
+
+/* Ein Ring auf der Spur des Balkens, darauf ein Bogen in der Marke, der sich dreht: beschäftigt, ohne Anteil.
+   Klein (--sm) steht er statt eines kleinen Icons und dreht seinen Bogen in der Textfarbe. Dauer und Kurve sind
+   die Bewegungstokens der Schleife; der globale Reduced-Motion-Schalter hält ihn an. */
+.tl-spinner {
+  display: inline-block;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  width: var(--tl-size-icon-lg);
+  height: var(--tl-size-icon-lg);
+  border: var(--tl-border-width-md) solid var(--tl-surface-interactive-selected);
+  border-top-color: var(--tl-surface-brand);
+  border-radius: var(--tl-radius-full);
+  animation: tl-spinner-turn var(--tl-duration-loop) var(--tl-easing-linear) infinite;
+}
+
+.tl-spinner[hidden] { display: none; }
+
+.tl-spinner--sm {
+  width: var(--tl-size-icon-sm);
+  height: var(--tl-size-icon-sm);
+  border-top-color: currentColor;
+}
+
+@keyframes tl-spinner-turn {
+  to { rotate: 360deg; }
+}

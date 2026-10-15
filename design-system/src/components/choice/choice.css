@@ -299,6 +299,12 @@
 }
 .tl-chip[hidden] { display: none; }
 
+/* Der leisere Text hinter der Beschriftung, etwa die Größe einer Datei (Part Chip, #29787): er kürzt nicht. */
+.tl-chip__detail {
+  flex-shrink: 0;
+  color: var(--tl-text-secondary);
+}
+
 /* Die Tönung trägt der Chip selbst (data-tl-role, 3b §11) — keine Pill in der Kapsel. Die Rollenregeln
    stehen vor Zeigen und Gewählt: beide schlagen die Tönung bei gleicher Spezifität. */
 /* @tl-roles: brand .tl-chip */
