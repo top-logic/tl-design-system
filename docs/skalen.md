@@ -1947,6 +1947,18 @@ Spaltengruppen, das Icon behalten und nur erklären.
 * **Ein Wort fürs Fixieren:** auch das Kontextmenü am Spaltenkopf sagt „Bis hier fixieren“ / „Fixierung aufheben“
   statt „feststellen“.
 
+**Nachgetragen im Review !1852 (15.10., Bernhard; Hendrik entschied Weg A):**
+* **Fixiert heißt sichtbar — vorerst.** Bernhard fand: eine ausgeblendete Spalte ließ sich fixieren, sie rückte in den
+  Block, blieb unsichtbar und war nach erneutem Öffnen wieder gelöst; eine fixierte ließ sich ausblenden und blieb im
+  Dialog fixiert. Der Dialog zeigte damit einen Zustand, den die Tabelle nicht speichern kann: `frozenColumnCount` zählt
+  einen Anfang *sichtbarer* Spalten, eine ausgeblendete trägt kein Schloss. Jetzt gekoppelt: Ausblenden einer fixierten
+  Spalte löst sie (sie rückt direkt hinter den Block), Fixieren einer ausgeblendeten — per Schloss oder per Ablegen im
+  Block — blendet sie ein. Die Namen sagen beides („… ausblenden und Fixierung lösen“, „… einblenden und fixieren“).
+* **Das Ziel bleibt unabhängig wie in Figma.** Eine fixierte Spalte kurz auszublenden und sie beim Einblenden wieder im
+  Block zu haben, ist ein berechtigter Fall (Hendrik). Er braucht den Tabellenzustand aus #29828 (volle Reihenfolge,
+  ausgeblendete und fixierte Namen); mit ihm wird die Kopplung zurückgenommen. Verworfen: gleich entkoppeln (B — !1852
+  wartet auf Kernarbeit), Schloss an ausgeblendeten Spalten sperren (C — dieselbe spätere Rücknahme, ohne Vorteil).
+
 **Nachgetragen beim master-Merge in 3b (14.10.):**
 * **Hervorgehobene Zeilen sind eine Rolle, die API bleibt eine Klasse (#29815).** Auf master gibt `row-class` einer
   Zeile oder Zelle eine Klasse; `tl-status-error|warning|success|info` tönen sie. Die Klassen bleiben die API — sie

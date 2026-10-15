@@ -315,6 +315,8 @@ Innerhalb einer Welle keine Reihenfolge — parallel ist möglich. Der Button is
 
 > Sprechnotiz (12.10., Sichtprüfung): Zeigen muss man sehen — auch auf der Feldfläche. Kapsel und Segment rücken dort eine Stufe vor wie die Knöpfe im Feld. Und eine Liste mit Suche hat genau einen Scrollbereich; die Spaltenwahl wird ein Ebenen-Panel wie in Figma: Griff vorn, Auge und Schloss rechts beim Zeigen, später benannte Spaltengruppen. Blass heißt dort nicht „deaktiviert“: eine ausgeblendete Spalte bleibt bedienbar, also bleibt sie lesbar.
 
+> Sprechnotiz (15.10., Review): Fixiert heißt vorerst sichtbar — wer eine fixierte Spalte ausblendet, löst sie; wer eine ausgeblendete fixiert, blendet sie ein. Der Dialog verspricht nichts, was die Tabelle vergisst. Unabhängig wie in Figma wird es, sobald die Tabelle sich ausgeblendete Spalten merkt (#29828).
+
 > Sprechnotiz (12.10.): Was man ziehen kann, muss man sehen — ein Griff beim Zeigen, und mit dem Zugbeginn leuchten die Ziele auf.
 
 ---

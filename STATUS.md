@@ -18,8 +18,15 @@ Lagebild: http://localhost:8138/
    ohne Diff. Der Server-Hook lehnte zuerst ab: jeder neue Commit in `CWS_29825` muss `#29825` tragen, unser lokaler
    4a-Merge `9626e67a15` trug `#29836` — Merges mit gleichem Baum neu gebaut. Basis von !1852 auf master, PR-Text
    nachgezogen (Reset stellt die deklarierten Spalten wieder her), Antwort an Bernhard, `bhu` und `jenkins` angefragt.
-   Der Worktree `tl8-wt-29584` steht ohne Branch auf `1419fb49fe` (Paket-Gates prüfen dort). **Nächstes:** Jenkins-Build
-   und Bernhards Review.
+   Der Worktree `tl8-wt-29584` steht ohne Branch auf `1419fb49fe` (Paket-Gates prüfen dort). Jenkins 148 grün.
+   **Review 15.10. (Bernhard, Request Changes):** fixieren und ausblenden waren unabhängig — der Dialog zeigte
+   „fixiert und ausgeblendet“, die Tabelle vergaß es. Hendrik entschied Weg A: gekoppelt, bis #29828 den vollen
+   Tabellenzustand bringt (`skalen.md` „Nachgetragen im Review !1852“). Engine `b6bf05bbc2` lokal: Ausblenden löst,
+   Fixieren (Schloss oder Ablegen im Block) blendet ein, Namen „… einblenden und fixieren“ / „… ausblenden und Fixierung
+   lösen“, Fokus bleibt auch am Auge. Gates: react 677/0, Messages-Diff erzeugt und committet, Paket 386/0, `tsc` 0;
+   Sichtprüfung lokal (Name fixiert → Auge zu → gelöst, Schloss → eingeblendet und fixiert, Ok und neu öffnen hält).
+   **Nächstes:** Push mit Freigabe, Antwort an Bernhard (deutsch, als Hendrik), `bhu` neu anfragen; `jenkins` nur auf
+   Hendriks Wort.
 2. Branch `CWS/CWS_29836_design_system_welle_4a`: erledigt, 4a steckt über !1882 in der Spaltenwahl; der lokale
    Merge `9626e67a15` wird nicht gepusht. Ticket #29836 schließt mit dem Release, sobald !1852 auf master ist.
 3. **#29851** (Snackbar-Ansage): wartet.
