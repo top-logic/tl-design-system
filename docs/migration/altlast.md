@@ -690,7 +690,8 @@ in `tokens.json`: `size-drawer-narrow|medium|wide` und `size-toast-max`.
 
 ### Offen für 4b
 
-`useKeyedTransition` ohne Klassenart (Wizard, TileStack); mobile Sidebar auf den modalen Drawer; `tlViewError` auf
+`useKeyedTransition` ohne Klassenart (Wizard, TileStack) — deren Standard-Slides stehen seit #29792 (master-Merge in die
+Spaltenwahl, 15.10.) in `tlReactControls.css` auf den Bewegungstokens und ziehen dann als `data-tl-state`-Regeln ins Paket; mobile Sidebar auf den modalen Drawer; `tlViewError` auf
 `tl-alert`; `.tlAppShell .tl-breadcrumb` fällt.
 
 ### Sichtbar

@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-14 (Welle 4a gebaut per SDD, gepusht, PR !1882 gegen die Spaltenwahl; Doku- und Wiki-Abgleich) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-15 (3b auf master, 4a in der Spaltenwahl; master-Merge mit #29792 in die Spaltenwahl gelöst) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -8,28 +8,26 @@
 Lagebild: http://localhost:8138/
 
 **Wartet auf Bernhard (nichts selbst tun, außer er antwortet):**
-1. **!1838** (Welle 3b, #29821): Bernhards Request Changes (14.10. 09:28, Ziehen in der geordneten Liste lehnt in der
-   Zeilenmitte ab) und Konflikte mit master (!1841 #29815, #29757) — **erledigt und gepusht 14.10.** (Engine `55b4529268..1bd64cace7`, Paket bis `24f6f3d`), Antwort im PR, bhu und `jenkins` neu angefragt: Merge
-   `4c2441f470` (Tönung als `data-tl-role`, Zeilenzahl, Verlauf vor der Spaltenwahl; Paket `4fe3a9c`, `48573d0`,
-   skalen.md „Nachgetragen beim master-Merge in 3b“) und `1bd64cace7` (Modi je Art, `dropModesByKind`). Gates: react
-   659/0, view 1429/1 (#29651), configedit 341/0, demo.react 13/0, Messages ohne Diff; JDK 21 nötig (Homebrew-Default 27
-   bricht `ext.com.meterware.httpunit`). **Durchgereicht 14.10. (lokal, nicht gepusht):** 3b → Spaltenwahl `6a6d1cdbdc` (Konflikt `TableViewControl`: `applyColumns` über masters `rearrange`, Zurücksetzen = `resetToDefaults`), Spaltenwahl → 4a `9626e67a15` (Overlay-Blöcke bleiben gestrichen, `display: contents` am Dialogbehälter selbst). Gates beider: react 672/0, configedit 341/0, view 1429/1 (#29651), demo.react 13/0, Messages ohne Diff; Paket 357/0 bzw. 386/0. **Nächstes:** Push beider Branches mit Freigabe, danach
-   `bhu` neu anfragen; `jenkins` nur einmal am Ende je PR (seit 14.10., Hendrik), Build 116 von !1882 abgebrochen.
-2. **!1852** (#29825 Spaltenwahl): sein Request Changes (12.10. 18:23, Schloss/Auge blieben nach Klick sichtbar) ist
-   behoben — Knöpfe nur bei Tastaturfokus `:has(:focus-visible)`; Engine `00f3c902e4`, Paket `87aa99e`; geantwortet
-   und Review erneut angefordert 13.10.
-3. **!1882** (#29836 Welle 4a, gestapelt auf !1852): angelegt 14.10., Reviewer bhu und `jenkins`.
-4. **!1841** (#29815, sein PR): Kommentar 12.10. — `tl-status-*` als Klassen und Regeln auf `tlTableView__row`
-   kollidieren mit 3b; Vorschlag `row-role` → `data-tl-role` am `tl-table__row`, Paket zeichnet die Tönung. Stimmt er zu,
-   bauen wir Paket und TSX auf 3b.
+1. **!1852** (#29825 Spaltenwahl, trägt seit 14.10. 19:01 auch Welle 4a): **3b (!1838) ist seit 14.10. auf master**, !1882
+   (4a) von Bernhard freigegeben, in die Spaltenwahl gemergt (Jenkins 138 grün). Bernhards Claude meldete 14.10. 19:21
+   Konflikte mit master (#29792 Standard-Übergänge) und vier Fragen. **Gelöst 15.10. lokal:** `a3d8ec930d` (4a-Stand +
+   Server-Stand, gleicher Baum), master-Merge `383741eb2e` (master `2e9619c6ad`): Dialog-Fade bleibt beim Paket
+   (`data-tl-state`), `transition.ts` übernimmt Sofort-Ende und den Marken-Wächter je Attribut (`class` oder
+   `data-tl-state`), Kachelstapel-Slide in der Engine statt in der Demo; `e5df6783ee` zieht `app-shell.md` nach. Ratsche
+   TLTileStack 38→76, TLWizard 183→185 (#29792). Gates: Paket 386/0, react 674/0, configedit 341/0, view 1457/1 (#29651),
+   demo.react 13/0, `tsc` 0, Vite grün, Messages ohne Diff. Reset stellt jetzt die deklarierten Spalten wieder her
+   (masters `rearrange`). Request Changes vom 12.10. mit `00f3c902e4` behoben. **Nächstes:** Push mit Freigabe, Basis auf
+   master, PR-Text (Reset), Antwort (Entwurf im Scratchpad), `bhu` und `jenkins` — der PR ist fertig.
+2. Branch `CWS/CWS_29836_design_system_welle_4a`: kein Push mehr nötig, sein lokaler Merge `9626e67a15` steckt in der
+   Spaltenwahl. Ticket #29836 schließt mit dem Release, sobald !1852 auf master ist.
+3. **#29851** (Snackbar-Ansage): wartet.
+4. **!1841** (#29815): 13.10. auf master, in 3b als `data-tl-role` eingearbeitet.
 5. **#29850** (Entwicklerdoc): drei Fragen im Ticket, 14.10. — die wichtigste: wo Kundenthemes leben.
 
 **Wenn er antwortet:** Befunde einarbeiten, Gates, lokal committen, Push nur mit Hendriks Freigabe (Repo und Branch
 nennen; nie tl-engine-7 master), danach `add_reviewers bhu`.
 
-**Bekannte Konflikte beim nächsten master-Merge in 3b:** #29808 (seit 12.10. auf master) ändert `bridge-entry.ts`,
-`control-state.ts`, `state.proto`; offene PRs !1825, !1801, !1841, !1845 berühren 3b-Dateien. Bernhard merged master
-selbst in 3b (zuletzt `2af20a4447`) — vor eigener Arbeit dort `git fetch`.
+**master-Merges:** Bernhard merged master auch selbst in unsere Branches — vor eigener Arbeit dort `git fetch`.
 
 **Welle 4 begonnen (13.10.):** Konsolidierungs-Prognose Q1–Q19 in `altlast.md` („Welle 4“), entschieden „alle wie
 vorgeschlagen“; Schnitt **4a Overlays** (Trac **#29836**, accepted, CC bhu) und **4b Gerüst** (eigenes Ticket beim
@@ -46,7 +44,7 @@ nur #29651 rot, Messages ohne Diff. Sichtprüfung lokal erledigt (Befund S1 Dial
 `== Migration ==` und `RequiresMigration`. Rulings stehen in `altlast.md` „Welle 4a“, der Ledger ist gelöscht.
 **Entschieden 14.10.:** Startfokus verlegt (Engine `e29345b7a8`, gepusht, PR-Text nachgezogen, bhu und `jenkins` erneut angefragt; skalen.md „Der Startfokus liegt dort,
 wo Enter wirkt“); Snackbar-Ansage als Folgeticket **#29851** (CC bhu). Rest-Minor: Kommentar `tlReactControls.css:2263` zur leeren
-NoticeBar veraltet. **Nächstes:** Review von Bernhard; nach Merge von !1838 und !1852 die Basis von !1882 auf master.
+NoticeBar veraltet. **15.10.:** !1882 in die Spaltenwahl gemergt, weiter über !1852 (oben, Punkt 1).
 
 **#29850 (angelegt 14.10., accepted, CC bhu):** Die Regeln fürs Stylen von React-Controls kommen als Entwicklerdoc
 nach tl-engine-7 (`view-layer/design-system.md`), `theme-tokens.md` verweist darauf und führt die alten Tokens als
@@ -74,8 +72,8 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 | 1 | Button, ToggleButton, Pill, Avatar, Progress, Icon | 6 | master | #29617 |
 | 2 | Formulare (Felder, Select, Checkbox, FormField, FormLayout …) | 11 | master | #29617 |
 | 3a | Menü, Toolbar, Reiter, Breadcrumb, Popups, Ton folgt der Aktion | 5 | master | #29617 |
-| 3b | Tabelle, Baum, Text, Spaltenwahl als Ebenen-Panel (!1838, !1852) | 3 | PR | #29821, #29825 |
-| 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay (!1882) | 7 | PR | #29836 |
+| 3b | Tabelle, Baum, Text (!1838, auf master 14.10.) | 3 | master | #29821 |
+| 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay; mit der Spaltenwahl als Ebenen-Panel in !1852 | 7 | PR | #29836, #29825 |
 | 4b | Gerüst: AppShell, AppBar, Sidebar, BottomBar, Panel, SplitPanel, Card, Stack, Grid, Wizard; Q10–Q18 | 10 | offen | eigenes beim Start |
 | 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | offen | — |
 
