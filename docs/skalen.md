@@ -1954,9 +1954,9 @@ Spaltengruppen, das Icon behalten und nur erklären.
   einen Anfang *sichtbarer* Spalten, eine ausgeblendete trägt kein Schloss. Jetzt gekoppelt: Ausblenden einer fixierten
   Spalte löst sie (sie rückt direkt hinter den Block), Fixieren einer ausgeblendeten — per Schloss oder per Ablegen im
   Block — blendet sie ein. Die Namen sagen beides („… ausblenden und Fixierung lösen“, „… einblenden und fixieren“).
-* **Der Tooltip am Auge sagt nur „Einblenden“ / „Ausblenden“ (Hendrik).** Er steht neben der Zeile, der Spaltenname
-  wäre doppelt. Der zugängliche Name (`aria-label`) behält Spalte und Kopplung, denn ein Screenreader liest den Knopf
-  für sich allein.
+* **Die Tooltips an Auge und Schloss sagen nur „Einblenden“ / „Ausblenden“ bzw. „Fixieren“ / „Lösen“ (Hendrik).** Sie
+  stehen neben der Zeile, der Spaltenname wäre doppelt. Die zugänglichen Namen (`aria-label`) behalten Spalte und Kopplung, denn ein Screenreader liest den
+  Knopf für sich allein.
 * **Das Ziel bleibt unabhängig wie in Figma.** Eine fixierte Spalte kurz auszublenden und sie beim Einblenden wieder im
   Block zu haben, ist ein berechtigter Fall (Hendrik). Er braucht den Tabellenzustand aus #29828 (volle Reihenfolge,
   ausgeblendete und fixierte Namen); mit ihm wird die Kopplung zurückgenommen. Verworfen: gleich entkoppeln (B — !1852

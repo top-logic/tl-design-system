@@ -23,7 +23,7 @@ Lagebild: http://localhost:8138/
    „fixiert und ausgeblendet“, die Tabelle vergaß es. Hendrik entschied Weg A: gekoppelt, bis #29828 den vollen
    Tabellenzustand bringt (`skalen.md` „Nachgetragen im Review !1852“). Engine `b6bf05bbc2` lokal: Ausblenden löst,
    Fixieren (Schloss oder Ablegen im Block) blendet ein, Namen „… einblenden und fixieren“ / „… ausblenden und Fixierung
-   lösen“, Fokus bleibt auch am Auge; `62aec19ae3`: Tooltip am Auge nur „Einblenden“/„Ausblenden“ (Hendrik). Gates: react 677/0, Messages-Diff erzeugt und committet, Paket 386/0, `tsc` 0;
+   lösen“, Fokus bleibt auch am Auge; `62aec19ae3`/`c7879859bb`: Tooltips an Auge und Schloss ohne Spaltennamen (Hendrik); gepusht bis `62aec19ae3`, Antwort an Bernhard steht (Hendrik aktualisiert sie selbst). Gates: react 677/0, Messages-Diff erzeugt und committet, Paket 386/0, `tsc` 0;
    Sichtprüfung lokal (Name fixiert → Auge zu → gelöst, Schloss → eingeblendet und fixiert, Ok und neu öffnen hält).
    **Nächstes:** Push mit Freigabe, Antwort an Bernhard (deutsch, als Hendrik), `bhu` neu anfragen; `jenkins` nur auf
    Hendriks Wort.
