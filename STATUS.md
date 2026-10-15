@@ -10,16 +10,18 @@ Lagebild: http://localhost:8138/
 **Wartet auf Bernhard (nichts selbst tun, außer er antwortet):**
 1. **!1852** (#29825 Spaltenwahl, trägt seit 14.10. 19:01 auch Welle 4a): **3b (!1838) ist seit 14.10. auf master**, !1882
    (4a) von Bernhard freigegeben, in die Spaltenwahl gemergt (Jenkins 138 grün). Bernhards Claude meldete 14.10. 19:21
-   Konflikte mit master (#29792 Standard-Übergänge) und vier Fragen. **Gelöst 15.10. lokal:** `a3d8ec930d` (4a-Stand +
-   Server-Stand, gleicher Baum), master-Merge `383741eb2e` (master `2e9619c6ad`): Dialog-Fade bleibt beim Paket
-   (`data-tl-state`), `transition.ts` übernimmt Sofort-Ende und den Marken-Wächter je Attribut (`class` oder
-   `data-tl-state`), Kachelstapel-Slide in der Engine statt in der Demo; `e5df6783ee` zieht `app-shell.md` nach. Ratsche
-   TLTileStack 38→76, TLWizard 183→185 (#29792). Gates: Paket 386/0, react 674/0, configedit 341/0, view 1457/1 (#29651),
-   demo.react 13/0, `tsc` 0, Vite grün, Messages ohne Diff. Reset stellt jetzt die deklarierten Spalten wieder her
-   (masters `rearrange`). Request Changes vom 12.10. mit `00f3c902e4` behoben. **Nächstes:** Push mit Freigabe, Basis auf
-   master, PR-Text (Reset), Antwort (Entwurf im Scratchpad), `bhu` und `jenkins` — der PR ist fertig.
-2. Branch `CWS/CWS_29836_design_system_welle_4a`: kein Push mehr nötig, sein lokaler Merge `9626e67a15` steckt in der
-   Spaltenwahl. Ticket #29836 schließt mit dem Release, sobald !1852 auf master ist.
+   Konflikte mit master (#29792 Standard-Übergänge) und vier Fragen. **Gelöst und gepusht 15.10.** (Engine `b228f6a8d4..1419fb49fe`): `54f593ed17` (4a in die Spaltenwahl),
+   master-Merge `76afcad8c2` (master `2e9619c6ad`): Dialog-Fade bleibt beim Paket (`data-tl-state`), `transition.ts`
+   übernimmt Sofort-Ende und den Marken-Wächter je Attribut (`class` oder `data-tl-state`), Kachelstapel-Slide in der
+   Engine statt in der Demo; `1419fb49fe` zieht `app-shell.md` nach. Ratsche TLTileStack 38→76, TLWizard 183→185 (#29792).
+   Gates: Paket 386/0, react 674/0, configedit 341/0, view 1457/1 (#29651), demo.react 13/0, `tsc` 0, Vite grün, Messages
+   ohne Diff. Der Server-Hook lehnte zuerst ab: jeder neue Commit in `CWS_29825` muss `#29825` tragen, unser lokaler
+   4a-Merge `9626e67a15` trug `#29836` — Merges mit gleichem Baum neu gebaut. Basis von !1852 auf master, PR-Text
+   nachgezogen (Reset stellt die deklarierten Spalten wieder her), Antwort an Bernhard, `bhu` und `jenkins` angefragt.
+   Der Worktree `tl8-wt-29584` steht ohne Branch auf `1419fb49fe` (Paket-Gates prüfen dort). **Nächstes:** Jenkins-Build
+   und Bernhards Review.
+2. Branch `CWS/CWS_29836_design_system_welle_4a`: erledigt, 4a steckt über !1882 in der Spaltenwahl; der lokale
+   Merge `9626e67a15` wird nicht gepusht. Ticket #29836 schließt mit dem Release, sobald !1852 auf master ist.
 3. **#29851** (Snackbar-Ansage): wartet.
 4. **!1841** (#29815): 13.10. auf master, in 3b als `data-tl-role` eingearbeitet.
 5. **#29850** (Entwicklerdoc): drei Fragen im Ticket, 14.10. — die wichtigste: wo Kundenthemes leben.
