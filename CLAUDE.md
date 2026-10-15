@@ -23,7 +23,7 @@ Alle in `design-system/`, alle mit `node` ohne Abhängigkeiten:
 | `node tools/publish-to-worktree.mjs` | Kopiert `dist/` in den Worktree, bis das Paket einen Maven-Wrapper hat. Nach jedem `generate` aufrufen; `test/published.test.mjs` hält die Kopie byte-gleich. |
 | `node tools/serve.mjs` | Specimen auf `http://localhost:8137/` |
 | `node tools/derive.mjs <theme>.primitives.json [<ausgabe>.css] [--strict]` | **Kundenstufe A.** Rechnet aus Hausfarbe und Grauwahl ein Theme und schreibt `<theme>.theme.css` mit Rollen unter `[data-tl-theme]`. Gerechnetes hält die Paarliste, Geliefertes darf sie verfehlen (Befund im Kopf). Beispiel: `test/fixtures/probe.primitives.json` → `specimen/probe.theme.css`. |
-| `tools/check-messages-en.sh` | **Push-Gate für den Worktree.** Erzeugt `messages_en.properties` aus dem JavaDoc für jedes Modul mit Java-Änderungen und schlägt fehl, wenn ein Diff bleibt. Jenkins scheitert sonst mit „Files have been changed during build“. Vor **jedem** Push in den Worktree aufrufen — auch nach reinen JavaDoc-Änderungen. |
+| `tools/check-messages-en.sh` | **Push-Gate für den Worktree.** Erzeugt `messages_en.properties` aus dem JavaDoc für jedes Modul mit Java-Änderungen und schlägt fehl, wenn ein Diff bleibt. Jenkins scheitert sonst mit „Files have been changed during build“. Prüft auch die Sortierung aller `messages_*.properties` (Ressourcen-Check; sonst wird der PR-Build UNSTABLE). Vor **jedem** Push in den Worktree aufrufen — auch nach reinen JavaDoc-Änderungen. |
 
 Der Worktree liegt unter `_Working-Tree/tl8-wt-29584` im Projektordner (ignoriert; oder `TL_WORKTREE`), das
 Hauptrepo daneben. Beides muss dort liegen: die Sandbox sieht nur den Projektordner und `~/.m2`, nicht `~/git`. Welle 0 ist auf `master`; jede weitere
