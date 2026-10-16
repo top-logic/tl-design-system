@@ -48,6 +48,14 @@ Lage `right-start`. Einträge tragen die Anatomie von `tl-menu__item`, die aktue
 10. **Flyout und Rail-Tastatur:** Tastenereignisse aus dem portalierten Menü laufen in React durch die Komponente
     hinauf zur Rail. Die Rail behandelt nur Ereignisse, deren Ziel in ihrem eigenen DOM liegt.
 
+**Plan-Review** 16.10. durch einen frischen Agenten (Fable): Probelauf des Pakets in einer Kopie mit allen Dateien der
+Tasks 1–3 und 8 (Lint grün, 416/417, nur `published` erwartet rot; `focus-clip`, `app-bar-shrink`, `contracts-4b`,
+`navigation`, `ratchet`, `engine-classes` grün), Engine-Kopie (`tsc` 0, beide Vite-Builds grün, MUI-Vitest 507/507),
+Java (`javac` 0, `TestDrawerToggleState` 2/2). Review Focus 1–4 am Code bestätigt. Befunde 1–10 eingearbeitet:
+Badge-Vertrag (Token-Zeile, „kein Control“), echte Anatomie von Breadcrumb und NoticeBar im Specimen, Spec-§7-Prüfungen
+im Verträge-Test, Drawer schließt beim Wechsel auf breit, `tl-drawer--container` statt Specimen-Override, ein `main`
+je Dokument, Slot-Frage beantwortet, `lines` ungeprüft, JavaDoc-Wortlaut.
+
 ## Global Constraints
 
 - Ticket **#29866**; Commits beider Repos mit Präfix `Ticket #29866:`, Paket-Commits deutsch, Engine-Commits englisch,
@@ -209,12 +217,18 @@ test('tl-icon-badge: der Behälter ist positioniert, der Zähler sitzt an der Ec
 ```markdown
 ## Zustand
 
-Das Part `Badge` (`BadgePart.tsx`, `usePart('Badge')`) zeichnet es mit `content`; Sidebar, BottomBar und Reiter
-setzen es.
+Es gibt kein Control; das Part `Badge` (`BadgePart.tsx`, `usePart('Badge')`) zeichnet es mit `content`, Sidebar,
+BottomBar und Reiter setzen es. (`feedback.test.mjs` verlangt den Satz „kein Control“.)
 
 | Schlüssel | Typ | Bedeutung |
 |---|---|---|
 | `content` | integer oder kurzer string | Die Ziffern oder das Kürzel; Text gehört in eine Pill. |
+```
+
+  in „## Tokens“ eine Zeile anfügen (`feedback.test.mjs` verlangt jedes Token, das `badge.css` liest, im Vertrag):
+
+```markdown
+| Ecke (`tl-icon-badge__count`) | `--tl-space-2xs` nach oben, `--tl-space-xs` zum Ende |
 ```
 
   und in „## Attribute“ zwei Zeilen anfügen:
@@ -239,9 +253,8 @@ setzen es.
   `<link rel="stylesheet" href="/fonts/style/bootstrap-icons.css">` nach `interFonts.css` ergänzen.)
 
 - [ ] **Step 7: Gates** — `node tools/generate.mjs && node tools/lint-css.mjs && node tools/publish-to-worktree.mjs &&
-  node --test 2>&1 | grep -E '^ℹ (pass|fail)|^✖'` — Expected: alles grün. Meldet ein Test, dass ein Token keinen
-  Leser hat oder die Dichte-Schlüssel fest gezählt sind (`tokens.test.mjs`, `generate.test.mjs`), den Test um die zwei
-  Namen ergänzen — Leser kommen in Task 2 und 3; reicht das nicht, Task 1 erst nach Task 3 committen.
+  node --test 2>&1 | grep -E '^ℹ (pass|fail)|^✖'` — Expected: alles grün außer `published.test.mjs` vor dem Publizieren. Rot in `feedback.test.mjs` („badge: Specimen
+  und Vertrag“) heißt: Token-Zeile oder Satz „kein Control“ aus Step 6 fehlt (Plan-Review, Befund 1).
 
 - [ ] **Step 8: Commit** (Paket)
 
@@ -601,7 +614,7 @@ Titel nachgibt und im Klassen-Gate keine Klasse ohne `tl-`-Präfix bleibt.
       <header class="tl-app-bar">
         <div class="tl-app-bar__leading"><button type="button" class="tl-button tl-button--ghost tl-button--icon" aria-label="Navigation öffnen" aria-expanded="false" data-tooltip="text:Navigation öffnen"><i class="tl-icon-md bi bi-list tl-button__icon" aria-hidden="true"></i></button></div>
         <h1 class="tl-app-bar__title tl-type-heading-sm">TopLogic Demo</h1>
-        <div class="tl-app-bar__children"><nav class="tl-breadcrumb tl-type-body" aria-label="Pfad"><ol class="tl-breadcrumb__list"><li class="tl-breadcrumb__item"><a class="tl-breadcrumb__link" href="#">Start</a></li><li class="tl-breadcrumb__item"><span class="tl-breadcrumb__current" aria-current="page">Aufträge</span></li></ol></nav></div>
+        <div class="tl-app-bar__children"><nav class="tl-breadcrumb" aria-label="Pfad"><ol class="tl-breadcrumb__list"><li class="tl-breadcrumb__entry"><button type="button" class="tl-button tl-button--link tl-type-body"><span class="tl-button__label">Start</span></button><i class="tl-breadcrumb__separator tl-icon-sm bi bi-chevron-right" aria-hidden="true"></i></li><li class="tl-breadcrumb__entry"><span class="tl-breadcrumb__current tl-type-body" aria-current="page">Aufträge</span></li></ol></nav></div>
         <div class="tl-app-bar__actions"><div class="tl-toolbar" role="toolbar" aria-label="Befehle" data-tl-overflow="trailing"><button type="button" class="tl-button tl-button--ghost"><span class="tl-button__label">Neu</span></button><button type="button" class="tl-button tl-button--ghost"><span class="tl-button__label">Export</span></button></div></div>
         <div class="tl-app-bar__trailing"><button type="button" class="tl-button tl-button--ghost"><span class="tl-button__label">Hendrik</span></button></div>
       </header>
@@ -626,8 +639,9 @@ Titel nachgibt und im Klassen-Gate keine Klasse ohne `tl-`-Präfix bleibt.
   </section>
 ```
 
-  (Die Breadcrumb-Klassen vor dem Einfügen gegen `src/components/breadcrumb/breadcrumb.spec.html` abgleichen und
-  dessen Anatomie übernehmen.) `app-shell.spec.html`:
+  (Anatomie der Breadcrumb wie `breadcrumb.spec.html:27-33`.) `app-shell.spec.html` — die Bühne steht in
+  `<div class="specimen">` statt `<main class="specimen">`, damit das Dokument nur ein `main` hat (Plan-Review,
+  Befund 7):
 
 ```html
 <style>
@@ -640,8 +654,8 @@ Titel nachgibt und im Klassen-Gate keine Klasse ohne `tl-`-Präfix bleibt.
       <div class="tl-app-shell" data-tl-display="regular">
         <div class="tl-app-shell__header"><header class="tl-app-bar tl-app-bar--elevated"><h1 class="tl-app-bar__title tl-type-heading-sm">TopLogic Demo</h1></header></div>
         <div class="tl-app-shell__notices"><div class="specimen__notices">
-          <div role="status"><div class="tl-alert tl-notice-bar tl-type-body" data-tl-role="info"><span class="tl-alert__message">Wartung heute ab 18 Uhr.</span></div></div>
-          <div role="status"><div class="tl-alert tl-notice-bar tl-type-body" data-tl-role="warning"><span class="tl-alert__message">Die Sitzung läuft bald ab.</span></div></div>
+          <div role="status"><div class="tl-alert tl-notice-bar tl-type-body" data-tl-role="info"><div class="tl-alert__body"><div class="tl-alert__message">Wartung heute ab 18 Uhr.</div></div></div></div>
+          <div role="status"><div class="tl-alert tl-notice-bar tl-type-body" data-tl-role="warning"><div class="tl-alert__body"><div class="tl-alert__message">Die Sitzung läuft bald ab.</div></div></div></div>
         </div></div>
         <main class="tl-app-shell__content"><p class="tl-type-body">Inhalt (main). Die Ansicht trägt ihren Abstand selbst.</p></main>
         <div class="tl-app-shell__footer"><nav class="tl-bottom-bar" aria-label="Navigation unten"></nav></div>
@@ -650,7 +664,7 @@ Titel nachgibt und im Klassen-Gate keine Klasse ohne `tl-`-Präfix bleibt.
   </section>
 ```
 
-  (Die Notice-Anatomie vor dem Einfügen gegen `notice-bar.spec.html` abgleichen. `.specimen__notices` ist eine
+  (Notice-Anatomie wie `notice-bar.spec.html:33-36`. `.specimen__notices` ist eine
   Stapel-Attrappe mit Lücke: in den `<style>` des Specimens `.specimen__notices { display: flex; flex-direction:
   column; gap: var(--tl-space-sm); }` aufnehmen — die Paketregel muss sie auf 0 setzen.)
 
@@ -765,6 +779,12 @@ test('sidebar.spec.html zeigt die aktuelle Seite, eine zugeklappte Gruppe mit ih
   assert.match(html, /<div class="tl-dialog">\s*<aside class="tl-drawer tl-drawer--start tl-drawer--narrow[^"]*" data-tl-state="open" role="dialog" aria-modal="true"/);
   assert.match(html, /<aside class="tl-drawer[^>]*>\s*<nav [^>]*class="tl-sidebar__nav"/);
   assert.match(html, /class="tl-icon-badge"/);
+});
+
+test('Specimen der Spec §7: <main> in der Shell, aria-expanded am Hamburger, aria-controls auf die Nav', () => {
+  assert.match(datei('app-shell', 'app-shell.spec.html'), /<main class="tl-app-shell__content"/);
+  assert.match(datei('app-bar', 'app-bar.spec.html'), /<div class="tl-app-bar__leading"><button [^>]*aria-expanded="false"/);
+  assert.match(datei('sidebar', 'sidebar.spec.html'), /aria-controls="sb1-nav"/);
 });
 
 test('bottom-bar.spec.html: genau eine aktuelle Seite, ein Zähler an der Ecke', () => {
@@ -1134,7 +1154,6 @@ Eine BottomBar besteht den Vertrag, wenn sie `<nav>` mit übersetztem Namen ist,
 <style>
   .stage { position: relative; height: 26rem; overflow: hidden; transform: translateZ(0); background: var(--tl-surface-base); }
   .stage .tl-dialog { position: absolute; }
-  .stage .tl-drawer { position: absolute; }
   .stage .tl-popover { position: absolute; inset-inline-start: 3.5rem; top: 4rem; }
   .stage p { margin: var(--tl-space-md); }
 </style>
@@ -1217,7 +1236,7 @@ Eine BottomBar besteht den Vertrag, wenn sie `<nav>` mit übersetztem Namen ist,
     <div class="stage">
       <div class="tl-sidebar">
         <div class="tl-dialog">
-          <aside class="tl-drawer tl-drawer--start tl-drawer--narrow" data-tl-state="open" role="dialog" aria-modal="true" aria-label="Seitenleisten-Navigation" tabindex="-1">
+          <aside class="tl-drawer tl-drawer--start tl-drawer--narrow tl-drawer--container" data-tl-state="open" role="dialog" aria-modal="true" aria-label="Seitenleisten-Navigation" tabindex="-1">
             <nav id="sb3-nav" class="tl-sidebar__nav" aria-label="Seitenleisten-Navigation">
               <div class="tl-sidebar__items">
                 <button type="button" class="tl-menu__item tl-type-body-strong tl-sidebar__item" tabindex="0" aria-current="page"><i class="tl-menu__icon tl-icon-sm bi bi-inbox" aria-hidden="true"></i><span class="tl-menu__label">Eingang</span></button>
@@ -1245,7 +1264,7 @@ Eine BottomBar besteht den Vertrag, wenn sie `<nav>` mit übersetztem Namen ist,
 
   Im `app-shell.spec.html` (Task 2) die leere BottomBar im Fuß durch diese drei Einträge ersetzen. In
   `specimen/index.html` die Links `Sidebar →` und `BottomBar →` ergänzen. `<hr class="tl-divider">` vor dem Einfügen
-  gegen `divider.spec.html` abgleichen.
+  gegen `divider.spec.html` abgleichen (das Part `Divider` zeichnet `hr.tl-divider`).
 
 - [ ] **Step 7: Gates** — `node tools/generate.mjs && node tools/lint-css.mjs && node tools/publish-to-worktree.mjs &&
   node --test 2>&1 | grep -E '^ℹ (pass|fail)|^✖'` — Expected: alles grün, `focus-clip` über alle neuen Seiten in
@@ -1380,12 +1399,9 @@ Co-Authored-By: <Modell> <noreply@anthropic.com>"
 - Produces: Zustand des Hamburgers `{ open: boolean, controls: string }`; `ReactSidebarControl.setDrawerToggle(DrawerToggleControl)`
   (package-private); `DrawerToggleControl.setOpen(boolean)` (package-private).
 
-- [ ] **Step 1: Kontext erreicht den Slot?** — prüfen, wie `SlotContentControl` und der Platzhalter `<slot>` den
-  Inhalt rendern (`grep -rn "class SlotContentControl\|TLSlot" R/src/main/java R/react-src`): steht der Hamburger im
-  selben React-Baum wie die AppShell (`TLChild`, oder `createPortal` aus einer Komponente unter der Shell), erreicht
-  ihn `useDisplayClass()`. Rendert der Slot einen **eigenen** Root (`createRoot`), Arbeit anhalten und melden — dann
-  muss die Anzeigeklasse zusätzlich über das Attribut an `document.documentElement` laufen (Entscheidung beim
-  Orchestrator).
+- [ ] **Step 1: Kontext erreicht den Slot — geprüft im Plan-Review, ja.** `SlotPlaceholderControl` (Modul `TLSlot`)
+  trägt die gerouteten Controls als `children`, `TLSlot.tsx` rendert sie mit `TLChild`; AppShell → AppBar → Slot →
+  Hamburger ist ein React-Baum unter einem `createRoot`. Nichts zu tun; ändert sich das, meldet es Task 9 Punkt 3.
 
 - [ ] **Step 2: Failing Java-Test** — `TestDrawerToggleState.java`:
 
@@ -1743,6 +1759,7 @@ Co-Authored-By: <Modell> <noreply@anthropic.com>"
 - Modify: `R/src/main/webapp/style/tlReactControls.css` (Blöcke `TLSidebar`, `Collapsed mode: center icon-only items`,
   `Drawer backdrop (…)`, `Responsive: sidebar becomes an off-canvas drawer on small viewports` streichen)
 - Modify: `design-system/test/ratchet.json` (vier Blöcke streichen)
+- Modify: `R/…/control/sidebar/ReactSidebarControl.java:52`, `com.top_logic.layout.view/…/element/SidebarElement.java:144` (JavaDoc-Wortlaut)
 
 **Interfaces:**
 - Consumes: `Menu`, `MenuItem` (mit `current`, `trailing`, `tooltip`), `MenuHeader`, `MenuSeparator`,
@@ -1926,7 +1943,19 @@ const SidebarGroupFlyout: React.FC<{
   useFocusTrap(drawerVisible, drawerRef, 'first');
 ```
 
-  - nach `handleToggleDrawer`: `useStandaloneKeyboardScope(drawerVisible, { ESCAPE: handleToggleDrawer });`
+  - nach `handleToggleDrawer`:
+
+```tsx
+  useStandaloneKeyboardScope(drawerVisible, { ESCAPE: handleToggleDrawer });
+
+  // Wide again with the drawer open: there is no drawer to show, and the next narrowing must not find it open
+  // without anyone asking. The server keeps drawerOpen until told.
+  useEffect(() => {
+    if (!compact && drawerOpen) {
+      handleToggleDrawer();
+    }
+  }, [compact, drawerOpen, handleToggleDrawer]);
+```
   - in `handleKeyDown` den Escape-Zweig für das Flyout streichen und als erste Zeile setzen:
 
 ```tsx
@@ -2050,6 +2079,11 @@ const SidebarGroupFlyout: React.FC<{
 
   - `useEffect` „Close flyout when sidebar expands“ bleibt.
 
+- [ ] **Step 4a: JavaDoc-Wortlaut** — `ReactSidebarControl.java:52` („mobile off-canvas drawer“) → „the drawer of the
+  navigation while the app shell is compact“; `com.top_logic.layout.view/…/element/SidebarElement.java:144` („visible …
+  at mobile breakpoints“) → „rendered only while the app shell is compact“. Danach `check-messages-en.sh` in Task 8
+  (JavaDoc an Konfig-Eigenschaften erzeugt Messages).
+
 - [ ] **Step 5: Altbestand** — die vier Sidebar-Blöcke in `tlReactControls.css` vollständig löschen (vom Kopf
   `/* --- TLSidebar --- */` bis vor die Überschrift nach `Responsive: …`); in `design-system/test/ratchet.json` die vier
   Schlüssel streichen.
@@ -2061,7 +2095,7 @@ const SidebarGroupFlyout: React.FC<{
 - [ ] **Step 7: Commit** (Engine, dann Paket-Ratsche)
 
 ```bash
-git -C _Working-Tree/tl8-wt-29584 add -A com.top_logic.layout.react
+git -C _Working-Tree/tl8-wt-29584 add -A com.top_logic.layout.react com.top_logic.layout.view/src/main/java/com/top_logic/layout/view/element/SidebarElement.java
 git -C _Working-Tree/tl8-wt-29584 commit -m "Ticket #29866: The sidebar reads the design system package -- entries as menu items with aria-current page, the head of a closed group marks the page inside, chevron as the toggle's, the flyout is the menu placed right-start, compact the navigation is a modal drawer with focus and Escape.
 
 Co-Authored-By: <Modell> <noreply@anthropic.com>"
@@ -2326,7 +2360,8 @@ test('Welle 4b im TSX: main in der Shell, aria-current an den Seiten, aria-expan
 - [ ] **Step 2: Ratsche** — `cd design-system && node tools/inventory.mjs`; in `test/ratchet.json`:
   - `literals` auf die gemessenen Zahlen (erwartet: duration 23→20, zIndex 14→11, fontSize 31→28, color und
     outlineNone unverändert — die Messung zählt);
-  - `lines` = Summe der Budgets = gemessen;
+  - `lines` = Summe der Budgets = gemessen (Plan-Review in einer Nachbildung: 3145; kein Test prüft `lines`, nur
+    `inventory.mjs` gibt es aus);
   - Vermerk an `_blocks`: „16.10. Welle 4b (#29866): TLSidebar, Collapsed mode: center icon-only items, Drawer
     backdrop, Drawer toggle, Responsive: sidebar becomes an off-canvas drawer, TLAppBar, TLBottomBar, TLAppShell
     gestrichen — app-shell.css, app-bar.css, sidebar.css, bottom-bar.css und tl-icon-badge (badge.css) im Paket; mit
@@ -2437,7 +2472,7 @@ Co-Authored-By: <Modell> <noreply@anthropic.com>"
   3. Fenster schmal (unter 768 px): Hamburger erscheint in der AppBar, `aria-expanded="false"`; öffnen → Scrim über
      AppBar und Seite, Fokus auf dem ersten Eintrag, Tab bleibt drin; Escape schließt, Fokus am Hamburger; Klick auf
      den Scrim schließt; Auswahl einer Seite schließt und navigiert; zurück auf breit: Rail wie vorher (eingeklappt,
-     wenn sie es war).
+     wenn sie es war); Drawer offen lassen, breit ziehen, wieder schmal: der Drawer bleibt zu (Plan-Review, Befund 4).
   4. AppBar: Höhe 48/40; Fenster langsam schmaler — erst verlieren die Toolbar-Knöpfe ihre Labels, dann wandern sie
      ins Überlaufmenü, erst dann kürzt der Titel.
   5. BottomBar (sofern eine Ansicht sie nutzt; sonst im Specimen): Fläche hinter dem Icon, Zähler an der Ecke,

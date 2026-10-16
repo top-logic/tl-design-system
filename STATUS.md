@@ -85,7 +85,19 @@ von 4a. Ticket #29866 auf Navigation umbenannt, Kommentar dazu. **Spec steht (16
 Fläche, auch am Kopf einer zugeklappten Gruppe; `--elevated` als Linie; `tl-badge--corner`); `skalen.md` „Welle 4b:
 Navigation“, Präsentation nachgezogen. Spec von Hendrik freigegeben. **Plan steht:** `docs/superpowers/plans/2026-10-16-welle-4b-navigation.md` (zehn Tasks,
 zehn Abweichungen beim Planen gefunden, u. a. `tl-icon-badge` statt `tl-badge--corner`, Hamburger mit Zustand vom
-Server). **Nächstes:** Plan-Review durch einen frischen Agenten (Fable), dann SDD.
+Server). Plan-Review (Fable, 16.10.) mit Probeläufen in Kopien:
+Paket 416/417 (nur `published` erwartet rot), `tsc` 0, Vite grün, MUI-Vitest 507/507, Java-Test 2/2; zehn Befunde
+eingearbeitet (Kopf des Plans). Hendrik: „plan sieht gut aus“, **nicht automatisch starten**.
+
+**Einstieg der nächsten Sitzung (Welle 4b umsetzen):**
+1. `STATUS.md`, Spec `docs/superpowers/specs/2026-10-16-welle-4b-navigation-design.md` und Plan
+   `docs/superpowers/plans/2026-10-16-welle-4b-navigation.md` lesen.
+2. Worktree `_Working-Tree/tl8-wt-29584` steht auf `CWS/CWS_29866_design_system_welle_4b` (lokal, ein Commit
+   `1fdae596a9` über `origin/…_spaltenwahl`); vorher `git fetch` — Bernhard kann die Spaltenwahl bewegt haben; dann
+   den 4b-Branch auf den neuen Stand der Spaltenwahl setzen, bevor Task 1 beginnt.
+3. Ausführung Subagent-driven (`superpowers:subagent-driven-development`), Empfehlung, beim Start mit Hendrik
+   bestätigen; Task 1 bis 10 der Reihe nach, je Task Review; Trac (Task 8 Step 6) und Push nur der Orchestrator mit
+   Freigabe.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
