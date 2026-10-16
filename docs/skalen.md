@@ -2399,6 +2399,53 @@ kein englisches `aria-label`), Lint ohne Breiten-Media-Query, `focus-clip.test.m
 `engine-classes.test.mjs` sperrt `tlSidebar`, `tlAppBar`, `tlBottomBar`, `tlAppShell`, `tlDrawerToggle`; die Ratsche
 streicht acht Blöcke.
 
+### Welle 4c: Behälter (16.10., Hendrik — #29870)
+
+**Grundlage.** Prognose Q3, Q7, Q8, Q13–Q23 (`altlast.md` „Welle 4c“), alle wie vorgeschlagen; Spec
+`docs/superpowers/specs/2026-10-16-welle-4c-behaelter-design.md`. Rund 850 Zeilen Altbestand, zwölf Behälter.
+
+**Ein Kopf, eine Fußleiste.** Panel und Karte tragen den Kopf aus 4a (`tl-titlebar`): ohne eigene Fläche, Linie
+darunter, Titel `h2`. Die Tönung `layer-02` des Panelkopfs fällt — sie sollte ihn vom dunklen AppBar absetzen, den es
+nicht mehr gibt, und machte Panels zu einer vierten Kopfform neben Fenster, Drawer und Karte. Jeder Kopf misst
+`size-bar`, mit und ohne Toolbar; ein DOM-Test misst es. Panel-Knopfleiste und Dialog-Fuß werden ein Block
+`tl-button-bar` (`tl-dialog__footer` entfällt). **Verworfen:** die Tönung behalten (eine Kopfform mehr); eine
+Fußklasse je Behälter (zwei Abstände für dieselbe Leiste).
+
+**Die Verschachtelung bestimmt die Stufe, nicht eine Variante.** Eine Karte auf dem Grund liegt auf `surface-layer`,
+eine in einer Fläche (Panel, Karte, Accordion) auf `surface-layer-nested`; im Dialog bleibt sie auf dessen Fläche, weil
+`nested` dunkel unter `surface-overlay` liegt und die Karte einsänke. Hell ändert das nichts — `layer` und `nested`
+sind weiß, dort trennt der Rahmen —, dunkel hebt sich die innere Karte um eine Stufe. Das ist die Regel aus
+„Elevation“ (hell der Rahmen, dunkel die Fläche) zum ersten Mal ausgenutzt. `elevated` zeichnet wie `outlined`: „Eine
+Karte liegt in der Oberfläche“ (Welle 0), Schatten nur für Schwebendes (4b). Die Fläche erfährt die Karte über einen
+React-Kontext, denselben, aus dem das Inset seinen Abstand liest. **Verworfen:** `elevated` als Schatten (gestrichen
+seit Welle 0); jede Karte auf `layer` (dunkel verschwimmt eine Karte im Panel).
+
+**Eine Gap-Skala.** Stack und Grid hatten 0,5/1,5/3 rem, die Spalten aus 3b 0,75/1/1,5 rem — gleiche Stufennamen,
+andere Werte. Alle drei nehmen `space-sm`/`-md`/`-lg`. Sichtbar in jeder Ansicht: der Standardabstand wird 1 statt 1,5
+rem. Der Grid-Abstand kommt im TSX aus der Stufe statt über die Fremdeigenschaft `--tlGrid-gap`. **Verworfen:** die
+Spalten auf die alten Werte ziehen (3 rem „locker“ ist ein Loch, kein Abstand).
+
+**Der Rand kommt von der Fläche.** `--page-inset` war an drei Stellen definiert und erbte sich durch: Inset 1,5 rem auf
+der Seite, 1 rem im Panel, 0,5/1 rem in der Karte. Die Werte bleiben, der Weg wird ein React-Kontext
+(`tl-inset--page|panel|card`) — kein Fremdname im Namensraum, und die nächste Fläche gewinnt wie bisher. Die
+Kartenpolsterung folgt „der Inhalt beginnt, wo der Titel beginnt“: `space-md` statt 1,5 rem, kompakt `space-xs`.
+
+**Ein Griff mit Tastatur.** SplitPanel-Teiler und Spaltengriff der Tabelle teilen eine Bedienung aus `bridge/`:
+`role=separator`, fokussierbar, Pfeiltasten um `space-md`, Home/End, `aria-valuenow`. Der Split-Teiler ist in Ruhe eine
+Linie (Flächen brauchen eine Grenze), der Tabellengriff unsichtbar (Zellen haben Linien); beide werden unter dem Zeiger,
+beim Ziehen und mit Fokus `border-width-md` in `border-interactive`.
+
+**Bedienung, die man erwartet (U1–U3, Hendrik: „modern und großartig zu bedienen“).** Doppelklick auf den Panelkopf
+maximiert und stellt wieder her, Escape beendet das Maximieren; Doppelklick auf den Split-Griff stellt die
+Ausgangsaufteilung her; ein minimiertes Panel öffnet ein Klick auf den ganzen Kopf. Der Knopf bleibt der Weg für
+Tastatur und Screenreader.
+
+**Kleineres.** Breadcrumb in AdaptiveDetail ist `TLBreadcrumb` (der Server behält `{depth, label}`, der Standard-Kopf
+„Übersicht“ statt `‹`); ViewError und der Html-Fehler sind `tl-alert` `error`; das Accordion zieht ins Paket (Bernhard
+baute es im alten Stylesheet); Wizard und TileStack gleiten um einen Versatz `space-md` und markieren Übergänge als
+Attribute; `--tl-item-index` heißt `--item-index` — ein Datum der Engine für Anwendungs-CSS, kein Wort des Pakets.
+`tlFill`, Viewport und Mount bleiben bis Welle 5.
+
 ### Die Kopie in der Engine ist versiegelt (16.10.)
 
 **Befund:** Zweimal wurde die Kopie des Pakets in tl-engine-7 von Hand geändert — #29787 (sechs Stellen) und #29859

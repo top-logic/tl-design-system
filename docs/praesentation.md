@@ -192,6 +192,7 @@ Jede Komponente geht denselben Weg: CSS ins Paket, Klassen umbenennen, Zustände
 | **Kopfzeilen und ihre Knöpfe** | sechs Kopfzeilen, sieben Knopf-Eigenbauten in 28–40 px, das Kreuz dreimal von Hand gezeichnet | eine Titelleiste, Knöpfe 24 px mit Namen und Tooltip |
 | **Meldungen** | Snackbar und Systemhinweis voll gefärbt mit Weiß/Schwarz, ein Fehler wird nur „höflich“ angesagt | getönte Alerts: dieselben Farben, ein Fehler unterbricht, alles andere nicht |
 | **Navigation** (Welle 4b) | zwei Schubladen, ein Flyout mit eigener Lagerechnung, drei Eintragsformen, die aktuelle Seite nur als Klasse; der Breakpoint zweimal | **eine** Schublade mit Fokus und Escape, das Flyout ist das Menü, ein Eintrag; „hier bist du“ für Auge und Screenreader |
+| **Behälter** (Welle 4c) | vier Kopfformen, drei Kartenflächen, zwei Abstandsskalen mit denselben Namen, ein Teiler nur für die Maus | **ein** Kopf, **eine** Karte, die sich in einer Fläche selbst eine Stufe hebt, **eine** Skala — und jeder Teiler mit der Tastatur |
 
 Vor jeder Welle: Was tut dasselbe? Prognose auf den Tisch, Entscheidung, dann die Spec. Gebautes wird mitgeprüft.
 
@@ -208,6 +209,8 @@ Vor jeder Welle: Was tut dasselbe? Prognose auf den Tisch, Entscheidung, dann di
 > Sprechnotiz (Welle 3b, 07.10.): Was Kollegen parallel gebaut haben — Höfe, der runde Entfernen-Knopf, die Hinweisbox — wird nicht ein zweites Mal erfunden, sondern übernommen. Ein Knopf, eine Regel.
 >
 > Sprechnotiz (Welle 3b gebaut, 08.10.): Tabelle, Baum und Listen teilen sich Fokus, Ziehen und Suchen — fünf Helfer statt fünfzehn Fassungen; der Fokus geht nirgends mehr verloren.
+>
+> Sprechnotiz (Welle 4c, 16.10.): Panels benehmen sich wie Fenster — Doppelklick auf den Kopf maximiert, Escape holt zurück, ein Doppelklick auf den Teiler stellt die Aufteilung her. Und im dunklen Modus hebt sich eine Karte im Panel von selbst eine Stufe ab, ohne Schatten.
 >
 > Sprechnotiz (Welle 4b, 16.10.): Wo bin ich? Die aktuelle Seite trägt dieselbe Fläche wie eine gewählte Zeile — auch eingeklappt, auch in einer zugeklappten Gruppe. Und auf dem Handy ist die Seitenleiste eine echte Schublade: Escape schließt, der Fokus kommt zurück.
 >
@@ -310,7 +313,7 @@ Einen vierten Weg gibt es nicht: Shell nutzen und den Draht ignorieren. Und es g
 | 1 | Button, Pill, Avatar, Progress, FontIcon | auf master |
 | 2 | Felder, Checkbox, Select, Formular | auf master — ein Feldrahmen für alle; Fehler ist `aria-invalid`, dasselbe Attribut für Auge und Screenreader; ein deaktiviertes Feld zeigt nie einen Fehler; gewählt sieht überall gleich aus (Chip wie Kästchen); schreibgeschützt bleibt lesbar, nicht grau; Ratsche 7.252 → 5.994 Zeilen, zwölf alte Blöcke gestrichen |
 | 3 | Tabelle, Baum, Menü, Toolbar, Reiter | Datendarstellung und Navigation: **3a** Menü, Toolbar, Reiter auf master; **3b** Tabelle, Baum und Spaltenwahl als Ebenen-Panel (PRs !1838, !1852) |
-| 4 | Dialog, Fenster, Drawer, Snackbar, Shell | zwei PRs: **4a Overlays** (PR !1882) — ein Dialog, eine Titelleiste, Meldungen als Alerts; Ratsche 4.505 → 4.010 Zeilen, sieben alte Blöcke gestrichen; **4b Navigation** (Shell, AppBar, Sidebar, BottomBar) geplant — ein Breakpoint, die mobile Sidebar ein echter Drawer, die aktuelle Seite eine Fläche; **4c Behälter** (Panel, Karte, Wizard …) folgt |
+| 4 | Dialog, Fenster, Drawer, Snackbar, Shell | zwei PRs: **4a Overlays** (PR !1882) — ein Dialog, eine Titelleiste, Meldungen als Alerts; Ratsche 4.505 → 4.010 Zeilen, sieben alte Blöcke gestrichen; **4b Navigation** (Shell, AppBar, Sidebar, BottomBar) geplant — ein Breakpoint, die mobile Sidebar ein echter Drawer, die aktuelle Seite eine Fläche; **4c Behälter** (Panel, Karte, Wizard …) geplant — ein Kopf, eine Karte, eine Abstandsskala, Teiler mit Tastatur |
 | 5 | Kalender, Farbwahl, Medien, Dashboard | fachlich, zuletzt |
 
 Innerhalb einer Welle keine Reihenfolge — parallel ist möglich. Der Button ist die Vorlage für alle Muster.

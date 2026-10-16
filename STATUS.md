@@ -102,7 +102,9 @@ Sichtprüfung (Task 9) 16.10. bestanden, Befunde S1–S5 in `altlast.md` „Well
 `CWS/CWS_29870_design_system_welle_4c` im Worktree `tl8-wt-29584`, lokal, auf dem 4b-Head `9c6776f258` (!1906 offen).
 Prognose Q3, Q7, Q8, Q13–Q23 (`altlast.md` „Welle 4c“) von Hendrik angekreuzt: alle wie vorgeschlagen. **Spec-Entwurf
 steht:** `docs/superpowers/specs/2026-10-16-welle-4c-behaelter-design.md`; elf beim Schreiben getroffene Entscheidungen
-in §12 zur Freigabe. Nächstes: Hendriks Durchsicht der Spec, dann Plan (`writing-plans`), Plan-Review, SDD.
+in §12. **Spec freigegeben 16.10. (Hendrik)**, mit Weg B (Karte: Stufe nach Verschachtelung) und den Bedien-Gewinnen
+U1–U3 (Doppelklick Panelkopf/Escape, Doppelklick Split-Griff, Klick auf ganzen Kopf öffnet minimiertes Panel);
+`skalen.md` „Welle 4c: Behälter“, Präsentation nachgezogen. Nächstes: Plan (`writing-plans`), Plan-Review, SDD.
 
 **Einstieg der nächsten Sitzung (Welle 4b umsetzen):**
 1. `STATUS.md`, Spec `docs/superpowers/specs/2026-10-16-welle-4b-navigation-design.md` und Plan

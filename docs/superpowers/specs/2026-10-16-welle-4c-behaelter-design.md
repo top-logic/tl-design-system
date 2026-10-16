@@ -2,8 +2,8 @@
 
 **Ticket:** Trac #29870 · **Branch:** `CWS/CWS_29870_design_system_welle_4c` auf `CWS/CWS_29866_design_system_welle_4b`
 (!1906) · **Grundlage:** Konsolidierungs-Prognose in `docs/migration/altlast.md` „Welle 4c“ (Q3, Q7, Q8, Q13–Q23; von
-Hendrik am 16.10. angekreuzt: alle wie vorgeschlagen) · **Stand:** Entwurf zur Freigabe; was beim Schreiben entschieden
-wurde, steht in §12.
+Hendrik am 16.10. angekreuzt: alle wie vorgeschlagen) · **Freigegeben:** 16.10.2026 von Hendrik, mit den beim
+Schreiben getroffenen Entscheidungen (§12) und den Bedien-Gewinnen U1–U3.
 
 ## 1 · Ziel und Abgrenzung
 
@@ -77,6 +77,10 @@ div.tl-panel[data-tl-state~="minimized"|"maximized"][.tl-card][.tl-panel--hover-
   ohne das Literal `100000`, in der Form, die der 4b-Plan für die AppBar fand.
 - **Minimieren** ist ein Auf- und Zuklappen: der Knopf trägt `aria-expanded` (zu = minimiert) und `aria-controls` auf
   den Körper (Q13); Name und Glyph wechseln wie heute.
+- **Bedienung wie ein Fenster (U1, U3):** Doppelklick auf den Kopf maximiert und stellt wieder her, wenn das Panel
+  maximieren darf; Escape beendet das Maximieren, der Fokus bleibt im Panel. Ein minimiertes Panel öffnet ein Klick auf
+  den ganzen Kopf, nicht nur auf das Icon. Klicks auf Knöpfe und Toolbar im Kopf bleiben deren eigene; der Knopf bleibt
+  der Weg für Tastatur und Screenreader (der Kopf selbst wird kein zweiter Knopf).
 - **Zustände sind Attribute:** `data-tl-state~="minimized"|"maximized"` statt `tlPanel--normalized|minimized|…`.
   Maximiert liegt das Panel `position: absolute; inset: 0` auf `layer-raised` (Q8) mit `surface-base`; das Inline-Style
   `zIndex: 10` entfällt.
@@ -152,6 +156,9 @@ div.tl-split.tl-split--horizontal|vertical[data-tl-state~="all-collapsed"]
   Minimum. Name aus i18n.
 - **Senden:** wie beim Ziehen ein Befehl je abgeschlossener Bewegung (`updateSizes`, Spaltenbreite) — bei Tasten nach
   dem Loslassen.
+- **Zurück auf Anfang (U2):** Doppelklick auf den Split-Griff stellt die konfigurierte Aufteilung wieder her (wie in
+  VS Code oder Figma). Der Server bekommt dafür einen Befehl, der die persönliche Aufteilung verwirft; ob
+  `SplitSizePersonalization` das schon kann, prüft der Plan. Der Tabellengriff behält seinen Doppelklick („passend“).
 - **Aussehen:** Trefferzone `space-xs`. Der Split-Teiler zeigt in Ruhe eine Linie `border-width-sm` in
   `border-separator` (die Flächen brauchen eine Grenze), der Tabellengriff in Ruhe keine (die Zellen haben eigene
   Linien). Unter dem Zeiger, beim Ziehen und mit Fokus beide `border-width-md` in `border-interactive`; der Fokusring
@@ -237,7 +244,8 @@ Neu im Paket (`node --test`) und im Engine-Gate:
    Blöcke aus §1 gestrichen, `engine-classes` ohne Treffer.
 8. **Gates gesamt** nach §9.
 9. **Sichtprüfung lokal** (`tl-demo-react`, hell und dunkel, beide Dichten): Panelköpfe nebeneinander gleich hoch;
-   Minimieren, Maximieren, eingeklappt im Split; Teiler mit Maus und Tastatur, Fokus sichtbar; Spaltenbreite per
+   Minimieren, Maximieren, eingeklappt im Split; Doppelklick auf Kopf und Griff, Escape aus dem Maximieren; Karte in
+   Karte dunkel eine Stufe heller; Teiler mit Maus und Tastatur, Fokus sichtbar; Spaltenbreite per
    Tastatur; Abstände einer Formularseite vorher/nachher; Karte und Kommentar-Karte; Accordion; Wizard vorwärts und
    zurück, auch mit reduzierter Bewegung; AdaptiveDetail schmal mit Breadcrumb; eine kaputte Ansicht (ViewError).
 10. **Lokal committen, melden.** Push nur nach Freigabe; PR gegen 4b (nach dessen Merge gegen master), Reviewer bhu.
@@ -274,3 +282,7 @@ Steht im Trac-Text unter `== Migration ==` und als Alt→neu-Liste in `altlast.m
   9. Teiler in Ruhe eine Linie, Tabellengriff in Ruhe unsichtbar; Tastaturschritt `space-md`.
   10. Ein Versatz `space-md` für Wizard und TileStack; Richtung als `data-tl-state~="backward"`.
   11. Wizard-Zähler `aria-hidden`, Liste mit Namen; Token `size-wizard-progress`.
+- **Bedien-Gewinne, angekreuzt 16.10. (Hendrik, Prämisse „modern und großartig zu bedienen“):** U1 Doppelklick auf den
+  Panelkopf maximiert, Escape stellt wieder her; U2 Doppelklick auf den Split-Griff stellt die Ausgangsaufteilung her;
+  U3 ein minimiertes Panel öffnet sich per Klick auf den ganzen Kopf. Mehr Bewegung bleibt beim UI-Durchgang nach
+  Welle 5.
