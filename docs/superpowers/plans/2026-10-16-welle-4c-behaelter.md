@@ -41,6 +41,12 @@ Karte im schlichten Panel), Task 12 (Basis `2bf2151a2e`, PR gegen master, Hinwei
 Review Focus 7. Die Toolbar meldet ohne Befehl weiter `null` (`TLToolbar.tsx:492`, jetzt nach sichtbaren Gruppen) —
 die Annahmen zu Kopf und Knopfleiste bleiben.
 
+**Plan-Review 2** 16.10. (Fable, nach dem Nachzug auf master und Q24): Paket-Probelauf 480 Tests, 474 grün (rot nur
+Hof-Gate, `focus-clip` am Master-Detail und die erwarteten Engine-/`published`-Prüfungen); Engine `tsc` 0, MUI 513/516
+(nur die erwarteten Task-6-Erwartungen). Befunde 1–5 eingearbeitet: Hof-Gate um `layout.css` (Task 3 Step 0, Q24 ist
+eine Auswahlmarke), `focus-clip` beendet Übergänge vor dem Messen (Task 4 Step 9b), `inline-buttons.test.tsx` Zeilen
+83–85, `layout.md:172`, Paar `border-interactive|surface-layer-nested`.
+
 ## Abweichungen von der Spec (beim Planen am Code gefunden)
 
 1. **Ein Vertrag `layout` statt `stack`, `grid`, `inset`.** Stack, Grid, Inset, Bounded, Item und Deck sind sechs
@@ -1116,11 +1122,20 @@ Ein Accordion besteht den Vertrag, wenn jeder Auslöser `aria-expanded` meldet u
 - Modify: `design-system/src/components/columns/columns.contract.md` (Abschnitt „Klassen“, Q24)
 - Modify: `design-system/tools/lib/pairs.mjs` (Zeile mit `paar('border-interactive', 'surface-overlay', 3.0)`)
 - Modify: `design-system/test/behaelter.test.mjs`, `test/contracts-4c.test.mjs`, `specimen/index.html`
+- Modify: `design-system/test/choice.test.mjs` (Test „der Hof gehört nur den Auswahlmarken“, Ausnahme Q24)
+- Modify: `docs/skalen.md` (Satz in „Auswählbare Einträge (Q24)“)
 
 **Interfaces:**
 - Produces: `tl-stack*`, `tl-grid*`, `tl-inset`, `tl-inset--panel|card`, `tl-bounded`, `tl-item`, `tl-deck`, die
   Auswahl `.tl-item[role="option"]`/`[aria-selected="true"]` und dieselbe an `.tl-columns__column` (Task 8);
   `tl-split`, `tl-split--horizontal|vertical`, `tl-split__pane`, `tl-split__handle` (Task 7).
+
+- [ ] **Step 0: Hof-Gate um Q24 erweitern** (Plan-Review 2, Befund 1). `test/choice.test.mjs`, Test „der Hof gehört
+  nur den Auswahlmarken: kein anderer Block liest ihn“: die Bedingung um `&& name !== 'layout/layout.css'` erweitern,
+  Kommentar darüber: `// Ausnahme 16.10. (Q24): eine auswählbare Option (tl-item, tl-columns__column mit role=option)
+  ist eine Auswahlmarke — sie zeigt beim Zeigen den Hof.` In `docs/skalen.md`, Abschnitt „Auswählbare Einträge (Q24 …)“,
+  nach „ausgewählt der Ring …“ den Satz anfügen: „Der Hof gehörte bis dahin nur Kästchen, Punkt und Schalter; eine
+  auswählbare Option ist ebenso eine Auswahlmarke, `choice.test.mjs` lässt `layout.css` darum zu.“
 
 - [ ] **Step 1: Failing tests** — an `behaelter.test.mjs` anfügen:
 
@@ -1177,7 +1192,7 @@ test('tl-split: Richtung aus dem Modifier, Griff space-xs mit Linie; unter dem Z
 test('die kräftige Linie des Griffs steht im Kontrast-Gate auf Grund und Layer (Spec §9)', async () => {
   const { kontrastPaare } = await import('../tools/lib/pairs.mjs');
   const P = kontrastPaare(T).map((p) => `${p.fg}|${p.bg}`);
-  for (const bg of ['surface-base', 'surface-layer']) assert.ok(P.includes(`border-interactive|${bg}`), bg);
+  for (const bg of ['surface-base', 'surface-layer', 'surface-layer-nested']) assert.ok(P.includes(`border-interactive|${bg}`), bg);
 });
 
 test('eingeklappt im waagrechten Split: Titel senkrecht über writing-mode, nicht gedreht', () => {
@@ -1439,7 +1454,9 @@ test('split.spec.html: Griff fokussierbar mit Wert; eine eingeklappte Fläche im
   Fokus-Hover-Selektor liest der Test per Regex.
 
   `tools/lib/pairs.mjs`: in der Zeile `paar('border-interactive', 'surface-overlay', 3.0); …` davor
-  `paar('border-interactive', 'surface-layer', 3.0); // Griff des Splits auf einer Fläche (Welle 4c)` einfügen.
+  `paar('border-interactive', 'surface-layer', 3.0); // Griff des Splits auf einer Fläche (Welle 4c)` und
+  `paar('border-interactive', 'surface-layer-nested', 3.0); // Ring einer ausgewählten Option in einer Fläche (Q24)`
+  einfügen (Plan-Review 2: nested gemessen 5,84/5,04).
   Beim Planen gemessen: hell 5,84, dunkel 5,49 (die drei Stufen der Wizard-Scheibe: `border-control` auf `nested`
   3,42/3,39, `text-secondary` auf `nested` 7,34/5,94, `text-on-brand` auf `surface-brand` 5,84/5,66). Scheitert
   `contrast.test.mjs` trotzdem in einem Modus, **nicht** an Token oder Primitiv drehen: Befund mit Messwert an den
@@ -1592,6 +1609,7 @@ Ein Split besteht den Vertrag, wenn jeder Griff mit der Tastatur bedienbar ist u
 - Modify: `design-system/src/components/drawer/drawer.css` (nach `.tl-drawer--container`), `drawer.contract.md`
   (Abweichung 18)
 - Modify: `design-system/test/behaelter.test.mjs`, `test/contracts-4c.test.mjs`, `specimen/index.html`
+- Modify: `design-system/test/focus-clip.test.mjs` (Übergänge vor dem Messen beenden, Plan-Review 2 Befund 2)
 
 **Interfaces:**
 - Consumes: `--tl-size-wizard-progress` (Task 1).
@@ -2028,8 +2046,21 @@ test('adaptive-detail.spec.html: die letzte Krume ist die aktuelle Seite, der Dr
 
 - [ ] **Step 9: Index** — Links `Wizard →`, `Master-Detail →`.
 
+- [ ] **Step 9b: focus-clip misst den Endstand** (Plan-Review 2, Befund 2). Der offene Container-Drawer im
+  Master-Detail-Specimen gleitet per `@starting-style` herein (`drawer.css`); misst der Test sofort, steht er noch bei
+  `translateX(100%)` außerhalb des beschneidenden `tl-adaptive-detail` (rot in beiden Dichten, 3/3). In
+  `test/focus-clip.test.mjs` im Mess-Skript (`MEASURE`) nach dem Setzen der Dichte, vor dem Messen, einfügen:
+
+```js
+for (const a of document.getAnimations()) if (a instanceof CSSTransition) a.finish();
+```
+
+  Nur Übergänge: `finish()` wirft an den endlosen Spinner-Animationen („Cannot finish Animation with an infinite target
+  effect end“). Kommentar dazu: `// Eingänge (@starting-style) sind Übergänge: gemessen wird der Endstand, nicht der
+  Weg dorthin.`
+
 - [ ] **Step 10: Run** `node --test test/behaelter.test.mjs test/contracts-4c.test.mjs test/focus-clip.test.mjs
-  test/contrast.test.mjs` — Expected: PASS.
+  test/contrast.test.mjs` — Expected: PASS (`focus-clip` erst mit Step 9b).
 
 - [ ] **Step 11: Gates und Commit** wie Task 1; Paket „Ticket #29870: Paket -- ein Versatz tl-slide-*, tl-tile-stack
   und tl-wizard mit Übergängen in data-tl-state, Wizard-Scheibe in drei Stufen, tl-adaptive-detail; Leser in
@@ -2294,7 +2325,7 @@ Co-Authored-By: <Modell> <noreply@anthropic.com>"
 **Files:**
 - Modify: `com.top_logic.layout.react/react-src/controls/TLPanel.tsx` (ganz), `TLCard.tsx` (ganz), `TLAccordion.tsx`
   (Render-Teil), `TLWindow.tsx` (Zeile 25 und Fuß), `TLDrawer.tsx` (Körper)
-- Modify: `com.top_logic.layout.react.mui/react-src/adapters/inline-buttons.test.tsx` (Zeilen 82–84)
+- Modify: `com.top_logic.layout.react.mui/react-src/adapters/inline-buttons.test.tsx` (Zeilen 83–85)
 - Create: `com.top_logic.layout.react.mui/react-src/adapters/containers.test.tsx`
 - Modify: `com.top_logic.layout.react/src/main/webapp/style/tlReactControls.css` (Blöcke „TLPanel“, „TLAccordion“,
   „TLCard“, „TLPanel button bar“ und die Regel `.tlPanel__buttonBar:not(:has(button))` samt Kommentar im Block „Element
@@ -2770,7 +2801,7 @@ const OVERLAY_SURFACE: Surface = { level: 'overlay', inset: 'page' };
 
   `TLDrawer.tsx` ebenso um den `FillBarrier` im `tl-drawer__body` (eigene Konstante gleichen Inhalts).
 
-- [ ] **Step 6: MUI-Test** — in `inline-buttons.test.tsx` Zeilen 82–84 ersetzen durch:
+- [ ] **Step 6: MUI-Test** — in `inline-buttons.test.tsx` Zeilen 83–85 (Kommentar und die zwei `tlPanel__*`-Erwartungen; Zeile 82 `expectMuiIconButton(button);` bleibt) ersetzen durch:
 
 ```tsx
       // The element around the buttons places them; the buttons carry no class of their own.
@@ -3622,7 +3653,8 @@ describe('the items of a selectable container', () => {
     `<div class="tl-item tlObjectList__item" style="--item-index: 0">`; `.tlGrid` → `.tl-grid`, `.tlStack` → `.tl-stack`.
   - `layout.md:142` (Auswahl, #29755): nach „… is marked as selected“ ergänzen „(`aria-selected`; the design system
     draws a ring over the element, `layout.css`)“.
-  - `layout.md:172–179` (CSS-Beispiel): wie Step 3.
+  - `layout.md:172`: im Kommentar „a list arranges its items in a `.tlStack` instead“ `.tlStack` → `.tl-stack`.
+  - `layout.md:173–179` (CSS-Beispiel): wie Step 3.
   - `layout.md:214`: `` `.tlDeckPane` `` → `` `.tl-deck` ``.
   - `theme-tokens.md:30`: „(`--page-inset`, `--cal-ev-bg`, …)“ → „(`--cal-ev-bg`, …)“.
 
