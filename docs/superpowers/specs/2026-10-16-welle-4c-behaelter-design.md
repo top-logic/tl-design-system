@@ -290,3 +290,8 @@ Steht im Trac-Text unter `== Migration ==` und als Alt→neu-Liste in `altlast.m
   Panelkopf maximiert, Escape stellt wieder her; U2 Doppelklick auf den Split-Griff stellt die Ausgangsaufteilung her;
   U3 ein minimiertes Panel öffnet sich per Klick auf den ganzen Kopf. Mehr Bewegung bleibt beim UI-Durchgang nach
   Welle 5.
+- **Q24, entschieden 16.10. (Hendrik, nach dem Merge von !1906):** die auswählbaren Einträge aus #29755 (Bernhard,
+  `useItems`; Block „Repeated items“ seitdem 48 Zeilen) zeichnet `tl-item` im Paket — Zustand nur `aria-selected`,
+  beim Zeigen ein Hof (`surface-state-hover`) statt `--shadow-raised`, ausgewählt ein Ring `border-width-md` in
+  `border-interactive` über dem Eintrag (keine Auswahlfläche, sie läge hinter einer Karte), Fokus aus `base.css`; die
+  Spalte von `tl-columns` als Hülle derselben Auswahl trägt dieselbe Regel.

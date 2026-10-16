@@ -29,6 +29,18 @@ mit Task 10 gegen eine Engine-Kopie mit allen Tasks (476, 469 grün — dieselbe
 Constraints, Tasks 1–4, 6–8, 10, 12); `calc` der Kopfhöhe und des Drawer-Rings sowie die erweiterten Zustandswörter am
 Lint einer Paketkopie geprüft (grün, `lint-css.test.mjs` 35/35).
 
+**Nachgezogen auf master `2bf2151a2e` (16.10.)** — !1906 (4b) ist gemergt, der 4c-Branch per Fast-Forward darauf.
+Seit dem bisherigen Basis-Commit `9c6776f258` kamen !1905 (#29755, Bernhard: auswählbare Einträge in Stack, Grid und
+Spalten — `renderItems` wurde `useItems(state, wrapper?)` mit `containerProps`, die Hüllen sind als Listbox
+`role="option"` mit `aria-selected`; der Block „Repeated items“ wuchs um `.tlItem--selectable/--selected` auf 48 Zeilen)
+und #29713 (`.tlDashboard__hide`, Welle 5). Geändert: Task 3 (die Auswahl der Einträge nach Q24 in `layout.css`, Test,
+Vertrag `layout` und `columns`, Specimen), Task 8 (`items.tsx` nach `useItems`: Klasse `tl-item`, `--item-index`,
+keine Zustandsklassen der Auswahl; Zeilenangaben in Java und Doku; „Repeated items“ verliert auch Bernhards
+Auswahlregeln; Vitest der Auswahl), Task 10 (Ratsche ab dem gehobenen Budget), Task 11 (Auswahl in der Demo prüfen;
+Karte im schlichten Panel), Task 12 (Basis `2bf2151a2e`, PR gegen master, Hinweis an Bernhard zu Q24); Abweichung 23,
+Review Focus 7. Die Toolbar meldet ohne Befehl weiter `null` (`TLToolbar.tsx:492`, jetzt nach sichtbaren Gruppen) —
+die Annahmen zu Kopf und Knopfleiste bleiben.
+
 ## Abweichungen von der Spec (beim Planen am Code gefunden)
 
 1. **Ein Vertrag `layout` statt `stack`, `grid`, `inset`.** Stack, Grid, Inset, Bounded, Item und Deck sind sechs
@@ -99,13 +111,22 @@ Lint einer Paketkopie geprüft (grün, `lint-css.test.mjs` 35/35).
     `MuiBreadcrumbAdapter` ersetzt das **Control** `TLBreadcrumb` (`replace('TLBreadcrumb', …)` in `registry.ts`), kein
     Part; die Krumen des AdaptiveDetail haben keinen eigenen Control-Zustand und keinen Server-Partner, über den die
     Ersetzung greifen könnte. Ein Part `Breadcrumb` wäre Bernhards Entscheidung — Hinweis an ihn im PR (Task 12).
+23. **Die Auswahl der Einträge (Q24) zeichnet ein Ring über dem Eintrag, kein Schatten und keine Fläche.** Das Lint
+    erlaubt als `box-shadow` nur `--tl-shadow-*`, eine `inset`-Linie oder den Hof; ein Ring nach außen als Schatten
+    fällt also weg, und `outline` ist der Fokus. Eine `inset`-Linie oder ein Rand an der Hülle läge hinter einer
+    Karte mit eigener Fläche bzw. verschöbe die Einträge um 2 px. Darum: die Option ist `position: relative`, der Ring
+    ein `::after` über dem ganzen Eintrag (`inset: 0`, `border: border-width-md solid border-interactive`,
+    `border-radius: inherit`, `pointer-events: none`) bei `aria-selected="true"`; beim Zeigen der Hof
+    `0 0 0 var(--tl-space-2xs) var(--tl-surface-state-hover)`. Bernhards Auswahlfläche (`surface-brand-subtle`) fällt
+    wie entschieden. Die Regel gilt für `tl-item` und für `tl-columns__column` — `useItems` nimmt die Spalte als Hülle
+    (`TLColumns.tsx`), auch sie wird Option.
 
 ## Global Constraints
 
 - Ticket **#29870**; Commits beider Repos mit Präfix `Ticket #29870:`, Paket-Commits deutsch, Engine-Commits englisch,
   Trailer `Co-Authored-By: <Modell des Ausführenden> <noreply@anthropic.com>`.
-- Engine-Branch `CWS/CWS_29870_design_system_welle_4c` im Worktree `_Working-Tree/tl8-wt-29584` (lokal, auf dem
-  4b-Head `9c6776f258`). **Kein Push** — weder Engine noch Paket; Subagenten committen lokal und melden.
+- Engine-Branch `CWS/CWS_29870_design_system_welle_4c` im Worktree `_Working-Tree/tl8-wt-29584` (lokal, auf master
+  `2bf2151a2e` mit 4b und #29755). **Kein Push** — weder Engine noch Paket; Subagenten committen lokal und melden.
 - Paket: `tokens.json` nur Referenzen; im CSS nur Tokens (Lint, keine eigene Variable in einer Klasse); `dist/` nur
   über `node tools/generate.mjs`, danach `node tools/publish-to-worktree.mjs` (`test/published.test.mjs` hält die Kopie
   byte-gleich, `TestDesignSystemCopy` in der Engine prüft das Siegel).
@@ -144,6 +165,9 @@ Lint einer Paketkopie geprüft (grün, `lint-css.test.mjs` 35/35).
    Vitest in Task 6, Specimen in Task 2.
 6. **Ein Klick auf die leere Fläche der Toolbar im Kopf** eines minimierten Panels öffnet es nicht, ein Doppelklick
    dort maximiert nicht — alles in `.tl-titlebar__actions` gehört der Toolbar (Spec §3). Vitest in Task 6.
+7. **Ein ausgewählter Eintrag trägt seinen Zustand nur als `aria-selected`** — keine Klasse `tlItem--selected` oder
+   `tl-item--selected`, die Hülle heißt `tl-item` (Spalten: `tl-columns__column`); ein Klick wählt, ein Klick auf einen
+   Knopf im Eintrag nicht. Vitest in Task 8; Ring neben dem Fokusring auf einer Karte in Task 11.
 
 ## Datei-Übersicht
 
@@ -157,7 +181,8 @@ Lint einer Paketkopie geprüft (grün, `lint-css.test.mjs` 35/35).
 | `design-system/src/components/panel/panel.{css,contract.md,spec.html}` | neu |
 | `design-system/src/components/card/card.{css,contract.md,spec.html}` | neu |
 | `design-system/src/components/accordion/accordion.{css,contract.md,spec.html}` | neu (aus dem alten Stylesheet) |
-| `design-system/src/components/layout/layout.{css,contract.md,spec.html}` | neu |
+| `design-system/src/components/layout/layout.{css,contract.md,spec.html}` | neu (mit der Auswahl der Einträge, Q24) |
+| `design-system/src/components/columns/columns.contract.md` | eine auswählbare Spalte liest die Auswahlregel aus `layout.css` |
 | `design-system/src/components/split/split.{css,contract.md,spec.html}` | neu |
 | `design-system/src/components/slide/slide.{css,contract.md}` | neu |
 | `design-system/src/components/tile-stack/tile-stack.{css,contract.md}` | neu |
@@ -1088,11 +1113,13 @@ Ein Accordion besteht den Vertrag, wenn jeder Auslöser `aria-expanded` meldet u
 **Files:**
 - Create: `design-system/src/components/layout/layout.{css,contract.md,spec.html}`
 - Create: `design-system/src/components/split/split.{css,contract.md,spec.html}`
+- Modify: `design-system/src/components/columns/columns.contract.md` (Abschnitt „Klassen“, Q24)
 - Modify: `design-system/tools/lib/pairs.mjs` (Zeile mit `paar('border-interactive', 'surface-overlay', 3.0)`)
 - Modify: `design-system/test/behaelter.test.mjs`, `test/contracts-4c.test.mjs`, `specimen/index.html`
 
 **Interfaces:**
-- Produces: `tl-stack*`, `tl-grid*`, `tl-inset`, `tl-inset--panel|card`, `tl-bounded`, `tl-item`, `tl-deck` (Task 8);
+- Produces: `tl-stack*`, `tl-grid*`, `tl-inset`, `tl-inset--panel|card`, `tl-bounded`, `tl-item`, `tl-deck`, die
+  Auswahl `.tl-item[role="option"]`/`[aria-selected="true"]` und dieselbe an `.tl-columns__column` (Task 8);
   `tl-split`, `tl-split--horizontal|vertical`, `tl-split__pane`, `tl-split__handle` (Task 7).
 
 - [ ] **Step 1: Failing tests** — an `behaelter.test.mjs` anfügen:
@@ -1117,6 +1144,23 @@ test('tl-bounded, tl-item, tl-deck: Breite mittig begrenzt, Hülle durchlässig,
   assert.match(decl('layout', '.tl-bounded'), /margin-inline:\s*auto/);
   assert.match(decl('layout', '.tl-item'), /min-height:\s*0/);
   assert.match(decl('layout', '.tl-deck'), /flex-direction:\s*column/);
+});
+
+// Q24 (#29755): eine Option schwebt nicht — beim Zeigen ein Hof; ausgewählt ein Ring über dem Eintrag, Zustand aus
+// aria-selected; Fokus aus base.css. Für die Hülle tl-item und die Spalte von tl-columns, die useItems als Hülle nimmt.
+test('auswählbare Einträge (Q24): Hof beim Zeigen, Ring bei aria-selected, kein Schatten, keine Zustandsklasse', () => {
+  for (const host of ['.tl-item', '.tl-columns__column']) {
+    assert.match(decl('layout', `${host}[role="option"]`), /position:\s*relative/, host);
+    assert.match(decl('layout', `${host}[role="option"]`), /cursor:\s*pointer/, host);
+    assert.match(decl('layout', `${host}[role="option"]`), /transition:\s*box-shadow var\(--tl-duration-fast\) var\(--tl-easing-standard\)/, host);
+    assert.match(decl('layout', `${host}[role="option"]:hover`), /box-shadow:\s*0 0 0 var\(--tl-space-2xs\) var\(--tl-surface-state-hover\)/, host);
+    const ring = decl('layout', `${host}[aria-selected="true"]::after`);
+    assert.match(ring, /border:\s*var\(--tl-border-width-md\) solid var\(--tl-border-interactive\)/, host);
+    assert.match(ring, /inset:\s*0/, host);
+    assert.match(ring, /pointer-events:\s*none/, host);
+  }
+  const css = ohneKommentar(readGenerated('layout', 'layout.css'));
+  assert.doesNotMatch(css, /--selectable|--selected|--tl-shadow|outline|surface-brand-subtle/);
 });
 
 test('tl-split: Richtung aus dem Modifier, Griff space-xs mit Linie; unter dem Zeiger, beim Ziehen, mit Fokus kräftig', () => {
@@ -1147,7 +1191,8 @@ test('eingeklappt im waagrechten Split: Titel senkrecht über writing-mode, nich
 
 ```js
   'layout/layout.contract.md': ['tl-stack', 'tl-grid', 'tl-inset', 'tl-inset--panel', 'tl-inset--card', 'tl-bounded',
-    'tl-item', 'tl-deck', '--item-index', '--tl-space-sm', '--tl-space-md', '--tl-space-lg', 'useSurface'],
+    'tl-item', 'tl-deck', '--item-index', '--tl-space-sm', '--tl-space-md', '--tl-space-lg', 'useSurface',
+    'role="listbox"', 'role="option"', 'aria-selected', 'selectItem', '--tl-surface-state-hover', '--tl-border-interactive'],
   'split/split.contract.md': ['tl-split', 'tl-split__pane', 'tl-split__handle', 'role="separator"', 'aria-valuenow',
     'aria-orientation', 'aria-controls', 'data-tl-state~="collapsed"', 'updateSizes', 'resetSizes', 'Home', 'End'],
 ```
@@ -1155,6 +1200,14 @@ test('eingeklappt im waagrechten Split: Titel senkrecht über writing-mode, nich
   und `'layout', 'split'` an `SPECIMEN` anhängen, dazu:
 
 ```js
+test('layout.spec.html: eine Liste auswählbarer Karten, eine ausgewählt, ohne Zustandsklasse', () => {
+  const html = datei('layout', 'layout.spec.html');
+  assert.match(html, /role="listbox"/);
+  assert.equal((html.match(/class="tl-item" role="option"/g) ?? []).length >= 3, true);
+  assert.match(html, /class="tl-item" role="option" aria-selected="true" tabindex="0"/);
+  assert.doesNotMatch(html, /--selectable|--selected/);
+});
+
 test('split.spec.html: Griff fokussierbar mit Wert; eine eingeklappte Fläche im waagrechten Split', () => {
   const html = datei('split', 'split.spec.html');
   assert.match(html, /class="tl-split__handle" role="separator" tabindex="0" aria-orientation="vertical"[^>]*aria-valuenow="30"/);
@@ -1237,7 +1290,7 @@ test('split.spec.html: Griff fokussierbar mit Wert; eine eingeklappte Fläche im
   margin-inline: auto;
 }
 
-/* Die Hülle eines wiederholten Kindes (renderItems); sie gibt den Platz an das Kind weiter. Ihre Position trägt sie
+/* Die Hülle eines wiederholten Kindes (useItems); sie gibt den Platz an das Kind weiter. Ihre Position trägt sie
    als --item-index, ein Datum der Engine für Anwendungs-CSS. */
 .tl-item {
   display: flex;
@@ -1246,6 +1299,33 @@ test('split.spec.html: Griff fokussierbar mit Wert; eine eingeklappte Fläche im
   min-height: 0;
 }
 .tl-item[hidden] { display: none; }
+
+/* Auswählbar (Q24, #29755): ist der Behälter eine Listbox, ist jeder Eintrag eine Option, und die ganze Fläche nimmt
+   den Klick. Ein Eintrag schwebt nicht: beim Zeigen ein Hof, kein Schatten. Ausgewählt liegt ein Ring über dem Rand
+   des Eintrags — eine Auswahlfläche läge hinter einer Karte mit eigener Fläche —, der Zustand ist aria-selected; der
+   Fokus ist der Ring aus base.css. Die Spalte von tl-columns ist dieselbe Hülle (useItems) und trägt dieselbe Regel. */
+.tl-item[role="option"],
+.tl-columns__column[role="option"] {
+  position: relative;
+  border-radius: var(--tl-radius-md);
+  cursor: pointer;
+  transition: box-shadow var(--tl-duration-fast) var(--tl-easing-standard);
+}
+
+.tl-item[role="option"]:hover,
+.tl-columns__column[role="option"]:hover {
+  box-shadow: 0 0 0 var(--tl-space-2xs) var(--tl-surface-state-hover);
+}
+
+.tl-item[aria-selected="true"]::after,
+.tl-columns__column[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: var(--tl-border-width-md) solid var(--tl-border-interactive);
+  border-radius: inherit;
+  pointer-events: none;
+}
 
 /* Zeigt ein Kind zur Zeit und nimmt dessen Größe: neben einer Breadcrumb, in der AppBar so groß wie sein Inhalt. */
 .tl-deck {
@@ -1382,6 +1462,13 @@ nur Lage und Abstand. Die Gap-Skala teilen sie mit `tl-columns`.
 | `TLInset` | `child` | `tl-inset`, in einem Panel `tl-inset--panel`, in einer Karte `tl-inset--card` (aus `useSurface()`) |
 | `TLDeckPane` | `activeChild` | `tl-deck` |
 | Hülle wiederholter Kinder | `itemClass` | `tl-item` und die konfigurierte Klasse; Position als `--item-index` (0-basiert) |
+| Auswahl unter den Einträgen | `selectable`, `itemKeys`, `selected`, `multiSelect` | der Behälter `role="listbox"` (mehrfach: `aria-multiselectable`), jede Hülle `role="option"` mit `aria-selected`; kein Modifier |
+
+## Aktionen
+
+| Befehl | Wann |
+|---|---|
+| `selectItem` | Klick auf einen Eintrag (mit Strg/Cmd umschalten, mit Umschalt erweitern), Enter oder Leertaste am Eintrag, langes Drücken (mehrfach); Argumente `key`, `toggle`, `range`. Ein Klick auf ein bedienbares Element im Eintrag gehört diesem |
 
 ## Tokens
 
@@ -1391,11 +1478,13 @@ nur Lage und Abstand. Die Gap-Skala teilen sie mit `tl-columns`.
 | `default` | `--tl-space-md` |
 | `loose` | `--tl-space-lg` |
 | Inset Seite / Panel / Karte | `--tl-space-lg` / `--tl-space-md` / `--tl-space-xs` `--tl-space-md` |
+| Option beim Zeigen | Hof `--tl-space-2xs` in `--tl-surface-state-hover` |
+| Option ausgewählt | Ring `--tl-border-width-md` in `--tl-border-interactive` über dem Eintrag, Radius `--tl-radius-md` |
 
 ## Konformität
 
 Ein Behälter besteht den Vertrag, wenn er seinen Abstand aus der Skala oben nimmt und keine eigene Custom Property
-im Namensraum `--tl` setzt.
+im Namensraum `--tl` setzt; ein auswählbarer meldet die Auswahl über `aria-selected`, nicht über eine Klasse.
 ```
 
   `split/split.contract.md`:
@@ -1441,6 +1530,12 @@ Tasten am Griff: Pfeile quer zum Griff um `--tl-space-md` (rechts-nach-links ges
 Ein Split besteht den Vertrag, wenn jeder Griff mit der Tastatur bedienbar ist und seinen Wert meldet.
 ```
 
+  `columns/columns.contract.md`, Abschnitt „Klassen“, Zeile anfügen:
+
+```markdown
+| `tl-columns__column` mit `role="option"` und `aria-selected` | die Reihe ist auswählbar (`selectable`, `useItems`): die Spalte ist Option; Zeigen und Auswahl zeichnet die Regel der Einträge in `layout.css` (Vertrag `layout`) |
+```
+
 - [ ] **Step 6: Specimen** — `layout/layout.spec.html` (`<style>`: `.box { min-height: 2rem; min-width: 4rem;
   background: var(--tl-surface-brand-subtle); border: 1px dashed var(--tl-border-interactive); }
   .wrap { background: var(--tl-surface-layer); }`): je Stufe ein `div.tl-stack.tl-stack--row.tl-stack--gap-<stufe>`
@@ -1448,7 +1543,18 @@ Ein Split besteht den Vertrag, wenn jeder Griff mit der Tastatur bedienbar ist u
   `.cols3 { grid-template-columns: repeat(3, 1fr); }` und sechs Boxen; `div.wrap > div.tl-inset > div.box`,
   `div.tl-panel > div.tl-panel__body > div.tl-inset.tl-inset--panel > div.box`, dasselbe in `div.tl-card` mit
   `tl-inset--card`; `div.tl-stack.tl-stack--column.tl-bounded.narrow` (`.narrow { max-width: 20rem; }`) mit Boxen in
-  `div.tl-item`; `div.tl-deck > div.box`.
+  `div.tl-item`; `div.tl-deck > div.box`; eine Liste auswählbarer Karten (Q24) — keine Inline-Styles
+  (`specimenProblems`), also ohne `--item-index`:
+
+```html
+<div class="tl-stack tl-stack--column tl-stack--gap-compact narrow" role="listbox" aria-label="Exposés">
+  <div class="tl-item" role="option" aria-selected="false" tabindex="-1"><div class="tl-card"><div class="tl-card__body tl-card__body--pad-default"><p class="tl-type-body">Altbau am Park</p></div></div></div>
+  <div class="tl-item" role="option" aria-selected="true" tabindex="0"><div class="tl-card"><div class="tl-card__body tl-card__body--pad-default"><p class="tl-type-body">Loft am Hafen</p></div></div></div>
+  <div class="tl-item" role="option" aria-selected="false" tabindex="-1"><div class="tl-card"><div class="tl-card__body tl-card__body--pad-default"><p class="tl-type-body">Reihenhaus am Feld</p></div></div></div>
+</div>
+```
+
+  `focus-clip` misst den Fokusring der fokussierbaren Option (`tabindex="0"`): der Stack schneidet nicht.
 
   `split/split.spec.html` (`<style>`: `.stage { height: 12rem; } .stage .tl-split__pane { flex: 1 1 0; min-width: 0;
   min-height: 0; } .stage .tl-split__pane[data-tl-state~="collapsed"] { flex: 0 0 auto; }`): (1) waagrecht, zwei
@@ -3374,12 +3480,13 @@ cd ../com.top_logic.layout.react.mui && NODE_OPTIONS=--no-experimental-webstorag
 
 **Files:**
 - Modify: `com.top_logic.layout.react/react-src/controls/TLStack.tsx`, `TLGrid.tsx`, `TLInset.tsx`, `TLDeckPane.tsx`,
-  `items.tsx`
+  `items.tsx` (seit #29755 `useItems`; `TLColumns.tsx` bleibt — seine Hülle ist `tl-columns__column`)
 - Modify: `com.top_logic.layout.react/src/main/java/com/top_logic/layout/react/control/layout/ReactLayoutControl.java`
-  (JavaDoc Zeile 75)
+  (JavaDoc Zeile 371)
 - Modify: `com.top_logic.layout.view/src/main/java/com/top_logic/layout/view/list/ObjectListElement.java` (JavaDoc
-  Zeile 118, `ITEM_CSS_CLASS`) — Plan-Review, Befund 5: das Engine-Gate `ALT_4C` sucht `--tl-item-index` in
+  Zeile 141, `ITEM_CSS_CLASS`) — Plan-Review, Befund 5: das Engine-Gate `ALT_4C` sucht `--tl-item-index` in
   `layout.view/src/main/java`
+- Modify: `com.top_logic.layout.react.mui/react-src/adapters/containers.test.tsx` (Auswahl, Review Focus 7)
 - Modify: `com.top_logic.demo.react/TRIAGE.md` (Zeile 32, Repeater)
 - Modify: `tlReactControls.css` (Blöcke „Viewport-filling layout“, „Bounded width“, „Repeated items“, „TLInset“,
   „TLStack“, „TLGrid“, „TLDeckPane“, „Table cells holding legacy controls …“, „TLHtml“, „Dashboard“)
@@ -3389,12 +3496,24 @@ cd ../com.top_logic.layout.react.mui && NODE_OPTIONS=--no-experimental-webstorag
 - Modify: `design-system/test/ratchet.json` (Blöcke, `foreignTl`)
 
 - [ ] **Step 1: TSX**
-  - `items.tsx`: `ITEM_INDEX_PROPERTY = '--item-index'`, `ITEM_CLASS = 'tl-item'`; im JavaDoc
-    `calc(var(--tl-item-index) * 60ms)` → `calc(var(--item-index) * 60ms)` und vor der Konstante den Satz ergänzen:
-    „ * Outside the design system's namespace (the `tl` prefix of its custom properties): it is data of the engine for an
-    application stylesheet, not a word of the package.“ — ohne das Literal `--tl`: `foreignTlInSources` liest
-    `react-src` mit `/--tl[A-Za-z0-9-]*/` und meldete `--tl` als neuen Fremdnamen (Plan-Review, Befund 4).
-  - `TLStack.tsx`: `'tlStack'` → `'tl-stack'`, jede `tlStack--…` → `tl-stack--…`, `'tlBounded'` → `'tl-bounded'`.
+  - `items.tsx` (Stand master: `useItems`, Zeilen 20–41 und 186):
+    - Zeile 27: `ITEM_INDEX_PROPERTY = '--item-index'`; im JavaDoc darüber (Zeile 25)
+      `calc(var(--tl-item-index) * 60ms)` → `calc(var(--item-index) * 60ms)` und als letzten Satz des JavaDoc
+      ergänzen: „ * Outside the design system's namespace (the `tl` prefix of its custom properties): it is data of the
+      engine for an application stylesheet, not a word of the package.“ — ohne das Literal `--tl`:
+      `foreignTlInSources` liest `react-src` mit `/--tl[A-Za-z0-9-]*/` und meldete `--tl` als neuen Fremdnamen
+      (Plan-Review, Befund 4).
+    - Zeile 35: `ITEM_CLASS = 'tl-item'`; der JavaDoc darüber: „The layout stylesheet uses it …“ → „The design system
+      draws it (layout.css): the wrapper passes the space it is given on to the item, and in a selectable container it
+      is the option the user presses.“
+    - Zeilen 37–41 (`ITEM_SELECTABLE_CLASS`, `ITEM_SELECTED_CLASS` samt JavaDoc) löschen — Q24: der Zustand ist
+      `aria-selected`, „auswählbar“ ist `role="option"`; beides setzt die Hülle schon.
+    - Zeile 186: `className={wrapperClass(wrapper, itemClass, ITEM_SELECTABLE_CLASS, isSelected && ITEM_SELECTED_CLASS)}`
+      → `className={wrapperClass(wrapper, itemClass)}`.
+    - Sonst nichts: `role`, `aria-selected`, `tabIndex`, `data-tl-item`, Tastatur und langes Drücken bleiben
+      Bernhards.
+  - `TLStack.tsx` (Zeilen 46–57): `'tlStack'` → `'tl-stack'`, jede `tlStack--…` → `tl-stack--…`, `'tlBounded'` →
+    `'tl-bounded'`. `useItems` und `containerProps` bleiben.
   - `TLGrid.tsx`: oberhalb der Komponente
 
 ```tsx
@@ -3409,19 +3528,62 @@ const GAP_TOKEN: Record<string, string> = {
 };
 ```
 
-    `var(--tlGrid-gap)` → `${GAP_TOKEN[gap] ?? GAP_TOKEN.default}`; Klassen `'tl-grid'`, `` `tl-grid--gap-${gap}` ``,
-    `'tl-bounded'`.
+    Zeile 38: `var(--tlGrid-gap)` → `${GAP_TOKEN[gap] ?? GAP_TOKEN.default}`; Zeile 51: Klassen `'tl-grid'`,
+    `` `tl-grid--gap-${gap}` ``, `'tl-bounded'`. `useItems` und `containerProps` bleiben.
   - `TLInset.tsx`: Import `useSurface, insetClass`; `className={rootClassName(state, 'tl-inset', insetClass(useSurface().inset), fillClass)}`
     — den Hook-Aufruf oben in der Komponente (`const surface = useSurface();`), nicht im JSX.
   - `TLDeckPane.tsx`: `'tlDeckPane'` → `'tl-deck'` (über `rootClassName(state, 'tl-deck', fillClass)`).
-  - `ReactLayoutControl.java` Zeile 75: `{@code --tl-item-index}` → `{@code --item-index}`.
-  - `ObjectListElement.java` Zeile 118: `{@code --tl-item-index}` → `{@code --item-index}`. Der JavaDoc einer
+  - `ReactLayoutControl.java` Zeile 371: `{@code --tl-item-index}` → `{@code --item-index}`.
+  - `ObjectListElement.java` Zeile 141: `{@code --tl-item-index}` → `{@code --item-index}`. Der JavaDoc einer
     Konstante landet nicht in `messages_en`; `check-messages-en.sh` in Task 10 bestätigt es.
+
+  - Vitest an `containers.test.tsx` anfügen (Import `TLStack` aus
+    `'../../../com.top_logic.layout.react/react-src/controls/TLStack'` neben `TLPanel`; `childControl`, `mountAdapter`,
+    `settle` sind schon importiert):
+
+```tsx
+// Q24 (#29755): a selectable stack is a list box; the state of an item is aria-selected, not a class.
+describe('the items of a selectable container', () => {
+  const LIST = {
+    children: [childControl('a', 'Altbau'), childControl('b', 'Loft')],
+    selectable: true,
+    itemKeys: ['ka', 'kb'],
+    selected: ['kb'],
+  };
+
+  it('are options of a list box, the selected one by aria-selected only', async () => {
+    mountAdapter(TLStack, LIST);
+    await settle();
+    expect(screen.getByRole('listbox')).toBeTruthy();
+    const options = screen.getAllByRole('option');
+    expect(options).toHaveLength(2);
+    expect(options[1].getAttribute('aria-selected')).toBe('true');
+    expect(options[0].getAttribute('aria-selected')).toBe('false');
+    for (const option of options) {
+      expect(option.classList).toContain('tl-item');
+      expect(option.className).not.toMatch(/--selectable|--selected|tlItem/);
+    }
+  });
+
+  it('select an item on a click', async () => {
+    const sent = mountAdapter(TLStack, LIST);
+    await settle();
+    await userEvent.click(screen.getByText('Altbau'));
+    await settle();
+    expect(sent).toHaveBeenCalledWith('selectItem', { key: 'ka', toggle: false, range: false });
+  });
+});
+```
+
+    Vorher prüfen: `childControl('a', 'Altbau')` rendert den Text „Altbau“ im Stand-in (wie `'Inhalt'` in Task 6), und
+    `mountAdapter` gibt den Mock zurück, mit dem `useTLCommand` sendet (`sent` in Task 6). Läuft der Test vor der
+    Änderung an `items.tsx`, scheitert er an `tl-item` und `tlItem--selected` — das ist das erwartete Scheitern.
 
 - [ ] **Step 2: Altbestand** — in `tlReactControls.css`:
   - „Viewport-filling layout“: `.is-control > .tlStack {` → `.is-control > .tl-stack {`
   - „Bounded width“ ganz löschen.
-  - „Repeated items“: Inhalt nach der Kopfzeile ersetzen durch
+  - „Repeated items“ (48 Zeilen, mit Bernhards `.tlItem--selectable/--selected` aus #29755 — die Auswahl zeichnet jetzt
+    `layout.css`, Q24): Inhalt nach der Kopfzeile ersetzen durch
 
 ```css
 
@@ -3456,25 +3618,29 @@ const GAP_TOKEN: Record<string, string> = {
   - `basics.md:200`: `tlStack tlStack--column tlStack--gap-normal` → `tl-stack tl-stack--column tl-stack--gap-default`.
   - `basics.md:228`: `` `tlCard--outlined` `` → `` `tl-card__body--pad-compact` ``.
   - `layout.md:74`: `` `tlBounded` `` → `` `tl-bounded` ``.
-  - `layout.md:142`: `<div class="tlItem tlObjectList__item" style="--tl-item-index: 0">` →
+  - `layout.md:143`: `<div class="tlItem tlObjectList__item" style="--tl-item-index: 0">` →
     `<div class="tl-item tlObjectList__item" style="--item-index: 0">`; `.tlGrid` → `.tl-grid`, `.tlStack` → `.tl-stack`.
-  - `layout.md:171–179` (CSS-Beispiel): wie Step 3.
-  - `layout.md:213`: `` `.tlDeckPane` `` → `` `.tl-deck` ``.
+  - `layout.md:142` (Auswahl, #29755): nach „… is marked as selected“ ergänzen „(`aria-selected`; the design system
+    draws a ring over the element, `layout.css`)“.
+  - `layout.md:172–179` (CSS-Beispiel): wie Step 3.
+  - `layout.md:214`: `` `.tlDeckPane` `` → `` `.tl-deck` ``.
   - `theme-tokens.md:30`: „(`--page-inset`, `--cal-ev-bg`, …)“ → „(`--cal-ev-bg`, …)“.
 
 - [ ] **Step 5: Ratsche** — `node tools/inventory.mjs` im Paket; in `ratchet.json` „Bounded width“, „TLInset“,
-  „TLStack“, „TLGrid“, „TLDeckPane“ streichen, „Repeated items“ auf den gemessenen Wert; `foreignTl` ohne
+  „TLStack“, „TLGrid“, „TLDeckPane“ streichen, „Repeated items“ (Budget 48 seit dem Vorziehen auf master) auf den
+  gemessenen Wert; `literals.duration` sinkt um die `120ms` von `.tlItem--selectable`; `foreignTl` ohne
   `--tl-item-index` und `--tlGrid-gap`.
 
 - [ ] **Step 6: Run** — `tsc`, beide Vite-Builds, MUI-Vitest, Paket `node --test` wie Task 6 Step 8 — Expected: grün.
-  `grep -rn "tlStack\|tlGrid\|tlInset\|tlBounded\|tlDeckPane\|page-inset\|tl-item-index" com.top_logic.layout.react*/react-src
+  `grep -rn "tlStack\|tlGrid\|tlInset\|tlBounded\|tlDeckPane\|tlItem\|page-inset\|tl-item-index" com.top_logic.layout.react*/react-src
   com.top_logic.layout.react/src/main/java com.top_logic.demo.react/src com.top_logic.demo.react/TRIAGE.md
   com.top_logic.layout.view/src/main/java` — leer. Und `foreignTl`: `node --test test/ratchet.test.mjs` im Paket grün
   (kein neuer Fremdname, auch nicht `--tl` aus einem Kommentar).
 
 - [ ] **Step 7: Commit** — Engine „Ticket #29870: Stacks, grids, insets and decks read the design system package --
   one gap scale with the columns, the inset set by the surface it stands on instead of --page-inset, the item index
-  as --item-index outside the package's namespace.“ (mit `com.top_logic.demo.react`, `com.top_logic.layout.view`);
+  as --item-index outside the package's namespace; a selected item is marked by aria-selected alone, the package draws
+  a halo under the pointer and a ring when selected (#29755).“ (mit `com.top_logic.demo.react`, `com.top_logic.layout.view`);
   Paket „Ticket #29870: Ratsche -- Bounded width, TLInset, TLStack, TLGrid, TLDeckPane gestrichen, Repeated items
   gekürzt; foreignTl ohne --tl-item-index und --tlGrid-gap“.
 
@@ -3860,12 +4026,15 @@ test('der Abstand des Grids im TSX ist der des Stylesheets', { skip: !existsSync
   ganzes Wort, `tl-item` nicht.
 
 - [ ] **Step 2: Ratsche** — `node tools/inventory.mjs`; `literals` auf die gemessenen Zahlen (erwartet sinkt
-  `duration` um die `0.15s` des Panels, `fontSize` um `0.875em` des ViewError — die Messung zählt); `lines` = Summe
+  `duration` um die `0.15s` des Panels und die `120ms` der auswählbaren Einträge, `fontSize` um `0.875em` des
+  ViewError — die Messung zählt; Ausgang ist das gehobene Budget vom Vorziehen auf master: duration 21, zIndex 12,
+  lines 3185); `lines` = Summe
   der Budgets = gemessen; Vermerk an `_blocks`: „16.10. Welle 4c (#29870): TLPanel, TLPanel button bar, TLCard,
   TLSplitPanel, Collapsed panel in horizontal split, TLStack, TLGrid, TLDeckPane, TLTileStack, TLInset, TLAdaptiveDetail,
   TLWizard, TLViewError und Bounded width gestrichen, TLAccordion (unlisted, #29651) ins Paket — panel.css, card.css,
   accordion.css, layout.css, split.css, slide.css, tile-stack.css, wizard.css, adaptive-detail.css, button-bar.css;
-  Repeated items auf die Fill-Regel gekürzt (liest tl-item), TLHtml ohne .tlHtml__error, Element picker ohne die Regel
+  Repeated items 48->… auf die Fill-Regel gekürzt (liest tl-item; Bernhards Auswahlregeln aus #29755 zeichnet layout.css
+  nach Q24), TLHtml ohne .tlHtml__error, Element picker ohne die Regel
   der Panel-Knopfleiste; --page-inset gestrichen (TLHtml und Dashboard lesen --tl-space-lg). Literale … lines = <n>.“
 
 - [ ] **Step 3: Paket-Gates**
@@ -3952,8 +4121,11 @@ cd ../.. && design-system/tools/check-messages-en.sh
      aus; minimiert öffnet ein Klick auf den Kopf; Screenreader (VoiceOver) meldet „erweitert/reduziert“ am Minimieren.
   3. Panel mit Knopfleiste und Dialog mit Fuß: gleiche Leiste; Dialog mit Panel im Körper: Startfokus im Fuß des
      Dialogs.
-  4. Karte auf der Seite, Karte im Panel (dunkel eine Stufe heller), Karte im Dialog (keine dunklere Fläche);
-     Kommentar-Karten; Accordion.
+  4. Karte auf der Seite, Karte im schlichten Panel (wie auf der Seite), Karte in einer Karte oder einem Panel als Karte
+     (dunkel eine Stufe heller), Karte im Dialog (keine dunklere Fläche); Kommentar-Karten; Accordion.
+  4a. Auswählbare Karten (`demo/html-demo.view.xml`, Liste der Exposés, Q24): beim Zeigen ein Hof, kein Schatten; ein
+     Klick wählt, der Ring liegt über dem Rand der Karte; mit Tab und Pfeilen der Fokusring neben dem Ring sichtbar;
+     Strg/Cmd-Klick in einer Mehrfachliste (`test-object-list.view.xml`-Muster) schaltet um.
   5. Split: Griff als Linie, unter dem Zeiger kräftig; Tab auf den Griff, Pfeile, Home, End, Loslassen speichert;
      Doppelklick stellt die Ausgangsaufteilung her und überlebt ein Neuladen; eingeklappte Fläche mit senkrechtem
      Titel; Spaltenbreite einer Tabelle per Tastatur.
@@ -3967,17 +4139,20 @@ cd ../.. && design-system/tools/check-messages-en.sh
 
 ### Task 12: Abschluss — melden, nicht pushen
 
-- [ ] **Step 1:** `git log --oneline 9c6776f258..HEAD` (Engine) und `git log --oneline origin/main..HEAD` (Paket)
+- [ ] **Step 1:** `git log --oneline 2bf2151a2e..HEAD` (Engine) und `git log --oneline origin/main..HEAD` (Paket)
   zusammenfassen.
 - [ ] **Step 2 (Orchestrator):** Trac #29870 `== Migration ==` (Text aus Spec §11 und der Tabelle aus Task 10 Step 5)
   und Keyword `RequiresMigration`; `skalen.md`, Präsentation und STATUS nachziehen; Hinweise an Bernhard für den PR
   (englisch): das Accordion steht im Paket; `MuiCardAdapter` liest `useSurface` nicht, die Stufe nach Verschachtelung
   gilt im MUI-Theme nicht; die Breadcrumb im AdaptiveDetail ist der Darstellungsteil von `TLBreadcrumb` und lässt
   sich nicht über `replace('TLBreadcrumb', …)` ersetzen — ein Part `Breadcrumb` wäre der Weg, seine Entscheidung
-  (Abweichung 22).
+  (Abweichung 22); die auswählbaren Einträge aus #29755 zeichnet jetzt das Paket (Q24): beim Zeigen ein Hof statt
+  `--shadow-raised` (ein Eintrag schwebt nicht), ausgewählt der Ring über dem Eintrag aus `aria-selected` statt der
+  Klassen `tlItem--selectable/--selected` und ohne die Fläche `surface-brand-subtle` (sie läge hinter einer Karte),
+  Fokus aus `base.css` — sein Verhalten (Listbox, Tastatur, langes Drücken) bleibt unverändert.
 - [ ] **Step 3:** Hendrik melden: Branch, Commits, Gates, Sichtprüfung, offene Befunde. **Push nur nach seiner
-  ausdrücklichen Freigabe**, je Repo und Branch benannt; PR gegen 4b (!1906; nach dessen Merge gegen master), Reviewer
-  bhu, danach `add_reviewers bhu`.
+  ausdrücklichen Freigabe**, je Repo und Branch benannt; PR gegen master (4b ist mit !1906 gemergt), Reviewer bhu,
+  danach `add_reviewers bhu`.
 
 ---
 
