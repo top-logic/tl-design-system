@@ -96,7 +96,12 @@ altlast, Spec und `skalen.md` an die Abweichungen). Gates: Paket 418/0, Lint gr�
 Locale; deutsche Locale rot an `TestAll.testSectionsReachTheClient`, #29651-Art), `demo.react` 13/0, Messages-Diff
 einmal (`js.bottomBar.ariaLabel`, Sidebar-Tooltip) committet, zweiter Lauf ohne Diff. Der 768-Test fand nur `TLAppShell.tsx`.
 Trac #29866: `== Migration ==` und `RequiresMigration` gesetzt, Beschreibung auf Navigation eingegrenzt (Behälter → 4c).
-Sichtprüfung (Task 9) 16.10. bestanden, Befunde S1–S5 in `altlast.md` „Welle 4b“ (S4 behoben: Drawer gleitet herein; S2 AppBar-Ende bleibt, Randfall unter 300 px). Gepusht 16.10. (Paket `main` bis `a585b8f`, Engine-Branch bis `b6df949d58`). Danach war !1852 auf master (`b36e6a55b8`); master in 4b gemergt (`ac094d5c5d`), Konflikt nur in der Paketkopie: Bernhards Haken der Einfachauswahl (#29859, `tl-select__option-check`) direkt in `components.css` — ins Paket übernommen (`select.css`, Vertrag), Kopie wieder byte-gleich. Gates: Paket 419/0, `tsc` 0, MUI-Vitest 510/510. **Kopie versiegelt (16.10., Hendrik):** `generate` hängt jeder CSS-Datei ein SHA-256-Siegel an, `TestDesignSystemCopy` (Engine, `layout.react`) prüft es in Jenkins — rot ohne Siegel, grün nach `publish`, rot nach Handänderung; `skalen.md` „Die Kopie in der Engine ist versiegelt“. Gates: Paket 422/0, `layout.react` 680/0. Gepusht 16.10. (Paket `main` bis `a918ab6`, Engine bis `9c6776f258`), **PR [!1906](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1906)** gegen master, Reviewer `bhu`; `jenkins` erst, wenn keine Änderungen mehr folgen. Weiter: Bernhards Review; danach Welle 4c (eigenes Ticket beim Start).
+Sichtprüfung (Task 9) 16.10. bestanden, Befunde S1–S5 in `altlast.md` „Welle 4b“ (S4 behoben: Drawer gleitet herein; S2 AppBar-Ende bleibt, Randfall unter 300 px). Gepusht 16.10. (Paket `main` bis `a585b8f`, Engine-Branch bis `b6df949d58`). Danach war !1852 auf master (`b36e6a55b8`); master in 4b gemergt (`ac094d5c5d`), Konflikt nur in der Paketkopie: Bernhards Haken der Einfachauswahl (#29859, `tl-select__option-check`) direkt in `components.css` — ins Paket übernommen (`select.css`, Vertrag), Kopie wieder byte-gleich. Gates: Paket 419/0, `tsc` 0, MUI-Vitest 510/510. **Kopie versiegelt (16.10., Hendrik):** `generate` hängt jeder CSS-Datei ein SHA-256-Siegel an, `TestDesignSystemCopy` (Engine, `layout.react`) prüft es in Jenkins — rot ohne Siegel, grün nach `publish`, rot nach Handänderung; `skalen.md` „Die Kopie in der Engine ist versiegelt“. Gates: Paket 422/0, `layout.react` 680/0. Gepusht 16.10. (Paket `main` bis `a918ab6`, Engine bis `9c6776f258`), **PR [!1906](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1906)** gegen master, Reviewer `bhu`; `jenkins` erst, wenn keine Änderungen mehr folgen. Weiter: Bernhards Review.
+
+**Welle 4c gestartet (16.10.):** Trac **#29870** (accepted, CC bhu). Engine-Branch
+`CWS/CWS_29870_design_system_welle_4c` im Worktree `tl8-wt-29584`, lokal, auf dem 4b-Head `9c6776f258` (!1906 offen).
+Nächstes: Bestandsaufnahme der zwölf Behälter und Nachprüfung des Gebauten (Wellen 0–4b) gegen sie, dann
+Konsolidierungs-Prognose (Q14–Q18 nachgeschärft) für Hendrik, dann Spec.
 
 **Einstieg der nächsten Sitzung (Welle 4b umsetzen):**
 1. `STATUS.md`, Spec `docs/superpowers/specs/2026-10-16-welle-4b-navigation-design.md` und Plan
@@ -128,7 +133,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 | 3b | Tabelle, Baum, Text (!1838, auf master 14.10.) | 3 | master | #29821 |
 | 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay; mit der Spaltenwahl als Ebenen-Panel in !1852 (auf master 16.10.) | 7 | master | #29836, #29825 |
 | 4b | Navigation: AppShell, AppBar, Sidebar (mobiler Drawer, Flyout), BottomBar; Q10–Q13, Leiste aus Q14 (!1906) | 4 | PR | #29866 |
-| 4c | Behälter: Panel, SplitPanel, Card, Stack, Grid, DeckPane, TileStack, Inset, AdaptiveDetail, Accordion, Wizard, ViewError; Q14–Q18 | 12 | offen | eigenes beim Start |
+| 4c | Behälter: Panel, SplitPanel, Card, Stack, Grid, DeckPane, TileStack, Inset, AdaptiveDetail, Accordion, Wizard, ViewError; Q14–Q18 | 12 | offen | #29870 |
 | 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | offen | — |
 
 **Abnahme außerhalb der Wellen** (Spec „Abnahme“):
