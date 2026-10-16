@@ -36,8 +36,6 @@
     "TLGrid": 14,
     "TLDeckPane": 13,
     "TLCard": 52,
-    "TLAppBar": 83,
-    "TLBottomBar": 77,
     "TLAdaptiveDetail (responsive master-detail)": 51,
     "TLViewError": 29,
     "Table cells holding legacy controls (until waves 4 and 5)": 43,
