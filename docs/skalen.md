@@ -694,6 +694,29 @@ greift. Der Ring weicht deswegen nicht aus; **`overflow: hidden` an einem Behäl
 fokussierbaren Kindern wird zum Befund.** Der Ersatz ist `overflow: clip` mit einem
 `overflow-clip-margin`, das die vier Pixel aus Offset und Breite freihält.
 
+**Nachgetragen 16.10. — gemessen statt gelesen.** Die Regel „kein `overflow: hidden` an einem Behälter mit
+fokussierbaren Kindern“ ist als Text zu grob und zu eng zugleich. Zu grob: fast alle Stellen, die sie im
+Specimen trifft, schneiden nichts — Zelle, Kopfzelle und Popup haben genug Innenabstand, und ihr `hidden` trägt
+die Ellipse oder die Ecken. Zu eng: ein Rollbehälter (`overflow: auto`) schneidet genauso, und der Baum hätte
+den Ring seines Umschalters links abgeschnitten, wäre der Umschalter je fokussierbar. Darum **misst**
+`focus-clip.test.mjs` im Browser (Chrome ohne Fenster, über das DevTools-Protokoll, keine npm-Abhängigkeit):
+jede Specimen-Seite, beide Dichten, jedes fokussierbare Element einmal mit Tastaturfokus. Reicht der Ring
+(`outline-offset` + `outline-width`) über die Kante eines Vorfahren, der schneidet (`overflow` nicht `visible`;
+`clip` zählt seinen `overflow-clip-margin`), ist das ein Befund. Ausgenommen ist, wohin Tastaturfokus nie kommt
+(`tabindex="-1"` unter `aria-activedescendant`: der Cursor ist virtuell), und das Gerüst der Specimen-Seite
+(Vorfahren ohne `tl-`-Klasse). Fehlt Chrome, scheitert der Test (`TL_CHROME` nennt ihn) — ein Gate, das still
+besteht, prüft nichts.
+
+**Was die Messung fand:** die leere Tabelle. Ihr Vertrag versprach „ohne Cursor zeigt das Raster den Ring
+selbst“, und `tl-table` (`overflow: hidden`) schnitt ihn auf allen vier Seiten ab — der Fokus war unsichtbar
+(WCAG 2.4.7). Ebenso der Rollkörper und die Spaltenwahl in der Ecke (rechts und oben). **Was bündig an der
+schneidenden Kante liegt, trägt den Ring innen** (`outline-offset: calc(-1 * var(--tl-focus-offset))`) —
+dieselbe Form wie das Feld in der Zelle und der Cursor-Ring. `clip` mit Rand wäre hier keine Lösung: der Ring
+ragte über die Tabelle hinaus in einen Nachbarn, der seinerseits schneiden kann.
+
+**Verworfen:** die Textregel als Lint-Regel über die Specimen-Struktur (fände die falschen und nicht den
+Baum); die Messung nur für `overflow: hidden` (Rollbehälter schneiden gleich).
+
 Das Gate bekommt zwei Regeln: **`outline: none` ohne Ersatz im selben Block ist ein Verstoß**, und
 **jede Fokusdarstellung, die nicht `outline` ist, ebenso.**
 

@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-15 (3b auf master, 4a in der Spaltenwahl; master-Merge mit #29792 in die Spaltenwahl gelöst) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-16 (DOM-Test focus-clip, Ring der leeren Tabelle innen; danach derive-Hinweise, dann 4b) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -71,6 +71,12 @@ Skill. **Entwurf steht (14.10.):** `docs/uebergabe/2026-10-14-29850-entwicklerdo
 wichtigste: Kundenthemes in `tl-react-theme.config.xml` erreichen umgestellte Controls nicht mehr). Gepusht, Fragen
 als Kommentar in #29850 an Bernhard (14.10.). **Nächstes:** seine Antwort; nach Abstimmung Engine-Branch `CWS/CWS_29850_…`.
 
+**16.10. — DOM-Test `focus-clip.test.mjs` (Paket `main`):** misst im Browser jeden Fokusring jeder Specimen-Seite in
+beiden Dichten gegen schneidende Vorfahren (`skalen.md` „gemessen statt gelesen“). Fand die leere Tabelle: Ring
+des Rasters, des Körpers und der Spaltenwahl von `tl-table` abgeschnitten — jetzt innen. Paket 388/0. **Die
+Worktree-Kopie (`components.css`) ist publiziert, aber im Engine-Worktree nicht committet** — sie geht mit dem
+4b-Branch (Basis Spaltenwahl), nicht in !1852. Reihenfolge danach: `derive`-Hinweise (Paket), dann 4b.
+
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
 axe auf `li role="presentation"`, `format()` dreifach).
@@ -116,7 +122,6 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
   und Pivot bei Bernhard.
 * Token-Mapper (Browserwerkzeug für Kunden-Styleguides, Spec §3); Maven-Wrapper für das Paket (bis dahin
   `publish-to-worktree`); `derive`-Hinweise aus dem Abschluss-Review (Kollaps-Hinweis, achromatische Flächen).
-* DOM-Test im Specimen für `overflow: hidden` an Behältern mit fokussierbaren Kindern (Spec §5).
 * Kleinpunkte je Welle: `altlast.md` „Offen für spätere Wellen und Pakete“ und „Offen nach 3b“.
 
 
@@ -392,8 +397,7 @@ Offen aus der Spec, nicht Teil von Welle 0:
 * Maven-Wrapper für das Paket; bis dahin kopiert `tools/publish-to-worktree.mjs`
 * TSX-Lint-Regel (kein Hex, kein `style={{ color }}`, nur `tl-`-Klassen)
 * Prüfung in der laufenden Demo-App (Browser); bisher ist nur das Specimen im Browser geprüft
-* Spec §5 `overflow: hidden` an Behältern mit fokussierbaren Kindern ist statisch nicht prüfbar —
-  wird ein DOM-Test im Specimen, kein Klassen-Gate
+* Spec §5 abgeschnittener Fokusring: **erledigt 16.10.** als `focus-clip.test.mjs` (Chrome über CDP, misst)
 
 ## Der Schnitt vom 17.09.
 

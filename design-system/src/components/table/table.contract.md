@@ -131,7 +131,8 @@ oder Kästchen im Raster gehören sie dem Bedienelement.
 mit dieser Id gerendert und im sichtbaren Bereich des Körpers ist und `data-tl-state~="cursor"` trägt.
 Ohne Cursor (`cursorIndex` −1), in der leeren Tabelle oder solange die Cursorzeile nicht sichtbar ist
 (gerollt oder noch nicht geschickt), fehlt das Attribut — dann
-zeigt das Raster selbst den Ring aus `base.css`. Mit dem Attribut gibt das Raster den Ring an die
+zeigt das Raster selbst den Ring aus `base.css`, nach innen: `tl-table` schneidet an seiner Kante, ein Ring
+außen wäre weg. Ebenso innen: der Körper und die Spaltenwahl in der Ecke (`focus-clip.test.mjs`). Mit dem Attribut gibt das Raster den Ring an die
 Cursorzeile ab: `base.css` zeichnet ihn innen auf ihrem `::after`. Ein `aria-activedescendant` auf eine
 Id, die es nicht gibt, ließe den Fokus unsichtbar.
 

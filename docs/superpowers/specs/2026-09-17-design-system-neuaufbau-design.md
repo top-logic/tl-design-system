@@ -250,8 +250,8 @@ jede Rolle. Kompakt überschreibt nur Maße, nie Schrift.
 
 **Klassen.** Kein Literal in einer Komponentendatei außer `0`, `1`, `auto`, `none`, `100%`,
 `currentColor`, `inherit`. Jedes `var(--tl-…)` existiert. Jede Klasse beginnt mit `tl-` und folgt
-BEM. Kein `:focus` ohne `-visible`. Kein `outline: none`. Kein `overflow: hidden` an einem Behälter
-mit fokussierbaren Kindern. Kein `font-size` außerhalb einer `tl-type-*`-Klasse. Kein `z-index`
+BEM. Kein `:focus` ohne `-visible`. Kein `outline: none`. Kein Vorfahr schneidet einen Fokusring ab —
+im Browser gemessen (`focus-clip.test.mjs`, `skalen.md` „gemessen statt gelesen“, 16.10.). Kein `font-size` außerhalb einer `tl-type-*`-Klasse. Kein `z-index`
 außer `var(--tl-layer-*)`. Kein `box-shadow` außer `var(--tl-shadow-*)` und `inset`-Linien. Keine
 Dauer außer `var(--tl-duration-*)`.
 

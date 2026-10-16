@@ -11,7 +11,8 @@ const FONTS = ['ext.com.inter.fonts', 'ext.com.bootstrap.icons'].map((m) => join
 const TYPES = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.mjs': 'text/javascript',
   '.json': 'application/json', '.ttf': 'font/ttf', '.woff': 'font/woff', '.woff2': 'font/woff2' };
 
-createServer(async (req, res) => {
+/** Der Specimen-Server, noch nicht gestartet — der DOM-Test (focus-clip.test.mjs) startet ihn auf Port 0. */
+export const specimenServer = () => createServer(async (req, res) => {
   const p = normalize(decodeURIComponent(new URL(req.url, 'http://x').pathname));
   const files = p.startsWith('/fonts/') ? FONTS.map((f) => join(f, p.slice(7))) : [join(ROOT, p === '/' ? 'specimen/index.html' : p)];
   for (const file of files) {
@@ -19,4 +20,8 @@ createServer(async (req, res) => {
     catch { /* nächstes Modul */ }
   }
   res.writeHead(404).end(`Nicht gefunden: ${p}`);
-}).listen(PORT, () => console.log(`Specimen: http://localhost:${PORT}/`));
+});
+
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  specimenServer().listen(PORT, () => console.log(`Specimen: http://localhost:${PORT}/`));
+}

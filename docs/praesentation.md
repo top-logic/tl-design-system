@@ -145,6 +145,7 @@ Deshalb ist Dunkel eine **zweite vollständige Palette**. Jede Rolle hat je Modu
 * Der Abstand ist kein Detail: An der Kante wäre ein blauer Ring auf einer blauen Schaltfläche unsichtbar.
 * Wer klickt, weiß, wo er ist. Bisher zeigten 36 von 64 Stellen den Ring auch bei der Maus.
 * `outline: none` bricht den Build. 22 Stellen im Bestand hatten keinen Fokus mehr.
+* Ein abgeschnittener Ring bricht ihn auch: ein Test fokussiert im Browser jedes Element jeder Beispielseite und misst, ob ein Behälter den Ring kappt. Er fand die leere Tabelle — ihr Fokus war unsichtbar. Was bündig an einer Kante sitzt, trägt den Ring jetzt innen.
 * Zeigen ist nicht Fokus: Kästchen, Radio und Schalter zeigen unter dem Zeiger einen Hof bis zur Trefferfläche — auch, wenn man nur über das Label fährt. Durchscheinend: was darunter liegt — die Linie eines Schiebers — bleibt sichtbar, und der Hof hebt sich auf jedem Grund gleich stark ab.
 * Knöpfe im Feld — Löschen, Link öffnen, der Pfeil des Select, der Kalenderknopf — zeigen eine Stufe kräftiger: auf der Feldfläche war das gewöhnliche Zeigen hell unsichtbar (1,01). Ein Quadrat, eine Fläche, wie jeder Icon-Knopf; das ✕ im Chip nimmt die kräftigste Stufe, weil es auf der getönten Pille liegt.
 
