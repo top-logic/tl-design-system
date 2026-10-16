@@ -100,8 +100,9 @@ Sichtprüfung (Task 9) 16.10. bestanden, Befunde S1–S5 in `altlast.md` „Well
 
 **Welle 4c gestartet (16.10.):** Trac **#29870** (accepted, CC bhu). Engine-Branch
 `CWS/CWS_29870_design_system_welle_4c` im Worktree `tl8-wt-29584`, lokal, auf dem 4b-Head `9c6776f258` (!1906 offen).
-Nächstes: Bestandsaufnahme der zwölf Behälter und Nachprüfung des Gebauten (Wellen 0–4b) gegen sie, dann
-Konsolidierungs-Prognose (Q14–Q18 nachgeschärft) für Hendrik, dann Spec.
+Prognose Q3, Q7, Q8, Q13–Q23 (`altlast.md` „Welle 4c“) von Hendrik angekreuzt: alle wie vorgeschlagen. **Spec-Entwurf
+steht:** `docs/superpowers/specs/2026-10-16-welle-4c-behaelter-design.md`; elf beim Schreiben getroffene Entscheidungen
+in §12 zur Freigabe. Nächstes: Hendriks Durchsicht der Spec, dann Plan (`writing-plans`), Plan-Review, SDD.
 
 **Einstieg der nächsten Sitzung (Welle 4b umsetzen):**
 1. `STATUS.md`, Spec `docs/superpowers/specs/2026-10-16-welle-4b-navigation-design.md` und Plan
@@ -133,7 +134,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 | 3b | Tabelle, Baum, Text (!1838, auf master 14.10.) | 3 | master | #29821 |
 | 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay; mit der Spaltenwahl als Ebenen-Panel in !1852 (auf master 16.10.) | 7 | master | #29836, #29825 |
 | 4b | Navigation: AppShell, AppBar, Sidebar (mobiler Drawer, Flyout), BottomBar; Q10–Q13, Leiste aus Q14 (!1906) | 4 | PR | #29866 |
-| 4c | Behälter: Panel, SplitPanel, Card, Stack, Grid, DeckPane, TileStack, Inset, AdaptiveDetail, Accordion, Wizard, ViewError; Q14–Q18 | 12 | offen | #29870 |
+| 4c | Behälter: Panel, SplitPanel, Card, Stack, Grid, DeckPane, TileStack, Inset, AdaptiveDetail, Accordion, Wizard, ViewError; Q3, Q7, Q8, Q13–Q23 | 12 | geplant | #29870 |
 | 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | offen | — |
 
 **Abnahme außerhalb der Wellen** (Spec „Abnahme“):

@@ -874,3 +874,30 @@ entscheiden). Kleinkram: `getContextPath()` steht gleichlautend in `route-sync.t
 `useDismiss` (ein Hook bindet nicht in den Scope, den dieselbe Komponente öffnet); Q1 nimmt bei der Fotoaufnahme nur
 Scrim, Fokus und Escape — die Kamera-Knöpfe bleiben bis Welle 5; Q7 ohne Icon in der Snackbar (der Zustand liefert
 keins). 4a setzt auf die Spaltenwahl (!1852) auf.
+
+### Welle 4c (16.10.) — Nachprüfung vor der Spec; entschieden: alle Zeilen wie vorgeschlagen
+
+Zwei Erkundungen: Bestand der zwölf Behälter und Nachprüfung der Wellen 0–4b gegen sie. Q3, Q7, Q8 und Q13–Q19 aus der
+Tabelle oben gelten weiter und sind mit Zahlen nachgeschärft; neu sind Q20–Q23. **Entschieden 16.10. (Hendrik): alle
+wie vorgeschlagen.** Spec `docs/superpowers/specs/2026-10-16-welle-4c-behaelter-design.md`, Trac #29870.
+
+| # | Befund | Sichtbar heute | Zusammenlegen zu | Urteil |
+|---|---|---|---|---|
+| Q3 | Panel-Kopf mit Fläche `layer-02`, Titel fett, 0,5/1 rem; Card-Kopf 1/1,5 rem, Gewicht 600; beide Titel `span` | ja | `tl-titlebar` (4a), Titel `h2` | lohnt |
+| Q13 | Panel-Minimieren ohne `aria-expanded` | nein | `aria-expanded`, `aria-controls` | lohnt |
+| Q14 | Panel-Knopfleiste (Abstand 1 rem, 1/1,5 rem, `:has(button)`) gegen Dialog-Fuß (0,5 rem, 0,75/1 rem, `:empty`) | ja | ein Block für die untere Befehlsleiste | mit der Welle |
+| Q15 | Drei Kartenflächen: TLCard (`shadow-raised`), `.tlPanel--card`, Accordion | ja: klein | `tl-card` nach der Fläche des Accordions | lohnt |
+| Q16 | Stack/Grid 0,5/1,5/3 rem gegen `tl-columns` 0,75/1/1,5 rem, gleiche Stufennamen | ja, in jeder Ansicht | eine Gap-Skala | mit der Welle |
+| Q16b | `--tlGrid-gap` Fremdgut; `--page-inset` dreifach definiert (Wurzel, Panel, Karte) | nein | Abstand aus der Stufe; Inset von der Fläche | mit der Welle |
+| Q17 | SplitPanel-Teiler: 4-px-Balken, ohne `role`, ohne Tastatur; Tabellengriff `role=separator`, ohne Tastatur | ja | ein Griff mit Tastatur und `aria-valuenow` | lohnt |
+| Q18 | AdaptiveDetail-Breadcrumb mit `›`, 600, `aria-label="Breadcrumb"`, ohne `aria-current` | ja | `TLBreadcrumb` | mit der Welle |
+| Q7 | ViewError und `tlHtml__error`: Linie links 1 rem, neutrale Fläche, ohne Rolle | ja | `tl-alert` `error` | lohnt |
+| Q8 | Maximiertes Panel `zIndex: 10` inline | nein | `layer-raised` | mit der Welle |
+| Q19 | Wizard-Scheibe auf Alt-Tokens; Zähler fest, Liste ohne Namen | ja | eigenes Muster, nur Tokens | lohnt nicht (Zusammenlegen) |
+| Q20 | `tl-accordion` steht im alten Stylesheet (Bernhard, #29651, 02.10.), ohne Vertrag und Specimen | nein | ins Paket | mit der Welle |
+| Q21 | Slide-Versatz TileStack 24 px, Wizard 12 px, Literale | kaum | ein Versatz auf einem Token | mit der Welle |
+| Q22 | `tlBounded`, `tlItem` (nur Stack/Grid); `tlFill`, Viewport, Mount (rund 20 Controls) | nein | 4c: `tl-bounded`, `tl-item`; Welle 5: Fill, Viewport, Mount | mit der Welle, zum Teil |
+| Q23 | Pfeiltasten-Fokus sechsmal eigen (Accordion, Tree, Table, Sidebar, Dropdown, Segmented) | nein | ein Hook | lohnt nicht in 4c, eigener Strang |
+
+Schon erledigt: den Breakpoint von AdaptiveDetail entscheidet der Server über die `DisplayClass`, die die AppShell seit
+4b meldet.
