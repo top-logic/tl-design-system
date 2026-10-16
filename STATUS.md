@@ -104,7 +104,10 @@ Prognose Q3, Q7, Q8, Q13–Q23 (`altlast.md` „Welle 4c“) von Hendrik angekre
 steht:** `docs/superpowers/specs/2026-10-16-welle-4c-behaelter-design.md`; elf beim Schreiben getroffene Entscheidungen
 in §12. **Spec freigegeben 16.10. (Hendrik)**, mit Weg B (Karte: Stufe nach Verschachtelung) und den Bedien-Gewinnen
 U1–U3 (Doppelklick Panelkopf/Escape, Doppelklick Split-Griff, Klick auf ganzen Kopf öffnet minimiertes Panel);
-`skalen.md` „Welle 4c: Behälter“, Präsentation nachgezogen. Nächstes: Plan (`writing-plans`), Plan-Review, SDD.
+`skalen.md` „Welle 4c: Behälter“, Präsentation nachgezogen. **Plan steht (16.10.):**
+`docs/superpowers/plans/2026-10-16-welle-4c-behaelter.md` (zwölf Tasks, 16 Abweichungen beim Planen, zwei Fragen an
+Hendrik am Planende). Nächstes: Hendriks Antwort auf die Fragen, Plan-Review durch einen frischen Agenten (Fable, Opus
+plante), dann SDD.
 
 **Einstieg der nächsten Sitzung (Welle 4b umsetzen):**
 1. `STATUS.md`, Spec `docs/superpowers/specs/2026-10-16-welle-4b-navigation-design.md` und Plan
