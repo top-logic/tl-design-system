@@ -59,3 +59,41 @@ test('tl-app-bar: eine überlaufende Toolbar nimmt nur den Rest und hält am Üb
   assert.match(decl('app-bar', '.tl-app-bar__children'), /flex:\s*0 1 auto/);
   assert.match(decl('app-bar', '.tl-app-bar__actions:empty'), /display:\s*none/);
 });
+
+test('tl-sidebar: Nav size-sidebar auf surface-layer mit Linie; eingeklappt eine Rechnung aus size-row und space-2xs', () => {
+  const n = decl('sidebar', '.tl-sidebar__nav');
+  assert.match(n, /width:\s*var\(--tl-size-sidebar\)/);
+  assert.match(n, /background:\s*var\(--tl-surface-layer\)/);
+  assert.match(n, /border-inline-end:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-separator\)/);
+  assert.match(n, /transition:\s*width var\(--tl-duration-base\) var\(--tl-easing-standard\)/);
+  assert.match(decl('sidebar', '.tl-sidebar[data-tl-state~="collapsed"] .tl-sidebar__nav'),
+    /width:\s*calc\(var\(--tl-size-row\) \+ 2 \* var\(--tl-space-2xs\)\)/);
+  assert.match(decl('sidebar', '.tl-sidebar[data-tl-state~="collapsed"] .tl-sidebar__item'), /width:\s*var\(--tl-size-row\)/);
+});
+
+test('tl-sidebar: die aktuelle Seite und der Kopf einer zugeklappten Gruppe, die sie enthält, tragen die Fläche der Auswahl — kein Balken', () => {
+  const css = readGenerated('sidebar', 'sidebar.css');
+  const regel = declarationsOf(css, '.tl-sidebar__item[aria-current="page"]') ?? '';
+  assert.match(regel, /background:\s*var\(--tl-surface-interactive-selected\)/);
+  assert.notEqual(declarationsOf(css, '.tl-sidebar__item[data-tl-state~="contains-current"]'), null);
+  assert.doesNotMatch(ohneKommentar(css), /border-left|border-width-accent|font-weight/);
+});
+
+test('tl-sidebar: der Chevron folgt tl-toggle — rechts zu, bei aria-expanded="true" 90° nach unten', () => {
+  assert.match(decl('sidebar', '.tl-sidebar__chevron'), /transition:\s*rotate var\(--tl-duration-fast\) var\(--tl-easing-standard\)/);
+  assert.match(decl('sidebar', '.tl-sidebar__item[aria-expanded="true"] > .tl-sidebar__chevron'), /rotate:\s*90deg/);
+  assert.doesNotMatch(ohneKommentar(readGenerated('sidebar', 'sidebar.css')), /180deg/);
+});
+
+test('tl-sidebar: im Drawer füllt die Nav die Schublade, Breite und Linie trägt der Drawer', () => {
+  const d = decl('sidebar', '.tl-drawer > .tl-sidebar__nav');
+  assert.match(d, /width:\s*auto/);
+  assert.match(d, /border-inline-end:\s*0/);
+});
+
+test('tl-bottom-bar: Höhe size-shell-bar; die aktuelle Seite trägt die Fläche hinter dem Icon', () => {
+  assert.match(decl('bottom-bar', '.tl-bottom-bar'), /height:\s*var\(--tl-size-shell-bar\)/);
+  assert.match(decl('bottom-bar', '.tl-bottom-bar__item[aria-current="page"] .tl-bottom-bar__icon'),
+    /background:\s*var\(--tl-surface-interactive-selected\)/);
+  assert.match(decl('bottom-bar', '.tl-bottom-bar__item:focus-visible'), /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/);
+});

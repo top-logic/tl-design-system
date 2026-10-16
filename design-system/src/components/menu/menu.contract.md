@@ -38,6 +38,10 @@ Der Fokus ist echt (Roving-Tabindex): der fokussierte Eintrag trägt `tabindex="
 Der DOM-Fokus wandert mit, der Browser scrollt den fokussierten Eintrag ins Bild. Deaktivierte
 Einträge, Kopfzeilen und Trenner werden übersprungen.
 
+## Verhalten
+
+- Die Rail der Sidebar (`tl-sidebar`) trägt ihre Einträge in derselben Anatomie (`tl-menu__item`, `tl-menu__header`, `tl-menu__separator`); dort heißt `aria-current="page"` „hier bist du“ und bekommt zusätzlich die Fläche der Auswahl.
+
 ## Tokens
 
 | Teil | Token |
