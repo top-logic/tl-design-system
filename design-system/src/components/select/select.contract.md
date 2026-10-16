@@ -115,7 +115,7 @@ außen gesetzt; `tl-select` hat keine Schriftregel. Laden, keine Treffer und Lad
 | `aria-activedescendant` | am Suchfeld: die Id der hervorgehobenen Option. |
 | `role="listbox"` | an `tl-select__list`. |
 | `role="option"` | an jeder `tl-select__option`. |
-| `aria-selected` | `"false"` an jeder `tl-select__option`: die Liste führt nur ungewählte Optionen; Gewähltes steht als Wert oder Wert-Chip in der Wurzel. Hervorgehoben ist nicht gewählt. |
+| `aria-selected` | an jeder `tl-select__option`: `"true"` an der gewählten Option einer Einfachauswahl (mit Haken), sonst `"false"`. Die Liste einer Einfachauswahl führt alle Optionen; die einer Mehrfachauswahl nur die ungewählten, das Gewählte steht als Wert-Chip in der Wurzel. Hervorgehoben ist nicht gewählt (#29859). |
 | `data-tl-state="highlighted"` | an der hervorgehobenen Option (Tastatur oder Zeiger). Der Indikator ist die Akzentlinie (`--tl-border-interactive`, Gate 3,0 auf `surface-overlay` und `surface-interactive-selected`); die Tönung ist ein Zusatz, weil `--tl-surface-interactive-selected` auf `surface-layer` abgestimmt ist, nicht auf die gehobene Overlay-Fläche. |
 | `data-tl-state="dragging"` | am Wert-Chip, der gerade gezogen wird; die Optik zeichnet `drag.css`. |
 | `data-tl-state="drop-before"` / `"drop-after"` | am Wert-Chip, vor bzw. hinter dem der gezogene landet; die Optik zeichnet `drag.css`. |
@@ -151,6 +151,7 @@ Klassen:
 | `tl-select__search` | das Suchfeld, zusammen mit `tl-field` |
 | `tl-select__list` | die Liste, `role="listbox"` |
 | `tl-select__option` | eine Option, `role="option"` |
+| `tl-select__option-check` | der Haken der gewählten Option einer Einfachauswahl, am Zeilenende (`ThemeIcon` `ICON_CONFIRM` in `tl-icon-sm`) |
 | `tl-status` | Laden, keine Treffer, Ladefehler |
 
 Symbole (Pfeil, Löschen, Entfernen, Suche, Ziehgriff) sind `ThemeIcon` in `tl-icon-sm`. Das Control
