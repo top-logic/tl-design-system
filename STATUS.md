@@ -77,8 +77,9 @@ Worktree-Kopie (`components.css`) liegt als erster Commit `1fdae596a9` auf dem 4
 
 **Welle 4b gestartet (16.10.):** Trac **#29866** (accepted, CC bhu). Engine-Branch
 `CWS/CWS_29866_design_system_welle_4b` im Worktree `tl8-wt-29584`, lokal, auf `origin/…_spaltenwahl` (`f9d0a99ab0`),
-nicht gepusht. **Nächstes:** Spec 4b (Brainstorming mit Hendrik, abschnittsweise), Schnitt klären: `altlast.md`
-nennt 17 Komponenten, der Gesamtplan 10.
+nicht gepusht. **Schnitt entschieden (Hendrik, 16.10.):** 4b = Navigation (AppShell, AppBar, Sidebar,
+BottomBar, ~550 Zeilen Altbestand), 4c = Behälter (~780, eigenes Ticket beim Start) — zusammen ~1.330 Zeilen, das Dreifache
+von 4a. Ticket #29866 auf Navigation umbenannt, Kommentar dazu. **Nächstes:** Spec 4b, abschnittsweise mit Hendrik.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
@@ -99,7 +100,8 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 | 3a | Menü, Toolbar, Reiter, Breadcrumb, Popups, Ton folgt der Aktion | 5 | master | #29617 |
 | 3b | Tabelle, Baum, Text (!1838, auf master 14.10.) | 3 | master | #29821 |
 | 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay; mit der Spaltenwahl als Ebenen-Panel in !1852 | 7 | PR | #29836, #29825 |
-| 4b | Gerüst: AppShell, AppBar, Sidebar, BottomBar, Panel, SplitPanel, Card, Stack, Grid, Wizard; Q10–Q18 | 10 | offen | #29866 |
+| 4b | Navigation: AppShell, AppBar, Sidebar (mobiler Drawer, Flyout), BottomBar; Q10–Q13, Leiste aus Q14 | 4 | geplant | #29866 |
+| 4c | Behälter: Panel, SplitPanel, Card, Stack, Grid, DeckPane, TileStack, Inset, AdaptiveDetail, Accordion, Wizard, ViewError; Q14–Q18 | 12 | offen | eigenes beim Start |
 | 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | offen | — |
 
 **Abnahme außerhalb der Wellen** (Spec „Abnahme“):

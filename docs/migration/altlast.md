@@ -750,6 +750,9 @@ Drei Erkundungen (Overlays, Gerüst und Layout, Nachprüfung der Wellen 0–3b g
 (Dialog, DialogManager, Window, Drawer, Snackbar, NoticeBar, Overlay; Trac #29836), **4b Gerüst** (AppShell, AppBar,
 Sidebar, BottomBar, Panel, SplitPanel, Card, Stack, Grid, DeckPane, TileStack, Inset, AdaptiveDetail, Accordion,
 Wizard, ViewError, Kopfblöcke; eigenes Ticket beim Start).
+**Nachgeschnitten 16.10. (Hendrik):** 4b ist nur die **Navigation** (AppShell, AppBar, Sidebar mit mobilem Drawer
+und Flyout, BottomBar; Q10–Q13, die Leiste aus Q14; Trac #29866), die Behälter werden **4c** (Q14–Q18, eigenes Ticket
+beim Start) — zusammen ~1.330 Zeilen Altbestand, das Dreifache von 4a.
 
 | # | Befund | Sichtbar heute | Zusammenlegen zu | Urteil · PR |
 |---|---|---|---|---|
