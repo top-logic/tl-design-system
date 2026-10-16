@@ -777,7 +777,7 @@ Befunde, nicht behoben:
 | # | Befund | Urteil |
 |---|---|---|
 | S1 | Die Demo-AppBar hat keine Toolbar: die Reihenfolge des Nachgebens (erst Toolbar, dann Titel) ist nur im Paket gemessen (`app-bar-shrink.test.mjs`). | hinnehmen |
-| S2 | Kompakt gibt `tl-app-bar__trailing` nicht nach: bei 300 px ist der Titel weg, „Entwicklung“ behält sein Label (231 px Ende). | Hendrik entscheidet; Kandidat 4c oder eigener Punkt |
+| S2 | Kompakt gibt `tl-app-bar__trailing` nicht nach: bei 300 px ist der Titel weg, „Entwicklung“ behält sein Label (231 px Ende). | bleibt (Hendrik 16.10.: unter 300 px ist ein Randfall) |
 | S3 | Nach dem Login trägt der aktuelle Eintrag der Sidebar den Fokus mit sichtbarem Ring (Enter im Login-Formular macht `:focus-visible`). Ob das alt so war, ist nicht geprüft. | beobachten |
 | S4 | Der Drawer erschien ohne Gleiten (Abweichung 3). | behoben: gleitet herein per `@starting-style` (Hendrik: rudimentär jetzt, Bewegung im Ganzen nach Welle 5) |
 | S5 | BottomBar nutzt keine Demo-Ansicht; nur im Specimen geprüft. | hinnehmen |
