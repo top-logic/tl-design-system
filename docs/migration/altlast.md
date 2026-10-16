@@ -761,6 +761,27 @@ AppBar 48/40 statt 56 px; `--elevated` eine Linie statt eines Schattens; die akt
 Einträge in `text-primary`; Kopfzeilen ohne Großbuchstaben und Sperrung; die mobile Sidebar modal über der AppBar, ohne
 Gleiten (Abweichung 3 des Plans); BottomBar-Label 12 px.
 
+### Sichtprüfung 16.10. (lokale Demo, Chrome)
+
+Kompakt im 700-px-iframe geprüft (das Chrome-Fenster ließ sich nicht verkleinern; `matchMedia` misst den Viewport des
+iframes). Bestanden: breit 48 px, `<main>`, aktuelle Seite mit Fläche und 600, Befehl „Info“ deaktiviert mit Tooltip,
+kein Hamburger, keine alte Klasse im DOM; Rail 44 px, Einträge 36 px mit Tooltip; Flyout rechts, Fokus auf dem ersten
+Eintrag, Pfeile bewegen nur das Menü (Rail-Tabstopp bleibt „Demos“), Escape gibt den Fokus an den Gruppenknopf, zweiter
+Klick schließt nur; kompakt Hamburger mit `aria-expanded`, Nav nicht im DOM, offen `tl-dialog > tl-drawer--start`
+über der AppBar, `aria-controls` zeigt auf die Nav, Fokus auf dem ersten Eintrag, Tab bleibt drin; Escape, Scrim und
+Auswahl schließen und geben den Fokus an den Hamburger, die Auswahl navigiert; offen auf breit gezogen schließt der
+Drawer, wieder schmal bleibt er zu; eingeklappte Rail überdauert den Wechsel; kompakte Dichte 40 px; hell und dunkel.
+
+Befunde, nicht behoben:
+
+| # | Befund | Urteil |
+|---|---|---|
+| S1 | Die Demo-AppBar hat keine Toolbar: die Reihenfolge des Nachgebens (erst Toolbar, dann Titel) ist nur im Paket gemessen (`app-bar-shrink.test.mjs`). | hinnehmen |
+| S2 | Kompakt gibt `tl-app-bar__trailing` nicht nach: bei 300 px ist der Titel weg, „Entwicklung“ behält sein Label (231 px Ende). | Hendrik entscheidet; Kandidat 4c oder eigener Punkt |
+| S3 | Nach dem Login trägt der aktuelle Eintrag der Sidebar den Fokus mit sichtbarem Ring (Enter im Login-Formular macht `:focus-visible`). Ob das alt so war, ist nicht geprüft. | beobachten |
+| S4 | Der Drawer erscheint ohne Gleiten (Abweichung 3). | Hendrik vorlegen |
+| S5 | BottomBar nutzt keine Demo-Ansicht; nur im Specimen geprüft. | hinnehmen |
+
 ### Offen für 4c
 
 Der 768-Test (`engine-classes.test.mjs`) fand keinen weiteren Breakpoint in `react-src`: `768` steht nur in
