@@ -99,9 +99,15 @@ div.tl-panel[data-tl-state~="minimized"|"maximized"][.tl-card][.tl-panel--hover-
 - **`TLCard`**: Wurzel `tl-card`, Kopf `tl-titlebar` (Titel `h2`, Kopfaktionen in `__actions`), Körper
   `tl-card__body` mit `--pad-default|compact|none`. Die Polsterung folgt der Regel „der Inhalt beginnt, wo der Titel
   beginnt“: `default` = `space-md` (heute 1,5 rem), `compact` = `space-xs` (heute 1 rem), `none` = 0.
-- **`elevated`** zeichnet wie `outlined`: Schatten gehören den schwebenden Ebenen (4b: AppBar `--elevated` als Linie,
-  kein `shadow-raised`). Der Zustandswert bleibt im Proto (`CardState.variant`), die Spec bekommt keine zweite
-  Erscheinung.
+- **Die Verschachtelung bestimmt die Stufe** (Hendrik 16.10., Weg B): eine Karte auf dem Grund liegt auf
+  `surface-layer`, eine Karte in einer Fläche (Panel, Karte, Accordion) auf `surface-layer-nested`. Hell ändert das
+  nichts — dort trennt der Rahmen, `layer` und `nested` sind beide weiß —, dunkel hebt sich die innere Karte um eine
+  Stufe ab. Im Dialog (`surface-overlay`, dunkel heller als `nested`) bleibt die Karte auf der Dialogfläche und trennt
+  nur mit dem Rahmen; sie sinkt nicht ein. Die Fläche erfährt die Karte über denselben React-Kontext wie das Inset
+  (§5). Regel aus Welle 0 („Elevation“: hell trennt der Rahmen, dunkel die Fläche).
+- **`elevated`** zeichnet wie `outlined`: Schatten gehören den schwebenden Ebenen (Welle 0: „Eine Karte liegt in der
+  Oberfläche. Sie bekommt einen Rahmen.“; 4b: AppBar `--elevated` als Linie). Der Zustandswert bleibt im Proto
+  (`CardState.variant`), die Spec bekommt keine zweite Erscheinung.
 - **Panel als Karte** (`appearance="card"`): die Wurzel trägt zusätzlich `tl-card`.
 - **Das Accordion zieht ins Paket** (Q20): `components/accordion/` mit CSS, Vertrag und Specimen; Bernhards Anatomie
   und Tastatur bleiben. Die Wurzel trägt `tl-card`; `tl-accordion` behält nur, was die Abschnitte anders machen (Linien
@@ -119,7 +125,7 @@ div.tl-panel[data-tl-state~="minimized"|"maximized"][.tl-card][.tl-panel--hover-
   `var(--tl-space-sm|md|lg)` nach der Stufe, nicht mehr über `--tlGrid-gap`. Ein Test hält die Zuordnung im TSX gleich
   der im CSS.
 - **`tl-inset`**: der Abstand einer Seite zu ihrem Rand. Wie weit, sagt die nächste Fläche über React-Kontext statt
-  über die geerbte Eigenschaft `--page-inset`: auf der Seite `space-lg` (wie heute), im Panel `space-md`, in der Karte
+  über die geerbte Eigenschaft `--page-inset` — derselbe Flächen-Kontext, aus dem die Karte ihre Stufe liest (§4): auf der Seite `space-lg` (wie heute), im Panel `space-md`, in der Karte
   `space-xs space-md` (wie heute) — `tl-inset--page|panel|card`.
 - **`tl-bounded`** (begrenzte Breite) und **`tl-item`** (Wrapper wiederholter Einträge) ziehen ins Paket. Die
   Positionsnummer heißt künftig `--item-index`: sie ist ein Datum der Engine für Anwendungs-CSS (Verzögerung einer
@@ -257,7 +263,8 @@ Steht im Trac-Text unter `== Migration ==` und als Alt→neu-Liste in `altlast.m
 - **Beim Schreiben entschieden, mit der Spec zur Freigabe:**
   1. Panelkopf ohne Tönung (wie Fenster und Drawer), Titel `h2`.
   2. Ein Block `tl-button-bar` für Panel-Knopfleiste und Dialog-Fuß; `tl-dialog__footer` entfällt.
-  3. Karte `elevated` = `outlined`, kein Schatten.
+  3. Karte `elevated` = `outlined`, kein Schatten; die Stufe der Fläche folgt der Verschachtelung (`layer` auf dem
+     Grund, `nested` in einer Fläche, Dialog ausgenommen). **Entschieden 16.10. (Hendrik): Weg B.**
   4. Polsterung der Karte `space-md`/`space-xs`/0 statt 1,5/1/0 rem.
   5. Gap-Werte von `tl-columns` für alle drei Behälter.
   6. Inset über React-Kontext (`tl-inset--page|panel|card`) statt geerbter Eigenschaft.
