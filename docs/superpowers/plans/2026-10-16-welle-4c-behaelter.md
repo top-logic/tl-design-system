@@ -19,6 +19,16 @@ Split-Griff setzt per Doppelklick zurück (U2, neuer Befehl `resetSizes`).
 **Spec:** `docs/superpowers/specs/2026-10-16-welle-4c-behaelter-design.md` (freigegeben 16.10.); Begründungen in
 `docs/skalen.md` „Welle 4c: Behälter“; Prognose in `docs/migration/altlast.md` „Welle 4c“.
 
+**Plan-Review** 16.10. durch einen frischen Agenten (Fable), Probelauf in Kopien: Paket mit allen Dateien der Tasks
+1–4 wörtlich (Lint grün; `node --test` 473, 466 grün — rot `hidden` (11 Blöcke ohne `[hidden]`), `card`- und
+`wizard`-Vertrag, `focus-clip` am Master-Detail, `titlebar-height` ×2 (41 statt 40 px), `published` erwartet); Paket
+mit Task 10 gegen eine Engine-Kopie mit allen Tasks (476, 469 grün — dieselben plus `engine-classes` an
+`ObjectListElement.java:118`); Engine `tsc` 0, beide Vite-Builds grün, MUI-Vitest 43/44 Dateien (`containers.test.tsx`
+7/12 ohne registrierte Parts, mit `replacePart` 12/12), `javac` grün, `TestSplitPanelReset` 2/2, `TestViewLoadError`
+1/1, `TestSplitSizePersonalization` 8/8. **Befunde 1–13 und f eingearbeitet** (Abweichungen 17–22, Global
+Constraints, Tasks 1–4, 6–8, 10, 12); `calc` der Kopfhöhe und des Drawer-Rings sowie die erweiterten Zustandswörter am
+Lint einer Paketkopie geprüft (grün, `lint-css.test.mjs` 35/35).
+
 ## Abweichungen von der Spec (beim Planen am Code gefunden)
 
 1. **Ein Vertrag `layout` statt `stack`, `grid`, `inset`.** Stack, Grid, Inset, Bounded, Item und Deck sind sechs
@@ -65,6 +75,30 @@ Split-Griff setzt per Doppelklick zurück (U2, neuer Befehl `resetSizes`).
     `ReactInsetControl` (Seite: `space-lg`) statt `space-md`. Siehe „Fragen an Hendrik“ 1.
 16. **Der Standard-Kopf der Breadcrumb** ist ein neuer Schlüssel `ADAPTIVE_DETAIL_HOME` in
     `com.top_logic.layout.view.element.I18NConstants`.
+17. **Die Linie des Kopfs zählt zur Höhe** (Plan-Review, Befund 2). `.tl-titlebar` ist `border-box` mit `min-height:
+    size-bar`, Innenabstand `space-2xs` oben und unten und einer Linie unten: der Inhalt fasst 31 statt 32 px, ein
+    Toolbar-Knopf (`size-control`) drückte den Kopf auf 41 px (kompakt 37). Unten liegt darum
+    `calc(var(--tl-space-2xs) - var(--tl-border-width-sm))`; jeder Kopf misst `size-bar`. Sichtbar nur 1 px weniger
+    Luft unter dem Titel eines Dialogs.
+18. **Der Ring des Container-Drawers liegt innen** (Befund 3). `.tl-adaptive-detail` beschneidet mit `overflow: clip`
+    (der geparkte Drawer darf nie in Sicht scrollen), der Drawer liegt bündig an drei Kanten: sein Ring würde
+    beschnitten. Regel „Ring innen, wo der Behälter schneidet“ wie Tabelle und Menü: `.tl-drawer--container:focus-visible
+    { outline-offset: calc(-1 * var(--tl-focus-offset)); }` in `drawer.css`, Vertrag `drawer` nachgezogen.
+19. **End am Spaltengriff passt die Spalte an ihren Inhalt an** (Befund 10) — dieselbe Wirkung wie der Doppelklick;
+    Home setzt die Mindestbreite. Eine Spalte hat kein Maximum, „End an das Maximum“ (Spec §6) hätte nichts zu tun.
+    Spec §12 nachgetragen.
+20. **Das Lint kennt die Zustände der Welle** (Befund 9): `STATE_MODIFIER` und `ELEMENT_STATE_MODIFIER` um
+    `minimized`, `covered`, `current`, `done`, `upcoming`, `forward`, `backward` erweitert (`maximized`, `collapsed`,
+    `entering`, `exiting`, `expanded` standen schon). „Kein `transform: rotate` für Text“ (Spec §9) bleibt ein Test auf
+    `split.css` (`behaelter.test.mjs`), keine Lint-Regel: eine Regel auf `rotate` träfe den Chevron, der zu Recht dreht.
+21. **Escape von innen nach außen** (Review b): ein maximiertes Panel in einem Fenster stellt sich auf Escape zuerst
+    wieder her; erst das nächste Escape schließt das Fenster. Das ist die Regel aus 4a („Escape schließt von innen nach
+    außen“); der `keyboard-dispatcher` hängt in der Bubble-Phase am `document` und steht bei `defaultPrevented` zurück.
+22. **MUI-Theme** (Review e): `MuiCardAdapter` liest `useSurface` nicht — Weg B gilt dort nicht (Adapter folgen dem
+    Vertrag, nicht unseren Flächen). `TLAdaptiveDetail` rendert den Darstellungsteil `Breadcrumb` direkt: der
+    `MuiBreadcrumbAdapter` ersetzt das **Control** `TLBreadcrumb` (`replace('TLBreadcrumb', …)` in `registry.ts`), kein
+    Part; die Krumen des AdaptiveDetail haben keinen eigenen Control-Zustand und keinen Server-Partner, über den die
+    Ersetzung greifen könnte. Ein Part `Breadcrumb` wäre Bernhards Entscheidung — Hinweis an ihn im PR (Task 12).
 
 ## Global Constraints
 
@@ -76,7 +110,14 @@ Split-Griff setzt per Doppelklick zurück (U2, neuer Befehl `resetSizes`).
   über `node tools/generate.mjs`, danach `node tools/publish-to-worktree.mjs` (`test/published.test.mjs` hält die Kopie
   byte-gleich, `TestDesignSystemCopy` in der Engine prüft das Siegel).
 - Zustände sind Attribute (`data-tl-state` als Wortliste, `aria-current`, `aria-expanded`), nie `--minimized`,
-  `--maximized`, `--collapsed`, `--entering`, `--exiting`, `--covered`, `--expanded`.
+  `--maximized`, `--collapsed`, `--entering`, `--exiting`, `--covered`, `--expanded`, `--current`, `--done`,
+  `--upcoming`, `--forward`, `--backward` — das Lint fängt sie an Block und Element (Task 1).
+- Jeder Block, der `display` setzt, setzt direkt nach seiner Grundregel `.tl-x[hidden] { display: none; }`
+  (`test/hidden.test.mjs`).
+- Jeder Pflichtbegriff eines Vertrags (`SOLL` in `contracts-4c.test.mjs`) steht im Vertrag unmittelbar nach einem
+  Backtick: eine Klasse je Backtick-Paar, ohne Elementpräfix — `` `tl-card` `tl-card--nested` ``, nicht
+  `` `tl-card tl-card--nested` ``; `` `tl-wizard__steps` (an `ol`) ``, nicht `` `ol.tl-wizard__steps` ``
+  (`missingInContract` sucht „\`<Begriff>“).
 - `z-index` nur `var(--tl-layer-*)`; `transition`/`animation` nur mit `var(--tl-duration-*)` und
   `var(--tl-easing-*)`; kein `outline: none`; der Ring kommt aus `base.css`; `font-size`/`font-weight` nur über
   Typo-Klassen; keine Breiten-Media-Query in einer Komponentendatei.
@@ -101,6 +142,8 @@ Split-Griff setzt per Doppelklick zurück (U2, neuer Befehl `resetSizes`).
 5. **Eine Karte im Dialog sinkt nicht ein:** im Kontext `overlay` trägt sie `tl-card--overlay`, in einer Fläche
    `tl-card--nested`, auf der Seite keines von beiden; ein schlichtes Panel hebt die Stufe nicht (`panelSurface`).
    Vitest in Task 6, Specimen in Task 2.
+6. **Ein Klick auf die leere Fläche der Toolbar im Kopf** eines minimierten Panels öffnet es nicht, ein Doppelklick
+   dort maximiert nicht — alles in `.tl-titlebar__actions` gehört der Toolbar (Spec §3). Vitest in Task 6.
 
 ## Datei-Übersicht
 
@@ -147,7 +190,9 @@ Split-Griff setzt per Doppelklick zurück (U2, neuer Befehl `resetSizes`).
 
 **Files:**
 - Modify: `design-system/src/tokens.json` (Zeile `"size-sidebar": "{size-12}",` in `measure`)
-- Modify: `design-system/tools/lint-css.mjs` (`MODIFIERS`, nach `'tl-icon-badge': new Set([]),`)
+- Modify: `design-system/tools/lint-css.mjs` (`MODIFIERS`, nach `'tl-icon-badge': new Set([]),`; Zustandswörter in
+  `STATE_MODIFIER` und `ELEMENT_STATE_MODIFIER`, Zeilen 80 und 83)
+- Modify: `design-system/test/lint-css.test.mjs` (anfügen)
 - Modify: `design-system/src/components/titlebar/titlebar.css`, `titlebar.contract.md`
 - Create: `design-system/src/components/button-bar/button-bar.css`, `button-bar.contract.md`
 - Modify: `design-system/src/components/dialog/dialog.css` (Fußregeln Zeilen 86–97), `dialog.contract.md` (Zeile
@@ -182,6 +227,10 @@ test('tl-titlebar: eine Toolbar im Kopf bringt keine eigene Leistenhöhe mit', (
   const t = decl('titlebar', '.tl-titlebar__actions > .tl-toolbar');
   assert.match(t, /min-height:\s*0/);
   assert.match(t, /padding-block:\s*0/);
+  // Die Linie unten zählt zur Höhe (border-box): unten space-2xs abzüglich der Linie, sonst misst ein Kopf mit
+  // Toolbar-Knopf size-bar + 1 px (Plan-Review, Befund 2).
+  assert.match(decl('titlebar', '.tl-titlebar'),
+    /padding-bottom:\s*calc\(var\(--tl-space-2xs\) - var\(--tl-border-width-sm\)\)/);
 });
 
 test('tl-titlebar: Inhalt neben dem Titel, Kopfknöpfe in einer Hülle, ohne Titel alles am Ende', () => {
@@ -245,6 +294,21 @@ test('tl-button-bar: rechtsbündig, Linie oben, verschwindet ohne Knopf — Fuß
   'tl-adaptive-detail': new Set([]),
 ```
 
+  In beiden Zustands-Regexen (Zeilen 80 und 83) `|drop-onto|drop-refused)$/;` ersetzen durch
+  `|drop-onto|drop-refused|minimized|covered|current|done|upcoming|forward|backward)$/;` (Abweichung 20). An
+  `test/lint-css.test.mjs` anfügen:
+
+```js
+test('Zustände der Behälter als Modifier brechen das Gate (Welle 4c) — an Block und Element', () => {
+  for (const sel of ['.tl-panel--minimized', '.tl-panel--maximized', '.tl-split__pane--collapsed', '.tl-tile-stack__frame--covered',
+    '.tl-tile-stack--forward', '.tl-wizard--backward', '.tl-wizard__step-item--done', '.tl-wizard__step-item--current',
+    '.tl-wizard__step-item--upcoming', '.tl-wizard__step--entering'])
+    assert.ok(lint(`${sel} { display: none; }`, { known, file: 'x.css' }).some((v) => /Zustand als/.test(v)), sel);
+});
+```
+
+  (Am Lint einer Paketkopie geprüft: der Bestand bleibt grün, der neue Test 1/1, `lint-css.test.mjs` 35/35.)
+
 - [ ] **Step 5: Titelleiste** — `src/components/titlebar/titlebar.css`: den Kopfkommentar ersetzen und Regeln anfügen.
   Neuer Kopfkommentar (Zeilen 1–3):
 
@@ -253,6 +317,14 @@ test('tl-button-bar: rechtsbündig, Linie oben, verschwindet ohne Knopf — Fuß
    Titel links mit Ellipse, daneben frei gestalteter Inhalt, Aktionen (Toolbar) und Kopfknöpfe (tl-button--icon --sm)
    am Ende, eine Linie darunter. Dialog, Drawer, Panel und Karte tragen ihn. Er ist size-bar hoch, mit und ohne
    Toolbar; eine überlaufende Toolbar gibt vor dem Titel nach. Die Typo-Klasse des Titels setzt das Markup. */
+```
+
+  In `.tl-titlebar` nach der Zeile `border-bottom: …;` ergänzen (Abweichung 17):
+
+```css
+  /* Die Linie unten zählt zur Höhe (border-box): unten liegt space-2xs abzüglich der Linie, damit ein Control der
+     Toolbar (size-control) Platz hat und der Kopf size-bar misst, mit und ohne Toolbar. */
+  padding-bottom: calc(var(--tl-space-2xs) - var(--tl-border-width-sm));
 ```
 
   In `.tl-titlebar__actions` die Zeile `gap: var(--tl-space-2xs);` ergänzen (nach `align-items: center;`) und ans Ende
@@ -334,6 +406,7 @@ test('tl-button-bar: rechtsbündig, Linie oben, verschwindet ohne Knopf — Fuß
   padding: var(--tl-space-sm) var(--tl-space-md);
   border-top: var(--tl-border-width-sm) solid var(--tl-border-separator);
 }
+.tl-button-bar[hidden] { display: none; }
 
 .tl-button-bar:not(:has(button)) {
   display: none;
@@ -595,6 +668,7 @@ test('Panelkopf: bei 640 px ist der Titel ganz, bei 260 px hält die Toolbar am 
   flex-direction: column;
   min-width: 0;
 }
+.tl-panel[hidden] { display: none; }
 
 /* Maximiert deckt das Panel den Behälter, der es maximiert, über dessen Inhalt. */
 .tl-panel[data-tl-state~="maximized"] {
@@ -859,9 +933,9 @@ Die Stufe folgt der Verschachtelung, nicht einer Variante. Das TSX liest sie aus
 | Lage | Klasse | Fläche |
 |---|---|---|
 | auf der Seite | `tl-card` | `--tl-surface-layer` |
-| in einer Fläche (Karte, Accordion, Panel als Karte) | `tl-card tl-card--nested` | `--tl-surface-layer-nested` |
+| in einer Fläche (Karte, Accordion, Panel als Karte) | `tl-card` `tl-card--nested` | `--tl-surface-layer-nested` |
 | in einem schlichten Panel | wie dort, wo das Panel liegt | (das Panel malt keine Fläche) |
-| im Dialog oder Drawer | `tl-card tl-card--overlay` | `--tl-surface-overlay` |
+| im Dialog oder Drawer | `tl-card` `tl-card--overlay` | `--tl-surface-overlay` |
 
 Hell sind `layer` und `nested` weiß; dort trennt die Linie (`--tl-border-width-sm` `--tl-border-separator`).
 
@@ -1103,6 +1177,7 @@ test('split.spec.html: Griff fokussierbar mit Wert; eine eingeklappte Fläche im
 .tl-stack {
   display: flex;
 }
+.tl-stack[hidden] { display: none; }
 
 .tl-stack--column { flex-direction: column; }
 .tl-stack--row { flex-direction: row; }
@@ -1135,6 +1210,7 @@ test('split.spec.html: Griff fokussierbar mit Wert; eine eingeklappte Fläche im
 .tl-grid {
   display: grid;
 }
+.tl-grid[hidden] { display: none; }
 
 /* Gibt den Platz, den es bekommt, an seinen Inhalt weiter: eine begrenzte Spalte, gegen die ein füllender Inhalt
    seine Höhe auflöst. */
@@ -1144,6 +1220,7 @@ test('split.spec.html: Griff fokussierbar mit Wert; eine eingeklappte Fläche im
   width: 100%;
   padding: var(--tl-space-lg);
 }
+.tl-inset[hidden] { display: none; }
 
 .tl-inset--panel {
   padding: var(--tl-space-md);
@@ -1168,6 +1245,7 @@ test('split.spec.html: Griff fokussierbar mit Wert; eine eingeklappte Fläche im
   min-width: 0;
   min-height: 0;
 }
+.tl-item[hidden] { display: none; }
 
 /* Zeigt ein Kind zur Zeit und nimmt dessen Größe: neben einer Breadcrumb, in der AppBar so groß wie sein Inhalt. */
 .tl-deck {
@@ -1176,6 +1254,7 @@ test('split.spec.html: Griff fokussierbar mit Wert; eine eingeklappte Fläche im
   min-width: 0;
   min-height: 0;
 }
+.tl-deck[hidden] { display: none; }
 ```
 
 - [ ] **Step 4: `split/split.css`**
@@ -1192,6 +1271,7 @@ test('split.spec.html: Griff fokussierbar mit Wert; eine eingeklappte Fläche im
   width: 100%;
   height: 100%;
 }
+.tl-split[hidden] { display: none; }
 
 .tl-split--horizontal { flex-direction: row; }
 .tl-split--vertical { flex-direction: column; }
@@ -1403,6 +1483,8 @@ Ein Split besteht den Vertrag, wenn jeder Griff mit der Tastatur bedienbar ist u
 - Create: `design-system/src/components/adaptive-detail/adaptive-detail.{css,contract.md,spec.html}`
 - Modify: `design-system/src/components/breadcrumb/breadcrumb.contract.md`, `alert/alert.contract.md`,
   `table/table.contract.md` (Leser)
+- Modify: `design-system/src/components/drawer/drawer.css` (nach `.tl-drawer--container`), `drawer.contract.md`
+  (Abweichung 18)
 - Modify: `design-system/test/behaelter.test.mjs`, `test/contracts-4c.test.mjs`, `specimen/index.html`
 
 **Interfaces:**
@@ -1458,6 +1540,8 @@ test('AdaptiveDetail: Behälter des Drawers, Leiste der Breadcrumb auf size-bar 
   const r = decl('adaptive-detail', '.tl-adaptive-detail');
   assert.match(r, /position:\s*relative/);
   assert.match(r, /overflow:\s*clip/);
+  // Der Behälter beschneidet; der Ring der Schublade darin liegt innen (Abweichung 18, focus-clip).
+  assert.match(decl('drawer', '.tl-drawer--container:focus-visible'), /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/);
   const b = decl('adaptive-detail', '.tl-adaptive-detail__bar');
   assert.match(b, /min-height:\s*var\(--tl-size-bar\)/);
   assert.match(b, /border-bottom:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-separator\)/);
@@ -1489,6 +1573,13 @@ test('wizard.spec.html: erledigt, aktuell, kommend; die Liste hat einen Namen, Z
   assert.match(html, /class="tl-wizard__step-item" aria-current="step"/);
   assert.match(html, /class="tl-wizard__counter tl-type-label tl-nums" aria-hidden="true"/);
   assert.match(html, /class="tl-wizard__disc tl-type-label tl-nums" aria-hidden="true"/);
+});
+
+test('adaptive-detail.spec.html: die letzte Krume ist die aktuelle Seite, der Drawer liegt im Behälter', () => {
+  const html = datei('adaptive-detail', 'adaptive-detail.spec.html');
+  assert.match(html, /<div class="tl-adaptive-detail__bar">\s*<nav class="tl-breadcrumb" aria-label="[^"]+"/);
+  assert.match(html, /tl-breadcrumb__current[^"]*" aria-current="page"|aria-current="page"[^>]*tl-breadcrumb__current/);
+  assert.match(html, /class="tl-drawer [^"]*tl-drawer--container[^"]*" data-tl-state="open"/);
 });
 ```
 
@@ -1541,6 +1632,7 @@ test('wizard.spec.html: erledigt, aktuell, kommend; die Liste hat einen Namen, Z
   flex-direction: column;
   width: 100%;
 }
+.tl-tile-stack[hidden] { display: none; }
 
 .tl-tile-stack__frame {
   display: flex;
@@ -1603,6 +1695,7 @@ test('wizard.spec.html: erledigt, aktuell, kommend; die Liste hat einen Namen, Z
   width: 100%;
   min-height: 0;
 }
+.tl-wizard[hidden] { display: none; }
 
 .tl-wizard__header {
   display: flex;
@@ -1729,11 +1822,12 @@ test('wizard.spec.html: erledigt, aktuell, kommend; die Liste hat einen Namen, Z
 
   `wizard.contract.md`: Zustand (`steps`, `activeIndex`, `activeChild`, `counter`, `progress`, `stepList`,
   `direction`, `autoAdvance`), Aktionen `gotoStep` (erledigter Schritt, Knopf `tl-button--link`) und `advanceStep`
-  (Zeitgeber), Attribute (`tl-wizard` mit `data-tl-state~="backward"`, `tl-wizard__counter tl-type-label tl-nums`
-  `aria-hidden`, `tl-wizard__progress`, `ol.tl-wizard__steps` mit `aria-label` aus i18n `js.wizard.steps`,
-  `li.tl-wizard__step-item` mit `data-tl-state~="done"` oder `aria-current="step"`, darin
-  `span.tl-wizard__disc tl-type-label tl-nums` `aria-hidden`, der Name als `tl-button--link` (erledigt) oder
-  `span.tl-wizard__step-name` mit `tl-type-body`/`tl-type-body-strong`; `tl-wizard__body`, `tl-wizard__step`),
+  (Zeitgeber), Attribute — je Klasse ein Backtick-Paar, ohne Elementpräfix (Global Constraints): `tl-wizard` mit
+  `data-tl-state~="backward"`, `tl-wizard__counter` (mit `tl-type-label` `tl-nums`) `aria-hidden`,
+  `tl-wizard__progress`, `tl-wizard__steps` (an `ol`) mit `aria-label` aus i18n `js.wizard.steps`,
+  `tl-wizard__step-item` (an `li`) mit `data-tl-state~="done"` oder `aria-current="step"`, darin `tl-wizard__disc` (an
+  `span`, mit `tl-type-label` `tl-nums`) `aria-hidden`, der Name als `tl-button--link` (erledigt) oder
+  `tl-wizard__step-name` (an `span`) mit `tl-type-body`/`tl-type-body-strong`; `tl-wizard__body`, `tl-wizard__step`,
   Tokens der drei Stufen, `--tl-size-wizard-progress`.
 
 - [ ] **Step 6: `adaptive-detail/adaptive-detail.css`**
@@ -1753,6 +1847,7 @@ test('wizard.spec.html: erledigt, aktuell, kommend; die Liste hat einen Namen, Z
   min-height: 0;
   overflow: clip;
 }
+.tl-adaptive-detail[hidden] { display: none; }
 
 .tl-adaptive-detail__bar {
   display: flex;
@@ -1775,12 +1870,25 @@ test('wizard.spec.html: erledigt, aktuell, kommend; die Liste hat einen Namen, Z
   `aria-current="page"` an der letzten Krume und `aria-label` aus `js.breadcrumb.label`, `tl-adaptive-detail__content`,
   der Drawer `tl-drawer--container`); Satz: „Der erste Eintrag heißt ohne Konfiguration ‚Übersicht‘.“
 
+  `drawer/drawer.css` nach der Regel `.tl-drawer--container` (Abweichung 18):
+
+```css
+
+/* Der Behälter beschneidet (Master-Detail: overflow: clip); der Ring der Schublade liegt darum innen. */
+.tl-drawer--container:focus-visible {
+  outline-offset: calc(-1 * var(--tl-focus-offset));
+}
+```
+
+  `drawer.contract.md`: Zeile `` | `tl-drawer--container` | im Behälter verankert | `` →
+  `` | `tl-drawer--container` | im Behälter verankert; der Fokusring liegt innen (der Behälter beschneidet) | ``.
+
 - [ ] **Step 7: Leser nachziehen** — `breadcrumb.contract.md`: unter Konformität oder Zustand den Satz „Leser:
   `TLBreadcrumb` und die Leiste von `tl-adaptive-detail` (Darstellungsteil `Breadcrumb`).“ `alert.contract.md`: „Leser
   auch: `ViewLoadError` (eine Ansicht, die nicht lädt, `data-tl-role=\"error\"`) und `TLHtml` (ein Fragment, das nicht
   gezeigt wird).“ `table.contract.md` beim Griff der Breite: „`tabindex=\"0\"`, `aria-valuenow` (Breite in px),
-  `aria-valuemin`; Pfeile links/rechts um `--tl-space-md`, Home an die Mindestbreite; das Loslassen sendet
-  `columnResize`.“
+  `aria-valuemin`; Pfeile links/rechts um `--tl-space-md`, Home an die Mindestbreite, End passt die Spalte an ihren
+  Inhalt an (wie der Doppelklick); das Loslassen einer Pfeiltaste sendet `columnResize`.“
 
 - [ ] **Step 8: Specimen** — `wizard/wizard.spec.html`:
 
@@ -1807,7 +1915,8 @@ test('wizard.spec.html: erledigt, aktuell, kommend; die Liste hat einen Namen, Z
 
   `adaptive-detail/adaptive-detail.spec.html` (`<style>`: `.stage { height: 16rem; }`): `div.stage > div.tl-adaptive-detail`
   mit `div.tl-adaptive-detail__bar > nav.tl-breadcrumb[aria-label="Navigationspfad"]` (drei Einträge wie in
-  `breadcrumb.spec.html`, erster „Übersicht“), `div.tl-adaptive-detail__content` mit Text, und einem offenen
+  `breadcrumb.spec.html`, erster „Übersicht“, die letzte Krume `tl-breadcrumb__current` mit `aria-current="page"` — der
+  Test aus Step 1 liest genau diese Form; am Markup von `breadcrumb.spec.html` prüfen), `div.tl-adaptive-detail__content` mit Text, und einem offenen
   `aside.tl-drawer.tl-drawer--end.tl-drawer--medium.tl-drawer--container[data-tl-state="open"]` mit Titelleiste und
   Körper wie im Drawer-Specimen.
 
@@ -2094,16 +2203,31 @@ Co-Authored-By: <Modell> <noreply@anthropic.com>"
 
 ```tsx
 // The containers of wave 4c (spec 2026-10-16): a panel handles like a window, a card takes its surface from where it
-// lies. Drawn with the default parts; the MUI parts are tested in inline-buttons.test.tsx.
+// lies. The test registry has no parts of its own, so the parts the controls look up are the MUI ones, as in
+// inline-buttons.test.tsx; what is tested here is the behaviour of the controls, not the drawing of the parts.
 
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { screen, cleanup, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { React, SurfaceProvider, panelSurface } from 'tl-react-bridge';
+import { React, SurfaceProvider, panelSurface, replacePart } from 'tl-react-bridge';
 import type { TLCellProps } from 'tl-react-bridge';
 import TLPanel from '../../../com.top_logic.layout.react/react-src/controls/TLPanel';
 import TLCard from '../../../com.top_logic.layout.react/react-src/controls/TLCard';
+import MuiButtonAdapter from './MuiButtonAdapter';
+import MuiDisclosureToggleAdapter from './MuiDisclosureToggleAdapter';
+import MuiCheckboxAdapter from './MuiCheckboxAdapter';
+import MuiTextInputAdapter from './MuiTextInputAdapter';
+import MuiChipAdapter from './MuiChipAdapter';
 import { childControl, mountAdapter, settle } from './wire-test-support';
+
+// The panel looks up the part Button; the table (Task 7) also the toggle of its tree rows, the selection boxes of its
+// rows, the boxes of its search and the chips of its named filters. Without them a control throws ("No component
+// registered for the part …") instead of failing an expectation.
+replacePart('Button', MuiButtonAdapter);
+replacePart('DisclosureToggle', MuiDisclosureToggleAdapter);
+replacePart('Checkbox', MuiCheckboxAdapter);
+replacePart('TextInput', MuiTextInputAdapter);
+replacePart('Chip', MuiChipAdapter);
 
 afterEach(() => {
   cleanup();
@@ -2156,6 +2280,23 @@ describe('a panel handles like a window', () => {
     await userEvent.click(head());
     await settle();
     expect(sent).toHaveBeenCalledWith('toggleMinimize', expect.anything());
+  });
+
+  // Review Focus 6: the toolbar's slot belongs to the toolbar, its empty space too.
+  it('neither opens nor maximizes on a gesture in the toolbar of its head', async () => {
+    const withToolbar = { ...PANEL, toolbar: childControl('t', 'Werkzeuge') };
+    const sent = mountAdapter(TLPanel, { ...withToolbar, expansionState: 'MINIMIZED' });
+    await settle();
+    await userEvent.click(screen.getByText('Werkzeuge'));
+    await settle();
+    expect(sent).not.toHaveBeenCalledWith('toggleMinimize', expect.anything());
+    cleanup();
+
+    const sentOpen = mountAdapter(TLPanel, { ...withToolbar, expansionState: 'NORMALIZED' });
+    await settle();
+    await userEvent.dblClick(screen.getByText('Werkzeuge'));
+    await settle();
+    expect(sentOpen).not.toHaveBeenCalledWith('toggleMaximize', expect.anything());
   });
 
   it('names the body it controls while open', async () => {
@@ -2220,7 +2361,9 @@ describe('a card takes its surface from where it lies', () => {
   dem Text (Zeile 222). Die Überschrift `h2` ist per `getByRole('heading')` erreichbar.
 
 - [ ] **Step 2: Run** `cd com.top_logic.layout.react.mui && NODE_OPTIONS=--no-experimental-webstorage npx vitest run
-  react-src/adapters/containers.test.tsx` — Expected: FAIL (kein `heading`, keine `tl-card`-Klassen).
+  react-src/adapters/containers.test.tsx` — Expected: FAIL an Erwartungen, nicht an Ausnahmen: „Unable to find role
+  heading“ (das alte Panel schreibt `span.tlPanel__title`), keine `tl-card`-Klassen, kein `aria-expanded`. Wirft ein
+  Test „No component registered for the part“, fehlt ein `replacePart` oben.
 
 - [ ] **Step 3: `TLPanel.tsx`** — Importzeile und Komponente ersetzen (Konstanten `I18N_KEYS`, Icons und der
   JavaDoc-Kopf bleiben; im JavaDoc `appearance` „card renders a bordered, rounded panel with compact insets“ →
@@ -2239,6 +2382,16 @@ const { useCallback, useMemo } = React;
 ```
 
 ```tsx
+/**
+ * Whether a pointer gesture on the head of a panel is the head's: not on a button or another interactive element of
+ * the head, and not anywhere in the toolbar's slot - its empty space included (spec §3: clicks on the toolbar stay
+ * its own).
+ */
+function ownedByHead(event: React.MouseEvent<HTMLElement>): boolean {
+  return !isInteractiveWithin(event.target, event.currentTarget)
+    && !(event.target instanceof Element && event.target.closest('.tl-titlebar__actions'));
+}
+
 const TLPanel: React.FC<TLCellProps> = ({ controlId }) => {
   const state = useTLState();
   const sendCommand = useTLCommand();
@@ -2279,17 +2432,16 @@ const TLPanel: React.FC<TLCellProps> = ({ controlId }) => {
     sendCommand('popOut');
   }, [sendCommand]);
 
-  // The head as a window's: a double click maximizes or restores, a click opens a minimized panel. A gesture on a
-  // button or another interactive element of the head is that element's alone.
+  // The head as a window's: a double click maximizes or restores, a click opens a minimized panel (ownedByHead).
   const handleHeadDoubleClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
-    if (!showMaximize || isMinimized || isInteractiveWithin(event.target, event.currentTarget)) {
+    if (!showMaximize || isMinimized || !ownedByHead(event)) {
       return;
     }
     handleMaximize();
   }, [showMaximize, isMinimized, handleMaximize]);
 
   const handleHeadClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
-    if (!showMinimize || !isMinimized || isInteractiveWithin(event.target, event.currentTarget)) {
+    if (!showMinimize || !isMinimized || !ownedByHead(event)) {
       return;
     }
     handleMinimize();
@@ -2565,6 +2717,8 @@ Co-Authored-By: <Modell> <noreply@anthropic.com>"
 - Modify: `com.top_logic.layout.view/src/test/java/test/com/top_logic/layout/view/element/TestSplitSizePersonalization.java`
 - Modify: `com.top_logic.layout.react.mui/react-src/adapters/containers.test.tsx`
 - Modify: `tlReactControls.css` (Blöcke „TLSplitPanel“, „Collapsed panel in horizontal split“), `design-system/test/ratchet.json`
+- Modify (Paket): `design-system/src/components/table/table.css` (Griff mit Fokus, Step 7),
+  `design-system/src/components/table/table.spec.html` (Griffe fokussierbar, Step 7)
 
 **Interfaces:**
 - Consumes: `separatorMove`, `separatorStep`, `movedSize` (Task 5).
@@ -3059,23 +3213,29 @@ export default TLSplitPanel;
 
 ```tsx
   // The width handle takes the keyboard like any separator (bridge/separator.ts): the arrows widen and narrow the
-  // column by one step, Home narrows it to the minimum. The width reaches the server when the key is released.
+  // column by one step, Home narrows it to the minimum. A column has no maximum, so End fits it to its content - what a
+  // double click on the handle does - and reports it at once. The arrows reach the server when the key is released.
   const keyResizeRef = React.useRef<{ column: string; width: number } | null>(null);
 
   const handleResizeKeyDown = React.useCallback((columnName: string, colWidth: number, event: React.KeyboardEvent<HTMLElement>) => {
     const handle = event.currentTarget;
     const move = separatorMove(event.key, 'vertical', handle);
-    if (!move || move.to === 'max') {
+    if (!move) {
       return;
     }
     // The table's own keyboard (cursor, selection) does not see the key.
     event.preventDefault();
     event.stopPropagation();
+    if (move.to === 'max') {
+      keyResizeRef.current = null;
+      fitColumnToContent(columnName);
+      return;
+    }
     const from = keyResizeRef.current?.column === columnName ? keyResizeRef.current.width : colWidth;
     const width = movedSize(from, move, MIN_COL_WIDTH, Number.MAX_SAFE_INTEGER, separatorStep(handle));
     keyResizeRef.current = { column: columnName, width };
     setColumnWidthOverrides((prev) => ({ ...prev, [columnName]: width }));
-  }, []);
+  }, [fitColumnToContent]);
 
   const handleResizeKeyUp = React.useCallback(() => {
     const info = keyResizeRef.current;
@@ -3100,7 +3260,10 @@ export default TLSplitPanel;
 
   `table.css` im Paket: `.tl-table__resize:focus-visible { outline-offset: calc(-1 * var(--tl-focus-offset)); }` und
   in die Regel `.tl-table__resize:hover::after, …` den Selektor `.tl-table__resize:focus-visible::after` aufnehmen —
-  im Paket (Task-eigener Paket-Commit, generate, publish, Engine-Kopie mitcommitten).
+  im Paket (Task-eigener Paket-Commit, generate, publish, Engine-Kopie mitcommitten). `table.spec.html`: an die drei
+  `<span class="tl-table__resize" role="separator" …>` (Zeilen 56, 61, 66) `tabindex="0"`, `aria-valuenow` (die
+  Breite der Spalte im Specimen, z. B. `160`) und `aria-valuemin="50"` (`MIN_COL_WIDTH` in `TLTableView.tsx` Zeile 186)
+  anfügen — erst fokussierbar misst `focus-clip.test.mjs` den Innen-Ring im Kopf (Kopfzelle `overflow: hidden`).
 
 - [ ] **Step 8: Vitest** — an `containers.test.tsx` anfügen (Importe um `TLSplitPanel`, `TLTableView` ergänzen;
   `NoResizeObserver` wie in `inline-buttons.test.tsx`):
@@ -3160,6 +3323,22 @@ describe('the width handle of a table column takes the keyboard', () => {
     await settle();
     expect(sent).toHaveBeenCalledWith('columnResize', { column: 'name', width: 136 });
   });
+
+  it('fits the column to its content on End, at once', async () => {
+    vi.stubGlobal('ResizeObserver', NoResizeObserver);
+    const sent = mountAdapter(TLTableView, {
+      columns: [{ name: 'name', label: 'Name', width: 120, sortable: false }],
+      rows: [],
+      totalRowCount: 0,
+    });
+    await settle();
+    const handle = screen.getByRole('separator', { name: 'js.table.columnWidth' });
+    handle.focus();
+    await userEvent.keyboard('{End}');
+    await settle();
+    // jsdom measures no content: the fitted width is the minimum. What counts is that End reports the column at once.
+    expect(sent).toHaveBeenCalledWith('columnResize', expect.objectContaining({ column: 'name' }));
+  });
 });
 ```
 
@@ -3186,7 +3365,7 @@ cd ../com.top_logic.layout.react.mui && NODE_OPTIONS=--no-experimental-webstorag
 
 - [ ] **Step 11: Commit** — Engine „Ticket #29870: The split handle is a separator -- focusable, moved by the arrow
   keys, Home and End, reset to the configured sizes by a double click (resetSizes; the personalization forgets the
-  dragged sizes); the width handle of a table column takes the same keyboard.“ (mit `com.top_logic.layout.view`); Paket
+  dragged sizes); the width handle of a table column takes the same keyboard, End fitting the column to its content.“ (mit `com.top_logic.layout.view`); Paket
   „Ticket #29870: Ratsche -- TLSplitPanel und Collapsed panel gestrichen; Griff der Tabelle mit Fokus“.
 
 ---
@@ -3198,6 +3377,10 @@ cd ../com.top_logic.layout.react.mui && NODE_OPTIONS=--no-experimental-webstorag
   `items.tsx`
 - Modify: `com.top_logic.layout.react/src/main/java/com/top_logic/layout/react/control/layout/ReactLayoutControl.java`
   (JavaDoc Zeile 75)
+- Modify: `com.top_logic.layout.view/src/main/java/com/top_logic/layout/view/list/ObjectListElement.java` (JavaDoc
+  Zeile 118, `ITEM_CSS_CLASS`) — Plan-Review, Befund 5: das Engine-Gate `ALT_4C` sucht `--tl-item-index` in
+  `layout.view/src/main/java`
+- Modify: `com.top_logic.demo.react/TRIAGE.md` (Zeile 32, Repeater)
 - Modify: `tlReactControls.css` (Blöcke „Viewport-filling layout“, „Bounded width“, „Repeated items“, „TLInset“,
   „TLStack“, „TLGrid“, „TLDeckPane“, „Table cells holding legacy controls …“, „TLHtml“, „Dashboard“)
 - Modify: `com.top_logic.demo.react/src/main/webapp/style/tl-demo-react.css` (Zeilen 27–45)
@@ -3208,8 +3391,9 @@ cd ../com.top_logic.layout.react.mui && NODE_OPTIONS=--no-experimental-webstorag
 - [ ] **Step 1: TSX**
   - `items.tsx`: `ITEM_INDEX_PROPERTY = '--item-index'`, `ITEM_CLASS = 'tl-item'`; im JavaDoc
     `calc(var(--tl-item-index) * 60ms)` → `calc(var(--item-index) * 60ms)` und vor der Konstante den Satz ergänzen:
-    „ * Outside the namespace `--tl` of the design system: it is data of the engine for an application stylesheet, not
-    a word of the package.“
+    „ * Outside the design system's namespace (the `tl` prefix of its custom properties): it is data of the engine for an
+    application stylesheet, not a word of the package.“ — ohne das Literal `--tl`: `foreignTlInSources` liest
+    `react-src` mit `/--tl[A-Za-z0-9-]*/` und meldete `--tl` als neuen Fremdnamen (Plan-Review, Befund 4).
   - `TLStack.tsx`: `'tlStack'` → `'tl-stack'`, jede `tlStack--…` → `tl-stack--…`, `'tlBounded'` → `'tl-bounded'`.
   - `TLGrid.tsx`: oberhalb der Komponente
 
@@ -3231,6 +3415,8 @@ const GAP_TOKEN: Record<string, string> = {
     — den Hook-Aufruf oben in der Komponente (`const surface = useSurface();`), nicht im JSX.
   - `TLDeckPane.tsx`: `'tlDeckPane'` → `'tl-deck'` (über `rootClassName(state, 'tl-deck', fillClass)`).
   - `ReactLayoutControl.java` Zeile 75: `{@code --tl-item-index}` → `{@code --item-index}`.
+  - `ObjectListElement.java` Zeile 118: `{@code --tl-item-index}` → `{@code --item-index}`. Der JavaDoc einer
+    Konstante landet nicht in `messages_en`; `check-messages-en.sh` in Task 10 bestätigt es.
 
 - [ ] **Step 2: Altbestand** — in `tlReactControls.css`:
   - „Viewport-filling layout“: `.is-control > .tlStack {` → `.is-control > .tl-stack {`
@@ -3258,7 +3444,7 @@ const GAP_TOKEN: Record<string, string> = {
 
 - [ ] **Step 3: Demo** — `tl-demo-react.css`: Kommentar „--tl-item-index“ → „--item-index“, beide `.tlGrid >
   .tlObjectList__item` → `.tl-grid > .tlObjectList__item`, `calc(var(--tl-item-index) * 60ms)` →
-  `calc(var(--item-index) * 60ms)`.
+  `calc(var(--item-index) * 60ms)`. `TRIAGE.md` Zeile 32: `` `--tl-item-index` `` → `` `--item-index` ``.
 
 - [ ] **Step 4: Doku** (`view-layer/*.md`, englisch):
   - `basics.md:121`: „keeps the page inset (`--page-inset`) as distance to the border“ → „keeps the page inset as
@@ -3282,7 +3468,9 @@ const GAP_TOKEN: Record<string, string> = {
 
 - [ ] **Step 6: Run** — `tsc`, beide Vite-Builds, MUI-Vitest, Paket `node --test` wie Task 6 Step 8 — Expected: grün.
   `grep -rn "tlStack\|tlGrid\|tlInset\|tlBounded\|tlDeckPane\|page-inset\|tl-item-index" com.top_logic.layout.react*/react-src
-  com.top_logic.demo.react/src com.top_logic.layout.view/src/main/java` — leer.
+  com.top_logic.layout.react/src/main/java com.top_logic.demo.react/src com.top_logic.demo.react/TRIAGE.md
+  com.top_logic.layout.view/src/main/java` — leer. Und `foreignTl`: `node --test test/ratchet.test.mjs` im Paket grün
+  (kein neuer Fremdname, auch nicht `--tl` aus einem Kommentar).
 
 - [ ] **Step 7: Commit** — Engine „Ticket #29870: Stacks, grids, insets and decks read the design system package --
   one gap scale with the columns, the inset set by the surface it stands on instead of --page-inset, the item index
@@ -3742,6 +3930,11 @@ cd ../.. && design-system/tools/check-messages-en.sh
 | `.tlAdaptiveDetail__breadcrumb`, `__crumb`, `--current`, `__sep` | `.tl-adaptive-detail__bar > .tl-breadcrumb` |
 | `.tlViewError`, `__title`, `__view`, `__detail`; `.tlHtml__error` | `.tl-alert[data-tl-role="error"]` |
 
+  Dazu in `altlast.md` „Offen nach 3b“ die Zeile **„Spaltenbreite und Fixiergrenze per Tastatur“** nachziehen: die
+  Breite ist mit 4c erledigt (Pfeile, Home, End am fokussierten Griff, `aria-valuenow`; Befund 13 des Plan-Reviews),
+  offen bleibt die Fixiergrenze — die Zeile heißt dann „Fixiergrenze per Tastatur“ mit dem Vermerk „Breite erledigt
+  in Welle 4c (#29870)“.
+
 - [ ] **Step 6: Commit** — Paket „Ticket #29870: Ratsche und Engine-Gate Welle 4c -- Behälter-Blöcke gestrichen,
   alte Klassen gesperrt, Grid-Abstand gleich dem Stylesheet; altlast Welle 4c“; Engine (Messages-Diff) „Ticket
   #29870: Generated messages_en for the split handle, the wizard's step list and the adaptive detail's first crumb.“
@@ -3777,8 +3970,11 @@ cd ../.. && design-system/tools/check-messages-en.sh
 - [ ] **Step 1:** `git log --oneline 9c6776f258..HEAD` (Engine) und `git log --oneline origin/main..HEAD` (Paket)
   zusammenfassen.
 - [ ] **Step 2 (Orchestrator):** Trac #29870 `== Migration ==` (Text aus Spec §11 und der Tabelle aus Task 10 Step 5)
-  und Keyword `RequiresMigration`; `skalen.md`, Präsentation und STATUS nachziehen; Hinweis an Bernhard für den PR: das
-  Accordion steht im Paket.
+  und Keyword `RequiresMigration`; `skalen.md`, Präsentation und STATUS nachziehen; Hinweise an Bernhard für den PR
+  (englisch): das Accordion steht im Paket; `MuiCardAdapter` liest `useSurface` nicht, die Stufe nach Verschachtelung
+  gilt im MUI-Theme nicht; die Breadcrumb im AdaptiveDetail ist der Darstellungsteil von `TLBreadcrumb` und lässt
+  sich nicht über `replace('TLBreadcrumb', …)` ersetzen — ein Part `Breadcrumb` wäre der Weg, seine Entscheidung
+  (Abweichung 22).
 - [ ] **Step 3:** Hendrik melden: Branch, Commits, Gates, Sichtprüfung, offene Befunde. **Push nur nach seiner
   ausdrücklichen Freigabe**, je Repo und Branch benannt; PR gegen 4b (!1906; nach dessen Merge gegen master), Reviewer
   bhu, danach `add_reviewers bhu`.

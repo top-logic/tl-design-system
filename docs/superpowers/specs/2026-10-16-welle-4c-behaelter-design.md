@@ -281,6 +281,9 @@ Steht im Trac-Text unter `== Migration ==` und als Alt→neu-Liste in `altlast.m
   8. Breadcrumb: Server behält `{depth, label}` (abweichend von der Prognose Q18, die `{id, label}` vorsah — die
      Zuordnung im TSX genügt); Standard-Kopf „Übersicht“ statt `‹`.
   9. Teiler in Ruhe eine Linie, Tabellengriff in Ruhe unsichtbar; Tastaturschritt `space-md`.
+     **Beim Plan-Review präzisiert (16.10.):** am Spaltengriff setzt Home die Mindestbreite und End passt die Spalte
+     an ihren Inhalt an (wie der Doppelklick) — eine Spalte hat kein Maximum; der Split-Griff behält Home/End an
+     Minimum und Maximum.
   10. Ein Versatz `space-md` für Wizard und TileStack; Richtung als `data-tl-state~="backward"`.
   11. Wizard-Zähler `aria-hidden`, Liste mit Namen; Token `size-wizard-progress`.
 - **Bedien-Gewinne, angekreuzt 16.10. (Hendrik, Prämisse „modern und großartig zu bedienen“):** U1 Doppelklick auf den
