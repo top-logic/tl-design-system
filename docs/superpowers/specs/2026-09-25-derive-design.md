@@ -141,6 +141,8 @@ gemeldet, nicht abgebrochen. Für jedes andere gerechnete Paar bleibt es bei Exi
 
 **Hinweise** (kein Fehlercharakter): Chroma einer Stufe reduziert, Marke näher als 20° an einer
 Bedeutung, Kategorienabstand unter 20° gesenkt, gelieferte Stufe identisch mit ihrer Nachbarstufe.
+Eine unbunte Fläche (Chroma < 0,02, `UNBUNT_C`) hat keinen Farbton; Abstände in Grad zu ihr werden nicht
+gemeldet (nachgetragen 16.10.).
 
 | Lage | Exit | Datei |
 |---|---|---|

@@ -75,7 +75,7 @@ als Kommentar in #29850 an Bernhard (14.10.). **Nächstes:** seine Antwort; nach
 beiden Dichten gegen schneidende Vorfahren (`skalen.md` „gemessen statt gelesen“). Fand die leere Tabelle: Ring
 des Rasters, des Körpers und der Spaltenwahl von `tl-table` abgeschnitten — jetzt innen. Paket 388/0. **Die
 Worktree-Kopie (`components.css`) ist publiziert, aber im Engine-Worktree nicht committet** — sie geht mit dem
-4b-Branch (Basis Spaltenwahl), nicht in !1852. Reihenfolge danach: `derive`-Hinweise (Paket), dann 4b.
+4b-Branch (Basis Spaltenwahl), nicht in !1852. `derive`-Hinweise danach erledigt (Kollaps-Text, `UNBUNT_C`). Weiter: 4b.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
@@ -121,7 +121,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 * #29826 „Ziehen sichtbar machen“ nach Merge von !1825; #29828 Tabellenzustand mit Bernhard; #29827 Spaltengruppen
   und Pivot bei Bernhard.
 * Token-Mapper (Browserwerkzeug für Kunden-Styleguides, Spec §3); Maven-Wrapper für das Paket (bis dahin
-  `publish-to-worktree`); `derive`-Hinweise aus dem Abschluss-Review (Kollaps-Hinweis, achromatische Flächen).
+  `publish-to-worktree`).
 * Kleinpunkte je Welle: `altlast.md` „Offen für spätere Wellen und Pakete“ und „Offen nach 3b“.
 
 
@@ -388,10 +388,11 @@ Offen aus der Spec, nicht Teil von Welle 0:
 * `data-tl-theme` — dritte Achse für mehrere Themes je Anwendung: **Paketseite fertig** (`derive` schreibt
   je Theme eine Datei unter `[data-tl-theme="<id>"]`, das Gate läuft je Theme, das Specimen schaltet um),
   **Engine (`UIThemeService`) offen, Issue #16** — skalen.md „Themes: eine dritte Achse“
-* `derive`, Rest aus dem Abschluss-Review (25.09.), kein Fehlverhalten, nur Hinweise: (1) der Kollaps-Hinweis
-  „surface-brand, -hover und -active“ fällt bei geliefertem `blue-49` weg, weil die Suffixe keine Rollennamen sind;
-  (2) die 20°-Prüfung meldet auch achromatische Flächen (unbunte Marke) — Chroma < 0,02 ausnehmen;
-  (3) Wiki „Übersicht“ nachgezogen am 25.09. (Stufe A gebaut, derive, Graurampe)
+* `derive`, Rest aus dem Abschluss-Review (25.09.): **erledigt 16.10.** — Kollaps-Hinweis nennt volle
+  Rollennamen und bleibt bei geliefertem `blue-49`; Gradprüfungen überspringen unbunte Flächen (`UNBUNT_C`)
+  Review (Fable): Kollaps jetzt am fertigen Ergebnis geprüft, unbunt auch auf der Bedeutungsseite. **Offen, Bestand:**
+  `kategorienVerteilen` blockiert für eine graue Marke oder Bedeutung deren Rauschton (≈ 90°) statt keinen; zwei
+  Kategorien, die über gelieferte Stufen gleich grau werden, meldet nur der `setze`-Hinweis, keine eigene Prüfung
 * Token-Mapper — Miniprojekt, Browserwerkzeug für Kunden-Styleguides
 * Figma-Push aus `tokens.dtcg.json`
 * Maven-Wrapper für das Paket; bis dahin kopiert `tools/publish-to-worktree.mjs`

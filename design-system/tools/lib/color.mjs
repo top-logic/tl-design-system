@@ -252,6 +252,9 @@ export function farbtonAbstand(hexA, hexB) {
 /** Ab diesem Farbtonabstand lesen sich zwei getönte Flächen als verschieden. */
 export const FARBTON_ABSTAND_MIN = 30;
 
+/** Unter dieser Chroma ist eine Farbe unbunt: ihr Farbton ist Rechenrauschen, kein Ton (markenRollen, derive). */
+export const UNBUNT_C = 0.02;
+
 /** Schrittweite in L, mit der aufKontrast() einen Wert nachführt. */
 export const KONTRAST_SCHRITT = 0.005;
 
@@ -361,7 +364,7 @@ export const MARKE_SUBTLE = {
 export function markenRollen(saatHex, gruende) {
   const { L, C, H } = hexZuOklch(saatHex);
   const hinweise = [];
-  const unbunt = C < 0.02;
+  const unbunt = C < UNBUNT_C;
   if (unbunt) hinweise.push('die Marke ist unbunt; getönte Flächen bleiben grau');
   const bei = (mode, rolle, l, c = C) => {
     const r = oklchZuHex({ L: l, C: c, H });
@@ -378,7 +381,7 @@ export function markenRollen(saatHex, gruende) {
   };
   const pruefeKollaps = (mode, rollen) => {
     if (new Set(rollen).size < rollen.length) {
-      hinweise.push(`${mode}: surface-brand, -hover und -active fallen auf denselben Wert zusammen (Saat zu hell oder zu dunkel)`);
+      hinweise.push(`${mode}: surface-brand, surface-brand-hover und surface-brand-active fallen auf denselben Wert zusammen (Saat zu hell oder zu dunkel)`);
     }
   };
   const subtleC = (mode, teil) => (unbunt ? 0 : MARKE_SUBTLE[mode][teil].C);

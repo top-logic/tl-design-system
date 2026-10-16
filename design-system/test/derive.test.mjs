@@ -154,6 +154,38 @@ test('eine gelieferte Stufe unter einer Kategorie bleibt nicht lautlos', () => {
   assert.ok(r.hinweise.some((h) => h.includes('category-5-subtle')), r.hinweise.join(' | '));
 });
 
+test('der Kollaps-Hinweis bleibt, wenn die Marke als Stufe 49 kommt — hover und active sind gerechnet', () => {
+  // Hell ist surface-brand die gelieferte Stufe selbst, hover und active rechnet derive: fallen sie mit ihr
+  // zusammen, ist das eine Aussage über Gerechnetes und gehört in die Datei.
+  for (const brand of ['#000000', { 49: '#000000' }]) {
+    const r = derive(P, T, { theme: 'a', color: { brand } });
+    assert.ok(r.hinweise.some((h) => h.startsWith('light: ') && h.includes('zusammen')), `${JSON.stringify(brand)}: ${r.hinweise.join(' | ')}`);
+  }
+});
+
+test('der Kollaps-Hinweis nennt, was in der Datei zusammenfällt — nicht eine gelieferte Stufe daneben', () => {
+  // blue-55 (hover) geliefert: hell fallen nur surface-brand und surface-brand-active zusammen.
+  const r = derive(P, T, { theme: 'a', color: { brand: { 49: '#000000', 55: '#3366CC' } } });
+  const hell = r.hinweise.filter((h) => h.startsWith('light: ') && h.includes('zusammen'));
+  assert.deepEqual(hell, ['light: surface-brand und surface-brand-active fallen auf denselben Wert zusammen (Saat zu hell oder zu dunkel)']);
+  // Alles Helle geliefert: nichts gerechnet, kein Hinweis für hell.
+  const alle = derive(P, T, { theme: 'a', color: { brand: { 49: '#000000', 55: '#000000', 62: '#000000' } } });
+  assert.ok(!alle.hinweise.some((h) => h.startsWith('light: ') && h.includes('zusammen')), alle.hinweise.join(' | '));
+});
+
+test('eine unbunte Fläche hat keinen Farbton: keine Abstandsprüfung in Grad', () => {
+  // Der Ton eines Graus ist Rechenrauschen; „5° neben einer Bedeutung“ wäre eine Aussage über nichts.
+  for (const brand of ['#6B6B6B', '#3A3A3A', '#9A9A9A']) {
+    const r = derive(P, T, { theme: 'a', color: { brand } });
+    assert.ok(!r.hinweise.some((h) => /\d+°/.test(h) && /Marke|surface-brand/.test(h)), `${brand}: ${r.hinweise.join(' | ')}`);
+  }
+  // Auch eine graue Bedeutung hat keinen Ton: ihr Rauschton (um 90°) läge neben jeder gelben Marke. Die
+  // Marke liegt wirklich nahe an Amber — dieser Hinweis bleibt; ein zweiter für das graue Rot käme dazu.
+  const neben = (json) => derive(P, T, json).hinweise.filter((h) => h.includes('neben einer Bedeutung'));
+  assert.deepEqual(neben({ theme: 'a', color: { brand: '#7A6000', red: { 45: '#808080' } } }),
+    neben({ theme: 'a', color: { brand: '#7A6000' } }));
+});
+
 test('7 derive ist deterministisch', () => {
   assert.equal(derive(P, T, probe).css, ergebnis.css);
 });
