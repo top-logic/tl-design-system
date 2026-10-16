@@ -110,18 +110,21 @@ in §12. **Spec freigegeben 16.10. (Hendrik)**, mit Weg B (Karte: Stufe nach Ver
 U1–U3 (Doppelklick Panelkopf/Escape, Doppelklick Split-Griff, Klick auf ganzen Kopf öffnet minimiertes Panel);
 `skalen.md` „Welle 4c: Behälter“, Präsentation nachgezogen. **Plan steht (16.10.):**
 `docs/superpowers/plans/2026-10-16-welle-4c-behaelter.md` (zwölf Tasks, 16 Abweichungen beim Planen, zwei Fragen an
-Hendrik am Planende). Nächstes: Hendriks Antwort auf die Fragen, Plan-Review durch einen frischen Agenten (Fable, Opus
-plante), dann SDD.
+Hendrik am Planende — beide wie empfohlen: ViewError ohne Monospace; nur was eine Fläche malt, hebt die Stufe,
+`panelSurface`). Plan-Review 1 (Fable, Probelauf Paket 469/476, Engine `tsc` 0): Befunde 1–13, f eingearbeitet
+(`6ffad95`; u. a. Kopfhöhe per `padding-bottom`, Ring des Container-Drawers innen, End am Spaltengriff = passend).
+Nach dem Merge von !1906 auf master `2bf2151a2e` nachgezogen (`useItems` aus #29755) und **Q24** entschieden
+(auswählbare Einträge: Hof beim Zeigen, Ring bei `aria-selected`; `2ad291d`). Plan-Review 2 (Fable, 474/480, MUI
+513/516 nur erwartet rot): Befunde 1–5 eingearbeitet (`bcbfda2`). **Bereit für die SDD; Start nur auf Hendriks Wort.**
 
-**Einstieg der nächsten Sitzung (Welle 4b umsetzen):**
-1. `STATUS.md`, Spec `docs/superpowers/specs/2026-10-16-welle-4b-navigation-design.md` und Plan
-   `docs/superpowers/plans/2026-10-16-welle-4b-navigation.md` lesen.
-2. Worktree `_Working-Tree/tl8-wt-29584` steht auf `CWS/CWS_29866_design_system_welle_4b` (lokal, ein Commit
-   `1fdae596a9` über `origin/…_spaltenwahl`); vorher `git fetch` — Bernhard kann die Spaltenwahl bewegt haben; dann
-   den 4b-Branch auf den neuen Stand der Spaltenwahl setzen, bevor Task 1 beginnt.
-3. Ausführung Subagent-driven (`superpowers:subagent-driven-development`), Empfehlung, beim Start mit Hendrik
-   bestätigen; Task 1 bis 10 der Reihe nach, je Task Review; Trac (Task 8 Step 6) und Push nur der Orchestrator mit
-   Freigabe.
+**Einstieg der nächsten Sitzung (Welle 4c umsetzen):**
+1. `STATUS.md`, Spec `docs/superpowers/specs/2026-10-16-welle-4c-behaelter-design.md` und Plan
+   `docs/superpowers/plans/2026-10-16-welle-4c-behaelter.md` lesen (Kopf: Review-Stände, Abweichungen 1–23).
+2. Worktree `_Working-Tree/tl8-wt-29584` steht auf `CWS/CWS_29870_design_system_welle_4c` = master `2bf2151a2e`, ohne
+   eigenen Commit; vorher `git fetch` — rückt master vor, per `git merge --ff-only origin/master` nachziehen (solange
+   ohne eigenen Commit) und die berührten Dateien des Plans gegenprüfen.
+3. Ausführung Subagent-driven (`superpowers:subagent-driven-development`), Task 1 bis 12 der Reihe nach, je Task
+   Review; Trac (Migration, `RequiresMigration`) und Push nur der Orchestrator mit Freigabe.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
