@@ -2383,9 +2383,12 @@ dem Element **um** das Part; eine Komponentenbibliothek setzt die Position ihres
 `position: relative`) und gewönne gegen unsere Klasse am Badge. `span.tl-icon-badge` (positioniert, um Icon und Zähler)
 trägt die Lage, `span.tl-icon-badge__count` die Ecke um das Part `Badge`. **Der Hamburger kennt seinen Zustand vom
 Server:** `aria-expanded` und `aria-controls` brauchen `open` und `controls` in `DrawerToggleControl` (die Sidebar führt
-`open` nach); `aria-controls` steht nur, solange offen — geschlossen gibt es die Nav kompakt nicht im DOM. **Kein
-Gleiten des mobilen Drawers:** kompakt und offen rendert die Sidebar `div.tl-dialog > aside.tl-drawer`, geschlossen
-nichts; die Schublade erscheint mit dem Scrim. Eine Bewegung folgt, wenn die Sichtprüfung sie verlangt.
+`open` nach); `aria-controls` steht nur, solange offen — geschlossen gibt es die Nav kompakt nicht im DOM. **Der mobile
+Drawer gleitet herein, nicht hinaus:** kompakt und offen rendert die Sidebar `div.tl-dialog > aside.tl-drawer`, geschlossen
+nichts. Damit die offen eingefügte Schublade trotzdem kommt, beginnt ihr Übergang per `@starting-style` außerhalb
+des Randes — eine Regel in `drawer.css`, die jede offen eingefügte Schublade trifft, ohne TSX. Das Schließen nimmt sie
+mit dem Scrim ohne Bewegung (Hendrik nach der Sichtprüfung 16.10.: „gleiten sollte er trotzdem, zumindest rudimentär“;
+die Bewegung im Ganzen gehört zum UI-Durchgang nach Welle 5).
 **Die AppBar gibt der Reihe nach nach:** die Aktionen mit einer überlaufenden Toolbar sind `flex: 1 1 0` mit
 `min-width: size-control` — sie nehmen den Rest und halten am Überlaufknopf; erst dann schrumpfen Titel und Kinder (die
 Kinder wachsen nicht mehr, `flex: 0 1 auto`); ein Browser-Test misst die Reihenfolge. **BottomBar-Icon ohne

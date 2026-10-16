@@ -66,7 +66,7 @@ div.tl-app-shell[data-tl-display="compact"|"regular"]
 - **Der Hamburger** (`TLDrawerToggle`) rendert nur, wenn der Kontext kompakt meldet — kein CSS dafür. Er trägt
   `aria-expanded` (offen = `drawerOpen`) und `aria-controls` auf die Nav der Sidebar — der Zustand kommt vom Server
   (`DrawerToggleControl` bekommt `open` und `controls`, die Sidebar führt `open` nach); `aria-controls` nur, solange
-  offen. Der Drawer gleitet nicht: kompakt und offen steht er mit dem Scrim im DOM, geschlossen gar nicht. Die Klasse `tlDrawerToggle`
+  offen. Kompakt und offen steht der Drawer mit dem Scrim im DOM, geschlossen gar nicht; er gleitet beim Öffnen herein (`@starting-style` in `drawer.css`), beim Schließen fällt er ohne Bewegung (Hendrik 16.10.: rudimentär jetzt, Bewegung im Ganzen mit dem UI-Durchgang nach Welle 5). Die Klasse `tlDrawerToggle`
   entfällt; der Knopf ist der Part `Button` (`tl-button--ghost --icon`).
 - **Sidebar kompakt:** die Nav steht im modalen `TLDrawer` aus 4a — Seite `--start`, Breite `--narrow`, Scrim
   (`tl-dialog`), Fokusfalle, Escape, geschlossen `inert`; der Fokus kehrt zum Hamburger zurück. `drawerOpen` bleibt

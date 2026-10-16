@@ -758,8 +758,8 @@ Vier Blöcke (`app-shell.css`, `app-bar.css`, `sidebar.css`, `bottom-bar.css`), 
 ### Sichtbar
 
 AppBar 48/40 statt 56 px; `--elevated` eine Linie statt eines Schattens; die aktuelle Seite als Fläche statt Balken;
-Einträge in `text-primary`; Kopfzeilen ohne Großbuchstaben und Sperrung; die mobile Sidebar modal über der AppBar, ohne
-Gleiten (Abweichung 3 des Plans); BottomBar-Label 12 px.
+Einträge in `text-primary`; Kopfzeilen ohne Großbuchstaben und Sperrung; die mobile Sidebar modal über der AppBar,
+gleitet herein, schließt ohne Bewegung; BottomBar-Label 12 px.
 
 ### Sichtprüfung 16.10. (lokale Demo, Chrome)
 
@@ -779,7 +779,7 @@ Befunde, nicht behoben:
 | S1 | Die Demo-AppBar hat keine Toolbar: die Reihenfolge des Nachgebens (erst Toolbar, dann Titel) ist nur im Paket gemessen (`app-bar-shrink.test.mjs`). | hinnehmen |
 | S2 | Kompakt gibt `tl-app-bar__trailing` nicht nach: bei 300 px ist der Titel weg, „Entwicklung“ behält sein Label (231 px Ende). | Hendrik entscheidet; Kandidat 4c oder eigener Punkt |
 | S3 | Nach dem Login trägt der aktuelle Eintrag der Sidebar den Fokus mit sichtbarem Ring (Enter im Login-Formular macht `:focus-visible`). Ob das alt so war, ist nicht geprüft. | beobachten |
-| S4 | Der Drawer erscheint ohne Gleiten (Abweichung 3). | Hendrik vorlegen |
+| S4 | Der Drawer erschien ohne Gleiten (Abweichung 3). | behoben: gleitet herein per `@starting-style` (Hendrik: rudimentär jetzt, Bewegung im Ganzen nach Welle 5) |
 | S5 | BottomBar nutzt keine Demo-Ansicht; nur im Specimen geprüft. | hinnehmen |
 
 ### Offen für 4c

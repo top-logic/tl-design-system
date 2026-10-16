@@ -97,3 +97,13 @@ test('tl-bottom-bar: Höhe size-shell-bar; die aktuelle Seite trägt die Fläche
     /background:\s*var\(--tl-surface-interactive-selected\)/);
   assert.match(decl('bottom-bar', '.tl-bottom-bar__item:focus-visible'), /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/);
 });
+
+test('tl-drawer gleitet auch, wenn er offen eingefügt wird (mobile Sidebar): @starting-style je Seite, auch rtl', () => {
+  const css = ohneKommentar(readGenerated('drawer', 'drawer.css'));
+  const start = css.match(/@starting-style\s*\{([\s\S]*?)\n\}/)?.[1] ?? '';
+  assert.match(start, /\.tl-drawer--start\[data-tl-state~="open"\]\s*\{\s*transform:\s*translateX\(-100%\)/);
+  assert.match(start, /\.tl-drawer--start\[data-tl-state~="open"\]:dir\(rtl\)\s*\{\s*transform:\s*translateX\(100%\)/);
+  assert.match(start, /\.tl-drawer--end\[data-tl-state~="open"\]\s*\{\s*transform:\s*translateX\(100%\)/);
+  assert.match(start, /\.tl-drawer--end\[data-tl-state~="open"\]:dir\(rtl\)\s*\{\s*transform:\s*translateX\(-100%\)/);
+  assert.match(start, /\.tl-drawer--bottom\[data-tl-state~="open"\]\s*\{\s*transform:\s*translateY\(100%\)/);
+});

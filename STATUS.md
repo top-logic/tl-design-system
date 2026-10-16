@@ -96,7 +96,7 @@ altlast, Spec und `skalen.md` an die Abweichungen). Gates: Paket 418/0, Lint gr�
 Locale; deutsche Locale rot an `TestAll.testSectionsReachTheClient`, #29651-Art), `demo.react` 13/0, Messages-Diff
 einmal (`js.bottomBar.ariaLabel`, Sidebar-Tooltip) committet, zweiter Lauf ohne Diff. Der 768-Test fand nur `TLAppShell.tsx`.
 Trac #29866: `== Migration ==` und `RequiresMigration` gesetzt, Beschreibung auf Navigation eingegrenzt (Behälter → 4c).
-Sichtprüfung (Task 9) 16.10. bestanden, Befunde S1–S5 in `altlast.md` „Welle 4b“ (S2 AppBar-Ende, S4 Gleiten: Hendrik entscheidet). Offen: Push nur mit Freigabe.
+Sichtprüfung (Task 9) 16.10. bestanden, Befunde S1–S5 in `altlast.md` „Welle 4b“ (S4 behoben: Drawer gleitet herein; S2 AppBar-Ende: Hendrik entscheidet). Offen: Push nur mit Freigabe.
 
 **Einstieg der nächsten Sitzung (Welle 4b umsetzen):**
 1. `STATUS.md`, Spec `docs/superpowers/specs/2026-10-16-welle-4b-navigation-design.md` und Plan
