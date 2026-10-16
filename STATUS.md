@@ -90,12 +90,13 @@ Paket 416/417 (nur `published` erwartet rot), `tsc` 0, Vite grün, MUI-Vitest 50
 eingearbeitet (Kopf des Plans). Hendrik: „plan sieht gut aus“, **nicht automatisch starten**.
 
 **4b gebaut (16.10., Tasks 1–8), lokal, nicht gepusht; Sichtprüfung (Task 9) offen.** Engine-Head `6cd6fcf9ff`
-(Branch `CWS/CWS_29866_design_system_welle_4b`), Paket `main` bis `918765f` plus Commit Task 8 (Ratsche, Engine-Gate,
+(Branch `CWS/CWS_29866_design_system_welle_4b`), Paket `main` bis `ffbe602` (Ratsche, Engine-Gate,
 altlast, Spec und `skalen.md` an die Abweichungen). Gates: Paket 418/0, Lint grün, Ratsche `lines` 3698 → 3145 (fontSize
 28, duration 20, zIndex 11, color 67, outlineNone 8), Maven `layout.react` 679/0, `layout.view` 1457/0 (unter englischer
 Locale; deutsche Locale rot an `TestAll.testSectionsReachTheClient`, #29651-Art), `demo.react` 13/0, Messages-Diff
 einmal (`js.bottomBar.ariaLabel`, Sidebar-Tooltip) committet, zweiter Lauf ohne Diff. Der 768-Test fand nur `TLAppShell.tsx`.
-Offen: Sichtprüfung (Task 9), Trac `== Migration ==` (Task 8 Step 6, Orchestrator), Push nur mit Freigabe.
+Trac #29866: `== Migration ==` und `RequiresMigration` gesetzt, Beschreibung auf Navigation eingegrenzt (Behälter → 4c).
+Offen: Sichtprüfung (Task 9), Push nur mit Freigabe.
 
 **Einstieg der nächsten Sitzung (Welle 4b umsetzen):**
 1. `STATUS.md`, Spec `docs/superpowers/specs/2026-10-16-welle-4b-navigation-design.md` und Plan
