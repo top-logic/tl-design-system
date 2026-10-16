@@ -46,8 +46,7 @@ nennen; nie tl-engine-7 master), danach `add_reviewers bhu`.
 **master-Merges:** Bernhard merged master auch selbst in unsere Branches — vor eigener Arbeit dort `git fetch`.
 
 **Welle 4 begonnen (13.10.):** Konsolidierungs-Prognose Q1–Q19 in `altlast.md` („Welle 4“), entschieden „alle wie
-vorgeschlagen“; Schnitt **4a Overlays** (Trac **#29836**, accepted, CC bhu) und **4b Gerüst** (eigenes Ticket beim
-Start). Graphify einmal gelaufen, ohne neuen Befund, gelöscht. **Fertig zur Umsetzung:** Spec
+vorgeschlagen“; Schnitt **4a Overlays** (Trac **#29836**, accepted, CC bhu) und **4b Gerüst** (Trac **#29866**). Graphify einmal gelaufen, ohne neuen Befund, gelöscht. **Fertig zur Umsetzung:** Spec
 `docs/superpowers/specs/2026-10-13-welle-4a-overlays-design.md` (von Hendrik abschnittsweise freigegeben, §13 trägt die
 Nachträge aus dem Planen), Plan `docs/superpowers/plans/2026-10-13-welle-4a-overlays.md` (elf Tasks, Plan-Review durch
 Fable mit Probelauf: Lint grün, `tsc` 0, Befunde eingearbeitet). **Entschieden:** Branch
@@ -73,9 +72,13 @@ als Kommentar in #29850 an Bernhard (14.10.). **Nächstes:** seine Antwort; nach
 
 **16.10. — DOM-Test `focus-clip.test.mjs` (Paket `main`):** misst im Browser jeden Fokusring jeder Specimen-Seite in
 beiden Dichten gegen schneidende Vorfahren (`skalen.md` „gemessen statt gelesen“). Fand die leere Tabelle: Ring
-des Rasters, des Körpers und der Spaltenwahl von `tl-table` abgeschnitten — jetzt innen. Paket 388/0. **Die
-Worktree-Kopie (`components.css`) ist publiziert, aber im Engine-Worktree nicht committet** — sie geht mit dem
-4b-Branch (Basis Spaltenwahl), nicht in !1852. `derive`-Hinweise danach erledigt (Kollaps-Text, `UNBUNT_C`). Weiter: 4b.
+des Rasters, des Körpers und der Spaltenwahl von `tl-table` abgeschnitten — jetzt innen. Paket 388/0. Die
+Worktree-Kopie (`components.css`) liegt als erster Commit `1fdae596a9` auf dem 4b-Branch, nicht in !1852. `derive`-Hinweise danach erledigt (Kollaps-Text, `UNBUNT_C`). Weiter: 4b.
+
+**Welle 4b gestartet (16.10.):** Trac **#29866** (accepted, CC bhu). Engine-Branch
+`CWS/CWS_29866_design_system_welle_4b` im Worktree `tl8-wt-29584`, lokal, auf `origin/…_spaltenwahl` (`f9d0a99ab0`),
+nicht gepusht. **Nächstes:** Spec 4b (Brainstorming mit Hendrik, abschnittsweise), Schnitt klären: `altlast.md`
+nennt 17 Komponenten, der Gesamtplan 10.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
@@ -96,7 +99,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 | 3a | Menü, Toolbar, Reiter, Breadcrumb, Popups, Ton folgt der Aktion | 5 | master | #29617 |
 | 3b | Tabelle, Baum, Text (!1838, auf master 14.10.) | 3 | master | #29821 |
 | 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay; mit der Spaltenwahl als Ebenen-Panel in !1852 | 7 | PR | #29836, #29825 |
-| 4b | Gerüst: AppShell, AppBar, Sidebar, BottomBar, Panel, SplitPanel, Card, Stack, Grid, Wizard; Q10–Q18 | 10 | offen | eigenes beim Start |
+| 4b | Gerüst: AppShell, AppBar, Sidebar, BottomBar, Panel, SplitPanel, Card, Stack, Grid, Wizard; Q10–Q18 | 10 | offen | #29866 |
 | 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | offen | — |
 
 **Abnahme außerhalb der Wellen** (Spec „Abnahme“):
