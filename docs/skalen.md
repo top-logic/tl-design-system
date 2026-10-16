@@ -2376,7 +2376,20 @@ Schatten gehören den Ebenen, die über etwas liegen (Dialog, Popover, Ziehen). 
 nicht und kommt nicht.
 
 **Das Eck-Badge einmal.** Eingeklappte Sidebar und BottomBar setzten ein Badge mit je eigenen Literalen
-(`-0.375rem`/`-0.5rem`) an ein Icon. Es wird der Modifier `tl-badge--corner`, versetzt um `space-2xs`.
+(`-0.375rem`/`-0.5rem`) an ein Icon. Es wird der Behälter `tl-icon-badge` mit `tl-icon-badge__count` (`badge.css`),
+oben versetzt um `space-2xs`, zum Ende um `space-xs`. **Warum ein Behälter und kein Modifier am Badge (beim Planen
+16.10.):** `view-layer/parts.md` der Engine gibt die Lage eines Parts — auch „die absolute Position über einer Ecke“ —
+dem Element **um** das Part; eine Komponentenbibliothek setzt die Position ihres Badges selbst (MUI:
+`position: relative`) und gewönne gegen unsere Klasse am Badge. `span.tl-icon-badge` (positioniert, um Icon und Zähler)
+trägt die Lage, `span.tl-icon-badge__count` die Ecke um das Part `Badge`. **Der Hamburger kennt seinen Zustand vom
+Server:** `aria-expanded` und `aria-controls` brauchen `open` und `controls` in `DrawerToggleControl` (die Sidebar führt
+`open` nach); `aria-controls` steht nur, solange offen — geschlossen gibt es die Nav kompakt nicht im DOM. **Kein
+Gleiten des mobilen Drawers:** kompakt und offen rendert die Sidebar `div.tl-dialog > aside.tl-drawer`, geschlossen
+nichts; die Schublade erscheint mit dem Scrim. Eine Bewegung folgt, wenn die Sichtprüfung sie verlangt.
+**Die AppBar gibt der Reihe nach nach:** die Aktionen mit einer überlaufenden Toolbar sind `flex: 1 1 0` mit
+`min-width: size-control` — sie nehmen den Rest und halten am Überlaufknopf; erst dann schrumpfen Titel und Kinder (die
+Kinder wachsen nicht mehr, `flex: 0 1 auto`); ein Browser-Test misst die Reihenfolge. **BottomBar-Icon ohne
+Java-Änderung:** `ThemeIcon` nimmt die rohe CSS-Klasse, die `BottomBarElement` liefert.
 
 **Als Test (mit dem Bau):** `contracts-4b.test.mjs` (aktuelle Seite, `aria-expanded`, `aria-controls`, `<main>`,
 kein englisches `aria-label`), Lint ohne Breiten-Media-Query, `focus-clip.test.mjs` über die neuen Specimen-Seiten,

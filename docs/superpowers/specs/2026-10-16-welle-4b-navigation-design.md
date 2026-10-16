@@ -64,7 +64,9 @@ div.tl-app-shell[data-tl-display="compact"|"regular"]
 - **Hinweise:** mehrere stehen bündig (heute `.tlAppShell__notices .tlStack { gap: 0 }`); das wird eine Paketregel
   auf dem Kind von `tl-app-shell__notices`, nicht auf `.tlStack`.
 - **Der Hamburger** (`TLDrawerToggle`) rendert nur, wenn der Kontext kompakt meldet — kein CSS dafür. Er trägt
-  `aria-expanded` (offen = `drawerOpen`) und `aria-controls` auf die Nav der Sidebar. Die Klasse `tlDrawerToggle`
+  `aria-expanded` (offen = `drawerOpen`) und `aria-controls` auf die Nav der Sidebar — der Zustand kommt vom Server
+  (`DrawerToggleControl` bekommt `open` und `controls`, die Sidebar führt `open` nach); `aria-controls` nur, solange
+  offen. Der Drawer gleitet nicht: kompakt und offen steht er mit dem Scrim im DOM, geschlossen gar nicht. Die Klasse `tlDrawerToggle`
   entfällt; der Knopf ist der Part `Button` (`tl-button--ghost --icon`).
 - **Sidebar kompakt:** die Nav steht im modalen `TLDrawer` aus 4a — Seite `--start`, Breite `--narrow`, Scrim
   (`tl-dialog`), Fokusfalle, Escape, geschlossen `inert`; der Fokus kehrt zum Hamburger zurück. `drawerOpen` bleibt
@@ -105,7 +107,7 @@ div.tl-sidebar[data-tl-state~="collapsed"]
   `ICON_EXPAND` über `ThemeIcon`.
 - **Eingeklappt** ist `data-tl-state~="collapsed"` statt `tlSidebar--collapsed`. Jeder Eintrag wird ein Quadrat aus
   `size-row`, mittig das Icon; Label und Tooltip werden `aria-label` und Tooltip wie heute. Das Badge sitzt als
-  `tl-badge--corner` am Icon (§6).
+  `tl-icon-badge` am Icon (§6).
 - **Breiten:** ausgeklappt das neue Token `size-sidebar` = `{size-12}` (16 rem; eine eigene Rolle, kein Lesen von
   `size-drawer-narrow`, das zufällig gleich ist). Eingeklappt ist die Breite eine Rechnung aus `size-row` und
   `space-2xs` (Eintrag plus Rand) — sie folgt der Dichte ohne drittes Maß. Der Übergang der Breite nimmt
@@ -154,7 +156,7 @@ header.tl-app-bar[.tl-app-bar--elevated]
 ```
 nav.tl-bottom-bar[aria-label=i18n]
   button.tl-bottom-bar__item[type=button][aria-current="page"]
-    span.tl-bottom-bar__icon > ThemeIcon.tl-icon-md · Badge.tl-badge--corner
+    span.tl-bottom-bar__icon > ThemeIcon.tl-icon-md · span.tl-icon-badge__count > Badge
     span.tl-bottom-bar__label.tl-type-label            (aktiv: tl-type-label-strong)
 ```
 
@@ -169,14 +171,15 @@ nav.tl-bottom-bar[aria-label=i18n]
 ## 6 · Zusammengelegt: das Eck-Badge
 
 Das Badge an einem Icon steht zweimal mit eigenen Literalen (`tlSidebar__cornerBadge`, `tlBottomBar__badge`, je
-`top: -0.375rem; right: -0.5rem`). Es wird ein Modifier `tl-badge--corner` in `badge.css`: absolut an einem
-positionierten Icon-Behälter, versetzt um `space-2xs` nach oben und außen. Der Vertrag `badge` nennt beide Leser.
+`top: -0.375rem; right: -0.5rem`). Es wird der Behälter `tl-icon-badge` mit `__count` in `badge.css` (beim Planen geändert, `skalen.md`):
+die Lage eines Parts gehört dem Element um das Part (`view-layer/parts.md`), also ist `span.tl-icon-badge`
+positioniert und `span.tl-icon-badge__count` die Ecke, oben um `space-2xs`, zum Ende um `space-xs`. Der Vertrag `badge` nennt beide Leser.
 
 ## 7 · Gates
 
 Neu im Paket (`node --test`) und im Engine-Gate:
 
-- **Klassen (Lint):** kennt `tl-app-shell`, `tl-app-bar`, `tl-sidebar`, `tl-bottom-bar`, `tl-badge--corner`; keine
+- **Klassen (Lint):** kennt `tl-app-shell`, `tl-app-bar`, `tl-sidebar`, `tl-bottom-bar`, `tl-icon-badge`; keine
   Zustandsklasse (`--active`, `--collapsed`, `--drawerOpen`, `--open`, `--flyoutOpen`); `z-index` nur
   `var(--tl-layer-*)`; Dauern nur `var(--tl-duration-*)`. **Neu:** keine Breiten-Media-Query
   (`@media (max-width|min-width …)`) in einer Komponentendatei — den Breakpoint kennt nur die AppShell.
@@ -197,7 +200,7 @@ Neu im Paket (`node --test`) und im Engine-Gate:
 
 ## 8 · Reihenfolge mit Fertig-Bedingungen
 
-1. **Paket.** Tokens `size-shell-bar`, `size-sidebar`; `tl-badge--corner`; die vier Blöcke mit CSS, Vertrag und
+1. **Paket.** Tokens `size-shell-bar`, `size-sidebar`; `tl-icon-badge`; die vier Blöcke mit CSS, Vertrag und
    Specimen — Sidebar aus- und eingeklappt mit Flyout und einer zugeklappten Gruppe, die die aktuelle Seite enthält;
    Shell kompakt mit offenem Drawer; AppBar flach und `--elevated` mit überlaufender Toolbar; BottomBar mit Badge.
    Fertig: hell und dunkel, beide Dichten; `node --test` grün.
@@ -234,4 +237,6 @@ Steht im Trac-Text unter `== Migration ==` (Keyword `RequiresMigration`) und als
 - **Entschieden 16.10.:** Schnitt 4b Navigation / 4c Behälter; Breakpoint nur in der AppShell, Sidebar kompakt als
   modaler `TLDrawer`; `size-shell-bar` 48/40 px; aktuelle Seite als Fläche und Gewicht ohne Balken, auch die Fläche am
   Kopf einer zugeklappten Gruppe; `--elevated` als Linie; Eck-Badge zusammengelegt.
-- **Offen bis zum Plan:** die Schrumpfform der AppBar ohne `100000`; die Icon-Form von `BottomBarElement`.
+- **Erledigt beim Plan (16.10.):** die Schrumpfform der AppBar ohne `100000` (die Aktionen `flex: 1 1 0` mit
+  `min-width: size-control`, Kinder `0 1 auto`); die Icon-Form von `BottomBarElement` (`ThemeIcon` nimmt die rohe
+  CSS-Klasse, keine Java-Änderung).

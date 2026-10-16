@@ -70,3 +70,34 @@ test('keine alte Klasse der Welle 4a in react-src, Stylesheets, Java, tl-docs un
   for (const p of quellen) readFileSync(p, 'utf8').split('\n').forEach((line, i) => { if (ALT_4A.test(line)) hits.push(`${p.slice(WT.length + 1)}:${i + 1}`); });
   assert.deepEqual(hits, []);
 });
+
+// Welle 4b (#29866): keine alte Klasse der Navigation mehr — im TSX jedes Moduls (MUI eingeschlossen), im alten
+// Stylesheet, in Java, tl-docs und Views. Modulnamen (TLSidebar) treffen nicht: großes TL.
+const ALT_4B = /\btl(Sidebar|AppBar|BottomBar|AppShell|DrawerToggle)(__|--|\b)/;
+
+test('keine alte Klasse der Welle 4b in react-src, Stylesheets, Java, tl-docs und Views', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+  const quellen = [
+    ...reactSources(),
+    join(M, 'src/main/webapp/style/tlReactControls.css'),
+    join(WT, 'com.top_logic.demo.react/src/main/webapp/style/tl-demo-react.css'),
+    ...tree(join(M, 'src/main/java'), /\.java$/),
+    ...tree(join(WT, 'com.top_logic.layout.view/src/main/java'), /\.(java|md)$/),
+    ...tree(join(WT, 'com.top_logic.demo.react/src/main/webapp'), /\.view\.xml$/),
+    ...tree(join(WT, 'com.top_logic.layout.view/src/main/webapp'), /\.view\.xml$/),
+  ];
+  const hits = [];
+  for (const p of quellen) readFileSync(p, 'utf8').split('\n').forEach((line, i) => { if (ALT_4B.test(line)) hits.push(`${p.slice(WT.length + 1)}:${i + 1}`); });
+  assert.deepEqual(hits, []);
+});
+
+test('Welle 4b im TSX: main in der Shell, aria-current an den Seiten, aria-expanded am Hamburger, kein englischer Name, 768 nur in der Shell', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+  const tsx = (n) => readFileSync(join(M, `react-src/controls/${n}.tsx`), 'utf8');
+  assert.match(tsx('TLAppShell'), /<main className="tl-app-shell__content"/);
+  assert.match(tsx('TLSidebar'), /aria-current=\{active \? 'page' : undefined\}/);
+  assert.match(tsx('TLBottomBar'), /aria-current=\{isActive \? 'page' : undefined\}/);
+  assert.match(tsx('TLDrawerToggle'), /aria-expanded=\{open\}/);
+  for (const n of ['TLAppShell', 'TLAppBar', 'TLSidebar', 'TLBottomBar', 'TLDrawerToggle'])
+    assert.doesNotMatch(tsx(n), /aria-label="[A-Za-z]/, `${n}: Name als Literal`);
+  const mit768 = [...reactSources()].filter((p) => /\b768\b/.test(readFileSync(p, 'utf8'))).map((p) => p.slice(WT.length + 1));
+  assert.deepEqual(mit768, ['com.top_logic.layout.react/react-src/controls/TLAppShell.tsx']);
+});

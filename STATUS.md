@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-16 (DOM-Test focus-clip, Ring der leeren Tabelle innen; danach derive-Hinweise, dann 4b) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-16 (DOM-Test focus-clip, Ring der leeren Tabelle innen; danach derive-Hinweise, dann 4b gebaut) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -89,6 +89,14 @@ Server). Plan-Review (Fable, 16.10.) mit Probeläufen in Kopien:
 Paket 416/417 (nur `published` erwartet rot), `tsc` 0, Vite grün, MUI-Vitest 507/507, Java-Test 2/2; zehn Befunde
 eingearbeitet (Kopf des Plans). Hendrik: „plan sieht gut aus“, **nicht automatisch starten**.
 
+**4b gebaut (16.10., Tasks 1–8), lokal, nicht gepusht; Sichtprüfung (Task 9) offen.** Engine-Head `6cd6fcf9ff`
+(Branch `CWS/CWS_29866_design_system_welle_4b`), Paket `main` bis `918765f` plus Commit Task 8 (Ratsche, Engine-Gate,
+altlast, Spec und `skalen.md` an die Abweichungen). Gates: Paket 418/0, Lint grün, Ratsche `lines` 3698 → 3145 (fontSize
+28, duration 20, zIndex 11, color 67, outlineNone 8), Maven `layout.react` 679/0, `layout.view` 1457/0 (unter englischer
+Locale; deutsche Locale rot an `TestAll.testSectionsReachTheClient`, #29651-Art), `demo.react` 13/0, Messages-Diff
+einmal (`js.bottomBar.ariaLabel`, Sidebar-Tooltip) committet, zweiter Lauf ohne Diff. Der 768-Test fand nur `TLAppShell.tsx`.
+Offen: Sichtprüfung (Task 9), Trac `== Migration ==` (Task 8 Step 6, Orchestrator), Push nur mit Freigabe.
+
 **Einstieg der nächsten Sitzung (Welle 4b umsetzen):**
 1. `STATUS.md`, Spec `docs/superpowers/specs/2026-10-16-welle-4b-navigation-design.md` und Plan
    `docs/superpowers/plans/2026-10-16-welle-4b-navigation.md` lesen.
@@ -118,7 +126,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 | 3a | Menü, Toolbar, Reiter, Breadcrumb, Popups, Ton folgt der Aktion | 5 | master | #29617 |
 | 3b | Tabelle, Baum, Text (!1838, auf master 14.10.) | 3 | master | #29821 |
 | 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay; mit der Spaltenwahl als Ebenen-Panel in !1852 | 7 | PR | #29836, #29825 |
-| 4b | Navigation: AppShell, AppBar, Sidebar (mobiler Drawer, Flyout), BottomBar; Q10–Q13, Leiste aus Q14 | 4 | geplant | #29866 |
+| 4b | Navigation: AppShell, AppBar, Sidebar (mobiler Drawer, Flyout), BottomBar; Q10–Q13, Leiste aus Q14 | 4 | gebaut | #29866 |
 | 4c | Behälter: Panel, SplitPanel, Card, Stack, Grid, DeckPane, TileStack, Inset, AdaptiveDetail, Accordion, Wizard, ViewError; Q14–Q18 | 12 | offen | eigenes beim Start |
 | 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | offen | — |
 

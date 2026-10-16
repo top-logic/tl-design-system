@@ -700,6 +700,72 @@ Spaltenwahl, 15.10.) in `tlReactControls.css` auf den Bewegungstokens und ziehen
 
 Das Glass-Theme zeigt keinen Blur mehr hinter Dialogen; die Snackbar hat kein Icon (der State liefert keins).
 
+## Welle 4b · Navigation — gebaut 16.10.2026
+
+Spec `docs/superpowers/specs/2026-10-16-welle-4b-navigation-design.md`, Plan `docs/superpowers/plans/2026-10-16-welle-4b-navigation.md`,
+Branch `CWS/CWS_29866_design_system_welle_4b` (Engine, lokal, nicht gepusht) und Paket (`main`, Ratsche je Task). Ratsche:
+`lines` 3698 → 3145 (Summe der Budgets = gemessen; vier Budgets stehen zugleich auf ihrem Messwert, nicht aus 4b:
+TLValueList 101→91, TLJobStatus 117→107, TLSlider 211→204, TLCalendar 255→254).
+
+### Gestrichene Blöcke
+
+| Block (`tlReactControls.css`) | Zeilen alt | Nachfolger |
+|---|---|---|
+| TLSidebar | 211 | `tl-sidebar` (`sidebar.css`) |
+| Collapsed mode: center icon-only items | 110 | `tl-sidebar[data-tl-state~="collapsed"]` |
+| Drawer backdrop | 6 | `tl-dialog` (4a) |
+| Drawer toggle | 25 | entfällt (nur kompakt im DOM) |
+| Responsive: sidebar becomes an off-canvas drawer | 61 | `tl-app-shell[data-tl-display~="compact"]`, `tl-drawer` (4a) |
+| TLAppBar | 83 | `tl-app-bar` (`app-bar.css`) |
+| TLBottomBar | 77 | `tl-bottom-bar` (`bottom-bar.css`) |
+| TLAppShell | 37 | `tl-app-shell` (`app-shell.css`); die Übergangsregel `.tlAppShell .tl-breadcrumb` fällt |
+
+Zusammen 553 Zeilen aus der Datei (`lines` 3698 → 3145). Literale: fontSize 31→28, duration 23→20,
+zIndex 14→11; color und outlineNone unverändert.
+
+### Neu im Paket
+
+Vier Blöcke (`app-shell.css`, `app-bar.css`, `sidebar.css`, `bottom-bar.css`), der Behälter `tl-icon-badge` mit
+`tl-icon-badge__count` (`badge.css`) und zwei Maße in `tokens.json`: `size-shell-bar` (48/40 px) und `size-sidebar`.
+
+### Alt → neu für Anwendungs-Stylesheets
+
+| Alt | Neu |
+|---|---|
+| `.tlAppShell`, `__header`, `__notices`, `__content`, `__footer` | `.tl-app-shell`, `__header`, `__notices`, `__content` (`<main>`), `__footer` |
+| `@media (max-width: 768px)` für Sidebar und Hamburger | `.tl-app-shell[data-tl-display~="compact"] …` |
+| `.tlAppBar`, `--primary` | `.tl-app-bar` |
+| `.tlAppBar--elevated` (Schatten) | `.tl-app-bar--elevated` (Linie unten) |
+| `.tlAppBar__leading`, `__title`, `__children`, `__actions`, `__trailing` | `.tl-app-bar__leading`, `__title`, `__children`, `__actions`, `__trailing` |
+| `.tlSidebar`, `__nav`, `__content` | `.tl-sidebar`, `__nav`, `__content` |
+| `.tlSidebar--collapsed` | `.tl-sidebar[data-tl-state~="collapsed"]` |
+| `.tlSidebar--drawerOpen`, `__backdrop` | `.tl-dialog > .tl-drawer.tl-drawer--start > .tl-sidebar__nav` |
+| `.tlSidebar__headerSlot`, `__footerSlot` (`--collapsed`) | `.tl-sidebar__header`, `__footer` |
+| `.tlSidebar__item`, `__navItem`, `__commandItem` | `.tl-menu__item.tl-sidebar__item` |
+| `.tlSidebar__navItem--active` | `.tl-sidebar__item[aria-current="page"]` |
+| `.tlSidebar__item--disabled` | `.tl-sidebar__item:disabled` |
+| `.tlSidebar__headerItem` | `.tl-menu__header` |
+| `.tlSidebar__separator` | `.tl-menu__separator` |
+| `.tlSidebar__group`, `__groupChildren`, `__chevron` (`--open`) | `.tl-sidebar__group`, `__children`, `__chevron` (`[aria-expanded="true"] >`) |
+| `.tlSidebar__icon`, `__label`, `__badge` | `.tl-menu__icon`, `.tl-menu__label`, Part `Badge` |
+| `.tlSidebar__iconWrap`, `__cornerBadge` | `.tl-icon-badge`, `.tl-icon-badge__count` |
+| `.tlSidebar__collapseBar` | `.tl-sidebar__collapse` |
+| `.tlSidebar__flyout`, `__flyoutHeader`, `__flyoutItem` (`--active`), `__flyoutSectionHeader` | `.tl-popover.tl-menu`, `.tl-menu__header`, `.tl-menu__item[aria-current="page"]`, `.tl-menu__header` |
+| `.tlDrawerToggle` | entfällt (nur kompakt im DOM; `aria-expanded`) |
+| `.tlBottomBar`, `__item` (`--active`) | `.tl-bottom-bar`, `__item` (`[aria-current="page"]`) |
+| `.tlBottomBar__iconWrap`, `__icon`, `__badge`, `__label` | `.tl-bottom-bar__icon`, `.tl-icon-md`, `.tl-icon-badge__count`, `.tl-bottom-bar__label` |
+
+### Sichtbar
+
+AppBar 48/40 statt 56 px; `--elevated` eine Linie statt eines Schattens; die aktuelle Seite als Fläche statt Balken;
+Einträge in `text-primary`; Kopfzeilen ohne Großbuchstaben und Sperrung; die mobile Sidebar modal über der AppBar, ohne
+Gleiten (Abweichung 3 des Plans); BottomBar-Label 12 px.
+
+### Offen für 4c
+
+Der 768-Test (`engine-classes.test.mjs`) fand keinen weiteren Breakpoint in `react-src`: `768` steht nur in
+`TLAppShell.tsx`.
+
 ## Konsolidierung (01.10.) — Gleiches wird zusammengelegt
 
 Regel (CLAUDE.md „Arbeitsweise“, skalen.md „Gleiches wird zusammengelegt“): findet eine Erkundung zwei Stellen, die
