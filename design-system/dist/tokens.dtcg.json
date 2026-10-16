@@ -1790,6 +1790,10 @@
         "$type": "dimension",
         "$value": "{primitive.measure.size-14}"
       },
+      "size-sidebar": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-12}"
+      },
       "size-toast-max": {
         "$type": "dimension",
         "$value": "{primitive.measure.size-15}"
@@ -1907,6 +1911,10 @@
           "$type": "dimension",
           "$value": "{primitive.measure.height-5}"
         },
+        "size-shell-bar": {
+          "$type": "dimension",
+          "$value": "{primitive.measure.size-8}"
+        },
         "space-control-x": {
           "$type": "dimension",
           "$value": "{primitive.measure.size-3}"
@@ -1936,6 +1944,10 @@
         "size-bar": {
           "$type": "dimension",
           "$value": "{primitive.measure.height-4}"
+        },
+        "size-shell-bar": {
+          "$type": "dimension",
+          "$value": "{primitive.measure.height-5}"
         },
         "space-control-x": {
           "$type": "dimension",

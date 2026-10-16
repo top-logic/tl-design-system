@@ -128,6 +128,11 @@ const MODIFIERS = {
   'tl-drawer': new Set(['start', 'end', 'bottom', 'narrow', 'medium', 'wide', 'container']), // offen: data-tl-state.
   'tl-snackbar': new Set([]), // Die Bedeutung trägt tl-alert (data-tl-role).
   'tl-notice-bar': new Set([]), // klickbar: role="button", kein Modifier.
+  'tl-app-shell': new Set([]), // Kompakt ist ein Attribut (data-tl-display) der Wurzel.
+  'tl-app-bar': new Set(['elevated']), // Eine Variante, kein Zustand.
+  'tl-sidebar': new Set([]), // Eingeklappt: data-tl-state~="collapsed"; aktuell: aria-current.
+  'tl-bottom-bar': new Set([]), // Aktuell: aria-current.
+  'tl-icon-badge': new Set([]),
 };
 
 // Die einzige Ausnahme vom Ring: der Behälter mit virtuellem Cursor, nur in base.css (Spec 3b §3).
