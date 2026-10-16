@@ -2447,6 +2447,14 @@ baute es im alten Stylesheet); Wizard und TileStack gleiten um einen Versatz `sp
 Attribute; `--tl-item-index` heißt `--item-index` — ein Datum der Engine für Anwendungs-CSS, kein Wort des Pakets.
 `tlFill`, Viewport und Mount bleiben bis Welle 5.
 
+**Auswählbare Einträge (Q24, nach dem Merge von !1906).** Bernhard machte mit #29755 die Einträge von Stack und Grid
+auswählbar (Listbox, `role="option"`, `aria-selected`) und zeichnete sie im alten Stylesheet: Abheben beim Zeigen per
+`--shadow-raised`, Zustand als Klasse, eigener Fokusring. Mit `tl-item` im Paket: beim Zeigen ein Hof
+(`surface-state-hover`) — ein Eintrag schwebt nicht, und der Hof bleibt um eine Karte mit eigener Fläche sichtbar;
+ausgewählt der Ring `border-width-md` in `border-interactive`, gelesen aus `aria-selected` — eine Auswahlfläche wie in
+Tabelle und Baum läge hinter der Karte; Fokus aus `base.css`. **Verworfen:** die Auswahlfläche (`surface-interactive-selected`)
+wie in der Tabelle (unsichtbar hinter Einträgen mit eigener Fläche); der Schatten beim Zeigen (gestrichen seit Welle 0).
+
 ### Die Kopie in der Engine ist versiegelt (16.10.)
 
 **Befund:** Zweimal wurde die Kopie des Pakets in tl-engine-7 von Hand geändert — #29787 (sechs Stellen) und #29859

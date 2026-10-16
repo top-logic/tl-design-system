@@ -901,3 +901,9 @@ wie vorgeschlagen.** Spec `docs/superpowers/specs/2026-10-16-welle-4c-behaelter-
 
 Schon erledigt: den Breakpoint von AdaptiveDetail entscheidet der Server über die `DisplayClass`, die die AppShell seit
 4b meldet.
+
+**Nachgetragen 16.10. (nach dem Merge von !1906, master `2bf2151a2e`) — entschieden (Hendrik: „ja passt“):**
+
+| # | Befund | Sichtbar heute | Zusammenlegen zu | Urteil |
+|---|---|---|---|---|
+| Q24 | Auswählbare Einträge aus #29755 (!1905, Bernhard): `.tlItem--selectable` hebt sich beim Zeigen mit `--shadow-raised`, `.tlItem--selected` als Klasse (`aria-selected` steht schon am Eintrag), eigener Fokusring 2 px `--focus`, `120ms ease` | ja | `tl-item[aria-selected]`: beim Zeigen ein Hof (`surface-state-hover`) statt Schatten, ausgewählt der Ring `border-width-md` `border-interactive` (eine Fläche sähe man hinter einer Karte nicht), Fokus aus `base.css` | mit der Welle |
