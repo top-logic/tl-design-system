@@ -31,3 +31,31 @@ test('tl-icon-badge: der Behälter ist positioniert, der Zähler sitzt an der Ec
   assert.match(z, /inset-inline-end:\s*calc\(-1 \* var\(--tl-space-xs\)\)/);
   assert.doesNotMatch(ohneKommentar(readGenerated('badge', 'badge.css')), /\.tl-badge--/);
 });
+
+test('tl-app-shell: Spalte, füllt; der Inhalt ist begrenzt, Hinweise stehen bündig', () => {
+  const s = decl('app-shell', '.tl-app-shell');
+  assert.match(s, /display:\s*flex/);
+  assert.match(s, /flex-direction:\s*column/);
+  assert.match(s, /height:\s*100%/);
+  const c = decl('app-shell', '.tl-app-shell__content');
+  assert.match(c, /flex:\s*1 1 auto/);
+  assert.match(c, /min-height:\s*0/);
+  assert.match(decl('app-shell', '.tl-app-shell .tl-app-shell__notices > *'), /gap:\s*0/);
+});
+
+test('tl-app-bar: Höhe size-shell-bar, Fläche surface-layer; --elevated ist eine Linie, kein Schatten', () => {
+  const b = decl('app-bar', '.tl-app-bar');
+  assert.match(b, /height:\s*var\(--tl-size-shell-bar\)/);
+  assert.match(b, /background:\s*var\(--tl-surface-layer\)/);
+  assert.match(decl('app-bar', '.tl-app-bar--elevated'), /border-bottom:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-separator\)/);
+  assert.doesNotMatch(ohneKommentar(readGenerated('app-bar', 'app-bar.css')), /box-shadow|100000/);
+});
+
+test('tl-app-bar: eine überlaufende Toolbar nimmt nur den Rest und hält am Überlaufknopf', () => {
+  const a = decl('app-bar', '.tl-app-bar__actions:has(> .tl-toolbar[data-tl-overflow])');
+  assert.match(a, /flex:\s*1 1 0/);
+  assert.match(a, /min-width:\s*var\(--tl-size-control\)/);
+  assert.match(decl('app-bar', '.tl-app-bar__title'), /min-width:\s*0/);
+  assert.match(decl('app-bar', '.tl-app-bar__children'), /flex:\s*0 1 auto/);
+  assert.match(decl('app-bar', '.tl-app-bar__actions:empty'), /display:\s*none/);
+});
