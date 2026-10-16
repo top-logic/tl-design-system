@@ -2334,6 +2334,55 @@ TLPanel, TLFileChips, TLColorInput, TLIconSelect und vier Literale (`ratchet.jso
 baut darauf auf und migriert die Hüllen. **Vorschlag an Bernhard:** die Paket-Gates (`node --test` gegen den
 Worktree) in den Engine-Jenkins hängen, damit ein Bruch vor dem Merge auffällt.
 
+### Welle 4b: Navigation (16.10., Hendrik — #29866)
+
+**Schnitt.** Welle 4b, wie am 13.10. geschnitten, umfasste 17 Komponenten und rund 1.330 Zeilen Altbestand, das
+Dreifache von 4a. Geteilt: **4b Navigation** (AppShell, AppBar, Sidebar mit mobilem Drawer und Flyout, BottomBar;
+553 Zeilen, Q10–Q13, die Leiste aus Q14) und **4c Behälter** (Panel bis ViewError, Q14–Q18). Zuerst die Navigation,
+weil dort die sichtbaren Fehler liegen: das Flyout läuft aus dem Fenster und hat, per Tastatur geöffnet, gar keine
+Lage; die mobile Sidebar hat weder Escape noch Fokus noch `inert`. Spec
+`docs/superpowers/specs/2026-10-16-welle-4b-navigation-design.md`.
+
+**Der Breakpoint steht einmal.** Heute schaltet das CSS die Sidebar bei `@media (max-width: 768px)` zum Off-Canvas,
+und die AppShell misst dieselben 768 noch einmal im TSX, um dem Server `COMPACT` zu melden („must stay in sync“).
+Zwei Quellen, und die eine (CSS) weiß nichts von Fokus und Escape. **Entschieden:** nur die AppShell misst; sie gibt
+den Wert als Kontext und als `data-tl-display` an ihrer Wurzel weiter. Die Sidebar wird kompakt der modale
+`TLDrawer` aus 4a — Scrim, Falle, Escape, `inert`, Fokus zurück zum Hamburger — und deckt die AppBar mit, also
+entfällt die Kopplung `top: 3.5rem`. Keine Komponentendatei enthält eine Breiten-Media-Query; das Lint hält es.
+**Verworfen:** die Media-Query behalten und im TSX zusätzlich messen (768 an drei Stellen); eine Container-Query
+(Fokus und Escape brauchen trotzdem JS — wieder zwei Quellen).
+
+**Die Rahmenleisten bekommen eine Höhe: `size-shell-bar`, 48/40 px.** AppBar und BottomBar standen mit `3.5rem`
+(56 px) als Literal, zweimal. Ein Token für beide, das der Dichte folgt: normal `{size-8}`, kompakt `{height-5}` —
+keine neue Primitive. Kompakt ist die Rahmenleiste so hoch wie eine Toolbar-Leiste normal. **Verworfen:** 56 px
+halten (eine Primitive außerhalb der Höhenstufen); `size-bar` für alle Leisten (die BottomBar mit Icon über Label wäre
+kompakt mit 36 px eng).
+
+**Die aktuelle Seite ist eine Fläche, kein Balken.** Die Sidebar markierte sie mit einem 3-px-Balken links in der
+Marke; Baum und Tabelle haben seit 3b „aria-selected die Fläche — kein Balken links“. Eine Auswahlform in der ganzen
+Oberfläche: `aria-current="page"` trägt `surface-interactive-selected` und `tl-type-body-strong`, in der BottomBar die
+Fläche hinter dem Icon. Eingeklappt bleibt die Fläche hinter dem Icon sichtbar; ein Balken wäre dort nur ein Strich.
+Im Menü bleibt `aria-current` Gewicht allein — dort heißt es „in Kraft“, nicht „hier bist du“. **Neu:** steckt die
+aktuelle Seite in einer zugeklappten Gruppe, trägt der Gruppenkopf die Fläche (ohne Gewicht) — sonst zeigt die
+eingeklappte Rail nicht, wo man ist. **Verworfen:** Balken als Akzent (`border-width-accent` ist Bedeutung an Karten
+und Hinweisen, keine Auswahl); Gewicht allein (eingeklappt unsichtbar).
+
+**Einträge wie das Menü.** Rail und Flyout zeichnen ihre Einträge als `tl-menu__item` (Q12); das Flyout ist
+`Menu.tsx` mit `usePopover` an der neuen Lage `right-start` (Q11). Der Chevron folgt `tl-toggle`: rechts zu, unten
+offen (Q13) — die Sidebar-Gruppe drehte als einzige um 180° und zeigte unten für zu.
+
+**Eine Leiste schwebt nicht.** `ELEVATED` an der AppBar wird eine Trennlinie (`border-separator`), kein Schatten:
+Schatten gehören den Ebenen, die über etwas liegen (Dialog, Popover, Ziehen). Ein Token `shadow-raised` gibt es
+nicht und kommt nicht.
+
+**Das Eck-Badge einmal.** Eingeklappte Sidebar und BottomBar setzten ein Badge mit je eigenen Literalen
+(`-0.375rem`/`-0.5rem`) an ein Icon. Es wird der Modifier `tl-badge--corner`, versetzt um `space-2xs`.
+
+**Als Test (mit dem Bau):** `contracts-4b.test.mjs` (aktuelle Seite, `aria-expanded`, `aria-controls`, `<main>`,
+kein englisches `aria-label`), Lint ohne Breiten-Media-Query, `focus-clip.test.mjs` über die neuen Specimen-Seiten,
+`engine-classes.test.mjs` sperrt `tlSidebar`, `tlAppBar`, `tlBottomBar`, `tlAppShell`, `tlDrawerToggle`; die Ratsche
+streicht acht Blöcke.
+
 ## Befunde aus dem Specimen
 
 ### Inter trägt nur zwei Gewichte

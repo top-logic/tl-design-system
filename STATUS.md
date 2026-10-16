@@ -79,7 +79,12 @@ Worktree-Kopie (`components.css`) liegt als erster Commit `1fdae596a9` auf dem 4
 `CWS/CWS_29866_design_system_welle_4b` im Worktree `tl8-wt-29584`, lokal, auf `origin/…_spaltenwahl` (`f9d0a99ab0`),
 nicht gepusht. **Schnitt entschieden (Hendrik, 16.10.):** 4b = Navigation (AppShell, AppBar, Sidebar,
 BottomBar, ~550 Zeilen Altbestand), 4c = Behälter (~780, eigenes Ticket beim Start) — zusammen ~1.330 Zeilen, das Dreifache
-von 4a. Ticket #29866 auf Navigation umbenannt, Kommentar dazu. **Nächstes:** Spec 4b, abschnittsweise mit Hendrik.
+von 4a. Ticket #29866 auf Navigation umbenannt, Kommentar dazu. **Spec steht (16.10.):**
+`docs/superpowers/specs/2026-10-16-welle-4b-navigation-design.md`, mit Hendrik Abschnitt für Abschnitt entschieden
+(Breakpoint nur in der AppShell, Sidebar kompakt als modaler TLDrawer; `size-shell-bar` 48/40; aktuelle Seite als
+Fläche, auch am Kopf einer zugeklappten Gruppe; `--elevated` als Linie; `tl-badge--corner`); `skalen.md` „Welle 4b:
+Navigation“, Präsentation nachgezogen. **Nächstes:** Hendrik liest die Spec, dann Plan (`writing-plans`), Plan-Review
+durch einen frischen Agenten, SDD.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
