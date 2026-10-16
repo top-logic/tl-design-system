@@ -99,7 +99,8 @@ Split-Griff setzt per Doppelklick zurück (U2, neuer Befehl `resetSizes`).
 4. **Pfeiltasten am Spaltengriff** ändern die Spaltenbreite und laufen nicht in die Tastatur der Tabelle weiter
    (`stopPropagation`); erst das Loslassen sendet `columnResize`. Vitest in Task 7.
 5. **Eine Karte im Dialog sinkt nicht ein:** im Kontext `overlay` trägt sie `tl-card--overlay`, in einer Fläche
-   `tl-card--nested`, auf der Seite keines von beiden. Vitest in Task 6, Specimen in Task 2.
+   `tl-card--nested`, auf der Seite keines von beiden; ein schlichtes Panel hebt die Stufe nicht (`panelSurface`).
+   Vitest in Task 6, Specimen in Task 2.
 
 ## Datei-Übersicht
 
@@ -655,8 +656,8 @@ test('Panelkopf: bei 640 px ist der Titel ganz, bei 260 px hält die Toolbar am 
 
 ```css
 /* Karte — Spec 2026-10-16 Welle 4c §4 (Q15), Weg B. Die eine Kartenfläche: Karte, Panel als Karte, Accordion. Die
-   Fläche folgt der Verschachtelung — auf der Seite surface-layer, in einer Fläche (Panel, Karte, Accordion)
-   surface-layer-nested, im Dialog die Fläche des Dialogs (nested läge dunkel unter surface-overlay und sänke ein).
+   Fläche folgt der Verschachtelung — auf der Seite surface-layer, in einer Fläche (Karte, Accordion, Panel als Karte;
+   ein schlichtes Panel malt keine und hebt nicht) surface-layer-nested, im Dialog die Fläche des Dialogs (nested läge dunkel unter surface-overlay und sänke ein).
    Hell sind layer und nested weiß; dort trennt die Linie (skalen.md „Elevation“). Kein Schatten: eine Karte liegt in
    der Oberfläche, darum zeichnet elevated wie outlined. Den Modifier der Stufe setzt das TSX aus useSurface(). */
 
@@ -858,7 +859,8 @@ Die Stufe folgt der Verschachtelung, nicht einer Variante. Das TSX liest sie aus
 | Lage | Klasse | Fläche |
 |---|---|---|
 | auf der Seite | `tl-card` | `--tl-surface-layer` |
-| in einer Fläche (Panel, Karte, Accordion) | `tl-card tl-card--nested` | `--tl-surface-layer-nested` |
+| in einer Fläche (Karte, Accordion, Panel als Karte) | `tl-card tl-card--nested` | `--tl-surface-layer-nested` |
+| in einem schlichten Panel | wie dort, wo das Panel liegt | (das Panel malt keine Fläche) |
 | im Dialog oder Drawer | `tl-card tl-card--overlay` | `--tl-surface-overlay` |
 
 Hell sind `layer` und `nested` weiß; dort trennt die Linie (`--tl-border-width-sm` `--tl-border-separator`).
@@ -1836,6 +1838,8 @@ Alle Pfade dieser und der folgenden Engine-Tasks relativ zu `_Working-Tree/tl8-w
     `interface Surface { level: SurfaceLevel; inset: InsetKind }`
   - `SurfaceProvider({ value: Surface, children })`, `useSurface(): Surface`
   - `cardSurfaceClass(level: SurfaceLevel): string | undefined`, `insetClass(inset: InsetKind): string | undefined`
+  - `panelSurface(outer: Surface, card: boolean): Surface` — was ein Panel seinem Inhalt sagt (Hendrik 16.10.: nur
+    was eine Fläche malt, hebt die Stufe)
   - `type SeparatorOrientation = 'horizontal' | 'vertical'`,
     `type SeparatorMove = { to: 'step'; steps: number } | { to: 'min' } | { to: 'max' }`
   - `separatorMove(key: string, orientation: SeparatorOrientation, element: Element | null): SeparatorMove | null`
@@ -1879,6 +1883,14 @@ export function SurfaceProvider({ value, children }: React.PropsWithChildren<{ v
 /** The surface around the rendered component; the page outside any. */
 export function useSurface(): Surface {
   return useContext(SurfaceContext);
+}
+
+/**
+ * What a panel tells the components inside. Only what paints a surface raises the level: a panel drawn as a card
+ * does, a plain panel paints none and passes on the level it lies on. Its insets are those of a card or a panel.
+ */
+export function panelSurface(outer: Surface, card: boolean): Surface {
+  return { level: card ? 'layer' : outer.level, inset: card ? 'card' : 'panel' };
 }
 
 /** The class giving a card the surface of its level: none on the page. */
@@ -1963,7 +1975,7 @@ export function movedSize(size: number, move: SeparatorMove, min: number, max: n
 - [ ] **Step 3: Exporte** — in `bridge-entry.ts` nach `export type { DisplayClass } from './bridge/display-class';`:
 
 ```ts
-export { SurfaceProvider, useSurface, cardSurfaceClass, insetClass } from './bridge/surface';
+export { SurfaceProvider, useSurface, cardSurfaceClass, insetClass, panelSurface } from './bridge/surface';
 export type { Surface, SurfaceLevel, InsetKind } from './bridge/surface';
 export { separatorMove, separatorStep, movedSize } from './bridge/separator';
 export type { SeparatorMove, SeparatorOrientation } from './bridge/separator';
@@ -2087,7 +2099,7 @@ Co-Authored-By: <Modell> <noreply@anthropic.com>"
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { screen, cleanup, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { React, SurfaceProvider } from 'tl-react-bridge';
+import { React, SurfaceProvider, panelSurface } from 'tl-react-bridge';
 import type { TLCellProps } from 'tl-react-bridge';
 import TLPanel from '../../../com.top_logic.layout.react/react-src/controls/TLPanel';
 import TLCard from '../../../com.top_logic.layout.react/react-src/controls/TLCard';
@@ -2191,6 +2203,15 @@ describe('a card takes its surface from where it lies', () => {
     expect(card.classList).toContain('tl-card--overlay');
     expect(card.classList).not.toContain('tl-card--nested');
   });
+
+  // Hendrik 16.10.: only what paints a surface raises the level - a plain panel paints none.
+  it('a plain panel passes on the level it lies on; a panel drawn as a card raises it', () => {
+    const page = { level: 'base', inset: 'page' } as const;
+    const dialog = { level: 'overlay', inset: 'page' } as const;
+    expect(panelSurface(page, false)).toEqual({ level: 'base', inset: 'panel' });
+    expect(panelSurface(dialog, false)).toEqual({ level: 'overlay', inset: 'panel' });
+    expect(panelSurface(page, true)).toEqual({ level: 'layer', inset: 'card' });
+  });
 });
 ```
 
@@ -2210,7 +2231,7 @@ describe('a card takes its surface from where it lies', () => {
 ```tsx
 import {
   React, useTLState, useTLCommand, TLChild, useI18N, useFillHost, FillProvider, FillBarrier, rootClassName, stateAttr,
-  ThemeIcon, ButtonDefaults, usePart, SurfaceProvider, useSurface, cardSurfaceClass, isInteractiveWithin,
+  ThemeIcon, ButtonDefaults, usePart, SurfaceProvider, useSurface, cardSurfaceClass, panelSurface, isInteractiveWithin,
 } from 'tl-react-bridge';
 import type { TLCellProps, Surface } from 'tl-react-bridge';
 
@@ -2242,9 +2263,9 @@ const TLPanel: React.FC<TLCellProps> = ({ controlId }) => {
   const isHidden = expansionState === 'HIDDEN';
   const bodyId = `${controlId}-body`;
 
-  // What the panel is for the components inside: a surface of the page, whose insets are those of a panel or, drawn
-  // as a card, of a card.
-  const inner = useMemo<Surface>(() => ({ level: 'layer', inset: card ? 'card' : 'panel' }), [card]);
+  // What the panel is for the components inside: drawn as a card it is a surface and raises the level, plain it
+  // paints none and passes on the level it lies on; its insets are those of a card or a panel.
+  const inner = useMemo<Surface>(() => panelSurface(surface, card), [surface, card]);
 
   const handleMinimize = useCallback(() => {
     sendCommand('toggleMinimize');
@@ -3764,7 +3785,11 @@ cd ../.. && design-system/tools/check-messages-en.sh
 
 ---
 
-## Fragen an Hendrik
+## Fragen an Hendrik — entschieden 16.10.
+
+Beide wie empfohlen (Hendrik: „1 und 2 ja“): ViewError ohne Monospace, Abstand aus dem Inset der Seite; nur was eine
+Fläche malt, hebt die Stufe — eine Karte im schlichten Panel bleibt auf der Stufe, auf der das Panel liegt
+(`panelSurface`, Task 5 und 6).
 
 1. **ViewError ohne Monospace.** Das Alert des Pakets hat Titel und Meldung; Pfad und Ursache stehen als Meldung
    untereinander in normaler Schrift (heute Monospace), und der Abstand zum Rand kommt aus dem Inset der Seite

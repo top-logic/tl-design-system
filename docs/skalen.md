@@ -2412,7 +2412,8 @@ nicht mehr gibt, und machte Panels zu einer vierten Kopfform neben Fenster, Draw
 Fußklasse je Behälter (zwei Abstände für dieselbe Leiste).
 
 **Die Verschachtelung bestimmt die Stufe, nicht eine Variante.** Eine Karte auf dem Grund liegt auf `surface-layer`,
-eine in einer Fläche (Panel, Karte, Accordion) auf `surface-layer-nested`; im Dialog bleibt sie auf dessen Fläche, weil
+eine in einer Fläche (Karte, Accordion, Panel als Karte) auf `surface-layer-nested` — ein schlichtes Panel malt keine
+Fläche und hebt die Stufe darum nicht (beim Planen 16.10.: sonst läge die Karte dunkel zwei Stufen über dem Grund); im Dialog bleibt sie auf dessen Fläche, weil
 `nested` dunkel unter `surface-overlay` liegt und die Karte einsänke. Hell ändert das nichts — `layer` und `nested`
 sind weiß, dort trennt der Rahmen —, dunkel hebt sich die innere Karte um eine Stufe. Das ist die Regel aus
 „Elevation“ (hell der Rahmen, dunkel die Fläche) zum ersten Mal ausgenutzt. `elevated` zeichnet wie `outlined`: „Eine

@@ -104,7 +104,8 @@ div.tl-panel[data-tl-state~="minimized"|"maximized"][.tl-card][.tl-panel--hover-
   `tl-card__body` mit `--pad-default|compact|none`. Die Polsterung folgt der Regel „der Inhalt beginnt, wo der Titel
   beginnt“: `default` = `space-md` (heute 1,5 rem), `compact` = `space-xs` (heute 1 rem), `none` = 0.
 - **Die Verschachtelung bestimmt die Stufe** (Hendrik 16.10., Weg B): eine Karte auf dem Grund liegt auf
-  `surface-layer`, eine Karte in einer Fläche (Panel, Karte, Accordion) auf `surface-layer-nested`. Hell ändert das
+  `surface-layer`, eine Karte in einer Fläche (Karte, Accordion, Panel als Karte) auf `surface-layer-nested`; ein
+  schlichtes Panel malt keine Fläche und hebt die Stufe nicht (Hendrik 16.10., beim Planen). Hell ändert das
   nichts — dort trennt der Rahmen, `layer` und `nested` sind beide weiß —, dunkel hebt sich die innere Karte um eine
   Stufe ab. Im Dialog (`surface-overlay`, dunkel heller als `nested`) bleibt die Karte auf der Dialogfläche und trennt
   nur mit dem Rahmen; sie sinkt nicht ein. Die Fläche erfährt die Karte über denselben React-Kontext wie das Inset
