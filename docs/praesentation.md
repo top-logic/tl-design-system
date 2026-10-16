@@ -226,7 +226,7 @@ Vor jeder Welle: Was tut dasselbe? Prognose auf den Tisch, Entscheidung, dann di
 | Farbton | zwei Bedeutungen, die sich zu ähnlich sehen |
 | Raster | einer Schriftgröße unter 12 px, einer Zeilenhöhe neben dem 4-px-Raster |
 | Klassen | jedem Literal, jedem `:focus` ohne `-visible`, jedem `outline: none` |
-| Erzeugtes | jedem Unterschied zwischen Quelle und ausgeliefertem CSS |
+| Erzeugtes | jedem Unterschied zwischen Quelle und ausgeliefertem CSS — auch in der Engine: wer die Kopie dort von Hand ändert, bricht ihr Siegel und den Build |
 
 > Sprechnotiz: Beim ersten Lauf widersprach das Inventar den von Hand gezählten Zahlen. Der Test dazu war grün und trotzdem falsch, weil er nur den Fall prüfte, den der Leser beherrschte. Deshalb sind alle Zahlen hier gemessen — und bleiben es.
 

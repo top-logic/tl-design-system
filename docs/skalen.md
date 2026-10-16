@@ -2399,6 +2399,25 @@ kein englisches `aria-label`), Lint ohne Breiten-Media-Query, `focus-clip.test.m
 `engine-classes.test.mjs` sperrt `tlSidebar`, `tlAppBar`, `tlBottomBar`, `tlAppShell`, `tlDrawerToggle`; die Ratsche
 streicht acht Blöcke.
 
+### Die Kopie in der Engine ist versiegelt (16.10.)
+
+**Befund:** Zweimal wurde die Kopie des Pakets in tl-engine-7 von Hand geändert — #29787 (sechs Stellen) und #29859
+(Haken der Einfachauswahl in `components.css`). `published.test.mjs` hält Kopie und `dist/` byte-gleich, läuft aber nur
+im Paket-Repo; Jenkins baut die Engine ohne das Paket, die Handänderung ging grün durch. Der nächste `publish` hätte sie
+still überschrieben, oder der Merge bricht wie in 4b. #29752 zeigt, dass der richtige Weg bekannt ist: fünf Commits im
+Paket, dann neu publiziert.
+
+**Entschieden (Hendrik: „die Trennung so sauber wie möglich, der falsche Weg soll scheitern“):** `generate` schließt
+jede CSS-Datei mit einem Siegel — SHA-256 über alles davor, als letzte Kommentarzeile, damit der Herkunftskopf und
+`derive` unberührt bleiben. `TestDesignSystemCopy` in `com.top_logic.layout.react` rechnet es in Jenkins nach (CRLF als
+LF) und nennt bei einem Bruch den Weg: Quelle in `design-system/src`, `generate`, `publish-to-worktree`. Kein
+Paket-Repo in Jenkins nötig. Die beiden Fremdänderungen stehen in der Quelle (#29787 seit 15.10., #29859 mit 4b,
+`select.css` und Vertrag); der Merge von 4b hat gegenüber master keine Zeile der Kopie verloren.
+
+**Als Test:** `seal.test.mjs` (Siegel jeder Datei, eine Änderung bricht es, die Engine prüft dieselben vier Dateien mit
+demselben Muster); in der Engine `TestDesignSystemCopy` — rot ohne Siegel, grün nach `publish`, rot nach einer
+Handänderung (16.10. so gelaufen).
+
 ## Befunde aus dem Specimen
 
 ### Inter trägt nur zwei Gewichte

@@ -2,6 +2,7 @@
 import { resolve, primitives } from './resolve.mjs';
 import { dtcg } from './dtcg.mjs';
 import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { join, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -228,7 +229,17 @@ ${print}
 `;
 }
 
+// Das Siegel schließt jede erzeugte Datei: SHA-256 über alles davor. TestDesignSystemCopy in tl-engine-7 rechnet es
+// nach, damit eine Änderung von Hand an der Kopie dort scheitert und nicht erst beim nächsten publish verloren geht
+// (test/seal.test.mjs).
+export const seal = (text) =>
+  `${text}/* tl-design-system sha256:${createHash('sha256').update(text).digest('hex')} — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */\n`;
+
 export function generate(P, T, components = []) {
+  return Object.fromEntries(Object.entries(unsealed(P, T, components)).map(([name, text]) => [name, seal(text)]));
+}
+
+function unsealed(P, T, components) {
   const R = resolve(P, T);
   return {
     'primitives.css': primitivesCss(P),
