@@ -23,14 +23,27 @@
 }
 .tl-color-picker__mixer[hidden] { display: none; }
 
+/* Der Mischer gibt in kurzen Popups nach: seine Höhe liegt zwischen size-11 und size-12 (size-12, wenn Platz ist),
+   das Feld bleibt quadratisch, der Farbtonstreifen ist so hoch wie das Feld. Den freien Platz gibt das Reiterfeld
+   über die Stapelzeile weiter (picker.css). */
+.tl-color-picker__mixer {
+  align-self: stretch;
+  min-block-size: var(--tl-size-11);
+}
+
+.tl-color-picker__field,
+.tl-color-picker__hue {
+  block-size: 100%;
+  min-block-size: var(--tl-size-11);
+  max-block-size: var(--tl-size-12);
+}
+
 .tl-color-picker__field {
-  inline-size: var(--tl-size-12);
-  block-size: var(--tl-size-12);
+  aspect-ratio: 1;
 }
 
 .tl-color-picker__hue {
   inline-size: var(--tl-size-control-sm);
-  block-size: var(--tl-size-12);
 }
 
 /* Gemeinsam: der Rahmen der beiden Flächen. */

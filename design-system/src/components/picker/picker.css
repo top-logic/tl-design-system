@@ -21,8 +21,22 @@
 .tl-picker__tabs > .tl-tabs__panel {
   padding: var(--tl-space-2xs);
   scroll-padding: var(--tl-space-xs);
+  scrollbar-gutter: stable;
 }
 
 .tl-picker__actions {
   flex-shrink: 0;
+}
+
+/* Zeigt das Reiterfeld den Mischer, ist seine Stapelzeile der Teil, der mit dem Popup schrumpft; der Mischer darin
+   nimmt ihre Höhe (color-picker.css). Die Spalte daneben (Vorschau, Eingaben) schrumpft nicht mit: sie behält ihre
+   Höhe samt Rand von space-2xs unten und scrollt im Reiterfeld, sodass der Fokusring der letzten Eingabe im
+   overflow bleibt. */
+.tl-picker__tabs > .tl-tabs__panel > .tl-stack:has(> .tl-color-picker__mixer:not([hidden])) {
+  flex: 0 1 calc(var(--tl-size-12) + 2 * var(--tl-space-2xs));
+  min-block-size: 0;
+}
+.tl-picker__tabs > .tl-tabs__panel > .tl-stack:has(> .tl-color-picker__mixer:not([hidden])) > :not(.tl-color-picker__mixer) {
+  min-block-size: min-content;
+  padding-block-end: var(--tl-space-2xs);
 }
