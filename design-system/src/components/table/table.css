@@ -254,8 +254,14 @@
   left: 0;
 }
 
+/* Der Ring liegt innen: der Griff ist space-xs breit und die Kopfzelle schneidet, was über sie hinausragt. */
+.tl-table__resize:focus-visible {
+  outline-offset: calc(-1 * var(--tl-focus-offset));
+}
+
 .tl-table__resize:hover::after,
 .tl-table__resize:active::after,
+.tl-table__resize:focus-visible::after,
 .tl-table__freeze:hover::after,
 .tl-table__freeze:active::after {
   background: var(--tl-border-interactive);
