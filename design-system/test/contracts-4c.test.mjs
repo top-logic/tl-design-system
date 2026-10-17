@@ -42,4 +42,13 @@ test('card.spec.html: Karte auf der Seite, in einer Fläche (nested), im Dialog 
   assert.match(html, /class="tl-card"/);
   assert.match(html, /class="tl-card tl-card--nested"/);
   assert.match(html, /tl-dialog__surface[\s\S]*class="tl-card tl-card--overlay"/);
+  // nested nur in einer Fläche (Panel als Karte); ein schlichtes Panel hebt die Stufe nicht.
+  assert.match(html, /class="tl-panel tl-card">\s*<div class="tl-panel__body">\s*<div class="tl-card tl-card--nested"/);
+  assert.match(html, /class="tl-panel">\s*<div class="tl-panel__body">\s*<div class="tl-card">/);
+});
+
+test('accordion.spec.html: Zustand nur in aria-expanded, kein --expanded', () => {
+  const html = datei('accordion', 'accordion.spec.html');
+  assert.doesNotMatch(html, /--expanded/);
+  assert.match(html, /aria-expanded="true"/);
 });
