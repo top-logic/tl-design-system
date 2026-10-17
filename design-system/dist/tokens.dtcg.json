@@ -925,7 +925,7 @@
       },
       "veil-6": {
         "$type": "color",
-        "$value": "rgba(240, 243, 249, 0.20)",
+        "$value": "rgba(240, 243, 249, 0.13)",
         "$extensions": {
           "com.top-logic.note": "alpha, CSS notation"
         }

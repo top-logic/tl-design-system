@@ -7,7 +7,7 @@ const GRUENDE_TEXT = ['surface-layer', 'surface-layer-nested', 'surface-overlay'
 // Ein durchscheinender Hof liegt unter dem Ring, wenn eine fokussierte Marke gezeigt oder gedrückt wird. Er hat
 // keine eigene Farbe: gemessen wird die Schicht über jedem Grund, auf dem eine Marke stehen kann, als
 // Zusammensetzung `<Schicht>/<Grund>` (siehe werte).
-const SCHICHTEN = ['surface-state-hover', 'surface-state-active'];
+const SCHICHTEN = ['surface-state-hover', 'surface-state-hover-strong', 'surface-state-active'];
 const GRUENDE_HOF = ['surface-base', 'surface-layer', 'surface-layer-nested', 'surface-overlay', 'surface-field'];
 const GRUENDE_FOKUS = ['surface-base', 'surface-layer', 'surface-layer-nested', 'surface-overlay',
   'surface-field', 'surface-brand-subtle', ...SCHICHTEN.flatMap((s) => GRUENDE_HOF.map((g) => `${s}/${g}`))];
