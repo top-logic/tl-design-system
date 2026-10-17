@@ -995,3 +995,49 @@ Schon erledigt: den Breakpoint von AdaptiveDetail entscheidet der Server über d
 | # | Befund | Sichtbar heute | Zusammenlegen zu | Urteil |
 |---|---|---|---|---|
 | Q24 | Auswählbare Einträge aus #29755 (!1905, Bernhard): `.tlItem--selectable` hebt sich beim Zeigen mit `--shadow-raised`, `.tlItem--selected` als Klasse (`aria-selected` steht schon am Eintrag), eigener Fokusring 2 px `--focus`, `120ms ease` | ja | `tl-item[aria-selected]`: beim Zeigen ein halo (`surface-state-hover`) statt Schatten, ausgewählt der Ring `border-width-md` `border-interactive` (eine Fläche sähe man hinter einer Karte nicht), Fokus aus `base.css` | mit der Welle |
+
+### Welle 5 (17.10.) — Prognose vor der Spec; offen, Hendrik entscheidet
+
+Drei Erkundungen: Bestand der 24 Restblöcke von `tlReactControls.css` (2405 Zeilen) und der drei ungelisteten
+(`TLKanbanBoard` 148, „Touch drag“ 32, „Compact field“ 60); fremde Stylesheets und Laden; Nachprüfung der Welle-5-Controls
+gegen die gemeinsamen Stücke der Wellen 0–4c. N3 (Upload) und N4 (Color-/Icon-Popup) aus der Tabelle von 01.10. gehen
+hier auf. Urteile wie oben: **lohnt** = eigener Grund, **mit der Welle** = die Stelle wird ohnehin angefasst.
+
+| # | Befund | Sichtbar heute | Zusammenlegen zu | UX-Gewinn | Berührt | Urteil · Schnitt |
+|---|---|---|---|---|---|---|
+| V1 | **Picker-Popups:** Color und Icon zweimal derselbe Rahmen (`position:fixed`, eigene Fläche, 480/420 px), dieselbe Tab-Leiste ohne `tablist`, dieselbe Aktionszeile aus rohen `<button>`; Position von Hand ohne Flip-Nachführen; keine Fokusfalle, keine Fokusrückgabe, kein `role=dialog` (= N4) | ja: Popup folgt Scroll nicht, Tabs ohne Tastatur | `usePopover` + `tl-popover`, Tabs `tl-tabs`, Aktionen Part `Button`, `useFocusTrap`; eine gemeinsame Picker-Hülle | Popup bleibt am Feld, Tabs per Pfeil, Fokus kehrt zurück | 2 Popups, 2 TSX, ~700 Zeilen | lohnt · 5a |
+| V2 | **Runde Icon-Knöpfe:** Counter, AudioRecorder, AudioPlayer, Kamera viermal 2,5 rem rund mit eigenem Inset-Fokus und `outline:none`; Foto-Overlay drei weitere (3/4,5 rem); Icons aus `border`/`background` gezeichnet (Punkt, Quadrat, Dreieck, Balken, Kamera) und zwei Inline-SVG | ja: vier Fokusformen, Icons skalieren nicht | Part `Button` icon-only (rund als Modifier am Element um das Part), `ThemeIcon` für record/stop/play/pause/camera/mirror | ein Fokus (`base.css`), Icons im Icon-System | 7 Knöpfe, 4 TSX | lohnt · 5b |
+| V3 | **Upload (= N3):** sechs Dateien bauen `FormData` selbst, viermal `LocalStatus`, dreimal dieselbe Statusformel, drei Drop-Handler (FileChips mit eigener Optik), drei Blob-Downloads plus `download.ts` | ja: DnD-Optik in FileChips anders | `useUpload` + eine Drop-Zone auf `tl-file-upload[data-tl-state~="dragover"]`; Download über `download.ts` | DnD überall gleich, Fehler einmal angesagt | 7 TSX | lohnt · 5b |
+| V4 | **Status, leer, lädt:** fünf eigene Leer-/Ladezustände (PDF, Download, Icon-Suche, Audio, Bild), Fehlerzeilen in Recorder und Foto ohne `role=alert`, drei eigene Spinner-/Wobble-Animationen | ja | `tl-status`, Part `Spinner`, `aria-busy` | Fehler werden angesagt | 7 TSX | mit der Welle · 5a/5b |
+| V5 | **Drag and drop:** Kanban eigener `DropState` und zweite `DropHint`-Kopie (`z-index:13000`), Dashboard eigene Zugmaschine ohne Touch und Tastatur, Farbpalette eigenes Drag-Bild, Kalender `--dragging` 0,7 statt 0,4 | ja: drei Einfügeoptiken | `data-tl-state` aus `drag.css`, `dropZoneAt`, `DropHint`, `useListReorder` (Dashboard braucht 2D — prüfen) | eine Optik, Touch überall | 4 TSX | lohnt · 5c |
+| V6 | **Raster ohne Tastatur:** Farbpalette (`div`), Mixer (nur Zeiger), Mini-Monat, Kanban-Karten verschieben, Dashboard-Kacheln verschieben; `useRovingFocus` existiert, nutzt nur `items.tsx`; acht weitere Roving-Fassungen von Hand (Q23) | nein (Maus geht) | `useRovingFocus` für die Raster; Mixer als `role=slider`; Verschieben per Tastatur wie `useListReorder` (Alt+Pfeil) | alles ohne Maus bedienbar (WCAG 2.1.1) | 5 Stellen; Q23 optional | lohnt · 5a/5c |
+| V7 | **1-aus-N von Hand:** Kalender-Granularität (5 Knöpfe ohne `aria-pressed`), zwei Popup-Tab-Leisten | ja | `tl-segmented` (`choice`), `tl-tabs` | Zustand angesagt | 3 Leisten | mit der Welle · 5a/5c |
+| V8 | **Kalender:** kein einziges `role`/`aria`, 8 Kategoriefarben als Hex (das Paket hat `category-1..8`), Jetzt-Linie `#da1e28`, `outline:none` am Anlegen-Feld, Toolbar halb Part, halb eigen | ja | `tl-toolbar`, Termine `tl-chip`/`tl-pill` mit `data-tl-category`, Jetzt-Linie aus `status-error`, Raster nach V6 | Kategorien folgen dem Kundentheme, Kontrast geprüft | 1 TSX (944 Zeilen) | lohnt · 5c |
+| V9 | **Slider:** natives `range` mit 27 Pseudo-Regeln, Zustand per Klasse `--error/--warning`, vier `--tlSlider-*` im Namensraum des Pakets | kaum | neue Komponente `tl-slider` im Paket (keine Vorlage), Zustand über `fieldStateAttrs` | — (a11y ist gut) | 1 TSX | mit der Welle · 5a (Paketlücke) |
+| V10 | **Schwebende Knöpfe auf Flächen:** Druckknopf im HTML-Dokument und Ausblenden-Knopf der Dashboard-Kachel, je eigene Hülle mit `--shadow-raised` | kaum | ein Muster „Knopf über Fläche“ (Overlay-Ebene) | — | 2 TSX | mit der Welle · 5b/5c |
+| V11 | **Schachbrett „keine Farbe“** zweimal mit Literalen (`#ccc` 8 px, `#eee` 6 px) | kaum | ein Swatch-Muster aus Tokens | — | 1 Block | mit der Welle · 5a |
+| V12 | **Visually hidden** im Dashboard mit 9 Deklarationen nachgebaut | nein | `tl-visually-hidden` (`base.css`) | — | 1 | mit der Welle · 5c |
+| V13 | **Ebenen über allem:** Drag shield 12000, Touch-Bild 12500, Element-Picker 10000, Kanban-Hinweis 13000, Wysiwyg-Popups 10000 — Literale über der Skala (Toast 1200) | nein | Token `layer-drag` (über Toast) für Schild und Touch-Bild; Picker und Hinweis auf `layer-popover` | — | 5 Stellen | lohnt · 5d (Entscheidung: neues Token) |
+| V14 | **Bewegung ohne `prefers-reduced-motion`:** Ripple, Wobble (zweimal gleich), Spin | nein | Dauern/Kurven aus Tokens, eine Wobble, Guard | — | 4 Animationen | mit der Welle · 5b |
+| V15 | **Fundament im alten Sheet, das keiner Welle gehört:** Tooltip (`tl-tooltip-popover`, alte Tokens, steckt im IconSelect-Block), Anchor-Flash, Fill-Vertrag (`tlFill`, `.tl-item:has(> .tlFill)`), Mount point, Viewport, Touch drag, Drag shield, Element-Picker | nein | ins Paket: `layout` (Fill, Viewport, Mount), `drag` (Schild, Touch), `popover` (Tooltip), `base` (Anchor-Flash) | — | ~250 Zeilen, 6 TS | lohnt · 5d (Voraussetzung zum Löschen) |
+| V16 | **Fremde Stylesheets:** Wysiwyg 378 (definiert `--tl-wysiwyg-*`, `z-index:10000`), Script-Editor 173, Code-Editor 76, Flow 44, Chart.js 48, Demo 111, `tlReactBase.css` — lesen alte Theme-Tokens | ja: Fokusblau, Flächen | Tokens des Pakets (Klassen bleiben dort, wo die Fremdbibliothek sie vorgibt); `--tl-wysiwyg-*` aus dem Namensraum | eine Farbwelt | 7 Dateien | lohnt · 5d oder eigener Strang (Entscheidung) |
+| V17 | **Alte Theme-Tokens nach dem Löschen:** `MuiTextAdapter` liest `--text-on-color`, die fremden Sheets ~150 Lesestellen; `tl-react-theme.config.xml` liefert sie weiter; Kundenthemes dort erreichen umgestellte Controls nicht (Frage an Bernhard in #29850) | nein | Entscheidung, ob die alten Tokens nach Welle 5 bleiben (Brücke für Fremdes) oder fallen | — | Theme-Config, #29850 | Entscheidung · 5d |
+| V18 | **Tot:** `TLCounter` (kein Java-Control, nur registriert), Regel `tlPhotoCapture__cameraBtn--active` (nie gesetzt) | nein | streichen | — | 1 TSX, 1 Regel | lohnt · 5b |
+| V19 | **Zwei Interaktiv-Prüfungen:** `controls/interactive.ts` (`isInteractiveTarget`) neben `bridge/interactive.ts` (`isInteractiveWithin`) | nein | eine | — | 6 Aufrufer | mit der Welle · 5c |
+| V20 | **Dashboard misst selbst** (`parseLengthPx`, eigene Spaltenrechnung, `gap:'1rem'` inline) | kaum | `tokenPx`, Raster aus `layout.css` | — | 1 TSX | mit der Welle · 5c |
+| V21 | **Escape außerhalb des Dispatchers:** Element-Picker (eigener Capture-Listener), Kalender-Anlegen | nein | `useStandaloneKeyboardScope` | — | 2 | mit der Welle · 5c/5d |
+
+Nicht zusammenzulegen: Audio hat keinen Scrubber, Slider ist einzig (V9); `TLJobStatus`, `TLValueList`, `TLDownload`
+nutzen die Parts schon — dort nur Tokens und Klassen. „Compact field“ steht schon auf `--tl-*`, nur umziehen. Der Block
+„Kopf“ der Ratsche (37 Zeilen) ist der Dateikopf vor dem ersten Block, keine Komponente. Die Regel
+`.tl-table__row:hover .tlCompactField--view` und „Table cells holding legacy controls“ gehen mit ValueList (5c) und
+Compact field.
+
+**Vorschlag Schnitt** (je eigenes Ticket, wie 4a–4c):
+
+| Teil | Inhalt | Altbestand | Kern |
+|---|---|---|---|
+| **5a Eingaben** | ColorInput, IconSelect, Slider (neu `tl-slider`) | ~900 | V1, V6 (Palette, Mixer), V7, V9, V11 |
+| **5b Medien** | AudioRecorder, AudioPlayer, PhotoCapture, FileChips, Download, Image, PdfViewer, Html, JobStatus; `TLCounter` streichen | ~830 | V2, V3, V4, V10, V14, V18 |
+| **5c Planen und Ziehen** | Calendar, Kanban, Dashboard, ValueList, Tabellenzellen | ~630 | V5, V6 (Monat, Kanban, Dashboard), V8, V12, V19, V20 |
+| **5d Fundament und Abschluss** | Tooltip, Fill, Viewport, Mount, Drag shield, Touch drag, Element-Picker, Anchor-Flash, Compact field; Ebene `layer-drag`; fremde Stylesheets nach Entscheidung; `tlReactControls.css` gelöscht (Config, `TestReactStylesheetTokens`, Doku) | ~300 + Fremde | V13, V15, V16, V17, V21 |
