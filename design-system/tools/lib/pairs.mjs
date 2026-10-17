@@ -62,6 +62,9 @@ export function kontrastPaare(T) {
   paar('border-interactive', 'surface-layer-nested', 3.0); // Ring einer ausgewählten Option in einer Fläche (Q24)
   paar('border-interactive', 'surface-overlay', 3.0); paar('border-interactive', 'surface-interactive-selected', 3.0); paar('text-link', 'surface-overlay', 4.5);
   paar('text-primary', 'surface-field', 4.5); paar('icon-secondary', 'surface-field', 3.0); // Schalterknopf
+  // Griff des Mischers auf jeder Datenfarbe: 9:1 zwischen den Ringen sichert auf jeder Farbe einen Ring mit
+  // 3:1 (Spec 5a §4).
+  paar('border-handle-light', 'border-handle-dark', 9.0);
   // Knöpfe im Feld: der Pfeil des Select steht beim Zeigen und Drücken auf der Fläche seines Quadrats.
   paar('icon-secondary', 'surface-interactive-selected', 3.0); paar('icon-secondary', 'surface-interactive-active', 3.0);
   paar('border-interactive', 'surface-brand-subtle', 3.0); // gewählter Chip, gewähltes Segment

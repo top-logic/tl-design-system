@@ -57,3 +57,7 @@ Ein Popover ist kein eigenes Control. Es ist die Fläche, die ein Control öffne
 Ein Popover besteht den Vertrag, wenn es im Portal unter `document.body` liegt, `tl-popover` und
 `data-tl-anchored-overlay` trägt, mit Escape und Drücken außerhalb schließt, den Fokus an den Auslöser
 zurückgibt und im Klassen-Gate keine Klasse ohne `tl-`-Präfix hinterlässt.
+
+## Leser
+
+Der Picker (`tl-picker`) liegt als Hülle auf einem Popover.

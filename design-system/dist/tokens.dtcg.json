@@ -1054,6 +1054,14 @@
           "$type": "color",
           "$value": "{primitive.color.gray-18}"
         },
+        "border-handle-light": {
+          "$type": "color",
+          "$value": "{primitive.color.gray-0}"
+        },
+        "border-handle-dark": {
+          "$type": "color",
+          "$value": "{primitive.color.gray-77}"
+        },
         "focus-ring": {
           "$type": "color",
           "$value": "{primitive.color.blue-49}"
@@ -1416,6 +1424,14 @@
         "border-disabled": {
           "$type": "color",
           "$value": "{primitive.color.gray-66}"
+        },
+        "border-handle-light": {
+          "$type": "color",
+          "$value": "{primitive.color.gray-0}"
+        },
+        "border-handle-dark": {
+          "$type": "color",
+          "$value": "{primitive.color.gray-77}"
         },
         "focus-ring": {
           "$type": "color",

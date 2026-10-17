@@ -147,6 +147,8 @@ const MODIFIERS = {
   'tl-deck': new Set([]),
   'tl-split': new Set(['horizontal', 'vertical']), // Alle eingeklappt: data-tl-state.
   'tl-tile-stack': new Set([]), // Richtung und Übergang: data-tl-state.
+  'tl-swatch': new Set(['color', 'wide']), // Leer, Fehler, Warnung: Attribute.
+  'tl-picker': new Set([]),
   'tl-wizard': new Set([]), // Richtung: data-tl-state; Schritt erledigt: data-tl-state, aktuell: aria-current.
   'tl-adaptive-detail': new Set([]),
 };

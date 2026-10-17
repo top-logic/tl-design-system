@@ -1,0 +1,20 @@
+/* Picker — Spec 2026-10-17 Welle 5a §3. Die Hülle der Popups von Farb- und Icon-Picker: eine Spalte aus Reitern
+   (tl-tabs), Inhalt und Knopfleiste (tl-button-bar) auf einem tl-popover. Keine Breite — das Popup richtet sich nach
+   seinem Inhalt. Den Rand der Reiter liefert tl-tabs. */
+
+.tl-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tl-space-sm);
+}
+.tl-picker[hidden] { display: none; }
+
+.tl-picker__tabs {
+  flex-shrink: 0;
+}
+.tl-picker__tabs[hidden] { display: none; }
+
+.tl-picker__actions {
+  flex-shrink: 0;
+}
+.tl-picker__actions[hidden] { display: none; }

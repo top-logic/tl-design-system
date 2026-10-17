@@ -19,3 +19,7 @@ rendert sie um ihre Toolbar. TopLogic garantiert Lage und Verschwinden, nicht da
 ## Konformität
 
 Eine Knopfleiste besteht den Vertrag, wenn sie die Knöpfe rechtsbündig zeigt und ohne Knopf samt Linie verschwindet.
+
+## Leser
+
+Der Picker (`tl-picker__actions`) trägt seine Knöpfe in einer Knopfleiste.

@@ -61,3 +61,7 @@ Tabs bestehen den Vertrag, wenn die Leiste `role="tablist"` trägt, jeder Reiter
 `role="tab"`, `aria-selected` und `aria-controls` ist, genau einer `aria-selected="true"` trägt, jedes
 Panel `role="tabpanel"` mit `aria-labelledby` hat, die Tastatur oben vollständig wirkt und im
 Klassen-Gate keine Klasse ohne `tl-`-Präfix hinterlässt.
+
+## Leser
+
+Der Picker (`tl-picker__tabs`) liest die Reiter und ihre Tastatur über `useTabList`.

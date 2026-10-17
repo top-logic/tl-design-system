@@ -79,7 +79,9 @@ test('der Hof gehört nur den Auswahlmarken: kein anderer Block liest ihn', () =
       // Ausnahme 07.10.: der Toggle zeigt mit dem Schleier als Fläche (kein Hof, toggle.css; Lint SCHICHT_FLAECHE).
       // Ausnahme 16.10. (Q24): eine auswählbare Option (tl-item, tl-columns__column mit role=option) ist eine
       // Auswahlmarke — sie zeigt beim Zeigen den Hof.
-      if (/surface-state-/.test(d.value) && name !== 'choice/choice.css' && name !== 'toggle/toggle.css' && name !== 'layout/layout.css') hits.push(`${name}:${d.line} ${d.selector}`);
+      // Ausnahme 17.10. (Welle 5a): ein Swatch ist eine Auswahlmarke — Feldknopf und Palettenzelle (Option)
+      // zeigen beim Zeigen den halo.
+      if (/surface-state-/.test(d.value) && name !== 'choice/choice.css' && name !== 'toggle/toggle.css' && name !== 'layout/layout.css' && name !== 'swatch/swatch.css') hits.push(`${name}:${d.line} ${d.selector}`);
   assert.deepEqual(hits, []);
 });
 
