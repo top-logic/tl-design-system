@@ -162,7 +162,11 @@ test('keine alte Klasse der Welle 5a in react-src, Stylesheets, Java, tl-docs un
 });
 
 test('Welle 5a im TSX: Picker als Dialog mit usePopover, Reiter mit useTabList, kein englischer Name', { skip: !existsSync(M) && 'kein Worktree' }, () => {
-  const tsx = (n) => readFileSync([...reactSources()].find((p) => p.endsWith(`/controls/${n}.tsx`) || p.endsWith(`/controls/picker/${n}.tsx`) || p.endsWith(`/controls/color/${n}.tsx`) || p.endsWith(`/controls/icon/${n}.tsx`)), 'utf8');
+  const tsx = (n) => {
+    const p = [...reactSources()].find((q) => q.endsWith(`/${n}.tsx`));
+    assert.ok(p, `${n}.tsx nicht in den React-Quellen gefunden`);
+    return readFileSync(p, 'utf8');
+  };
   const pp = tsx('PickerPopover');
   assert.match(pp, /role="dialog"/);
   assert.match(pp, /usePopover/);

@@ -72,13 +72,15 @@ test('picker-spec: Reiter in tl-type-body, Knopfleiste Leeren · Abbrechen · OK
   assert.match(bar, /tl-button--primary[^>]*>OK</);
 });
 
-test('color-picker: Mischfeld quadratisch zwischen size-11 und size-12, Farbtonregler size-control-sm breit', () => {
+test('color-picker: Mischfeld und Farbtonregler quadratisch/gleich hoch zwischen size-11 und size-12, Farbtonregler size-control-sm breit', () => {
   const css = ohneKommentar(readGenerated('color-picker', 'color-picker.css'));
   assert.match(css, /\.tl-color-picker__field\s*\{[^}]*aspect-ratio:\s*1\b/);
+  assert.match(css, /\.tl-color-picker__field,\s*\.tl-color-picker__hue\s*\{[^}]*min-block-size:\s*var\(--tl-size-11\)[^}]*max-block-size:\s*var\(--tl-size-12\)/, 'Farbtonregler: dieselbe Spanne wie das Feld');
   const both = decl('color-picker', '.tl-color-picker__field');
   assert.match(both, /min-block-size:\s*var\(--tl-size-11\)/);
   assert.match(both, /max-block-size:\s*var\(--tl-size-12\)/);
   assert.match(both, /(?<![-\w])block-size:\s*100%/);
+  assert.match(css, /\.tl-color-picker__mixer\s*\{[^}]*(?<![-\w])block-size:\s*var\(--tl-size-12\)/);
   assert.match(css, /\.tl-color-picker__hue\s*\{[^}]*inline-size:\s*var\(--tl-size-control-sm\)/);
 });
 

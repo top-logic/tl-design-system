@@ -912,7 +912,7 @@ Mischers, auf jeder Farbe lesbar). Im Bridge: `useTabList` (Reiter mit Tastatur,
 | `.tlIconSelect`, `__swatch`, `--empty`, `--immutable` | `.tl-swatch`, `[data-tl-state~="empty"]`, lesend `span` |
 | `.tlIconSelect__popup`, `__grid`, `__iconCell--selected` | `.tl-popover.tl-picker.tl-icon-picker`, `.tl-icon-picker__grid`, `__cell[aria-selected="true"]` |
 | `.tlIconSelect__loading`, `__noResults` | `.tl-status` |
-| `.tlSlider`, `--error`, `--warning`, `__input`, `__value` | `.tl-slider`, `[aria-invalid]`, `[data-tl-state~="warning"]`, `__input`, `__value` |
+| `.tlSlider`, `--error`, `--warning`, `__input`, `__value` | `.tl-slider`, `.tl-slider__input[aria-invalid="true"]`, `[data-tl-state~="warning"]`, `__input`, `__value` |
 | `--tlSlider-*` | — (Füllung `.tl-slider__fill`) |
 
 ## Konsolidierung (01.10.) — Gleiches wird zusammengelegt

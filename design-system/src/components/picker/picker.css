@@ -21,6 +21,11 @@
 .tl-picker__tabs > .tl-tabs__panel {
   padding: var(--tl-space-2xs);
   scroll-padding: var(--tl-space-xs);
+}
+
+/* Ein Reiterfeld mit Mischer reserviert die Bahn des Scrollbalkens: erscheint er erst beim Schrumpfen, verengt er das
+   Feld, und das Popup scrollt auch seitlich. Das Raster des Icon-Pickers scrollt selbst und braucht das nicht. */
+.tl-picker__tabs > .tl-tabs__panel:has(.tl-color-picker__mixer) {
   scrollbar-gutter: stable;
 }
 
@@ -28,13 +33,16 @@
   flex-shrink: 0;
 }
 
-/* Zeigt das Reiterfeld den Mischer, ist seine Stapelzeile der Teil, der mit dem Popup schrumpft; der Mischer darin
-   nimmt ihre Höhe (color-picker.css). Die Spalte daneben (Vorschau, Eingaben) schrumpft nicht mit: sie behält ihre
-   Höhe samt Rand von space-2xs unten und scrollt im Reiterfeld, sodass der Fokusring der letzten Eingabe im
-   overflow bleibt. */
+/* Zeigt das Reiterfeld den Mischer, ist seine Stapelzeile der Teil, der mit dem Popup schrumpft: die Höhe richtet
+   sich nach der Spalte daneben (Vorschau, Eingaben) und gibt erst unter einer Kappe nach. Der Mischer darin nimmt
+   die Höhe der Zeile (color-picker.css). Die Spalte schrumpft nicht mit: sie behält ihre Höhe samt Rand von
+   space-2xs unten und scrollt im Reiterfeld, sodass der Fokusring der letzten Eingabe im overflow bleibt. */
 .tl-picker__tabs > .tl-tabs__panel > .tl-stack:has(> .tl-color-picker__mixer:not([hidden])) {
-  flex: 0 1 calc(var(--tl-size-12) + 2 * var(--tl-space-2xs));
+  flex: 0 1 auto;
   min-block-size: 0;
+}
+.tl-picker__tabs > .tl-tabs__panel > .tl-stack:has(> .tl-color-picker__mixer:not([hidden])) > .tl-color-picker__mixer {
+  block-size: auto;
 }
 .tl-picker__tabs > .tl-tabs__panel > .tl-stack:has(> .tl-color-picker__mixer:not([hidden])) > :not(.tl-color-picker__mixer) {
   min-block-size: min-content;

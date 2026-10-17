@@ -23,11 +23,13 @@
 }
 .tl-color-picker__mixer[hidden] { display: none; }
 
-/* Der Mischer gibt in kurzen Popups nach: seine Höhe liegt zwischen size-11 und size-12 (size-12, wenn Platz ist),
-   das Feld bleibt quadratisch, der Farbtonstreifen ist so hoch wie das Feld. Den freien Platz gibt das Reiterfeld
-   über die Stapelzeile weiter (picker.css). */
+/* Maß des Mischers: allein size-12 im Quadrat. In der Stapelzeile des Picker-Popups (picker.css) gibt er nach: dort
+   hat der Mischer keine eigene Höhe, sondern die der Zeile, und das Feld liegt zwischen size-11 und size-12 (size-12,
+   wenn Platz ist), quadratisch; der Farbtonstreifen ist so hoch wie das Feld. */
 .tl-color-picker__mixer {
+  box-sizing: content-box;
   align-self: stretch;
+  block-size: var(--tl-size-12);
   min-block-size: var(--tl-size-11);
 }
 

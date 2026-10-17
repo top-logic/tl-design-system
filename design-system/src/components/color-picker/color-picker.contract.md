@@ -39,8 +39,8 @@ Alles im Popup ändert nur den Entwurf „Neu“; Abbrechen und Escape verwerfen
 |---|---|
 | `tl-color-picker__palette` | Raster der Palette, Spalten inline |
 | `tl-color-picker__mixer` | Mischfeld und Farbtonregler |
-| `tl-color-picker__field` | Sättigung/Helligkeit, Maß `--tl-size-12` im Quadrat |
-| `tl-color-picker__hue` | Farbton, `--tl-size-control-sm` breit |
+| `tl-color-picker__field` | Sättigung/Helligkeit, quadratisch: `--tl-size-12`, wo Platz ist, und nicht unter `--tl-size-11`; im Popup gibt das Feld mit der Höhe des Reiterfelds nach (`picker.css`), allein steht es auf `--tl-size-12` |
+| `tl-color-picker__hue` | Farbton, `--tl-size-control-sm` breit, so hoch wie das Feld (`--tl-size-11` bis `--tl-size-12`) |
 | `tl-color-picker__handle` | Doppelring, außen `--tl-border-handle-dark` (Rand), innen `--tl-border-handle-light` (inset-Linie) |
 | `tl-color-picker__preview` | Aktuell und Neu, je ein breiter Swatch |
 | `tl-color-picker__inputs` | Rot, Grün, Blau, Hex |
