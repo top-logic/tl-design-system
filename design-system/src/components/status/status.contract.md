@@ -8,7 +8,7 @@ die Tokens.
 
 | Schlüssel | Typ | Bedeutung |
 |---|---|---|
-| `loading` | boolean | Es lädt. Die Zeile trägt einen unbestimmten `tl-progress` mit `aria-busy="true"`; seine Beschriftung ist optional und sagt, was lädt. |
+| `loading` | boolean | Es lädt. Die Zeile trägt einen unbestimmten `tl-progress` mit `aria-busy="true"` oder den Spinner (`tl-spinner`, Part `Spinner`, `role="progressbar"` mit Namen); die Beschriftung des `tl-progress` ist optional und sagt, was lädt. |
 | `empty` | boolean | Es ist nichts da. Die Zeile trägt nur Text („Keine Einträge“, „Nichts gefunden“). |
 | `error` | boolean | Das Laden ist gescheitert. Die Zeile trägt `role="alert"` und darf einen `tl-button--link` zum Wiederholen tragen. |
 
@@ -37,6 +37,7 @@ der Zeile füllt sie.
 |---|---|
 | Select-Popup | eine `tl-status`-Zeile statt der Optionen |
 | Baum | eine `li` mit `role="treeitem"`, eine Ebene unter einem Knoten mit `aria-busy`; im Baum mit `aria-multiselectable` trägt sie `aria-selected="false"` (sie ist nie wählbar); die `li` trägt den Namen (`aria-label` aus `js.tree.loading`), der `tl-progress` darin ist `aria-hidden="true"` |
+| Icon-Picker | alle drei Zustände im Raster: laden mit dem Spinner und dem Text `js.iconSelect.loading`, leer mit `js.iconSelect.noResults`, Fehler mit `js.iconSelect.loadError` und dem Part `Button` (`tl-button--link`) `js.iconSelect.retry` |
 | Tabelle | nur leer: eine `role="row"` (im `treegrid` mit `aria-level="1"`), deren einzige `role="gridcell"` selbst die `tl-status`-Zeile ist, Text `js.table.empty`. Laden zeigt die Tabelle mit Platzhalterzeilen (`tl-skeleton`), nicht mit einer Statuszeile (`table.contract.md`). |
 
 ## Attribute
@@ -54,5 +55,5 @@ der Zeile füllt sie.
 ## Konformität
 
 Eine Statuszeile besteht den Vertrag, wenn sie im Ladezustand einen `tl-progress` mit
-`aria-busy="true"` trägt und der Name (`aria-label` oder `aria-labelledby`) am Element sitzt, das der Screenreader ansagt (der `tl-progress`, in einer Zeile mit eigener Rolle diese Zeile), im Fehlerzustand `role="alert"` hat und im
+`aria-busy="true"` (oder den Spinner mit eigenem Namen) trägt und der Name (`aria-label` oder `aria-labelledby`) am Element sitzt, das der Screenreader ansagt (der `tl-progress`, in einer Zeile mit eigener Rolle diese Zeile), im Fehlerzustand `role="alert"` hat und im
 Klassen-Gate keine Klasse ohne `tl-`-Präfix hinterlässt.

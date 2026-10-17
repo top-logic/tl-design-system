@@ -37,7 +37,7 @@ und Fehler sind `tl-status`.
 | `tl-icon-picker__advanced` | Reiter „Erweitert“: Klassenfeld und Vorschau |
 | `tl-icon-picker__preview` | Vorschau des Icons |
 
-Laden, keine Treffer und Fehler stehen als `tl-status` im Raster; der Fehler nennt „Erneut laden“ als Part `Button`.
+Laden, keine Treffer und Fehler stehen als `tl-status` an der Stelle des Rasters (ohne Treffer gibt es kein `listbox`); der Fehler nennt „Erneut laden“ als Part `Button`.
 
 ## Konformität
 
