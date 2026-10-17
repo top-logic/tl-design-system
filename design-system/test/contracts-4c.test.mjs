@@ -21,8 +21,18 @@ const SOLL = {
     'role="listbox"', 'role="option"', 'aria-selected', 'selectItem', '--tl-surface-state-hover', '--tl-border-interactive'],
   'split/split.contract.md': ['tl-split', 'tl-split__pane', 'tl-split__handle', 'role="separator"', 'aria-valuenow',
     'aria-orientation', 'aria-controls', 'data-tl-state~="collapsed"', 'updateSizes', 'resetSizes', 'Home', 'End'],
+  'slide/slide.contract.md': ['tl-slide-in-forward', 'tl-slide-out-backward', '--tl-space-md'],
+  'tile-stack/tile-stack.contract.md': ['tl-tile-stack', 'tl-tile-stack__frame', 'data-tl-state~="covered"',
+    'data-tl-state~="entering"', 'data-tl-state~="exiting"', 'data-tl-state~="backward"', 'useKeyedTransition'],
+  'wizard/wizard.contract.md': ['tl-wizard', 'tl-wizard__steps', 'tl-wizard__disc', 'aria-current="step"',
+    'data-tl-state~="done"', 'aria-hidden', 'tl-button--link', '--tl-size-wizard-progress', 'gotoStep', 'advanceStep'],
+  'adaptive-detail/adaptive-detail.contract.md': ['tl-adaptive-detail', 'tl-adaptive-detail__bar', 'tl-breadcrumb',
+    'aria-current="page"', 'tl-drawer--container', 'navigate'],
+  'breadcrumb/breadcrumb.contract.md': ['tl-adaptive-detail'],
+  'alert/alert.contract.md': ['ViewLoadError', 'TLHtml'],
+  'table/table.contract.md': ['tabindex="0"', 'aria-valuenow', 'columnResize'],
 };
-const SPECIMEN = ['panel', 'card', 'accordion', 'layout', 'split'];
+const SPECIMEN = ['panel', 'card', 'accordion', 'layout', 'split', 'wizard', 'adaptive-detail'];
 
 for (const [file, names] of Object.entries(SOLL)) test(`${file} nennt ${names.length} Pflichtbegriffe`, () => {
   const [d, f] = file.split('/');
@@ -70,4 +80,20 @@ test('split.spec.html: Griff fokussierbar mit Wert; eine eingeklappte Fläche im
   const html = datei('split', 'split.spec.html');
   assert.match(html, /class="tl-split__handle" role="separator" tabindex="0" aria-orientation="vertical"[^>]*aria-valuenow="30"/);
   assert.match(html, /class="tl-split__pane" data-tl-state="collapsed"/);
+});
+
+test('wizard.spec.html: erledigt, aktuell, kommend; die Liste hat einen Namen, Zähler und Scheiben sind still', () => {
+  const html = datei('wizard', 'wizard.spec.html');
+  assert.match(html, /<ol class="tl-wizard__steps" aria-label="[^"]+"/);
+  assert.match(html, /class="tl-wizard__step-item" data-tl-state="done"/);
+  assert.match(html, /class="tl-wizard__step-item" aria-current="step"/);
+  assert.match(html, /class="tl-wizard__counter tl-type-label tl-nums" aria-hidden="true"/);
+  assert.match(html, /class="tl-wizard__disc tl-type-label tl-nums" aria-hidden="true"/);
+});
+
+test('adaptive-detail.spec.html: die letzte Krume ist die aktuelle Seite, der Drawer liegt im Behälter', () => {
+  const html = datei('adaptive-detail', 'adaptive-detail.spec.html');
+  assert.match(html, /<div class="tl-adaptive-detail__bar">\s*<nav class="tl-breadcrumb" aria-label="[^"]+"/);
+  assert.match(html, /tl-breadcrumb__current[^"]*" aria-current="page"|aria-current="page"[^>]*tl-breadcrumb__current/);
+  assert.match(html, /class="tl-drawer [^"]*tl-drawer--container[^"]*" data-tl-state="open"/);
 });

@@ -25,6 +25,8 @@ Was es bekommt (`AlertStateJson`):
 | `generation` | number | Die Fassung der Meldung; `dismiss` nennt sie, eine veraltete wird ignoriert. |
 | `hidden` | boolean | Verborgen: der Alert rendert nichts. |
 
+Leser auch: `ViewLoadError` (eine Ansicht, die nicht lädt, `data-tl-role="error"`) und `TLHtml` (ein Fragment, das nicht gezeigt wird).
+
 ## Aktionen
 
 | Aktion | Argument | Wann |

@@ -160,3 +160,55 @@ test('eingeklappt im waagrechten Split: Titel senkrecht über writing-mode, nich
   assert.match(css, /writing-mode:\s*vertical-rl/);
   assert.doesNotMatch(css, /rotate/);
 });
+
+test('ein Versatz für Wizard und TileStack: tl-slide-* aus space-md, keine px', () => {
+  const css = ohneKommentar(readGenerated('slide', 'slide.css'));
+  for (const name of ['tl-slide-in-forward', 'tl-slide-in-backward', 'tl-slide-out-forward', 'tl-slide-out-backward'])
+    assert.match(css, new RegExp(`@keyframes ${name}\\b`));
+  assert.match(css, /translateX\(var\(--tl-space-md\)\)/);
+  assert.match(css, /translateX\(calc\(-1 \* var\(--tl-space-md\)\)\)/);
+  for (const dir of ['tile-stack', 'wizard'])
+    assert.doesNotMatch(ohneKommentar(readGenerated(dir, `${dir}.css`)), /\d+px|@keyframes/, dir);
+});
+
+test('Übergänge als Attribute: entering/exiting/backward in data-tl-state, verdeckter Rahmen ebenso', () => {
+  const t = ohneKommentar(readGenerated('tile-stack', 'tile-stack.css'));
+  assert.match(t, /\.tl-tile-stack__frame\[data-tl-state~="entering"\]\s*\{[^}]*animation:\s*tl-slide-in-forward var\(--tl-duration-slow\) var\(--tl-easing-entrance\)/);
+  assert.match(t, /\.tl-tile-stack\[data-tl-state~="backward"\] > \.tl-tile-stack__frame\[data-tl-state~="entering"\]/);
+  assert.match(t, /:dir\(rtl\)/);
+  assert.match(decl('tile-stack', '.tl-tile-stack__frame[data-tl-state~="covered"]'), /visibility:\s*hidden/);
+  const w = ohneKommentar(readGenerated('wizard', 'wizard.css'));
+  assert.match(w, /\.tl-wizard__step\[data-tl-state~="exiting"\]\s*\{[^}]*animation:\s*tl-slide-out-forward var\(--tl-duration-slow\) var\(--tl-easing-exit\) forwards/);
+});
+
+test('Wizard: drei Stufen der Scheibe aus Rollen, Breite des Balkens als Token', () => {
+  const d = decl('wizard', '.tl-wizard__disc');
+  assert.match(d, /width:\s*var\(--tl-size-icon-lg\)/);
+  assert.match(d, /border-radius:\s*var\(--tl-radius-full\)/);
+  assert.match(d, /background:\s*var\(--tl-surface-layer-nested\)/);
+  assert.match(d, /border:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-control\)/);
+  assert.match(decl('wizard', '.tl-wizard__step-item[data-tl-state~="done"] > .tl-wizard__disc'), /background:\s*var\(--tl-surface-brand-subtle\)/);
+  const c = decl('wizard', '.tl-wizard__step-item[aria-current="step"] > .tl-wizard__disc');
+  assert.match(c, /background:\s*var\(--tl-surface-brand\)/);
+  assert.match(c, /color:\s*var\(--tl-text-on-brand\)/);
+  assert.match(decl('wizard', '.tl-wizard__progress'), /max-width:\s*var\(--tl-size-wizard-progress\)/);
+});
+
+test('Wizard: die Paare der Scheibe stehen im Kontrast-Gate', async () => {
+  const { kontrastPaare } = await import('../tools/lib/pairs.mjs');
+  const P = kontrastPaare(T).map((p) => `${p.fg}|${p.bg}`);
+  for (const p of ['text-on-brand|surface-brand', 'text-primary|surface-brand-subtle', 'text-secondary|surface-layer-nested',
+    'border-control|surface-layer-nested', 'border-control|surface-base', 'border-control|surface-layer'])
+    assert.ok(P.includes(p), p);
+});
+
+test('AdaptiveDetail: Behälter des Drawers, Leiste der Breadcrumb auf size-bar mit Linie', () => {
+  const r = decl('adaptive-detail', '.tl-adaptive-detail');
+  assert.match(r, /position:\s*relative/);
+  assert.match(r, /overflow:\s*clip/);
+  // Der Behälter beschneidet; der Ring der Schublade darin liegt innen (Abweichung 18, focus-clip).
+  assert.match(decl('drawer', '.tl-drawer--container:focus-visible'), /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/);
+  const b = decl('adaptive-detail', '.tl-adaptive-detail__bar');
+  assert.match(b, /min-height:\s*var\(--tl-size-bar\)/);
+  assert.match(b, /border-bottom:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-separator\)/);
+});

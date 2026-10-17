@@ -195,7 +195,7 @@ zeichnet `drag.css` (`drag.contract.md`), den Cursor-Ring `base.css`.
 | `data-tl-state~="covered"` | am Kopf, solange Spalten unter der Spaltenwahl weiterlaufen (Kopf breiter als sein Fenster, nicht ganz nach rechts gescrollt); vor der Spaltenwahl blenden die Überschriften dann aus |
 | `data-tl-state~="dragging"`, `"drop-before"`, `"drop-after"`, `"drop-onto"`, `"drop-refused"` | an Zeile, Kopfzelle oder `tl-table` als Ganzem (`drag.contract.md`) |
 | `draggable="true"` | an ziehbaren Zeilen und verschiebbaren Kopfzellen |
-| `role="separator"` | an `tl-table__resize` mit `aria-label` `js.table.columnWidth` („Breite von {0} ändern“, {0} die Überschrift der Spalte) und an `tl-table__freeze` mit `aria-label` `js.table.freezeSplitter`; `aria-orientation="vertical"`, Zeigerbedienung |
+| `role="separator"` | an `tl-table__resize` mit `aria-label` `js.table.columnWidth` („Breite von {0} ändern“, {0} die Überschrift der Spalte) und an `tl-table__freeze` mit `aria-label` `js.table.freezeSplitter`; `aria-orientation="vertical"`, Zeigerbedienung; der Griff der Breite zusätzlich `tabindex="0"`, `aria-valuenow` (Breite in px), `aria-valuemin`; Pfeile links/rechts um `--tl-space-md`, Home an die Mindestbreite, End passt die Spalte an ihren Inhalt an (wie der Doppelklick); das Loslassen einer Pfeiltaste sendet `columnResize` |
 | `hidden` | an jedem Element, das gerade nicht steht |
 
 Cursor, Lage, Filter, Überdeckung und Ziehen sind Zustände: die Wörter `cursor`, `frozen`, `frozen-last`, `pinned`,

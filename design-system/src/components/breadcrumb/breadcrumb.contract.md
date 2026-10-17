@@ -10,6 +10,8 @@ das Aussehen; wer ins Bild passen will, liest die Tokens.
 | `entries` | Liste | Die Stufen von der Wurzel bis zur Seite davor; je Stufe `id`, `label`. |
 | `current` | string | Beschriftung der aktuellen Seite; sie ist kein Sprung. |
 
+Leser: `TLBreadcrumb` und die Leiste von `tl-adaptive-detail` (Darstellungsteil `Breadcrumb`).
+
 ## Aktionen
 
 | Aktion | Wirkung |

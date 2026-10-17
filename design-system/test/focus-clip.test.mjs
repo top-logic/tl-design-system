@@ -22,6 +22,8 @@ const PAGES = ['/specimen/index.html', ...readdirSync(COMPONENTS, { withFileType
 
 const MEASURE = (density) => `(() => {
   document.documentElement.dataset.tlDensity = ${JSON.stringify(density)};
+  // Eingänge (@starting-style) sind Übergänge: gemessen wird der Endstand, nicht der Weg dorthin.
+  for (const a of document.getAnimations()) if (a instanceof CSSTransition) a.finish();
   const FOCUSABLE = 'a[href], button, input, select, textarea, summary, [tabindex], [contenteditable]';
   const name = (e) => e.tagName.toLowerCase() + [...e.classList].filter((c) => c.startsWith('tl-')).map((c) => '.' + c).join('');
   const findings = [];

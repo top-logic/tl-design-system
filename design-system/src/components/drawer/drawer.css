@@ -71,6 +71,11 @@
   z-index: var(--tl-layer-raised);
 }
 
+/* Der Behälter beschneidet (Master-Detail: overflow: clip); der Ring der Schublade liegt darum innen. */
+.tl-drawer--container:focus-visible {
+  outline-offset: calc(-1 * var(--tl-focus-offset));
+}
+
 .tl-drawer__body {
   display: flex;
   flex: 1 1 auto;

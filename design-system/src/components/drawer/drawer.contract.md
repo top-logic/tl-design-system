@@ -46,7 +46,7 @@ Das Control ist `TLDrawer` (`ReactDrawerControl`).
 | Attribut | Wann |
 |---|---|
 | `tl-drawer` + `tl-drawer--start` \| `--end` \| `--bottom` + `tl-drawer--narrow` \| `--medium` \| `--wide` | immer, an `aside` |
-| `tl-drawer--container` | im Behälter verankert |
+| `tl-drawer--container` | im Behälter verankert; der Fokusring liegt innen (der Behälter beschneidet) |
 | `data-tl-state~="open"` | offen |
 | `inert` | geschlossen |
 | `aria-labelledby` | mit Titel, auf `tl-titlebar__title` |
