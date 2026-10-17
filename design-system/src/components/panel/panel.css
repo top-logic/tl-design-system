@@ -18,6 +18,11 @@
   background: var(--tl-surface-base);
 }
 
+/* Ein Doppelklick auf den Kopf maximiert; er soll den Titel nicht markieren. */
+.tl-panel > .tl-titlebar {
+  user-select: none;
+}
+
 .tl-panel[data-tl-state~="minimized"] > .tl-titlebar {
   cursor: pointer;
 }
