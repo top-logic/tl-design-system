@@ -115,9 +115,10 @@ Hendrik am Planende — beide wie empfohlen: ViewError ohne Monospace; nur was e
 (`6ffad95`; u. a. Kopfhöhe per `padding-bottom`, Ring des Container-Drawers innen, End am Spaltengriff = passend).
 Nach dem Merge von !1906 auf master `2bf2151a2e` nachgezogen (`useItems` aus #29755) und **Q24** entschieden
 (auswählbare Einträge: Hof beim Zeigen, Ring bei `aria-selected`; `2ad291d`). Plan-Review 2 (Fable, 474/480, MUI
-513/516 nur erwartet rot): Befunde 1–5 eingearbeitet (`bcbfda2`). **Bereit für die SDD; Start nur auf Hendriks Wort.**
+513/516 nur erwartet rot): Befunde 1–5 eingearbeitet (`bcbfda2`). **Bereit für die SDD. Start freigegeben (Hendrik 17.10.): alle zwölf Tasks in einer neuen Sitzung**, Subagent-driven.
+In der Sitzung vom 16.10. war die Trac-Anbindung (MCP) getrennt — vor Task 12 prüfen.
 
-**Einstieg der nächsten Sitzung (Welle 4c umsetzen):**
+**Einstieg der nächsten Sitzung (Welle 4c umsetzen — freigegeben, ohne Rückfrage starten):**
 1. `STATUS.md`, Spec `docs/superpowers/specs/2026-10-16-welle-4c-behaelter-design.md` und Plan
    `docs/superpowers/plans/2026-10-16-welle-4c-behaelter.md` lesen (Kopf: Review-Stände, Abweichungen 1–23).
 2. Worktree `_Working-Tree/tl8-wt-29584` steht auf `CWS/CWS_29870_design_system_welle_4c` = master `2bf2151a2e`, ohne
