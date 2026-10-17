@@ -30,6 +30,7 @@ nur Lage und Abstand. Die Gap-Skala teilen sie mit `tl-columns`.
 | `loose` | `--tl-space-lg` |
 | Inset Seite / Panel / Karte | `--tl-space-lg` / `--tl-space-md` / `--tl-space-xs` `--tl-space-md` |
 | Option beim Zeigen | Halo `--tl-space-2xs` in `--tl-surface-state-hover-strong` (der halo um Flächen; Marken lesen `-hover`) |
+| Haken der Option | `--tl-surface-brand` (Kreis, `--tl-size-icon-md`, `--tl-radius-round`), `--tl-text-on-brand` (Haken, Rand `--tl-border-width-md`), Lage `--tl-space-xs` oben am Ende |
 | Option ausgewählt | Ring `--tl-border-width-md` in `--tl-border-interactive` über dem Eintrag, Radius `--tl-radius-md` |
 
 ## Konformität

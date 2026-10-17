@@ -148,13 +148,24 @@ test('tl-item__check: Kreis oben am Ende, Fläche der Marke, Haken in text-on-br
   assert.match(marke, /height:\s*var\(--tl-size-icon-md\)/);
   assert.match(marke, /border-radius:\s*var\(--tl-radius-round\)/);
   assert.match(marke, /background:\s*var\(--tl-surface-brand\)/);
-  assert.match(marke, /z-index:\s*var\(--tl-layer-raised\)/);
+  assert.doesNotMatch(marke, /z-index/, 'ohne z-index: sie folgt dem Kind im DOM und liegt so über der Karte, ohne Panels zu überdecken');
   assert.match(marke, /pointer-events:\s*none/);
   const haken = decl('layout', '.tl-item__check::after');
-  assert.match(haken, /border-color:\s*var\(--tl-text-on-brand\)/);
-  assert.match(haken, /var\(--tl-border-width-md\)/);
-  assert.match(haken, /rotate\(/);
+  assert.match(haken, /border:\s*solid var\(--tl-text-on-brand\)/);
   assert.doesNotMatch(marke + haken, /\d+px/);
+});
+
+test('der Haken der Option und der des Kästchens sind gleich gebaut: rechter und unterer Rand, rotate(45deg)', () => {
+  const kaestchen = declarationsOf(readGenerated('choice', 'choice.css'), '.tl-checkbox:checked::after') ?? '';
+  const option = decl('layout', '.tl-item__check::after');
+  for (const d of [kaestchen, option]) {
+    assert.match(d, /border-width:\s*0 var\(--tl-border-width-md\) var\(--tl-border-width-md\) 0/);
+    assert.match(d, /rotate\(45deg\)/);
+    assert.match(d, /width:\s*calc\(var\(--tl-size-[a-z-]+\) \* 0\.3\)/);
+    assert.match(d, /height:\s*calc\(var\(--tl-size-[a-z-]+\) \* 0\.55\)/);
+    assert.match(d, /translateY\(calc\(var\(--tl-size-[a-z-]+\) \* -0\.06\)\)/);
+  }
+  assert.match(option, /var\(--tl-size-icon-md\)/);
 });
 
 test('tl-split: Richtung aus dem Modifier, Griff space-xs mit Linie; unter dem Zeiger, beim Ziehen, mit Fokus kräftig', () => {
