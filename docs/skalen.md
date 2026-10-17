@@ -2474,6 +2474,28 @@ den focus ring eines Kundenthemes hell etwas dunkler (Probe `#DB4809` → `#D343
 halo (Zeigen hätte die Stärke von Drücken geliehen); ein veil über der ausgewählten Karte (färbt Bild und Inhalt);
 ein dickerer Ring innen (derselbe Farbton, der Unterschied bliebe subtil).
 
+### Welle 5: Schnitt und Konsolidierung (17.10., Hendrik)
+
+**Grundlage.** Prognose V1–V21 in `altlast.md` „Welle 5“, alle wie vorgeschlagen. Rest des alten Stylesheets: 2405
+Zeilen in 24 Blöcken plus Kanban, Touch drag und Compact field; dazu sieben fremde Stylesheets mit alten Theme-Tokens.
+
+**Vier Teile, je ein Ticket:** 5a Eingaben (ColorInput, IconSelect, Slider), 5b Medien (Audio, Foto, Upload-Familie,
+Download, Bild, PDF, Html, JobStatus), 5c Planen und Ziehen (Calendar, Kanban, Dashboard, ValueList), 5d Fundament und
+Abschluss (Tooltip, Fill, Drag shield, Touch drag, Element-Picker, fremde Stylesheets; danach wird
+`tlReactControls.css` gelöscht). Fundament zuletzt, weil erst dann feststeht, was davon noch gelesen wird.
+
+**Gemeinsam statt je Control:** eine Picker-Hülle für Color und Icon auf `usePopover`, `tl-tabs`, Part `Button` und
+`useFocusTrap` (V1); runde Icon-Knöpfe als Part `Button` mit `ThemeIcon` statt CSS-gezeichneter Formen (V2); ein
+`useUpload` mit einer Drop-Zone und einem Download-Weg — die Technik wird eins, die Bedienformen bleiben (V3); Ziehen
+überall über `drag.css`, `DropHint` und `useListReorder` (V5); jedes Raster per Tastatur über `useRovingFocus` (V6).
+
+**Entschieden:** ein Token `layer-drag` über Toast für Drag shield und Touch-Bild — beide müssen über allem liegen, auch
+über einer Meldung (V13). Fremde Stylesheets lesen die Tokens des Pakets, ihre Klassen bleiben, wo die Bibliothek sie
+vorgibt (V16). Die alten Theme-Tokens bleiben nach Welle 5 als Brücke für Fremdes, bis #29850 klärt, wo Kundenthemes
+leben (V17). `TLCounter` hat kein Java-Control und wird gestrichen (V18). **Verworfen:** Welle 5 in einem Stück (über
+2.600 Zeilen, das Doppelte von 4b und 4c zusammen); Fundament zuerst (es zöge Regeln um, die die Teile 5a–5c noch
+streichen).
+
 ### Die Kopie in der Engine ist versiegelt (16.10.)
 
 **Befund:** Zweimal wurde die Kopie des Pakets in tl-engine-7 von Hand geändert — #29787 (sechs Stellen) und #29859

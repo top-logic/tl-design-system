@@ -996,12 +996,16 @@ Schon erledigt: den Breakpoint von AdaptiveDetail entscheidet der Server über d
 |---|---|---|---|---|
 | Q24 | Auswählbare Einträge aus #29755 (!1905, Bernhard): `.tlItem--selectable` hebt sich beim Zeigen mit `--shadow-raised`, `.tlItem--selected` als Klasse (`aria-selected` steht schon am Eintrag), eigener Fokusring 2 px `--focus`, `120ms ease` | ja | `tl-item[aria-selected]`: beim Zeigen ein halo (`surface-state-hover`) statt Schatten, ausgewählt der Ring `border-width-md` `border-interactive` (eine Fläche sähe man hinter einer Karte nicht), Fokus aus `base.css` | mit der Welle |
 
-### Welle 5 (17.10.) — Prognose vor der Spec; offen, Hendrik entscheidet
+### Welle 5 (17.10.) — Prognose vor der Spec; entschieden: alle Zeilen wie vorgeschlagen, Schnitt 5a–5d
 
 Drei Erkundungen: Bestand der 24 Restblöcke von `tlReactControls.css` (2405 Zeilen) und der drei ungelisteten
 (`TLKanbanBoard` 148, „Touch drag“ 32, „Compact field“ 60); fremde Stylesheets und Laden; Nachprüfung der Welle-5-Controls
 gegen die gemeinsamen Stücke der Wellen 0–4c. N3 (Upload) und N4 (Color-/Icon-Popup) aus der Tabelle von 01.10. gehen
 hier auf. Urteile wie oben: **lohnt** = eigener Grund, **mit der Welle** = die Stelle wird ohnehin angefasst.
+**Entschieden 17.10. (Hendrik): alle wie vorgeschlagen, Schnitt so** — V13 neues Token `layer-drag` über Toast; V16
+fremde Stylesheets in 5d, nur Tokens (Klassen der Fremdbibliotheken bleiben); V17 alte Theme-Tokens bleiben als
+Brücke, bis #29850 entschieden ist; V18 `TLCounter` wird gestrichen. V3 vereinheitlicht die Technik (Hook, Drop-Zone,
+Download, Fehleransage), nicht die Bedienformen.
 
 | # | Befund | Sichtbar heute | Zusammenlegen zu | UX-Gewinn | Berührt | Urteil · Schnitt |
 |---|---|---|---|---|---|---|

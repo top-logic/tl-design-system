@@ -138,6 +138,13 @@ darauf. `jenkins` erst, wenn keine Änderungen mehr folgen. master ist seit der 
 `com.top_logic.monitoring`, keine Überschneidung). **Weiter:** Bernhards Review.
 Die lokale Demo lief zur Sichtprüfung (Port 8080) — vor einem Neubau beenden.
 
+**Welle 5 gestartet (17.10.):** Prognose V1–V21 in `altlast.md` „Welle 5“, entschieden „alle wie vorgeschlagen,
+Schnitt so“ (Hendrik): **5a Eingaben** (ColorInput, IconSelect, Slider; Trac **#29875**, accepted, CC bhu), 5b Medien,
+5c Planen und Ziehen, 5d Fundament und Abschluss (je eigenes Ticket beim Start). Entscheidungen V13 `layer-drag`, V16
+fremde Stylesheets in 5d nur Tokens, V17 alte Theme-Tokens als Brücke bis #29850, V18 `TLCounter` streichen; `skalen.md`
+„Welle 5: Schnitt und Konsolidierung“. **Weiter:** Spec 5a (Brainstorming, abschnittsweise mit Hendrik); Engine-Branch
+`CWS/CWS_29875_design_system_welle_5a` auf dem 4c-Branch (Paket-Gates grün), erst wenn die Spec steht.
+
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
 axe auf `li role="presentation"`, `format()` dreifach).
@@ -159,7 +166,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 | 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay; mit der Spaltenwahl als Ebenen-Panel in !1852 (auf master 16.10.) | 7 | master | #29836, #29825 |
 | 4b | Navigation: AppShell, AppBar, Sidebar (mobiler Drawer, Flyout), BottomBar; Q10–Q13, Leiste aus Q14 (!1906, auf master 16.10.) | 4 | master | #29866 |
 | 4c | Behälter: Panel, SplitPanel, Card, Stack, Grid, DeckPane, TileStack, Inset, AdaptiveDetail, Accordion, Wizard, ViewError; Q3, Q7, Q8, Q13–Q23 | 12 | PR | #29870 |
-| 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | offen | — |
+| 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | geplant (5a–5d) | #29875 (5a) |
 
 **Abnahme außerhalb der Wellen** (Spec „Abnahme“):
 
