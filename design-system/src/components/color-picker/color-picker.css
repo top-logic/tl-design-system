@@ -59,6 +59,11 @@
   pointer-events: none;
 }
 
+/* Der Griff des Farbtonreglers steht mittig im Streifen; nur seine Höhe (top) ist Datum und kommt inline. */
+.tl-color-picker__hue > .tl-color-picker__handle {
+  left: 50%;
+}
+
 .tl-color-picker__preview {
   display: flex;
   flex-direction: column;
