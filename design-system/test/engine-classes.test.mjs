@@ -101,3 +101,44 @@ test('Welle 4b im TSX: main in der Shell, aria-current an den Seiten, aria-expan
   const mit768 = [...reactSources()].filter((p) => /\b768\b/.test(readFileSync(p, 'utf8'))).map((p) => p.slice(WT.length + 1));
   assert.deepEqual(mit768, ['com.top_logic.layout.react/react-src/controls/TLAppShell.tsx']);
 });
+
+// Welle 4c (#29870): keine alte Klasse der Behälter mehr — im TSX jedes Moduls (MUI eingeschlossen), im alten
+// Stylesheet, in Java, tl-docs, Views und der Demo; kein --page-inset, kein --tl-item-index, kein Dialog-Fuß der 4a.
+const ALT_4C = /\btl(Panel|Card|Stack|Grid|Inset|Bounded|Item|DeckPane|SplitPanel|TileStack|Wizard|AdaptiveDetail|ViewError)(__|--|\b)|\btlHtml__error\b|--page-inset\b|--tl-item-index\b|--tlGrid-gap\b|\btl-dialog__footer\b/;
+
+test('keine alte Klasse der Welle 4c in react-src, Stylesheets, Java, tl-docs und Views', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+  const quellen = [
+    ...reactSources(),
+    join(M, 'src/main/webapp/style/tlReactControls.css'),
+    join(WT, 'com.top_logic.demo.react/src/main/webapp/style/tl-demo-react.css'),
+    ...tree(join(M, 'src/main/java'), /\.java$/),
+    ...tree(join(WT, 'com.top_logic.layout.view/src/main/java'), /\.(java|md)$/),
+    ...tree(join(WT, 'com.top_logic.demo.react/src/main/webapp'), /\.view\.xml$/),
+    ...tree(join(WT, 'com.top_logic.layout.view/src/main/webapp'), /\.view\.xml$/),
+  ];
+  const hits = [];
+  for (const p of quellen) readFileSync(p, 'utf8').split('\n').forEach((line, i) => { if (ALT_4C.test(line)) hits.push(`${p.slice(WT.length + 1)}:${i + 1}`); });
+  assert.deepEqual(hits, []);
+});
+
+test('Welle 4c im TSX: Griffe mit role=separator und Tastatur, Minimieren mit aria-expanded, Fensterfuß direkt an der Fläche, kein englischer Name', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+  const tsx = (n) => readFileSync(join(M, `react-src/controls/${n}.tsx`), 'utf8');
+  assert.match(tsx('TLSplitPanel'), /role="separator"[\s\S]*tabIndex=\{0\}[\s\S]*onKeyDown=/);
+  assert.match(tsx('TLSplitPanel'), /onDoubleClick=\{handleReset\}/);
+  assert.match(tsx('TLTableView'), /onKeyDown=\{\(e\) => handleResizeKeyDown\(/);
+  assert.match(tsx('TLPanel'), /aria-expanded=\{!isMinimized\}/);
+  assert.match(tsx('TLWindow'), /querySelector<HTMLElement>\(':scope > \.tl-button-bar'\)/);
+  for (const n of ['TLPanel', 'TLCard', 'TLSplitPanel', 'TLWizard', 'TLAdaptiveDetail', 'TLAccordion'])
+    assert.doesNotMatch(tsx(n), /aria-label="[A-Za-z]/, `${n}: Name als Literal`);
+});
+
+test('der Abstand des Grids im TSX ist der des Stylesheets', { skip: !existsSync(M) && 'kein Worktree' }, async () => {
+  const { readGenerated, declarationsOf } = await import('./lib/component.mjs');
+  const tsx = readFileSync(join(M, 'react-src/controls/TLGrid.tsx'), 'utf8');
+  const map = Object.fromEntries([...tsx.matchAll(/(compact|default|loose): 'var\((--tl-space-[a-z0-9]+)\)'/g)].map((m) => [m[1], m[2]]));
+  const css = readGenerated('layout', 'layout.css');
+  for (const stufe of ['compact', 'default', 'loose']) {
+    const gap = /gap:\s*var\((--tl-space-[a-z0-9]+)\)/.exec(declarationsOf(css, `.tl-grid--gap-${stufe}`) ?? '')?.[1];
+    assert.equal(map[stufe], gap, stufe);
+  }
+});

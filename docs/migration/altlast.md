@@ -582,7 +582,7 @@ Grep-Gate `test/engine-classes.test.mjs` aus der Engine fern; für die Paketklas
 
 | Gruppe | Stand |
 |---|---|
-| **Spaltenbreite und Fixiergrenze per Tastatur** | `role=separator` ohne Tastatur; Pfeile am fokussierten Griff wären der Weg (WAI-ARIA Window Splitter). Spec §16. |
+| **Fixiergrenze per Tastatur** | Breite erledigt in Welle 4c (#29870): Pfeile, Home, End am fokussierten Griff, `aria-valuenow`. Offen die Fixiergrenze: `role=separator` ohne Tastatur; Pfeile am fokussierten Griff wären der Weg (WAI-ARIA Window Splitter). Spec §16. |
 | **Senkrechtes Auto-Scrollen beim Zeilenziehen** | fehlt heute; waagerecht gibt es zwei Fassungen (Spaltenzug, Breite ziehen) — beim Nachholen zusammenlegen. Spec §16. |
 | **Ziehen-Optik Dashboard, Kalender, Farbpalette** | eigene Markierungen (leuchtender Balken, Deckkraft 0,7, keine); Welle 4/5 auf `data-tl-state`. Spec §16. |
 | **Spaltenzug ohne Sonderzonen** | Mit `useListReorder` fallen die Ablagezonen „vor der ersten Spalte“ (Kopfzelle der Auswahl) und „hinter der letzten“; die Hälften der ersten und letzten Spalte leisten dasselbe. In der Sichtprüfung ansehen, ob die Ränder vermisst werden. |
@@ -786,6 +786,77 @@ Befunde, nicht behoben:
 
 Der 768-Test (`engine-classes.test.mjs`) fand keinen weiteren Breakpoint in `react-src`: `768` steht nur in
 `TLAppShell.tsx`.
+
+## Welle 4c · Behälter — gebaut 17.10.2026
+
+Branch `CWS/CWS_29870_design_system_welle_4c` (Engine, lokal, nicht gepusht) und Paket (`main`, Ratsche je Task). Ratsche:
+`lines` 3185 → 2405 (Summe der Budgets = gemessen); Literale duration 21 → 19, fontSize 28 → 27.
+
+### Gestrichene Blöcke
+
+| Block (`tlReactControls.css`) | Zeilen alt | Nachfolger |
+|---|---|---|
+| TLPanel | 130 | `tl-panel` (`panel.css`), Titelleiste `tl-titlebar` |
+| TLPanel button bar | 12 | `tl-button-bar` (`button-bar.css`) |
+| TLCard | 52 | `tl-card` (`card.css`) |
+| TLAccordion (unlisted, #29651) | — | `tl-card.tl-accordion` (`accordion.css`), ins Paket |
+| TLSplitPanel | 26 | `tl-split` (`split.css`) |
+| Collapsed panel in horizontal split | 28 | `tl-split__pane[data-tl-state~="collapsed"]` |
+| TLStack | 33 | `tl-stack` (`layout.css`) |
+| TLGrid | 14 | `tl-grid` (`layout.css`) |
+| TLInset | 61 | `tl-inset` (`layout.css`) |
+| Bounded width | 14 | `tl-bounded` (`layout.css`) |
+| TLDeckPane | 13 | `tl-deck` (`layout.css`) |
+| Repeated items | 48 → 8 | `tl-item` (`layout.css`); bleibt die Füll-Regel der Hülle |
+| TLTileStack | 76 | `tl-tile-stack` (`tile-stack.css`, `slide.css`) |
+| TLWizard | 185 | `tl-wizard` (`wizard.css`, `slide.css`) |
+| TLAdaptiveDetail | — | `tl-adaptive-detail` (`adaptive-detail.css`) |
+| TLViewError | 29 | `tl-alert[data-tl-role="error"]` |
+| TLHtml (Fehlerbox) | 184 → 174 | `.tlHtml__error` fällt, der Fehler ist `tl-alert` |
+| Element picker | 47 → 41 | Regel der Panel-Knopfleiste fällt |
+
+`--page-inset`, `--tl-item-index` und `--tlGrid-gap` fallen (TLHtml und Dashboard lesen `--tl-space-lg`).
+
+### Neu im Paket
+
+Dateien `panel.css`, `card.css`, `accordion.css`, `layout.css`, `split.css`, `slide.css`, `tile-stack.css`, `wizard.css`,
+`adaptive-detail.css`, `button-bar.css`; Maß `size-wizard-progress`; die Titelleiste `tl-titlebar` mit `__content` und
+`__buttons`.
+
+### Alt → neu für Anwendungs-Stylesheets
+
+| Alt | Neu |
+|---|---|
+| `.tlPanel`, `--normalized` | `.tl-panel` |
+| `.tlPanel--minimized`, `--maximized`, `--hidden` | `.tl-panel[data-tl-state~="minimized"]`, `~="maximized"`; versteckt rendert nichts |
+| `.tlPanel--card` | `.tl-panel.tl-card` |
+| `.tlPanel--hoverActions`, `--fullLine` | `.tl-panel--hover-actions`, `--full-line` |
+| `.tlPanel__header`, `__title`, `__titleContent`, `__toolbar`, `__actions`, `__actionButton` | `.tl-titlebar`, `__title` (`h2`), `__content`, `__actions`, `__buttons` |
+| `.tlPanel__content` | `.tl-panel__body` |
+| `.tlPanel__buttonBar`, `.tl-dialog__footer` | `.tl-button-bar` |
+| `.tlCard`, `--outlined`, `--elevated` | `.tl-card` (Fläche nach Lage: `--nested`, `--overlay`), kein Schatten |
+| `.tlCard__header`, `__title`, `__headerActions` | `.tl-titlebar`, `__title`, `__actions` |
+| `.tlCard__body--pad-*` | `.tl-card__body--pad-*` |
+| `.tl-accordion` (Fläche), `.tl-accordion__section--expanded` | `.tl-card.tl-accordion`; offen: `[aria-expanded="true"]` am Auslöser |
+| `.tlStack`, `--*` | `.tl-stack`, `--*` (Abstände `space-sm/md/lg`) |
+| `.tlGrid`, `--gap-*`, `--tlGrid-gap` | `.tl-grid`, `--gap-*` |
+| `.tlInset`, `--page-inset` | `.tl-inset`, `--panel`, `--card` |
+| `.tlBounded`, `.tlItem`, `--tl-item-index` | `.tl-bounded`, `.tl-item`, `--item-index` |
+| `.tlDeckPane` | `.tl-deck` |
+| `.tlSplitPanel`, `--horizontal`, `--vertical`, `--allCollapsed` | `.tl-split`, `--horizontal`, `--vertical`, `[data-tl-state~="all-collapsed"]` |
+| `.tlSplitPanel__child`, `--collapsedHorizontal` | `.tl-split__pane`, `[data-tl-state~="collapsed"]` |
+| `.tlSplitPanel__splitter`, `--horizontal`, `--vertical` | `.tl-split__handle` (`role="separator"`) |
+| `.tlTileStack`, `--forward`, `--backward` | `.tl-tile-stack`, `[data-tl-state~="backward"]` |
+| `.tlTileStack__frame`, `--covered`, `--entering`, `--exiting` | `.tl-tile-stack__frame`, `[data-tl-state~="covered"]`, `~="entering"`, `~="exiting"` |
+| `.tlWizard`, `--forward`, `--backward` | `.tl-wizard`, `[data-tl-state~="backward"]` |
+| `.tlWizard__header`, `__counter`, `__progress`, `__steps` | `.tl-wizard__header`, `__counter`, `__progress`, `__steps` |
+| `.tlWizard__stepItem--done`, `--current`, `--upcoming` | `.tl-wizard__step-item[data-tl-state~="done"]`, `[aria-current="step"]`, ohne Marke |
+| `.tlWizard__stepItem::before` (Zähler) | `.tl-wizard__disc` |
+| `.tlWizard__stepButton`, `__stepName`, `__stepIcon` | `.tl-button--link`, `.tl-wizard__step-name`, `.tl-icon-sm` |
+| `.tlWizard__step--entering`, `--exiting` | `.tl-wizard__step[data-tl-state~="entering"]`, `~="exiting"` |
+| `.tlAdaptiveDetail`, `__content` | `.tl-adaptive-detail`, `__content` |
+| `.tlAdaptiveDetail__breadcrumb`, `__crumb`, `--current`, `__sep` | `.tl-adaptive-detail__bar > .tl-breadcrumb` |
+| `.tlViewError`, `__title`, `__view`, `__detail`; `.tlHtml__error` | `.tl-alert[data-tl-role="error"]` |
 
 ## Konsolidierung (01.10.) — Gleiches wird zusammengelegt
 
