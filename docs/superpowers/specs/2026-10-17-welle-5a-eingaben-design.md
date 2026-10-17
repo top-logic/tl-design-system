@@ -2,8 +2,8 @@
 
 **Ticket:** Trac #29875 · **Branch:** `CWS/CWS_29875_design_system_welle_5a` auf `CWS/CWS_29870_design_system_welle_4c`
 (!1911; nach dessen Merge gegen master) · **Grundlage:** Prognose in `docs/migration/altlast.md` „Welle 5“ (V1, V4, V6,
-V7, V9, V11; von Hendrik am 17.10. entschieden: alle wie vorgeschlagen, Schnitt 5a–5d) · **Stand:** Entwurf 17.10.,
-wartet auf Hendriks Freigabe.
+V7, V9, V11; von Hendrik am 17.10. entschieden: alle wie vorgeschlagen, Schnitt 5a–5d) · **Freigegeben:** 17.10.2026 von Hendrik,
+abschnittsweise, mit den Entscheidungen aus §11.
 
 ## 1 · Ziel und Abgrenzung
 
@@ -122,7 +122,7 @@ Popup:  tl-picker (§3), Tabs „Palette“ | „Mischer“
   Farbe→Schwarz und das Farbtonspektrum sind Daten, kein Design — das TSX setzt sie als `style`. Das CSS des Pakets
   zeichnet nur Geometrie, Griffe und Rahmen aus Tokens.
 - **Maße:** keine feste Breite; die Palette ergibt sich aus `paletteColumns` × Zellmaß `size-control`, der Mischer aus
-  seinem Feld (`size-11`) und dem Farbtonregler (`size-control-sm` breit).
+  seinem Feld (`size-12`, Hendrik 17.10.: lieber größer als die alten 192 px) und dem Farbtonregler (`size-control-sm` breit).
 - **Commit wie heute:** alles im Popup ändert nur den Entwurf „Neu“; OK übernimmt (und trägt die Farbe in die erste
   freie Palettenzelle ein, wie heute), Abbrechen und Escape verwerfen.
 
@@ -236,8 +236,9 @@ Steht im Trac-Text unter `== Migration ==` und als Alt→neu-Liste in `altlast.m
 
 - Die Klassen `tlColorInput*`, `tlIconSelect*`, `tlSlider*` gibt es nicht mehr; `--tlSlider-*` ebenso.
 - Sichtbar: das Popup ist so breit wie sein Inhalt und bleibt beim Scrollen am Feld; Tabs ohne fetten Text; die
-  gewählte Icon-Zelle in der Auswahlfarbe des Systems; der leere Farbknopf ohne roten Schrägstrich; Farb- und Icon-Feld
-  zeigen Fehler und Pflicht wie andere Felder.
+  gewählte Icon-Zelle in der Auswahlfarbe des Systems; Icon-Zellen 32 statt 40 px, das Mischfeld 256 statt 192 px; der
+  leere Farbknopf ohne roten Schrägstrich; Farb- und Icon-Feld zeigen Fehler und Pflicht wie andere Felder; der
+  Fokusring des Sliders liegt um das ganze Feld statt am Daumen.
 
 ## 11 · Offen und entschieden
 
@@ -261,6 +262,8 @@ Beim Schreiben entschieden (Orchestrator, Hendrik prüft beim Lesen):
 11. **Griff des Mischers als Doppelring** aus zwei neuen, modusgleichen Rollen; das Gate rechnet 9:1 zwischen ihnen statt
     gegen jede Datenfarbe (die der Gate nicht kennt).
 12. **Schachbrett ist Schmuck**, den Zustand „keine Farbe“ tragen Rahmen und Name; gemessen wird der Rahmen.
+13. **Mischfeld `size-12`** (256 px) — Hendrik 17.10.: lieber größer als die alten 192 px. Icon-Zelle 32 px, gleiches
+    Maß wie die Palette (Hendrik bestätigt).
 
 Aus der Builder-Prüfung (vom Bauenden zu entscheiden): der 2D-`role="slider"` braucht `aria-valuenow` (Sättigung als
 Wert, beides in `aria-valuetext`); `useTabList` nimmt einen Rückruf für die Wahl — `TLTabBar` sendet den Befehl

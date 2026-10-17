@@ -2496,6 +2496,30 @@ leben (V17). `TLCounter` hat kein Java-Control und wird gestrichen (V18). **Verw
 2.600 Zeilen, das Doppelte von 4b und 4c zusammen); Fundament zuerst (es zöge Regeln um, die die Teile 5a–5c noch
 streichen).
 
+### Welle 5a: Eingaben (17.10., Hendrik — #29875)
+
+**Grundlage.** V1, V4, V6, V7, V9, V11 der Prognose; Spec `docs/superpowers/specs/2026-10-17-welle-5a-eingaben-design.md`.
+**Kein neues Bedienkonzept** (Hendrik: Farb- und Icon-Auswahl „sehen aus wie im alten, und zwar langweilig“ — das ist
+Sache des UI-Durchgangs nach Welle 5); 5a legt zusammen und schließt Lücken.
+
+**Eine Picker-Hülle.** Farbe und Icon teilen Fläche (`tl-popover` im Portal), Lage (`usePopover`, folgt Scrollen),
+Rolle (`role="dialog"`, nicht modal), Fokus (Falle, zurück an den Feldknopf), Schließen und Aktionen (`tl-button-bar`).
+Die Tab-Tastatur wird ein Hook `useTabList`, den auch `TLTabBar` nutzt — eine Tastatur für jede Tab-Leiste.
+
+**Ein Swatch.** Feldknopf, lesende Anzeige, Palettenzelle und Vorschau sind `tl-swatch`; „keine Farbe“ ist ein
+Schachbrett aus Tokens, den Zustand trägt der Rahmen in `border-control` und der Name. Der rote Schrägstrich fällt: Rot
+heißt Fehler. Farb- und Icon-Feld zeigen Fehler, Warnung und Pflicht wie jedes Feld.
+
+**Raster per Tastatur.** Palette und Icon-Raster über `useRovingFocus` (ein Tab-Halt, Pfeile); der Mischer aus zwei
+`role="slider"`. Ein Zellmaß `size-control` für beide Raster (32 px, Icon vorher 40). Mischfeld `size-12` (Hendrik:
+größer als die alten 192 px). Der Griff ist ein Doppelring aus zwei modusgleichen Rollen; 9:1 zwischen ihnen sichert auf
+jeder Datenfarbe einen Ring mit 3:1 (das Produkt der beiden Kontraste zu einer Farbe dazwischen ist ihr Kontrast
+zueinander). Datenfarben (Wert, Farbton, Verläufe) setzt das TSX inline — sie sind Daten, kein Design.
+
+**Slider.** Neue Komponente `tl-slider`; die Füllung ist ein Element wie bei `tl-progress` statt `--tlSlider-fill` im
+Namensraum des Pakets; der Fokusring liegt um das ganze `range` (am Daumen ginge er nur mit `outline: none`).
+**Verworfen:** eine Lint-Ausnahme für den Daumenring; feste Popup-Breiten; die eigene Scrollbar-Optik.
+
 ### Die Kopie in der Engine ist versiegelt (16.10.)
 
 **Befund:** Zweimal wurde die Kopie des Pakets in tl-engine-7 von Hand geändert — #29787 (sechs Stellen) und #29859

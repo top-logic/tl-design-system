@@ -142,8 +142,9 @@ Die lokale Demo lief zur Sichtprüfung (Port 8080) — vor einem Neubau beenden.
 Schnitt so“ (Hendrik): **5a Eingaben** (ColorInput, IconSelect, Slider; Trac **#29875**, accepted, CC bhu), 5b Medien,
 5c Planen und Ziehen, 5d Fundament und Abschluss (je eigenes Ticket beim Start). Entscheidungen V13 `layer-drag`, V16
 fremde Stylesheets in 5d nur Tokens, V17 alte Theme-Tokens als Brücke bis #29850, V18 `TLCounter` streichen; `skalen.md`
-„Welle 5: Schnitt und Konsolidierung“. **Weiter:** Spec 5a (Brainstorming, abschnittsweise mit Hendrik); Engine-Branch
-`CWS/CWS_29875_design_system_welle_5a` auf dem 4c-Branch (Paket-Gates grün), erst wenn die Spec steht.
+„Welle 5: Schnitt und Konsolidierung“. **Spec 5a freigegeben (17.10., abschnittsweise):** `docs/superpowers/specs/2026-10-17-welle-5a-eingaben-design.md`,
+13 Entscheidungen in §11 (u. a. Mischfeld `size-12`, Zellen 32 px); `skalen.md` „Welle 5a: Eingaben“. **Weiter:** Plan
+schreiben, Plan-Review, dann SDD; Engine-Branch `CWS/CWS_29875_design_system_welle_5a` auf dem 4c-Branch.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
