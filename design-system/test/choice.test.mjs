@@ -81,7 +81,8 @@ test('der Hof gehört nur den Auswahlmarken: kein anderer Block liest ihn', () =
       // Auswahlmarke — sie zeigt beim Zeigen den Hof.
       // Ausnahme 17.10. (Welle 5a): ein Swatch ist eine Auswahlmarke — Feldknopf und Palettenzelle (Option)
       // zeigen beim Zeigen den halo.
-      if (/surface-state-/.test(d.value) && name !== 'choice/choice.css' && name !== 'toggle/toggle.css' && name !== 'layout/layout.css' && name !== 'swatch/swatch.css') hits.push(`${name}:${d.line} ${d.selector}`);
+      // Ausnahme 17.10. (Welle 5a): der Daumen des Sliders ist eine Marke.
+      if (/surface-state-/.test(d.value) && name !== 'choice/choice.css' && name !== 'toggle/toggle.css' && name !== 'layout/layout.css' && name !== 'swatch/swatch.css' && name !== 'slider/slider.css') hits.push(`${name}:${d.line} ${d.selector}`);
   assert.deepEqual(hits, []);
 });
 

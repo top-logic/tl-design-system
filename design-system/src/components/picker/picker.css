@@ -12,9 +12,7 @@
 .tl-picker__tabs {
   flex-shrink: 0;
 }
-.tl-picker__tabs[hidden] { display: none; }
 
 .tl-picker__actions {
   flex-shrink: 0;
 }
-.tl-picker__actions[hidden] { display: none; }

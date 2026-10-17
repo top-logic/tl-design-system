@@ -43,3 +43,89 @@ test('tokens: Griff-Rollen in beiden Modi gleich', () => {
     assert.equal(T.color.light[r], T.color.dark[r]);
   }
 });
+
+test('swatch: die Warnung steht vor dem Fehler, damit der Fehler sie verdrängt', () => {
+  const css = ohneKommentar(readGenerated('swatch', 'swatch.css'));
+  assert.ok(css.indexOf('.tl-swatch[data-tl-state~="warning"]') < css.indexOf('.tl-swatch[aria-invalid="true"]'));
+});
+
+test('swatch: deaktiviert zeichnet den Rahmen wie tl-field:disabled', () => {
+  const d = decl('swatch', 'button.tl-swatch:disabled');
+  assert.match(d, /border-color:\s*var\(--tl-border-disabled\)/);
+  assert.match(d, /cursor:\s*default/);
+});
+
+test('picker: die Reiter und die Knopfleiste tragen ihr [hidden] selbst', () => {
+  const css = ohneKommentar(readGenerated('picker', 'picker.css'));
+  assert.doesNotMatch(css, /\.tl-picker__tabs\[hidden\]|\.tl-picker__actions\[hidden\]/);
+});
+
+test('picker-spec: Reiter in tl-type-body, Knopfleiste Leeren · Abbrechen · OK', () => {
+  const html = readFileSync(new URL('../src/components/picker/picker.spec.html', import.meta.url), 'utf8');
+  assert.match(html, /tl-tabs__tab tl-type-body/);
+  const bar = html.slice(html.indexOf('tl-picker__actions'));
+  const i = [bar.indexOf('Leeren'), bar.indexOf('Abbrechen'), bar.indexOf('>OK<')];
+  assert.ok(i[0] > 0 && i[0] < i[1] && i[1] < i[2], 'Reihenfolge');
+  assert.match(bar, /tl-button--ghost tl-button--danger[^>]*>Leeren/);
+  assert.match(bar, /tl-button--primary[^>]*>OK</);
+});
+
+test('color-picker: Mischfeld size-12, Farbtonregler size-control-sm breit', () => {
+  const f = decl('color-picker', '.tl-color-picker__field');
+  assert.match(f, /inline-size:\s*var\(--tl-size-12\)/);
+  assert.match(f, /block-size:\s*var\(--tl-size-12\)/);
+  assert.match(decl('color-picker', '.tl-color-picker__hue'), /inline-size:\s*var\(--tl-size-control-sm\)/);
+});
+
+test('color-picker: Griff ist ein Doppelring aus den Griff-Rollen', () => {
+  const d = decl('color-picker', '.tl-color-picker__handle');
+  assert.match(d, /border[^;]*var\(--tl-border-handle-light\)/);
+  assert.match(d, /box-shadow:\s*inset[^;]*var\(--tl-border-handle-dark\)/);
+  assert.doesNotMatch(d, /outline/);
+});
+
+test('color-picker: keine Farbe im CSS', () => {
+  const css = ohneKommentar(readGenerated('color-picker', 'color-picker.css'));
+  assert.doesNotMatch(css, /#[0-9a-f]{3,6}\b|rgb\(|hsl\(/i);
+});
+
+test('color-picker: die gewählte Palettenoption trägt einen Ring in border-interactive', () => {
+  const d = decl('color-picker', '.tl-color-picker__palette [aria-selected="true"]');
+  assert.match(d, /border:\s*var\(--tl-border-width-md\) solid var\(--tl-border-interactive\)/);
+  assert.doesNotMatch(d, /outline/);
+});
+
+test('icon-picker: Zelle size-control, gewählt in surface-interactive-selected, Popup size-13 mit resize', () => {
+  const c = decl('icon-picker', '.tl-icon-picker__cell');
+  assert.match(c, /inline-size:\s*var\(--tl-size-control\)/);
+  assert.match(c, /block-size:\s*var\(--tl-size-control\)/);
+  assert.match(decl('icon-picker', '.tl-icon-picker__cell[aria-selected="true"]'), /--tl-surface-interactive-selected/);
+  const p = decl('icon-picker', '.tl-picker.tl-icon-picker');
+  assert.match(p, /inline-size:\s*var\(--tl-size-13\)/);
+  assert.match(p, /block-size:\s*var\(--tl-size-13\)/);
+  assert.match(p, /resize:\s*both/);
+  assert.doesNotMatch(readGenerated('icon-picker', 'icon-picker.css'), /scrollbar/);
+});
+
+test('slider: Füllung ist ein Element, Spur des range durchsichtig, kein outline:none', () => {
+  const css = ohneKommentar(readGenerated('slider', 'slider.css'));
+  assert.notEqual(decl('slider', '.tl-slider__fill'), '');
+  assert.doesNotMatch(css, /--tlSlider|outline:\s*none/);
+  for (const s of ['.tl-slider__input::-webkit-slider-runnable-track', '.tl-slider__input::-moz-range-track'])
+    assert.match(decl('slider', s), /background:\s*transparent/);
+  for (const s of ['.tl-slider__input::-webkit-slider-thumb', '.tl-slider__input::-moz-range-thumb'])
+    assert.match(decl('slider', s), /var\(--tl-size-choice\)/);
+});
+
+test('slider: Zustand als Attribut, keine --error/--warning-Klasse', () => {
+  const css = ohneKommentar(readGenerated('slider', 'slider.css'));
+  for (const s of ['.tl-slider[data-tl-state~="warning"] .tl-slider__text',
+    '.tl-slider[data-tl-state~="warning"] .tl-slider__input::-webkit-slider-thumb',
+    '.tl-slider[data-tl-state~="warning"] .tl-slider__input::-moz-range-thumb',
+    '.tl-slider__input[aria-invalid="true"]::-webkit-slider-thumb',
+    '.tl-slider__input[aria-invalid="true"]::-moz-range-thumb',
+    '.tl-slider__input[aria-invalid="true"] ~ .tl-slider__value .tl-slider__text'])
+    assert.notEqual(decl('slider', s), '', s);
+  assert.doesNotMatch(css, /tl-slider--(error|warning)/);
+  assert.ok(css.indexOf('data-tl-state~="warning"') < css.indexOf('[aria-invalid="true"]'), 'Warnung vor Fehler');
+});

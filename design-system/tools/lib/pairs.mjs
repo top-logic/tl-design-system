@@ -65,6 +65,8 @@ export function kontrastPaare(T) {
   // Griff des Mischers auf jeder Datenfarbe: 9:1 zwischen den Ringen sichert auf jeder Farbe einen Ring mit
   // 3:1 (Spec 5a §4).
   paar('border-handle-light', 'border-handle-dark', 9.0);
+  // Auswahlzelle von Palette und Icon-Raster: Text und Icon auf der gewählten Fläche (Welle 5a).
+  paar('text-primary', 'surface-interactive-selected', 4.5); paar('icon-primary', 'surface-interactive-selected', 3.0);
   // Knöpfe im Feld: der Pfeil des Select steht beim Zeigen und Drücken auf der Fläche seines Quadrats.
   paar('icon-secondary', 'surface-interactive-selected', 3.0); paar('icon-secondary', 'surface-interactive-active', 3.0);
   paar('border-interactive', 'surface-brand-subtle', 3.0); // gewählter Chip, gewähltes Segment

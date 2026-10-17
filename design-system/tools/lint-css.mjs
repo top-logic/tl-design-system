@@ -149,6 +149,9 @@ const MODIFIERS = {
   'tl-tile-stack': new Set([]), // Richtung und Übergang: data-tl-state.
   'tl-swatch': new Set(['color', 'wide']), // Leer, Fehler, Warnung: Attribute.
   'tl-picker': new Set([]),
+  'tl-color-picker': new Set([]),
+  'tl-icon-picker': new Set([]),
+  'tl-slider': new Set([]), // Fehler und Warnung: aria-invalid, data-tl-state.
   'tl-wizard': new Set([]), // Richtung: data-tl-state; Schritt erledigt: data-tl-state, aktuell: aria-current.
   'tl-adaptive-detail': new Set([]),
 };

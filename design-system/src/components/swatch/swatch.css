@@ -29,12 +29,19 @@
   background-size: calc(2 * var(--tl-space-xs)) calc(2 * var(--tl-space-xs));
 }
 
+/* Die Warnung steht vor dem Fehler: bei gleicher Spezifität gewinnt die spätere Regel, und der Fehler
+   muss die Warnung verdrängen (wie in field.css). */
+.tl-swatch[data-tl-state~="warning"] {
+  border-color: var(--tl-status-warning-border);
+}
+
 .tl-swatch[aria-invalid="true"] {
   border-color: var(--tl-status-error-border);
 }
 
-.tl-swatch[data-tl-state~="warning"] {
-  border-color: var(--tl-status-warning-border);
+button.tl-swatch:disabled {
+  border-color: var(--tl-border-disabled);
+  cursor: default;
 }
 
 /* Ein Knopf oder eine Option zeigt beim Zeigen den Hof der Auswahlmarken. */

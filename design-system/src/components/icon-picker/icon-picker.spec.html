@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="de" data-tl-mode="light" data-tl-density="normal">
+<head>
+<meta charset="utf-8">
+<title>TopLogic Design System — Icon-Picker</title>
+<link rel="stylesheet" href="/fonts/style/interFonts.css">
+<link rel="stylesheet" href="/fonts/style/bootstrap-icons.css">
+<link rel="stylesheet" href="/dist/primitives.css">
+<link rel="stylesheet" href="/dist/tokens.css">
+<link rel="stylesheet" href="/dist/base.css">
+<link rel="stylesheet" href="/dist/components.css">
+<link rel="stylesheet" href="/specimen/specimen.css">
+<style>
+
+</style>
+</head>
+<body>
+<main class="specimen">
+  <div class="specimen__bar">
+    <a class="tl-type-label" href="/">← Grundklassen</a>
+    <span class="tl-type-heading-lg">Icon-Picker</span>
+    <label class="tl-type-label"><input type="checkbox" id="mode"> dunkel</label>
+    <label class="tl-type-label"><input type="checkbox" id="density"> kompakt</label>
+  </div>
+
+  <section class="specimen__base"><p class="tl-type-heading-sm">Feldknopf: gewählt, leer, Fehler</p>
+    <button type="button" class="tl-swatch" aria-label="Icon wählen"><i class="bi bi-star"></i></button>
+    <button type="button" class="tl-swatch" data-tl-state="empty" aria-label="Kein Icon"><i class="bi bi-grid"></i></button>
+    <button type="button" class="tl-swatch" aria-invalid="true" aria-required="true" aria-label="Icon, ungültig"><i class="bi bi-star"></i></button>
+  </section>
+
+  <section class="specimen__base"><p class="tl-type-heading-sm">Raster mit gewählter Zelle, ein Tab-Halt</p>
+    <div class="tl-icon-picker__grid" role="listbox" aria-label="Icons">
+      <div class="tl-icon-picker__cell" role="option" aria-selected="false" tabindex="-1" aria-label="house"><i class="bi bi-house"></i></div>
+      <div class="tl-icon-picker__cell" role="option" aria-selected="false" tabindex="-1" aria-label="gear"><i class="bi bi-gear"></i></div>
+      <div class="tl-icon-picker__cell" role="option" aria-selected="true" tabindex="0" aria-label="star"><i class="bi bi-star"></i></div>
+      <div class="tl-icon-picker__cell" role="option" aria-selected="false" tabindex="-1" aria-label="person"><i class="bi bi-person"></i></div>
+      <div class="tl-icon-picker__cell" role="option" aria-selected="false" tabindex="-1" aria-label="envelope"><i class="bi bi-envelope"></i></div>
+      <div class="tl-icon-picker__cell" role="option" aria-selected="false" tabindex="-1" aria-label="trash"><i class="bi bi-trash"></i></div>
+      <div class="tl-icon-picker__cell" role="option" aria-selected="false" tabindex="-1" aria-label="pencil"><i class="bi bi-pencil"></i></div>
+      <div class="tl-icon-picker__cell" role="option" aria-selected="false" tabindex="-1" aria-label="search"><i class="bi bi-search"></i></div>
+      <div class="tl-icon-picker__cell" role="option" aria-selected="false" tabindex="-1" aria-label="bell"><i class="bi bi-bell"></i></div>
+      <div class="tl-icon-picker__cell" role="option" aria-selected="false" tabindex="-1" aria-label="calendar"><i class="bi bi-calendar"></i></div>
+      <div class="tl-icon-picker__cell" role="option" aria-selected="false" tabindex="-1" aria-label="folder"><i class="bi bi-folder"></i></div>
+      <div class="tl-icon-picker__cell" role="option" aria-selected="false" tabindex="-1" aria-label="heart"><i class="bi bi-heart"></i></div>
+    </div>
+  </section>
+
+  <section class="specimen__base"><p class="tl-type-heading-sm">Laden, keine Treffer, Fehler (tl-status)</p>
+    <div class="tl-status tl-type-body" role="status"><div class="tl-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-busy="true" aria-label="Icons laden"><span class="tl-progress__track"><span class="tl-progress__fill"></span></span></div></div>
+    <div class="tl-status tl-type-body" role="status">Keine Treffer</div>
+    <div class="tl-status tl-type-body" role="alert">Die Icons konnten nicht geladen werden. <button type="button" class="tl-button tl-button--link">Erneut laden</button></div>
+  </section>
+
+  <section class="specimen__base"><p class="tl-type-heading-sm">Erweitert: Klasse und Vorschau</p>
+    <div class="tl-icon-picker__advanced">
+      <label class="tl-type-label">Klasse <input class="tl-field" value="bi bi-star"></label>
+      <div class="tl-icon-picker__preview"><span class="tl-type-label">Vorschau</span><i class="bi bi-star"></i></div>
+    </div>
+  </section>
+</main>
+<script>
+  const html = document.documentElement;
+  document.getElementById('mode').addEventListener('change', (e) => html.setAttribute('data-tl-mode', e.target.checked ? 'dark' : 'light'));
+  document.getElementById('density').addEventListener('change', (e) => html.setAttribute('data-tl-density', e.target.checked ? 'compact' : 'normal'));
+</script>
+</body>
+</html>
