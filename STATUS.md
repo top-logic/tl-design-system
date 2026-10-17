@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-17 (4c als PR !1911; 5a gebaut, Push offen) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-17 (4c als PR !1911; 5a gebaut, lokal — Welle 5 als ein PR) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -152,9 +152,12 @@ Maven `layout.react` 706 (finaler Head), `layout.configedit` 343, `layout.view` 
 Befunden: Mischer überdeckte die Eingaben (jetzt fest `size-12`, Grenze unter ~595 px Fensterhöhe), Popover ragten
 oben heraus (jetzt bleiben **alle** Popover im Fenster). Trac #29875: Solution, `== Migration ==`, `RequiresMigration`.
 Ledger: `.superpowers/sdd/2026-10-17-welle-5a-eingaben/` (`progress.md`, `final-review.md`).
-**Offen für Hendrik:** (1) Push (Engine-Branch `CWS/CWS_29875_…`, Paket `main`) und PR gegen den 4c-Branch (!1911);
-(2) Auswahlring der Palettenzelle gegen Fokusring kaum zu unterscheiden — wie S2 bei Karten (dort Haken-Badge): jetzt
-oder im UI-Durchgang; (3) Vorschlag Bridge-Ticket: `useFocusTrap` hat am Dokumentende keinen Tab-Zyklus (alle Popups).
+**Entschieden (Hendrik 17.10.):** kein Push jetzt — **Welle 5 kommt als ein PR**, wenn 5a–5d gebaut sind (5b, 5c, 5d
+setzen auf dem 5a-Branch auf; ein Branch je Teil mit eigenem Ticket, der PR am Ende über alles). Auswahlring der
+Palettenzelle gegen Fokusring: im UI-Durchgang nach Welle 5. Fokusfalle ohne Tab-Zyklus am Dokumentende: Trac
+**#29879** (accepted, CC bhu). **Weiter (nächste Sitzung):** 5b Medien — Ticket anlegen, Branch auf
+`CWS/CWS_29875_design_system_welle_5a`, Spec (Brainstorming, abschnittsweise), Plan, Plan-Review, SDD. Die Demo ist
+beendet.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,

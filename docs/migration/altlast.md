@@ -1089,3 +1089,7 @@ Compact field.
 | **5b Medien** | AudioRecorder, AudioPlayer, PhotoCapture, FileChips, Download, Image, PdfViewer, Html, JobStatus; `TLCounter` streichen | ~830 | V2, V3, V4, V10, V14, V18 |
 | **5c Planen und Ziehen** | Calendar, Kanban, Dashboard, ValueList, Tabellenzellen | ~630 | V5, V6 (Monat, Kanban, Dashboard), V8, V12, V19, V20 |
 | **5d Fundament und Abschluss** | Tooltip, Fill, Viewport, Mount, Drag shield, Touch drag, Element-Picker, Anchor-Flash, Compact field; Ebene `layer-drag`; fremde Stylesheets nach Entscheidung; `tlReactControls.css` gelöscht (Config, `TestReactStylesheetTokens`, Doku) | ~300 + Fremde | V13, V15, V16, V17, V21 |
+
+**Nach Welle 5a offen (17.10., Hendrik):** Auswahlring der Palettenzelle und Fokusring kaum zu unterscheiden (wie S2 bei
+Karten in 4c, dort Haken-Badge) — im UI-Durchgang nach Welle 5. Fokusfalle ohne Tab-Zyklus am Dokumentende (alle
+portalierten Popups) — Trac #29879.
