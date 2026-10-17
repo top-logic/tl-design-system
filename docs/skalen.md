@@ -2458,6 +2458,22 @@ Tabelle und Baum läge hinter der Karte; Fokus aus `base.css`. Der halo gehörte
 eine auswählbare Option ist ebenso eine Auswahlmarke, `choice.test.mjs` lässt `layout.css` darum zu. **Verworfen:** die Auswahlfläche (`surface-interactive-selected`)
 wie in der Tabelle (unsichtbar hinter Einträgen mit eigener Fläche); der Schatten beim Zeigen (gestrichen seit Welle 0).
 
+**Nachgetragen nach der Sichtprüfung (17.10., Hendrik: S2 A, S3 C).** *Selection ring und focus ring* hatten dieselbe
+Farbe und Breite (`border-interactive` = `focus-ring`); eine nur fokussierte und eine nur ausgewählte Karte trennte
+allein der Abstand des Rings. Ausgewählt heißt jetzt: Ring **und** ein runder check badge oben am Ende
+(`tl-item__check`, `surface-brand`, Durchmesser `size-icon-md`, Haken in `text-on-brand` nach dem Rezept des
+Kästchens) — der Unterschied liegt in der Form, nicht nur in der Farbe (WCAG 1.4.1). Der badge ist ein `span` mit
+`aria-hidden` in der Hülle von `useItems`, der Zustand bleibt allein `aria-selected`; ohne `z-index` (er liegt nach der
+Karte im DOM, ein `--tl-layer-raised` hätte ihn über ein maximiertes Panel gehoben). Der *halo* beim Zeigen trug mit
+`surface-state-hover` (6 %) um eine Marke, um eine ganze Karte war er als 4-px-Saum verloren. Eine eigene Rolle
+`surface-state-hover-strong` (`veil-5` hell 16 %, `veil-6` dunkel 13 %) liest nur der halo um eine Option. Gemessen gegen
+die fünf Gründe: hell 1,38 (pressed 1,27–1,28), dunkel 1,43–1,48 (pressed 1,39–1,44). Dunkel hätten 20 % den halo
+deutlicher gemacht, aber der focus ring liegt mit Abstand und Breite 2 px über dem halo und fiele auf `surface-overlay`
+unter 3:1 (bei 14 % 2,99) — die Paarliste misst den Ring jetzt auch auf diesem halo. Nebenwirkung: `derive` rechnet
+den focus ring eines Kundenthemes hell etwas dunkler (Probe `#DB4809` → `#D34300`). **Verworfen:** der Pressed-veil als
+halo (Zeigen hätte die Stärke von Drücken geliehen); ein veil über der ausgewählten Karte (färbt Bild und Inhalt);
+ein dickerer Ring innen (derselbe Farbton, der Unterschied bliebe subtil).
+
 ### Die Kopie in der Engine ist versiegelt (16.10.)
 
 **Befund:** Zweimal wurde die Kopie des Pakets in tl-engine-7 von Hand geändert — #29787 (sechs Stellen) und #29859

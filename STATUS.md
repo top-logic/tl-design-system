@@ -126,17 +126,15 @@ Gates: Paket 481/0, Lint grün, Ratsche `lines` 3185 → 2405 (14 Blöcke gestri
 Messages ohne Diff. Sichtprüfung lokal (Task 11) in `altlast.md` „Welle 4c“, Befunde S1–S5.
 Ledger mit allen Rulings, deferred Minors und Triage: `.superpowers/sdd/2026-10-16-welle-4c-behaelter-plans/`
 (`progress.md`, `final-review.md`, Entwurf `trac-29870-migration.txt` für `== Migration ==`).
-**Offen für Hendrik (17.10., „Entscheidungen aufsparen“):**
-1. **Escape im maximierten Panel gegen Popups am Keyboard-Dispatcher** (ColorPopup, IconSelectPopup, Drawer,
-   PhotoCapture verlieren Escape an das Panel). Weg A: Panel-Escape als Scope im Dispatcher, nur solange maximiert
-   (Empfehlung, auch der Abschlussprüfung); Weg B: die Popups verhindern Escape selbst. Heute erreicht keine View das
-   Maximieren (S5).
-2. **Wizard-Zähler** nur `aria-hidden`, wenn die Schrittliste steht (Vorgabe: Liste aus, Zähler an — dann erfährt ein
-   Screenreader die Position nur als Prozent). Empfehlung ja; ändert TLWizard und `wizard.contract.md`.
-3. **S2** Fokusring und Auswahlring einer Karte kaum zu unterscheiden; **S3** halo beim Zeigen sehr schwach.
-4. Danach: Trac #29870 `== Migration ==` und `RequiresMigration`, Push (Engine-Branch `CWS/CWS_29870_…`, Paket
-   `main`), PR gegen master mit den Hinweisen an Bernhard aus Plan Task 12 Step 2 (Accordion im Paket, `MuiCardAdapter`
-   ohne `useSurface`, Breadcrumb als Part wäre seine Entscheidung, Q24-Auswahl) und S5; Reviewer `bhu`.
+**Entschieden und gebaut (17.10., Hendrik):** Escape im maximierten Panel über den Keyboard-Dispatcher (Weg A),
+Wizard-Zähler nur neben der Schrittliste `aria-hidden`, S2 check badge zusätzlich zum selection ring, S3 eigene Rolle
+`surface-state-hover-strong` (hell 16 %, dunkel 13 % — dunkel begrenzt durch den focus ring ≥ 3:1 auf dem halo).
+Je reviewt, Sichtprüfung des badge und des halo in beiden Modi bestanden. Doku auf englische Fachbegriffe umgestellt
+(halo, veil). Trac #29870: `== Migration ==` und `RequiresMigration` eingetragen.
+**Offen:** Push (Engine-Branch `CWS/CWS_29870_design_system_welle_4c`, Paket `main`), dann PR gegen master mit den
+Hinweisen an Bernhard aus Plan Task 12 Step 2 (Accordion im Paket, `MuiCardAdapter` ohne `useSurface`, Breadcrumb als
+Part wäre seine Entscheidung, Q24-Auswahl mit check badge) und S5 (Minimieren/Maximieren erreicht keine View);
+Reviewer `bhu`, `jenkins` erst am Ende.
 Die lokale Demo lief zur Sichtprüfung (Port 8080) — vor einem Neubau beenden.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;

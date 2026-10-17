@@ -869,8 +869,8 @@ Stufen, erledigter Schritt als Link); Kachelstapel (`covered`/`entering`); Adapt
 | # | Befund | Stand |
 |---|---|---|
 | S1 | End am Split setzt die zweite Fläche auf 0, wenn sie kein Mindestmaß hat | WAI-gemäß (End = Maximum); keine Änderung |
-| S2 | Fokusring und Auswahlring einer Karte kaum zu unterscheiden — beide `border-interactive`, nur der Abstand trennt | offen, Hendrik |
-| S3 | Halo beim Zeigen sehr schwach (dunkel `surface-state-hover`, 4 px) | offen, Hendrik |
+| S2 | Fokusring und Auswahlring einer Karte kaum zu unterscheiden — beide `border-interactive`, nur der Abstand trennt | behoben 17.10.: check badge `tl-item__check` zusätzlich zum Ring (Hendrik: A) |
+| S3 | Halo beim Zeigen sehr schwach (dunkel `surface-state-hover`, 4 px) | behoben 17.10.: eigene Rolle `surface-state-hover-strong` (hell 16 %, dunkel 13 %; Hendrik: C) |
 | S4 | Wizard-Demo: Knöpfe im Slot bündig am Panelrand | Demo-View (Panel ohne `with-inset`), nicht 4c |
 | S5 | Minimieren und Maximieren erreicht keine View (`PanelElement` übergibt `false`) — U1/U3 nur per Vitest geprüft | Hinweis an Bernhard |
 | — | nicht geprüft: Karte im Dialog, Anzeige des ViewError (Java-Test), VoiceOver | — |

@@ -210,7 +210,7 @@ Vor jeder Welle: Was tut dasselbe? Prognose auf den Tisch, Entscheidung, dann di
 >
 > Sprechnotiz (Welle 3b gebaut, 08.10.): Tabelle, Baum und Listen teilen sich Fokus, Ziehen und Suchen — fünf Helfer statt fünfzehn Fassungen; der Fokus geht nirgends mehr verloren.
 >
-> Sprechnotiz (Welle 4c, 16.10.): Panels benehmen sich wie Fenster — Doppelklick auf den Kopf maximiert, Escape holt zurück, ein Doppelklick auf den Teiler stellt die Aufteilung her. Und im dunklen Modus hebt sich eine Karte im Panel von selbst eine Stufe ab, ohne Schatten — und im Dialog sinkt sie nie ein, egal wie tief sie liegt. Der Teiler lässt sich jetzt auch mit der Tastatur verschieben.
+> Sprechnotiz (Welle 4c, 16.10.): Panels benehmen sich wie Fenster — Doppelklick auf den Kopf maximiert, Escape holt zurück, ein Doppelklick auf den Teiler stellt die Aufteilung her. Und im dunklen Modus hebt sich eine Karte im Panel von selbst eine Stufe ab, ohne Schatten — und im Dialog sinkt sie nie ein, egal wie tief sie liegt. Der Teiler lässt sich jetzt auch mit der Tastatur verschieben. Eine ausgewählte Karte erkennt man am Haken, nicht nur an der Farbe des Rings — Fokus und Auswahl sind nicht mehr zu verwechseln.
 >
 > Sprechnotiz (Welle 4b, 16.10.): Wo bin ich? Die aktuelle Seite trägt dieselbe Fläche wie eine gewählte Zeile — auch eingeklappt, auch in einer zugeklappten Gruppe. Und auf dem Handy ist die Seitenleiste eine echte Schublade: Escape schließt, der Fokus kommt zurück.
 >
