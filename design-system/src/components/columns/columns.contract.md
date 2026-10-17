@@ -36,7 +36,7 @@ Keine.
 | `tl-columns` | die Reihe |
 | `tl-columns--gap-compact`, `tl-columns--gap-default`, `tl-columns--gap-loose` | genau eine, der Abstand |
 | `tl-columns__column` | jede Spalte |
-| `tl-columns__column` mit `role="option"` und `aria-selected` | die Reihe ist auswählbar (`selectable`, `useItems`): die Spalte ist Option; Zeigen und Auswahl zeichnet die Regel der Einträge in `layout.css` (Vertrag `layout`) |
+| `tl-columns__column` mit `role="option"` und `aria-selected` | die Reihe ist auswählbar (`selectable`, `useItems`): die Spalte ist Option; Zeigen und Auswahl zeichnet die Regel der Einträge in `layout.css` (Vertrag `layout`), die ausgewählte Spalte trägt auch den Haken `tl-item__check` |
 
 ## Konformität
 

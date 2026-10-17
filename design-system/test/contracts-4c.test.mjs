@@ -18,7 +18,7 @@ const SOLL = {
   'dialog/dialog.contract.md': ['tl-button-bar'],
   'layout/layout.contract.md': ['tl-stack', 'tl-grid', 'tl-inset', 'tl-inset--panel', 'tl-inset--card', 'tl-bounded',
     'tl-item', 'tl-deck', '--item-index', '--tl-space-sm', '--tl-space-md', '--tl-space-lg', 'useSurface',
-    'role="listbox"', 'role="option"', 'aria-selected', 'selectItem', '--tl-surface-state-hover', '--tl-border-interactive'],
+    'role="listbox"', 'role="option"', 'aria-selected', 'tl-item__check', 'selectItem', '--tl-surface-state-hover-strong', '--tl-border-interactive'],
   'split/split.contract.md': ['tl-split', 'tl-split__pane', 'tl-split__handle', 'role="separator"', 'aria-valuenow',
     'aria-orientation', 'aria-controls', 'data-tl-state~="collapsed"', 'updateSizes', 'resetSizes', 'Home', 'End'],
   'slide/slide.contract.md': ['tl-slide-in-forward', 'tl-slide-out-backward', '--tl-space-md'],
@@ -73,6 +73,8 @@ test('layout.spec.html: eine Liste auswählbarer Karten, eine ausgewählt, ohne 
   assert.match(html, /role="listbox"/);
   assert.equal((html.match(/class="tl-item" role="option"/g) ?? []).length >= 3, true);
   assert.match(html, /class="tl-item" role="option" aria-selected="true" tabindex="0"/);
+  assert.match(html, /<span class="tl-item__check" aria-hidden="true"><\/span>/);
+  assert.equal((html.match(/tl-item__check/g) ?? []).length, 1, 'nur die ausgewählte Option trägt die Marke');
   assert.doesNotMatch(html, /--selectable|--selected/);
 });
 

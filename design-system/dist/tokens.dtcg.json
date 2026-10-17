@@ -915,6 +915,20 @@
         "$extensions": {
           "com.top-logic.note": "alpha, CSS notation"
         }
+      },
+      "veil-5": {
+        "$type": "color",
+        "$value": "rgba(27, 29, 33, 0.16)",
+        "$extensions": {
+          "com.top-logic.note": "alpha, CSS notation"
+        }
+      },
+      "veil-6": {
+        "$type": "color",
+        "$value": "rgba(240, 243, 249, 0.20)",
+        "$extensions": {
+          "com.top-logic.note": "alpha, CSS notation"
+        }
       }
     }
   },
@@ -1271,6 +1285,10 @@
         "surface-state-hover": {
           "$type": "color",
           "$value": "{primitive.effect.veil-1}"
+        },
+        "surface-state-hover-strong": {
+          "$type": "color",
+          "$value": "{primitive.effect.veil-5}"
         },
         "surface-state-active": {
           "$type": "color",
@@ -1630,6 +1648,10 @@
         "surface-state-hover": {
           "$type": "color",
           "$value": "{primitive.effect.veil-3}"
+        },
+        "surface-state-hover-strong": {
+          "$type": "color",
+          "$value": "{primitive.effect.veil-6}"
         },
         "surface-state-active": {
           "$type": "color",

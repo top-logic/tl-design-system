@@ -128,7 +128,7 @@ test('auswählbare Einträge (Q24): Hof beim Zeigen, Ring bei aria-selected, kei
     assert.match(decl('layout', `${host}[role="option"]`), /position:\s*relative/, host);
     assert.match(decl('layout', `${host}[role="option"]`), /cursor:\s*pointer/, host);
     assert.match(decl('layout', `${host}[role="option"]`), /transition:\s*box-shadow var\(--tl-duration-fast\) var\(--tl-easing-standard\)/, host);
-    assert.match(decl('layout', `${host}[role="option"]:hover`), /box-shadow:\s*0 0 0 var\(--tl-space-2xs\) var\(--tl-surface-state-hover\)/, host);
+    assert.match(decl('layout', `${host}[role="option"]:hover`), /box-shadow:\s*0 0 0 var\(--tl-space-2xs\) var\(--tl-surface-state-hover-strong\)/, host);
     const ring = decl('layout', `${host}[aria-selected="true"]::after`);
     assert.match(ring, /border:\s*var\(--tl-border-width-md\) solid var\(--tl-border-interactive\)/, host);
     assert.match(ring, /inset:\s*0/, host);
@@ -136,6 +136,25 @@ test('auswählbare Einträge (Q24): Hof beim Zeigen, Ring bei aria-selected, kei
   }
   const css = ohneKommentar(readGenerated('layout', 'layout.css'));
   assert.doesNotMatch(css, /--selectable|--selected|--tl-shadow|outline|surface-brand-subtle/);
+});
+
+// Nachtrag 4c (S2): ausgewählt heißt Ring und Haken; die Marke ist dekoratives Element der Hülle, kein Pseudo.
+test('tl-item__check: Kreis oben am Ende, Fläche der Marke, Haken in text-on-brand, nur Tokens', () => {
+  const marke = decl('layout', '.tl-item__check');
+  assert.match(marke, /position:\s*absolute/);
+  assert.match(marke, /top:\s*var\(--tl-space-xs\)/);
+  assert.match(marke, /inset-inline-end:\s*var\(--tl-space-xs\)/);
+  assert.match(marke, /width:\s*var\(--tl-size-icon-md\)/);
+  assert.match(marke, /height:\s*var\(--tl-size-icon-md\)/);
+  assert.match(marke, /border-radius:\s*var\(--tl-radius-round\)/);
+  assert.match(marke, /background:\s*var\(--tl-surface-brand\)/);
+  assert.match(marke, /z-index:\s*var\(--tl-layer-raised\)/);
+  assert.match(marke, /pointer-events:\s*none/);
+  const haken = decl('layout', '.tl-item__check::after');
+  assert.match(haken, /border-color:\s*var\(--tl-text-on-brand\)/);
+  assert.match(haken, /var\(--tl-border-width-md\)/);
+  assert.match(haken, /rotate\(/);
+  assert.doesNotMatch(marke + haken, /\d+px/);
 });
 
 test('tl-split: Richtung aus dem Modifier, Griff space-xs mit Linie; unter dem Zeiger, beim Ziehen, mit Fokus kräftig', () => {

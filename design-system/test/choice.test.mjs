@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { readComponent, colorVarsOf, declarationsOf, specimenProblems, missingInContract, varsOf, componentCssFiles } from './lib/component.mjs';
 import { declarations } from '../tools/lib/css.mjs';
 import { resolve } from '../tools/resolve.mjs';
+import { lint } from '../tools/lint-css.mjs';
 
 const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)));
 const css = readComponent('choice', 'choice.css');
@@ -22,6 +23,23 @@ test('choice.css liest genau diese Farbrollen', () => {
     'surface-disabled', 'surface-field', 'surface-interactive-active', 'surface-interactive-selected', 'surface-state-active', 'surface-state-hover', 'text-disabled', 'text-on-brand',
     'text-on-brand-active', 'text-on-brand-hover', 'text-primary', 'text-secondary',
   ]);
+});
+
+test('wer welchen Hof liest: die Fläche der Option -hover-strong, die Marken -hover', () => {
+  const layout = readComponent('layout', 'layout.css');
+  assert.deepEqual(layout.match(/var\(--tl-surface-state-[a-z-]+\)/g)?.sort(),
+    ['var(--tl-surface-state-hover-strong)'], 'ein Leser, ein Selektor für Eintrag und Spalte');
+  assert.doesNotMatch(css, /surface-state-hover-strong/);
+  assert.match(css, /var\(--tl-surface-state-hover\)/);
+});
+
+test('der Hof der Flächen ist als Hof erlaubt und als Fläche, Rand oder Text verboten', () => {
+  const known = new Set(['--tl-surface-state-hover-strong', '--tl-space-2xs', '--tl-border-width-md']);
+  const rolle = 'var(--tl-surface-state-hover-strong)';
+  assert.deepEqual(lint(`.tl-x:hover { box-shadow: 0 0 0 var(--tl-space-2xs) ${rolle}; }`, { known, file: 'x.css' }), []);
+  for (const [p, v] of [['background', rolle], ['border-color', rolle], ['color', rolle],
+    ['box-shadow', `inset 0 0 0 var(--tl-border-width-md) ${rolle}`]])
+    assert.ok(lint(`.tl-x { ${p}: ${v}; }`, { known, file: 'x.css' }).length >= 1, `${p}: ${v}`);
 });
 
 test('Auswahlmarken zeigen einen Hof: Zeigen und Drücken, an der Marke und am Label, nie deaktiviert oder schreibgeschützt', () => {

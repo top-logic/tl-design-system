@@ -12,6 +12,7 @@ nur Lage und Abstand. Die Gap-Skala teilen sie mit `tl-columns`.
 | `TLInset` | `child` | `tl-inset`, in einem Panel `tl-inset--panel`, in einer Karte `tl-inset--card` (aus `useSurface()`) |
 | `TLDeckPane` | `activeChild` | `tl-deck` |
 | Hülle wiederholter Kinder | `itemClass` | `tl-item` und die konfigurierte Klasse; Position als `--item-index` (0-basiert) |
+| Haken der ausgewählten Option | `selectable`, `selected` | `tl-item__check`: ein dekoratives `<span aria-hidden="true">` in der Hülle, nur bei `aria-selected="true"`; sitzt oben am Ende, fängt keinen Klick; die Auswahl bleibt allein in `aria-selected` |
 | Auswahl unter den Einträgen | `selectable`, `itemKeys`, `selected`, `multiSelect` | der Behälter `role="listbox"` (mehrfach: `aria-multiselectable`), jede Hülle `role="option"` mit `aria-selected`; kein Modifier |
 
 ## Aktionen
@@ -28,7 +29,7 @@ nur Lage und Abstand. Die Gap-Skala teilen sie mit `tl-columns`.
 | `default` | `--tl-space-md` |
 | `loose` | `--tl-space-lg` |
 | Inset Seite / Panel / Karte | `--tl-space-lg` / `--tl-space-md` / `--tl-space-xs` `--tl-space-md` |
-| Option beim Zeigen | Hof `--tl-space-2xs` in `--tl-surface-state-hover` |
+| Option beim Zeigen | Hof `--tl-space-2xs` in `--tl-surface-state-hover-strong` (der Hof um Flächen; Marken lesen `-hover`) |
 | Option ausgewählt | Ring `--tl-border-width-md` in `--tl-border-interactive` über dem Eintrag, Radius `--tl-radius-md` |
 
 ## Konformität

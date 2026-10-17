@@ -67,6 +67,16 @@ test('5 warm liegt auf den Helligkeiten von TopLogic-Grau; neutral trägt keine 
   assert.ok(hexZuOklch(neutral.ergebnis.color.light['text-secondary']).C < 0.002);
 });
 
+test('veil-5 und veil-6 (Hof um Flächen) folgen dem Kundengrau und behalten ihre Deckkraft', () => {
+  for (const mode of MODES) {
+    const vorher = rgba(R0.effect[mode]['surface-state-hover-strong']);
+    const nachher = rgba(ergebnis.ergebnis.effect[mode]['surface-state-hover-strong']);
+    assert.equal(nachher.a, vorher.a, `${mode}: Deckkraft`);
+    assert.notDeepEqual([nachher.r, nachher.g, nachher.b], [vorher.r, vorher.g, vorher.b], `${mode}: nicht nachgefärbt`);
+    assert.ok(ergebnis.css.includes(`--tl-surface-state-hover-strong: ${ergebnis.ergebnis.effect[mode]['surface-state-hover-strong']};`), mode);
+  }
+});
+
 test('die Schleier folgen dem Kundengrau und behalten ihre Deckkraft; ein gelieferter Schleier bleibt', () => {
   for (const mode of MODES) for (const s of ['surface-state-hover', 'surface-state-active']) {
     const vorher = rgba(R0.effect[mode][s]);

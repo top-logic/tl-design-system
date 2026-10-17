@@ -60,6 +60,7 @@
   --tl-text-on-status-success: #1F1C19;
   --tl-text-on-status-info: #1F1C19;
   --tl-surface-state-hover: rgba(31, 28, 25, 0.06);
+  --tl-surface-state-hover-strong: rgba(31, 28, 25, 0.16);
   --tl-surface-state-active: rgba(31, 28, 25, 0.12);
   --tl-font-family-sans: 'Probe Sans', system-ui, sans-serif;
   --tl-radius-sm: 0;
@@ -124,6 +125,7 @@
   --tl-text-on-status-success: #1F1C19;
   --tl-text-on-status-info: #1F1C19;
   --tl-surface-state-hover: rgba(247, 242, 237, 0.06);
+  --tl-surface-state-hover-strong: rgba(247, 242, 237, 0.2);
   --tl-surface-state-active: rgba(247, 242, 237, 0.12);
 }
 

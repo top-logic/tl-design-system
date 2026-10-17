@@ -146,6 +146,25 @@ test('die Zustandsschichten sind durchscheinend und heben sich auf jedem Grund a
   }
 });
 
+// Nachtrag 4c (S3, 17.10.): um eine große Karte trägt der Saum von 6 % nicht; die Fläche hat eine eigene, kräftigere Rolle.
+test('der Hof um Flächen (surface-state-hover-strong): durchscheinend, auf jedem Grund ≥ 1,3, stärker als Drücken', () => {
+  const gruende = ['surface-base', 'surface-layer', 'surface-layer-nested', 'surface-overlay', 'surface-field'];
+  const gemessen = [];
+  for (const m of MODES) {
+    const { a } = rgba(R.effect[m]['surface-state-hover-strong']);
+    assert.ok(a > 0 && a <= 0.25, `${m}: surface-state-hover-strong deckt ${a}`);
+    for (const g of gruende) {
+      const grund = R.color[m][g];
+      const stark = ratio(ueberlagert(R.effect[m]['surface-state-hover-strong'], grund), grund);
+      const druecken = ratio(ueberlagert(R.effect[m]['surface-state-active'], grund), grund);
+      gemessen.push(`${m}/${g}=${stark.toFixed(2)} (active ${druecken.toFixed(2)})`);
+      assert.ok(stark >= 1.3, `${m}: hover-strong auf ${g} = ${stark.toFixed(2)}`);
+      assert.ok(stark > druecken, `${m}: hover-strong ${stark.toFixed(2)} nicht stärker als active ${druecken.toFixed(2)} auf ${g}`);
+    }
+  }
+  console.log('HOF-STRONG', gemessen.join('; '));
+});
+
 test('jede rem-Größe ist ein glattes Sechzehntel', () => {
   for (const [n, v] of Object.entries(P.measure)) {
     const m = /^([\d.]+)rem$/.exec(v);
