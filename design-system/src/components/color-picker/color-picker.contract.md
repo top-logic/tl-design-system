@@ -41,7 +41,7 @@ Alles im Popup ändert nur den Entwurf „Neu“; Abbrechen und Escape verwerfen
 | `tl-color-picker__mixer` | Mischfeld und Farbtonregler |
 | `tl-color-picker__field` | Sättigung/Helligkeit, Maß `--tl-size-12` im Quadrat |
 | `tl-color-picker__hue` | Farbton, `--tl-size-control-sm` breit |
-| `tl-color-picker__handle` | Doppelring aus `--tl-border-handle-light` (Rand) und `--tl-border-handle-dark` (inset-Linie) |
+| `tl-color-picker__handle` | Doppelring, außen `--tl-border-handle-dark` (Rand), innen `--tl-border-handle-light` (inset-Linie) |
 | `tl-color-picker__preview` | Aktuell und Neu, je ein breiter Swatch |
 | `tl-color-picker__inputs` | Rot, Grün, Blau, Hex |
 

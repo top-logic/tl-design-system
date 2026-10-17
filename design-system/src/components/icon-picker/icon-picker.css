@@ -4,7 +4,7 @@
 .tl-picker.tl-icon-picker {
   inline-size: var(--tl-size-13);
   block-size: var(--tl-size-13);
-  overflow: auto;
+  overflow: hidden;
   resize: both;
 }
 
@@ -21,6 +21,7 @@
   gap: var(--tl-space-2xs);
   min-block-size: 0;
   padding: var(--tl-space-2xs);
+  scroll-padding: var(--tl-space-xs); /* Fokus hält die Zelle samt Ring im Sichtfeld. */
   overflow: auto;
 }
 .tl-icon-picker__grid[hidden] { display: none; }

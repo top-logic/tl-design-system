@@ -140,28 +140,33 @@
   visibility: hidden;
 }
 
-/* Warnung vor Fehler: bei gleicher Spezifität gewinnt die spätere Regel, und der Fehler muss die Warnung
-   verdrängen. Der Daumen und der Text tragen den Zustand. */
-.tl-slider[data-tl-state~="warning"] .tl-slider__input::-webkit-slider-thumb {
+/* Vorrang über die Spezifität, nicht über die Reihenfolge: deaktiviert verdrängt jeden Zustand (:not(:disabled)),
+   und der Fehler verdrängt die Warnung (:not([aria-invalid="true"]) an den Warnregeln). Daumen und Text tragen
+   den Zustand. */
+.tl-slider[data-tl-state~="warning"] .tl-slider__input:not(:disabled):not([aria-invalid="true"])::-webkit-slider-thumb {
   background: var(--tl-status-warning-border);
 }
 
-.tl-slider[data-tl-state~="warning"] .tl-slider__input::-moz-range-thumb {
+.tl-slider[data-tl-state~="warning"] .tl-slider__input:not(:disabled):not([aria-invalid="true"])::-moz-range-thumb {
   background: var(--tl-status-warning-border);
 }
 
-.tl-slider[data-tl-state~="warning"] .tl-slider__text {
+.tl-slider[data-tl-state~="warning"] .tl-slider__input:not(:disabled):not([aria-invalid="true"]) ~ .tl-slider__value .tl-slider__text {
   color: var(--tl-status-warning-text);
 }
 
-.tl-slider__input[aria-invalid="true"]::-webkit-slider-thumb {
+.tl-slider__input[aria-invalid="true"]:not(:disabled)::-webkit-slider-thumb {
   background: var(--tl-status-error-border);
 }
 
-.tl-slider__input[aria-invalid="true"]::-moz-range-thumb {
+.tl-slider__input[aria-invalid="true"]:not(:disabled)::-moz-range-thumb {
   background: var(--tl-status-error-border);
 }
 
-.tl-slider__input[aria-invalid="true"] ~ .tl-slider__value .tl-slider__text {
+.tl-slider__input[aria-invalid="true"]:not(:disabled) ~ .tl-slider__value .tl-slider__text {
   color: var(--tl-status-error-text);
+}
+
+.tl-slider__input:disabled ~ .tl-slider__value {
+  color: var(--tl-text-disabled);
 }

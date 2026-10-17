@@ -9,8 +9,18 @@
 }
 .tl-picker[hidden] { display: none; }
 
+/* Die Reiter nehmen den Rest der Hülle und schrumpfen mit ihr: der Inhalt im Reiterfeld (Raster) scrollt selbst,
+   statt dass das Popup als Ganzes scrollt. */
 .tl-picker__tabs {
-  flex-shrink: 0;
+  flex: 1 1 auto;
+  min-block-size: 0;
+}
+
+/* Der Rand von space-2xs im Reiterfeld hält den Fokusring der Randelemente (Filter, Eingaben, Zellen) im
+   overflow des Feldes. */
+.tl-picker__tabs > .tl-tabs__panel {
+  padding: var(--tl-space-2xs);
+  scroll-padding: var(--tl-space-xs);
 }
 
 .tl-picker__actions {

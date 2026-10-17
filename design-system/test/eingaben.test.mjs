@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { readGenerated, declarationsOf } from './lib/component.mjs';
+import { readGenerated, declarationsOf, rulesOf } from './lib/component.mjs';
 
 const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)));
 const decl = (dir, sel, file = `${dir}.css`) => declarationsOf(readGenerated(dir, file), sel) ?? '';
@@ -53,9 +53,11 @@ test('swatch: deaktiviert zeichnet den Rahmen wie tl-field:disabled', () => {
   const d = decl('swatch', 'button.tl-swatch:disabled');
   assert.match(d, /border-color:\s*var\(--tl-border-disabled\)/);
   assert.match(d, /cursor:\s*default/);
+  assert.match(d, /background-color:\s*var\(--tl-surface-disabled\)/);
+  assert.match(d, /color:\s*var\(--tl-text-disabled\)/);
 });
 
-test('picker: die Reiter und die Knopfleiste tragen ihr [hidden] selbst', () => {
+test('picker: picker.css hat keine eigene [hidden]-Regel für Reiter und Knopfleiste', () => {
   const css = ohneKommentar(readGenerated('picker', 'picker.css'));
   assert.doesNotMatch(css, /\.tl-picker__tabs\[hidden\]|\.tl-picker__actions\[hidden\]/);
 });
@@ -79,8 +81,8 @@ test('color-picker: Mischfeld size-12, Farbtonregler size-control-sm breit', () 
 
 test('color-picker: Griff ist ein Doppelring aus den Griff-Rollen', () => {
   const d = decl('color-picker', '.tl-color-picker__handle');
-  assert.match(d, /border[^;]*var\(--tl-border-handle-light\)/);
-  assert.match(d, /box-shadow:\s*inset[^;]*var\(--tl-border-handle-dark\)/);
+  assert.match(d, /border:[^;]*var\(--tl-border-handle-dark\)/);
+  assert.match(d, /box-shadow:\s*inset[^;]*var\(--tl-border-handle-light\)/);
   assert.doesNotMatch(d, /outline/);
 });
 
@@ -117,15 +119,19 @@ test('slider: Füllung ist ein Element, Spur des range durchsichtig, kein outlin
     assert.match(decl('slider', s), /var\(--tl-size-choice\)/);
 });
 
+const W = '.tl-slider[data-tl-state~="warning"] .tl-slider__input:not(:disabled):not([aria-invalid="true"])';
 test('slider: Zustand als Attribut, keine --error/--warning-Klasse', () => {
   const css = ohneKommentar(readGenerated('slider', 'slider.css'));
-  for (const s of ['.tl-slider[data-tl-state~="warning"] .tl-slider__text',
-    '.tl-slider[data-tl-state~="warning"] .tl-slider__input::-webkit-slider-thumb',
-    '.tl-slider[data-tl-state~="warning"] .tl-slider__input::-moz-range-thumb',
-    '.tl-slider__input[aria-invalid="true"]::-webkit-slider-thumb',
-    '.tl-slider__input[aria-invalid="true"]::-moz-range-thumb',
-    '.tl-slider__input[aria-invalid="true"] ~ .tl-slider__value .tl-slider__text'])
+  for (const s of [W + ' ~ .tl-slider__value .tl-slider__text', W + '::-webkit-slider-thumb', W + '::-moz-range-thumb',
+    '.tl-slider__input[aria-invalid="true"]:not(:disabled)::-webkit-slider-thumb',
+    '.tl-slider__input[aria-invalid="true"]:not(:disabled)::-moz-range-thumb',
+    '.tl-slider__input[aria-invalid="true"]:not(:disabled) ~ .tl-slider__value .tl-slider__text'])
     assert.notEqual(decl('slider', s), '', s);
   assert.doesNotMatch(css, /tl-slider--(error|warning)/);
-  assert.ok(css.indexOf('data-tl-state~="warning"') < css.indexOf('[aria-invalid="true"]'), 'Warnung vor Fehler');
+});
+
+test('slider: Vorrang über die Spezifität — Fehler vor Warnung, deaktiviert vor beiden', () => {
+  const sel = rulesOf(readGenerated('slider', 'slider.css')).map(([s]) => s).filter((s) => /::-webkit-slider-thumb|__text/.test(s));
+  for (const s of sel.filter((x) => /warning/.test(x))) assert.match(s, /:not\(\[aria-invalid="true"\]\)/, s);
+  for (const s of sel.filter((x) => /warning|aria-invalid/.test(x))) assert.match(s, /:not\(:disabled\)/, s);
 });

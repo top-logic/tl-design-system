@@ -11,6 +11,8 @@
 <link rel="stylesheet" href="/dist/components.css">
 <link rel="stylesheet" href="/specimen/specimen.css">
 <style>
+  /* Das ganze Popup ohne Höhenkappe: das Messfenster des focus-clip ist niedriger als ein Mischer. */
+  .tl-popover { max-block-size: none; }
   .specimen__row > .tl-color-picker__palette { grid-template-columns: repeat(4, var(--tl-size-control)); }
   #hue { background: linear-gradient(to bottom, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00); }
   #field { background: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, #1e88e5); }
@@ -18,6 +20,12 @@
   #h-hue { left: 50%; top: 60%; }
   #prev-old { background: #1e88e5; }
   #prev-new { background: #e53935; }
+  #cp-field { background: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, #1e88e5); }
+  #cp-hue { background: linear-gradient(to bottom, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00); }
+  #cp-hf { left: 70%; top: 25%; }
+  #cp-hh { left: 50%; top: 60%; }
+  #cp-old { background: #1e88e5; }
+  #cp-new { background: #e53935; }
   #field-btn { background: #1e88e5; }
   #c0 { background: #e53935; }
   #c1 { background: #fb8c00; }
@@ -76,6 +84,41 @@
     <div class="tl-color-picker__inputs">
       <label class="tl-type-label">Rot <input class="tl-field" value="229"></label>
       <label class="tl-type-label">Hex <input class="tl-field" value="#e53935"></label>
+    </div>
+  </section>
+  <section class="specimen__base"><p class="tl-type-heading-sm">Das ganze Popup: Reiter, Mischer, Eingaben, Aktionen — focus-clip misst es mit</p>
+    <div class="tl-popover tl-picker" role="dialog" aria-label="Farbe wählen">
+      <div class="tl-tabs tl-picker__tabs">
+        <div class="tl-tabs__list" role="tablist" aria-label="Farbwahl">
+          <button type="button" class="tl-tabs__tab tl-type-body" role="tab" id="cp-t1" aria-selected="false" aria-controls="cp-p1" tabindex="-1">Palette</button>
+          <button type="button" class="tl-tabs__tab tl-type-body" role="tab" id="cp-t2" aria-selected="true" aria-controls="cp-p2" tabindex="0">Mischer</button>
+        </div>
+        <div class="tl-tabs__panel" role="tabpanel" id="cp-p1" aria-labelledby="cp-t1" hidden><p class="tl-type-body">Palette.</p></div>
+        <div class="tl-tabs__panel" role="tabpanel" id="cp-p2" aria-labelledby="cp-t2">
+          <div class="tl-stack tl-stack--row tl-stack--gap-default">
+            <div class="tl-color-picker__mixer">
+              <div id="cp-field" class="tl-color-picker__field" role="slider" aria-label="Sättigung und Helligkeit" aria-valuetext="Sättigung 70 %, Helligkeit 75 %" tabindex="0"><div id="cp-hf" class="tl-color-picker__handle"></div></div>
+              <div id="cp-hue" class="tl-color-picker__hue" role="slider" aria-label="Farbton" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="360" aria-valuenow="216" tabindex="0"><div id="cp-hh" class="tl-color-picker__handle"></div></div>
+            </div>
+            <div class="tl-stack tl-stack--column tl-stack--gap-compact">
+              <div class="tl-color-picker__preview">
+                <div id="cp-old" class="tl-swatch tl-swatch--color tl-swatch--wide" role="img" aria-label="Aktuell"></div>
+                <div id="cp-new" class="tl-swatch tl-swatch--color tl-swatch--wide" role="img" aria-label="Neu"></div>
+              </div>
+              <div class="tl-divider"></div>
+              <div class="tl-color-picker__inputs">
+                <label class="tl-type-label">Rot <input class="tl-field" value="229"></label>
+                <label class="tl-type-label">Hex <input class="tl-field" value="#e53935"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tl-button-bar tl-picker__actions"><div class="tl-toolbar" role="toolbar" aria-label="Aktionen"><div class="tl-toolbar__group">
+        <button type="button" class="tl-button tl-button--ghost tl-button--danger">Leeren</button>
+        <button type="button" class="tl-button tl-button--secondary">Abbrechen</button>
+        <button type="button" class="tl-button tl-button--primary">OK</button>
+      </div></div></div>
     </div>
   </section>
 </main>
