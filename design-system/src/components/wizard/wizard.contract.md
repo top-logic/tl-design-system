@@ -19,7 +19,7 @@ Zugänglichkeit der Position, nicht das Aussehen.
 | Attribut | Wann |
 |---|---|
 | `tl-wizard` | Wurzel; zurück: `data-tl-state~="backward"` |
-| `tl-wizard__counter` | mit `tl-type-label` `tl-nums`, `aria-hidden` |
+| `tl-wizard__counter` | mit `tl-type-label` `tl-nums`; `aria-hidden`, wenn die Schrittliste steht |
 | `tl-wizard__progress` | Hülle des Fortschrittsbalkens |
 | `tl-wizard__steps` | an `ol`, `aria-label` aus i18n `js.wizard.steps` |
 | `tl-wizard__step-item` | an `li`; erledigt `data-tl-state~="done"`, aktuell `aria-current="step"` |

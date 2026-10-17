@@ -23,7 +23,7 @@ Das Control ist `TLPanel` (`ReactPanelControl`).
 | Befehl | Wann |
 |---|---|
 | `toggleMinimize` | Minimieren-Knopf; ein Klick auf den Kopf außerhalb seiner Knöpfe öffnet nur ein minimiertes Panel, er minimiert nicht |
-| `toggleMaximize` | Maximieren-Knopf; Doppelklick auf den Kopf außerhalb seiner Knöpfe; `Escape` im maximierten Panel, sofern kein Element darin Escape verbraucht hat |
+| `toggleMaximize` | Maximieren-Knopf; Doppelklick auf den Kopf außerhalb seiner Knöpfe; `Escape` im maximierten Panel über den Tastatur-Verteiler: ein Popup darin schließt zuerst, ein von einem Element darin schon verbrauchtes Escape stellt nicht her |
 | `popOut` | Lösen-Knopf |
 
 ## Tokens
