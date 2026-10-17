@@ -59,7 +59,7 @@ Zwei Controls, ein Baustein: `TLDialog` (`ReactDialogControl`) rendert den Scrim
 | `tl-dialog__surface` + `role="dialog"` + `aria-modal="true"` + `aria-labelledby` | an der Fläche; `aria-labelledby` zeigt auf `tl-titlebar__title` |
 | `data-tl-state~="entering"` / `~="exiting"` | am Scrim, während er kommt bzw. als Kopie geht |
 | `data-tl-state~="maximized"` | an der Fläche, maximiert |
-| `tl-dialog__body`, `tl-dialog__footer` | Körper, Fuß (leer verborgen) |
+| `tl-dialog__body`, `tl-button-bar` | Körper; Fuß als direktes Kind der Fläche (ohne Knopf verborgen, Vertrag `button-bar`) |
 | `tl-dialog__resize` + `data-tl-edge` | Griff je Kante und Ecke: `n`, `ne`, `e`, `se`, `s`, `sw`, `w`, `nw` |
 
 ## Konformität

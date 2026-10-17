@@ -255,3 +255,10 @@ test('Zustände der Overlays als Modifier brechen das Gate (Welle 4a)', () => {
   for (const sel of ['.tl-dialog--entering', '.tl-dialog__surface--maximized', '.tl-notice-bar--clickable', '.tl-snackbar--visible', '.tl-x__y--exiting'])
     assert.ok(lint(`${sel} { display: none; }`, { known, file: 'x.css' }).some((v) => /Zustand als/.test(v)), sel);
 });
+
+test('Zustände der Behälter als Modifier brechen das Gate (Welle 4c) — an Block und Element', () => {
+  for (const sel of ['.tl-panel--minimized', '.tl-panel--maximized', '.tl-split__pane--collapsed', '.tl-tile-stack__frame--covered',
+    '.tl-tile-stack--forward', '.tl-wizard--backward', '.tl-wizard__step-item--done', '.tl-wizard__step-item--current',
+    '.tl-wizard__step-item--upcoming', '.tl-wizard__step--entering'])
+    assert.ok(lint(`${sel} { display: none; }`, { known, file: 'x.css' }).some((v) => /Zustand als/.test(v)), sel);
+});

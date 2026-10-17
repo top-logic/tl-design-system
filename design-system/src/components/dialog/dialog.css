@@ -83,19 +83,6 @@
   overflow: auto;
 }
 
-/* Der Fuß hält eine Toolbar; ohne Befehl rendert sie nichts, dann verschwindet er. */
-.tl-dialog__footer {
-  display: flex;
-  justify-content: end;
-  gap: var(--tl-space-xs);
-  padding: var(--tl-space-sm) var(--tl-space-md);
-  border-top: var(--tl-border-width-sm) solid var(--tl-border-separator);
-}
-
-.tl-dialog__footer:empty {
-  display: none;
-}
-
 /* Acht Griffe zum Ändern der Größe, halb über dem Rand. Kanten xs breit, Ecken sm groß. */
 .tl-dialog__resize {
   position: absolute;

@@ -1,6 +1,7 @@
-/* Titelleiste — Spec 2026-10-13 Welle 4a §3, Konsolidierung Q3. Der eine Kopf über einer Fläche: Titel links mit
-   Ellipse, Aktionen (Toolbar, Kopfknöpfe tl-button--icon --sm) rechts, eine Linie darunter. Dialog und Drawer
-   tragen ihn; Panel und Card folgen in 4b. Die Typo-Klasse des Titels (tl-type-heading-sm) setzt das Markup. */
+/* Titelleiste — Spec 2026-10-13 Welle 4a §3 (Q3), Spec 2026-10-16 Welle 4c §3. Der eine Kopf über einer Fläche:
+   Titel links mit Ellipse, daneben frei gestalteter Inhalt, Aktionen (Toolbar) und Kopfknöpfe (tl-button--icon --sm)
+   am Ende, eine Linie darunter. Dialog, Drawer, Panel und Karte tragen ihn. Er ist size-bar hoch, mit und ohne
+   Toolbar; eine überlaufende Toolbar gibt vor dem Titel nach. Die Typo-Klasse des Titels setzt das Markup. */
 
 .tl-titlebar {
   display: flex;
@@ -10,6 +11,9 @@
   min-height: var(--tl-size-bar);
   padding: var(--tl-space-2xs) var(--tl-space-xs) var(--tl-space-2xs) var(--tl-space-md);
   border-bottom: var(--tl-border-width-sm) solid var(--tl-border-separator);
+  /* Die Linie unten zählt zur Höhe (border-box): unten liegt space-2xs abzüglich der Linie, damit ein Control der
+     Toolbar (size-control) Platz hat und der Kopf size-bar misst, mit und ohne Toolbar. */
+  padding-bottom: calc(var(--tl-space-2xs) - var(--tl-border-width-sm));
 }
 .tl-titlebar[hidden] { display: none; }
 
@@ -29,5 +33,53 @@
   display: flex;
   flex: 0 1 auto;
   align-items: center;
+  gap: var(--tl-space-2xs);
   min-width: 0;
+}
+
+/* Eine Toolbar im Kopf bringt keine eigene Leistenhöhe mit: der Kopf misst size-bar (Control plus space-2xs oben und
+   unten), ob er eine Toolbar trägt oder nicht — Köpfe nebeneinander stehen auf einer Linie. */
+.tl-titlebar__actions > .tl-toolbar {
+  min-height: 0;
+  padding-block: 0;
+}
+
+/* Frei gestalteter Inhalt neben dem Titel (Panel: titleContent). Steht er da, nimmt der Titel seine Breite und der
+   Inhalt den Rest. */
+.tl-titlebar__content {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  min-width: 0;
+}
+.tl-titlebar__content[hidden] { display: none; }
+
+.tl-titlebar__title:has(+ .tl-titlebar__content) {
+  flex: 0 1 auto;
+}
+
+/* Die Kopfknöpfe eines Behälters (Part Button: Minimieren, Maximieren, Lösen). Sie behalten ihre Maße; die Lage steht
+   an dieser Hülle, nicht am Part (view-layer/parts.md). */
+.tl-titlebar__buttons {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--tl-space-xs);
+}
+.tl-titlebar__buttons[hidden] { display: none; }
+
+/* Ohne Titel stehen Aktionen und Knöpfe am Ende: das erste Kind schiebt alles dorthin. */
+.tl-titlebar > :first-child:not(.tl-titlebar__title, .tl-titlebar__content) {
+  margin-inline-start: auto;
+}
+
+/* Wer nachgibt (wie die AppBar, 4b): eine überlaufende Toolbar nimmt nur den Rest und hält an ihrem Überlaufknopf;
+   erst dann kürzt der Titel. */
+.tl-titlebar__actions:has(> .tl-toolbar[data-tl-overflow]) {
+  flex: 1 1 0;
+  min-width: var(--tl-size-control);
+}
+
+.tl-titlebar:has(> .tl-titlebar__actions > .tl-toolbar[data-tl-overflow]) > .tl-titlebar__title {
+  flex: 0 1 auto;
 }

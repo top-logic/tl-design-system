@@ -71,8 +71,7 @@ test('tl-dialog__surface: Overlay-Fläche mit Rahmen, Schatten dialog, Ecke md; 
 test('tl-dialog: Kopf zum Ziehen, Fuß rechtsbündig und leer verborgen, acht Griffe', () => {
   assert.match(decl('dialog', '.tl-dialog__surface > .tl-titlebar'), /cursor:\s*grab/);
   assert.match(decl('dialog', '.tl-dialog__surface[data-tl-state~="maximized"] > .tl-titlebar'), /cursor:\s*default/);
-  assert.match(decl('dialog', '.tl-dialog__footer'), /justify-content:\s*end/);
-  assert.match(decl('dialog', '.tl-dialog__footer:empty'), /display:\s*none/);
+  assert.match(decl('button-bar', '.tl-button-bar'), /justify-content:\s*end/);
   for (const e of ['n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw'])
     assert.match(decl('dialog', `.tl-dialog__resize[data-tl-edge="${e}"]`), /cursor:\s*[a-z]+-resize/, e);
 });

@@ -77,10 +77,10 @@ const SCHICHT_FLAECHE = { '.tl-toggle:hover': 'var(--tl-surface-state-hover)', '
 // Punkt 9: Attributselektoren, die auf Klassen zielen, umgehen das BEM/Prefix-Gate.
 const CLASS_ATTR_SELECTOR = /\[class[*^~]=/;
 // Punkt 10: Zustände sind Attribute (:disabled, [aria-pressed], [aria-busy], :focus-visible), nie Klassen.
-const STATE_MODIFIER = /--(active|disabled|loading|hover|focus|focused|pressed|selected|open|closed|entering|exiting|maximized|clickable|visible|checked|busy|invalid|dirty|immutable|readonly|dragover|dragging|highlighted|collapsed|expanded|cursor|filtered|frozen|frozen-last|pinned|pinned-first|drop-before|drop-after|drop-onto|drop-refused)$/;
+const STATE_MODIFIER = /--(active|disabled|loading|hover|focus|focused|pressed|selected|open|closed|entering|exiting|maximized|clickable|visible|checked|busy|invalid|dirty|immutable|readonly|dragover|dragging|highlighted|collapsed|expanded|cursor|filtered|frozen|frozen-last|pinned|pinned-first|drop-before|drop-after|drop-onto|drop-refused|minimized|covered|current|done|upcoming|forward|backward)$/;
 // Punkt 10a: Am Element ist jeder Zustand ein Attribut — auch Fehler und Warnung, die ein Block (tl-alert,
 // tl-pill) als Bedeutung trägt. tl-x__y--error ist ein Zustand, der sich als Modifier tarnt.
-const ELEMENT_STATE_MODIFIER = /^tl-[a-z0-9-]+__[a-z0-9-]+--(active|disabled|loading|hover|focus|focused|pressed|selected|open|closed|entering|exiting|maximized|clickable|visible|checked|busy|invalid|dirty|error|warning|immutable|readonly|dragover|dragging|highlighted|collapsed|expanded|cursor|filtered|frozen|frozen-last|pinned|pinned-first|drop-before|drop-after|drop-onto|drop-refused)$/;
+const ELEMENT_STATE_MODIFIER = /^tl-[a-z0-9-]+__[a-z0-9-]+--(active|disabled|loading|hover|focus|focused|pressed|selected|open|closed|entering|exiting|maximized|clickable|visible|checked|busy|invalid|dirty|error|warning|immutable|readonly|dragover|dragging|highlighted|collapsed|expanded|cursor|filtered|frozen|frozen-last|pinned|pinned-first|drop-before|drop-after|drop-onto|drop-refused|minimized|covered|current|done|upcoming|forward|backward)$/;
 // Punkt 11: Die Modifier eines Blocks sind entschieden (docs/skalen.md), nicht gewachsen.
 const MODIFIERS = {
   'tl-button': new Set(['primary', 'secondary', 'ghost', 'link', 'danger', 'sm', 'icon']),
@@ -133,6 +133,22 @@ const MODIFIERS = {
   'tl-sidebar': new Set([]), // Eingeklappt: data-tl-state~="collapsed"; aktuell: aria-current.
   'tl-bottom-bar': new Set([]), // Aktuell: aria-current.
   'tl-icon-badge': new Set([]),
+  'tl-button-bar': new Set([]), // Leer verborgen über :has, kein Modifier.
+  'tl-panel': new Set(['hover-actions', 'full-line']), // Minimiert, maximiert: data-tl-state.
+  'tl-card': new Set(['nested', 'overlay']), // Die Stufe folgt der Verschachtelung (Weg B), keine Erscheinung.
+  'tl-accordion': new Set([]), // Offen: aria-expanded am Auslöser.
+  'tl-stack': new Set(['row', 'column', 'gap-compact', 'gap-default', 'gap-loose', 'align-start', 'align-center',
+    'align-end', 'align-stretch', 'justify-start', 'justify-center', 'justify-end', 'justify-space-between',
+    'justify-space-around', 'justify-space-evenly', 'wrap', 'grow-first']),
+  'tl-grid': new Set(['gap-compact', 'gap-default', 'gap-loose']),
+  'tl-inset': new Set(['panel', 'card']), // Ohne Modifier: die Seite.
+  'tl-bounded': new Set([]),
+  'tl-item': new Set([]),
+  'tl-deck': new Set([]),
+  'tl-split': new Set(['horizontal', 'vertical']), // Alle eingeklappt: data-tl-state.
+  'tl-tile-stack': new Set([]), // Richtung und Übergang: data-tl-state.
+  'tl-wizard': new Set([]), // Richtung: data-tl-state; Schritt erledigt: data-tl-state, aktuell: aria-current.
+  'tl-adaptive-detail': new Set([]),
 };
 
 // Die einzige Ausnahme vom Ring: der Behälter mit virtuellem Cursor, nur in base.css (Spec 3b §3).

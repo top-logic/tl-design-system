@@ -1794,6 +1794,10 @@
         "$type": "dimension",
         "$value": "{primitive.measure.size-12}"
       },
+      "size-wizard-progress": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-13}"
+      },
       "size-toast-max": {
         "$type": "dimension",
         "$value": "{primitive.measure.size-15}"
