@@ -143,8 +143,11 @@ Schnitt so“ (Hendrik): **5a Eingaben** (ColorInput, IconSelect, Slider; Trac *
 5c Planen und Ziehen, 5d Fundament und Abschluss (je eigenes Ticket beim Start). Entscheidungen V13 `layer-drag`, V16
 fremde Stylesheets in 5d nur Tokens, V17 alte Theme-Tokens als Brücke bis #29850, V18 `TLCounter` streichen; `skalen.md`
 „Welle 5: Schnitt und Konsolidierung“. **Spec 5a freigegeben (17.10., abschnittsweise):** `docs/superpowers/specs/2026-10-17-welle-5a-eingaben-design.md`,
-13 Entscheidungen in §11 (u. a. Mischfeld `size-12`, Zellen 32 px); `skalen.md` „Welle 5a: Eingaben“. **Weiter:** Plan
-schreiben, Plan-Review, dann SDD; Engine-Branch `CWS/CWS_29875_design_system_welle_5a` auf dem 4c-Branch.
+13 Entscheidungen in §11 (u. a. Mischfeld `size-12`, Zellen 32 px); `skalen.md` „Welle 5a: Eingaben“. **Plan steht (17.10.):**
+`docs/superpowers/plans/2026-10-17-welle-5a-eingaben.md` (zehn Tasks); Plan-Review durch Fable mit Probelauf in einer
+Paketkopie (469/4 rot an halo-Gate, Paarliste, Fokus-Gate, Probe-Theme — nach Korrektur grün), Befunde 1–13
+eingearbeitet (`531c4b0`). **Weiter:** Hendriks Durchsicht des Plans, dann SDD; Engine-Branch
+`CWS/CWS_29875_design_system_welle_5a` auf dem 4c-Branch (Task 1 Step 0).
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
