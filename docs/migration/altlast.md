@@ -875,6 +875,46 @@ Stufen, erledigter Schritt als Link); Kachelstapel (`covered`/`entering`); Adapt
 | S5 | Minimieren und Maximieren erreicht keine View (`PanelElement` übergibt `false`) — U1/U3 nur per Vitest geprüft | Hinweis an Bernhard |
 | — | nicht geprüft: Karte im Dialog, Anzeige des ViewError (Java-Test), VoiceOver | — |
 
+## Welle 5a · Eingaben — gebaut 17.10.2026
+
+Branch `CWS/CWS_29875_design_system_welle_5a` (Engine, lokal, nicht gepusht) und Paket (`main`, Ratsche je Task). Ratsche:
+`lines` 2405 → 1564 (Summe der Budgets = gemessen); Literale color 67 → 43, fontSize 27 → 20, duration 19 → 9, zIndex 12 → 10,
+outlineNone 8 → 7; `foreignTl` ohne `--tlSlider-*`.
+
+### Gestrichene Blöcke
+
+| Block (`tlReactControls.css`) | Zeilen alt | Nachfolger |
+|---|---|---|
+| TLColorInput | 354 | `tl-swatch.tl-swatch--color`, `tl-picker`, `tl-color-picker` (`swatch.css`, `picker.css`, `color-picker.css`) |
+| TLIconSelect | 340 | `tl-swatch`, `tl-picker`, `tl-icon-picker`, `tl-status` (`icon-picker.css`, `status.css`) |
+| Tooltip (stand unter TLIconSelect) | 57 | bleibt als eigener Block bis Welle 5d (V15) |
+| TLSlider | 204 | `tl-slider` (`slider.css`) |
+
+`--tlSlider-*` fällt: die Füllung ist das Element `.tl-slider__fill`, inline mit `inline-size`.
+
+### Neu im Paket
+
+Fünf Blöcke: `swatch.css` (`tl-swatch`, `--color`, `--wide`), `picker.css` (`tl-picker`, Hülle der Popups),
+`color-picker.css`, `icon-picker.css`, `slider.css`. Zwei Rollen: `border-handle-light`, `border-handle-dark` (Griffe des
+Mischers, auf jeder Farbe lesbar). Im Bridge: `useTabList` (Reiter mit Tastatur, `TLTabBar` und die Picker) und
+`PickerPopover` (`role="dialog"`, `usePopover`, Fokusfalle, Escape und Klick außerhalb schließen).
+
+### Alt → neu für Anwendungs-Stylesheets
+
+| Alt | Neu |
+|---|---|
+| `.tlColorInput`, `__swatch`, `--noColor`, `--immutable` | `.tl-swatch.tl-swatch--color`, `[data-tl-state~="empty"]`, lesend `span` |
+| `.tlColorInput__popup`, `__tabs`, `__tab--active` | `.tl-popover.tl-picker`, `.tl-tabs`, `[aria-selected="true"]` |
+| `.tlColorInput__palette`, `__paletteCell`, `--empty` | `.tl-color-picker__palette`, `.tl-swatch.tl-swatch--color[role="option"]`, `[data-tl-state~="empty"]` |
+| `.tlColorInput__mixer`, `__svField`, `__hueSlider`, `__svHandle`, `__hueHandle` | `.tl-color-picker__mixer`, `__field`, `__hue`, `__handle` |
+| `.tlColorInput__previewSwatch`, `__inputRow` | `.tl-swatch--wide`, `.tl-color-picker__inputs` |
+| `.tlColorInput__actions`, `__btn--ok/cancel/reset` | `.tl-button-bar.tl-picker__actions`, Part `Button` |
+| `.tlIconSelect`, `__swatch`, `--empty`, `--immutable` | `.tl-swatch`, `[data-tl-state~="empty"]`, lesend `span` |
+| `.tlIconSelect__popup`, `__grid`, `__iconCell--selected` | `.tl-popover.tl-picker.tl-icon-picker`, `.tl-icon-picker__grid`, `__cell[aria-selected="true"]` |
+| `.tlIconSelect__loading`, `__noResults` | `.tl-status` |
+| `.tlSlider`, `--error`, `--warning`, `__input`, `__value` | `.tl-slider`, `[aria-invalid]`, `[data-tl-state~="warning"]`, `__input`, `__value` |
+| `--tlSlider-*` | — (Füllung `.tl-slider__fill`) |
+
 ## Konsolidierung (01.10.) — Gleiches wird zusammengelegt
 
 Regel (CLAUDE.md „Arbeitsweise“, skalen.md „Gleiches wird zusammengelegt“): findet eine Erkundung zwei Stellen, die

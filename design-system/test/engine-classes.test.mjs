@@ -142,3 +142,31 @@ test('der Abstand des Grids im TSX ist der des Stylesheets', { skip: !existsSync
     assert.equal(map[stufe], gap, stufe);
   }
 });
+
+// Welle 5a (#29875): keine alte Klasse der Eingaben mehr — Farbfeld, Icon-Feld, Slider samt --tlSlider-*.
+const ALT_5A = /\btl(ColorInput|IconSelect|Slider)(__|--|\b)|--tlSlider-/;
+
+test('keine alte Klasse der Welle 5a in react-src, Stylesheets, Java, tl-docs und Views', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+  const quellen = [
+    ...reactSources(),
+    join(M, 'src/main/webapp/style/tlReactControls.css'),
+    join(WT, 'com.top_logic.demo.react/src/main/webapp/style/tl-demo-react.css'),
+    ...tree(join(M, 'src/main/java'), /\.java$/),
+    ...tree(join(WT, 'com.top_logic.layout.view/src/main/java'), /\.(java|md)$/),
+    ...tree(join(WT, 'com.top_logic.demo.react/src/main/webapp'), /\.view\.xml$/),
+    ...tree(join(WT, 'com.top_logic.layout.view/src/main/webapp'), /\.view\.xml$/),
+  ];
+  const hits = [];
+  for (const p of quellen) readFileSync(p, 'utf8').split('\n').forEach((line, i) => { if (ALT_5A.test(line)) hits.push(`${p.slice(WT.length + 1)}:${i + 1}`); });
+  assert.deepEqual(hits, []);
+});
+
+test('Welle 5a im TSX: Picker als Dialog mit usePopover, Reiter mit useTabList, kein englischer Name', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+  const tsx = (n) => readFileSync([...reactSources()].find((p) => p.endsWith(`/controls/${n}.tsx`) || p.endsWith(`/controls/picker/${n}.tsx`) || p.endsWith(`/controls/color/${n}.tsx`) || p.endsWith(`/controls/icon/${n}.tsx`)), 'utf8');
+  const pp = tsx('PickerPopover');
+  assert.match(pp, /role="dialog"/);
+  assert.match(pp, /usePopover/);
+  assert.match(tsx('TLTabBar'), /useTabList/);
+  for (const n of ['TLColorInput', 'ColorPopup', 'TLIconSelect', 'IconSelectPopup', 'TLSlider'])
+    assert.doesNotMatch(tsx(n), /aria-label="[A-Za-z]/, `${n}: Name als Literal`);
+});
