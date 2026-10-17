@@ -858,6 +858,23 @@ Dateien `panel.css`, `card.css`, `accordion.css`, `layout.css`, `split.css`, `sl
 | `.tlAdaptiveDetail__breadcrumb`, `__crumb`, `--current`, `__sep` | `.tl-adaptive-detail__bar > .tl-breadcrumb` |
 | `.tlViewError`, `__title`, `__view`, `__detail`; `.tlHtml__error` | `.tl-alert[data-tl-role="error"]` |
 
+### Sichtprüfung (17.10., lokale Demo, dunkel/hell, normal/kompakt)
+
+Bestanden: Panelköpfe 40/36 px auf einer Linie; Panel als Karte im schlichten Panel ohne eigene Stufe, Inset Karte
+`space-xs`, Panel `space-md`; Split mit Pfeilen, Home, End, Loslassen speichert, Doppelklick stellt die Ausgangsaufteilung
+her, beides übersteht ein Neuladen; Spaltengriff per Tastatur mit Ring innen; auswählbare Karten (Hof beim Zeigen, Ring
+bei Auswahl, Fokus und Auswahl zusammen doppelt); Html-Fehler als Fehlermeldung; Accordion; Wizard (Scheiben in drei
+Stufen, erledigter Schritt als Link); Kachelstapel (`covered`/`entering`); AdaptiveDetail schmal mit Breadcrumb.
+
+| # | Befund | Stand |
+|---|---|---|
+| S1 | End am Split setzt die zweite Fläche auf 0, wenn sie kein Mindestmaß hat | WAI-gemäß (End = Maximum); keine Änderung |
+| S2 | Fokusring und Auswahlring einer Karte kaum zu unterscheiden — beide `border-interactive`, nur der Abstand trennt | offen, Hendrik |
+| S3 | Hof beim Zeigen sehr schwach (dunkel `surface-state-hover`, 4 px) | offen, Hendrik |
+| S4 | Wizard-Demo: Knöpfe im Slot bündig am Panelrand | Demo-View (Panel ohne `with-inset`), nicht 4c |
+| S5 | Minimieren und Maximieren erreicht keine View (`PanelElement` übergibt `false`) — U1/U3 nur per Vitest geprüft | Hinweis an Bernhard |
+| — | nicht geprüft: Karte im Dialog, Anzeige des ViewError (Java-Test), VoiceOver | — |
+
 ## Konsolidierung (01.10.) — Gleiches wird zusammengelegt
 
 Regel (CLAUDE.md „Arbeitsweise“, skalen.md „Gleiches wird zusammengelegt“): findet eine Erkundung zwei Stellen, die

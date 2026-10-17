@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-17 (SDD 4c, Tasks 1–2) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-17 (SDD 4c, Tasks 1–12 gebaut, Push offen) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -117,20 +117,27 @@ Nach dem Merge von !1906 auf master `2bf2151a2e` nachgezogen (`useItems` aus #29
 (auswählbare Einträge: Hof beim Zeigen, Ring bei `aria-selected`; `2ad291d`). Plan-Review 2 (Fable, 474/480, MUI
 513/516 nur erwartet rot): Befunde 1–5 eingearbeitet (`bcbfda2`). **Bereit für die SDD. Start freigegeben (Hendrik 17.10.): alle zwölf Tasks in einer neuen Sitzung**, Subagent-driven.
 In der Sitzung vom 16.10. war die Trac-Anbindung (MCP) getrennt — vor Task 12 prüfen.
-**SDD 4c läuft (17.10.), pausiert nach Task 2 (Neustart):** Tasks 1–2 fertig und reviewt — Paket `main` bis `8b3d1ca`,
-Engine-Branch bis `6e129f7af6`, lokal, nicht gepusht; Paket 449/0, Lint grün. Ledger mit Rulings und deferred Minors:
-`.superpowers/sdd/2026-10-16-welle-4c-behaelter-plans/progress.md` (dort auch Briefs 2–10 und Vorlagen). Ruling Task 2:
-die nested-Karte im Specimen liegt im Panel als Karte, ein schlichtes Panel hebt nicht (Entscheid 2). **Weiter mit
-Task 3** (BASE Paket `8b3d1ca`, Engine `6e129f7af6`).
-
-**Einstieg der nächsten Sitzung (Welle 4c umsetzen — freigegeben, ohne Rückfrage starten):**
-1. `STATUS.md`, Spec `docs/superpowers/specs/2026-10-16-welle-4c-behaelter-design.md` und Plan
-   `docs/superpowers/plans/2026-10-16-welle-4c-behaelter.md` lesen (Kopf: Review-Stände, Abweichungen 1–23).
-2. Worktree `_Working-Tree/tl8-wt-29584` steht auf `CWS/CWS_29870_design_system_welle_4c` = master `2bf2151a2e`, ohne
-   eigenen Commit; vorher `git fetch` — rückt master vor, per `git merge --ff-only origin/master` nachziehen (solange
-   ohne eigenen Commit) und die berührten Dateien des Plans gegenprüfen.
-3. Ausführung Subagent-driven (`superpowers:subagent-driven-development`), Task 1 bis 12 der Reihe nach, je Task
-   Review; Trac (Migration, `RequiresMigration`) und Push nur der Orchestrator mit Freigabe.
+**4c gebaut (17.10., SDD Tasks 1–11, Task 12 bis auf Trac und Push), lokal, nicht gepusht.** Engine-Branch
+`CWS/CWS_29870_design_system_welle_4c` bis `fba772fb0f` (16 Commits auf master `2bf2151a2e`), Paket `main` mit den
+Commits der Welle vor `origin/main`. Jeder Task reviewt, Abschlussprüfung der ganzen Welle (Opus): bereit nach Fixes,
+Fixes eingearbeitet und nachgeprüft (Split-ARIA, Panelkopf ohne Textmarkierung, Doku der Übergänge, Panel-Vertrag).
+Gates: Paket 481/0, Lint grün, Ratsche `lines` 3185 → 2405 (14 Blöcke gestrichen, TLAccordion ins Paket); Maven
+(JDK 21, englische Locale) `layout.react` 706, `layout.view` 1493, `demo.react` 13 grün; MUI-Vitest 531; `tsc` 0;
+Messages ohne Diff. Sichtprüfung lokal (Task 11) in `altlast.md` „Welle 4c“, Befunde S1–S5.
+Ledger mit allen Rulings, deferred Minors und Triage: `.superpowers/sdd/2026-10-16-welle-4c-behaelter-plans/`
+(`progress.md`, `final-review.md`, Entwurf `trac-29870-migration.txt` für `== Migration ==`).
+**Offen für Hendrik (17.10., „Entscheidungen aufsparen“):**
+1. **Escape im maximierten Panel gegen Popups am Keyboard-Dispatcher** (ColorPopup, IconSelectPopup, Drawer,
+   PhotoCapture verlieren Escape an das Panel). Weg A: Panel-Escape als Scope im Dispatcher, nur solange maximiert
+   (Empfehlung, auch der Abschlussprüfung); Weg B: die Popups verhindern Escape selbst. Heute erreicht keine View das
+   Maximieren (S5).
+2. **Wizard-Zähler** nur `aria-hidden`, wenn die Schrittliste steht (Vorgabe: Liste aus, Zähler an — dann erfährt ein
+   Screenreader die Position nur als Prozent). Empfehlung ja; ändert TLWizard und `wizard.contract.md`.
+3. **S2** Fokusring und Auswahlring einer Karte kaum zu unterscheiden; **S3** Hof beim Zeigen sehr schwach.
+4. Danach: Trac #29870 `== Migration ==` und `RequiresMigration`, Push (Engine-Branch `CWS/CWS_29870_…`, Paket
+   `main`), PR gegen master mit den Hinweisen an Bernhard aus Plan Task 12 Step 2 (Accordion im Paket, `MuiCardAdapter`
+   ohne `useSurface`, Breadcrumb als Part wäre seine Entscheidung, Q24-Auswahl) und S5; Reviewer `bhu`.
+Die lokale Demo lief zur Sichtprüfung (Port 8080) — vor einem Neubau beenden.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
@@ -152,7 +159,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 | 3b | Tabelle, Baum, Text (!1838, auf master 14.10.) | 3 | master | #29821 |
 | 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay; mit der Spaltenwahl als Ebenen-Panel in !1852 (auf master 16.10.) | 7 | master | #29836, #29825 |
 | 4b | Navigation: AppShell, AppBar, Sidebar (mobiler Drawer, Flyout), BottomBar; Q10–Q13, Leiste aus Q14 (!1906, auf master 16.10.) | 4 | master | #29866 |
-| 4c | Behälter: Panel, SplitPanel, Card, Stack, Grid, DeckPane, TileStack, Inset, AdaptiveDetail, Accordion, Wizard, ViewError; Q3, Q7, Q8, Q13–Q23 | 12 | geplant | #29870 |
+| 4c | Behälter: Panel, SplitPanel, Card, Stack, Grid, DeckPane, TileStack, Inset, AdaptiveDetail, Accordion, Wizard, ViewError; Q3, Q7, Q8, Q13–Q23 | 12 | gebaut | #29870 |
 | 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | offen | — |
 
 **Abnahme außerhalb der Wellen** (Spec „Abnahme“):
