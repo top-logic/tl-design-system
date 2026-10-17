@@ -892,6 +892,10 @@ outlineNone 8 → 7; `foreignTl` ohne `--tlSlider-*`.
 
 `--tlSlider-*` fällt: die Füllung ist das Element `.tl-slider__fill`, inline mit `inline-size`.
 
+### Sichtprüfung
+
+Bekannte Grenze: Das Farb-Popup hat einen festen Mischer (Feld `size-12` im Quadrat); in einem Fenster unter etwa 595 px Höhe scrollt das Reiterfeld, und der Fokusring des Feldes kann am Rand des Reiterfelds abgeschnitten werden (Specimen mit Kappe `26rem`, darunter ist `focus-clip` nicht grün).
+
 ### Neu im Paket
 
 Fünf Blöcke: `swatch.css` (`tl-swatch`, `--color`, `--wide`), `picker.css` (`tl-picker`, Hülle der Popups),

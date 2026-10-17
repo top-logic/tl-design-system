@@ -32,19 +32,3 @@
 .tl-picker__actions {
   flex-shrink: 0;
 }
-
-/* Zeigt das Reiterfeld den Mischer, ist seine Stapelzeile der Teil, der mit dem Popup schrumpft: die Höhe richtet
-   sich nach der Spalte daneben (Vorschau, Eingaben) und gibt erst unter einer Kappe nach. Der Mischer darin nimmt
-   die Höhe der Zeile (color-picker.css). Die Spalte schrumpft nicht mit: sie behält ihre Höhe samt Rand von
-   space-2xs unten und scrollt im Reiterfeld, sodass der Fokusring der letzten Eingabe im overflow bleibt. */
-.tl-picker__tabs > .tl-tabs__panel > .tl-stack:has(> .tl-color-picker__mixer:not([hidden])) {
-  flex: 0 1 auto;
-  min-block-size: 0;
-}
-.tl-picker__tabs > .tl-tabs__panel > .tl-stack:has(> .tl-color-picker__mixer:not([hidden])) > .tl-color-picker__mixer {
-  block-size: auto;
-}
-.tl-picker__tabs > .tl-tabs__panel > .tl-stack:has(> .tl-color-picker__mixer:not([hidden])) > :not(.tl-color-picker__mixer) {
-  min-block-size: min-content;
-  padding-block-end: var(--tl-space-2xs);
-}

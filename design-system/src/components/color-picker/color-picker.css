@@ -23,29 +23,23 @@
 }
 .tl-color-picker__mixer[hidden] { display: none; }
 
-/* Maß des Mischers: allein size-12 im Quadrat. In der Stapelzeile des Picker-Popups (picker.css) gibt er nach: dort
-   hat der Mischer keine eigene Höhe, sondern die der Zeile, und das Feld liegt zwischen size-11 und size-12 (size-12,
-   wenn Platz ist), quadratisch; der Farbtonstreifen ist so hoch wie das Feld. */
+/* Maß des Mischers: ein festes Quadrat. Das Feld ist size-12 breit und hoch, der Farbtonstreifen size-control-sm breit
+   und size-12 hoch; der Mischer schrumpft nicht (flex: none), damit die Stapelzeile seine Breite einrechnet und er die
+   Spalte daneben (Vorschau, Eingaben) nicht überlagert. Ist das Popup niedriger, scrollt das Reiterfeld. */
 .tl-color-picker__mixer {
+  flex: none;
   box-sizing: content-box;
-  align-self: stretch;
   block-size: var(--tl-size-12);
-  min-block-size: var(--tl-size-11);
-}
-
-.tl-color-picker__field,
-.tl-color-picker__hue {
-  block-size: 100%;
-  min-block-size: var(--tl-size-11);
-  max-block-size: var(--tl-size-12);
 }
 
 .tl-color-picker__field {
-  aspect-ratio: 1;
+  inline-size: var(--tl-size-12);
+  block-size: var(--tl-size-12);
 }
 
 .tl-color-picker__hue {
   inline-size: var(--tl-size-control-sm);
+  block-size: var(--tl-size-12);
 }
 
 /* Gemeinsam: der Rahmen der beiden Flächen. */
