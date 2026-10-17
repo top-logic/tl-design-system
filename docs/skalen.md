@@ -2452,7 +2452,8 @@ auswählbar (Listbox, `role="option"`, `aria-selected`) und zeichnete sie im alt
 `--shadow-raised`, Zustand als Klasse, eigener Fokusring. Mit `tl-item` im Paket: beim Zeigen ein Hof
 (`surface-state-hover`) — ein Eintrag schwebt nicht, und der Hof bleibt um eine Karte mit eigener Fläche sichtbar;
 ausgewählt der Ring `border-width-md` in `border-interactive`, gelesen aus `aria-selected` — eine Auswahlfläche wie in
-Tabelle und Baum läge hinter der Karte; Fokus aus `base.css`. **Verworfen:** die Auswahlfläche (`surface-interactive-selected`)
+Tabelle und Baum läge hinter der Karte; Fokus aus `base.css`. Der Hof gehörte bis dahin nur Kästchen, Punkt und Schalter;
+eine auswählbare Option ist ebenso eine Auswahlmarke, `choice.test.mjs` lässt `layout.css` darum zu. **Verworfen:** die Auswahlfläche (`surface-interactive-selected`)
 wie in der Tabelle (unsichtbar hinter Einträgen mit eigener Fläche); der Schatten beim Zeigen (gestrichen seit Welle 0).
 
 ### Die Kopie in der Engine ist versiegelt (16.10.)

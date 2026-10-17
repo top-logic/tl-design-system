@@ -99,3 +99,64 @@ test('tl-accordion: die Fläche ist tl-card; nur Linien, Kopf auf size-bar, Kör
   assert.match(decl('accordion', '.tl-accordion__trigger:focus-visible'), /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/);
   assert.match(decl('accordion', '.tl-accordion__trigger[aria-expanded="true"] > .tl-accordion__chevron'), /rotate:\s*90deg/);
 });
+
+test('eine Gap-Skala: Stack, Grid und Spalten lesen space-sm, -md, -lg', () => {
+  for (const [stufe, token] of [['compact', 'sm'], ['default', 'md'], ['loose', 'lg']]) {
+    for (const block of ['tl-stack', 'tl-grid'])
+      assert.match(decl('layout', `.${block}--gap-${stufe}`), new RegExp(`gap:\\s*var\\(--tl-space-${token}\\)`), `${block} ${stufe}`);
+    assert.match(decl('columns', `.tl-columns--gap-${stufe}`), new RegExp(`gap:\\s*var\\(--tl-space-${token}\\)`));
+  }
+});
+
+test('tl-inset: auf der Seite space-lg, im Panel space-md, in der Karte space-xs space-md — keine eigene Variable', () => {
+  assert.match(decl('layout', '.tl-inset'), /padding:\s*var\(--tl-space-lg\)/);
+  assert.match(decl('layout', '.tl-inset--panel'), /padding:\s*var\(--tl-space-md\)/);
+  assert.match(decl('layout', '.tl-inset--card'), /padding:\s*var\(--tl-space-xs\) var\(--tl-space-md\)/);
+  assert.doesNotMatch(ohneKommentar(readGenerated('layout', 'layout.css')), /page-inset|--tl-grid-gap|tlFill/);
+});
+
+test('tl-bounded, tl-item, tl-deck: Breite mittig begrenzt, Hülle durchlässig, ein Kind ohne eigene Größe', () => {
+  assert.match(decl('layout', '.tl-bounded'), /margin-inline:\s*auto/);
+  assert.match(decl('layout', '.tl-item'), /min-height:\s*0/);
+  assert.match(decl('layout', '.tl-deck'), /flex-direction:\s*column/);
+});
+
+// Q24 (#29755): eine Option schwebt nicht — beim Zeigen ein Hof; ausgewählt ein Ring über dem Eintrag, Zustand aus
+// aria-selected; Fokus aus base.css. Für die Hülle tl-item und die Spalte von tl-columns, die useItems als Hülle nimmt.
+test('auswählbare Einträge (Q24): Hof beim Zeigen, Ring bei aria-selected, kein Schatten, keine Zustandsklasse', () => {
+  for (const host of ['.tl-item', '.tl-columns__column']) {
+    assert.match(decl('layout', `${host}[role="option"]`), /position:\s*relative/, host);
+    assert.match(decl('layout', `${host}[role="option"]`), /cursor:\s*pointer/, host);
+    assert.match(decl('layout', `${host}[role="option"]`), /transition:\s*box-shadow var\(--tl-duration-fast\) var\(--tl-easing-standard\)/, host);
+    assert.match(decl('layout', `${host}[role="option"]:hover`), /box-shadow:\s*0 0 0 var\(--tl-space-2xs\) var\(--tl-surface-state-hover\)/, host);
+    const ring = decl('layout', `${host}[aria-selected="true"]::after`);
+    assert.match(ring, /border:\s*var\(--tl-border-width-md\) solid var\(--tl-border-interactive\)/, host);
+    assert.match(ring, /inset:\s*0/, host);
+    assert.match(ring, /pointer-events:\s*none/, host);
+  }
+  const css = ohneKommentar(readGenerated('layout', 'layout.css'));
+  assert.doesNotMatch(css, /--selectable|--selected|--tl-shadow|outline|surface-brand-subtle/);
+});
+
+test('tl-split: Richtung aus dem Modifier, Griff space-xs mit Linie; unter dem Zeiger, beim Ziehen, mit Fokus kräftig', () => {
+  assert.match(decl('split', '.tl-split--horizontal'), /flex-direction:\s*row/);
+  assert.match(decl('split', '.tl-split--vertical[data-tl-state~="all-collapsed"]'), /flex-direction:\s*row/);
+  assert.match(decl('split', '.tl-split--horizontal > .tl-split__handle'), /width:\s*var\(--tl-space-xs\)/);
+  assert.match(decl('split', '.tl-split--horizontal > .tl-split__handle'), /cursor:\s*col-resize/);
+  assert.match(decl('split', '.tl-split__handle::after'), /background:\s*var\(--tl-border-separator\)/);
+  const aktiv = ohneKommentar(readGenerated('split', 'split.css'));
+  assert.match(aktiv, /\.tl-split__handle:focus-visible::after[\s\S]*?background:\s*var\(--tl-border-interactive\)/);
+  assert.match(decl('split', '.tl-split__handle:focus-visible'), /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/);
+});
+
+test('die kräftige Linie des Griffs steht im Kontrast-Gate auf Grund und Layer (Spec §9)', async () => {
+  const { kontrastPaare } = await import('../tools/lib/pairs.mjs');
+  const P = kontrastPaare(T).map((p) => `${p.fg}|${p.bg}`);
+  for (const bg of ['surface-base', 'surface-layer', 'surface-layer-nested']) assert.ok(P.includes(`border-interactive|${bg}`), bg);
+});
+
+test('eingeklappt im waagrechten Split: Titel senkrecht über writing-mode, nicht gedreht', () => {
+  const css = ohneKommentar(readGenerated('split', 'split.css'));
+  assert.match(css, /writing-mode:\s*vertical-rl/);
+  assert.doesNotMatch(css, /rotate/);
+});

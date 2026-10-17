@@ -16,8 +16,13 @@ const SOLL = {
   'button-bar/button-bar.contract.md': ['tl-button-bar'],
   'titlebar/titlebar.contract.md': ['tl-titlebar__content', 'tl-titlebar__buttons'],
   'dialog/dialog.contract.md': ['tl-button-bar'],
+  'layout/layout.contract.md': ['tl-stack', 'tl-grid', 'tl-inset', 'tl-inset--panel', 'tl-inset--card', 'tl-bounded',
+    'tl-item', 'tl-deck', '--item-index', '--tl-space-sm', '--tl-space-md', '--tl-space-lg', 'useSurface',
+    'role="listbox"', 'role="option"', 'aria-selected', 'selectItem', '--tl-surface-state-hover', '--tl-border-interactive'],
+  'split/split.contract.md': ['tl-split', 'tl-split__pane', 'tl-split__handle', 'role="separator"', 'aria-valuenow',
+    'aria-orientation', 'aria-controls', 'data-tl-state~="collapsed"', 'updateSizes', 'resetSizes', 'Home', 'End'],
 };
-const SPECIMEN = ['panel', 'card', 'accordion'];
+const SPECIMEN = ['panel', 'card', 'accordion', 'layout', 'split'];
 
 for (const [file, names] of Object.entries(SOLL)) test(`${file} nennt ${names.length} Pflichtbegriffe`, () => {
   const [d, f] = file.split('/');
@@ -51,4 +56,18 @@ test('accordion.spec.html: Zustand nur in aria-expanded, kein --expanded', () =>
   const html = datei('accordion', 'accordion.spec.html');
   assert.doesNotMatch(html, /--expanded/);
   assert.match(html, /aria-expanded="true"/);
+});
+
+test('layout.spec.html: eine Liste auswählbarer Karten, eine ausgewählt, ohne Zustandsklasse', () => {
+  const html = datei('layout', 'layout.spec.html');
+  assert.match(html, /role="listbox"/);
+  assert.equal((html.match(/class="tl-item" role="option"/g) ?? []).length >= 3, true);
+  assert.match(html, /class="tl-item" role="option" aria-selected="true" tabindex="0"/);
+  assert.doesNotMatch(html, /--selectable|--selected/);
+});
+
+test('split.spec.html: Griff fokussierbar mit Wert; eine eingeklappte Fläche im waagrechten Split', () => {
+  const html = datei('split', 'split.spec.html');
+  assert.match(html, /class="tl-split__handle" role="separator" tabindex="0" aria-orientation="vertical"[^>]*aria-valuenow="30"/);
+  assert.match(html, /class="tl-split__pane" data-tl-state="collapsed"/);
 });

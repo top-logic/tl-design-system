@@ -1,0 +1,114 @@
+/* Reihen und Abstände — Spec 2026-10-16 Welle 4c §5 (Q16, Q22). Stack und Grid ordnen Kinder mit der einen
+   Gap-Skala, die tl-columns seit 3b liest: compact space-sm, default space-md, loose space-lg. Inset ist der Abstand
+   eines Inhalts zum Rand; wie weit, sagt die nächste Fläche über React-Kontext (useSurface) als Modifier — ohne
+   Modifier die Seite. Bounded begrenzt die Breite und mittelt, Item umhüllt wiederholte Kinder, Deck zeigt eines zur
+   Zeit und nimmt seine Größe. Wer füllt, entscheidet der Fill-Vertrag (tlFill, bis Welle 5 im alten Stylesheet). */
+
+.tl-stack {
+  display: flex;
+}
+.tl-stack[hidden] { display: none; }
+
+.tl-stack--column { flex-direction: column; }
+.tl-stack--row { flex-direction: row; }
+
+.tl-stack--gap-compact, .tl-grid--gap-compact { gap: var(--tl-space-sm); }
+.tl-stack--gap-default, .tl-grid--gap-default { gap: var(--tl-space-md); }
+.tl-stack--gap-loose, .tl-grid--gap-loose { gap: var(--tl-space-lg); }
+
+.tl-stack--align-start { align-items: start; }
+.tl-stack--align-center { align-items: center; }
+.tl-stack--align-end { align-items: end; }
+.tl-stack--align-stretch { align-items: stretch; }
+
+/* Wie der freie Platz entlang der Richtung verteilt wird. */
+.tl-stack--justify-start { justify-content: start; }
+.tl-stack--justify-center { justify-content: center; }
+.tl-stack--justify-end { justify-content: end; }
+.tl-stack--justify-space-between { justify-content: space-between; }
+.tl-stack--justify-space-around { justify-content: space-around; }
+.tl-stack--justify-space-evenly { justify-content: space-evenly; }
+
+.tl-stack--wrap { flex-wrap: wrap; }
+
+/* Das erste Kind füllt die Hauptachse (Eingabe mit Knopf daneben). */
+.tl-stack--grow-first.tl-stack--row > :first-child { flex: 1 1 auto; min-width: 0; }
+.tl-stack--grow-first.tl-stack--column > :first-child { flex: 1 1 auto; min-height: 0; }
+
+/* Die Spaltenvorlage rechnet das TSX inline (sie hängt an Mindestbreite und Höchstzahl); den Abstand liest es aus
+   derselben Stufe wie die Regeln oben. */
+.tl-grid {
+  display: grid;
+}
+.tl-grid[hidden] { display: none; }
+
+/* Gibt den Platz, den es bekommt, an seinen Inhalt weiter: eine begrenzte Spalte, gegen die ein füllender Inhalt
+   seine Höhe auflöst. */
+.tl-inset {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: var(--tl-space-lg);
+}
+.tl-inset[hidden] { display: none; }
+
+.tl-inset--panel {
+  padding: var(--tl-space-md);
+}
+
+.tl-inset--card {
+  padding: var(--tl-space-xs) var(--tl-space-md);
+}
+
+/* Die Breite eines Stacks oder Grids, begrenzt durch ein Inline-max-width, in seinem Behälter mittig. Ohne die
+   Breite schrumpften die automatischen Ränder ihn auf seinen Inhalt. */
+.tl-bounded {
+  width: 100%;
+  margin-inline: auto;
+}
+
+/* Die Hülle eines wiederholten Kindes (useItems); sie gibt den Platz an das Kind weiter. Ihre Position trägt sie
+   als --item-index, ein Datum der Engine für Anwendungs-CSS. */
+.tl-item {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+.tl-item[hidden] { display: none; }
+
+/* Auswählbar (Q24, #29755): ist der Behälter eine Listbox, ist jeder Eintrag eine Option, und die ganze Fläche nimmt
+   den Klick. Ein Eintrag schwebt nicht: beim Zeigen ein Hof, kein Schatten. Ausgewählt liegt ein Ring über dem Rand
+   des Eintrags — eine Auswahlfläche läge hinter einer Karte mit eigener Fläche —, der Zustand ist aria-selected; der
+   Fokus ist der Ring aus base.css. Die Spalte von tl-columns ist dieselbe Hülle (useItems) und trägt dieselbe Regel. */
+.tl-item[role="option"],
+.tl-columns__column[role="option"] {
+  position: relative;
+  border-radius: var(--tl-radius-md);
+  cursor: pointer;
+  transition: box-shadow var(--tl-duration-fast) var(--tl-easing-standard);
+}
+
+.tl-item[role="option"]:hover,
+.tl-columns__column[role="option"]:hover {
+  box-shadow: 0 0 0 var(--tl-space-2xs) var(--tl-surface-state-hover);
+}
+
+.tl-item[aria-selected="true"]::after,
+.tl-columns__column[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: var(--tl-border-width-md) solid var(--tl-border-interactive);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* Zeigt ein Kind zur Zeit und nimmt dessen Größe: neben einer Breadcrumb, in der AppBar so groß wie sein Inhalt. */
+.tl-deck {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+.tl-deck[hidden] { display: none; }
