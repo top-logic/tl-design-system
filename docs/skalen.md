@@ -2520,6 +2520,25 @@ zueinander). Datenfarben (Wert, Farbton, Verläufe) setzt das TSX inline — sie
 Namensraum des Pakets; der Fokusring liegt um das ganze `range` (am Daumen ginge er nur mit `outline: none`).
 **Verworfen:** eine Lint-Ausnahme für den Daumenring; feste Popup-Breiten; die eigene Scrollbar-Optik.
 
+**Beim Bauen entschieden (17.10., SDD 5a).**
+- *Name des Feldknopfs = Label + Wert.* Im Formular überschrieb das Feldlabel (`aria-labelledby`) den eigenen Namen,
+  Wert und „keine Farbe“ wurden nie angesagt; jetzt `aria-labelledby="<Label> <Knopf>"`, `aria-label` trägt den Wert
+  („#43A047“, „Keine Farbe“, das Icon oder „Kein Symbol“), die Aktion sagt `aria-haspopup="dialog"`.
+- *Farbton von unten nach oben* (0° unten): hoch, rechts und Bild auf erhöhen, wie jeder ARIA-Slider; der Griff
+  wandert mit der Taste.
+- *Mischfeld fest `size-12` im Quadrat.* Ein Feld, das in niedrigen Popups nachgibt, verlor seine Breite im Layout und
+  überdeckte die Eingaben; zurück zur festen Größe. Grenze: in Fenstern unter etwa 595 px Höhe scrollt das Panel, der
+  Fokusring des Feldes kann am Rand angeschnitten sein (`altlast.md`).
+- *Popover bleiben im Fenster* — alle, nicht nur die Picker: passt ein Popover weder unter noch über seinen Auslöser,
+  schiebt `usePopover` es entlang beider Achsen ins Fenster (`shift` mit `crossAxis`); es überdeckt dann seinen
+  Auslöser statt den Bildschirm zu verlassen.
+- *`tl-status` darf beim Laden das Part `Spinner` zeigen* (neben dem unbestimmten `tl-progress`); die Statuszeilen des
+  Icon-Pickers stehen an der Stelle des Rasters, nicht darin (eine Listbox enthält nur Optionen).
+- *halo-Ausnahmen:* Swatch (Feldknopf; die Palettenzelle als Option mit dem kräftigen `surface-state-hover-strong`) und
+  der Daumen des Sliders sind Auswahlmarken bzw. eine Marke; `choice.test.mjs` lässt `swatch.css` und `slider.css` zu.
+- *Griff des Mischers:* außen der dunkle Rand, innen die helle `inset`-Linie (Rand plus Inset, `outline` gehört dem
+  Fokus).
+
 ### Die Kopie in der Engine ist versiegelt (16.10.)
 
 **Befund:** Zweimal wurde die Kopie des Pakets in tl-engine-7 von Hand geändert — #29787 (sechs Stellen) und #29859

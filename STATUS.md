@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-17 (SDD 4c, Tasks 1–12 gebaut, Push offen) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-17 (4c als PR !1911; 5a gebaut, Push offen) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -143,11 +143,18 @@ Schnitt so“ (Hendrik): **5a Eingaben** (ColorInput, IconSelect, Slider; Trac *
 5c Planen und Ziehen, 5d Fundament und Abschluss (je eigenes Ticket beim Start). Entscheidungen V13 `layer-drag`, V16
 fremde Stylesheets in 5d nur Tokens, V17 alte Theme-Tokens als Brücke bis #29850, V18 `TLCounter` streichen; `skalen.md`
 „Welle 5: Schnitt und Konsolidierung“. **Spec 5a freigegeben (17.10., abschnittsweise):** `docs/superpowers/specs/2026-10-17-welle-5a-eingaben-design.md`,
-13 Entscheidungen in §11 (u. a. Mischfeld `size-12`, Zellen 32 px); `skalen.md` „Welle 5a: Eingaben“. **Plan steht (17.10.):**
-`docs/superpowers/plans/2026-10-17-welle-5a-eingaben.md` (zehn Tasks); Plan-Review durch Fable mit Probelauf in einer
-Paketkopie (469/4 rot an halo-Gate, Paarliste, Fokus-Gate, Probe-Theme — nach Korrektur grün), Befunde 1–13
-eingearbeitet (`531c4b0`). **Weiter:** Hendriks Durchsicht des Plans, dann SDD; Engine-Branch
-`CWS/CWS_29875_design_system_welle_5a` auf dem 4c-Branch (Task 1 Step 0).
+13 Entscheidungen in §11 (u. a. Mischfeld `size-12`, Zellen 32 px); `skalen.md` „Welle 5a: Eingaben“. **5a gebaut (17.10., SDD Tasks 1–10), lokal, nicht gepusht.** Engine-Branch `CWS/CWS_29875_design_system_welle_5a`
+(auf dem 4c-Branch `79c141432d`) bis `358b6fb18c`; Paket `main` mit den Commits der Welle. Jeder Task reviewt,
+Abschlussprüfung (Opus): Fixes eingearbeitet und nachgeprüft. Gates: Paket 522/0, Lint grün, Ratsche `lines` 2405 → 1564
+(TLColorInput, TLIconSelect, TLSlider gestrichen; Tooltip eigener Block bis 5d), `foreignTl` nur noch `--tl-tt-padding`;
+Maven `layout.react` 706 (finaler Head), `layout.configedit` 343, `layout.view` 1493, `demo.react` 13; MUI-Vitest 597;
+`tsc` 0; Messages ohne Diff. Sichtprüfung lokal (hell, dunkel, kompakt, Konfigurationseditor) mit zwei behobenen
+Befunden: Mischer überdeckte die Eingaben (jetzt fest `size-12`, Grenze unter ~595 px Fensterhöhe), Popover ragten
+oben heraus (jetzt bleiben **alle** Popover im Fenster). Trac #29875: Solution, `== Migration ==`, `RequiresMigration`.
+Ledger: `.superpowers/sdd/2026-10-17-welle-5a-eingaben/` (`progress.md`, `final-review.md`).
+**Offen für Hendrik:** (1) Push (Engine-Branch `CWS/CWS_29875_…`, Paket `main`) und PR gegen den 4c-Branch (!1911);
+(2) Auswahlring der Palettenzelle gegen Fokusring kaum zu unterscheiden — wie S2 bei Karten (dort Haken-Badge): jetzt
+oder im UI-Durchgang; (3) Vorschlag Bridge-Ticket: `useFocusTrap` hat am Dokumentende keinen Tab-Zyklus (alle Popups).
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
@@ -170,7 +177,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 | 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay; mit der Spaltenwahl als Ebenen-Panel in !1852 (auf master 16.10.) | 7 | master | #29836, #29825 |
 | 4b | Navigation: AppShell, AppBar, Sidebar (mobiler Drawer, Flyout), BottomBar; Q10–Q13, Leiste aus Q14 (!1906, auf master 16.10.) | 4 | master | #29866 |
 | 4c | Behälter: Panel, SplitPanel, Card, Stack, Grid, DeckPane, TileStack, Inset, AdaptiveDetail, Accordion, Wizard, ViewError; Q3, Q7, Q8, Q13–Q23 | 12 | PR | #29870 |
-| 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | geplant (5a–5d) | #29875 (5a) |
+| 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | 5a gebaut, 5b–5d geplant | #29875 (5a) |
 
 **Abnahme außerhalb der Wellen** (Spec „Abnahme“):
 
