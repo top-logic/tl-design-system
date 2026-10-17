@@ -17,6 +17,12 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul.
 **Spec:** `docs/superpowers/specs/2026-10-17-welle-5a-eingaben-design.md` (freigegeben 17.10.); Begründungen in
 `docs/skalen.md` „Welle 5a: Eingaben“; Prognose in `docs/migration/altlast.md` „Welle 5“.
 
+**Plan-Review** 17.10. durch einen frischen Agenten (Fable), Probelauf in einer Paketkopie mit allen fünf Blöcken nach
+den Planregeln: `generate` und Lint grün (deg-Stops, `calc(2 * …)`, `resize: both`, Pseudoelemente); `node --test`
+469/4 — rot halo-Gate (Slider, Swatch), Paarliste (`surface-brand` als Vordergrund), Fokus-Gate (`outline` am Griff),
+Probe-Theme; nach den Korrekturen grün. APIs, MUI-Tests, `ALT_5A` (9 Treffer, alle im Umfang) und der Ratschen-Kopf
+„Tooltip“ bestätigt. **Befunde 1–13 eingearbeitet** (Tasks 1–7, Review Focus 2).
+
 ## Global Constraints
 
 - Ticket **#29875**; Commits beider Repos mit Präfix `Ticket #29875:`, Paket-Commits deutsch, Engine-Commits englisch,
@@ -75,8 +81,8 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul.
 - [ ] **Step 0: Branch** — im Worktree `git switch -c CWS/CWS_29875_design_system_welle_5a
   CWS/CWS_29870_design_system_welle_4c` (vorher `git fetch`; der 4c-Branch steht auf `79c141432d` oder weiter, dann
   auf seinem Head).
-- [ ] **Step 1: Failing tests** in `test/eingaben.test.mjs` (Helfer wie in `test/behaelter.test.mjs`: `decl`,
-  `readGenerated`, `ohneKommentar` aus `test/lib/component.mjs`):
+- [ ] **Step 1: Failing tests** in `test/eingaben.test.mjs` (`readGenerated`, `declarationsOf` aus
+  `test/lib/component.mjs`; `decl` und `ohneKommentar` lokal definieren wie `test/behaelter.test.mjs:10–11`):
   - `swatch: Maß size-control, Rahmen border-control, keine px` — `decl('swatch', '.tl-swatch')` enthält
     `inline-size: var(--tl-size-control)`, `block-size: var(--tl-size-control)`, `var(--tl-border-control)`;
     `ohneKommentar(readGenerated('swatch','swatch.css'))` ohne `/\d+px|#[0-9a-f]{3,6}\b/i`.
@@ -98,19 +104,25 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul.
   FAIL (Dateien fehlen).
 - [ ] **Step 3: Rollen und Paare.** `tokens.json`: `border-handle-light` = `{gray-0}`, `border-handle-dark` =
   `{gray-77}` in `light` **und** `dark`. `pairs.mjs`: `paar('border-handle-light', 'border-handle-dark', 9.0)`;
-  `border-control` auf `surface-overlay` und `surface-field` ≥ 3.0 (nur ergänzen, was `GRUENDE_FELD` nicht schon misst).
-  Kommentar: „Griff des Mischers auf jeder Datenfarbe: 9:1 zwischen den Ringen sichert auf jeder Farbe einen Ring mit
+  `border-control` auf `surface-overlay` und `surface-field` misst `GRUENDE_FELD` schon. Danach das Probe-Theme neu
+  rechnen: `node tools/derive.mjs test/fixtures/probe.primitives.json specimen/probe.theme.css` (es trägt die neuen
+  Rollen im Kundengrau) und mitcommitten. Kommentar am Paar: „Griff des Mischers auf jeder Datenfarbe: 9:1 zwischen den Ringen sichert auf jeder Farbe einen Ring mit
   3:1 (Spec 5a §4).“
 - [ ] **Step 4: `swatch.css`.** Block mit `display` → `[hidden]`-Regel; Rundung `--tl-radius-sm`; `--wide`
   `inline-size: 100%`. Schachbrett als `repeating-conic-gradient(var(--tl-surface-field) 0deg 90deg,
   var(--tl-border-separator) 90deg 180deg)` mit `background-size: calc(2 * var(--tl-space-xs)) calc(2 *
   var(--tl-space-xs))` (Grad statt Prozent — das Lint kennt `25%` nicht als Literal). Zeigen auf `button.tl-swatch`:
-  halo `0 0 0 var(--tl-space-2xs) var(--tl-surface-state-hover)`; Fokus aus `base.css`.
+  halo `0 0 0 var(--tl-space-2xs) var(--tl-surface-state-hover)`; Fokus aus `base.css`. Der halo-Gate
+  (`test/choice.test.mjs`, „der Hof gehört nur den Auswahlmarken“) bekommt die Ausnahme `name !== 'swatch/swatch.css'`
+  mit Kommentar `// Ausnahme 17.10. (Welle 5a): ein Swatch ist eine Auswahlmarke — Feldknopf und Palettenzelle (Option)
+  zeigen beim Zeigen den halo.`
 - [ ] **Step 5: `picker.css`.** `.tl-picker`: Spalte, `gap: var(--tl-space-sm)`; `.tl-picker__tabs` ohne eigenen Rand
   (der kommt aus `tl-tabs`). Keine Breite.
 - [ ] **Step 6: Lint.** In der Blockliste von `tools/lint-css.mjs`: `'tl-swatch': new Set(['color', 'wide'])`,
   `'tl-picker': new Set([])`, mit Kommentar „Leer, Fehler, Warnung: Attribute.“
-- [ ] **Step 7: Verträge und Specimen.** `swatch.spec.html`: gefüllt (Inline-Farbe), leer, lesend (`span`), Fehler,
+- [ ] **Step 7: Verträge und Specimen.** Specimen kennen kein `style="…"` (`specimenProblems`,
+  `test/lib/component.mjs:30–37`): Datenfarben über einen seitenlokalen `<style>`-Block mit ids. `swatch.spec.html`:
+  gefüllt, leer, lesend (`span`), Fehler,
   Warnung, `--wide`. `picker.spec.html`: Hülle mit `tl-tabs` (zwei Tabs, einer `aria-selected="true"`) und
   `tl-button-bar` mit drei Knöpfen, `role="dialog"` mit deutschem `aria-label`. Links in `specimen/index.html`.
 - [ ] **Step 8: Run** `node tools/generate.mjs && node tools/lint-css.mjs && node --test` — Expected: alles grün außer
@@ -138,7 +150,8 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul.
   - `color-picker: Mischfeld size-12, Farbtonregler size-control-sm breit` — `.tl-color-picker__field` mit
     `var(--tl-size-12)` für Breite und Höhe; `.tl-color-picker__hue` mit `inline-size: var(--tl-size-control-sm)`.
   - `color-picker: Griff ist ein Doppelring aus den Griff-Rollen` — `.tl-color-picker__handle` liest
-    `--tl-border-handle-light` und `--tl-border-handle-dark`; kein `box-shadow` außer `inset`.
+    `--tl-border-handle-light` (Rand) und `--tl-border-handle-dark` (`box-shadow: inset …`); kein `outline`
+    (`test/focus.test.mjs` verbietet Komponenten jeden `outline`).
   - `color-picker: keine Farbe im CSS` — ohne `#[0-9a-f]{3,6}` und ohne `rgb(`; das Spektrum steht nicht im CSS.
   - `icon-picker: Zelle size-control, gewählt in surface-interactive-selected, Popup size-13 mit resize` —
     `.tl-icon-picker__cell` `var(--tl-size-control)`; `[aria-selected="true"]` liest
@@ -147,8 +160,10 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul.
   - `slider: Füllung ist ein Element, Spur des range durchsichtig, kein outline:none` — `.tl-slider__fill` existiert;
     `ohneKommentar(slider.css)` ohne `--tlSlider`, ohne `outline: none`; Daumen-Pseudoelemente lesen
     `--tl-size-choice`.
-  - `slider: Zustand als Attribut` — `.tl-slider[data-tl-state~="warning"]` und `.tl-slider__input[aria-invalid="true"]`
-    existieren; keine `--error`/`--warning`-Klasse.
+  - `slider: Zustand als Attribut` — die genauen Selektoren, die `slider.css` schreibt (z. B.
+    `.tl-slider[data-tl-state~="warning"] .tl-slider__text` und
+    `.tl-slider__input[aria-invalid="true"]::-webkit-slider-thumb`; `declarationsOf` vergleicht wörtlich) existieren;
+    keine `--error`/`--warning`-Klasse.
   - `contracts-5a`: `SOLL` für `color-picker` (`role="listbox"`, `role="option"`, `role="slider"`, `aria-valuetext`,
     `aria-orientation`, `useRovingFocus`, `valueChanged`, `paletteChanged`, `tl-swatch`), `icon-picker`
     (`role="listbox"`, `role="option"`, `aria-selected`, `tl-status`, `loadIcons`, `valueChanged`, `useRovingFocus`),
@@ -159,12 +174,17 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul.
 - [ ] **Step 3: CSS der drei Blöcke** nach Spec §4–§6 und den Interfaces oben. Slider: Spur des `range`
   (`::-webkit-slider-runnable-track`, `::-moz-range-track`) durchsichtig; `__track` liegt darunter, eingerückt um die
   halbe Daumenbreite, Ruhe in `--tl-border-control`, `__fill` in `--tl-surface-brand`; Daumen in `--tl-surface-brand`,
-  halo beim Zeigen/Drücken wie heute; `prefers-reduced-motion` ohne Übergang.
-- [ ] **Step 4: Paare** (nur fehlende ergänzen): `surface-brand` auf `surface-field` 3.0 (Daumen, Füllung);
-  `text-primary` und `icon-primary` auf `surface-interactive-selected` 4.5/3.0 (gewählte Icon-Zelle).
+  halo beim Zeigen/Drücken wie heute — dafür bekommt der halo-Gate in `test/choice.test.mjs` die Ausnahme
+  `name !== 'slider/slider.css'` mit Kommentar `// Ausnahme 17.10. (Welle 5a): der Daumen des Sliders ist eine Marke.`
+  Kein eigener `prefers-reduced-motion`-Block (den trägt `base.css`). `__palette`, `__mixer` und `__grid` bekommen
+  `padding: var(--tl-space-2xs)`, sonst schneidet ihr `overflow` den Fokusring der Randzellen (`focus-clip`).
+- [ ] **Step 4: Paare.** `surface-brand` darf in `pairs.mjs` kein Vordergrund sein (es ist Grund von `text-on-brand`);
+  Daumen und Füllung auf dem Feld prüft `test/tokens.test.mjs` — dort `surface-field` in die Liste der Gründe nehmen,
+  gegen die sich die Marke abhebt (≥ 3:1). `text-primary` und `icon-primary` auf `surface-interactive-selected`
+  4.5/3.0 in `pairs.mjs`, nur falls noch nicht gemessen.
 - [ ] **Step 5: Lint** — `'tl-color-picker': new Set([])`, `'tl-icon-picker': new Set([])`, `'tl-slider': new Set([])`.
-- [ ] **Step 6: Verträge, Specimen** — Palette mit gefüllten und leeren Zellen, Mischer (Inline-Spektrum im Specimen
-  ist erlaubt: Specimen ist Daten), Raster mit gewählter Zelle, `tl-status` für lädt/leer/Fehler, Slider in Ruhe, Fehler,
+- [ ] **Step 6: Verträge, Specimen** — ohne `style="…"`: Spektrum, Datenfarben und Füllbreite über einen
+  seitenlokalen `<style>`-Block mit ids. Palette mit gefüllten und leeren Zellen, Mischer, Raster mit gewählter Zelle, `tl-status` für lädt/leer/Fehler, Slider in Ruhe, Fehler,
   Warnung, deaktiviert.
 - [ ] **Step 7: Run** `node tools/generate.mjs && node tools/lint-css.mjs && node tools/publish-to-worktree.mjs &&
   node --test` — Expected: alles grün, `focus-clip` misst die neuen Seiten mit.
@@ -188,10 +208,14 @@ Alle Engine-Pfade relativ zu `_Working-Tree/tl8-wt-29584/`.
   type: 'button'; onClick: () => void }`, `PanelProps = { id; role: 'tabpanel'; 'aria-labelledby': string; hidden:
   boolean }`. Ids: `${idPrefix}-tab-${id}`, `${idPrefix}-panel-${id}`.
 - Tastatur wie heute in `TLTabBar`: Pfeil rechts/links zyklisch, Pos1, Ende — fokussieren **und** wählen.
+- Tab-Halt (`tabIndex 0`) ist der gewählte Tab, fehlt die Wahl, `ids[0]` (wie heute `activeTabId ?? tabs[0].id`,
+  `TLTabBar.tsx:31–35`). `TLTabBar` hat **ein** Panel: es nutzt `panelProps(activeTabId ?? ids[0])`, und alle Tabs
+  zeigen mit `aria-controls` darauf — `tabProps` nimmt dafür optional `{ controls?: string }`.
 
 - [ ] **Step 1: Failing Vitest** `pickers.test.tsx`, `describe('useTabList')` über eine kleine Testkomponente:
   Pfeil rechts auf dem letzten Tab fokussiert und wählt den ersten (`onSelect` mit dessen id); Pos1/Ende; nur der
-  gewählte Tab hat `tabIndex 0`; `aria-controls` zeigt auf das Panel mit passender `aria-labelledby`. Und
+  gewählte Tab hat `tabIndex 0`; **ohne Wahl** hat der erste `tabIndex 0`; `aria-controls` zeigt auf das Panel mit
+  passender `aria-labelledby`. Und
   `describe('TLTabBar')`: Pfeil rechts sendet `selectTab` mit der nächsten id (wie heute).
 - [ ] **Step 2: Run** `cd com.top_logic.layout.react.mui && NODE_OPTIONS=--no-experimental-webstorage npx vitest run
   react-src/adapters/pickers.test.tsx` — Expected: FAIL (`useTabList` fehlt).
@@ -210,19 +234,23 @@ Alle Engine-Pfade relativ zu `_Working-Tree/tl8-wt-29584/`.
 **Interfaces:**
 - Consumes: `usePopover`, `useFocusTrap`, `useStandaloneKeyboardScope`, `useCloseOnOutsidePress`,
   `anchoredOverlayProps`, `createPortal` (alle aus `'tl-react-bridge'`).
-- Produces: `PickerPopover: React.FC<{ anchor: HTMLElement | null; label: string; className?: string;
+- Produces: `PickerPopover: React.FC<{ anchorRef: React.RefObject<HTMLElement | null>; label: string; className?: string;
   initialFocus: 'first' | ((root: HTMLElement) => HTMLElement | null); onClose: () => void; children: React.ReactNode }>`
   — rendert per Portal `div.tl-popover.tl-picker[.className][role="dialog"][aria-label={label}]` mit
-  `{...anchoredOverlayProps}`, Lage `usePopover({ open: true, anchor, placement: 'bottom-start' })`, Fokusfalle
+  `{...anchoredOverlayProps}`, Lage `usePopover({ open: true, anchor: anchorRef.current, placement: 'bottom-start' })`
+  (Ref mit `useMergeRefs` zusammenführen), Fokusfalle
   `useFocusTrap(true, ref, initialFocus)`, Escape und Druck außerhalb rufen `onClose`. Nach dem Schließen steht der Fokus
-  auf `anchor` (wenn `useFocusTrap` ihn nicht schon dorthin zurückgibt, explizit `anchor.focus()`).
+  auf dem Anker (`useFocusTrap` gibt ihn an das vorher fokussierte Element zurück; steht danach der Fokus auf `body`,
+  explizit `anchorRef.current?.focus()`). Im Vitest den Anker **vor** dem Mount fokussieren.
 - Tabs und Aktionen setzen die Aufrufer als Kinder ein (`useTabList`, `div.tl-button-bar.tl-picker__actions`).
 
 - [ ] **Step 1: Failing Vitest** `describe('PickerPopover')`: rendert unter `document.body` mit `role="dialog"` und
   Namen; der erste fokussierbare Inhalt hat beim Öffnen den Fokus (`'first'`), eine Funktion als `initialFocus` gewinnt;
   Tab vom letzten Element landet auf dem ersten (Falle); Escape ruft `onClose` einmal; Druck außerhalb ruft `onClose`;
-  nach dem Abbauen ist `document.activeElement` der Anker. **Review Focus 2:** in einem gerenderten `TLWindow` schließt
-  Escape nur den Picker — `onClose` einmal, kein `close` des Fensters gesendet.
+  nach dem Abbauen ist `document.activeElement` der Anker. **Review Focus 2:** `TLWindow` mit `mountAdapter` mounten,
+  den Picker über ein registriertes Kind darin (Muster `containers.test.tsx:36`); Escape → `onClose` einmal,
+  `expect(sent).not.toHaveBeenCalledWith('close', expect.anything())` (der Scope des Pickers entsteht beim Öffnen und
+  liegt über dem `modal`-Scope des Fensters, `keyboard-dispatcher.ts:218–233`).
 - [ ] **Step 2: Run** — Expected: FAIL.
 - [ ] **Step 3: Implement** `PickerPopover`.
 - [ ] **Step 4: Run** Vitest, `tsc` — grün.
@@ -251,7 +279,8 @@ Alle Engine-Pfade relativ zu `_Working-Tree/tl8-wt-29584/`.
 - Zustand, Befehle und Commit-Modell bleiben (`valueChanged`, `paletteChanged`, Entwurf „Neu“, OK trägt in die erste
   freie Zelle ein).
 
-- [ ] **Step 1: Failing Vitest** `describe('TLColorInput')` (Parts wie in `containers.test.tsx` per `replacePart`):
+- [ ] **Step 1: Failing Vitest** `describe('TLColorInput')` — die Testregistry hat keine Parts: `replacePart` für
+  `Button`, `TextInput`, `Spinner` und `FieldValue` mit den MUI-Adaptern (Muster `containers.test.tsx:1–30`):
   - Feldknopf ist `button.tl-swatch.tl-swatch--color`; ohne Wert `data-tl-state="empty"` und Name enthält
     „js.colorInput.noColor“; mit `hasError` `aria-invalid="true"`, mit `mandatory` `aria-required="true"`.
   - **Review Focus 5:** `editable: false` → `span.tl-swatch`, kein `button`; `disabled: true` → `button[disabled]`,
@@ -292,7 +321,7 @@ Alle Engine-Pfade relativ zu `_Working-Tree/tl8-wt-29584/`.
 - Modify: `tlReactControls.css` (Block „TLIconSelect“ löschen; die Regeln `.tl-tooltip-*` bleiben unter neuer
   Überschrift `/* --- Tooltip ---…--- */`, gleiche Form wie die anderen Köpfe), `design-system/test/ratchet.json`
   (Block „Tooltip“ mit Messwert, Vermerk „bis 5d, V15“)
-- Modify: `com.top_logic.layout.react.mui/react-src/adapters/busy-indicators.test.tsx` (Zeile 183: statt
+- Modify: `com.top_logic.layout.react.mui/react-src/adapters/busy-indicators.test.tsx` (nur Zeile 183: statt
   `.tlIconSelect__loading` die Hülle `.tl-status`), `pickers.test.tsx`
 
 **Interfaces:**
@@ -309,7 +338,11 @@ Alle Engine-Pfade relativ zu `_Working-Tree/tl8-wt-29584/`.
   - Ladefehler: `tl-status` mit Part `Button` „js.iconSelect.retry“ (kein `<a href="#">`); Klick sendet `loadIcons`.
   - **Review Focus 1:** Text im Filter, Escape → Popup zu, `valueChanged` nicht gesendet, Fokus auf dem Feldknopf.
 - [ ] **Step 2: Run** — Expected: FAIL.
-- [ ] **Step 3: Implement** nach Spec §5: `PickerPopover` mit `className="tl-icon-picker"` und `initialFocus` = Filter;
+- [ ] **Step 3: Implement** nach Spec §5. `IconSelectPopup` behält seine Props (`anchorRef`, `currentValue`, `icons`,
+  `iconsLoaded`, `onSelect`, `onCancel`, `onLoadIcons`) — zwei MUI-Tests mounten es direkt
+  (`busy-indicators.test.tsx:170–173`, `text-inputs.test.tsx:738`). `PickerPopover` mit `className="tl-icon-picker"`;
+  das Filterfeld wird immer gerendert und ist `initialFocus`, der bestehende `useEffect([iconsLoaded])`
+  (`IconSelectPopup.tsx:94–98`) bleibt, damit der Fokus nach dem Laden im Filter steht;
   Raster mit `useRovingFocus`; `tl-status` für lädt (Part `Spinner`), leer, Fehler; Aktionen nur im Tab „Erweitert“.
 - [ ] **Step 4: Alt löschen**, Tooltip-Regeln unter eigener Überschrift, Ratsche, `busy-indicators.test.tsx`.
 - [ ] **Step 5: Run** Vitest (alle, `text-inputs.test.tsx` und `busy-indicators.test.tsx` eingeschlossen), `tsc`, Vite,
@@ -327,7 +360,8 @@ Alle Engine-Pfade relativ zu `_Working-Tree/tl8-wt-29584/`.
 - Modify: `com.top_logic.layout.react.mui/react-src/adapters/pickers.test.tsx`
 
 **Interfaces:**
-- Consumes: `fieldStateAttrs` (Fehler `aria-invalid`, Warnung `data-tl-state="warning"`, Pflicht `aria-required`).
+- Consumes: `fieldStateAttrs(state)` — liefert ein Objekt; aufteilen: `aria-invalid` und `aria-required` an das
+  `input`, `data-tl-state` an die Wurzel `span.tl-slider`.
 - Zustand und Befehl bleiben (`valueChanged`, Entprellung, Flush bei Loslassen, Taste, Blur).
 
 - [ ] **Step 1: Failing Vitest** `describe('TLSlider')`: `span.tl-slider` mit `span.tl-slider__fill`, dessen
