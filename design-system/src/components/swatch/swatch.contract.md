@@ -1,6 +1,6 @@
 # Vertrag: Swatch
 
-Ein Quadrat, das eine Auswahl zeigt: der Feldknopf eines Pickers, eine Zelle der Palette oder des Icon-Rasters.
+Ein Quadrat, das eine Auswahl zeigt: der Feldknopf eines Pickers, eine Zelle der Palette. (Die Zelle des Icon-Rasters ist `tl-icon-picker__cell`.)
 TopLogic garantiert Maß, Rahmen und Zustände, nicht die Datenfarbe — die setzt das Control am Element.
 
 ## Klassen

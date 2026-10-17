@@ -142,3 +142,8 @@ test('slider: Vorrang über die Spezifität — Fehler vor Warnung, deaktiviert 
   for (const s of sel.filter((x) => /warning/.test(x))) assert.match(s, /:not\(\[aria-invalid="true"\]\)/, s);
   for (const s of sel.filter((x) => /warning|aria-invalid/.test(x))) assert.match(s, /:not\(:disabled\)/, s);
 });
+
+test('swatch: der Feldknopf zeigt den Hof -hover, die Option den Hof -hover-strong (skalen 4c S3)', () => {
+  assert.match(decl('swatch', 'button.tl-swatch:not(:disabled):hover'), /var\(--tl-space-2xs\) var\(--tl-surface-state-hover\)/);
+  assert.match(decl('swatch', '.tl-swatch[role="option"]:hover'), /var\(--tl-space-2xs\) var\(--tl-surface-state-hover-strong\)/);
+});
