@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-16 (DOM-Test focus-clip, Ring der leeren Tabelle innen; danach derive-Hinweise, dann 4b gebaut) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-17 (SDD 4c, Tasks 1–2) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -117,6 +117,11 @@ Nach dem Merge von !1906 auf master `2bf2151a2e` nachgezogen (`useItems` aus #29
 (auswählbare Einträge: Hof beim Zeigen, Ring bei `aria-selected`; `2ad291d`). Plan-Review 2 (Fable, 474/480, MUI
 513/516 nur erwartet rot): Befunde 1–5 eingearbeitet (`bcbfda2`). **Bereit für die SDD. Start freigegeben (Hendrik 17.10.): alle zwölf Tasks in einer neuen Sitzung**, Subagent-driven.
 In der Sitzung vom 16.10. war die Trac-Anbindung (MCP) getrennt — vor Task 12 prüfen.
+**SDD 4c läuft (17.10.), pausiert nach Task 2 (Neustart):** Tasks 1–2 fertig und reviewt — Paket `main` bis `8b3d1ca`,
+Engine-Branch bis `6e129f7af6`, lokal, nicht gepusht; Paket 449/0, Lint grün. Ledger mit Rulings und deferred Minors:
+`.superpowers/sdd/2026-10-16-welle-4c-behaelter-plans/progress.md` (dort auch Briefs 2–10 und Vorlagen). Ruling Task 2:
+die nested-Karte im Specimen liegt im Panel als Karte, ein schlichtes Panel hebt nicht (Entscheid 2). **Weiter mit
+Task 3** (BASE Paket `8b3d1ca`, Engine `6e129f7af6`).
 
 **Einstieg der nächsten Sitzung (Welle 4c umsetzen — freigegeben, ohne Rückfrage starten):**
 1. `STATUS.md`, Spec `docs/superpowers/specs/2026-10-16-welle-4c-behaelter-design.md` und Plan
