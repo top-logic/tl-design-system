@@ -29,7 +29,7 @@ nur Lage und Abstand. Die Gap-Skala teilen sie mit `tl-columns`.
 | `default` | `--tl-space-md` |
 | `loose` | `--tl-space-lg` |
 | Inset Seite / Panel / Karte | `--tl-space-lg` / `--tl-space-md` / `--tl-space-xs` `--tl-space-md` |
-| Option beim Zeigen | Hof `--tl-space-2xs` in `--tl-surface-state-hover-strong` (der Hof um Flächen; Marken lesen `-hover`) |
+| Option beim Zeigen | Halo `--tl-space-2xs` in `--tl-surface-state-hover-strong` (der halo um Flächen; Marken lesen `-hover`) |
 | Option ausgewählt | Ring `--tl-border-width-md` in `--tl-border-interactive` über dem Eintrag, Radius `--tl-radius-md` |
 
 ## Konformität

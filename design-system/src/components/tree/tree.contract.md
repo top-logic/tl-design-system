@@ -95,7 +95,7 @@ Bauteile anderer Blöcke:
 
 | Bauteil | Wo und wie |
 |---|---|
-| `tl-toggle` | Auf-/Zuklapper: `tabindex="-1"`, `aria-expanded`, `aria-label` wie jeder Toggle, ohne `aria-controls` — er zeigte auf den eigenen Knoten. Zeigen und Drücken mit dem Schleier (`toggle.contract.md`). |
+| `tl-toggle` | Auf-/Zuklapper: `tabindex="-1"`, `aria-expanded`, `aria-label` wie jeder Toggle, ohne `aria-controls` — er zeigte auf den eigenen Knoten. Zeigen und Drücken mit dem veil (`toggle.contract.md`). |
 | `tl-status` | Ladezeile unter einem ladenden Knoten: `li` mit `role="treeitem"`, benannt über `aria-label`; darin `tl-progress` unbestimmt und `aria-hidden`. |
 
 Klassen:
