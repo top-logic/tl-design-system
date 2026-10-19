@@ -919,6 +919,79 @@ Mischers, auf jeder Farbe lesbar). Im Bridge: `useTabList` (Reiter mit Tastatur,
 | `.tlSlider`, `--error`, `--warning`, `__input`, `__value` | `.tl-slider`, `.tl-slider__input[aria-invalid="true"]`, `[data-tl-state~="warning"]`, `__input`, `__value` |
 | `--tlSlider-*` | — (Füllung `.tl-slider__fill`) |
 
+## Welle 5b · Medien — gebaut 19.10.2026
+
+Branch `CWS/CWS_29904_design_system_welle_5b` (Engine, lokal, nicht gepusht; gestapelt auf 5a) und Paket (`main`,
+Ratsche je Task). Ratsche: `lines` 1564 → 683 (Summe der Budgets = gemessen); Literale color 43 → 22, fontSize 20 → 16,
+duration 9 → 3, outlineNone 7 → 1, zIndex unverändert 10. Engine-Gate `ALT_5B` in `test/engine-classes.test.mjs`
+(react-src ohne Vitest-Dateien, Stylesheets, Java, tl-docs, Views) und „Welle 5b im TSX“.
+
+### Gestrichene Blöcke
+
+| Block (`tlReactControls.css`) | Zeilen alt | Nachfolger |
+|---|---|---|
+| TLDownload | 29 | `tl-file` (`file.css`) |
+| TLFileChips | 21 | `tl-chip-group` mit `data-tl-state~="dragover"` (`choice.css`, `upload.css`) |
+| TLCounter | 56 | — (Control ohne Java-Leser, gelöscht) |
+| TLAudioRecorder | 114 | `tl-upload` mit Part `Button` (`tl-button--danger`, `aria-pressed`, `aria-busy`) |
+| TLAudioPlayer | 98 | Part `Button` mit `aria-busy` |
+| TLPhotoCapture | 224 | `tl-upload`, Paket-Dialog (`tl-dialog`, `tl-titlebar`, `tl-button-bar`), `tl-media__frame` |
+| TLImage | 32 | `tl-media`, `--cover`, `--contain` (`media.css`) |
+| TLPdfViewer | 26 | `tl-media`, ohne Dokument `tl-status` |
+| TLHtml | 174 | `tl-overlay--fill` mit `tl-media--document`, `tl-media--preview`, `tl-prose` (`overlay.css`, `media.css`, `prose.css`) |
+| TLJobStatus (what a long-running job reports) | 107 | `tl-job-status`, `tl-steps--vertical` (`job-status.css`, `steps.css`) |
+
+### Neu im Paket
+
+- Blöcke: `media.css` (`tl-media`, `__frame`, `__placeholder`, `--cover`, `--contain`, `--document`, `--preview`; Bild
+  so breit wie das Bild), `prose.css` (`tl-prose`, Schrift über den Generator, `th` liest `body-strong`, bricht lange
+  Wörter, Abstand beim Springen), `file.css` (`tl-file`, `__name`), `steps.css` (`tl-steps`, `--vertical`; der Wizard
+  liest sie), `job-status.css` (`tl-job-status` mit `__header`, `__state`, `__elapsed`, `__cancel`, `__live`, `__bar`,
+  `__message`, `__error`, `__result`).
+- Rolle `surface-document` (Fläche eines eingebetteten Dokuments).
+- Overlay: `tl-overlay--fill` (die Basis füllt, ihr Kind füllt mit), `tl-overlay__base`, `tl-overlay__action`.
+- Knopf: gedrückt in `danger` (`.tl-button--danger[aria-pressed="true"]`, Aufnahme läuft).
+- Upload: `data-tl-state~="dragover"` auch an `tl-chip-group`; `.tl-chip-group > .tl-file-upload__status` bricht unter
+  die Chips.
+- Im Bridge: `useUpload` (ein Hochladen für Upload-Feld, Binärfeld, FileChips, Recorder, Kamera), `downloadBlob` (ein
+  Herunterladen für Binärfeld, Download, FileChips); Glyphen-Konstanten in `bridge/icons.ts` (`ICON_UPLOAD`,
+  `ICON_DOWNLOAD`, `ICON_FILE`, `ICON_ATTACH`, `ICON_RECORD`, `ICON_STOP`, `ICON_PLAY`, `ICON_PAUSE`, `ICON_CAMERA`,
+  `ICON_MIRROR`, `ICON_PRINT`).
+- i18n: `js.jobStatus.currentStep`, `js.jobStatus.steps`.
+- View-Elemente `audio-recorder`, `audio-player`, `photo-capture`, `download` mit `BinaryChannelBinding`; Demo-Ansicht
+  `media-demo.view.xml`.
+
+### Alt → neu für Anwendungs-Stylesheets
+
+| Alt | Neu |
+|---|---|
+| `.tlAudioRecorder`, `__button`, `--recording`, `--uploading`, `__icon` | `.tl-upload` mit Part `Button` (`tl-button--danger`, `[aria-pressed="true"]`, `[aria-busy="true"]`) |
+| `.tlAudioPlayer`, `__button`, `--playing`, `--loading` | Part `Button` (`[aria-busy="true"]`) |
+| `.tlPhotoCapture`, `__cameraBtn`, `__overlayContent`, `__overlayVideo--mirrored`, `__overlayToolbar` | `.tl-upload`, `.tl-dialog__surface`, `.tl-media__frame[data-tl-state~="mirrored"]`, `.tl-button-bar` |
+| `.tlAudioRecorder__status--error`, `.tlPhotoCapture__status--error` | `.tl-file-upload__status[role="alert"]` |
+| `.tlDownload`, `--empty`, `__fileName`, `__fileName--empty` | `.tl-file`, `[data-tl-state~="empty"]`, `.tl-file__name` |
+| `.tlFileChips`, `--dragover`, `__add--uploading` | `.tl-chip-group`, `[data-tl-state~="dragover"]`, `[aria-busy="true"]` |
+| `.tlImage`, `--fit-cover`, `--fit-contain`, `__image`, `__placeholder` | `.tl-media`, `--cover`, `--contain`, `__frame`, `__placeholder` |
+| `.tlPdfViewer`, `__frame`, `__placeholder` | `.tl-media`, `__frame`, `.tl-status` |
+| `.tlHtml--document`, `__frame`, `__print`, `--thumbnail`, `__page`, `--inline` | `.tl-overlay--fill`, `.tl-media--document`, `.tl-overlay__action`, `.tl-media--preview`, `.tl-media__frame`, `.tl-prose` |
+| `.tlJobStatus`, `__header`, `__phases`, `__phase--done/active/pending`, `__bar`, `__error` | `.tl-job-status`, `__header`, `.tl-steps--vertical`, `[data-tl-state~="done"]` / `[aria-current="step"]`, `__bar`, `__error[role="alert"]` |
+| `.tl-wizard__steps`, `__step-item`, `__disc`, `__step-name` | `.tl-steps`, `__item`, `__disc`, `__name` |
+| `.tlCounter*`, `TLCounter` | — (gestrichen) |
+
+### Offen
+
+- `MAX_SIZE = "maxSize"` (Feldlimit aus `DataFieldModel`) wird in `ReactBinaryFieldControl` und
+  `ReactFileUploadControl` geschrieben, aber kein Client liest es; das wirksame Limit ist `maxUploadSize`.
+- `js.loading` (`I18NConstants`) hat keinen Client-Leser mehr; `js.photoCapture.error.insecure` hatte schon keinen (die
+  Kamera fällt ohne sicheren Kontext auf die Dateiwahl zurück).
+- `com.top_logic.layout.react/SPEC-audio-recorder.md` (#29109, historischer Entwurf) nennt die alten Klassen
+  `.tlAudioRecorder*`. `ALT_5B` trifft die Datei nicht, weil sie in keiner Quelle des Gates liegt (Modulwurzel, kein
+  react-src, kein Java).
+- `test/focus-clip.test.mjs` zählt `tabindex="-1"` als fokussierbar (das Specimen-iframe der Vorschau trägt darum
+  keins).
+- Kamera-Dialog: `.tl-dialog__surface > .tl-titlebar { cursor: grab }` trifft auch den nicht ziehbaren Dialog →
+  `docs/ui-durchgang.md` U8.
+
 ## Konsolidierung (01.10.) — Gleiches wird zusammengelegt
 
 Regel (CLAUDE.md „Arbeitsweise“, skalen.md „Gleiches wird zusammengelegt“): findet eine Erkundung zwei Stellen, die

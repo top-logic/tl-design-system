@@ -174,3 +174,41 @@ test('Welle 5a im TSX: Picker als Dialog mit usePopover, Reiter mit useTabList, 
   for (const n of ['TLColorInput', 'ColorPopup', 'TLIconSelect', 'IconSelectPopup', 'TLSlider'])
     assert.doesNotMatch(tsx(n), /aria-label="[A-Za-z]/, `${n}: Name als Literal`);
 });
+
+// Welle 5b (Medien): \btl ist klein geschrieben und trifft die Control-Namen TLImage, TLHtml … in
+// register('TLImage', …) nicht; TLCounter ist als Control ganz gestrichen und darum groß geschrieben gelistet.
+const ALT_5B = /\btl(AudioRecorder|AudioPlayer|PhotoCapture|Download|FileChips|Image|PdfViewer|Html|JobStatus|Counter|BinaryField)(__|--|\b)|\bTLCounter\b|\btl-wizard__(steps|step-item|disc|step-name)\b/;
+
+test('keine alte Klasse der Welle 5b in react-src, Stylesheets, Java, tl-docs und Views', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+  // Ohne die Vitest-Dateien: media.test.tsx prüft mit den alten Namen, dass sie nicht mehr gezeichnet werden.
+  const quellen = [
+    ...[...reactSources()].filter((p) => !/\.test\.tsx?$/.test(p)),
+    join(M, 'src/main/webapp/style/tlReactControls.css'),
+    join(WT, 'com.top_logic.demo.react/src/main/webapp/style/tl-demo-react.css'),
+    ...tree(join(M, 'src/main/java'), /\.java$/),
+    ...tree(join(WT, 'com.top_logic.layout.view/src/main/java'), /\.(java|md)$/),
+    ...tree(join(WT, 'com.top_logic.demo.react/src/main/webapp'), /\.view\.xml$/),
+    ...tree(join(WT, 'com.top_logic.layout.view/src/main/webapp'), /\.view\.xml$/),
+  ];
+  const hits = [];
+  for (const p of quellen) readFileSync(p, 'utf8').split('\n').forEach((line, i) => { if (ALT_5B.test(line)) hits.push(`${p.slice(WT.length + 1)}:${i + 1}`); });
+  assert.deepEqual(hits, []);
+});
+
+test('Welle 5b im TSX: Medienknöpfe ohne Bootstrap-Glyphe und SVG, Kamera als Dialog im Portal, kein englischer Name', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+  const tsx = (n) => {
+    const p = [...reactSources()].find((q) => q.endsWith(`/${n}.tsx`));
+    assert.ok(p, `${n}.tsx nicht in den React-Quellen gefunden`);
+    return readFileSync(p, 'utf8');
+  };
+  for (const n of ['TLAudioRecorder', 'TLAudioPlayer', 'TLPhotoCapture', 'TLHtml']) {
+    const s = tsx(n);
+    assert.doesNotMatch(s, /css:bi /, `${n}: Bootstrap-Glyphe`);
+    assert.doesNotMatch(s, /<svg/, `${n}: eigenes SVG`);
+  }
+  const pc = tsx('TLPhotoCapture');
+  assert.match(pc, /tl-dialog__surface/);
+  assert.match(pc, /createPortal/);
+  for (const n of ['TLAudioRecorder', 'TLAudioPlayer', 'TLPhotoCapture', 'TLDownload', 'TLFileChips', 'TLFileUpload', 'TLBinaryField', 'TLImage', 'TLPdfViewer', 'TLHtml', 'TLJobStatus'])
+    assert.doesNotMatch(tsx(n), /aria-label="[A-Za-z]/, `${n}: Name als Literal`);
+});

@@ -22,6 +22,7 @@ Neue Einträge: Datum, Welle, woher (Sichtprüfung, Hendrik, Review), Quelle in 
 | U3 | **Auswahlring der Palettenzelle** und Fokusring kaum zu unterscheiden (bei Karten in 4c mit Haken-Badge gelöst, S2) | Sichtprüfung 5a, 17.10. | `altlast.md` „Nach Welle 5a offen“ |
 | U4 | **Mischer des Farb-Popups** fest `size-12` im Quadrat: unter etwa 595 px Fensterhöhe scrollt das Reiterfeld, der Fokusring des Feldes kann abgeschnitten werden | Sichtprüfung 5a, 17.10. (bekannte Grenze) | `altlast.md` „Welle 5a · Sichtprüfung“ |
 | U5 | **AppBar kompakt unter 300 px:** `tl-app-bar__trailing` gibt nicht nach, der Titel verschwindet zuerst | Sichtprüfung 4b, S2 (Randfall, bleibt) | `altlast.md` „Welle 4b“ |
+| U8 | **Greif-Cursor am nicht ziehbaren Dialog:** `.tl-dialog__surface > .tl-titlebar { cursor: grab }` trifft auch den Kamera-Dialog von `TLPhotoCapture`, der sich nicht ziehen lässt | Review 5b Task 6, 19.10. | `altlast.md` „Welle 5b · Offen“ |
 
 ## Bewegung
 
