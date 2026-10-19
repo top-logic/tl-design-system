@@ -110,7 +110,11 @@ ${block(T.density.compact)}
 }
 
 function baseCss(T) {
-  const type = Object.entries(T.type).filter(([k]) => !k.startsWith('_')).map(([n, k]) => `.tl-type-${n} {
+  // Fließtext vom Server (tl-prose, Spec 5b §5) bekommt seine Schrift aus den Typo-Klassen: die Prose-Selektoren
+  // stehen vor der Klasse in derselben Regel, je auf eigener Zeile. Vorangestellt, nicht angehängt — die Regel
+  // endet weiter mit `.tl-type-<n> {`.
+  const prose = (n) => ((T.prose ?? {})[n] ?? []).map((el) => `.tl-prose ${el},\n`).join('');
+  const type = Object.entries(T.type).filter(([k]) => !k.startsWith('_')).map(([n, k]) => `${prose(n)}.tl-type-${n} {
   font-family: var(--tl-font-family-${k.family});
   font-size: var(--tl-font-size-${k.size});
   font-weight: ${k.weight};

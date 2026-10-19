@@ -122,7 +122,7 @@ const MODIFIERS = {
   'tl-status': new Set([]),
   'tl-table': new Set([]),
   'tl-tree': new Set([]),
-  'tl-overlay': new Set([]), // Die Anker sind Element-Modifier (tl-overlay__layer--<anker>), keine des Blocks.
+  'tl-overlay': new Set(['fill']), // Die Anker sind Element-Modifier (tl-overlay__layer--<anker>), keine des Blocks.
   'tl-titlebar': new Set([]),
   'tl-dialog': new Set([]), // Ein- und Ausblenden, maximiert: data-tl-state.
   'tl-drawer': new Set(['start', 'end', 'bottom', 'narrow', 'medium', 'wide', 'container']), // offen: data-tl-state.
@@ -154,6 +154,8 @@ const MODIFIERS = {
   'tl-slider': new Set([]), // Fehler und Warnung: aria-invalid, data-tl-state.
   'tl-wizard': new Set([]), // Richtung: data-tl-state; Schritt erledigt: data-tl-state, aktuell: aria-current.
   'tl-adaptive-detail': new Set([]),
+  'tl-media': new Set(['cover', 'contain', 'document']), // Einpassung und Papier; gespiegelt: data-tl-state.
+  'tl-prose': new Set([]),
 };
 
 // Die einzige Ausnahme vom Ring: der Behälter mit virtuellem Cursor, nur in base.css (Spec 3b §3).

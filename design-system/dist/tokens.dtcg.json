@@ -958,6 +958,10 @@
           "$type": "color",
           "$value": "{primitive.color.gray-3}"
         },
+        "surface-document": {
+          "$type": "color",
+          "$value": "{primitive.color.gray-0}"
+        },
         "surface-interactive-hover": {
           "$type": "color",
           "$value": "{primitive.color.gray-4}"
@@ -1328,6 +1332,10 @@
         "surface-field": {
           "$type": "color",
           "$value": "{primitive.color.gray-72}"
+        },
+        "surface-document": {
+          "$type": "color",
+          "$value": "{primitive.color.gray-0}"
         },
         "surface-interactive-hover": {
           "$type": "color",

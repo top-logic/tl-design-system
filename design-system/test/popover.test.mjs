@@ -29,7 +29,9 @@ test('tl-menu__item: Zeilenhöhe size-row, Zustand nur als Attribut, In-Kraft ü
 
 test('nur tl-popover setzt die Popup-Fläche: kein anderer Block liest shadow-popover', () => {
   const hits = [];
-  for (const [name, css] of componentCssFiles()) if (!name.startsWith('popover/') && /--tl-shadow-popover/.test(css)) hits.push(name);
+  for (const [name, css] of componentCssFiles())
+    // Ausnahme 19.10. (Welle 5b): der Knopf über einer Fläche (tl-overlay__action) schwebt wie ein Popover, ohne Portal.
+    if (!name.startsWith('popover/') && name !== 'overlay/overlay.css' && /--tl-shadow-popover/.test(css)) hits.push(name);
   assert.deepEqual(hits, []);
 });
 

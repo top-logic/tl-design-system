@@ -24,7 +24,11 @@ test('tl-overlay: Ebenen decken die Basis, lassen den Zeiger durch, zehn Anker, 
   assert.match(decl('overlay', '.tl-overlay__layer > *'), /pointer-events:\s*auto/);
   for (const a of ['fill', 'top-left', 'top', 'top-right', 'left', 'center', 'right', 'bottom-left', 'bottom', 'bottom-right'])
     assert.notEqual(declarationsOf(readGenerated('overlay', 'overlay.css'), `.tl-overlay__layer--${a}`), null, a);
-  assert.doesNotMatch(readGenerated('overlay', 'overlay.css').replace(/\/\*[\s\S]*?\*\//g, ''), /z-index|background/);
+  // Ausnahme 19.10. (5b): tl-overlay__action trägt die Fläche für den Knopf über dem Dokument.
+  const stapel = rulesOf(readGenerated('overlay', 'overlay.css'))
+    .filter(([sel]) => sel === '.tl-overlay' || sel.startsWith('.tl-overlay__layer'));
+  assert.ok(stapel.length > 10);
+  for (const [sel, d] of stapel) assert.doesNotMatch(d, /z-index|background/, sel);
 });
 
 test('tl-titlebar: Leistenhöhe, Linie unten, Titel mit Ellipse, Aktionen am Ende', () => {
