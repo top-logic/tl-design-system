@@ -18,3 +18,11 @@
   color: var(--tl-text-primary);
 }
 .tl-popover[hidden] { display: none; }
+
+/* Inhalts-Popover (#29659, View-Element <popover>): beliebiger Inhalt ist ein bündiger Behälter wie Panel oder
+   Dialogfenster — der Inhalt bringt seinen Abstand mit (<inset>), die Fläche keinen. Die Breite ist begrenzt, damit
+   Fließtext umbricht, statt über den Viewport zu laufen. */
+.tl-popover--content {
+  max-width: min(var(--tl-size-popover-content-max), calc(var(--tl-size-viewport-width) - 2 * var(--tl-space-xs)));
+  padding: 0;
+}

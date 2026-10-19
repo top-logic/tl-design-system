@@ -1808,6 +1808,10 @@
         "$type": "dimension",
         "$value": "{primitive.measure.view-1}"
       },
+      "size-popover-content-max": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-14}"
+      },
       "size-viewport-width": {
         "$type": "dimension",
         "$value": "{primitive.measure.view-2}"

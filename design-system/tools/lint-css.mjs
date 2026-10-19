@@ -112,7 +112,7 @@ const MODIFIERS = {
   'tl-divider': new Set(['vertical']),
   'tl-toggle': new Set(['end']), // Öffnet zum Zeilenende (Seitenleiste, #29787): eine Form, kein Zustand.
   'tl-spinner': new Set(['sm']),
-  'tl-popover': new Set([]),
+  'tl-popover': new Set(['content']), // Inhalts-Popover (#29659): bündig, begrenzte Breite — eine Form, kein Zustand.
   'tl-menu': new Set([]),
   'tl-menu-region': new Set([]),
   'tl-toolbar': new Set([]),

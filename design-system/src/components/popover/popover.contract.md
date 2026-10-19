@@ -43,6 +43,7 @@ Ein Popover ist kein eigenes Control. Es ist die Fläche, die ein Control öffne
 | Innenabstand | `--tl-space-xs` |
 | Mindestbreite | `--tl-size-popover-min` |
 | Höchste Höhe | `--tl-size-popover-max` |
+| Inhalts-Popover: höchste Breite | `--tl-size-popover-content-max`, höchstens Viewport minus 2 × `--tl-space-xs`; kein Innenabstand |
 
 ## Attribute
 
@@ -50,6 +51,7 @@ Ein Popover ist kein eigenes Control. Es ist die Fläche, die ein Control öffne
 |---|---|
 | `tl-popover` | immer; an der schwebenden Fläche im Portal unter `document.body` |
 | `data-tl-anchored-overlay` | immer; im Portal. Die Fläche liegt unter `document.body`, gehört aber zur Fläche ihres Auslösers: Fokus, der in sie wandert, gilt nicht als Ausbruch aus der Fokusfalle eines Dialogs und wird nicht zurückgeholt |
+| `tl-popover--content` | Inhalts-Popover (`TLPopover`, View-Element `<popover>`, #29659): beliebiger Inhalt, bündig, begrenzte Breite |
 | `hidden` | zu, wenn die Fläche gemountet bleibt (Toolbar-Überlauf: die Controls darin leben weiter) |
 
 ## Konformität

@@ -9,6 +9,14 @@ test('tl-popover: Overlay-Fläche, Schatten, Ebene popover, Maße aus den Tokens
     'size-popover-min', 'size-popover-max']) assert.match(d, new RegExp(`var\\(--tl-${t}\\)`));
 });
 
+test('tl-popover--content (#29659): bündig, Breite aus size-popover-content-max (size-14), höchstens Viewport', () => {
+  const d = declarationsOf(readGenerated('popover', 'popover.css'), '.tl-popover--content');
+  assert.match(d, /padding:\s*0/);
+  assert.match(d, /max-width:\s*min\(var\(--tl-size-popover-content-max\),\s*calc\(var\(--tl-size-viewport-width\)/);
+  const md = readFileSync(new URL('../src/components/popover/popover.contract.md', import.meta.url), 'utf8');
+  assert.deepEqual(missingInContract(md, ['tl-popover--content', '--tl-size-popover-content-max']), []);
+});
+
 test('tl-menu__item: Zeilenhöhe size-row, Zustand nur als Attribut, In-Kraft über die Typo-Klasse', () => {
   const css = readGenerated('menu', 'menu.css');
   assert.match(declarationsOf(css, '.tl-menu__item'), /min-height:\s*var\(--tl-size-row\)/);
