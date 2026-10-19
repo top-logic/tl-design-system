@@ -14,6 +14,9 @@
   /* Die Größe gibt im Control der Server inline; hier eine Klasse der Seite, damit kein Inline-Style steht. */
   .stage { width: 12rem; height: 12rem; outline: var(--tl-border-width-sm) dashed var(--tl-border-separator); }
   .stage--document { width: 24rem; height: 14rem; }
+  /* Die Vorschau: Seite 800 × 1130 px, verkleinert auf 12rem (192 px) Breite. Im Control gibt das der Server inline. */
+  .stage--preview { width: 12rem; aspect-ratio: 800 / 1130; }
+  .stage--preview > .tl-media__frame { width: 800px; height: 1130px; transform: scale(0.24); }
 </style>
 </head>
 <body>
@@ -61,6 +64,10 @@
       <span class="tl-type-label">tl-media--document</span>
       <div class="tl-media tl-media--document stage stage--document">
         <iframe class="tl-media__frame" title="Beispieldokument" srcdoc="&lt;h1&gt;Bericht&lt;/h1&gt;&lt;p&gt;Fremdes HTML setzt einen weißen Grund voraus und bringt seine eigene Schrift mit.&lt;/p&gt;"></iframe>
+      </div>
+      <span class="tl-type-label">tl-media--preview</span>
+      <div class="tl-media tl-media--document tl-media--preview stage--preview">
+        <iframe class="tl-media__frame" title="Vorschau" aria-hidden="true" srcdoc="&lt;h1&gt;Bericht&lt;/h1&gt;&lt;p&gt;Die Seite ist für 800 px geschrieben und wird als Bild ihrer selbst verkleinert gezeigt.&lt;/p&gt;"></iframe>
       </div>
     </div>
   </section>

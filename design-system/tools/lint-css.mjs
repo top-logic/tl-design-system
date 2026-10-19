@@ -154,7 +154,7 @@ const MODIFIERS = {
   'tl-slider': new Set([]), // Fehler und Warnung: aria-invalid, data-tl-state.
   'tl-wizard': new Set([]), // Richtung: data-tl-state; Schritt erledigt: data-tl-state, aktuell: aria-current.
   'tl-adaptive-detail': new Set([]),
-  'tl-media': new Set(['cover', 'contain', 'document']), // Einpassung und Papier; gespiegelt: data-tl-state.
+  'tl-media': new Set(['cover', 'contain', 'document', 'preview']), // Einpassung, Papier, Vorschau; gespiegelt: data-tl-state.
   'tl-prose': new Set([]),
   'tl-file': new Set([]), // Leer: data-tl-state.
   'tl-steps': new Set(['vertical']), // Erledigt: data-tl-state; aktuell: aria-current.

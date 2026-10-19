@@ -21,6 +21,17 @@
   margin-block: var(--tl-space-sm) 0;
 }
 
+/* Lange Wörter und Adressen brechen um, statt die Seite seitwärts zu schieben. Ein Abschnitt, zu dem gesprungen wird,
+   hält Abstand zur Oberkante (#29765) — ebenso der Inhalt selbst, wenn er an seinen Anfang gescrollt wird. */
+.tl-prose {
+  overflow-wrap: break-word;
+  scroll-margin-block-start: var(--tl-space-lg);
+}
+
+.tl-prose [id] {
+  scroll-margin-block-start: var(--tl-space-lg);
+}
+
 /* Das erste Kind schließt bündig an den Behälter an. */
 .tl-prose > :first-child {
   margin-block-start: 0;

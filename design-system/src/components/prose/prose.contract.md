@@ -35,6 +35,7 @@ Gewicht, keine Zeilenhöhe.
 | Link, gezeigt | `--tl-text-link`, `--tl-text-link-hover` |
 | Code und Code-Block | Fläche `--tl-surface-layer-nested`, Ecke `--tl-radius-sm`; der Block scrollt (`overflow: auto`) |
 | Zellen von Tabellen | Linie `--tl-border-width-sm` in `--tl-border-separator`, Innenabstand `--tl-space-2xs` `--tl-space-xs` |
+| Umbruch und Sprungziel | lange Wörter brechen um (`overflow-wrap: break-word`); die Wurzel und jedes Element mit `id` halten beim Springen Abstand zur Oberkante (`scroll-margin-block-start` `--tl-space-lg`, #29765) |
 | Zitat | Linie am Anfang `--tl-border-width-md` in `--tl-border-separator`, Einzug `--tl-space-sm` |
 
 Kurz: Text `text-link` für Links, Linie `border-separator` für Tabellen und Zitate.

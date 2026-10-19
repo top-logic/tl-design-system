@@ -27,6 +27,29 @@ test('media: Rahmen füllt, Ecke radius-sm, Einpassung als Variante', () => {
   assert.doesNotMatch(ohneKommentar(readGenerated('media', 'media.css')), /\d+px|#[0-9a-f]{3,6}\b/i);
 });
 
+test('media: Bild so breit wie das Bild, Dokument füllt', () => {
+  assert.match(alle('media', '.tl-media--cover'), /inline-size:\s*fit-content/);
+  assert.match(alle('media', '.tl-media--contain'), /inline-size:\s*fit-content/);
+  assert.doesNotMatch(alle('media', '.tl-media--document'), /fit-content/);
+});
+
+test('media: Vorschau schneidet ab, Seite außerhalb des Flusses, ohne Zeiger', () => {
+  assert.match(decl('media', '.tl-media--preview'), /overflow:\s*hidden/);
+  const frame = decl('media', '.tl-media--preview > .tl-media__frame');
+  assert.match(frame, /position:\s*absolute/);
+  assert.match(frame, /inset-block-start:\s*0/);
+  assert.match(frame, /inset-inline-start:\s*0/);
+  assert.match(frame, /transform-origin:\s*0 0/);
+  assert.match(frame, /pointer-events:\s*none/);
+});
+
+test('prose: lange Wörter brechen, Sprungziele halten Abstand', () => {
+  const root = alle('prose', '.tl-prose');
+  assert.match(root, /overflow-wrap:\s*break-word/);
+  assert.match(root, /scroll-margin-block-start:\s*var\(--tl-space-lg\)/);
+  assert.match(alle('prose', '.tl-prose [id]'), /scroll-margin-block-start:\s*var\(--tl-space-lg\)/);
+});
+
 /** Die Selektorliste der Regel, die mit `.tl-type-<n> {` endet. */
 function typoRegel(n) {
   const ohne = ohneKommentar(BASE);
