@@ -161,7 +161,12 @@ Palettenzelle gegen Fokusring: im UI-Durchgang nach Welle 5. Fokusfalle ohne Tab
 `CWS/CWS_29904_design_system_welle_5b` auf dem 5a-Branch (`358b6fb18c`), lokal. **Spec freigegeben** (abschnittsweise,
 Builder-Prüfung eingearbeitet, Frage A: „Aufnahme läuft“ gefüllt rot wie iOS): `docs/superpowers/specs/2026-10-19-welle-5b-medien-design.md`;
 `skalen.md` „Welle 5b: Medien“; V22 (zwei Schrittlisten → `tl-steps`) in `altlast.md`. Neu: Sammelliste
-`docs/ui-durchgang.md` (U1–U7) für den UI-Durchgang nach Welle 5. **Weiter:** Plan, Plan-Review, SDD.
+`docs/ui-durchgang.md` (U1–U7) für den UI-Durchgang nach Welle 5.
+**!1911 nachgezogen (19.10.):** Bernhard mergte master mit !1907 (#29659 Popover-Element) in 4c (`fce290f4c3`); seine
+Regel `.tl-popover--content` lag im alten Stylesheet → ins Paket (Paket `5f62325`, Engine 4c `aac86b328a`, lokal,
+**Push 4c wartet auf Freigabe**, Antwort-Entwurf im Scratchpad `reply-1911.md`). 4c in 5a gemergt (`dce3322bc7`;
+Picker behalten die 5a-Hülle, `popover.ts` vereint Platzierungen/Hover mit der 5a-Middleware), 5b vorgespult. Gates:
+Paket 523/0, `tsc` 0, MUI-Vitest 619/619, Maven `layout.react` 717/0. **Weiter:** Plan 5b, Plan-Review, SDD.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,

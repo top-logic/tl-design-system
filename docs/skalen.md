@@ -2539,6 +2539,15 @@ Namensraum des Pakets; der Fokusring liegt um das ganze `range` (am Daumen ginge
 - *Griff des Mischers:* außen der dunkle Rand, innen die helle `inset`-Linie (Rand plus Inset, `outline` gehört dem
   Fokus).
 
+### Nachgetragen: Inhalts-Popover (19.10., !1907/#29659 in 4c)
+
+Bernhards Popover-Element (`<popover>`, `TLPopover`) brachte die Regel `.tl-popover.tl-popover--content` ins alte
+Stylesheet — eine `tl-`-Klasse außerhalb des Pakets. Sie zieht ins Paket als **einziger Modifier von `tl-popover`**
+(`content`: bündig, kein Innenabstand; Breite `size-popover-content-max` = `size-14`, höchstens Viewport minus
+2 × `space-xs`). Eine Form, kein Zustand: der Inhalt bringt seinen Abstand mit (`<inset>`), wie Panel und Dialogfenster.
+Die Picker aus 5a tragen die Marke `data-tl-anchored-overlay` schon; eine Farbwahl in einem Inhalts-Popover lässt das
+Popover offen (#29659: Flächenstapel in `outside-press.ts`).
+
 ### Welle 5b: Medien (19.10., Hendrik — #29904)
 
 **Grundlage.** V2, V3, V4, V10, V14, V18 der Prognose und V22 (neu: zwei Schrittlisten); Spec
