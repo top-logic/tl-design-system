@@ -285,6 +285,11 @@
   color: var(--tl-text-on-brand);
   opacity: 0.4;
 }
+/* Trägt der Platzhalter das Anlegen-Feld, ist er keine Vorschau mehr, sondern die Eingabe: voll deckend, damit der
+   getippte Titel das Paar text-on-brand auf surface-brand hält (blass fiel er unter 4,5:1, Sichtprüfung 5c). */
+.tl-calendar__event[data-tl-state~="preview"]:has(.tl-calendar__create) {
+  opacity: 1;
+}
 
 .tl-calendar__event[aria-selected="true"],
 .tl-calendar__event:focus-visible,

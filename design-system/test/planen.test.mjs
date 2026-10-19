@@ -78,6 +78,11 @@ test('calendar: ausgewählt ist ein Ring', () => {
   assert.doesNotMatch(kalenderQuelle().replace(/\/\*[\s\S]*?\*\//g, ''), /(^|[\s;{])outline\s*:/);
 });
 
+test('calendar: das Anlegen-Feld ist nicht blass', () => {
+  assert.match(kalenderRegel('.tl-calendar__event[data-tl-state~="preview"]'), /opacity:\s*0\.4/);
+  assert.match(kalenderRegel('.tl-calendar__event[data-tl-state~="preview"]:has(.tl-calendar__create)'), /opacity:\s*1\b/);
+});
+
 test('calendar: heute überall derselbe Kreis', () => {
   for (const sel of ['.tl-calendar__day-head[aria-current="date"] .tl-calendar__day-number',
     '.tl-calendar__day[aria-current="date"] .tl-calendar__day-number',

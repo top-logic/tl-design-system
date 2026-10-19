@@ -25,6 +25,8 @@ Neue Einträge: Datum, Welle, woher (Sichtprüfung, Hendrik, Review), Quelle in 
 | U8 | **Greif-Cursor am nicht ziehbaren Dialog:** `.tl-dialog__surface > .tl-titlebar { cursor: grab }` trifft auch den Kamera-Dialog von `TLPhotoCapture`, der sich nicht ziehen lässt | Review 5b Task 6, 19.10. | `altlast.md` „Welle 5b · Offen“ |
 | U9 | **JobStatus nennt den aktuellen Schritt zweimal sichtbar:** die Live-Zeile (Spec 5b §7, Schrittzeile sichtbar) und die Schrittliste darunter; prüfen, ob die Live-Zeile sichtbar nur die Meldung trägt und den Schritt nur vorliest | Sichtprüfung 5b, S3, 19.10. | `altlast.md` „Welle 5b · Sichtprüfung“ |
 | U10 | **Kalender, Monat: die Termin-Liste (`role="listbox"`) umschließt auch Tagesknöpfe, „+n weitere“ und das Anlegen-Feld** — ARIA erlaubt in einer Listbox nur Optionen und Gruppen. Sauber wäre eine eigene Schicht für alle Termine des Monats (oder ein Raster mit `gridcell`); das ändert Aufbau und Paket-CSS des Monats | Review 5c Task 8, 19.10. | `calendar.contract.md`, Spec 5c §3 |
+| U11 | **Dashboard-Kachel heißt beim Verschieben „Kachel n“** nach ihrer Position, nicht nach ihrem Titel — der Server liefert der Kachel keinen Namen (nur der Aktion); nach dem Verschieben ändert sich der Name mit der Stelle | Sichtprüfung 5c, 19.10. | `dashboard.contract.md`, `TLDashboard.tsx` `labelOf` |
+| U12 | **Kalender, Zeitraster öffnet bei 0 Uhr**, nicht am Beginn der Arbeitszeit — wie vorher, aber man rollt bei jedem Öffnen | Sichtprüfung 5c, 19.10. | `TLCalendar.tsx` |
 
 ## Bewegung
 
