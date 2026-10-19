@@ -13,6 +13,7 @@ Neue Einträge: Datum, Welle, woher (Sichtprüfung, Hendrik, Review), Quelle in 
 |---|---|---|---|
 | U1 | **Farb- und Icon-Auswahl** sehen aus wie im alten System, „langweilig“ — neues Bedienkonzept für beide Picker | Hendrik 17.10. nach 5a | `skalen.md` „Welle 5a“, `altlast.md` „Welle 5a“ |
 | U2 | **Medien-Controls** (Aufnahme, Wiedergabe, Foto, Dateien, PDF, HTML-Dokument): Nutzung unbekannt, keine Metriken; 5b migriert nur. Klären, welche gebraucht werden, und dann gestalten — fehlende Bedienformen u. a. Scrubber und Dauer im Player, Vorschau vor dem Hochladen, Aufnahmedauer | Hendrik 19.10. vor 5b | Spec 5b |
+| U7 | **Medien-Player** (heute nur `TLAudioPlayer` mit einem Knopf; ein Video-Player fehlt): soll aussehen und funktionieren wie ein moderner Player — was heute Standard ist, u. a. Play/Pause per Leertaste, Spulen per Pfeiltasten, Zeitleiste zum Skimmen, Dauer und Position, Lautstärke, Tempo, Vollbild (Video) | Hendrik 19.10., Spec 5b Abschnitt 3 | Spec 5b |
 
 ## Darstellung
 
