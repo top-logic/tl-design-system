@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-19 (5b Medien: Ticket, Spec freigegeben; 5a gebaut, lokal — Welle 5 als ein PR) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-19 (5a und 5b gebaut, lokal — Welle 5 als ein PR) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -170,10 +170,17 @@ Paket 523/0, `tsc` 0, MUI-Vitest 619/619, Maven `layout.react` 717/0.
 **Plan 5b fertig und geprüft (19.10.):** `docs/superpowers/plans/2026-10-19-welle-5b-medien.md`, elf Tasks; Plan-Review
 (Fable, Probelauf Tasks 1–3) Befunde 1–9 eingearbeitet; **Task 5 neu (Hendrik): View-Elemente `<audio-recorder>`,
 `<audio-player>`, `<photo-capture>`, `<download>` und Demo-Ansicht „Medien“**, eigens geprüft, Befunde 1–9
-eingearbeitet. Spec nachgetragen (`maxUploadSize`, Demo-Ansicht). **Weiter (nächste Sitzung):** SDD 5b ab Task 1 —
-Ausführungsart bei Hendrik bestätigen (Vorschlag subagent-driven wie 5a); Ledger unter
-`.superpowers/sdd/2026-10-19-welle-5b-medien/` (noch nicht angelegt). Engine-Worktree steht sauber auf
-`CWS/CWS_29904_design_system_welle_5b` (`dce3322bc7`).
+eingearbeitet. Spec nachgetragen (`maxUploadSize`, Demo-Ansicht).
+**5b gebaut (19.10., SDD mit savvy-flow, Tasks 1–9 delegiert, 10–11 selbst), lokal, nicht gepusht.** Engine-Branch
+`CWS/CWS_29904_design_system_welle_5b` bis `be1d0851ae` (auf 5a `dce3322bc7`), Paket `main` mit den Commits der Welle.
+Jeder Task gegen Diff und Gates nachgeprüft, Korrekturrunden in T4–T9 (u. a. Wächter der Kanalbindung, Vorschau als
+`tl-media--preview`, Gate ohne Ausnahme für Vitest). Gates: Paket 555/0, Lint grün, Ratsche `lines` 1564 → 683 (zehn
+Blöcke gestrichen); MUI-Vitest 666; `tsc` 0; Maven `layout.react` 717, `layout.configedit` 343, `layout.view` 1513 (nur
+#29651 deutsch), `demo.react` 13; Messages ohne Diff. Sichtprüfung lokal (Demo „Medien“ mit künstlichen Geräten, HTML,
+Bilder, PDF, Job, Wizard, FileChips): S2 Druckknopf mit Abstand behoben, S1 Fokus nach erstem Foto beobachten, S3 → U9.
+Trac #29904: Solution, `== Migration ==`, `RequiresMigration`. `skalen.md` „Beim Bauen entschieden“, Präsentation, Spec
+§6.7 nachgezogen. Ledger `.superpowers/sdd/2026-10-19-welle-5b-medien/`. **Weiter:** 5c (Planen und Ziehen) — Ticket
+anlegen, Branch auf 5b, Spec; Push und PR erst nach 5d. Die lokale Demo läuft (Port 8080) — vor einem Neubau beenden.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
@@ -196,7 +203,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 | 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay; mit der Spaltenwahl als Ebenen-Panel in !1852 (auf master 16.10.) | 7 | master | #29836, #29825 |
 | 4b | Navigation: AppShell, AppBar, Sidebar (mobiler Drawer, Flyout), BottomBar; Q10–Q13, Leiste aus Q14 (!1906, auf master 16.10.) | 4 | master | #29866 |
 | 4c | Behälter: Panel, SplitPanel, Card, Stack, Grid, DeckPane, TileStack, Inset, AdaptiveDetail, Accordion, Wizard, ViewError; Q3, Q7, Q8, Q13–Q23 | 12 | PR | #29870 |
-| 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | 5a gebaut, 5b Spec, 5c–5d geplant | #29875 (5a), #29904 (5b) |
+| 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | 5a und 5b gebaut, 5c–5d geplant | #29875 (5a), #29904 (5b) |
 
 **Abnahme außerhalb der Wellen** (Spec „Abnahme“):
 

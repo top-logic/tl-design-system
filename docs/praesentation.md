@@ -214,7 +214,7 @@ Vor jeder Welle: Was tut dasselbe? Prognose auf den Tisch, Entscheidung, dann di
 
 > Sprechnotiz (Welle 5, 17.10.): Die letzte Welle räumt das alte Stylesheet ganz ab — in vier Teilen. Upload, Ziehen und Auswahlraster gibt es danach nur noch einmal: dieselbe Drop-Zone, dieselbe Einfügelinie, und jedes Raster lässt sich mit der Tastatur bedienen.
 
-> Sprechnotiz (Welle 5b, 19.10.): Aufnehmen, Fotografieren, Hochladen — jeder Fehler wird jetzt angesagt, und eine Datei zu ziehen sieht überall gleich aus. Läuft die Aufnahme, ist der Knopf rot gefüllt wie am iPhone. Die Kamera öffnet als richtiger Dialog: Enter löst aus, Escape schließt. Wizard und Hintergrundjobs zeigen ihre Schritte in derselben Liste.
+> Sprechnotiz (Welle 5b, 19.10.): Aufnehmen, Fotografieren, Hochladen — jeder Fehler wird jetzt angesagt, und eine Datei zu ziehen sieht überall gleich aus. Läuft die Aufnahme, ist der Knopf rot gefüllt wie am iPhone. Die Kamera öffnet als richtiger Dialog: Enter löst aus, Escape schließt. Wizard und Hintergrundjobs zeigen ihre Schritte in derselben Liste. Eingebettete Dokumente bleiben weiß wie Papier, auch im dunklen Modus, und der Druckknopf schwebt darüber.
 
 > Sprechnotiz (Welle 5a, 17.10.): Farb- und Icon-Auswahl teilen sich jetzt ein Popup — es bleibt beim Scrollen am Feld, der Fokus kommt danach zurück, und Palette, Mischer und Icon-Raster gehen ohne Maus. Neu gestaltet werden sie im UI-Durchgang nach Welle 5. Der Screenreader sagt jetzt, welche Farbe gewählt ist, und jedes Popup bleibt im Fenster, statt oben herauszuragen.
 >

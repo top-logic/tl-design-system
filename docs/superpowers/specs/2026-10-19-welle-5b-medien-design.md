@@ -174,8 +174,8 @@ Der Fehlermodus von `TLHtml` ist schon `tl-alert` mit `role="alert"` und bleibt.
 6. **Upload-Vertrag:** `TLFileChips`, `TLAudioRecorder`, `TLPhotoCapture` als Leser, mit ihren Teilnamen.
 7. **`FileListControl` (Java):** setzt `error`, wenn `handleUpload` scheitert (heute nur geloggt), und `maxUploadSize` über
    `UploadSupport` wie `ReactFileUploadControl`; der Fehler gilt bis zum nächsten erfolgreichen Hochladen. Einen Status
-   `received` braucht FileChips nicht — die neue Chip-Liste ist die Bestätigung; `useUpload` setzt dort beim Eintreffen
-   der neuen `chips` zurück. Test in `layout.view`.
+   `received` braucht FileChips nicht — die neue Chip-Liste ist die Bestätigung; „lädt hoch“ endet dort mit dem
+   Upload-Aufruf (beim Bauen entschieden 19.10., `skalen.md` „Welle 5b“). Test in `layout.view`.
 
 ## 7 · Schritte und JobStatus (V4, V22)
 

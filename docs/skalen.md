@@ -2574,7 +2574,7 @@ Inhalte (Bild, PDF, Dokument, Video) teilen `tl-media`.
 
 **Upload und Download je einmal.** `useUpload` (FormData, lokaler Status, Fehler) und `downloadBlob` ersetzen drei bis
 sechs Kopien; Ziehen heißt überall `data-tl-state~="dragover"`. Jeder Upload-Fehler steht in `role="alert"`;
-`FileListControl` bekommt dafür `error` und `maxSize` — Java nur, wo ein Zustand fehlt. „Keine Datei“ in
+`FileListControl` bekommt dafür `error` und `maxUploadSize` — Java nur, wo ein Zustand fehlt. „Keine Datei“ in
 `text-secondary` statt der Deaktiviert-Farbe: es ist Information, sie muss lesbar sein.
 
 **Eine Schrittliste** (V22): Wizard und JobStatus teilen `tl-steps`, ein Aussehen (die Wizard-Scheibe), zwei
@@ -2582,6 +2582,26 @@ Ausrichtungen. Das Grün erledigter Phasen fällt — sonst wären es wieder zwe
 schrumpft auf eine Textzeile (Zustand, aktueller Schritt): die sekündlich tickende Laufzeit wurde sonst angesagt.
 **Verworfen:** runde Medienknöpfe; ein Pulsieren für „Aufnahme läuft“; Kamera über den Server-Dialog-Manager (er verwaltet
 Server-Dialoge, das Verhalten teilen beide schon über die Hooks).
+
+**Beim Bauen entschieden (19.10., Reviews der SDD und Sichtprüfung):**
+
+- **Was der Altbestand konnte, kommt ins Paket, nicht inline.** Die HTML-Vorschau (beschnitten wie Papier, nicht
+  anklickbar) wird die Variante `tl-media--preview`; inline bleibt nur, was Daten sind (Seitenverhältnis, Größe,
+  Skalierung). Ein Bild ohne Größe ist wieder so breit wie das Bild (`tl-media--cover`/`--contain` mit `fit-content`;
+  das Dokument füllt weiter). `tl-prose` bricht lange Wörter und hält beim Sprung zu einem Abschnitt Abstand zum oberen
+  Rand (#29765). Der Tabellenkopf in Prosa liest `body-strong`.
+- **Die Basis eines füllenden Overlays gibt ihrem Kind die Höhe** (`tl-overlay--fill`): sonst bliebe das Dokument-iframe
+  150 px hoch. Der Knopf über der Fläche schwebt mit `space-xs` Abstand zur Ecke (Sichtprüfung).
+- **Die Fehlerzeile der FileChips bricht unter die Chips** — eine Regel am Paket, keine Hülle um die Chip-Gruppe.
+- **Die Kanalbindung der Medien-Elemente schreibt nie zurück, was vom Kanal kam.** Ein fremder Wert im Kanal (etwa die
+  Adresse eines Bildes) leert das Modell, bleibt aber stehen; ohne den Wächter hätte das geleerte Modell ihn mit `null`
+  überschrieben.
+- **FileChips: „lädt hoch“ endet mit dem Aufruf**, nicht mit dem Eintreffen der neuen Chips (Spec §6.7 nachgezogen) —
+  ein Hook für alle, der kurze Spalt bis zur neuen Liste ist hinnehmbar.
+- **JobStatus:** die Meldung steht in der Live-Zeile (wie die Spec), die Schrittliste hat einen eigenen Namen
+  (`js.jobStatus.steps`). Ob der Schritt dort sichtbar doppelt stehen muss, prüft der UI-Durchgang (U9).
+- **Das Engine-Gate liest auch die Vitest-Dateien** — Tests prüfen die Paketklassen positiv, statt das Fehlen der alten
+  Namen zu nennen (wie 5a).
 
 ### Die Kopie in der Engine ist versiegelt (16.10.)
 
