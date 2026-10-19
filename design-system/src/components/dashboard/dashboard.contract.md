@@ -39,8 +39,8 @@ derselbe Wert.
 |---|---|
 | Wurzel | `tl-dashboard` mit `tl-inset` (Innenabstand); im Bearbeiten `data-tl-state~="edit"` |
 | Raster | `tl-dashboard__grid`, `data-tl-axis="horizontal"`: die Einfügemarke steht links und rechts |
-| Kachel | `div` mit `tl-card`, `tl-dashboard__tile`, `tl-overlay`, `tl-overlay--fill`; der Inhalt in `tl-overlay__base`. Im Bearbeiten fokussierbar, mit Name und Beschreibung aus `useListReorder` |
-| Aktion | `button` mit `tl-dashboard__action` und `tl-visually-hidden`, direkt in der Kachel, Name `label`, Tooltip über `tooltipProps`; deaktiviert `disabled` bzw. `aria-disabled="true"` |
+| Kachel | `div` mit `tl-card`, `tl-dashboard__tile`, `tl-overlay`, `tl-overlay--fill`; der Inhalt in `tl-overlay__base`. Im Bearbeiten `role="group"`, fokussierbar (`tabindex="0"`), mit Name und Beschreibung aus `useListReorder` (ohne Rolle dürfte das `div` keinen Namen tragen) |
+| Aktion | `button` mit `tl-dashboard__action` und `tl-visually-hidden`, direkt in der Kachel, Name `label`; der Tooltip über `tooltipProps` sitzt an der Kachel (der Knopf ist außer Sicht und bekommt keinen Zeiger); deaktiviert `disabled` bzw. `aria-disabled="true"` |
 | Abdeckung | im Bearbeiten `div` `tl-dashboard__cover` in einer Ebene `tl-overlay__layer` `tl-overlay__layer--fill`, im DOM vor der Ebene des Ausblenden-Knopfs |
 | Ausblenden-Knopf | Part `Button` (ghost, icon-only, Name `js.dashboard.hideTile`) in `tl-overlay__action` in einer Ebene `tl-overlay__layer` `tl-overlay__layer--top-right` |
 
