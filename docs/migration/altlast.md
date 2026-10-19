@@ -924,7 +924,7 @@ Mischers, auf jeder Farbe lesbar). Im Bridge: `useTabList` (Reiter mit Tastatur,
 Branch `CWS/CWS_29904_design_system_welle_5b` (Engine, lokal, nicht gepusht; gestapelt auf 5a) und Paket (`main`,
 Ratsche je Task). Ratsche: `lines` 1564 → 683 (Summe der Budgets = gemessen); Literale color 43 → 22, fontSize 20 → 16,
 duration 9 → 3, outlineNone 7 → 1, zIndex unverändert 10. Engine-Gate `ALT_5B` in `test/engine-classes.test.mjs`
-(react-src ohne Vitest-Dateien, Stylesheets, Java, tl-docs, Views) und „Welle 5b im TSX“.
+(react-src samt Vitest-Dateien, Stylesheets, Java, tl-docs, Views) und „Welle 5b im TSX“.
 
 ### Gestrichene Blöcke
 

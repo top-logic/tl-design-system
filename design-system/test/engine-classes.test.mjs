@@ -180,9 +180,8 @@ test('Welle 5a im TSX: Picker als Dialog mit usePopover, Reiter mit useTabList, 
 const ALT_5B = /\btl(AudioRecorder|AudioPlayer|PhotoCapture|Download|FileChips|Image|PdfViewer|Html|JobStatus|Counter|BinaryField)(__|--|\b)|\bTLCounter\b|\btl-wizard__(steps|step-item|disc|step-name)\b/;
 
 test('keine alte Klasse der Welle 5b in react-src, Stylesheets, Java, tl-docs und Views', { skip: !existsSync(M) && 'kein Worktree' }, () => {
-  // Ohne die Vitest-Dateien: media.test.tsx prüft mit den alten Namen, dass sie nicht mehr gezeichnet werden.
   const quellen = [
-    ...[...reactSources()].filter((p) => !/\.test\.tsx?$/.test(p)),
+    ...reactSources(),
     join(M, 'src/main/webapp/style/tlReactControls.css'),
     join(WT, 'com.top_logic.demo.react/src/main/webapp/style/tl-demo-react.css'),
     ...tree(join(M, 'src/main/java'), /\.java$/),
