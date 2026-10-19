@@ -21,7 +21,9 @@ V22). Bestand: Scratchpad-Notizen `5b-inventory.md`, `5b-engine-facts.md` (nur O
 **Plan-Review** 19.10. durch einen frischen Agenten (Fable), Probelauf der Tasks 1–3 in einer Paketkopie: Lint grün,
 `node --test` 518/523 (Wizard-Test und `published` erwartet; drei Planfehler). Tokens, Part-API, Glyphen (Font
 Awesome 6.7.1), `ALT_5B`-Regex und Abhängigkeit `layout.view` → `layout.react` bestätigt. **Befunde 1–9
-eingearbeitet** (Tasks 1–4, 7, 8).
+eingearbeitet** (Tasks 1–4, 7, 8). Task 5 (Demo-Ansicht, nachträglich) eigens geprüft (Fable): Befunde 1–9
+eingearbeitet (eine Bindung für alle vier, Test über die Bindung, `messages_de` Pflicht, `@InApp`, `clean install`,
+Normalisierung direkt, Download schreibt zurück).
 
 ## Global Constraints
 
@@ -319,11 +321,14 @@ ausdrücklich zur Prüfung (seine View-Schicht).
 
 **Files:**
 - Create: `com.top_logic.layout.view/src/main/java/com/top_logic/layout/view/element/AudioRecorderElement.java`,
-  `AudioPlayerElement.java`, `PhotoCaptureElement.java`, `DownloadElement.java`
+  `AudioPlayerElement.java`, `PhotoCaptureElement.java`, `DownloadElement.java`, `BinaryChannelBinding.java` (die eine
+  Bindung Kanal ↔ Modell für alle vier)
 - Create: `com.top_logic.demo.react/src/main/webapp/WEB-INF/views/demo/media-demo.view.xml`
 - Modify: `com.top_logic.demo.react/src/main/webapp/WEB-INF/views/app.view.xml` (Eintrag nach „pdf“),
   `com.top_logic.layout.view/src/main/java/META-INF/tl-docs/view-layer/display.md` (Abschnitt zu den vier Tags),
-  `messages_en.properties` (erzeugt) und `messages_de.properties` beider Module, falls Labels entstehen
+  `layout.view/src/main/java/META-INF/messages_en.properties` (erzeugt) und **`messages_de.properties`** (Pflicht:
+  je Element Klasse, `.tooltip`, `Config.input`, `Config.input.tooltip` — 16 Schlüssel, sortiert; sonst „Missing
+  resource keys“). `demo.react` braucht keine Schlüssel (Labels inline `<en>`/`<de>`).
 - Test: `com.top_logic.layout.view/src/test/java/test/com/top_logic/layout/view/element/TestMediaElements.java`
 
 **Interfaces:**
@@ -334,28 +339,38 @@ ausdrücklich zur Prüfung (seine View-Schicht).
 - Tags und Controls: `<audio-recorder input="…">` → `ReactAudioRecorderControl`, `<audio-player input="…">` →
   `ReactAudioPlayerControl`, `<photo-capture input="…">` → `ReactPhotoCaptureControl`, `<download input="…">` →
   `ReactDownloadControl` (alle `(ReactContext, BinaryDataValue)`).
-- **Schreiben in den Kanal:** Recorder und Kamera hängen einen Listener an ihr `BinaryDataValue`
-  (`addListener`), der das hochgeladene `BinaryData` mit `channel.set(…)` in den Kanal schreibt; der Kanal-Listener
-  setzt das Modell nur, wenn sich der Wert unterscheidet (keine Schleife). Player und Download lesen nur.
-  Attributname `input` für alle vier — wie jedes lesende Element (`ImageElement`, `HtmlElement`, `PdfElement`); Recorder
-  und Kamera schreiben in denselben Kanal (Ruling, Bernhard prüft die Namen).
+- **Eine Bindung für alle vier:** paketsichtbar
+  `static Registration BinaryChannelBinding.bind(ViewChannel channel, BinaryDataValue model)` setzt das Modell auf
+  den Kanalwert, hängt einen Kanal-Listener (`model.setData(binary(newValue))`) und einen Modell-Listener
+  (`channel.set(data)`) an und gibt eine `Registration` zurück, die beide löst (`control.addCleanupAction`). Schleifenfrei
+  durch die vorhandene Semantik: `SimpleBinaryDataValue.setData` bricht bei Identität ab
+  (`SimpleBinaryDataValue.java:51–56`), `DefaultViewChannel.set` bei `Objects.equals` (`DefaultViewChannel.java:97–100`;
+  `BinaryData` vergleicht den Inhalt, `AbstractBinaryData.java:88–108` — jedes `set` liest beide Ströme, für eine
+  Aufnahme hinnehmbar). Zurück schreiben Recorder, Kamera (Upload) und Download (`handleClear` → `setData(null)`,
+  heute mit `clearable=false` folgenlos); der Player liest nur, die Bindung schadet ihm nicht. Attributname `input` für
+  alle vier — wie jedes Element am Kanal (`ImageElement`, `HtmlElement`, `PdfElement`) (Ruling, Bernhard prüft die
+  Namen). Alle vier Klassen tragen **`@InApp`** (sonst fehlen sie im View-Editor, Commit `fdc2a170ab`).
 
-- [ ] **Step 1: Failing test** `TestMediaElements` nach dem Muster eines bestehenden Element-Tests
-  (`TestImageElement`, `TestHtmlElement`): je Tag wird das Element aus XML gebaut, `createControl` liefert das
-  erwartete Control; ein Wert im Kanal erscheint im Modell von Player und Download; ein `setData` am Modell des
-  Recorders und der Kamera steht danach im Kanal; ein gleicher Wert löst keinen zweiten `set` aus.
+- [ ] **Step 1: Failing test** `TestMediaElements` nach dem Muster von `TestImageElement` (TypedConfiguration,
+  `ViewLoader.parseConfig` mit TypeIndex-Modul): je Tag wird das Element aus XML gebaut und `createControl` liefert das
+  erwartete Control. `BinaryChannelBinding.bind` direkt: Kanalwert erscheint im Modell; `model.setData(X)` steht danach
+  im Kanal; ein zweites `BinaryData` mit gleichen Bytes ändert den Kanal nicht (`set` liefert `false`); nach
+  `dispose()` der `Registration` wirkt keine Richtung mehr.
 - [ ] **Step 2: Run** — FAIL.
 - [ ] **Step 3: Implement** die vier Elemente.
 - [ ] **Step 4: Demo-Ansicht** `media-demo.view.xml` (Kopfkommentar wie `pdf-demo.view.xml`): Kanäle `recording` und
   `photo`; ein Panel „Aufnahme“ mit `<audio-recorder input="recording"/>`, `<audio-player input="recording"/>`,
   `<download input="recording"/>`; ein Panel „Foto“ mit `<photo-capture input="photo"/>`, `<image input="photo"/>`,
   `<download input="photo"/>`; Panels mit `with-inset="true"`. Navigation: `nav-item id="media"` nach „pdf“, Icon
-  `css:fa-solid fa-photo-film`, Label en „Media“, de „Medien“. Layout-XML normalisieren
-  (`XMLPrettyPrinter`, Engine-`CLAUDE.md` „Layout Normalization“).
+  `css:bi bi-camera-reels` (wie die Nachbarn `bi bi-…`; die Regel „nur Font Awesome“ gilt für die Controls), Label en „Media“, de „Medien“. Die View-Datei normalisieren: `normalize-layouts` erfasst
+  `WEB-INF/views` nicht — `XMLPrettyPrinter.main` direkt auf die Datei aufrufen (nimmt Dateien,
+  `XMLPrettyPrinter.java:1052ff`), `git diff` prüfen.
 - [ ] **Step 5: Doku** — `display.md`: kurzer Abschnitt „Recording, playback and download“ mit den vier Tags, dem
-  Kanal und dem Verweis auf die Demo; `TestDocumentation` des Moduls grün.
-- [ ] **Step 6: Run** Maven `install` `layout.view` mit `-DskipTests=false -Dtest=test.com.top_logic.layout.view.element.TestMediaElements`
-  und `TestDocumentation`, `demo.react` `install`; `check-messages-en.sh` — grün, Messages-Diff committen, Deutsch
+  Kanal und dem Verweis auf die Demo; nur `doc:`-Links auf bestehende Artikel, Frontmatter
+  unverändert (`TestDocumentation` läuft über `com.top_logic.basic`, nicht per `-Dtest` in `layout.view`).
+- [ ] **Step 6: Run** Maven **`clean install`** `layout.view` (der TypeIndex entsteht nur beim Kompilieren, sonst
+  „has no property 'audio-recorder'“) mit `-DskipTests=false -Dtest=test.com.top_logic.layout.view.element.TestMediaElements`,
+  `demo.react` `install`; `check-messages-en.sh` — grün, Messages-Diff committen, Deutsch
   nachziehen.
 - [ ] **Step 7: Commit** Engine „Ticket #29904: View elements for audio recorder, audio player, photo capture and
   download; media demo view.“
