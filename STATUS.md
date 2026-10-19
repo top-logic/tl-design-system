@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-17 (4c als PR !1911; 5a gebaut, lokal — Welle 5 als ein PR) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-19 (5b Medien: Ticket, Spec freigegeben; 5a gebaut, lokal — Welle 5 als ein PR) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -155,9 +155,13 @@ Ledger: `.superpowers/sdd/2026-10-17-welle-5a-eingaben/` (`progress.md`, `final-
 **Entschieden (Hendrik 17.10.):** kein Push jetzt — **Welle 5 kommt als ein PR**, wenn 5a–5d gebaut sind (5b, 5c, 5d
 setzen auf dem 5a-Branch auf; ein Branch je Teil mit eigenem Ticket, der PR am Ende über alles). Auswahlring der
 Palettenzelle gegen Fokusring: im UI-Durchgang nach Welle 5. Fokusfalle ohne Tab-Zyklus am Dokumentende: Trac
-**#29879** (accepted, CC bhu). **Weiter (nächste Sitzung):** 5b Medien — Ticket anlegen, Branch auf
-`CWS/CWS_29875_design_system_welle_5a`, Spec (Brainstorming, abschnittsweise), Plan, Plan-Review, SDD. Die Demo ist
-beendet.
+**#29879** (accepted, CC bhu).
+
+**5b Medien gestartet (19.10.):** Trac **#29904** (accepted, CC bhu), Engine-Branch
+`CWS/CWS_29904_design_system_welle_5b` auf dem 5a-Branch (`358b6fb18c`), lokal. **Spec freigegeben** (abschnittsweise,
+Builder-Prüfung eingearbeitet, Frage A: „Aufnahme läuft“ gefüllt rot wie iOS): `docs/superpowers/specs/2026-10-19-welle-5b-medien-design.md`;
+`skalen.md` „Welle 5b: Medien“; V22 (zwei Schrittlisten → `tl-steps`) in `altlast.md`. Neu: Sammelliste
+`docs/ui-durchgang.md` (U1–U7) für den UI-Durchgang nach Welle 5. **Weiter:** Plan, Plan-Review, SDD.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
@@ -180,7 +184,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 | 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay; mit der Spaltenwahl als Ebenen-Panel in !1852 (auf master 16.10.) | 7 | master | #29836, #29825 |
 | 4b | Navigation: AppShell, AppBar, Sidebar (mobiler Drawer, Flyout), BottomBar; Q10–Q13, Leiste aus Q14 (!1906, auf master 16.10.) | 4 | master | #29866 |
 | 4c | Behälter: Panel, SplitPanel, Card, Stack, Grid, DeckPane, TileStack, Inset, AdaptiveDetail, Accordion, Wizard, ViewError; Q3, Q7, Q8, Q13–Q23 | 12 | PR | #29870 |
-| 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | 5a gebaut, 5b–5d geplant | #29875 (5a) |
+| 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | 5a gebaut, 5b Spec, 5c–5d geplant | #29875 (5a), #29904 (5b) |
 
 **Abnahme außerhalb der Wellen** (Spec „Abnahme“):
 

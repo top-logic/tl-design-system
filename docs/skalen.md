@@ -2539,6 +2539,41 @@ Namensraum des Pakets; der Fokusring liegt um das ganze `range` (am Daumen ginge
 - *Griff des Mischers:* außen der dunkle Rand, innen die helle `inset`-Linie (Rand plus Inset, `outline` gehört dem
   Fokus).
 
+### Welle 5b: Medien (19.10., Hendrik — #29904)
+
+**Grundlage.** V2, V3, V4, V10, V14, V18 der Prognose und V22 (neu: zwei Schrittlisten); Spec
+`docs/superpowers/specs/2026-10-19-welle-5b-medien-design.md`. **Kein neues Bedienkonzept** — Nutzung der Medien-Controls
+ist unbekannt (keine Metriken, selbst ungenutzt); was sicher neu gestaltet werden muss, steht in `docs/ui-durchgang.md`
+(U2, U7 moderner Medien-Player). BinaryField gehört dazu, weil er die Klassen des Downloads trägt.
+
+**Medienknöpfe sind Part-Knöpfe.** Recorder, Player und Kamera werden `tl-button--icon`, quadratisch wie jeder
+Icon-Knopf — eine Rundform jetzt wäre eine Variante, die der UI-Durchgang vielleicht wieder streicht. Icons aus dem
+Icon-System (Font Awesome über `icons.ts`), ein Fokusring, Laden und Hochladen über `aria-busy`. **„Aufnahme läuft“ ist
+gefüllt rot wie die Videoaufnahme unter iOS** (Hendrik), ohne Bewegung: ein Pulsieren sähe aus wie „beschäftigt“. Dafür
+`tl-button--danger[aria-pressed]` mit den Rollen des roten Primärknopfs — ohne die Regel gewänne die Marken-Fläche des
+gedrückten Zustands, der Recorder würde blau.
+
+**Die Kamera ist ein Dialog.** Fläche, Titelleiste, Knopfleiste aus dem Paket; „Aufnehmen“ ist der primäre Knopf, Enter
+löst aus. Keine Knöpfe auf dem Video — auf hellem Bild waren sie unlesbar und brauchten `rgba`-Literale.
+
+**Knopf über Fläche** einmal im Paket: `tl-overlay__action` in einer Ebene von `tl-overlay` (Druckknopf des
+HTML-Dokuments, in 5c die Dashboard-Kachel). Die Fläche ist nötig, weil fremdes HTML auf **`surface-document`** liegt —
+weiß in beiden Modi, denn fremde Dokumente setzen Weiß voraus.
+
+**Eingebettetes HTML liest die Typo-Skala** (`tl-prose`): keine eigenen Größen, Überschriften auf `heading-*`. Eingebettete
+Inhalte (Bild, PDF, Dokument, Video) teilen `tl-media`.
+
+**Upload und Download je einmal.** `useUpload` (FormData, lokaler Status, Fehler) und `downloadBlob` ersetzen drei bis
+sechs Kopien; Ziehen heißt überall `data-tl-state~="dragover"`. Jeder Upload-Fehler steht in `role="alert"`;
+`FileListControl` bekommt dafür `error` und `maxSize` — Java nur, wo ein Zustand fehlt. „Keine Datei“ in
+`text-secondary` statt der Deaktiviert-Farbe: es ist Information, sie muss lesbar sein.
+
+**Eine Schrittliste** (V22): Wizard und JobStatus teilen `tl-steps`, ein Aussehen (die Wizard-Scheibe), zwei
+Ausrichtungen. Das Grün erledigter Phasen fällt — sonst wären es wieder zwei Formen. Der Live-Bereich des JobStatus
+schrumpft auf eine Textzeile (Zustand, aktueller Schritt): die sekündlich tickende Laufzeit wurde sonst angesagt.
+**Verworfen:** runde Medienknöpfe; ein Pulsieren für „Aufnahme läuft“; Kamera über den Server-Dialog-Manager (er verwaltet
+Server-Dialoge, das Verhalten teilen beide schon über die Hooks).
+
 ### Die Kopie in der Engine ist versiegelt (16.10.)
 
 **Befund:** Zweimal wurde die Kopie des Pakets in tl-engine-7 von Hand geändert — #29787 (sechs Stellen) und #29859

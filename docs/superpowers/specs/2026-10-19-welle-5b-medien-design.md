@@ -3,7 +3,7 @@
 **Ticket:** Trac #29904 · **Branch:** `CWS/CWS_29904_design_system_welle_5b` auf `CWS/CWS_29875_design_system_welle_5a`
 (der auf dem 4c-Branch von !1911 steht) · **Grundlage:** Prognose in `docs/migration/altlast.md` „Welle 5“ (V2, V3, V4,
 V10, V14, V18; von Hendrik am 17.10. entschieden), dazu V22 (neu, 19.10. entschieden: zusammenlegen) ·
-**Freigegeben:** 19.10.2026 von Hendrik, abschnittsweise, mit den Entscheidungen aus §12.
+**Freigegeben:** 19.10.2026 von Hendrik, abschnittsweise, mit den Entscheidungen aus §12 (Frage A entschieden).
 
 ## 1 · Ziel und Abgrenzung
 
@@ -69,11 +69,14 @@ Künftig ist jeder ein **Part `Button`, icon-only** (`tl-button--icon`, quadrati
   Bibliothek“).
 - **Fokus** nur aus `base.css`.
 - **Gedrückt in Tönung `danger`:** heute gewinnt `.tl-button[aria-pressed="true"]` (Marken-Fläche) gegen die Tönung —
-  ein aufnehmender Recorder würde blau. Das Paket bekommt `tl-button--danger[aria-pressed="true"]`: Fläche
-  `status-error-subtle`, Rahmen `status-error-border`, Text/Icon `status-error-text` (Paar im Gate).
+  ein aufnehmender Recorder würde blau. Das Paket bekommt `tl-button--danger[aria-pressed="true"]` **gefüllt rot wie
+  bei der Videoaufnahme unter iOS** (Hendrik 19.10.): dieselben Rollen wie `tl-button--danger.tl-button--primary` —
+  Fläche `status-error-surface` (Zeigen `-hover`, Drücken `-active`), Icon `text-on-status-error` (`-hover`,
+  `-active`); die Paare stehen schon im Gate.
 - **Bewegung:** Ripple (Recorder), Wackeln (Recorder, Kamera) und Kreisen (Player) fallen; Laden und Hochladen zeigt
   das Pulsieren des Icons, das `tl-button[aria-busy]` schon hat (Opazität 1 ↔ 0,4, `duration-loop`, Reduced-Motion aus
-  `base.css`). **„Aufnahme läuft“** zeigt der gedrückte Recorder in roter Fläche mit Stopp-Icon — §12 Frage A.
+  `base.css`). **„Aufnahme läuft“ ohne Bewegung:** der Knopf ist rot gefüllt, das Icon wird zum Stopp — ein Pulsieren
+  sähe aus wie „lädt hoch“ (§12 Frage A, entschieden).
 
 ## 4 · Kamera-Overlay und Knopf über Fläche (V2, V10)
 
@@ -215,8 +218,8 @@ Mehr nicht — der Rest gehört in den UI-Durchgang (U2, U7).
   keine Zustandsklasse (`--recording`, `--uploading`, `--playing`, `--loading`, `--dragover`, `--empty`, `--done`,
   `--active`, `--pending`, `--mirrored`); keine Literale; kein `outline: none`.
 - **Kontrast:** `tl-steps` erbt die Paare der Wizard-Scheibe; der Knopf in `tl-overlay__action` auf `surface-overlay`;
-  Recorder `danger` als Icon-Knopf, gedrückt (`status-error-text` auf `status-error-subtle`, Rahmen
-  `status-error-border` gegen die Umgebung); `tl-prose`-Link
+  Recorder `danger` als Icon-Knopf, gedrückt (`text-on-status-error` auf `status-error-surface` je Zustand, vorhandene
+  Paare); `tl-prose`-Link
   und Code-Fläche; `tl-file` leer in `text-secondary`. `surface-document` steht als Fläche ohne Textpaar im Gate
   ausgewiesen. Beide Modi, jedes Theme.
 - **`focus-clip.test.mjs`** misst die neuen Specimen-Seiten (Dialog mit Video, Overlay mit Knopf, Dateizeile, Schritte).
@@ -275,8 +278,8 @@ Steht im Trac-Text unter `== Migration ==` und als Alt→neu-Liste in `altlast.m
 
 ## 12 · Offen und entschieden
 
-Mit Hendrik entschieden (19.10., abschnittsweise): Umfang mit BinaryField (§1); Part-Knöpfe quadratisch (§3; Pulsieren für „Aufnahme läuft“:
-Frage A unten); Kamera als Paket-Dialog, `tl-overlay__action` (§4); `tl-media`, `surface-document`,
+Mit Hendrik entschieden (19.10., abschnittsweise): Umfang mit BinaryField (§1); Part-Knöpfe quadratisch (§3; „Aufnahme läuft“ gefüllt
+rot, Frage A unten); Kamera als Paket-Dialog, `tl-overlay__action` (§4); `tl-media`, `surface-document`,
 `tl-prose` (§5); `useUpload`, `downloadBlob`, `tl-file`, ein Drop-Weg (§6); V22 `tl-steps` (§7).
 
 Beim Schreiben entschieden (Orchestrator, Hendrik prüft beim Lesen):
@@ -303,6 +306,6 @@ Beim Schreiben entschieden (Orchestrator, Hendrik prüft beim Lesen):
     ändert nur diese Datei.
 11. **`tl-overlay--fill`** für das füllende Dokument; 5c nutzt es für die Kachel.
 
-**Frage A an Hendrik (offen):** Das Paket zeigt „beschäftigt“ (`aria-busy`) schon als pulsierendes Icon. Ein Pulsieren
-für „Aufnahme läuft“ sähe genauso aus wie „lädt hoch“. Vorschlag: „Aufnahme läuft“ ohne Bewegung, nur durch den
-gedrückten Knopf in roter Fläche mit Stopp-Icon (§3).
+**Frage A (aus der Builder-Prüfung, entschieden 19.10.):** Das Paket zeigt „beschäftigt“ (`aria-busy`) schon als
+pulsierendes Icon; ein Pulsieren für „Aufnahme läuft“ sähe aus wie „lädt hoch“. Hendrik: „aufnahme läuft sollte
+aussehen wie bei ios video aufnahme. button wird gefüllt rot.“ — keine Bewegung, gefüllt rot mit Stopp-Icon (§3).
