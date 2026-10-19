@@ -1074,6 +1074,7 @@ Download, Fehleransage), nicht die Bedienformen.
 | V19 | **Zwei Interaktiv-Prüfungen:** `controls/interactive.ts` (`isInteractiveTarget`) neben `bridge/interactive.ts` (`isInteractiveWithin`) | nein | eine | — | 6 Aufrufer | mit der Welle · 5c |
 | V20 | **Dashboard misst selbst** (`parseLengthPx`, eigene Spaltenrechnung, `gap:'1rem'` inline) | kaum | `tokenPx`, Raster aus `layout.css` | — | 1 TSX | mit der Welle · 5c |
 | V21 | **Escape außerhalb des Dispatchers:** Element-Picker (eigener Capture-Listener), Kalender-Anlegen | nein | `useStandaloneKeyboardScope` | — | 2 | mit der Welle · 5c/5d |
+| V22 | **Zwei Schrittlisten** (Nachprüfung 19.10. vor der Spec 5b): Phasen des JobStatus (Punkt, senkrecht, Klassen `--done/--active/--pending`) und Schrittliste des Wizards aus 4c (Scheibe mit Nummer, waagrecht, `data-tl-state~="done"`, `aria-current="step"`) | ja: zwei Formen für „wo stehe ich“ | Block `tl-steps` (waagrecht, `--vertical`); Wizard liest ihn | ein Muster, aktueller Schritt angesagt | Wizard (4c), JobStatus | lohnt mit der Welle · 5b (**entschieden 19.10.: zusammenlegen**) |
 
 Nicht zusammenzulegen: Audio hat keinen Scrubber, Slider ist einzig (V9); `TLJobStatus`, `TLValueList`, `TLDownload`
 nutzen die Parts schon — dort nur Tokens und Klassen. „Compact field“ steht schon auf `--tl-*`, nur umziehen. Der Block
