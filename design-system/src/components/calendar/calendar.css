@@ -260,7 +260,11 @@
   pointer-events: auto;
 }
 
-/* Ausgewählt ist ein Ring wie tl-item[aria-selected] (layout.css); die Fläche bleibt die Kategorie. */
+/* Ausgewählt ist ein Ring wie tl-item[aria-selected] (layout.css); die Fläche bleibt die Kategorie. Auf dem
+   gefüllten Termin zieht der Ring die Schriftfarbe (currentColor = text-on der Fläche): sie hält 4,5:1 gegen jede
+   Fläche, border-interactive verschwände auf der Marke und den blauen Kategorien. Um die Linienbreite eingerückt,
+   damit außen die Füllung stehen bleibt und der Ring als Linie liest, nicht als hellerer Rand. Der Chip liegt auf der Tageszelle
+   und trägt den Ring von tl-item. */
 .tl-calendar__event[aria-selected="true"]::after,
 .tl-calendar__chip[aria-selected="true"]::after {
   content: "";
@@ -269,6 +273,10 @@
   border: var(--tl-border-width-md) solid var(--tl-border-interactive);
   border-radius: inherit;
   pointer-events: none;
+}
+.tl-calendar__event[aria-selected="true"]::after {
+  inset: var(--tl-border-width-md);
+  border-color: currentColor;
 }
 
 /* Die Vorschau am Zielort (Ziehen, Länge ändern, Anlegen) und der Platzhalter beim Anlegen: die Marke, blass. */
