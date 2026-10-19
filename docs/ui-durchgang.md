@@ -24,6 +24,7 @@ Neue Einträge: Datum, Welle, woher (Sichtprüfung, Hendrik, Review), Quelle in 
 | U5 | **AppBar kompakt unter 300 px:** `tl-app-bar__trailing` gibt nicht nach, der Titel verschwindet zuerst | Sichtprüfung 4b, S2 (Randfall, bleibt) | `altlast.md` „Welle 4b“ |
 | U8 | **Greif-Cursor am nicht ziehbaren Dialog:** `.tl-dialog__surface > .tl-titlebar { cursor: grab }` trifft auch den Kamera-Dialog von `TLPhotoCapture`, der sich nicht ziehen lässt | Review 5b Task 6, 19.10. | `altlast.md` „Welle 5b · Offen“ |
 | U9 | **JobStatus nennt den aktuellen Schritt zweimal sichtbar:** die Live-Zeile (Spec 5b §7, Schrittzeile sichtbar) und die Schrittliste darunter; prüfen, ob die Live-Zeile sichtbar nur die Meldung trägt und den Schritt nur vorliest | Sichtprüfung 5b, S3, 19.10. | `altlast.md` „Welle 5b · Sichtprüfung“ |
+| U10 | **Kalender, Monat: die Termin-Liste (`role="listbox"`) umschließt auch Tagesknöpfe, „+n weitere“ und das Anlegen-Feld** — ARIA erlaubt in einer Listbox nur Optionen und Gruppen. Sauber wäre eine eigene Schicht für alle Termine des Monats (oder ein Raster mit `gridcell`); das ändert Aufbau und Paket-CSS des Monats | Review 5c Task 8, 19.10. | `calendar.contract.md`, Spec 5c §3 |
 
 ## Bewegung
 

@@ -53,7 +53,8 @@ Verschieben, Länge ändern und Anlegen sind Zeiger-Bedienung, nicht Tastatur (S
 | Ansichtswahl | `tl-segmented` mit `role="radiogroup"`, Name `js.calendar.view`; je Ansicht `tl-segmented__segment` mit `aria-checked` |
 | Termin-Liste | `tl-calendar__events` mit `role="listbox"`, Name `js.calendar.events`; eine je Raster (Ganztagszeile, Zeitraster, Monat) |
 | Termin | `tl-calendar__event` bzw. im Monat mit Uhrzeit `tl-calendar__chip`, `role="option"`, `aria-selected`; Name: Zeit und Titel, ganztägig Titel und `js.calendar.allDay` |
-| Tageskopf, Tageszahl im Monat, „+n weitere“, Titel und Tag des Mini-Monats | `button`, Name: das volle Datum (Intl, `locale`) bzw. der Monat |
+| Tageskopf, Tageszahl im Monat, Titel und Tag des Mini-Monats | `button`, Name: das volle Datum (Intl, `locale`) bzw. der Monat |
+| „+n weitere“ | `button`, Name: der sichtbare Text, dann „, “ und das volle Datum (der Name beginnt mit dem, was zu sehen ist) |
 | Heute | `aria-current="date"` am Tageskopf, an der Tageszelle des Monats, am Tag des Mini-Monats |
 | Anlegen-Feld | `input` mit `tl-field` und `tl-calendar__create` im Platzhalter-Termin; hat nach dem Öffnen den Fokus |
 
@@ -86,7 +87,7 @@ Verschieben, Länge ändern und Anlegen sind Zeiger-Bedienung, nicht Tastatur (S
 | `tl-calendar__now` | die Jetzt-Linie; Lage inline |
 | `tl-calendar__event` | ein gefüllter Termin: im Zeitraster (absolut, Lage und Größe inline), in der Ganztagszeile, als Balken im Monat; `tl-type-label` |
 | `tl-calendar__event-time` | die Zeit im Termin bzw. im Chip, `tl-type-label` |
-| `tl-calendar__event-title` | der Titel im Termin bzw. im Chip, `tl-type-label-strong`; endet mit Ellipse |
+| `tl-calendar__event-title` | der Titel im gefüllten Termin `tl-type-label-strong`, im Chip `tl-type-label` (der Chip ist nicht gefüllt, der Punkt trägt die Farbe); endet mit Ellipse |
 | `tl-calendar__resize` | Griff zum Längenändern am unteren Rand (`--tl-space-xs` hoch) |
 | `tl-calendar__create` | das Feld im Platzhalter beim Anlegen (mit `tl-field`), randlos auf der Fläche |
 | `tl-calendar__month` | der Monat |
@@ -103,7 +104,7 @@ Verschieben, Länge ändern und Anlegen sind Zeiger-Bedienung, nicht Tastatur (S
 | `tl-calendar__year` | das Jahr: Raster der Mini-Monate |
 | `tl-calendar__mini` | ein Mini-Monat |
 | `tl-calendar__mini-title` | sein Name, `button`, `tl-type-label-strong` |
-| `tl-calendar__mini-grid` | sein Raster, ein Tab-Halt |
+| `tl-calendar__mini-grid` | sein Raster, ein Tab-Halt; `role="group"` mit dem Monat als Name (ein Name braucht eine Rolle) |
 | `tl-calendar__mini-weekday` | Wochentag, `tl-type-label` |
 | `tl-calendar__mini-day` | Tag, `button`, `tl-type-label`; Termintag `tl-type-label-strong` |
 
