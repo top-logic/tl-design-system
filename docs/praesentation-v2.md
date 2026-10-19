@@ -110,18 +110,23 @@ Was nicht passt, kommt nicht durch — egal ob es ein Mensch oder eine KI geschr
 
 ## 8 · Vorteil für Kunden: unabhängig von der Basisversion
 
-**Das Kundenthem hängt nicht an einer TopLogic-Version.**
+**Der Kunde pflegt nur eine Basisdatei: seine Hausfarbe, seinen Grauton, seine Schrift.**
 
-Der Kunde beschreibt nur seine Grundwerte, nicht einzelne Masken oder Klassen. Kommt eine neue TopLogic-Version mit
-neuen oder überarbeiteten Bausteinen, tragen sie automatisch seine Marke. Sein Theme muss dafür nicht angepasst
-werden.
+Sein Theme wird aus dieser Datei *gerechnet*, nicht von Hand geschrieben. Bringt eine neue TopLogic-Version neue
+Bausteine oder neue Farbrollen, wird das Theme aus derselben Basisdatei neu gerechnet — mit derselben
+Lesbarkeitsprüfung wie beim ersten Mal.
 
-* Kein Nachziehen von Stylesheets bei jedem Update
-* Neue Komponenten sehen beim Kunden sofort richtig aus
-* Mehrere Themes in einer Anwendung, der Nutzer wählt
+* Die Basisdatei bleibt über alle Versionen gleich; der Kunde muss sie nicht anpassen.
+* Niemand zieht Stylesheets von Hand nach, keine überschriebenen Klassennamen, die ein Update zerbricht.
+* Neue Komponenten tragen nach dem Neurechnen sofort die Kundenmarke.
 
 > Sprechnotiz: Bisher hat ein Kundenprojekt alte Klassennamen überschrieben, und jedes Update konnte das
-> zerbrechen. Jetzt gibt es einen festen Vertrag: die Grundwerte.
+> zerbrechen. Jetzt ist der Vertrag die Basisdatei; alles andere ist ein Rechenergebnis, das jederzeit neu entsteht.
+
+> Intern, nicht für die Folie (19.10.): *Wann* und *wo* neu gerechnet wird (beim Bauen, im Browser beim Laden, im
+> Theme-Editor beim Speichern) und wie die Anwendung merkt, dass ein Theme zu einer älteren Paketversion gehört, ist
+> noch nicht entschieden — offener Punkt in `STATUS.md`. Die Folie verspricht deshalb das Neurechnen, nicht seinen
+> Zeitpunkt; sobald es entschieden ist, kommt ein Satz dazu („automatisch beim Update“ o. ä.).
 
 ---
 
@@ -192,7 +197,7 @@ begeistert.
 | 5 | Die Musterseite (Specimen), daneben ein Siegel auf der Kopie in der Engine |
 | 6 | Eine rote Build-Meldung neben einem grünen Haken |
 | 7 | Dieselbe Maske im TopLogic-Theme und mit Kundenfarbe nebeneinander |
-| 8 | Zeitstrahl mit drei TopLogic-Versionen, darunter durchgehend dasselbe Kundenthem |
+| 8 | Zeitstrahl mit drei TopLogic-Versionen; darunter durchgehend dieselbe Basisdatei des Kunden, je Version ein Pfeil „neu gerechnet“ auf ein Theme |
 | 9 | Drei Kacheln wie eine Preistafel |
 | 10 | Dieselbe Maske hell, dunkel und kompakt |
 | 11 | Ein Ausschnitt Code mit nur Bedeutungen, keinen Werten |

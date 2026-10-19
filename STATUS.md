@@ -200,6 +200,12 @@ Beschreibung, `RequiresMigration`. Ledger `.superpowers/sdd/2026-10-19-welle-5c-
 Push nur mit Freigabe.
 **Präsentation neu (19.10., Hendrik):** `docs/praesentation-v2.md` — Überblick für alle Kollegen (was, wie, Vorteile wie
 „unabhängig von der Basisversion“), zwölf Folien mit Sprechnotiz und Bildhinweis; `praesentation.md` bleibt als Backup.
+**Offen, auszuarbeiten (Hendrik 19.10.): Lebenszyklus eines Kundenthemes.** Bestehen bleibt nur die gelieferte
+Basisdatei (`<theme>.primitives.json`); jede spätere Änderung am Paket (neue Rollen wie `category-N-surface` in 5c, neue
+Paare) verlangt ein Neurechnen des Themes. Zu klären: wo und wann `derive` rechnet (Bauzeit, Browser beim Laden,
+Theme-Editor beim Speichern — Bernhards TL-Script-Einwand vom 25.09., `docs/uebergabe/2026-09-30-sitzung-zwei-wege.md`),
+wie die Anwendung ein veraltetes Theme erkennt (Paketversion im Kopf der Datei?) und was bis zum Neurechnen gilt.
+Präsentation v2 Folie 8 verspricht das Neurechnen, nicht den Zeitpunkt.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
