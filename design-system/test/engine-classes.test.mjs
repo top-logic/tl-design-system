@@ -211,3 +211,36 @@ test('Welle 5b im TSX: Medienknöpfe ohne Bootstrap-Glyphe und SVG, Kamera als D
   for (const n of ['TLAudioRecorder', 'TLAudioPlayer', 'TLPhotoCapture', 'TLDownload', 'TLFileChips', 'TLFileUpload', 'TLBinaryField', 'TLImage', 'TLPdfViewer', 'TLHtml', 'TLJobStatus'])
     assert.doesNotMatch(tsx(n), /aria-label="[A-Za-z]/, `${n}: Name als Literal`);
 });
+
+// Welle 5c (Planen und Ziehen): \btl ist klein geschrieben und trifft register('TLCalendar', …) und die
+// Java-Klassen CalendarViewControl, DashboardElement nicht. --cal-ev-bg war die Terminfarbe am Element,
+// tl-table__hint der Ablagehinweis der Tabelle (heute tl-drop-hint).
+const ALT_5C = /\btl(Cal[A-Z]\w*|Calendar|KanbanBoard|Dashboard|ValueList|RowCommandCell)(__|--|\b)|--cal-ev-bg|\btl-table__hint\b/;
+
+test('keine alte Klasse der Welle 5c in react-src, Stylesheets, Java, tl-docs und Views', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+  const quellen = [
+    ...reactSources(),
+    join(M, 'src/main/webapp/style/tlReactControls.css'),
+    join(WT, 'com.top_logic.demo.react/src/main/webapp/style/tl-demo-react.css'),
+    ...tree(join(M, 'src/main/java'), /\.java$/),
+    ...tree(join(WT, 'com.top_logic.layout.view/src/main/java'), /\.(java|md)$/),
+    ...tree(join(WT, 'com.top_logic.demo.react/src/main/webapp'), /\.view\.xml$/),
+    ...tree(join(WT, 'com.top_logic.layout.view/src/main/webapp'), /\.view\.xml$/),
+  ];
+  const hits = [];
+  for (const p of quellen) readFileSync(p, 'utf8').split('\n').forEach((line, i) => { if (ALT_5C.test(line)) hits.push(`${p.slice(WT.length + 1)}:${i + 1}`); });
+  assert.deepEqual(hits, []);
+});
+
+test('Welle 5c im TSX: Interaktiv-Prüfung und Ablagehinweis zusammengelegt, keine feste Farbe im Kalender, kein englischer Name', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+  const tsx = (n) => {
+    const p = [...reactSources()].find((q) => q.endsWith(`/${n}.tsx`));
+    assert.ok(p, `${n}.tsx nicht in den React-Quellen gefunden`);
+    return readFileSync(p, 'utf8');
+  };
+  assert.ok(!existsSync(join(M, 'react-src/controls/interactive.ts')), 'controls/interactive.ts lebt in bridge/interactive.ts');
+  assert.ok(!existsSync(join(M, 'react-src/controls/drop-hint.ts')), 'controls/drop-hint.ts lebt in controls/DropHint.tsx');
+  assert.doesNotMatch(tsx('TLCalendar'), /#[0-9a-f]{6}/, 'TLCalendar: feste Farbe');
+  for (const n of ['TLKanbanBoard', 'TLDashboard', 'TLCalendar'])
+    assert.doesNotMatch(tsx(n), /aria-label="[A-Za-z]/, `${n}: Name als Literal`);
+});

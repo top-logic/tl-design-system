@@ -602,7 +602,7 @@ Grep-Gate `test/engine-classes.test.mjs` aus der Engine fern; für die Paketklas
 | **Sichtprüfung (mit dem PR)** | Spaltenwahl: Liste ohne Wurzel-Innenabstand, Specimen mit Suche und fünf Einträgen zeigt Leerraum; Breite der Tabellensuche (alt 16rem, min. 8rem, neu auto) und Höchstbreite des Ablehnungshinweises (alt `min(400px, …)`); `TLRelativeTime` außerhalb von Zellen ohne `nowrap`. |
 | **Befund an master, #29651** (Bernhard) | `TestAccordionElement.testSectionsReachTheClient` hängt an der JVM-Locale: erwartet „General“, die deutsche Locale liefert „Allgemein“ — einziger roter Test in `layout.view` (1217 Tests). |
 | **Befund an master, #29743** | Tooltip-Ebene `calc(var(--tl-layer-popover) + 1)` — eine Ebene, die die Skala nicht kennt. |
-| **Befund an master, #29730 (Kanban), 09.10.** | Kandidat für die Konsolidierung, Prognose vor der Spec der Welle, die das Board holt: `controls/drop-hint.ts` `placeDropHint` ist die neunte handgeschriebene Positionsrechnung (W1 löste acht durch `usePopover`); der Ablehnungshinweis `.tlKanbanBoard__dropHint` (z-index 13000, `--support-error`) ist die alte Fassung, die die Tabelle seit E9 als `tl-popover tl-table__hint` zeichnet; die Einfügelinie zwischen Karten (`--dropBefore/--dropAfter`) ist eine eigene Ablage-Optik neben `drag.css`. Dazu Touch-Ziehen (`startPointerDrag`, eigener Block „Touch drag“). |
+| **Befund an master, #29730 (Kanban), 09.10.** | Kandidat für die Konsolidierung, Prognose vor der Spec der Welle, die das Board holt: `controls/drop-hint.ts` (seit 5c `controls/DropHint.tsx`) `placeDropHint` ist die neunte handgeschriebene Positionsrechnung (W1 löste acht durch `usePopover`); der Ablehnungshinweis `.tlKanbanBoard__dropHint` (z-index 13000, `--support-error`) ist die alte Fassung, die die Tabelle seit E9 als `tl-popover tl-table__hint` zeichnet; die Einfügelinie zwischen Karten (`--dropBefore/--dropAfter`) ist eine eigene Ablage-Optik neben `drag.css`. Dazu Touch-Ziehen (`startPointerDrag`, eigener Block „Touch drag“). |
 
 ## Welle 4a · Overlays — gebaut 14.10.2026
 
@@ -1014,6 +1014,71 @@ passt in die kleine Scheibe), FileChips im Kommentar eines Tickets (Ablegen per 
 Nicht geprüft: Hellmodus und Kompakt in der Demo (das Umschalten per Attribut erreichte die Panels nicht; das Paket
 prüft beide Modi über `focus-clip`, `pairs`, `contrast`), echte Geräte-Rückfragen, Herunterladen.
 
+## Welle 5c · Planen und Ziehen — gebaut 19.10.2026
+
+Branch `CWS/CWS_29906_design_system_welle_5c` (Engine, lokal, nicht gepusht; gestapelt auf 5b) und Paket (`main`,
+Ratsche je Task). Ratsche: `lines` 683 → 198 (mit dem Eintrag von TLKanbanBoard zwischendurch 830; Summe der Budgets =
+gemessen); Literale color 22 → 1, fontSize 16 → 1, zIndex 10 → 3, outlineNone 1 → 0, duration unverändert 3.
+Engine-Gate `ALT_5C` in `test/engine-classes.test.mjs` (react-src samt Vitest-Dateien, Stylesheets, Java, tl-docs,
+Views; trifft auch `--cal-ev-bg` und `tl-table__hint`) und „Welle 5c im TSX“ (`controls/interactive.ts` und
+`controls/drop-hint.ts` gibt es nicht mehr, keine Hexfarbe in `TLCalendar.tsx`, kein englischer Name in Kanban,
+Dashboard, Kalender). Die Vitest-Prüfungen in `planen.test.tsx` fragen positiv: jede Klasse mit `tl` ist eine
+`tl-…`-Klasse (oder die Fill-Marke der Bridge), kein Inline-Style im Body setzt eine Custom Property.
+
+### Gestrichene Blöcke
+
+| Block (`tlReactControls.css`) | Zeilen alt | Nachfolger |
+|---|---|---|
+| TLValueList | 91 | `tl-value-list`, `--block`, `__row`, `__item`, Trenner `tl-select__separator`, Griff als Part `Button` (`value-list.css`) |
+| Table cells holding legacy controls (until waves 4 and 5) | 43 | Zellregeln in `table.css` (`tl-stack--row`, lesende Werteliste, `tl-table__cell--command`) |
+| Dashboard | 96 | `tl-dashboard`, `__grid`, `__tile` (an `tl-card tl-overlay tl-overlay--fill`), `__action` (`tl-visually-hidden`), `__cover` (`dashboard.css`, `overlay.css`, `card.css`) |
+| TLKanbanBoard | 147 | `tl-board`, `__column`, `__header`, `__label`, `__cards` (`role="listbox"`), `__card` an `tl-item` (`role="option"`), Zähler als Part `Badge`; Ablage aus `drag.css`, Hinweis `tl-drop-hint` (`board.css`) |
+| TLCalendar | 253 | `tl-calendar` mit Leiste `tl-toolbar tl-calendar__toolbar`, Ansichtswahl `tl-segmented`, Termine `tl-calendar__events` (`role="listbox"`), `__event`, `__chip`, Tageszellen mit Zuständen, Anlegen `tl-field tl-calendar__create` (`calendar.css`) |
+
+### Neu im Paket
+
+- Rollen: gefüllte Kategorien `category-1-surface` … `category-8-surface` mit `text-on-category-N` (abgeleitet), die
+  Kandidaten der Beschriftung `text-contrast-light` und `text-contrast-dark` als Rollen (`derive` rechnet beide).
+- Blöcke: `calendar.css` (`tl-calendar`), `board.css` (`tl-board`), `dashboard.css` (`tl-dashboard`), `value-list.css`
+  (`tl-value-list`); `tl-drop-hint` am `tl-popover` (Ablehnungshinweis von Tabelle und Board, vorher
+  `tl-table__hint`); `tl-table__cell--command` (Befehlsspalte, die Klasse setzt `RowCommandColumn.java`).
+- Zustände in `drag.css` und den Blöcken über `data-tl-state`: `drop-before`, `drop-after`, `drop-onto`,
+  `drop-refused`, `dragging`; im Kalender `preview`, `event`, `nonworking`, `other`, heute `aria-current="date"`.
+- Im Bridge: `categoryOf` (`bridge/category.ts`, Name → Kategorie, liest auch der Avatar), `textOn`
+  (`bridge/text-on.ts`, lesbare Schrift auf einer Datenfarbe aus denselben zwei Kandidaten wie `derive`),
+  `isInteractiveTarget` und `isOperableTarget` (`bridge/interactive.ts`, neben `isInteractiveWithin`), `boundaryAt`
+  (`bridge/drag-drop.ts`, Einfügestelle zwischen Einträgen) und `kindAccepted`; Glyphen `ICON_PREVIOUS`, `ICON_NEXT`
+  in `bridge/icons.ts`.
+- In den Controls: `useOptionSelection` (`controls/option-selection.ts`, eine Auswahl der Optionen einer Listbox für
+  `useItems`, Board und Kalender), `DropHint` (`controls/DropHint.tsx`, der Hinweis über `usePopover`); der Tab-Halt
+  einer Gruppe liegt allgemein in `useRovingFocus`.
+
+### Alt → neu für Anwendungs-Stylesheets
+
+| Alt | Neu |
+|---|---|
+| `.tlCal*` (`tlCalendar`, `tlCalBtn`, `tlCalEvent`, `tlCalDay`, …) | `.tl-calendar__*` (`__toolbar`, `__event`, `__chip`, `__day`, `__mini-day`, `__create`, …); Ansichtsknöpfe `.tl-segmented__segment[aria-checked="true"]` |
+| `--cal-ev-bg` (Terminfarbe am Element) | `[data-tl-role="category-N"]` (liest `--tl-category-N-surface`) oder die Serverfarbe inline mit Schrift aus `textOn` |
+| `.tlKanbanBoard*` | `.tl-board__*` (`__column`, `__header`, `__label`, `__cards`, `__card`); Zähler `.tl-badge` |
+| `.tlDashboard*` | `.tl-dashboard__*` (`__grid`, `__tile`, `__action`, `__cover`); Bearbeiten `.tl-dashboard[data-tl-state~="edit"]` |
+| `.tlValueList*` | `.tl-value-list`, `--block`, `__row`, `__item`; Trenner `.tl-select__separator` |
+| `.tlRowCommandCell` | `.tl-table__cell--command` |
+| `.tl-table__hint`, `.tlKanbanBoard__dropHint` | `.tl-popover.tl-drop-hint` |
+| `--active`, `--selected`, `--today` | `aria-checked`, `aria-selected`, `aria-current="date"` |
+| `--dragging`, `--preview`, `--nonworking`, `--other`, `--event`, `--edit` | `[data-tl-state~="dragging"]`, `~="preview"`, `~="nonworking"`, `~="other"`, `~="event"`, `~="edit"` |
+| `--dragover`, `--dropRefused`, `--dropBefore`, `--dropAfter`, `--dropEnd` | `[data-tl-state~="drop-onto"]`, `~="drop-refused"`, `~="drop-before"`, `~="drop-after"`; Ablegen ans Ende der Spalte (`--dropEnd`) ist `drop-onto` an der Spalte |
+| `--disabled` | `aria-disabled` bzw. natives `disabled` |
+
+### Offen
+
+- Monat: die Listbox der Termine umschließt die Tageszahl-Knöpfe → `docs/ui-durchgang.md` U10.
+- `textOn` liefert für eine gültige Farbe, die der Browser nicht als `rgb()` berechnet (`oklch()`, `color()`), keine
+  Schrift; der Termin fällt dann auf Kategorie bzw. Marke zurück. Serverfarben sind heute Hex oder Namen.
+- Dashboard: die Spaltenzahl rechnet den Abstand nicht mit (Packung wie bisher).
+- Ein dunkel gelieferter `gray-0` dunkelt die acht gefüllten Kategorien fast gleich (Befund aus dem Review von Task 1;
+  die Trennung prüft `derive` an `-subtle`).
+- Blöcke „Touch drag“ und „Compact field“ bleiben unlisted bis 5d.
+
 ## Konsolidierung (01.10.) — Gleiches wird zusammengelegt
 
 Regel (CLAUDE.md „Arbeitsweise“, skalen.md „Gleiches wird zusammengelegt“): findet eine Erkundung zwei Stellen, die
@@ -1166,7 +1231,7 @@ Download, Fehleransage), nicht die Bedienformen.
 | V16 | **Fremde Stylesheets:** Wysiwyg 378 (definiert `--tl-wysiwyg-*`, `z-index:10000`), Script-Editor 173, Code-Editor 76, Flow 44, Chart.js 48, Demo 111, `tlReactBase.css` — lesen alte Theme-Tokens | ja: Fokusblau, Flächen | Tokens des Pakets (Klassen bleiben dort, wo die Fremdbibliothek sie vorgibt); `--tl-wysiwyg-*` aus dem Namensraum | eine Farbwelt | 7 Dateien | lohnt · 5d oder eigener Strang (Entscheidung) |
 | V17 | **Alte Theme-Tokens nach dem Löschen:** `MuiTextAdapter` liest `--text-on-color`, die fremden Sheets ~150 Lesestellen; `tl-react-theme.config.xml` liefert sie weiter; Kundenthemes dort erreichen umgestellte Controls nicht (Frage an Bernhard in #29850) | nein | Entscheidung, ob die alten Tokens nach Welle 5 bleiben (Brücke für Fremdes) oder fallen | — | Theme-Config, #29850 | Entscheidung · 5d |
 | V18 | **Tot:** `TLCounter` (kein Java-Control, nur registriert), Regel `tlPhotoCapture__cameraBtn--active` (nie gesetzt) | nein | streichen | — | 1 TSX, 1 Regel | lohnt · 5b |
-| V19 | **Zwei Interaktiv-Prüfungen:** `controls/interactive.ts` (`isInteractiveTarget`) neben `bridge/interactive.ts` (`isInteractiveWithin`) | nein | eine | — | 6 Aufrufer | mit der Welle · 5c |
+| V19 | **Zwei Interaktiv-Prüfungen:** `controls/interactive.ts` (`isInteractiveTarget`, seit 5c in `bridge/interactive.ts`) neben `bridge/interactive.ts` (`isInteractiveWithin`) | nein | eine | — | 6 Aufrufer | mit der Welle · 5c |
 | V20 | **Dashboard misst selbst** (`parseLengthPx`, eigene Spaltenrechnung, `gap:'1rem'` inline) | kaum | `tokenPx`, Raster aus `layout.css` | — | 1 TSX | mit der Welle · 5c |
 | V21 | **Escape außerhalb des Dispatchers:** Element-Picker (eigener Capture-Listener), Kalender-Anlegen | nein | `useStandaloneKeyboardScope` | — | 2 | mit der Welle · 5c/5d |
 | V22 | **Zwei Schrittlisten** (Nachprüfung 19.10. vor der Spec 5b): Phasen des JobStatus (Punkt, senkrecht, Klassen `--done/--active/--pending`) und Schrittliste des Wizards aus 4c (Scheibe mit Nummer, waagrecht, `data-tl-state~="done"`, `aria-current="step"`) | ja: zwei Formen für „wo stehe ich“ | Block `tl-steps` (waagrecht, `--vertical`); Wizard liest ihn | ein Muster, aktueller Schritt angesagt | Wizard (4c), JobStatus | lohnt mit der Welle · 5b (**entschieden 19.10.: zusammenlegen**) |
