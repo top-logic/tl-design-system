@@ -3,8 +3,8 @@
 **Ticket:** Trac #29906 · **Branch:** `CWS/CWS_29906_design_system_welle_5c` auf `CWS/CWS_29904_design_system_welle_5b`
 (gestapelt auf 5a und dem 4c-Branch von !1911) · **Grundlage:** Prognose in `docs/migration/altlast.md` „Welle 5“ (V5,
 V6, V8, V12, V19, V20, V21; von Hendrik am 17.10. entschieden), dazu die Nachprüfung vor dieser Spec (V23–V30, am
-19.10. entschieden: alle wie vorgeschlagen, V25 mit gefüllten Kategorie-Tokens) · **Abschnitte 1–9 mit Hendrik
-abgestimmt** (19.10.).
+19.10. entschieden: alle wie vorgeschlagen, V25 mit gefüllten Kategorie-Tokens) · **Freigegeben:** 19.10.2026 von Hendrik
+(Abschnitte 1–9 einzeln abgestimmt, Builder-Prüfung in §13 eingearbeitet).
 
 ## 1 · Ziel und Abgrenzung
 

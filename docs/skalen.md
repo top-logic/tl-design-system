@@ -2603,6 +2603,30 @@ Server-Dialoge, das Verhalten teilen beide schon über die Hooks).
 - **Das Engine-Gate liest auch die Vitest-Dateien** — Tests prüfen die Paketklassen positiv, statt das Fehlen der alten
   Namen zu nennen (wie 5a).
 
+### Welle 5c: Planen und Ziehen (19.10., Hendrik — #29906)
+
+**Grundlage.** V5, V6, V8, V12, V19, V20 der Prognose und die Nachprüfung vor der Spec (V23–V30, alle wie
+vorgeschlagen); Spec `docs/superpowers/specs/2026-10-19-welle-5c-planen-und-ziehen-design.md`. **Kein neues
+Bedienkonzept, wie 5b:** Umzug, Zusammenlegen, Fokus, Ansage; Tastatur nur, wo V6 sie entschieden hat (Mini-Monat,
+Karten und Kacheln mit Alt+Pfeil) und wo eine Klick-Bedienung schon besteht (Termin wählen, Tag öffnen).
+
+**Gefüllte Kategorien (V25, Hendrik).** Termine sind heute gefüllt mit weißer Schrift; das Paket hatte je Kategorie nur
+die helle Fläche und die Linie. Neu `category-N-surface` mit gerechneter Schrift `text-on-category-N` — helle Schrift in
+beiden Modi wie heute. `derive` füllt mit dem Ton der Kategorie bei der Helligkeit von TopLogic und dunkelt ab, statt die
+Schrift dunkel zu machen. Die beiden Kandidaten, zwischen denen `derive` die Schrift wählt, werden Rollen
+(`text-contrast-light`/`-dark`), damit der Browser für Serverfarben dieselbe Wahl trifft — auch im Kundentheme.
+**Verworfen:** Termine wie Pills (helle Fläche, Linie) — ein anderes Bild als heute.
+
+**Vier Blöcke, Gemeinsames gelesen.** `tl-calendar`, `tl-board`, `tl-dashboard`, `tl-value-list` sind neu, weil kein
+Paketblock ein Zeitraster, ein Board oder eine Kachelpackung zeichnet. Was es schon gibt, lesen sie: Karte (`tl-card`),
+Eintrag mit Auswahl (`tl-item`, Ring und Haken — auch die Kanban-Karte), Ziehen (`drag.css`), Knopf über Fläche
+(`tl-overlay__action`), Badge, Segmentwahl, Werkzeugleiste. „Heute“ ist überall derselbe Kreis auf der Marke.
+
+**Einmal statt zweimal.** Eine Interaktiv-Prüfung (ohne Verhaltensänderung je Aufrufer), ein Auswahl-Hook für `useItems`
+und Kanban, ein Ablehnungshinweis (`tl-drop-hint`, vorher `tl-table__hint`), eine Zuordnung Name → Kategorie für Avatar
+und Kalender. **Verworfen:** die Ablageposition im Kanban auf `dropZoneAt` umstellen (machte aus Lücken „ans Ende“);
+die Packrechnung des Dashboards ins Paket (neues Layout, kein Umzug).
+
 ### Die Kopie in der Engine ist versiegelt (16.10.)
 
 **Befund:** Zweimal wurde die Kopie des Pakets in tl-engine-7 von Hand geändert — #29787 (sechs Stellen) und #29859

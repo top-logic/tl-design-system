@@ -216,6 +216,8 @@ Vor jeder Welle: Was tut dasselbe? Prognose auf den Tisch, Entscheidung, dann di
 
 > Sprechnotiz (Welle 5b, 19.10.): Aufnehmen, Fotografieren, Hochladen — jeder Fehler wird jetzt angesagt, und eine Datei zu ziehen sieht überall gleich aus. Läuft die Aufnahme, ist der Knopf rot gefüllt wie am iPhone. Die Kamera öffnet als richtiger Dialog: Enter löst aus, Escape schließt. Wizard und Hintergrundjobs zeigen ihre Schritte in derselben Liste. Eingebettete Dokumente bleiben weiß wie Papier, auch im dunklen Modus, und der Druckknopf schwebt darüber.
 
+> Sprechnotiz (Welle 5c, 19.10.): Kalender, Kanban und Dashboard gehen jetzt ohne Maus — Termine mit Pfeiltasten wählen, Karten und Kacheln mit Alt+Pfeil verschieben, und der Screenreader sagt die neue Position. „Hier ablegen“ sieht überall gleich aus, und die Kalenderfarben folgen dem Kundentheme, mit garantiert lesbarer Schrift.
+
 > Sprechnotiz (Welle 5a, 17.10.): Farb- und Icon-Auswahl teilen sich jetzt ein Popup — es bleibt beim Scrollen am Feld, der Fokus kommt danach zurück, und Palette, Mischer und Icon-Raster gehen ohne Maus. Neu gestaltet werden sie im UI-Durchgang nach Welle 5. Der Screenreader sagt jetzt, welche Farbe gewählt ist, und jedes Popup bleibt im Fenster, statt oben herauszuragen.
 >
 > Sprechnotiz (Welle 4b, 16.10.): Wo bin ich? Die aktuelle Seite trägt dieselbe Fläche wie eine gewählte Zeile — auch eingeklappt, auch in einer zugeklappten Gruppe. Und auf dem Handy ist die Seitenleiste eine echte Schublade: Escape schließt, der Fokus kommt zurück.
