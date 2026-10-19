@@ -17,6 +17,13 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul.
 `docs/skalen.md` „Welle 5c: Planen und Ziehen“; Prognose in `docs/migration/altlast.md` „Welle 5“ (V5, V6, V8, V12,
 V19, V20, V21, V23–V30). Bestand: Scratchpad-Notiz `5c-inventory.md` (nur Orchestrator).
 
+**Plan-Review** 19.10. durch einen frischen Agenten (Fable), Probelauf von Task 1 in einer Paketkopie (`generate`, Lint
+grün; `node --test` 533/555 mit vier erwarteten Brüchen), `ALT_5C` gegen 1378 Engine-Quellen (trifft nur die sieben
+Dateien der Welle), jsdom-Probe für `textOn`. **Befunde 1–24 eingearbeitet** (Tasks 1–9): u. a. `--strict` nicht in der
+Kette, drei bestehende Tests in Task 1, Fokusring der Kachel über `base.css`, `handleProps` für Alt+Pfeil am Dashboard,
+`isInteractiveWithin` an allen drei Kanban-Stellen, Tastatur-`drop` mit `selection: false` und Zielregel, keine
+Ziehen-Zustände in `calendar.css`, `textOn` liest am `<html>`, `categoryOf` ohne Verhaltensänderung.
+
 ## Global Constraints
 
 - Ticket **#29906**; Commits beider Repos mit Präfix `Ticket #29906:`, Paket-Commits deutsch, Engine-Commits englisch,
@@ -63,10 +70,11 @@ V19, V20, V21, V23–V30). Bestand: Scratchpad-Notiz `5c-inventory.md` (nur Orch
 
 **Files:**
 - Modify: `design-system/src/tokens.json`, `design-system/tools/lib/color.mjs` (`kategorieRollen`, neue Konstante),
-  `design-system/tools/derive.mjs`, `design-system/tools/lib/pairs.mjs` (nur falls die abgeleiteten Paare nicht schon
-  alles abdecken), `design-system/specimen/probe.theme.css` (neu erzeugt)
-- Test: `design-system/test/planen.test.mjs` (neu), `design-system/test/derive.test.mjs` (oder die Datei, die
-  `kategorieRollen` heute prüft)
+  `design-system/tools/derive.mjs`, `design-system/specimen/probe.theme.css` (neu erzeugt)
+- Modify (bestehende Tests, die sonst brechen — Plan-Review 2–4): `test/tokens.test.mjs:283–288` („eine Kategorie hat
+  genau zwei Rollen“ → drei: 24, Regex `(subtle|border|surface)`, Kommentar `:244–246`), `test/generate.test.mjs:90`
+  (Ausnahme-Regex `--tl-(text|icon)-on-[a-z0-9-]+`, sonst zählen `text-on-category-N` als 16 Farbliterale)
+- Test: `design-system/test/planen.test.mjs` (neu), `design-system/test/derive.test.mjs`
 
 **Interfaces:**
 - Produces: Rollen `--tl-category-N-surface` (N = 1…8), `--tl-text-on-category-N`, `--tl-text-contrast-light`,
@@ -85,7 +93,9 @@ V19, V20, V21, V23–V30). Bestand: Scratchpad-Notiz `5c-inventory.md` (nur Orch
   - In der `derive`-Testdatei: `kategorieRollen(ton, gruende, '#ffffff')` liefert `surface` mit
     `ratio('#ffffff', surface) >= 4.5` in beiden Modi; eine eigene Kategorie (`color.category['category-3']`) bewegt
     auch `category-3-surface`; ein Theme mit Kundengrau schreibt `text-contrast-light/-dark` als die Kandidaten des
-    Kundengraus; das Probe-Theme hat die neuen Rollen und `--strict` bleibt grün.
+    Kundengraus; das Probe-Theme trägt `--tl-category-N-surface` und `--tl-text-contrast-dark`; der bestehende
+    derive-Test zu `--strict` (Exit 1 auf dem Fixture, `derive.test.mjs:214`) und „Beschriftung, die niemand tragen
+    kann → Exit 3“ (`:132`) bleiben grün.
 - [ ] **Step 2: Run** `cd design-system && node --test test/planen.test.mjs test/derive.test.mjs` — FAIL.
 - [ ] **Step 3: Rollen.** In `tokens.json` je Modus `category-N-surface` (Werte oben) und `text-contrast-light`,
   `text-contrast-dark` (Kommentar in `color._`: „Kandidaten der Beschriftung als Rollen — `textOn` wählt im Browser
@@ -96,13 +106,17 @@ V19, V20, V21, V23–V30). Bestand: Scratchpad-Notiz `5c-inventory.md` (nur Orch
   beide Modi); `kategorieRollen(tonGrad, gruende, hellerKandidat)` gibt zusätzlich
   `surface: aufKontrast(oklchZuHex({ ...KATEGORIE_SURFACE, H }).hex, [hellerKandidat], 4.5, 'dunkler').hex` je Modus.
   `derive.mjs`: Kandidaten (`kandidaten`) vor dem Kategorie-Schritt berechnen; `setze(mode, 'category-${k}-surface', …)`
-  wie `subtle`/`border`; dunkelt `aufKontrast` ab (Ergebnis ≠ Ausgangswert), Hinweis
-  „`<mode>`: category-N-surface abgedunkelt, damit die helle Schrift 4,5:1 hält“; `setze(mode, 'text-contrast-light',
-  kandidaten.hellerKandidat)` und `-dark` entsprechend, wenn Grau geliefert ist. Die Trennungs-Prüfung (3b) bleibt bei
-  `-subtle`.
+  wie `subtle`/`border`. **Die Abdunkelung steht in `derive.mjs` in `try … catch`** wie Schritt 5 (`derive.mjs:224`):
+  scheitert `aufKontrast`, bleibt die ungeprüfte Stufe, der Befund entsteht später als Code 3 an `text-on-category-N`
+  (sonst wirft ein nackter `Error` vor Schritt 7, `derive.test.mjs:132` rot). Dunkelt sie ab (Ergebnis ≠ Rohstufe),
+  Hinweis „`<mode>`: category-N-surface abgedunkelt, damit die helle Schrift 4,5:1 hält“. `kategorieRollen` liefert
+  dafür `surface` als Rohstufe, die Abdunkelung macht `derive.mjs`. `text-contrast-light/-dark` braucht kein `setze`:
+  die Rollen referenzieren `{gray-0}`/`{gray-77}`, `resolve(Pk, T)` löst sie über die Kundenrampe auf. Die
+  Trennungs-Prüfung (3b) bleibt bei `-subtle`.
 - [ ] **Step 5: Run** `node tools/generate.mjs && node tools/lint-css.mjs && node tools/derive.mjs
-  test/fixtures/probe.primitives.json specimen/probe.theme.css --strict && node tools/publish-to-worktree.mjs &&
-  node --test` — grün (Kontrast-Gate prüft die acht neuen Paare in beiden Modi und im Probe-Theme).
+  test/fixtures/probe.primitives.json specimen/probe.theme.css && node tools/publish-to-worktree.mjs && node --test` —
+  grün (Kontrast-Gate prüft die acht neuen Paare in beiden Modi und im Probe-Theme). **Ohne `--strict`:** das Fixture
+  liefert absichtlich `red-42` mit vier gelieferten Befunden, `--strict` schriebe nichts.
 - [ ] **Step 6: Commit** Paket „Ticket #29906: Paket -- gefüllte Kategorie-Rollen, Kandidaten als Rollen, derive
   rechnet beide“; Engine (Kopie) „Ticket #29906: Design system package -- filled category roles and contrast candidates.“
 
@@ -123,20 +137,27 @@ reviewen.
   `tl-calendar__title`, `tl-calendar__body`; Zeitraster `tl-calendar__time-grid`, `__gutter`, `__head`,
   `__day-head` (Knopf), `__weekday`, `__day-number`, `__all-day`, `__all-day-label`, `__all-day-cell`, `__scroll`,
   `__time-body`, `__hours`, `__hour`, `__columns`, `__column`, `__hour-line`, `__work`, `__now`; Termine
-  `tl-calendar__events` (Liste, `role="listbox"`), `__event` (gefüllt, Zeitraster, Ganztagszeile, Monatsbalken),
+  `tl-calendar__events` (Liste, `role="listbox"`), `__event` (gefüllt, Zeitraster, Ganztagszeile, Monatsbalken; Lage
+  inline),
   `__event-time`, `__event-title`, `__resize`, `__create`; Monat `__month`, `__month-head`, `__month-weekday`,
   `__month-body`, `__week`, `__days`, `__day`, `__overlay`, `__chip`, `__chip-dot`, `__more`; Jahr `__year`, `__mini`,
   `__mini-title`, `__mini-grid`, `__mini-weekday`, `__mini-day`. Zustände: `aria-current="date"`,
-  `data-tl-state~="nonworking"`, `~="other"`, `~="event"`, `~="preview"`, `~="dragging"`, `~="drop-onto"`,
-  `aria-selected="true"`; Kategorie `data-tl-role="category-N"`.
+  `data-tl-state~="nonworking"`, `~="other"`, `~="event"`, `~="preview"`, `aria-selected="true"`; Kategorie
+  `data-tl-role="category-N"`. `dragging` und `drop-onto` setzt das TSX, **gezeichnet werden sie nur von `drag.css`**
+  (`drag.test.mjs:43–50`: kein anderer Block zeichnet Ziehen-Zustände).
 
 - [ ] **Step 1: Failing tests** in `test/planen.test.mjs`:
   - `calendar: Termin gefüllt in der Kategorie` — für N = 1…8 liest `.tl-calendar__event[data-tl-role="category-N"]`
-    `--tl-category-N-surface` und `--tl-text-on-category-N`; `.tl-calendar__event` ohne Rolle liest `--tl-surface-brand`
+    `--tl-category-N-surface` und `--tl-text-on-category-N` (die 16 Regeln nicht von Hand: der Generator bekommt eine
+    dritte Marker-Art in `expandRoles`, `/* @tl-roles: category-surface .tl-calendar__event */` → Fläche und Schrift je
+    Kategorie, wie die vorhandenen `-subtle`/`-border`-Marker; Test in `roles.test.mjs`; ebenso für `__chip-dot` nur die
+    Fläche, falls der Marker es hergibt, sonst acht Regeln mit Begründung im Bericht); `.tl-calendar__event` ohne Rolle liest `--tl-surface-brand`
     und `--tl-text-on-brand`; der Punkt `.tl-calendar__chip-dot[data-tl-role="category-N"]` liest
     `--tl-category-N-surface`.
-  - `calendar: ausgewählt ist ein Ring` — `.tl-calendar__event[aria-selected="true"]` liest `--tl-border-width-md` und
-    `--tl-border-interactive`; kein `outline: none` in `calendar.css`.
+  - `calendar: ausgewählt ist ein Ring` — `.tl-calendar__event[aria-selected="true"]::after` liest
+    `--tl-border-width-md` und `--tl-border-interactive` (dieselbe Form wie `tl-item[aria-selected]::after`,
+    `layout.css:97–105`: `inset: 0`, `border-radius: inherit`, `pointer-events: none`); kein `outline` in
+    `calendar.css` (`focus.test.mjs:13`).
   - `calendar: heute überall derselbe Kreis` — die Regeln für `__day-head[aria-current="date"] .tl-calendar__day-number`,
     `__day[aria-current="date"] .tl-calendar__day-number` und `.tl-calendar__mini-day[aria-current="date"]` lesen
     `--tl-surface-brand`, `--tl-text-on-brand` und `--tl-radius-full`.
@@ -144,7 +165,7 @@ reviewen.
     `.tl-calendar__now` liest `--tl-status-error-border` und `--tl-border-width-md`; `__hour-line` `--tl-border-separator`;
     `[data-tl-state~="nonworking"]` `--tl-surface-base`; `[data-tl-state~="other"]` `--tl-text-secondary`.
   - `calendar: keine Literale` — `calendar.css` ohne Kommentare enthält kein `#[0-9a-f]{3,6}`, kein `rgba(`, kein
-    `\d+px`, kein `z-index: \d`, kein `font-size`.
+    `\d+px`, kein `z-index: \d`, kein `font-size`, kein `data-tl-state~="(drop-|dragging)`.
   - `contracts-5c`: `SOLL` für `calendar` (`tl-calendar`, `tl-calendar__event`, `tl-toolbar`, `tl-segmented`,
     `role="listbox"`, `role="option"`, `aria-selected`, `aria-current="date"`, `data-tl-role`, `useRovingFocus`,
     `textOn`, `categoryOf`, `useStandaloneKeyboardScope`), `choice` (`TLCalendar`), `drag` (`TLCalendar`); `SPECIMEN =
@@ -164,8 +185,11 @@ reviewen.
   - `z-index` 2/4/5/6 → Reihenfolge im Stapel (`position: relative` + Quellreihenfolge) oder `--tl-layer-raised`; keine
     Zahl.
   - Monatszelle anderer Monat heute `text-disabled` → `text-secondary` (lesbarer Text, wie 5b „Keine Datei“).
-  - Der weiße Innenrand der Termine fällt (Paar hält ohne ihn); Vorschau `[data-tl-state~="preview"]` auf
-    `--tl-surface-brand` mit Deckkraft aus `drag.css` (`dragging`) bzw. eigener Regel ohne Literal.
+  - Der weiße Innenrand der Termine fällt (Paar hält ohne ihn); Vorschau `.tl-calendar__event[data-tl-state~="preview"]`
+    auf `--tl-surface-brand` mit eigener Deckkraft (einheitenlos, erlaubt); `dragging`/`drop-onto` ohne Regel hier.
+  - Weitere Maße (Plan-Review 22): Punkt der Jetzt-Linie `--tl-size-2`, Versatz über `calc(-1 * …)` aus
+    `--tl-space-2xs`/`--tl-border-width-*`; Griff zum Längenändern `--tl-space-xs` hoch (heute 6 px); `gap: 2px` →
+    `--tl-space-2xs`; `line-height`-Literale entfallen (Typo-Klasse); `opacity` einheitenlos bleibt.
   - `[hidden]` nach jeder Regel, die `display` setzt.
 - [ ] **Step 4: Vertrag und Specimen.** `calendar.contract.md`: Klassen, Zustände, Rollen (Leiste `role="toolbar"`,
   Ansichtswahl `tl-segmented` `role="radiogroup"`, Termine `role="listbox"`/`role="option"`, Tage als `button` mit Datum
@@ -204,14 +228,19 @@ reviewen.
     `drop-refused` (die zeichnet `drag.css`); Vertrag nennt `data-tl-state`, `tl-drop-hint`, `tl-item`, `tl-badge`.
   - `dashboard: Kachel ist eine Karte` — Vertrag nennt `tl-card`, `tl-overlay__action`, `tl-overlay__layer--top-right`,
     `tl-visually-hidden`, `data-tl-axis="horizontal"`; `.tl-dashboard__tile` setzt keinen `box-shadow`;
-    `.tl-dashboard[data-tl-state~="edit"] .tl-dashboard__cover` setzt `cursor: move`; die gezeigte Kachel mit Aktion
-    (nicht im Bearbeiten, nicht `aria-disabled`) liest `--tl-border-interactive`; Fokus der Aktion
-    (`.tl-dashboard__tile:has(> .tl-dashboard__action:focus-visible)`) liest die Fokus-Tokens wie `base.css`.
+    `.tl-dashboard__cover` setzt `cursor: move`; die gezeigte Kachel mit Aktion (nicht im Bearbeiten, nicht
+    `aria-disabled`) liest `--tl-border-interactive`; **der Fokusring der Kachel kommt aus `base.css`:** die eine
+    Ring-Regel in `tools/generate.mjs` (baseCss) bekommt die Alternative
+    `.tl-dashboard__tile:has(> .tl-dashboard__action:focus-visible)` (`focus.test.mjs:9–35` erlaubt den Ring nur dort;
+    prüfen, dass der Parser die zusätzliche Alternative annimmt); `dashboard.css` liest `--tl-focus-ring` nicht. Der
+    verborgene Knopf steht `position: absolute` mit Abstand `--tl-space-sm` zur Kachelkante (`focus-clip` misst ihn).
   - `value-list: Block und Zelle` — `.tl-value-list--block` setzt `flex-direction: column`;
-    `.tl-table__cell > .tl-value-list` in `table.css` setzt `text-overflow: ellipsis` und `overflow: hidden`;
+    `.tl-table__cell > .tl-value-list` in `table.css` setzt `text-overflow: ellipsis`, `overflow: hidden` und
+    `white-space: nowrap` in derselben Regel (`ellipsis.test.mjs:8–20`);
     `.tl-table__cell .tl-value-list--block` setzt `display: inline` an den Einträgen;
     `.tl-table__cell > .tl-stack--row` setzt `inline-size: 100%`; `.tl-table__cell--command` setzt `padding: 0` und
-    `justify-content: center`.
+    `justify-content: center` — Selektor `.tl-table__cell--command, .tl-table__header-cell.tl-table__cell--command`
+    (die Java-Klasse landet an Kopf- und Datenzelle; der Vertrag erklärt es).
   - `drop-hint: im Block drag` — `.tl-drop-hint` in `drag.css` liest `--tl-status-error-border`; `table.css` enthält kein
     `tl-table__hint`.
   - `contracts-5c`: `board`, `dashboard`, `value-list`, `drag` (`tl-drop-hint`, `TLKanbanBoard`, `TLDashboard`),
@@ -222,10 +251,13 @@ reviewen.
   (`385–480`), `TLValueList` (`134–224`), Zellen (`285–327`): Literale → Tokens; Zustandsklassen → Attribute (Ziehen
   ausschließlich `drag.css`); der leuchtende Balken und `--color-drop-zone` fallen; `.tlDashboard__tileAction` fällt
   zugunsten `tl-visually-hidden` (`dist/base.css`); Kachel-Zeigen wie heute `border-interactive`, ohne Schatten; der
-  Griff der Werteliste ist ein Part (keine eigene Regel). `tl-drop-hint`: die Regel von `.tl-table__hint` zieht nach
+  Griff der Werteliste ist ein Part (keine eigene Regel). **Dashboard-Abdeckung:** `div.tl-overlay__layer
+  .tl-overlay__layer--fill > div.tl-dashboard__cover` (nimmt den Zeiger, `cursor: move`), im DOM **vor** der Ebene
+  `--top-right` mit dem Ausblenden-Knopf (die spätere liegt oben); `.tl-overlay` ist `position: relative`.
+  `tl-drop-hint`: die Regel von `.tl-table__hint` zieht nach
   `drag.css` (Werte gleich). Lint: `'tl-board': new Set([])`, `'tl-dashboard': new Set([])`,
   `'tl-value-list': new Set(['block'])`, `'tl-drop-hint': new Set([])`.
-- [ ] **Step 4: Engine `DropHint.tsx`** auf `tl-drop-hint`; MUI-Vitest, die `tl-table__hint` suchen, nachziehen.
+- [ ] **Step 4: Engine `DropHint.tsx`** auf `tl-drop-hint` (MUI-Tests suchen die Klasse nicht).
 - [ ] **Step 5: Ratsche** `TLKanbanBoard` mit dem Messwert (`node tools/inventory.mjs`) eintragen, Vermerk „19.10. Welle 5c:
   TLKanbanBoard (147, #29730) eingetragen, fällt in Task 7“.
 - [ ] **Step 6: Run** Paket `node tools/generate.mjs && node tools/lint-css.mjs && node tools/publish-to-worktree.mjs &&
@@ -238,9 +270,10 @@ reviewen.
 
 **Files:**
 - Modify: `com.top_logic.layout.react/react-src/bridge/interactive.ts`, `bridge/avatar.ts` (Funktion umbenannt und
-  verschoben), `bridge-entry.ts`, `controls/useRovingFocus.ts`, `controls/items.tsx`, `controls/DropHint.tsx`,
-  `controls/TLTableView.tsx`, `controls/TLTreeView.tsx`, `controls/TLPanel.tsx`, `bridge/touch-drag.ts`, alle Leser von
-  `avatarCategory`
+  verschoben), `bridge-entry.ts:107`, `controls/useRovingFocus.ts`, `controls/items.tsx`, `controls/DropHint.tsx`,
+  `controls/TLTableView.tsx`, `controls/TLTreeView.tsx`, `controls/TLKanbanBoard.tsx` und `controls/TLDashboard.tsx` (nur
+  Importe), `controls/TLAvatar.tsx`; im MUI-Modul `react-src/adapters/MuiAvatarAdapter.tsx` und
+  `MuiAvatarAdapter.test.tsx` (lesen `avatarCategory`)
 - Create: `bridge/category.ts` (`categoryOf`), `bridge/text-on.ts` (`textOn`), `controls/option-selection.ts`
   (`useOptionSelection`)
 - Delete: `controls/interactive.ts`, `controls/drop-hint.ts`
@@ -254,11 +287,14 @@ reviewen.
   export function isInteractiveTarget(target: EventTarget | null): boolean;  // closest(INTERACTIVE_SELECTOR), Element selbst zählt
   export function isOperableTarget(target: EventTarget | null): boolean;     // interaktiv und nicht :disabled/[readonly]/aria-disabled/aria-readonly
   // bridge/category.ts
-  export function categoryOf(name: string | null | undefined): number | null; // 1..8, Hash wie avatarCategory; null für leer/fehlend
+  export function categoryOf(name: string): number; // 1..8, genau avatarCategory (leer → 1 wie heute); der Kalender
+  //   prüft „keine Kategorie“ selbst (category null oder '') und ruft categoryOf nur mit Namen
   // bridge/text-on.ts
-  export function textOn(color: string, scope: Element): string | null;
+  export function textOn(color: string): string | null;
   //   'var(--tl-text-contrast-light)' oder 'var(--tl-text-contrast-dark)' — der höhere WCAG-Kontrast zur aufgelösten
-  //   Farbe, Kandidaten aus getComputedStyle(scope); null, wenn die Farbe sich nicht auflösen lässt
+  //   Farbe; Kandidaten aus getComputedStyle(document.documentElement) (wie tokenPx; tokens.css deklariert am <html>,
+  //   jsdom liefert Custom Properties nur am deklarierenden Element); Auflösung über ein Probe-Element:
+  //   style.color = color, '' → null, sonst berechnetes rgb()/rgba() parsen (Hex, #rgb, rgb() auch direkt)
   // controls/useRovingFocus.ts
   export function useRovingFocus(containerRef, itemSelector, count, preferred, options?: { linear?: boolean }): RovingFocus;
   //   linear: Pfeil hoch/runter = vorheriges/nächstes wie links/rechts
@@ -282,11 +318,10 @@ reviewen.
     wählt die Zeile nicht; Klick auf einen deaktivierten Knopf in einer Zeile wählt sie (wie heute — vorher prüfen, was
     heute gilt, und genau das festschreiben).
   - `categoryOf('Alice') === avatarCategory('Alice')` von heute (Wert vorher notieren und im Test festschreiben);
-    `categoryOf('') === null`, `categoryOf(null) === null`.
-  - `textOn('#ffffff', el)` → `var(--tl-text-contrast-dark)`; `textOn('#003366', el)` → `…-light`;
-    `textOn('rgb(0, 0, 0)', el)` → `…-light`; `textOn('kein-farbwert', el)` → `null` (Kandidaten im Test als Custom
-    Properties am Element gesetzt; die Auflösung über einen Probe-Stil — jsdom normalisiert nicht jede Form: Hex, `#rgb`,
-    `rgb()`/`rgba()` selbst parsen, Namen über `getComputedStyle`, wo der Browser es kann).
+    `categoryOf('') === 1` (wie heute; der Avatar ohne Namen bleibt `category-1`).
+  - `textOn('#ffffff')` → `var(--tl-text-contrast-dark)`; `textOn('#003366')` → `…-light`; `textOn('rgb(0, 0, 0)')` →
+    `…-light`; `textOn('red')` → eine der beiden; `textOn('kein-farbwert')` → `null` (Kandidaten im Test mit
+    `document.documentElement.style.setProperty('--tl-text-contrast-light', '#ffffff')` und `-dark` gesetzt).
   - `useRovingFocus` mit `{ linear: true }`: Pfeil runter vom ersten geht zum zweiten, auch wenn beide in einer Spalte
     übereinander stehen.
   - `useItems` unverändert: die vorhandenen Tests (`containers.test.tsx` u. a.) grün.
@@ -294,7 +329,7 @@ reviewen.
 - [ ] **Step 3: Implement.** `isInteractiveTarget`/`isOperableTarget` aus `controls/interactive.ts` nach
   `bridge/interactive.ts` (Signatur `target` statt `event`), Datei gelöscht, Aufrufer umgestellt (`TLTableView` an
   allen Stellen, Kanban, Dashboard). `avatarCategory` → `categoryOf` in `bridge/category.ts` (kein Alias; Leser
-  umgestellt). `textOn` in `bridge/text-on.ts`. `useOptionSelection` aus dem Optionsteil von `useItems`
+  umgestellt, auch im MUI-Modul). `textOn` in `bridge/text-on.ts`. `useOptionSelection` aus dem Optionsteil von `useItems`
   (`items.tsx:170–200`: Umschalt-Mausdruck, Klick, Enter/Leertaste, Langdruck-Ereignis am Behälter, Inneres über
   `isInteractiveWithin(target, option)`); `useItems` nutzt ihn. `drop-hint.ts` in `DropHint.tsx` aufgehen lassen
   (Exporte gleich benannt), Importe in `TLTableView`, `TLTreeView`, `TLKanbanBoard` umstellen. Export der neuen
@@ -311,8 +346,7 @@ reviewen.
   controls (until waves 4 and 5)“ löschen), `design-system/test/ratchet.json`
 - Modify (Java): `com.top_logic.layout.view/src/main/java/com/top_logic/layout/view/table/RowCommandColumn.java:75`
   (`CSS_CLASS = "tl-table__cell--command"`, JavaDoc)
-- Modify: `com.top_logic.layout.react.mui/react-src/adapters/inline-buttons.test.tsx:160–190`
-- Test: `planen.test.tsx`
+- Test: `planen.test.tsx`; `inline-buttons.test.tsx:160–190` bleibt grün
 
 **Interfaces:**
 - Consumes: Klassen aus Task 3 (`tl-value-list`, `--block`, `__item`, `__row`; `tl-select__separator`).
@@ -323,8 +357,8 @@ reviewen.
   `moveElement` wie heute; kein Element mit Klasse `tlValueList*` (positiv: Wurzel-`className` genau
   `tl-value-list` bzw. `tl-value-list tl-value-list--block`, plus Serverklasse).
 - [ ] **Step 2: Run** — FAIL.
-- [ ] **Step 3: Implement** `TLValueList.tsx`; `RowCommandColumn.CSS_CLASS`; `inline-buttons.test.tsx` auf die neuen
-  Klassen.
+- [ ] **Step 3: Implement** `TLValueList.tsx`; `RowCommandColumn.CSS_CLASS`. `inline-buttons.test.tsx` prüft über
+  Rollen und Namen — nur nachziehen, wenn er rot wird.
 - [ ] **Step 4: Alt löschen** — zwei Blöcke; Ratsche auf den Messwert, Vermerk.
 - [ ] **Step 5: Run** Vitest, `tsc`, Paket `node --test`, Maven `layout.react` `test` (`TestReactValueListControl`,
   `TestReactStylesheetTokens`, `TestDesignSystemCopy`), `layout.view` `install` und `test`
@@ -351,13 +385,18 @@ reviewen.
     Zustand, Enter sendet `activate`; deaktiviert `disabled`/`aria-disabled`, kein `activate`.
   - Bearbeiten: Wurzel `data-tl-state="edit"`; Ebene `tl-overlay__layer--top-right` > `tl-overlay__action` > Part
     `Button` (Name `js.dashboard.hideTile`) sendet `hide`; Alt+Pfeil rechts auf der zweiten von drei Kacheln sendet
-    `reorder` mit der neuen Reihenfolge; Ansage im Live-Bereich nennt „Position 3 von 3“; Raster
-    `data-tl-axis="horizontal"`.
+    `reorder` mit der neuen Reihenfolge; Ansage im Live-Bereich ist `js.reorder.moved` (`'{0}, position {1} of {2}'`,
+    englisch im Test: „Tile 2, position 3 of 3“ bzw. der Name der Aktion); nach dem neuen Zustand hat die verschobene
+    Kachel den Fokus; Raster `data-tl-axis="horizontal"`.
   - Kein inline `gap: '1rem'`; der Abstand kommt aus `useTokenPx('--tl-space-md')`.
 - [ ] **Step 2: Run** — FAIL.
 - [ ] **Step 3: Implement** nach Spec §6. Die Packrechnung (`computeLayout`, `calcMaxColumns`) bleibt; `parseLengthPx`
   nur noch für Breiten aus dem Zustand (`16rem`). `labelOf(i)` = Name der Aktion, sonst `js.dashboard.tile` mit der
-  Position. Der eigene Zug (`draggedId`, `dropTarget`, `commitReorder`) fällt zugunsten `useListReorder`.
+  Position; `keyOf(i)` = Kachel-Id. **Alt+Pfeil kommt nur über `handleProps`** (`list-reorder.ts:386–423`; `handle:
+  false` ändert nur den Zeigerdruck): im Bearbeiten trägt die fokussierbare Kachel `{...reorder.itemProps(i)}
+  {...reorder.handleProps(i)}`; `handleProps` bringt `aria-label` („Move …“), `aria-describedby` und einen `ref`-Callback
+  — ein eigenes `ref` der Kachel damit zusammenführen. Der eigene Zug (`draggedId`, `dropTarget`, `commitReorder`)
+  fällt zugunsten `useListReorder`.
 - [ ] **Step 4: Alt löschen** — Block „Dashboard“; Ratsche.
 - [ ] **Step 5: Run** Vitest, `tsc`, Paket `node --test`, Maven `layout.view` `test`
   (`-Dtest=test.com.top_logic.layout.view.element.TestDashboardElement`), `check-messages-en.sh` — grün; Messages-Diff
@@ -386,12 +425,23 @@ reviewen.
     (`aria-multiselectable` bei `multiSelect`), Karten `div.tl-item.tl-board__card[role="option"]` mit `aria-selected`;
     genau ein Tab-Halt je Spalte; Pfeil runter fokussiert die nächste Karte; Zähler `tl-badge`.
   - Auswahl: Klick sendet `selectCard{card, toggle:false, range:false}`, Strg-Klick `toggle:true`, Umschalt-Klick
-    `range:true`, Enter auf der Karte wie Klick. **Review Focus 1:** Klick auf einen Knopf in der Karte sendet nichts.
-  - Tastatur-Verschieben (`dragEnabled`, `reorder`): auf der ersten von zwei Karten der Spalte A sendet Alt+Pfeil runter
-    `drop{source: <controlId>, keys: 'a1', selection: false, targetKey: 'a2', zone: 'lower'}`; Alt+Pfeil rechts auf
-    `a1` mit Spalte B = [`b1`, `b2`] sendet `targetKey: 'b1', zone: 'upper'`; Spalte B leer → `targetKey: 'B', zone:
-    'none'`; ist `a1` ausgewählt und auch `a2`, gehen beide (`keys: 'a1,a2'`, `selection: true`). Nach dem neuen Zustand
-    hat die verschobene Karte den Fokus und der Live-Bereich nennt Spalte und Position (`js.kanbanBoard.moved`).
+    `range:true`, Enter auf der Karte wie Klick; ausgewählte Karte enthält `span.tl-item__check[aria-hidden]` (Markup wie
+    `items.tsx:201`, nicht CSS). **Review Focus 1:** Klick auf einen Knopf in der Karte sendet nichts; `dragstart` auf der
+    Karte selbst schreibt die Nutzlast (die Karte ist als `option` selbst „interaktiv“ — `isInteractiveWithin(target,
+    card)` an allen drei Stellen: `TLKanbanBoard.tsx:183` Drag, `:363` Umschalt-Mausdruck, `:369` Klick).
+  - Tastatur-Verschieben (`dragEnabled`, `reorder`), **immer `selection: false` mit der Schlüsselliste wie beim Ziehen**
+    (`TLKanbanBoard.tsx:188–192`; `selection: true` nähme serverseitig einen anderen Pfad, `DropSupport.java:244`).
+    Bewegte Menge: die gewählten Karten der Spalte, wenn die fokussierte gewählt ist, sonst nur sie. Zielregel nach
+    `placeOf` (`ReactKanbanBoardControl.java:745–767`): Alt+runter → `targetKey` = erste Karte nach der letzten bewegten,
+    `zone: 'lower'`, gibt es keine → nichts senden; Alt+hoch → Karte vor der ersten bewegten, `zone: 'upper'`, keine →
+    nichts; Alt+links/rechts → Nachbarspalte, Karte am Index der fokussierten, `zone: 'upper'`, sonst Spaltenschlüssel
+    und `'none'`. Fälle: Spalte A = [`a1`, `a2`, `a3`], Fokus `a1` → Alt+runter `drop{source: <controlId>, keys: 'a1',
+    selection: false, targetKey: 'a2', zone: 'lower'}`; Alt+rechts mit B = [`b1`, `b2`] → `targetKey: 'b1', zone:
+    'upper'`; B leer → `targetKey: 'B', zone: 'none'`; `a1` und `a2` gewählt, Fokus `a1` → Alt+runter `keys: 'a1,a2',
+    targetKey: 'a3', zone: 'lower'`. Fokus nach dem Zug: die Karten sind nach `card.key` gekeyt, React versetzt den
+    Knoten → Fokus geht verloren; wie `list-reorder.ts:356–382` ein `pendingFocusRef` und `useLayoutEffect` auf
+    `columns`, der die Karte nach Schlüssel fokussiert und den Live-Bereich setzt (`js.kanbanBoard.moved`); lehnt der
+    Server ab (Warnung, kein neuer Zustand), bleibt der Fokus.
   - **Review Focus 2:** ohne `dragEnabled` sendet Alt+Pfeil nichts; ohne `reorder` sendet Alt+Pfeil hoch/runter nichts,
     Alt+Pfeil links/rechts schon; Pfeile ohne Alt senden nie.
   - Ziehen: `dragover` über der oberen Hälfte einer Karte setzt `data-tl-state="drop-before"` an ihr; über einer Lücke
@@ -428,8 +478,9 @@ reviewen.
     genau ein Tab-Halt, Pfeil runter fokussiert den nächsten in Zeitordnung, Enter sendet `selectEvent{eventId}`; Name
     des Termins enthält Uhrzeit und Titel; ausgewählt `aria-selected="true"`; Kategorie `data-tl-role="category-N"` mit
     `N = categoryOf(category)`.
-  - **Review Focus 3:** Termin ohne Kategorie und Farbe: kein `data-tl-role`, keine Inline-Farbe; mit `color:
-    'rgb(0, 51, 102)'`: Inline-`background` diese Farbe und `color: var(--tl-text-contrast-light)`; mit
+  - **Review Focus 3:** Termin ohne Kategorie (`null` oder `''`) und ohne Farbe: kein `data-tl-role`, keine
+    Inline-Farbe; mit `color: 'rgb(0, 51, 102)'`: Inline-`background` diese Farbe und
+    `color: var(--tl-text-contrast-light)` (Kandidaten am `document.documentElement` gesetzt); mit
     `color: 'kein-farbwert'`: keine Inline-Farbe, Kategorie bzw. Marke.
   - Tageskopf ist ein `button` mit dem vollen Datum als Name, Klick sendet `goto`; heute `aria-current="date"`;
     arbeitsfreier Tag `data-tl-state` enthält `nonworking`.
@@ -438,12 +489,15 @@ reviewen.
     `drop-onto`, `drop` sendet `moveEvent` wie heute.
   - Jahr: Mini-Monat ist ein Raster mit einem Tab-Halt; Pfeil rechts fokussiert den nächsten Tag; Enter sendet `goto`.
   - Anlegen: nach `create.open` hat das Feld den Fokus; Enter sendet `createSlot` mit dem Titel; **Review Focus 4:** in
-    einem `TLWindow` verwirft Escape nur den Platzhalter (kein `createSlot`), das Fenster bleibt offen.
+    einem `TLWindow` verwirft Escape nur den Platzhalter (kein `createSlot`), das Fenster bleibt offen. Dafür muss der
+    heutige `onKeyDown`-Zweig für Escape (`TLCalendar.tsx:299–307`) weg (sonst setzt `defaultPrevented` den Dispatcher
+    aus, `keyboard-dispatcher.ts:188–192`); die Bindung gibt `true` zurück und ist nur aktiv, solange der Platzhalter
+    existiert.
   - Kein Element mit Klasse `tlCal*`; keine Custom Property `--cal-ev-bg` (positiv: Klassen der Wurzel genau
     `tl-calendar` plus Serverklasse).
 - [ ] **Step 2: Run** — FAIL.
 - [ ] **Step 3: Implement** nach Spec §3: Klassen nach Task 2, Typo-Klassen im TSX, Kategorie über `categoryOf`,
-  Serverfarbe über `textOn(color, rootRef.current)` (inline `background` und `color`), `categoryClass`/`eventStyle`
+  Serverfarbe über `textOn(color)` (inline `background` und `color`; `null` → Kategorie bzw. Marke), `categoryClass`/`eventStyle`
   mit Hex-Palette fallen; Termin-Listen mit `useRovingFocus` (Zeitraster `linear`); Tage und „+n weitere“ als Part
   `Button` oder `button` mit Typo-Klasse; Anlegen-Feld mit Escape über `useStandaloneKeyboardScope`; Ansichtswahl als
   `tl-segmented` (Muster `TLSegmentedChoice.tsx`, Pfeiltasten in der Gruppe).

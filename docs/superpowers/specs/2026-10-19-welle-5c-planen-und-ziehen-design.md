@@ -130,7 +130,7 @@ Stapel. **Inline bleibt, was Daten sind:** Stundenhöhe, Lage und Größe der Te
   die Fläche ab (`aufKontrast`), bis er hält — die Schrift bleibt hell; ein Hinweis nennt es. Die Verteilung der Töne um
   die Kundenmarke bleibt unverändert. Die Trennungs-Prüfung (3b in
   `derive.mjs`) bleibt bei `-subtle`. Probe-Theme (`test/fixtures/probe.primitives.json`) bekommt die neuen Rollen;
-  `--strict` bleibt grün.
+  kein gerechneter Befund (Exit 3) — das Fixture liefert absichtlich Befunde, `--strict` bleibt dort Exit 1.
 - **Nur eine Stufe:** kein Zeigen/Drücken je Kategorie — Termine wechseln beim Zeigen nicht die Farbe, die Auswahl ist
   der Ring (§3).
 - **Leser:** Termine im Kalender. Pill und Avatar bleiben bei `-subtle`/`-border`.
@@ -252,7 +252,7 @@ Mehr nicht — der Rest gehört in den UI-Durchgang.
 - **Kontrast:** `text-on-category-N` auf `category-N-surface` (4,5) in beiden Modi und im Probe-Theme; heute-Kreis
   (`text-on-brand` auf `surface-brand`, vorhanden); Jetzt-Linie und Auswahl-Ring als Nicht-Text (3,0) auf
   `surface-layer` und `surface-base`.
-- **`derive`:** Probe-Theme mit den neuen Rollen, `--strict` grün; Test, dass eine eigene Kategorie (`color.category`)
+- **`derive`:** Probe-Theme mit den neuen Rollen, kein gerechneter Befund; Test, dass eine eigene Kategorie (`color.category`)
   auch die gefüllte Fläche bewegt.
 - **`focus-clip.test.mjs`** misst die neuen Specimen-Seiten (Termin-Liste, Mini-Monat, Kanban-Spalte, Dashboard-Kachel
   mit Aktion und Ausblenden-Knopf, Werteliste in einer Zelle).
@@ -276,8 +276,8 @@ Mehr nicht — der Rest gehört in den UI-Durchgang.
 
 ## 11 · Reihenfolge mit Fertig-Bedingungen
 
-1. **Paket: Kategorie-Tokens und `derive`.** Rollen, abgeleitete Schrift, `derive`, Probe-Theme. Fertig: Kontrast und
-   `derive --strict` grün, Opus-Review des Rechenkerns.
+1. **Paket: Kategorie-Tokens und `derive`.** Rollen, abgeleitete Schrift, `derive`, Probe-Theme. Fertig: Kontrast grün,
+   `derive` ohne gerechneten Befund, Opus-Review des Rechenkerns.
 2. **Paket: Blöcke.** `tl-calendar`, `tl-board`, `tl-dashboard`, `tl-value-list`, `tl-table__cell--command`, Zellregeln in
    `table.css`. Fertig: Specimen hell und dunkel, beide Dichten; Lint, Verträge, `focus-clip` grün.
 3. **Engine: gemeinsame Technik.** Interaktiv-Prüfung, Auswahl-Hook, `categoryOf`, `textOn`. Fertig: Vitest, `useItems`
