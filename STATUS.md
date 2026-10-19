@@ -166,7 +166,14 @@ Builder-Prüfung eingearbeitet, Frage A: „Aufnahme läuft“ gefüllt rot wie 
 Regel `.tl-popover--content` lag im alten Stylesheet → ins Paket (Paket `5f62325`, Engine 4c `aac86b328a`,
 **gepusht 19.10.**, Antwort in !1911, `bhu` und `jenkins` neu angefragt). 4c in 5a gemergt (`dce3322bc7`;
 Picker behalten die 5a-Hülle, `popover.ts` vereint Platzierungen/Hover mit der 5a-Middleware), 5b vorgespult. Gates:
-Paket 523/0, `tsc` 0, MUI-Vitest 619/619, Maven `layout.react` 717/0. **Weiter:** Plan 5b, Plan-Review, SDD.
+Paket 523/0, `tsc` 0, MUI-Vitest 619/619, Maven `layout.react` 717/0.
+**Plan 5b fertig und geprüft (19.10.):** `docs/superpowers/plans/2026-10-19-welle-5b-medien.md`, elf Tasks; Plan-Review
+(Fable, Probelauf Tasks 1–3) Befunde 1–9 eingearbeitet; **Task 5 neu (Hendrik): View-Elemente `<audio-recorder>`,
+`<audio-player>`, `<photo-capture>`, `<download>` und Demo-Ansicht „Medien“**, eigens geprüft, Befunde 1–9
+eingearbeitet. Spec nachgetragen (`maxUploadSize`, Demo-Ansicht). **Weiter (nächste Sitzung):** SDD 5b ab Task 1 —
+Ausführungsart bei Hendrik bestätigen (Vorschlag subagent-driven wie 5a); Ledger unter
+`.superpowers/sdd/2026-10-19-welle-5b-medien/` (noch nicht angelegt). Engine-Worktree steht sauber auf
+`CWS/CWS_29904_design_system_welle_5b` (`dce3322bc7`).
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
