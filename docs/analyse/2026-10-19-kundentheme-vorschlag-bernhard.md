@@ -1,6 +1,6 @@
 # Entwurf für Bernhard: Lebenszyklus eines Kundenthemes
 
-**Status:** Entwurf (19.10.), noch nicht gesendet. Gedacht als Beschreibung eines neuen Trac-Tickets (englisch,
+**Status:** gesendet 19.10. als Trac **#29909** (Owner hpe, CC bhu). Text dort maßgeblich; Fassung hier wie angelegt (englisch,
 Trac-WikiFormatting), CC `bhu`. Deutsche Grundlage: `docs/analyse/2026-10-19-kundentheme-lebenszyklus.md`.
 
 ---

@@ -207,7 +207,9 @@ Theme-Editor beim Speichern — Bernhards TL-Script-Einwand vom 25.09., `docs/ue
 wie die Anwendung ein veraltetes Theme erkennt (Paketversion im Kopf der Datei?) und was bis zum Neurechnen gilt.
 Präsentation v2 Folie 8 verspricht das Neurechnen, nicht den Zeitpunkt. **Optionsanalyse** (Hendrik: jetzt, vor 5d): `docs/analyse/2026-10-19-kundentheme-lebenszyklus.md` —
 Empfehlung A (Rechnen im Build der Anwendung) mit Versionsstempel (Fingerabdruck der Rollenliste in `tokens.css` und
-jedem Theme), C (Theme-Editor) nur bei Laufzeitbedarf; offen F1–F4, F1 (Laufzeit-Änderung nötig?) entscheidet.
+jedem Theme), C (Theme-Editor) nur bei Laufzeitbedarf; offen F1–F4. Hendrik: Laufzeit-Änderung **ja**, Bernhard entscheidet mit → Vorschlag als Trac **#29909** (Owner hpe,
+CC bhu, 19.10.). **Weiter:** Bernhards Antwort auf #29909 abwarten, dann Entscheidung in `skalen.md` „Themes: eine dritte
+Achse“, Spec; 5d erst danach (berührt `UIThemeService`, Fingerabdruck in `tokens.css`).
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
