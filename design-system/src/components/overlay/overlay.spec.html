@@ -15,8 +15,6 @@
   .badge { padding: var(--tl-space-2xs) var(--tl-space-xs); background: var(--tl-surface-overlay); border-radius: var(--tl-radius-sm); }
   /* Der Behälter, den tl-overlay--fill füllt; im Control gibt ihn das Layout (useFill). */
   .frame { width: 28rem; height: 16rem; }
-  /* Füllen wie useFill im Control: das Dokument nimmt die ganze Basis. */
-  .fill { height: 100%; }
 </style>
 </head>
 <body>
@@ -44,7 +42,7 @@
     <div class="frame">
       <div class="tl-overlay tl-overlay--fill">
         <div class="tl-overlay__base">
-          <div class="tl-media tl-media--document fill">
+          <div class="tl-media tl-media--document">
             <iframe class="tl-media__frame" title="Beispieldokument" srcdoc="&lt;h1&gt;Bericht&lt;/h1&gt;&lt;p&gt;Das Papier ist in beiden Modi weiß; der Knopf trägt seine eigene Fläche.&lt;/p&gt;"></iframe>
           </div>
         </div>

@@ -155,6 +155,25 @@
   background: var(--tl-surface-brand-subtle-hover);
 }
 
+/* Gedrückt in Tönung danger ist gefüllt rot (Welle 5b §3): der aufnehmende Recorder. Dieselben Rollen wie
+   danger + primary; der Rand folgt der Fläche, sonst bliebe die Markenlinie des gedrückten Zustands auf Rot.
+   Steht vor :disabled — dahinter schlüge Rot den deaktivierten Zustand. */
+.tl-button--danger[aria-pressed="true"] {
+  background: var(--tl-status-error-surface);
+  border-color: var(--tl-status-error-surface);
+  color: var(--tl-text-on-status-error);
+}
+.tl-button--danger[aria-pressed="true"]:hover {
+  background: var(--tl-status-error-surface-hover);
+  border-color: var(--tl-status-error-surface-hover);
+  color: var(--tl-text-on-status-error-hover);
+}
+.tl-button--danger[aria-pressed="true"]:active {
+  background: var(--tl-status-error-surface-active);
+  border-color: var(--tl-status-error-surface-active);
+  color: var(--tl-text-on-status-error-active);
+}
+
 /* Deaktiviert bleibt die Schaltfläche für den Zeiger erreichbar: ihr Tooltip nennt den Grund, warum
    sie nicht ausführbar ist (#29675). Den Klick verschluckt der native disabled-Zustand; Zeigen und
    Drücken ändern ihr Aussehen nicht, auch nicht bei Tönung oder Link. Der Zeiger steht mit :hover in

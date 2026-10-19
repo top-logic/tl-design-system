@@ -45,6 +45,7 @@ Fläche, Beschriftung und Linie je Erscheinung; Hover und Active eine Stufe weit
 | `danger` + `primary` | `--tl-status-error-surface`, `--tl-status-error-surface-hover`, `--tl-status-error-surface-active` | `--tl-text-on-status-error`, `--tl-text-on-status-error-hover`, `--tl-text-on-status-error-active` | — |
 | `danger` + `secondary` / `ghost` | Zeigen: `--tl-status-error-surface` (Beschriftung `--tl-text-on-status-error`); Drücken: `--tl-status-error-surface-active` (Beschriftung `--tl-text-on-status-error-active`) | `--tl-status-error-text` (Grundzustand, nicht gezeigt/gedrückt) | `--tl-status-error-border` (nur secondary; folgt beim Zeigen und Drücken der Fläche) |
 | gedrückt (`aria-pressed`) | `--tl-surface-brand-subtle`, `--tl-surface-brand-subtle-hover` | `--tl-text-primary` | `--tl-border-interactive` |
+| `danger` + gedrückt (`aria-pressed`) | gefüllt rot wie `danger` + `primary`: `--tl-status-error-surface`, `--tl-status-error-surface-hover`, `--tl-status-error-surface-active` | `--tl-text-on-status-error`, `--tl-text-on-status-error-hover`, `--tl-text-on-status-error-active` | folgt der Fläche (nicht `--tl-border-interactive`) |
 | `disabled` (vom Kontrast-Gate ausgenommen) | `--tl-surface-disabled` | `--tl-text-disabled` | `--tl-border-disabled` |
 | `ghost` / `link` + `disabled` (vom Kontrast-Gate ausgenommen) | — | `--tl-text-disabled` | — |
 
@@ -66,6 +67,17 @@ Hinweisstreifen vorbehalten (siehe Kommentarkopf in `button.css`).
 | `aria-label` | bei icon-only oder wenn ein Icon gesetzt ist: der `label`. |
 | `data-tooltip` | `text:<tooltip>`; das Tooltip-System liest es. |
 | `:focus-visible` | den Ring liefert `base.css`; die Komponente setzt und entfernt keinen Fokusstil. |
+
+## Leser: Medienknöpfe
+
+Die Medien-Controls (Welle 5b §3) zeichnen keine eigenen Knöpfe; jeder ist ein Part `Button`, icon-only
+(`tl-button--icon`).
+
+| Control | Erscheinung | Zustände |
+|---|---|---|
+| `TLAudioRecorder` | `secondary`, Tönung `danger` | Aufnahme läuft: `aria-pressed="true"` — gedrückt in `danger` ist gefüllt rot, das Icon wird zum Stopp; Upload: `aria-busy="true"` und `disabled` |
+| `TLAudioPlayer` | `secondary` | lädt: `aria-busy="true"`; ohne Audio `disabled` mit Tooltip |
+| `TLPhotoCapture` | `secondary` | Upload: `aria-busy="true"` |
 
 ## Konformität
 

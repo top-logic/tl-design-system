@@ -9,8 +9,12 @@ const SOLL = {
     'tl-media--contain', 'tl-status', '--tl-surface-document'],
   'prose/prose.contract.md': ['tl-prose', 'heading-lg', 'heading-md', 'heading-sm', 'text-link', 'border-separator'],
   'overlay/overlay.contract.md': ['tl-overlay--fill', 'tl-overlay__base', 'tl-overlay__action'],
+  'file/file.contract.md': ['tl-file', 'tl-file__name', 'data-tl-state~="empty"', 'TLDownload', 'TLBinaryField'],
+  'form/upload.contract.md': ['TLFileChips', 'TLAudioRecorder', 'TLPhotoCapture', 'audio', 'photo', 'tl-chip-group',
+    'maxUploadSize'],
+  'button/button.contract.md': ['aria-pressed', 'TLAudioRecorder'],
 };
-const SPECIMEN = ['media', 'prose', 'overlay'];
+const SPECIMEN = ['media', 'prose', 'overlay', 'file'];
 
 for (const [file, names] of Object.entries(SOLL)) test(`${file} nennt ${names.length} Pflichtbegriffe`, () => {
   const [d, f] = file.split('/');

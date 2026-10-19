@@ -21,7 +21,9 @@
 }
 .tl-file-upload[hidden] { display: none; }
 
-.tl-file-upload[data-tl-state~="dragover"] {
+/* Eine Regel für beide Drop-Zonen (Welle 5b §6): das Datei-Feld und die Chip-Gruppe von TLFileChips. */
+.tl-file-upload[data-tl-state~="dragover"],
+.tl-chip-group[data-tl-state~="dragover"] {
   outline: var(--tl-border-width-md) dashed var(--tl-border-interactive);
   outline-offset: var(--tl-focus-offset);
 }
