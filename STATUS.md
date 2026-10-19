@@ -205,7 +205,9 @@ Basisdatei (`<theme>.primitives.json`); jede spätere Änderung am Paket (neue R
 Paare) verlangt ein Neurechnen des Themes. Zu klären: wo und wann `derive` rechnet (Bauzeit, Browser beim Laden,
 Theme-Editor beim Speichern — Bernhards TL-Script-Einwand vom 25.09., `docs/uebergabe/2026-09-30-sitzung-zwei-wege.md`),
 wie die Anwendung ein veraltetes Theme erkennt (Paketversion im Kopf der Datei?) und was bis zum Neurechnen gilt.
-Präsentation v2 Folie 8 verspricht das Neurechnen, nicht den Zeitpunkt.
+Präsentation v2 Folie 8 verspricht das Neurechnen, nicht den Zeitpunkt. **Optionsanalyse** (Hendrik: jetzt, vor 5d): `docs/analyse/2026-10-19-kundentheme-lebenszyklus.md` —
+Empfehlung A (Rechnen im Build der Anwendung) mit Versionsstempel (Fingerabdruck der Rollenliste in `tokens.css` und
+jedem Theme), C (Theme-Editor) nur bei Laufzeitbedarf; offen F1–F4, F1 (Laufzeit-Änderung nötig?) entscheidet.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
