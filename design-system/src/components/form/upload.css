@@ -35,3 +35,8 @@
 .tl-file-upload__status[role="alert"] {
   color: var(--tl-status-error-text);
 }
+
+/* In der umbrechenden Chip-Gruppe von TLFileChips bricht die Fehlerzeile unter die Chips (Spec 5b §6.5). */
+.tl-chip-group > .tl-file-upload__status {
+  flex-basis: 100%;
+}

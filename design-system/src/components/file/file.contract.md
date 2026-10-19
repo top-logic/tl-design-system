@@ -8,7 +8,7 @@ Leer-Zustand; die Knöpfe sind Parts `Button` (`button.contract.md`).
 | Control | Form |
 |---|---|
 | `TLDownload` (`ReactDownloadControl`) | `tl-file` mit dem Namen in `tl-file__name` und dem Download-Knopf daneben. Ohne Datei `data-tl-state~="empty"` an `tl-file`. |
-| `TLBinaryField` (`ReactBinaryFieldControl`) | die Zeile innerhalb der Drop-Zone `tl-file-upload` (`upload.contract.md`): `tl-file` mit Name, Download- und Upload-Knopf. Ohne Datei (`hasData` falsch) `data-tl-state~="empty"` mit dem Hinweis „Keine Datei“. |
+| `TLBinaryField` (`ReactBinaryFieldControl`) | Lesend ist die Wurzel `tl-file`: der Download-Knopf und der Name in `tl-file__name`; ohne Datei (`hasData` falsch) `data-tl-state~="empty"` mit dem Hinweis „Keine Datei“ in `tl-file__name`. Im Bearbeiten ist die Wurzel die Drop-Zone `tl-file-upload` (`upload.contract.md`) mit dem Upload-Knopf; die Zeile `tl-file` (Download-Knopf und Name) steht darin nur, wenn eine Datei da ist, danach der Fehler in `tl-file-upload__status` mit `role="alert"`. |
 
 ## Klassen
 

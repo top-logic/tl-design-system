@@ -106,6 +106,12 @@ test('upload: Ziehen an Drop-Zone und Chip-Gruppe gleich', () => {
   assert.match(regel[1], /dashed var\(--tl-border-interactive\)/);
 });
 
+test('upload: Fehlerzeile bricht in der Chip-Gruppe unter die Chips', () => {
+  // §6.5: die Zeile ist das letzte Kind der Gruppe; sie steht nur dann darunter, wenn die Gruppe umbricht.
+  assert.match(decl('choice', '.tl-chip-group'), /flex-wrap:\s*wrap/);
+  assert.match(decl('form', '.tl-chip-group > .tl-file-upload__status', 'upload.css'), /flex-basis:\s*100%/);
+});
+
 // §7: eine Schrittliste für Wizard und JobStatus (V22). Die Ausrichtung ändert die Anordnung, nicht die Farben.
 const regeln = (dir) => rulesOf(readGenerated(dir, `${dir}.css`)).filter(([s]) => !/^(from|to|\d+%)$/.test(s));
 

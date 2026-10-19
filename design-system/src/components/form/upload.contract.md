@@ -13,7 +13,7 @@ Vom Server über `useTLState()`.
 | Control | Schlüssel | Typ | Bedeutung |
 |---|---|---|---|
 | `TLFileUpload` (`ReactFileUploadControl`), `TLBinaryField` (`ReactBinaryFieldControl`) | `status` | string | `idle` oder `received`: die Datei ist eingegangen. Den Zustand „lädt hoch“ hält der Client selbst. |
-| `TLFileUpload`, `TLBinaryField` | `error` | string, optional | Text des Fehlers beim letzten Hochladen: `tl-file-upload__status` mit `role="alert"`. |
+| `TLFileUpload`, `TLBinaryField`, `TLFileChips` | `error` | string, optional | Text des Fehlers beim letzten Hochladen: `tl-file-upload__status` mit `role="alert"`. Bei `TLFileChips` gilt er bis zum nächsten erfolgreichen Hochladen. |
 | `TLFileUpload`, `TLBinaryField` | `accept` | string, optional | Filter der erlaubten MIME-Typen, am verborgenen `input type="file"`. |
 | `TLFileUpload`, `TLBinaryField`, `TLUploadButton`, `TLFileChips`, `TLAudioRecorder`, `TLPhotoCapture` | `maxUploadSize` | number, optional | Höchstgröße des Hochladens in Byte (`UploadSupport`), vom Server geprüft. |
 | `TLBinaryField` (`ReactBinaryFieldControl`) | `hasData` | boolean | Ob eine Datei zum Herunterladen da ist; sonst „Keine Datei“. |
@@ -33,7 +33,7 @@ Alle Leser laden über denselben Upload-Kanal hoch; der Name des Teils im `multi
 | Control | Teil | Form |
 |---|---|---|
 | `TLFileUpload`, `TLBinaryField`, `TLUploadButton` | `file` | Knopf in `tl-upload` oder Drop-Zone `tl-file-upload` |
-| `TLFileChips` (`FileListControl`) | `file` | die Chip-Gruppe `tl-chip-group` ist die Drop-Zone (`choice.contract.md`); Fehler in `tl-file-upload__status` |
+| `TLFileChips` (`FileListControl`) | `file` | die Chip-Gruppe `tl-chip-group` ist die Drop-Zone (`choice.contract.md`); Fehler in `tl-file-upload__status` als letztes Kind der Gruppe, das unter die Chips bricht |
 | `TLAudioRecorder` (`ReactAudioRecorderControl`) | `audio` | Knopf (`button.contract.md`) in `tl-upload`; Fehler in `tl-file-upload__status` |
 | `TLPhotoCapture` (`ReactPhotoCaptureControl`) | `photo` | Knopf in `tl-upload`; Fehler in `tl-file-upload__status` |
 
@@ -70,8 +70,8 @@ Klassen:
 | Klasse | Element |
 |---|---|
 | `tl-upload` | Hülle um den Knopf von `TLUploadButton` und das verborgene `input`; ebenso um den Knopf von `TLAudioRecorder` und `TLPhotoCapture` und ihre Statuszeile |
-| `tl-file-upload` | Wurzel und Drop-Zone von `TLFileUpload` und `TLBinaryField` |
-| `tl-file-upload__status` | Status- oder Fehlertext neben dem Knopf |
+| `tl-file-upload` | Wurzel und Drop-Zone von `TLFileUpload` und von `TLBinaryField` im Bearbeiten (lesend ist die Wurzel `tl-file`, `file.contract.md`) |
+| `tl-file-upload__status` | Status- oder Fehlertext neben dem Knopf; in der umbrechenden `tl-chip-group` von `TLFileChips` volle Breite (`flex-basis: 100%`), also unter den Chips |
 
 ## Konformität
 
