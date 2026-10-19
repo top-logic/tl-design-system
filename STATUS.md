@@ -192,7 +192,7 @@ bis `717183e`, Engine-Branch bis `c3b462297b`. Gates: Paket 597/0, `tsc` 0, MUI-
 `layout.configedit` 343/0, `layout.view` 1513/0 (englische Locale per `argLine`), `demo.react` 13/0,
 `check-messages-en.sh` sauber. Ratsche `lines` 683 → 198 (TLValueList, Tabellenzellen, Dashboard, TLKanbanBoard,
 TLCalendar gestrichen). Opus-Review des Rechenkerns: kein Fehler. Beim Bauen entschieden: `skalen.md` „Welle 5c“
-(Tastatur nur, was der Zeiger kann; Ring in der Schriftfarbe; Spalte als Mulde; Anlegen-Feld deckend). Sichtprüfung in
+(Tastatur nur, was der Zeiger kann; Ring in der Schriftfarbe; Spalte als Mulde; Anlegen-Feld deckend; Kanban-Spalte unter dem Ziehen immer hervorgehoben, dazu die Linie, Ablehnung bleibt rot — Hendrik). Sichtprüfung in
 der lokalen Demo (Kalender Woche/Monat/Jahr, Anlegen, Escape; Kanban mit Alt+Pfeil und Maus; Dashboard mit Alt+Pfeil
 und Fokus): bestanden, Befunde U10–U12 in `docs/ui-durchgang.md`. Trac #29906: Lösung und Migration in der
 Beschreibung, `RequiresMigration`. Ledger `.superpowers/sdd/2026-10-19-welle-5c-planen-und-ziehen/`.
