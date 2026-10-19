@@ -20,21 +20,20 @@
     <label class="tl-type-label"><input type="checkbox" id="density"> kompakt</label>
   </div>
 
-  <section class="specimen__base"><p class="tl-type-heading-sm">Läuft: Schritte und Balken; nur die Live-Zeile trägt role="status"</p>
+  <section class="specimen__base"><p class="tl-type-heading-sm">Läuft: Schritte und Balken; nur die Live-Zeile trägt role="status", mit der Meldung</p>
     <div class="tl-job-status">
       <div class="tl-job-status__header">
         <span class="tl-job-status__state tl-type-body-strong" id="j1-state">Läuft</span>
         <span class="tl-job-status__elapsed tl-type-body tl-nums">00:42</span>
         <span class="tl-job-status__cancel"><button type="button" class="tl-button tl-button--secondary"><span class="tl-button__label">Abbrechen</span></button></span>
       </div>
-      <div class="tl-job-status__live tl-type-body" role="status"><span class="tl-visually-hidden">Läuft. Schritt: </span>Prüfen</div>
+      <div class="tl-job-status__live tl-type-body" role="status"><span class="tl-visually-hidden">Läuft. Schritt: </span>Prüfen<div class="tl-job-status__message tl-type-body">1.204 von 2.680 Datensätzen geprüft</div></div>
       <ol class="tl-steps tl-steps--vertical" aria-label="Schritte">
         <li class="tl-steps__item" data-tl-state="done"><span class="tl-steps__disc tl-type-label tl-nums" aria-hidden="true">1</span><span class="tl-steps__name tl-type-body">Daten lesen</span></li>
         <li class="tl-steps__item" aria-current="step"><span class="tl-steps__disc tl-type-label tl-nums" aria-hidden="true">2</span><span class="tl-steps__name tl-type-body-strong">Prüfen</span></li>
         <li class="tl-steps__item"><span class="tl-steps__disc tl-type-label tl-nums" aria-hidden="true">3</span><span class="tl-steps__name tl-type-body">Bericht schreiben</span></li>
       </ol>
       <div class="tl-job-status__bar"><div class="tl-progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="45" aria-labelledby="j1-state"><span class="tl-progress__track"><span class="tl-progress__fill"></span></span><span class="tl-progress__label tl-type-label tl-nums">45 %</span></div></div>
-      <div class="tl-job-status__message tl-type-body">1.204 von 2.680 Datensätzen geprüft</div>
     </div>
   </section>
 

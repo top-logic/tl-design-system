@@ -21,7 +21,7 @@ TopLogic garantiert, dass nur Text, der etwas sagt, angesagt wird — nicht das 
 | `tl-job-status__live` | die einzige Zeile mit `role="status"`: Zustand und Name des aktuellen Schritts (Präfix „Schritt“ als `tl-visually-hidden`), dazu die Meldung |
 | `tl-steps--vertical` | die Schritte (`steps.contract.md`), außerhalb der Live-Zeile |
 | `tl-job-status__bar` | Hülle des Fortschrittsbalkens, außerhalb der Live-Zeile |
-| `tl-job-status__message` | die Meldung des Auftrags |
+| `tl-job-status__message` | die Meldung des Auftrags, in der Live-Zeile unter der Schrittzeile |
 | `tl-job-status__error` | der Fehler als eigene Zeile mit `role="alert"`, außerhalb der Live-Zeile |
 | `tl-job-status__result` | das Ergebnis nach dem Abschluss |
 
