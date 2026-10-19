@@ -74,7 +74,7 @@ Die Schrift setzen die Typo-Klassen im TSX; `board.css` setzt keine.
 | `draggable="true"` | an einer Karte, die sich ziehen lässt (Zeiger `grab`) |
 | `data-tl-state~="dragging"` | an der gezogenen Karte |
 | `data-tl-state~="drop-before"`, `~="drop-after"` | an der Karte, vor bzw. hinter der abgelegt wird (Einfügelinie) |
-| `data-tl-state~="drop-onto"` | an der Spalte, wenn ans Ende der Spalte abgelegt wird (keine Karte trägt die Linie) |
+| `data-tl-state~="drop-onto"` | an der Spalte unter dem Ziehen, solange sie annimmt (Hendrik 19.10., wie das alte Board); landet die Karte neben einer anderen, trägt diese zusätzlich die Einfügelinie |
 | `data-tl-state~="drop-refused"` | an der Spalte, die ablehnt; dazu `tl-drop-hint` mit dem Grund |
 | `hidden` | verbirgt Board, Spalte, Kopf oder Liste |
 

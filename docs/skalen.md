@@ -2638,6 +2638,10 @@ die Packrechnung des Dashboards ins Paket (neues Layout, kein Umzug).
 - **Die Kanban-Spalte ist eine Mulde.** Spalte auf `surface-base`, Karte auf `surface-layer`: in beiden Modi liegt die
   Karte heller darauf (`layer-nested` war hell gleich der Karte, dunkel heller als sie). Die Karte hält die Ecke des
   Auswahlhakens immer frei — er deckte sonst einen Knopf der Kartenansicht, und der Inhalt spränge beim Wählen.
+- **Die Kanban-Spalte unter dem Ziehen ist immer hervorgehoben (Hendrik 19.10.)**, wie im alten Board; landet die Karte
+  neben einer anderen, zeigt die Einfügelinie dort zusätzlich die Stelle. Abgelehnt bleibt rot: eine Ablehnung ist eine
+  verbotene Aktion, und Rot heißt Warnung (Hendrik). **Verworfen:** die Spalte nur beim Ablegen ans Ende markieren (Bild
+  der Tabelle) — beim Ziehen über eine volle Spalte fehlte das Ziel.
 - **Das Arbeitszeitband ist deckend und fehlt an arbeitsfreien Tagen**; es steht im DOM vor den Stundenlinien.
 - **Das Anlegen-Feld ist nicht blass.** Die Vorschau (Ziehen, Länge) bleibt `opacity: 0.4`; trägt der Platzhalter das
   Feld, ist er die Eingabe und voll deckend — blass fiel der getippte Titel unter 4,5:1 (Sichtprüfung).
