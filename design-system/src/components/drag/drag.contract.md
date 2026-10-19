@@ -21,6 +21,10 @@ Baumknoten; `useListReorder` (Hälften) für Reihenfolgen — Spaltenwahl, Spalt
 
 Ablegen auf die ganze Tabelle trägt dieselben Zustände an ihrer Wurzel.
 
+Leser auch: `TLCalendar` (`calendar.contract.md`). Der gezogene Termin trägt `dragging`; im Monat trägt die
+Tageszelle `drop-onto`, solange ein Termin darüber gezogen wird. Die Vorschau am Zielort im Zeitraster ist kein
+Ziehen-Zustand, sondern `data-tl-state~="preview"` des Kalender-Blocks.
+
 ## Bild
 
 Marke und Rahmen liegen auf `::before` über dem Ziel (über den Hintergründen seiner Kinder und

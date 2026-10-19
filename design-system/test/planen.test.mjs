@@ -3,6 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { readComponent, readGenerated, declarationsOf, rulesOf } from './lib/component.mjs';
 
 const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)));
 const P = JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.url)));
@@ -39,4 +40,70 @@ test('kandidaten: als Rollen', () => {
   }
   assert.equal(T.derived.candidates.light, '{gray-0}');
   assert.equal(T.derived.candidates.dark, '{gray-77}');
+});
+
+// --- tl-calendar (Spec 5c §3) -------------------------------------------------------------------------
+// Der Block liest nur Tokens; die Kategorie-Regeln schreibt der Generator (Marker in calendar.css).
+
+const KALENDER = (() => { try { return readGenerated('calendar', 'calendar.css'); } catch { return ''; } })();
+const kalenderQuelle = () => readComponent('calendar', 'calendar.css');
+/** Alle Deklarationen aller Regeln, deren Selektorliste `sel` enthält. */
+const kalenderRegel = (sel) => rulesOf(KALENDER)
+  .filter(([s]) => s.split(',').map((x) => x.trim()).includes(sel)).map(([, d]) => d).join(';');
+
+test('calendar: Termin gefüllt in der Kategorie', () => {
+  for (const k of KATEGORIEN) {
+    const d = kalenderRegel(`.tl-calendar__event[data-tl-role="category-${k}"]`);
+    assert.match(d, new RegExp(`background:\\s*var\\(--tl-category-${k}-surface\\)`), `Fläche category-${k}`);
+    assert.match(d, new RegExp(`color:\\s*var\\(--tl-text-on-category-${k}\\)`), `Schrift category-${k}`);
+    const punkt = kalenderRegel(`.tl-calendar__chip-dot[data-tl-role="category-${k}"]`);
+    assert.match(punkt, new RegExp(`background:\\s*var\\(--tl-category-${k}-surface\\)`), `Punkt category-${k}`);
+  }
+  const ohne = declarationsOf(KALENDER, '.tl-calendar__event') ?? '';
+  assert.match(ohne, /background:\s*var\(--tl-surface-brand\)/);
+  assert.match(ohne, /color:\s*var\(--tl-text-on-brand\)/);
+  assert.match(declarationsOf(KALENDER, '.tl-calendar__chip-dot') ?? '', /background:\s*var\(--tl-surface-brand\)/);
+  // Die 16 + 8 Regeln stehen nicht von Hand in der Quelle, sondern als Marker.
+  assert.doesNotMatch(kalenderQuelle().replace(/\/\*[\s\S]*?\*\//g, ''), /--tl-(category-\d+-surface|text-on-category-\d+)/);
+});
+
+test('calendar: ausgewählt ist ein Ring', () => {
+  const d = kalenderRegel('.tl-calendar__event[aria-selected="true"]::after');
+  for (const r of [/content:\s*""/, /position:\s*absolute/, /inset:\s*0/,
+    /border:\s*var\(--tl-border-width-md\) solid var\(--tl-border-interactive\)/, /border-radius:\s*inherit/,
+    /pointer-events:\s*none/]) assert.match(d, r);
+  assert.doesNotMatch(kalenderQuelle().replace(/\/\*[\s\S]*?\*\//g, ''), /(^|[\s;{])outline\s*:/);
+});
+
+test('calendar: heute überall derselbe Kreis', () => {
+  for (const sel of ['.tl-calendar__day-head[aria-current="date"] .tl-calendar__day-number',
+    '.tl-calendar__day[aria-current="date"] .tl-calendar__day-number',
+    '.tl-calendar__mini-day[aria-current="date"]']) {
+    const d = kalenderRegel(sel);
+    assert.match(d, /background:\s*var\(--tl-surface-brand\)/, sel);
+    assert.match(d, /color:\s*var\(--tl-text-on-brand\)/, sel);
+    assert.match(d, /border-radius:\s*var\(--tl-radius-full\)/, sel);
+  }
+});
+
+test('calendar: Flächen', () => {
+  assert.match(kalenderRegel('.tl-calendar__column'), /background:\s*var\(--tl-surface-base\)/);
+  assert.match(kalenderRegel('.tl-calendar__work'), /background:\s*var\(--tl-surface-layer\)/);
+  const jetzt = kalenderRegel('.tl-calendar__now');
+  assert.match(jetzt, /var\(--tl-status-error-border\)/);
+  assert.match(jetzt, /var\(--tl-border-width-md\)/);
+  assert.match(kalenderRegel('.tl-calendar__hour-line'), /var\(--tl-border-separator\)/);
+  const mit = (zustand) => rulesOf(KALENDER).filter(([s]) => s.includes(`[data-tl-state~="${zustand}"]`)).map(([, d]) => d).join(';');
+  assert.match(mit('nonworking'), /background:\s*var\(--tl-surface-base\)/);
+  assert.match(mit('other'), /color:\s*var\(--tl-text-secondary\)/);
+});
+
+test('calendar: keine Literale', () => {
+  const ohne = kalenderQuelle().replace(/\/\*[\s\S]*?\*\//g, '');
+  assert.doesNotMatch(ohne, /#[0-9a-f]{3,6}\b/i);
+  assert.doesNotMatch(ohne, /rgba\(/);
+  assert.doesNotMatch(ohne, /\d+px/);
+  assert.doesNotMatch(ohne, /z-index:\s*\d/);
+  assert.doesNotMatch(ohne, /font-size/);
+  assert.doesNotMatch(ohne, /data-tl-state~="(drop-|dragging)/);
 });

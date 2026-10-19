@@ -122,6 +122,12 @@ Klassen:
 | `tl-chip__remove` | `tl-button tl-button--ghost tl-button--sm tl-button--icon`, `aria-label` und Tooltip Pflicht; Kreis innerhalb der Kapsellinie wie im Select-Chip |
 | `tl-choice-group--vertical` | die Optionen untereinander; ohne den Modifier nebeneinander mit Umbruch, Zustand `orientation` |
 
+## Leser außerhalb der Auswahl
+
+| Control | Form |
+|---|---|
+| `TLCalendar` | die Ansichtswahl (Tag, Arbeitswoche, Woche, Monat, Jahr) in der Leiste: `tl-segmented` mit `role="radiogroup"`, je Ansicht ein `tl-segmented__segment` mit `aria-checked`; Wahl sendet `switchGranularity` (`calendar.contract.md`) |
+
 ## Konformität
 
 Eine Komponente besteht den Vertrag, wenn sie im Specimen-Harness des Pakets für jeden Zustand oben

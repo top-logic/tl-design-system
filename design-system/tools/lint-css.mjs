@@ -159,6 +159,7 @@ const MODIFIERS = {
   'tl-file': new Set([]), // Leer: data-tl-state.
   'tl-steps': new Set(['vertical']), // Erledigt: data-tl-state; aktuell: aria-current.
   'tl-job-status': new Set([]),
+  'tl-calendar': new Set([]), // Heute, arbeitsfrei, anderer Monat, Termintag, Vorschau, gewählt: Attribute; Kategorie: data-tl-role.
 };
 
 // Die einzige Ausnahme vom Ring: der Behälter mit virtuellem Cursor, nur in base.css (Spec 3b §3).

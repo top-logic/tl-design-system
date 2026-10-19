@@ -79,3 +79,21 @@ test('der Marker wird ersetzt, ein unbekannter Marker bricht den Build', () => {
   assert.throws(() => expandRoles('/* @tl-roles: status .tl-x--y */', T), /weder Block- noch Elementklasse/);
   assert.ok(!OUT.includes('@tl-roles'), 'Marker im dist-Generat');
 });
+
+// Welle 5c (Spec §3, §4): gefüllte Termine lesen je Kategorie Fläche und gerechnete Schrift; der Punkt eines
+// Termins im Monat nur die Fläche. Dieselbe Mechanik wie -subtle/-border, zwei weitere Arten.
+test('der Marker category-surface schreibt Fläche und Schrift, category-fill nur die Fläche', () => {
+  const css = expandRoles('/* @tl-roles: category-surface .tl-x__y */\n/* @tl-roles: category-fill .tl-x__z */', T);
+  for (const k of KATEGORIEN) {
+    assert.ok(css.includes(`.tl-x__y[data-tl-role="${k}"] { background: var(--tl-${k}-surface); color: var(--tl-text-on-${k}); }`), k);
+    assert.ok(css.includes(`.tl-x__z[data-tl-role="${k}"] { background: var(--tl-${k}-surface); }`), k);
+  }
+  assert.equal(css.split('\n').length, 2 * KATEGORIEN.length);
+});
+
+test('components.css: der gefüllte Termin und sein Punkt lesen je Kategorie die gefüllte Fläche', () => {
+  for (const k of KATEGORIEN) {
+    assert.deepEqual(rolle('.tl-calendar__event', k), [`background: var(--tl-${k}-surface); color: var(--tl-text-on-${k});`], k);
+    assert.deepEqual(rolle('.tl-calendar__chip-dot', k), [`background: var(--tl-${k}-surface);`], k);
+  }
+});

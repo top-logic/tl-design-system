@@ -7,6 +7,10 @@ Die Einträge sind Button-Controls (`tl-button`). Die Toolbar gibt ihnen die Ers
 (`ButtonDefaults`, siehe `button.contract.md`) und sagt ihnen, wann sie kompakt sind (`iconOnly`);
 sie hat keine eigene Knopfregel. Trenner sind `tl-divider--vertical`.
 
+Leser auch: `TLCalendar` — die Leiste des Kalenders ist ein `tl-toolbar` mit `tl-calendar__toolbar`; darin
+Heute, zurück, vor als Part `Button`, der Titel `tl-calendar__title` und die Ansichtswahl `tl-segmented`
+(`calendar.contract.md`, `choice.contract.md`).
+
 ## Zustand
 
 | Schlüssel | Typ | Bedeutung |

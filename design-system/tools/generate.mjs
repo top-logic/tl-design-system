@@ -28,12 +28,20 @@ export function componentSources(dirUrl) {
 // (tl-segmented__segment), nie ein Modifier. Kommentar, damit Klassen-Gate und Tests auf src/ ihn
 // überlesen. docs/skalen.md „Gleiches wird zusammengelegt“. In `:where(<ziel>)` gesetzt, erzeugt der Marker
 // die Regeln ohne Spezifität: für ein Ablage-Ziel, dessen Fläche das Ablegen übermalt (Tabellenzeile, #29815).
+// Je Rolle eine Deklarationsliste: Fläche und Linie für die getönten Arten; die gefüllte Kategorie (5c §4) liest
+// ihre Fläche und die gerechnete Schrift darauf (category-surface, gefüllter Termin) oder nur die Fläche
+// (category-fill, Punkt ohne Text).
+const flaecheLinie = (flaeche, linie) => `background: var(--tl-${flaeche}); border-color: var(--tl-${linie});`;
+const gefuellt = (T) => Object.keys(T.color.light).map((n) => /^(category-\d+)-surface$/.exec(n)?.[1])
+  .filter((r) => r && `text-on-${r}` in T.derived.light);
 const ROLLEN = {
-  brand: () => [['brand', 'surface-brand-subtle', 'border-interactive']],
+  brand: () => [['brand', flaecheLinie('surface-brand-subtle', 'border-interactive')]],
   category: (T) => Object.keys(T.color.light).map((n) => /^(category-\d+)-subtle$/.exec(n)?.[1])
-    .filter((r) => r && `${r}-border` in T.color.light).map((r) => [r, `${r}-subtle`, `${r}-border`]),
+    .filter((r) => r && `${r}-border` in T.color.light).map((r) => [r, flaecheLinie(`${r}-subtle`, `${r}-border`)]),
   status: (T) => Object.keys(T.color.light).map((n) => /^status-([a-z]+)-subtle$/.exec(n)?.[1])
-    .filter((s) => s && `status-${s}-border` in T.color.light).map((s) => [s, `status-${s}-subtle`, `status-${s}-border`]),
+    .filter((s) => s && `status-${s}-border` in T.color.light).map((s) => [s, flaecheLinie(`status-${s}-subtle`, `status-${s}-border`)]),
+  'category-surface': (T) => gefuellt(T).map((r) => [r, `background: var(--tl-${r}-surface); color: var(--tl-text-on-${r});`]),
+  'category-fill': (T) => gefuellt(T).map((r) => [r, `background: var(--tl-${r}-surface);`]),
 };
 const MARKER = /\/\*\s*@tl-roles:\s*(\S+)\s+(\S+)\s*\*\//g;
 const ZIEL = /^\.tl-[a-z0-9]+(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)?$/;
@@ -45,9 +53,9 @@ export function expandRoles(css, T) {
     const ohne = /^:where\((.*)\)$/.exec(sel);
     const ziel = ohne ? ohne[1] : sel;
     if (!ZIEL.test(ziel)) throw new Error(`@tl-roles: ${sel} ist weder Block- noch Elementklasse`);
-    return ROLLEN[art](T).map(([rolle, flaeche, linie]) => {
+    return ROLLEN[art](T).map(([rolle, deklarationen]) => {
       const auswahl = `${ziel}[data-tl-role="${rolle}"]`;
-      return `${ohne ? `:where(${auswahl})` : auswahl} { background: var(--tl-${flaeche}); border-color: var(--tl-${linie}); }`;
+      return `${ohne ? `:where(${auswahl})` : auswahl} { ${deklarationen} }`;
     }).join('\n');
   });
 }
