@@ -86,10 +86,10 @@ die nächste Kartengrenze irgendwo in der Spalte, auch in Lücken und unter der 
 | Teil | Token |
 |---|---|
 | Wurzel | Abstand `--tl-space-md`, Innenabstand `--tl-space-sm` |
-| Spalte | `--tl-surface-layer-nested`, Rand `--tl-border-width-sm` in `--tl-border-separator`, Ecke `--tl-radius-md` |
+| Spalte | `--tl-surface-base` (Mulde; die Karte in `--tl-surface-layer` liegt in beiden Modi heller darauf), Rand `--tl-border-width-sm` in `--tl-border-separator`, Ecke `--tl-radius-md` |
 | Kopf | Innenabstand `--tl-space-sm` `--tl-space-md`, Linie unten `--tl-border-width-sm` in `--tl-border-separator`, Schrift `--tl-text-primary`, Abstand `--tl-space-xs` |
 | Karten-Liste | Abstand und Innenabstand `--tl-space-sm` |
-| Karte | `--tl-surface-layer`, Rand `--tl-border-width-sm` in `--tl-border-separator`, Innenabstand `--tl-space-sm` `--tl-space-md`; Ecke, Hof beim Zeigen, Ring und Haken aus `tl-item` |
+| Karte | `--tl-surface-layer`, Rand `--tl-border-width-sm` in `--tl-border-separator`, Innenabstand `--tl-space-sm` `--tl-space-md`, rechts die Ecke des Hakens frei (`--tl-space-xs` + `--tl-size-icon-md` + `--tl-space-xs`, immer); Ecke, Hof beim Zeigen, Ring und Haken aus `tl-item` |
 
 Kein Schatten, kein `z-index`. Den Fokusring liefert `base.css`; der Innenabstand der Karten-Liste hält ihn in der
 rollenden Liste.

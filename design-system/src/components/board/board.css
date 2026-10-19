@@ -16,7 +16,9 @@
 }
 .tl-board[hidden] { display: none; }
 
-/* Eine Spalte wächst von size-12 bis size-13; mehr Spalten, als passen, rollen waagerecht. */
+/* Eine Spalte wächst von size-12 bis size-13; mehr Spalten, als passen, rollen waagerecht. Die Spalte ist eine Mulde
+   auf surface-base, die Karte liegt darauf in surface-layer — in beiden Modi heller als die Spalte (layer-nested wäre
+   hell gleich der Karte und dunkel heller als sie: die Karte läge versenkt). */
 .tl-board__column {
   display: flex;
   flex-direction: column;
@@ -24,7 +26,7 @@
   min-width: var(--tl-size-12);
   max-width: var(--tl-size-13);
   min-height: 0;
-  background: var(--tl-surface-layer-nested);
+  background: var(--tl-surface-base);
   border: var(--tl-border-width-sm) solid var(--tl-border-separator);
   border-radius: var(--tl-radius-md);
 }
@@ -61,8 +63,10 @@
 .tl-board__cards[hidden] { display: none; }
 
 /* Die Fläche der Karte; Ecke, Zeiger und Lage (position) gibt tl-item[role="option"]. */
+/* Rechts hält die Karte die Ecke des Auswahlhakens frei (tl-item__check: Abstand xs, Breite icon-md, dazu xs Luft) —
+   immer, nicht erst gewählt: sonst deckt der Haken einen Knopf der Kartenansicht, oder der Inhalt springt beim Wählen. */
 .tl-board__card {
-  padding: var(--tl-space-sm) var(--tl-space-md);
+  padding: var(--tl-space-sm) calc(var(--tl-space-xs) + var(--tl-size-icon-md) + var(--tl-space-xs)) var(--tl-space-sm) var(--tl-space-md);
   background: var(--tl-surface-layer);
   border: var(--tl-border-width-sm) solid var(--tl-border-separator);
 }

@@ -10,8 +10,8 @@
   color: var(--tl-text-primary);
 }
 
+/* Der Trenner in der Schriftfarbe wie im Select (select.css): derselbe Trenner, dasselbe Bild. */
 .tl-value-list > .tl-select__separator {
-  color: var(--tl-text-secondary);
   white-space: pre;
 }
 

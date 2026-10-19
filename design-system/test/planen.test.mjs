@@ -127,12 +127,14 @@ test('board: Spalten und Karten aus Tokens', () => {
   const spalte = regel(BOARD, '.tl-board__column');
   assert.match(spalte, /var\(--tl-size-12\)/, 'Breite size-12');
   assert.match(spalte, /max-width:\s*var\(--tl-size-13\)/, 'Höchstbreite size-13');
-  assert.match(spalte, /background:\s*var\(--tl-surface-layer-nested\)/);
+  assert.match(spalte, /background:\s*var\(--tl-surface-base\)/);
   assert.match(spalte, /border-radius:\s*var\(--tl-radius-md\)/);
   assert.match(regel(BOARD, '.tl-board__label'), /text-overflow:\s*ellipsis/);
   const karte = regel(BOARD, '.tl-board__card');
   assert.match(karte, /border:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-separator\)/);
   assert.doesNotMatch(karte, /box-shadow/, 'eine Karte schwebt nicht (tl-item, Q24)');
+  assert.match(karte, /padding:[^;]*calc\(var\(--tl-space-xs\) \+ var\(--tl-size-icon-md\) \+ var\(--tl-space-xs\)\)/,
+    'die Karte hält die Ecke des Auswahlhakens frei');
   const ohne = ohneKommentar(BOARD);
   assert.ok(ohne.trim(), 'board.css fehlt');
   assert.doesNotMatch(ohne, /999px/);

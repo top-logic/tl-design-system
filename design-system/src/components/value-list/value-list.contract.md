@@ -65,7 +65,7 @@ Variante `--block` steht in der Zelle in einer Zeile, mit Trenner (`table.contra
 
 | Teil | Token |
 |---|---|
-| Schrift | `--tl-text-primary`; Trenner `--tl-text-secondary` |
+| Schrift | `--tl-text-primary`, auch der Trenner (wie im Select) |
 | Zeilen und Knöpfe | Abstand `--tl-space-2xs` |
 
 ## Konformität
