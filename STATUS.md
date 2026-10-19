@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-19 (5a und 5b gebaut, lokal — Welle 5 als ein PR) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-19 (5a, 5b gebaut; 5c Task 1 von 9 — Welle 5 als ein PR) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -182,6 +182,16 @@ Trac #29904: Solution, `== Migration ==`, `RequiresMigration`. `skalen.md` „Be
 §6.7 nachgezogen. Ledger `.superpowers/sdd/2026-10-19-welle-5b-medien/`. **Weiter:** 5c (Planen und Ziehen) — Ticket
 anlegen, Branch auf 5b, Spec; Push und PR erst nach 5d. Die lokale Demo läuft (Port 8080) — vor einem Neubau beenden.
 
+**5c Planen und Ziehen gestartet (19.10.):** Trac **#29906** (accepted, CC bhu), Engine-Branch
+`CWS/CWS_29906_design_system_welle_5c` auf 5b (`be1d0851ae`), lokal. Nachprüfung V23–V30 (`altlast.md`) entschieden „alle
+wie vorgeschlagen“, V25 mit gefüllten Kategorie-Tokens. **Spec freigegeben** (§1–9 einzeln, Builder-Prüfung in §13):
+`docs/superpowers/specs/2026-10-19-welle-5c-planen-und-ziehen-design.md`; `skalen.md` „Welle 5c“, Präsentation.
+**Plan** `docs/superpowers/plans/2026-10-19-welle-5c-planen-und-ziehen.md` (elf Tasks), Plan-Review Fable mit Probelauf,
+Befunde 1–24 eingearbeitet. **SDD mit savvy-flow läuft:** Task 1 (Kategorie-Rollen, Kandidaten-Rollen, `derive`) fertig
+(Paket `ad201fd`, Engine `0587e27b54`, Paket 564/0). **Weiter (nach Neustart):** Opus-Review des `derive`-Teils von
+Task 1 (frischer Agent), dann Task 2 `tl-calendar`; Ledger `.superpowers/sdd/2026-10-19-welle-5c-planen-und-ziehen/`
+(`progress.md`, Briefs `task-N-brief.md`, `implementer-common.md`). Die lokale Demo (Port 8080) endet mit dem Neustart.
+
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
 axe auf `li role="presentation"`, `format()` dreifach).
@@ -203,7 +213,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 | 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay; mit der Spaltenwahl als Ebenen-Panel in !1852 (auf master 16.10.) | 7 | master | #29836, #29825 |
 | 4b | Navigation: AppShell, AppBar, Sidebar (mobiler Drawer, Flyout), BottomBar; Q10–Q13, Leiste aus Q14 (!1906, auf master 16.10.) | 4 | master | #29866 |
 | 4c | Behälter: Panel, SplitPanel, Card, Stack, Grid, DeckPane, TileStack, Inset, AdaptiveDetail, Accordion, Wizard, ViewError; Q3, Q7, Q8, Q13–Q23 | 12 | PR | #29870 |
-| 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | 5a und 5b gebaut, 5c–5d geplant | #29875 (5a), #29904 (5b) |
+| 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | 5a und 5b gebaut, 5c im Bau, 5d geplant | #29875 (5a), #29904 (5b), #29906 (5c) |
 
 **Abnahme außerhalb der Wellen** (Spec „Abnahme“):
 
