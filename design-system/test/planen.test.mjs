@@ -110,3 +110,98 @@ test('calendar: keine Literale', () => {
   assert.doesNotMatch(ohne, /font-size/);
   assert.doesNotMatch(ohne, /data-tl-state~="(drop-|dragging)/);
 });
+
+// --- tl-board (Spec 5c §5) ----------------------------------------------------------------------------
+// Spalten und Karten aus Tokens; Einfügelinie, Ablegen und Ablehnung zeichnet allein drag.css.
+
+const leseOder = (dir, file) => { try { return readGenerated(dir, file); } catch { return ''; } };
+const ohneKommentar = (css) => css.replace(/\/\*[\s\S]*?\*\//g, '');
+const vertrag = (dir) => { try { return readComponent(dir, `${dir}.contract.md`); } catch { return ''; } };
+/** Alle Deklarationen aller Regeln, deren Selektorliste `sel` enthält. */
+const regel = (css, sel) => rulesOf(css)
+  .filter(([s]) => s.split(',').map((x) => x.trim()).includes(sel)).map(([, d]) => d).join(';');
+
+const BOARD = leseOder('board', 'board.css');
+
+test('board: Spalten und Karten aus Tokens', () => {
+  const spalte = regel(BOARD, '.tl-board__column');
+  assert.match(spalte, /var\(--tl-size-12\)/, 'Breite size-12');
+  assert.match(spalte, /max-width:\s*var\(--tl-size-13\)/, 'Höchstbreite size-13');
+  assert.match(spalte, /background:\s*var\(--tl-surface-layer-nested\)/);
+  assert.match(spalte, /border-radius:\s*var\(--tl-radius-md\)/);
+  assert.match(regel(BOARD, '.tl-board__label'), /text-overflow:\s*ellipsis/);
+  const karte = regel(BOARD, '.tl-board__card');
+  assert.match(karte, /border:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-separator\)/);
+  assert.doesNotMatch(karte, /box-shadow/, 'eine Karte schwebt nicht (tl-item, Q24)');
+  const ohne = ohneKommentar(BOARD);
+  assert.ok(ohne.trim(), 'board.css fehlt');
+  assert.doesNotMatch(ohne, /999px/);
+  assert.doesNotMatch(ohne, /z-index/);
+  assert.doesNotMatch(ohne, /#[0-9a-f]{3,8}\b/i);
+});
+
+test('board: Ziehen nur über drag.css', () => {
+  assert.doesNotMatch(ohneKommentar(BOARD), /drop-before|drop-after|drop-onto|drop-refused|dragging/);
+  const md = vertrag('board');
+  for (const n of ['data-tl-state', 'tl-drop-hint', 'tl-item', 'tl-badge'])
+    assert.ok(md.includes('`' + n), `board.contract.md nennt ${n}`);
+});
+
+// --- tl-dashboard (Spec 5c §6) ------------------------------------------------------------------------
+
+const DASHBOARD = leseOder('dashboard', 'dashboard.css');
+const BASE = readFileSync(new URL('../dist/base.css', import.meta.url), 'utf8');
+
+test('dashboard: Kachel ist eine Karte', () => {
+  const md = vertrag('dashboard');
+  for (const n of ['tl-card', 'tl-overlay__action', 'tl-overlay__layer--top-right', 'tl-visually-hidden', 'data-tl-axis="horizontal"'])
+    assert.ok(md.includes('`' + n), `dashboard.contract.md nennt ${n}`);
+  assert.ok(ohneKommentar(DASHBOARD).trim(), 'dashboard.css fehlt');
+  assert.doesNotMatch(regel(DASHBOARD, '.tl-dashboard__tile'), /box-shadow/);
+  assert.doesNotMatch(ohneKommentar(DASHBOARD), /box-shadow/, 'kein Schatten, auch nicht beim Zeigen');
+  assert.match(regel(DASHBOARD, '.tl-dashboard__cover'), /cursor:\s*move/);
+  // Zeigen auf eine Kachel mit Aktion — nicht im Bearbeiten, nicht deaktiviert — wie heute border-interactive.
+  const zeigen = rulesOf(DASHBOARD).filter(([s]) => /\.tl-dashboard__tile:has\(> \.tl-dashboard__action:not\(:disabled, \[aria-disabled="true"\]\)\):hover/.test(s)
+    && /\.tl-dashboard:not\(\[data-tl-state~="edit"\]\)/.test(s));
+  assert.equal(zeigen.length, 1, 'eine Regel für die gezeigte Kachel mit Aktion');
+  assert.match(zeigen[0][1], /border-color:\s*var\(--tl-border-interactive\)/);
+  assert.doesNotMatch(DASHBOARD, /--tl-focus-ring/);
+  // Der Fokusring der Kachel kommt aus base.css: die eine Ring-Regel trägt die Kachel als Alternative.
+  const ring = /([^{}]+)\{\s*outline:\s*var\(--tl-focus-width\) solid var\(--tl-focus-ring\);/.exec(BASE);
+  assert.ok(ring, 'Ring-Regel fehlt');
+  assert.ok(ring[1].split(/,\n/).map((s) => s.trim()).includes('.tl-dashboard__tile:has(> .tl-dashboard__action:focus-visible)'),
+    'die Kachel trägt den Ring, wenn ihr verborgener Knopf den Fokus hat');
+  // Der verborgene Knopf steht mit Abstand space-sm zur Kachelkante: sein Ring liegt in der Kachel (focus-clip).
+  const knopf = regel(DASHBOARD, '.tl-dashboard__action');
+  assert.match(knopf, /position:\s*absolute/);
+  assert.match(knopf, /inset-block-start:\s*var\(--tl-space-sm\)/);
+  assert.match(knopf, /inset-inline-start:\s*var\(--tl-space-sm\)/);
+});
+
+// --- tl-value-list (Spec 5c §7) und die Zellregeln -----------------------------------------------------
+
+const WERTELISTE = leseOder('value-list', 'value-list.css');
+const TABELLE = readGenerated('table', 'table.css');
+
+test('value-list: Block und Zelle', () => {
+  assert.match(regel(WERTELISTE, '.tl-value-list--block'), /flex-direction:\s*column/);
+  const zelle = regel(TABELLE, '.tl-table__cell > .tl-value-list:where(span)');
+  for (const r of [/text-overflow:\s*ellipsis/, /overflow:\s*hidden/, /white-space:\s*nowrap/, /display:\s*block/])
+    assert.match(zelle, r, 'Lesewert in der Zelle: ganze Breite, Ellipse');
+  const eintraege = rulesOf(TABELLE).filter(([s]) => s.includes('.tl-table__cell .tl-value-list--block')).map(([, d]) => d).join(';');
+  assert.match(eintraege, /display:\s*inline/, 'die Einträge der Variante --block stehen in der Zelle in einer Zeile');
+  assert.match(regel(TABELLE, '.tl-table__cell > .tl-stack--row'), /inline-size:\s*100%/);
+  const befehl = regel(TABELLE, '.tl-table__cell--command');
+  assert.match(befehl, /padding:\s*0/);
+  assert.match(befehl, /justify-content:\s*center/);
+  assert.match(regel(TABELLE, '.tl-table__header-cell.tl-table__cell--command'), /padding:\s*0/);
+  assert.doesNotMatch(ohneKommentar(TABELLE), /tlValueList|tlRowCommandCell|tlStack/);
+  // Der Griff ist ein Part Button: kein eigener Block.
+  assert.doesNotMatch(ohneKommentar(WERTELISTE), /__handle/);
+});
+
+test('drop-hint: im Block drag', () => {
+  const drag = readGenerated('drag', 'drag.css');
+  assert.match(regel(drag, '.tl-popover.tl-drop-hint'), /border-color:\s*var\(--tl-status-error-border\)/);
+  assert.doesNotMatch(TABELLE, /tl-table__hint/);
+});

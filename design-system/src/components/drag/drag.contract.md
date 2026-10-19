@@ -21,6 +21,10 @@ Baumknoten; `useListReorder` (Hälften) für Reihenfolgen — Spaltenwahl, Spalt
 
 Ablegen auf die ganze Tabelle trägt dieselben Zustände an ihrer Wurzel.
 
+Leser auch: `TLKanbanBoard` (`board.contract.md`): die Karte trägt `drop-before`/`drop-after`, die Spalte `drop-onto`
+(ans Ende) bzw. `drop-refused`, die gezogene Karte `dragging`. `TLDashboard` (`dashboard.contract.md`): das Raster trägt
+`data-tl-axis="horizontal"`, die Kachel `drop-before`/`drop-after` und `dragging`.
+
 Leser auch: `TLCalendar` (`calendar.contract.md`). Der gezogene Termin trägt `dragging`; im Monat trägt die
 Tageszelle `drop-onto`, solange ein Termin darüber gezogen wird. Die Vorschau am Zielort im Zeitraster ist kein
 Ziehen-Zustand, sondern `data-tl-state~="preview"` des Kalender-Blocks.
@@ -36,6 +40,13 @@ Spezifität, eine Lage, die der Block setzt (absolute Zeile, haftende Kopfzelle)
 
 Ein Drop-Ziel ist kein Fokus: kein `outline`, kein `--tl-focus-ring`. Fokus und Ziel können zugleich
 an einem Element stehen und bleiben unterscheidbar.
+
+## Ablehnungshinweis
+
+Warum ein Ziel ablehnt, sagt ein `tl-popover` mit `tl-drop-hint` (`DropHint`, `role="status"`) am Zeiger, für
+Tabelle, Baum und Board gleich: Rand `--tl-status-error-border`, Schrift `--tl-status-error-text`, der Zeiger geht
+hindurch. Lage aus `bridge/popover.ts`. Vorher hieß die Klasse `tl-table__hint`; sie gehört nicht mehr der Tabelle.
+Die Regel steht als `.tl-popover.tl-drop-hint`: `popover.css` steht im Bundle nach `drag.css`.
 
 ## Attribute
 

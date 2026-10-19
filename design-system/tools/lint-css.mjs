@@ -160,6 +160,10 @@ const MODIFIERS = {
   'tl-steps': new Set(['vertical']), // Erledigt: data-tl-state; aktuell: aria-current.
   'tl-job-status': new Set([]),
   'tl-calendar': new Set([]), // Heute, arbeitsfrei, anderer Monat, Termintag, Vorschau, gewählt: Attribute; Kategorie: data-tl-role.
+  'tl-board': new Set([]), // Gewählt: aria-selected am tl-item; Ziehen und Ablegen: data-tl-state (drag.css).
+  'tl-dashboard': new Set([]), // Bearbeiten: data-tl-state~="edit"; Aktion deaktiviert: disabled/aria-disabled am Knopf.
+  'tl-value-list': new Set(['block']), // Untereinander statt in einer Zeile: eine Form, kein Zustand.
+  'tl-drop-hint': new Set([]),
 };
 
 // Die einzige Ausnahme vom Ring: der Behälter mit virtuellem Cursor, nur in base.css (Spec 3b §3).

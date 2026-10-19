@@ -46,7 +46,7 @@ test('der Körper isoliert seinen Stapel, Spaltenwahl und Fixiergrenze sind so h
   assert.doesNotMatch(declarationsOf(css, '.tl-table__header') ?? '', /z-index|position/);
   assert.match(declarationsOf(css, '.tl-table__columns') ?? '', /height:\s*var\(--tl-size-bar\)/);
   assert.match(declarationsOf(css, '.tl-table__freeze') ?? '', /height:\s*var\(--tl-size-bar\)/);
-  assert.match(declarationsOf(css, '.tl-table__hint') ?? '', /status-error-border/);
+  assert.match(declarationsOf(readGenerated('drag', 'drag.css'), '.tl-popover.tl-drop-hint') ?? '', /status-error-border/);
 });
 
 // E8 (08.10.): fixierte und angeheftete Kopfzellen sind deckend — sie erben die Fläche der Kopfzeile, über die

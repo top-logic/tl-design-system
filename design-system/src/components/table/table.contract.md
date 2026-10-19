@@ -60,7 +60,7 @@ rechnet sie aus `--tl-size-row` (`useTokenPx`).
 | `dropAccepts` | Liste | Arten, die die Tabelle als Ziel annimmt. |
 | `dropModes` | Liste | Modi der Ablage-Operationen: `ordered` (vor/hinter einer Zeile), `onto` (auf eine Zeile), `control` (auf die Tabelle als Ganzes). Danach teilt das TSX eine Zeile: beide → Drittel, nur `ordered` → Hälften, nur `onto` → ganz. |
 | `dropModesByKind` | Objekt | Die Modi je angenommener Art. Geteilt wird nach den Modi der gezogenen Art; eine Art, die hier fehlt, nach `dropModes`. So bekommt eine Liste, die Knoten einordnet und Notizen auf eine Zeile legt, für Knoten Hälften und für Notizen die ganze Zeile — nicht Drittel, deren Mitte den Knoten ablehnte (Review !1838). |
-| `dropVerdicts` | Objekt | Antwort des Servers je Probe: angenommen oder abgelehnt mit Grund (`tl-table__hint`). |
+| `dropVerdicts` | Objekt | Antwort des Servers je Probe: angenommen oder abgelehnt mit Grund (`tl-drop-hint`, `drag.contract.md`). |
 
 ## Aktionen
 
@@ -213,7 +213,7 @@ Bauteile anderer Blöcke:
 | `tl-skeleton` | in `tl-table__placeholder` für Zeilen im Fenster, die der Server noch nicht geschickt hat; der Platzhalter ist `aria-hidden`, das Raster trägt `aria-busy` |
 | `tl-chip` | benannter Filter in der Filterleiste: `span.tl-chip` > `tl-chip__toggle` (`aria-pressed`) und, wenn löschbar, `tl-chip__remove`. Verschwindet die Kapsel mit ihrem fokussierten `tl-chip__remove`, geht der Fokus zum Entfernen-Knopf der Nachbarkapsel (gleicher Platz, sonst der vorige), ohne einen ins Suchfeld, sonst ins Raster (WCAG 2.4.3; derselbe Helfer wie beim Wert-Chip des Select) |
 | `tl-field-group` | Suche (`tl-table__search`) mit Lupe und, solange Text steht, Löschknopf (`js.textInput.clear`), nach dem Löschen bleibt der Fokus im Feld — dieselbe Suche wie in der Spaltenwahl (`reorder-list.contract.md`); der Name beim Speichern ist ein `tl-field` in `tl-table__save` |
-| `tl-popover` | Grund einer Ablehnung beim Ziehen (`tl-table__hint`), Lage aus `bridge/popover.ts` |
+| `tl-popover` | Grund einer Ablehnung beim Ziehen, mit `tl-drop-hint` (`drag.contract.md`; vorher `tl-table__hint`), Lage aus `bridge/popover.ts` |
 
 Klassen:
 
@@ -241,12 +241,12 @@ Klassen:
 | `tl-table__row` | jede Zeile |
 | `tl-table__cell` | jede Zelle |
 | `tl-table__select` | die Zelle der Auswahlspalte (mit `tl-table__cell` bzw. `tl-table__header-cell`) |
+| `tl-table__cell--command` | die Zelle einer Spalte mit einem Befehl je Zeile (`RowCommandColumn`): ohne Innenabstand, der Knopf (ghost, klein) mittig. Die Java-Klasse der Spalte landet an Kopf- und Datenzelle, darum gilt die Regel für `tl-table__cell` und `tl-table__header-cell`. Eine Form, kein Zustand |
 | `tl-table__tree` | Toggle, Einzug und Wert in der Baumspalte; ein `div`, kein `span`: er ist eine Flex-Reihe, kein Lesewert — als Lesewert füllt die Zelle nur ein `span` ohne Klasse oder ein `tl-text` (siehe „Zellinhalt“) |
 | `tl-table__spacer` | Platzhalter eines Blatts an der Stelle des Toggles |
 | `tl-table__value` | der Wert neben dem Toggle; endet mit Ellipse |
 | `tl-table__count` | Anzahl der Gruppenzeile |
 | `tl-table__placeholder` | Zeile im Fenster, die der Server noch nicht geschickt hat: `aria-hidden`, trägt ein `tl-skeleton`; keine Ladezeile mit `tl-progress` |
-| `tl-table__hint` | der Grund einer Ablehnung (am `tl-popover`) |
 | `tl-table__footer` | die Zeilenzahl unter dem Rahmen, `tl-type-label`; steht nur, solange `rowCount` nicht leer ist |
 | `tl-table__row-count` | wie viele Zeilen (von wie vielen) |
 | `tl-table__selection-count` | wie viele ausgewählt, nach einem Mittelpunkt |
@@ -266,6 +266,8 @@ Zeile.
 | `tl-pill`, `tl-badge`, `tl-chip` | Kapsel: behält ihr `display` und ihre Form, an die Zelle gebunden mit `max-width: 100%`. Die Pill (auch die Wurzel eines Texts als Pill, `text.contract.md`) kürzt ihre Beschriftung `tl-pill__label` mit Ellipse. |
 | `a` | so breit wie sein Text, höchstens die Zelle, endet mit Ellipse. |
 | `tl-field-value`, `tl-select__values`, `tl-choice-group` | bleibt eine Reihe und bricht nicht um; eine Werteliste wird an der Spaltenkante abgeschnitten. |
+| `tl-value-list` (lesend, `span`) | ein Lesewert wie ein Text: füllt die Zelle als Block, eine Zeile, endet mit Ellipse; die Variante `tl-value-list--block` steht in der Zelle in einer Zeile, Einträge und Trenner im Fluss (`value-list.contract.md`). Spezifität (0,2,0), `hidden` blendet aus. |
+| `tl-stack--row` (Wert mit Zusatzknopf, etwa dem Sprachknopf eines mehrsprachigen Texts) | eine Reihe in Spaltenbreite; mit `tl-stack--grow-first` nimmt der Wert den Platz und endet mit Ellipse. |
 | `tl-field`, `tl-field-group` | ist die Zelle: randlos, so hoch wie die Zeile (siehe Tokens). |
 
 Breiten, Versätze haftender Zellen, Einzug und die Lage der Zeilen sind Daten und stehen inline

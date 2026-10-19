@@ -360,6 +360,14 @@
   padding: 0;
 }
 
+/* Eine Spalte mit einem Befehl je Zeile (RowCommandColumn): der Knopf ist ghost und klein und trägt seinen Rahmen
+   selbst, die Zelle keinen Innenabstand, mittig. Die Java-Klasse landet an Kopf- und Datenzelle. */
+.tl-table__cell--command,
+.tl-table__header-cell.tl-table__cell--command {
+  padding: 0;
+  justify-content: center;
+}
+
 /* Lage, kein Zustand der Bedienung: fixierte und angeheftete Zellen haften (Versatz inline), liegen mit
    layer-raised über den scrollenden und erben die Fläche ihrer Zeile. Die Kante zur scrollenden Fläche
    ist eine Linie border-emphasis, kein Schatten. */
@@ -451,6 +459,38 @@
 
 .tl-table__cell .tl-field-value--multiline {
   flex-direction: row;
+  white-space: nowrap;
+}
+
+/* Eine Liste von Werten (tl-value-list, lesend ein span) ist ein Lesewert wie ein Text: sie füllt die Zelle und endet
+   mit Ellipse, wo die Spalte endet. :where hält die Spezifität bei (0,2,0), [hidden] unten gewinnt. Die bearbeitende
+   Liste (div, role="group") bleibt eine Spalte von Zeilen. */
+.tl-table__cell > .tl-value-list:where(span) {
+  display: block;
+  inline-size: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* In der Zelle liest sich die Variante untereinander als die eine Zeile, die die Zeile hoch ist: Einträge und Trenner
+   stehen im Fluss. */
+.tl-table__cell .tl-value-list--block > .tl-value-list__item,
+.tl-table__cell .tl-value-list--block > .tl-select__separator {
+  display: inline;
+}
+
+/* Ein Wert mit Zusatzknopf daneben (der Sprachknopf eines mehrsprachigen Texts): eine Reihe in Spaltenbreite, der Wert
+   nimmt den Platz (tl-stack--grow-first) und endet mit Ellipse. */
+.tl-table__cell > .tl-stack--row {
+  inline-size: 100%;
+  min-width: 0;
+}
+
+.tl-table__cell > .tl-stack--grow-first.tl-stack--row > :first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
@@ -576,14 +616,4 @@
 .tl-table__body > [role="row"]:has(> .tl-status) {
   position: sticky;
   inset-inline-start: 0;
-}
-
-/* --- Ablehnung beim Ziehen ------------------------------------------------------- */
-
-/* Warum das Ziel unter dem Zeiger ablehnt: ein tl-popover (Lage aus bridge/popover.ts), Text und Rand
-   in Fehlerfarbe; der Zeiger geht hindurch. */
-.tl-table__hint {
-  border-color: var(--tl-status-error-border);
-  color: var(--tl-status-error-text);
-  pointer-events: none;
 }

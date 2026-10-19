@@ -27,8 +27,7 @@ Das Control ist `TLOverlay` (`ReactOverlayControl`, View-Element `<overlay>` mit
 | Control | Form |
 |---|---|
 | `TLHtml` | Dokument mit Druckknopf: `tl-overlay tl-overlay--fill`, das Dokument (`tl-media--document`) ist die Basis `tl-overlay__base`, der Knopf liegt in `tl-overlay__layer--top-right` in einem `tl-overlay__action` — darin ein Part `Button` `ghost`, icon-only (`tl-button--ghost tl-button--icon`). |
-
-Die Ausblenden-Knöpfe der Dashboard-Kachel (Welle 5c) nutzen `tl-overlay--fill` und `tl-overlay__action` ebenso.
+| `TLDashboard` | Kachel: `tl-card tl-dashboard__tile tl-overlay tl-overlay--fill`, der Inhalt in `tl-overlay__base`. Im Bearbeiten zuerst eine Ebene `tl-overlay__layer--fill` mit der Abdeckung `tl-dashboard__cover` (nimmt den Zeiger), danach eine Ebene `tl-overlay__layer--top-right` mit dem Ausblenden-Knopf in `tl-overlay__action` (Part `Button` ghost, icon-only) — die spätere Ebene liegt oben (`dashboard.contract.md`). |
 
 ## Tokens
 

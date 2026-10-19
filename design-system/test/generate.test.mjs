@@ -67,10 +67,11 @@ test('base.css: jede Typo-Klasse setzt fünf Eigenschaften aus Variablen', () =>
 test('base.css: Zahlenklasse, Fokusring, Reduced Motion, Druckklassen', () => {
   assert.ok(base.includes('.tl-nums {'));
   assert.ok(base.includes('font-variant-numeric: tabular-nums slashed-zero'));
-  // Zwei Selektoren, eine Regel: der Ring am fokussierten Element und am Cursor-Element eines Behälters
-  // mit aria-activedescendant (3b §3). Die Deklaration steht genau einmal (focus.test.mjs). Dazu die eine
-  // Ausnahme: der Behälter mit Cursor zeichnet kein Browser-Outline.
-  assert.equal((base.match(/:focus-visible/g) ?? []).length, 3, 'ein Fokusring, zwei Selektoren, eine Ausnahme');
+  // Drei Selektoren, eine Regel: der Ring am fokussierten Element, am Cursor-Element eines Behälters
+  // mit aria-activedescendant (3b §3) und an der Dashboard-Kachel, deren verborgener Knopf den Fokus hat (5c §6).
+  // Die Deklaration steht genau einmal (focus.test.mjs). Dazu die eine Ausnahme: der Behälter mit Cursor zeichnet
+  // kein Browser-Outline.
+  assert.equal((base.match(/:focus-visible/g) ?? []).length, 4, 'ein Fokusring, drei Selektoren, eine Ausnahme');
   assert.ok(base.includes('outline: var(--tl-focus-width) solid var(--tl-focus-ring)'));
   assert.ok(base.includes('outline-offset: var(--tl-focus-offset)'));
   assert.ok(!/:focus\b(?!-visible)/.test(base), 'kein :focus ohne -visible');

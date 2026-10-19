@@ -158,6 +158,9 @@ Symbole (Pfeil, Löschen, Entfernen, Suche, Ziehgriff) sind `ThemeIcon` in `tl-i
 setzt feste ThemeImages (`css:fa-solid fa-chevron-down` / `fa-chevron-up`, `fa-xmark`,
 `fa-magnifying-glass`, `fa-grip-vertical`), wie `TLValueList` — sie kommen nicht aus dem Theme.
 
+Leser auch `TLValueList` (`value-list.contract.md`): der Trenner „, “ zwischen lesenden Werten ist
+`tl-select__separator`.
+
 ## Konformität
 
 Eine Komponente besteht den Vertrag, wenn sie im Specimen-Harness des Pakets für jeden Zustand oben

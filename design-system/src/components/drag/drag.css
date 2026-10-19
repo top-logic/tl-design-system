@@ -65,3 +65,12 @@
 [data-tl-state~="dragging"] {
   opacity: 0.4;
 }
+
+/* Warum das Ziel unter dem Zeiger ablehnt (Spec 5c §8): ein tl-popover (Lage aus bridge/popover.ts) an Tabelle, Baum
+   und Board, Text und Rand in Fehlerfarbe; der Zeiger geht hindurch. Vorher tl-table__hint. Am tl-popover, weil
+   popover.css im Bundle nach drag.css steht und seinen Rand sonst über diesen legte. */
+.tl-popover.tl-drop-hint {
+  border-color: var(--tl-status-error-border);
+  color: var(--tl-status-error-text);
+  pointer-events: none;
+}

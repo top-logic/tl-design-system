@@ -22,6 +22,9 @@ Die Stufe folgt der Verschachtelung, nicht einer Variante. Das TSX liest sie aus
 
 Hell sind `layer` und `nested` weiß; dort trennt die Linie (`--tl-border-width-sm` `--tl-border-separator`).
 
+Leser auch `TLDashboard` (`dashboard.contract.md`): die Kachel ist `tl-card` mit Fläche nach Lage wie oben; sie rollt
+(`overflow: auto`) statt zu beschneiden, ihre Höhe gibt das Raster.
+
 ## Attribute
 
 | Attribut | Wann |

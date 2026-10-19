@@ -12,6 +12,8 @@ BottomBar und Reiter setzen es. (`feedback.test.mjs` verlangt den Satz „kein C
 |---|---|---|
 | `content` | integer oder kurzer string | Die Ziffern oder das Kürzel; Text gehört in eine Pill. |
 
+Leser auch `TLKanbanBoard` (`board.contract.md`): der Zähler der Karten im Kopf einer Spalte.
+
 ## Aktionen
 
 Keine. Ein Badge ist Anzeige.

@@ -15,6 +15,9 @@ nur Lage und Abstand. Die Gap-Skala teilen sie mit `tl-columns`.
 | Haken der ausgewählten Option | `selectable`, `selected` | `tl-item__check`: ein dekoratives `<span aria-hidden="true">` in der Hülle, nur bei `aria-selected="true"`; sitzt oben am Ende, fängt keinen Klick; die Auswahl bleibt allein in `aria-selected` |
 | Auswahl unter den Einträgen | `selectable`, `itemKeys`, `selected`, `multiSelect` | der Behälter `role="listbox"` (mehrfach: `aria-multiselectable`), jede Hülle `role="option"` mit `aria-selected`; kein Modifier |
 
+Leser der Auswahl auch `TLKanbanBoard` (`board.contract.md`): jede Karte ist ein `tl-item` mit `tl-board__card`,
+`role="option"` und `aria-selected`, mit Haken `tl-item__check`; die Karten-Liste einer Spalte ist die Listbox.
+
 ## Aktionen
 
 | Befehl | Wann |
