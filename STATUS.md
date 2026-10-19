@@ -188,7 +188,7 @@ wie vorgeschlagen“, V25 mit gefüllten Kategorie-Tokens. **Spec freigegeben** 
 `docs/superpowers/specs/2026-10-19-welle-5c-planen-und-ziehen-design.md`; `skalen.md` „Welle 5c“, Präsentation.
 **Plan** `docs/superpowers/plans/2026-10-19-welle-5c-planen-und-ziehen.md` (elf Tasks), Plan-Review Fable mit Probelauf,
 Befunde 1–24 eingearbeitet. **5c gebaut (19.10., SDD Tasks 1–9 mit savvy-flow, Sichtprüfung und Abschluss), lokal, nicht gepusht.** Paket `main`
-bis `50d53fd`+, Engine-Branch bis `c3b462297b`. Gates: Paket 597/0, `tsc` 0, MUI-Vitest 739, `layout.react` 717/0,
+bis `717183e`, Engine-Branch bis `c3b462297b`. Gates: Paket 597/0, `tsc` 0, MUI-Vitest 739, `layout.react` 717/0,
 `layout.configedit` 343/0, `layout.view` 1513/0 (englische Locale per `argLine`), `demo.react` 13/0,
 `check-messages-en.sh` sauber. Ratsche `lines` 683 → 198 (TLValueList, Tabellenzellen, Dashboard, TLKanbanBoard,
 TLCalendar gestrichen). Opus-Review des Rechenkerns: kein Fehler. Beim Bauen entschieden: `skalen.md` „Welle 5c“
