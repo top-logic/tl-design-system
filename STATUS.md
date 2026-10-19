@@ -163,8 +163,8 @@ Builder-Prüfung eingearbeitet, Frage A: „Aufnahme läuft“ gefüllt rot wie 
 `skalen.md` „Welle 5b: Medien“; V22 (zwei Schrittlisten → `tl-steps`) in `altlast.md`. Neu: Sammelliste
 `docs/ui-durchgang.md` (U1–U7) für den UI-Durchgang nach Welle 5.
 **!1911 nachgezogen (19.10.):** Bernhard mergte master mit !1907 (#29659 Popover-Element) in 4c (`fce290f4c3`); seine
-Regel `.tl-popover--content` lag im alten Stylesheet → ins Paket (Paket `5f62325`, Engine 4c `aac86b328a`, lokal,
-**Push 4c wartet auf Freigabe**, Antwort-Entwurf im Scratchpad `reply-1911.md`). 4c in 5a gemergt (`dce3322bc7`;
+Regel `.tl-popover--content` lag im alten Stylesheet → ins Paket (Paket `5f62325`, Engine 4c `aac86b328a`,
+**gepusht 19.10.**, Antwort in !1911, `bhu` und `jenkins` neu angefragt). 4c in 5a gemergt (`dce3322bc7`;
 Picker behalten die 5a-Hülle, `popover.ts` vereint Platzierungen/Hover mit der 5a-Middleware), 5b vorgespult. Gates:
 Paket 523/0, `tsc` 0, MUI-Vitest 619/619, Maven `layout.react` 717/0. **Weiter:** Plan 5b, Plan-Review, SDD.
 
