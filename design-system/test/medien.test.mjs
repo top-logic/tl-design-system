@@ -85,6 +85,8 @@ test('overlay: fill, base, action', () => {
   const action = decl('overlay', '.tl-overlay__action');
   for (const t of ['surface-overlay', 'radius-md', 'shadow-popover', 'space-2xs'])
     assert.match(action, new RegExp(`var\\(--tl-${t}\\)`), t);
+  // Sichtprüfung 19.10.: der Knopf schwebt mit Abstand zur Ecke, nicht bündig am Rand.
+  assert.match(action, /margin:\s*var\(--tl-space-xs\)/);
   // Die Basis gibt ihrem Kind die volle Höhe: sonst bliebe ein iframe darin 150 px hoch.
   assert.match(decl('overlay', '.tl-overlay--fill > .tl-overlay__base'), /flex-direction:\s*column/);
   assert.match(decl('overlay', '.tl-overlay--fill > .tl-overlay__base > *'), /flex:\s*1 1 auto/);

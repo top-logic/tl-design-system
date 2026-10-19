@@ -992,6 +992,28 @@ duration 9 → 3, outlineNone 7 → 1, zIndex unverändert 10. Engine-Gate `ALT_
 - Kamera-Dialog: `.tl-dialog__surface > .tl-titlebar { cursor: grab }` trifft auch den nicht ziehbaren Dialog →
   `docs/ui-durchgang.md` U8.
 
+### Sichtprüfung (19.10., lokale Demo, Chrome, dunkel, normal)
+
+Geprüft: „Medien“ (Kamera und Mikrofon per Skript durch künstliche Ströme ersetzt, die Geräte-Rückfrage des Browsers
+bleibt Hendrik): Recorder gedrückt gefüllt rot mit Stopp-Glyphe, Name bleibt „Audio aufnehmen“, Stopp per Leertaste,
+Fokus bleibt; Player spielt („Audio pausieren“); Download zeigt `recording.webm`; Kamera-Dialog mit Fokus auf „Foto
+aufnehmen“, Spiegeln setzt `aria-pressed` und `data-tl-state="mirrored"`, Enter nimmt auf, Escape schließt, Fokus zurück
+am Kamera-Knopf, Bild zeigt das Foto, Download `capture.jpg`. „HTML-Inhalte“: Prosa mit fettem Tabellenkopf, Vorschauen,
+Dokument füllt (422 px), Druckknopf über dem weißen Dokument. „Bilder“, „Dokumentanzeige“ (Binärfeld lesend „Keine
+Datei“, PDF im Rahmen), Wizard unverändert, „Lang laufender Auftrag“ (Live-Zeile „Läuft. Schritt: Sammeln …“, Nummer
+passt in die kleine Scheibe), FileChips im Kommentar eines Tickets (Ablegen per Drag-Events: gestrichelt, Chip
+`notiz.txt`).
+
+| # | Befund | Ergebnis |
+|---|---|---|
+| S1 | Nach dem **ersten** Foto stand der Fokus auf `body`; bei jedem weiteren Foto (Maus wie Enter) kehrte er zum Kamera-Knopf zurück | nicht nachgestellt; vermutlich zeichnet die View beim ersten Kanalwert neu (Bild und Download erscheinen). Beobachten |
+| S2 | Druckknopf bündig in der Ecke des Dokuments, Schatten am Rand abgeschnitten | behoben: `tl-overlay__action` mit `margin: var(--tl-space-xs)` |
+| S3 | JobStatus zeigt den Namen des aktuellen Schritts zweimal sichtbar (Live-Zeile und Liste) | wie Spec §7 (Schrittzeile sichtbar); `docs/ui-durchgang.md` U9 |
+| S4 | URL-Sprung weg vom Ticket mit abgelegter Datei → „Internal error“ (`ChannelVetoException`) | bekannt seit 12.10. (Sichtprüfung 3b, (f)), Router, nicht 5b |
+
+Nicht geprüft: Hellmodus und Kompakt in der Demo (das Umschalten per Attribut erreichte die Panels nicht; das Paket
+prüft beide Modi über `focus-clip`, `pairs`, `contrast`), echte Geräte-Rückfragen, Herunterladen.
+
 ## Konsolidierung (01.10.) — Gleiches wird zusammengelegt
 
 Regel (CLAUDE.md „Arbeitsweise“, skalen.md „Gleiches wird zusammengelegt“): findet eine Erkundung zwei Stellen, die
