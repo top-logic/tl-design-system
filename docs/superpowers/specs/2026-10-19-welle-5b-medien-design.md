@@ -33,7 +33,7 @@ Was sicher neu gestaltet werden muss, steht in `docs/ui-durchgang.md` (U2 Medien
 
 **Java ändert sich nur, wo ein Zustand fehlt:** `FileListControl` (`layout.view`, Leser `TLFileChips`) bekommt die
 Upload-Zustände der übrigen Upload-Controls — `error` (Text des gescheiterten Hochladens, heute nur geloggt) und
-`maxSize` über `UploadSupport` (§6). Sonst bleiben Zustände, Befehle, Upload-Kanal und Teilnamen (`audio`, `photo`,
+`maxUploadSize` über `UploadSupport` (§6). Sonst bleiben Zustände, Befehle, Upload-Kanal und Teilnamen (`audio`, `photo`,
 `file`). Neue i18n-Schlüssel entstehen über JavaDoc, `messages_en` wird erzeugt; der Dialogtitel der Kamera nutzt
 `js.photoCapture.open`.
 
@@ -167,7 +167,7 @@ Der Fehlermodus von `TLHtml` ist schon `tl-alert` mit `role="alert"` und bleibt.
    `tl-file-upload__status` mit `role="alert"`. Ebenso die Gerätefehler von Recorder und Foto (`…error.denied`,
    `…error.insecure`).
 6. **Upload-Vertrag:** `TLFileChips`, `TLAudioRecorder`, `TLPhotoCapture` als Leser, mit ihren Teilnamen.
-7. **`FileListControl` (Java):** setzt `error`, wenn `handleUpload` scheitert (heute nur geloggt), und `maxSize` über
+7. **`FileListControl` (Java):** setzt `error`, wenn `handleUpload` scheitert (heute nur geloggt), und `maxUploadSize` über
    `UploadSupport` wie `ReactFileUploadControl`; der Fehler gilt bis zum nächsten erfolgreichen Hochladen. Einen Status
    `received` braucht FileChips nicht — die neue Chip-Liste ist die Bestätigung; `useUpload` setzt dort beim Eintreffen
    der neuen `chips` zurück. Test in `layout.view`.
@@ -232,7 +232,7 @@ Mehr nicht — der Rest gehört in den UI-Durchgang (U2, U7).
   `error` vom Server erscheint mit `role="alert"`; JobStatus (`aria-current`, Laufzeit außerhalb der `status`-Zeile,
   Schrittwechsel ändert deren Text, Fehler `role="alert"`); Wizard unverändert; MUI-Tests `busy-indicators`, `chips`
   nachgezogen.
-- **Java (`layout.view`):** `FileListControl` setzt `error` bei gescheitertem Hochladen und `maxSize`.
+- **Java (`layout.view`):** `FileListControl` setzt `error` bei gescheitertem Hochladen und `maxUploadSize`.
 - **Ratsche:** die zehn Blöcke gestrichen; `TestReactStylesheetTokens` ohne die Radius-Ausnahme.
 - **Engine:** `engine-classes.test.mjs` (`ALT_5B`) meldet `tlAudioRecorder`, `tlAudioPlayer`, `tlPhotoCapture`,
   `tlDownload`, `tlFileChips`, `tlImage`, `tlPdfViewer`, `tlHtml`, `tlJobStatus`, `tlCounter` und `TLCounter` in
@@ -248,7 +248,7 @@ Mehr nicht — der Rest gehört in den UI-Durchgang (U2, U7).
 2. **Paket: Dateien und Schritte.** `tl-file`, `dragover` an `tl-chip-group`, `tl-steps` (Wizard im Paket umgestellt),
    `tl-job-status`. Fertig: Specimen und Verträge, `focus-clip` grün.
 3. **Engine: Technik.** `useUpload`, `downloadBlob`; `TLFileUpload`, `TLBinaryField`, `TLFileChips`, `TLDownload` darauf;
-   `FileListControl` mit `error` und `maxSize`.
+   `FileListControl` mit `error` und `maxUploadSize`.
    Fertig: Blöcke TLDownload und TLFileChips leer, Vitest.
 4. **Engine: Aufnahme und Wiedergabe.** Recorder, Player, Foto mit Dialog; `TLCounter` gestrichen. Fertig: Blöcke
    TLAudioRecorder, TLAudioPlayer, TLPhotoCapture, TLCounter leer; Radius-Ausnahme weg.
@@ -300,7 +300,7 @@ Beim Schreiben entschieden (Orchestrator, Hendrik prüft beim Lesen):
    fehlt (Einblenden reicht, U6).
 8. **Live-Bereich des JobStatus** auf eine Textzeile verkleinert — die sekündlich tickende Laufzeit wird nicht mehr
    angesagt, ein Schrittwechsel schon.
-9. **`FileListControl` bekommt `error` und `maxSize`** (fehlender Zustand, Abschnitt 1 der Besprechung: Java nur, wo
+9. **`FileListControl` bekommt `error` und `maxUploadSize`** (fehlender Zustand, Abschnitt 1 der Besprechung: Java nur, wo
    ein Zustand fehlt) — sonst hätte FileChips keine Fehlerzeile (G1).
 10. **Font Awesome** statt Bootstrap für die neuen Glyphen — `bridge/icons.ts` hält Font Awesome, ein Bibliothekswechsel
     ändert nur diese Datei.

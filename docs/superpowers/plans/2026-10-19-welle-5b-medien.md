@@ -18,6 +18,11 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul.
 `docs/skalen.md` „Welle 5b: Medien“; Prognose in `docs/migration/altlast.md` „Welle 5“ (V2, V3, V4, V10, V14, V18,
 V22). Bestand: Scratchpad-Notizen `5b-inventory.md`, `5b-engine-facts.md` (nur Orchestrator).
 
+**Plan-Review** 19.10. durch einen frischen Agenten (Fable), Probelauf der Tasks 1–3 in einer Paketkopie: Lint grün,
+`node --test` 518/523 (Wizard-Test und `published` erwartet; drei Planfehler). Tokens, Part-API, Glyphen (Font
+Awesome 6.7.1), `ALT_5B`-Regex und Abhängigkeit `layout.view` → `layout.react` bestätigt. **Befunde 1–9
+eingearbeitet** (Tasks 1–4, 6, 7).
+
 ## Global Constraints
 
 - Ticket **#29904**; Commits beider Repos mit Präfix `Ticket #29904:`, Paket-Commits deutsch, Engine-Commits englisch,
@@ -65,8 +70,8 @@ V22). Bestand: Scratchpad-Notizen `5b-inventory.md`, `5b-engine-facts.md` (nur O
   `design-system/src/components/prose/prose.{css,contract.md,spec.html}`
 - Modify: `design-system/src/tokens.json` (Rolle `surface-document` in `light` und `dark`; Abschnitt `prose`),
   `tools/generate.mjs` (Prose-Selektoren an die Typo-Klassen), `tools/lint-css.mjs` (Blockliste),
-  `tools/lib/pairs.mjs` (falls die Rolle dort deklariert werden muss), `src/components/overlay/overlay.{css,contract.md,spec.html}`,
-  `test/popover.test.mjs` (Ausnahme), `specimen/index.html`
+  `src/components/overlay/overlay.{css,contract.md,spec.html}`, `test/popover.test.mjs` (Ausnahme),
+  `test/overlays.test.mjs:27` (Ausnahme), `specimen/index.html`
 - Create: `design-system/test/medien.test.mjs`, `design-system/test/contracts-5b.test.mjs`
 
 **Interfaces:**
@@ -98,13 +103,16 @@ V22). Bestand: Scratchpad-Notizen `5b-inventory.md`, `5b-engine-facts.md` (nur O
 - [ ] **Step 3: Rolle.** `surface-document` = `{gray-0}` in `light` und `dark`, Kommentar „Papier hinter fremdem HTML,
   in beiden Modi weiß (Spec 5b §5); kein Textpaar, der Inhalt kommt nicht vom Paket.“ Ist sie nach `pairs.test.mjs`
   („nennt jede Rolle, die tokens.test prüft“) oder einem Rollen-Test zu deklarieren, dort als Fläche ohne Paar
-  eintragen, mit demselben Kommentar. Probe-Theme neu rechnen
-  (`node tools/derive.mjs test/fixtures/probe.primitives.json specimen/probe.theme.css`) und mitcommitten.
+  eintragen, mit demselben Kommentar. Probe-Theme prüfen
+  (`node tools/derive.mjs test/fixtures/probe.primitives.json specimen/probe.theme.css`): es bleibt byte-gleich
+  (`gray-0` weicht nicht ab), kein Commit nötig.
 - [ ] **Step 4: Prose über den Generator.** `tokens.json` bekommt `"prose": { "_": "Selektoren in .tl-prose je
   Typo-Klasse (Spec 5b §5)", "heading-lg": ["h1"], "heading-md": ["h2"], "heading-sm": ["h3", "h4", "h5", "h6"],
-  "body": ["p", "li", "td", "th", "blockquote"], "code": ["code", "pre"] }`. `baseCss` in `tools/generate.mjs` hängt an
-  die Selektorliste jeder `.tl-type-<n>`-Regel `, .tl-prose <el>` für jedes Element aus `T.prose[n]` (das Lint
-  erlaubt Typo, weil die Regel `.tl-type-` trägt und in `base.css` steht).
+  "body": ["p", "li", "td", "th", "blockquote"], "code": ["code", "pre"] }`. `baseCss` in `tools/generate.mjs` stellt jeder
+  `.tl-type-<n>`-Regel die Prose-Selektoren **voran**, je auf eigener Zeile:
+  `${(T.prose[n] ?? []).map(el => `.tl-prose ${el},\n`).join('')}.tl-type-${n} {` — angehängt bräche
+  `test/generate.test.mjs:56` (`indexOf('.tl-type-${n} {')`) und `test/text.test.mjs:26` (`^\.tl-type-body\s*\{`). Das
+  Lint erlaubt die Typo, weil die Selektorliste `.tl-type-` trägt und in `base.css` steht (Plan-Review B1).
 - [ ] **Step 5: `prose.css`** — nur Abstände und Farben: Absatz- und Listenabstand aus `--tl-space-sm`, Überschrift oben
   `--tl-space-md`, erstes Kind ohne Abstand oben; `a` `--tl-text-link`, `a:hover` `--tl-text-link-hover`; `code`, `pre`
   auf `--tl-surface-layer-nested` mit `--tl-radius-sm`, `pre` mit `overflow: auto`; `table` `border-collapse`, Zellen
@@ -121,7 +129,9 @@ V22). Bestand: Scratchpad-Notizen `5b-inventory.md`, `5b-engine-facts.md` (nur O
   Fläche `--tl-surface-overlay`, Rand `--tl-border-width-sm` `--tl-border-separator`, Ecke `--tl-radius-md`, Schatten
   `--tl-shadow-popover` (+ `[hidden]`). `test/popover.test.mjs` „nur tl-popover setzt die Popup-Fläche“ bekommt die
   Ausnahme `name !== 'overlay/overlay.css'` mit Kommentar `// Ausnahme 19.10. (Welle 5b): der Knopf über einer Fläche
-  (tl-overlay__action) schwebt wie ein Popover, ohne Portal.`
+  (tl-overlay__action) schwebt wie ein Popover, ohne Portal.` `test/overlays.test.mjs:27` (`doesNotMatch(/z-index|background/)`
+  über die ganze Datei) prüft künftig nur die Deklarationen von `.tl-overlay` und `.tl-overlay__layer*`, Kommentar
+  „Ausnahme 19.10. (5b): tl-overlay__action trägt die Fläche für den Knopf über dem Dokument.“
 - [ ] **Step 8: Lint.** Blockliste: `'tl-media': new Set(['cover', 'contain', 'document'])`, `'tl-prose': new Set([])`,
   `'tl-overlay': new Set(['fill'])` (Kommentar bleibt: Anker sind Element-Modifier).
 - [ ] **Step 9: Verträge und Specimen.** `media.spec.html`: Bild `cover` und `contain` (Bild als Daten-URI ohne
@@ -153,8 +163,8 @@ V22). Bestand: Scratchpad-Notizen `5b-inventory.md`, `5b-engine-facts.md` (nur O
 - [ ] **Step 1: Failing tests** in `test/medien.test.mjs`:
   - `button: gedrückt in danger ist gefüllt rot` — Regel `.tl-button--danger[aria-pressed="true"]` liest
     `--tl-status-error-surface` und `--tl-text-on-status-error`; `:hover` `-hover`, `:active` `-active` (dieselben
-    sechs Rollen wie `.tl-button--danger.tl-button--primary`); die Regel steht in `button.css` **nach**
-    `.tl-button[aria-pressed="true"]` (gleiche Spezifität, die spätere gewinnt).
+    sechs Rollen wie `.tl-button--danger.tl-button--primary`), `border-color` je gleich der Fläche; die Regel steht
+    in `button.css` nach `.tl-button[aria-pressed="true"]:hover` und vor `.tl-button:disabled`.
   - `file: Name mit Ellipse, leer in text-secondary, nicht kursiv` — `.tl-file__name` setzt `text-overflow: ellipsis`,
     `overflow: hidden`, `white-space: nowrap`, `max-inline-size` aus einem Maß-Token (`--tl-size-13`);
     `.tl-file[data-tl-state~="empty"]` liest `--tl-text-secondary`; `file.css` ohne `font-style`.
@@ -164,12 +174,15 @@ V22). Bestand: Scratchpad-Notizen `5b-inventory.md`, `5b-engine-facts.md` (nur O
     `upload` (`TLFileChips`, `TLAudioRecorder`, `TLPhotoCapture`, `audio`, `photo`, `tl-chip-group`), `button`
     (`aria-pressed`, `TLAudioRecorder`); `SPECIMEN` + `file`.
 - [ ] **Step 2: Run** — FAIL.
-- [ ] **Step 3: Implement.** `button.css`: die drei Regeln nach dem Block „Zustände als Attribute“. `file.css`:
+- [ ] **Step 3: Implement.** `button.css`: die drei Regeln **direkt nach** `.tl-button[aria-pressed="true"]:hover`
+  (vor `:disabled` — dahinter schlügen sie Deaktiviert), je mit `border-color` gleich der Fläche (sonst bliebe der blaue
+  Rand `--tl-border-interactive` des gedrückten Zustands auf Rot). `file.css`:
   `.tl-file` `display: inline-flex`, `align-items: center`, `gap: var(--tl-space-control-gap)`, `min-block-size:
   var(--tl-size-control)` (+ `[hidden]`). `upload.css`: Selektorliste erweitern. Lint: `'tl-file': new Set([])`.
   Specimen `file.spec.html` (gefüllt mit Download-Knopf, leer, lang mit Ellipse); `button.spec.html` um einen
   gedrückten `danger`-Icon-Knopf. Verträge: `button` (Leser Medienknöpfe, gedrückt in `danger`), `upload` (Leser mit
-  Teilnamen `file`/`audio`/`photo`), `choice` (Chip-Gruppe als Drop-Zone von `TLFileChips`).
+  Teilnamen `file`/`audio`/`photo`; Zustandsschlüssel `maxSize` → `maxUploadSize`, wie Engine und `UploadSupport` ihn
+  führen; `tl-upload` als Hülle auch des Recorders und der Kamera in der Klassentabelle), `choice` (Chip-Gruppe als Drop-Zone von `TLFileChips`).
 - [ ] **Step 4: Run** `node tools/generate.mjs && node tools/lint-css.mjs && node tools/publish-to-worktree.mjs &&
   node --test` — grün (die Paare `text-on-status-error` auf `status-error-surface*` stehen schon in `pairs.mjs`).
 - [ ] **Step 5: Commit** Paket „Ticket #29904: Paket -- Knopf gedrückt in danger, tl-file, Ziehen an der
@@ -181,7 +194,8 @@ V22). Bestand: Scratchpad-Notizen `5b-inventory.md`, `5b-engine-facts.md` (nur O
 **Files:**
 - Create: `design-system/src/components/steps/steps.{css,contract.md,spec.html}`,
   `design-system/src/components/job-status/job-status.{css,contract.md,spec.html}`
-- Modify: `design-system/src/components/wizard/wizard.{css,contract.md,spec.html}`, `test/behaelter.test.mjs:215–221`,
+- Modify: `design-system/src/components/wizard/wizard.{css,contract.md,spec.html}`, `test/behaelter.test.mjs:209–220` (Test „Wizard: drei Stufen der Scheibe“; Zeile 198–201 verbietet
+  `@keyframes` in `wizard.css` — der Puls gehört nach `steps.css`),
   `test/contracts-4c.test.mjs:29,91–95`, `tools/lint-css.mjs`, `specimen/index.html`
 - Modify (Engine): `com.top_logic.layout.react/react-src/controls/TLWizard.tsx` (Schrittliste)
 - Test: `test/medien.test.mjs`, `test/contracts-5b.test.mjs`
@@ -199,7 +213,7 @@ V22). Bestand: Scratchpad-Notizen `5b-inventory.md`, `5b-engine-facts.md` (nur O
     .tl-steps__disc` hat `animation` mit `var(--tl-duration-loop)` und `var(--tl-easing-standard)`; waagrecht keine
     Animation (der Wizard bleibt ruhig).
   - `wizard: liest tl-steps` — `wizard.css` enthält keinen Selektor `tl-wizard__steps`, `__step-item`, `__disc`,
-    `__step-name`; Anpassung von `behaelter.test.mjs:215–221` und `contracts-4c.test.mjs:29,91–95` auf die
+    `__step-name`; Anpassung von `behaelter.test.mjs:209–220` und `contracts-4c.test.mjs:29,91–95` auf die
     `tl-steps`-Namen (dieselben Rollen, dieselbe Größe `--tl-size-icon-lg`).
   - `job-status: Live-Zeile, Fehler als alert` — Vertrag nennt `role="status"` an `tl-job-status__live`,
     `role="alert"` an `tl-job-status__error`, `tl-steps--vertical`, `tl-nums`, `tl-visually-hidden`; `.tl-job-status__error`
@@ -212,8 +226,8 @@ V22). Bestand: Scratchpad-Notizen `5b-inventory.md`, `5b-engine-facts.md` (nur O
   waagrecht `flex-wrap: wrap`, `gap: var(--tl-space-xs) var(--tl-space-xl)`; senkrecht `flex-direction: column`, `gap:
   var(--tl-space-2xs)`, Scheibe dort `--tl-size-icon-md`. Puls: `@keyframes tl-steps-pulse` (Opazität 1 → 0,4,
   `infinite alternate`); Reduced-Motion regelt `base.css` global. `job-status.css`: Spalte, `gap: var(--tl-space-xs)`;
-  Kopf Zeile mit `gap: var(--tl-space-sm)`, `__cancel` `margin-inline-start: auto`. Lint:
-  `'tl-steps': new Set(['vertical'])`, `'tl-job-status': new Set([])`. Specimen: `steps.spec.html` (waagrecht und
+  Kopf Zeile mit `gap: var(--tl-space-sm)`, `__cancel` `margin-inline-start: auto`. Je `.tl-steps[hidden]`, `.tl-job-status[hidden]`
+  (`test/hidden.test.mjs`). Lint: `'tl-steps': new Set(['vertical'])`, `'tl-job-status': new Set([])`. Specimen: `steps.spec.html` (waagrecht und
   senkrecht, je erledigt/aktuell/offen), `job-status.spec.html` (läuft mit Schritten und Balken, gescheitert mit
   Fehler, abgeschlossen), `wizard.spec.html` auf `tl-steps`.
 - [ ] **Step 4: Engine.** `TLWizard.tsx`: `ol.tl-steps` statt `tl-wizard__steps`, `li.tl-steps__item`, Scheibe
@@ -257,8 +271,8 @@ V22). Bestand: Scratchpad-Notizen `5b-inventory.md`, `5b-engine-facts.md` (nur O
   `ICON_FILE = 'css:fa-regular fa-file'`, `ICON_ATTACH = 'css:fa-solid fa-paperclip'` (je mit JavaDoc-Kommentar wie die
   Nachbarn).
 
-- [ ] **Step 1: Failing Vitest** `media.test.tsx` (Testregistry ohne Parts: `replacePart` für `Button`, `Chip` mit den
-  MUI-Adaptern, Muster `containers.test.tsx:1–30`; `fetch` und `URL.createObjectURL` gestubbt):
+- [ ] **Step 1: Failing Vitest** `media.test.tsx` (Testregistry ohne Parts: `replacePart` für `Button`, `Chip`, `ProgressBar` mit den
+  MUI-Adaptern wie `busy-indicators.test.tsx`, Muster `containers.test.tsx:1–30`; `fetch` und `URL.createObjectURL` gestubbt):
   - `useUpload`: `upload` setzt `uploading`, ruft `useTLUpload` mit `FormData` (Teilname und Dateiname wie übergeben);
     Server-`error` erscheint; `status: 'received'` setzt `uploading` zurück.
   - `downloadBlob`: holt die URL, legt einen Anker mit `download=fileName` an, klickt, entfernt ihn, gibt die
@@ -281,10 +295,12 @@ V22). Bestand: Scratchpad-Notizen `5b-inventory.md`, `5b-engine-facts.md` (nur O
   `putState(UploadSupport.MAX_UPLOAD_SIZE, UploadSupport.maxUploadSize())` (Schlüssel `maxUploadSize`, den
   `useTLUpload` liest) und in `handleUpload` bei `IOException` `putState("error", ex.getMessage())`, bei Erfolg
   `putState("error", null)` — Konstante `ERROR = "error"` mit JavaDoc wie `ReactFileUploadControl`. Die Umwandlung
-  `Part` → `BinaryData` über `UploadSupport.toBinaryData(Part)` statt der eigenen Kopie. Test: ist ein `FileListControl`
-  mit dem Fixture aus `AbstractTicketFormTest` (Feld einer Binärliste) zu bauen, Test `TestFileListUpload` (Upload mit
-  einem `Part`, dessen `getInputStream()` wirft → `error` gesetzt; danach erfolgreicher Upload → `error` null); sonst
-  **melden** (NEEDS_CONTEXT), nicht ausweichen.
+  `Part` → `BinaryData` über `UploadSupport.toBinaryData(Part)` statt der eigenen Kopie. Test `TestFileListUpload` mit dem Fixture
+  von `TestCompositionCell` (`extends AbstractModelAccessTest`, `_project` mit Komposition `STEPS`,
+  `TestCompositionCell.java:95–115`): `new FileListControl(_context, _form, STEPS, null)`, `init()`, `enterEditMode()`;
+  Upload mit einem `Part` (Name `file`), dessen `getInputStream()` wirft → `error` gesetzt; danach ein Upload mit
+  lesbarem `Part` → `error` null (ohne Datenattribut liefert `dataPart(row)` null, `addRow` läuft trotzdem);
+  `maxUploadSize` steht im Zustand. Geht das Fixture nicht, **melden** (NEEDS_CONTEXT), nicht ausweichen.
 - [ ] **Step 5: Alt löschen** — Blöcke „TLDownload“ und „TLFileChips“ in `tlReactControls.css`; in `ratchet.json`
   streichen, Literale auf den Messwert (`node tools/inventory.mjs`), Vermerk an `_blocks`. `chips.test.tsx:401` prüft
   den Knopf künftig über seine Rolle und seinen Namen (`js.fileChips.add`), nicht über die Klasse.
@@ -361,7 +377,9 @@ V22). Bestand: Scratchpad-Notizen `5b-inventory.md`, `5b-engine-facts.md` (nur O
 
 **Files:**
 - Modify: `react-src/bridge/icons.ts` (`ICON_PRINT = 'css:fa-solid fa-print'`), `controls/TLImage.tsx`,
-  `controls/TLPdfViewer.tsx`, `controls/TLHtml.tsx`
+  `controls/TLPdfViewer.tsx`, `controls/TLHtml.tsx`; `ReactHtmlControl.java:153` (JavaDoc nennt die Klasse `tlHtml`),
+  `com.top_logic.layout.view/src/main/java/META-INF/tl-docs/view-layer/display.md:92,106` (`.tlImage`, `tlHtml--`) —
+  sonst bleibt `ALT_5B` (Task 8) rot
 - Modify: `tlReactControls.css` (Blöcke „TLImage“, „TLPdfViewer“, „TLHtml“), `design-system/test/ratchet.json`
 - Test: `media.test.tsx`
 
@@ -380,7 +398,8 @@ V22). Bestand: Scratchpad-Notizen `5b-inventory.md`, `5b-engine-facts.md` (nur O
   zweimal) entfällt.
 - [ ] **Step 4: Alt löschen** — drei Blöcke; `ratchet.json`.
 - [ ] **Step 5: Run** Vitest, `tsc`, Paket `node --test`, Maven `test` `layout.view` (`TestHtmlElement`,
-  `TestImageElement`, `TestOverlayElement`) — grün.
+  `TestImageElement`, `TestOverlayElement`, `TestDocumentation`), `check-messages-en.sh` (JavaDoc in
+  `ReactHtmlControl`) — grün.
 - [ ] **Step 6: Commit** Engine „Ticket #29904: Image, PDF and HTML read the design system package -- tl-media,
   document surface, print button over the document, embedded HTML as tl-prose.“; Paket „Ticket #29904: Ratsche --
   TLImage, TLPdfViewer, TLHtml gestrichen“.
@@ -391,7 +410,8 @@ V22). Bestand: Scratchpad-Notizen `5b-inventory.md`, `5b-engine-facts.md` (nur O
 - Modify: `react-src/controls/TLJobStatus.tsx`, `com.top_logic.layout.react/src/main/java/com/top_logic/layout/react/I18NConstants.java`,
   `src/main/java/META-INF/messages_de.properties`
 - Modify: `tlReactControls.css` (Block „TLJobStatus (what a long-running job reports)“), `design-system/test/ratchet.json`
-- Modify: `com.top_logic.layout.react.mui/react-src/adapters/busy-indicators.test.tsx:89`
+- Modify: `com.top_logic.layout.react.mui/react-src/adapters/busy-indicators.test.tsx:89`,
+  `com.top_logic.layout.view/src/main/java/META-INF/tl-docs/view-layer/commands.md:187` (`tlJobStatus`)
 - Test: `media.test.tsx`
 
 **Interfaces:**
