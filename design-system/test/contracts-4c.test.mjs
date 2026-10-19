@@ -26,7 +26,7 @@ const SOLL = {
   'slide/slide.contract.md': ['tl-slide-in-forward', 'tl-slide-out-backward', '--tl-space-md'],
   'tile-stack/tile-stack.contract.md': ['tl-tile-stack', 'tl-tile-stack__frame', 'data-tl-state~="covered"',
     'data-tl-state~="entering"', 'data-tl-state~="exiting"', 'data-tl-state~="backward"', 'useKeyedTransition'],
-  'wizard/wizard.contract.md': ['tl-wizard', 'tl-wizard__steps', 'tl-wizard__disc', 'aria-current="step"',
+  'wizard/wizard.contract.md': ['tl-wizard', 'tl-steps', 'tl-steps__disc', 'aria-current="step"',
     'data-tl-state~="done"', 'aria-hidden', 'tl-button--link', '--tl-size-wizard-progress', 'gotoStep', 'advanceStep'],
   'adaptive-detail/adaptive-detail.contract.md': ['tl-adaptive-detail', 'tl-adaptive-detail__bar', 'tl-breadcrumb',
     'aria-current="page"', 'tl-drawer--container', 'navigate'],
@@ -88,11 +88,12 @@ test('split.spec.html: Griff fokussierbar mit Wert; eine eingeklappte Fläche im
 
 test('wizard.spec.html: erledigt, aktuell, kommend; die Liste hat einen Namen, Zähler und Scheiben sind still', () => {
   const html = datei('wizard', 'wizard.spec.html');
-  assert.match(html, /<ol class="tl-wizard__steps" aria-label="[^"]+"/);
-  assert.match(html, /class="tl-wizard__step-item" data-tl-state="done"/);
-  assert.match(html, /class="tl-wizard__step-item" aria-current="step"/);
+  assert.match(html, /<ol class="tl-steps" aria-label="[^"]+"/);
+  assert.match(html, /class="tl-steps__item" data-tl-state="done"/);
+  assert.match(html, /class="tl-steps__item" aria-current="step"/);
   assert.match(html, /class="tl-wizard__counter tl-type-label tl-nums" aria-hidden="true"/);
-  assert.match(html, /class="tl-wizard__disc tl-type-label tl-nums" aria-hidden="true"/);
+  assert.match(html, /class="tl-steps__disc tl-type-label tl-nums" aria-hidden="true"/);
+  assert.doesNotMatch(html, /tl-wizard__(steps|step-item|disc|step-name)\b/);
 });
 
 test('adaptive-detail.spec.html: die letzte Krume ist die aktuelle Seite, der Drawer liegt im Behälter', () => {

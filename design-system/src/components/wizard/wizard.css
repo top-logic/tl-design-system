@@ -1,6 +1,6 @@
 /* Wizard — Spec 2026-10-16 Welle 4c §8 (Q19: eigenes Muster, auf Tokens). Oben, was zeigt, wo man ist — Zähler,
-   Fortschritt, Schrittliste —, darunter der Schritt. Die Scheibe nennt die Position in drei Stufen: aktuell die
-   Marke, erledigt die schwächere Markenfläche, kommend eine Linie. Der Schritt gleitet beim Wechsel (slide.css). */
+   Fortschritt, Schrittliste —, darunter der Schritt. Die Schrittliste ist der Block tl-steps (steps.css, Spec 5b §7);
+   der Wizard zeigt ihn waagrecht. Der Schritt gleitet beim Wechsel (slide.css). */
 
 .tl-wizard {
   display: flex;
@@ -32,58 +32,6 @@
 .tl-wizard__progress > * {
   flex: 1 1 auto;
   min-width: 0;
-}
-
-.tl-wizard__steps {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--tl-space-xs) var(--tl-space-xl);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.tl-wizard__step-item {
-  display: flex;
-  align-items: center;
-  gap: var(--tl-space-xs);
-}
-
-.tl-wizard__disc {
-  display: flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  width: var(--tl-size-icon-lg);
-  height: var(--tl-size-icon-lg);
-  border: var(--tl-border-width-sm) solid var(--tl-border-control);
-  border-radius: var(--tl-radius-full);
-  background: var(--tl-surface-layer-nested);
-  color: var(--tl-text-secondary);
-}
-
-.tl-wizard__step-item[data-tl-state~="done"] > .tl-wizard__disc {
-  border-color: transparent;
-  background: var(--tl-surface-brand-subtle);
-  color: var(--tl-text-primary);
-}
-
-.tl-wizard__step-item[aria-current="step"] > .tl-wizard__disc {
-  border-color: transparent;
-  background: var(--tl-surface-brand);
-  color: var(--tl-text-on-brand);
-}
-
-.tl-wizard__step-name {
-  display: flex;
-  align-items: center;
-  gap: var(--tl-space-xs);
-  color: var(--tl-text-secondary);
-  white-space: nowrap;
-}
-
-.tl-wizard__step-item[aria-current="step"] > .tl-wizard__step-name {
-  color: var(--tl-text-primary);
 }
 
 /* Der Bereich des Schritts: begrenzt, damit ein füllender Schritt hier seine Höhe auflöst; er positioniert die Kopie

@@ -211,14 +211,14 @@ test('Übergänge als Attribute: entering/exiting/backward in data-tl-state, ver
   assert.match(w, /\.tl-wizard__step\[data-tl-state~="exiting"\]\s*\{[^}]*animation:\s*tl-slide-out-forward var\(--tl-duration-slow\) var\(--tl-easing-exit\) forwards/);
 });
 
-test('Wizard: drei Stufen der Scheibe aus Rollen, Breite des Balkens als Token', () => {
-  const d = decl('wizard', '.tl-wizard__disc');
+test('Wizard: drei Stufen der Scheibe aus Rollen (tl-steps), Breite des Balkens als Token', () => {
+  const d = decl('steps', '.tl-steps__disc');
   assert.match(d, /width:\s*var\(--tl-size-icon-lg\)/);
   assert.match(d, /border-radius:\s*var\(--tl-radius-full\)/);
   assert.match(d, /background:\s*var\(--tl-surface-layer-nested\)/);
   assert.match(d, /border:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-control\)/);
-  assert.match(decl('wizard', '.tl-wizard__step-item[data-tl-state~="done"] > .tl-wizard__disc'), /background:\s*var\(--tl-surface-brand-subtle\)/);
-  const c = decl('wizard', '.tl-wizard__step-item[aria-current="step"] > .tl-wizard__disc');
+  assert.match(decl('steps', '.tl-steps__item[data-tl-state~="done"] > .tl-steps__disc'), /background:\s*var\(--tl-surface-brand-subtle\)/);
+  const c = decl('steps', '.tl-steps__item[aria-current="step"] > .tl-steps__disc');
   assert.match(c, /background:\s*var\(--tl-surface-brand\)/);
   assert.match(c, /color:\s*var\(--tl-text-on-brand\)/);
   assert.match(decl('wizard', '.tl-wizard__progress'), /max-width:\s*var\(--tl-size-wizard-progress\)/);

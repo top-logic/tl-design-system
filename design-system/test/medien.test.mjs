@@ -105,3 +105,59 @@ test('upload: Ziehen an Drop-Zone und Chip-Gruppe gleich', () => {
   assert.ok(regel, 'eine Regel mit beiden Selektoren fehlt');
   assert.match(regel[1], /dashed var\(--tl-border-interactive\)/);
 });
+
+// §7: eine Schrittliste für Wizard und JobStatus (V22). Die Ausrichtung ändert die Anordnung, nicht die Farben.
+const regeln = (dir) => rulesOf(readGenerated(dir, `${dir}.css`)).filter(([s]) => !/^(from|to|\d+%)$/.test(s));
+
+test('steps: ein Aussehen in beiden Ausrichtungen', () => {
+  const d = decl('steps', '.tl-steps__disc');
+  assert.match(d, /width:\s*var\(--tl-size-icon-lg\)/);
+  assert.match(d, /height:\s*var\(--tl-size-icon-lg\)/);
+  assert.match(d, /border:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-control\)/);
+  assert.match(d, /background:\s*var\(--tl-surface-layer-nested\)/);
+  assert.match(d, /color:\s*var\(--tl-text-secondary\)/);
+  assert.match(decl('steps', '.tl-steps__item[data-tl-state~="done"] > .tl-steps__disc'), /background:\s*var\(--tl-surface-brand-subtle\)/);
+  const c = decl('steps', '.tl-steps__item[aria-current="step"] > .tl-steps__disc');
+  assert.match(c, /background:\s*var\(--tl-surface-brand\)/);
+  assert.match(c, /color:\s*var\(--tl-text-on-brand\)/);
+  assert.match(decl('steps', '.tl-steps__name'), /color:\s*var\(--tl-text-secondary\)/);
+  assert.match(decl('steps', '.tl-steps__item[aria-current="step"] > .tl-steps__name'), /color:\s*var\(--tl-text-primary\)/);
+  const w = decl('steps', '.tl-steps');
+  assert.match(w, /flex-wrap:\s*wrap/);
+  assert.match(w, /gap:\s*var\(--tl-space-xs\) var\(--tl-space-xl\)/);
+  const v = decl('steps', '.tl-steps--vertical');
+  assert.match(v, /flex-direction:\s*column/);
+  assert.match(v, /gap:\s*var\(--tl-space-2xs\)/);
+  assert.match(decl('steps', '.tl-steps--vertical .tl-steps__disc'), /width:\s*var\(--tl-size-icon-md\)/);
+  for (const [s, body] of regeln('steps').filter(([s]) => s.includes('tl-steps--vertical')))
+    assert.doesNotMatch(body, /(^|;)\s*(color|background|border)[a-z-]*\s*:/, s);
+});
+
+test('steps: aktuelle Scheibe pulsiert nur senkrecht', () => {
+  const css = ohneKommentar(readGenerated('steps', 'steps.css'));
+  assert.match(css, /@keyframes tl-steps-pulse\b/);
+  const a = decl('steps', '.tl-steps--vertical .tl-steps__item[aria-current="step"] > .tl-steps__disc');
+  assert.match(a, /animation:\s*tl-steps-pulse var\(--tl-duration-loop\) var\(--tl-easing-standard\) infinite alternate/);
+  for (const [s, body] of regeln('steps').filter(([, b]) => /animation/.test(b)))
+    assert.ok(s.split(',').every((x) => x.includes('.tl-steps--vertical')), `waagrecht animiert: ${s}`);
+});
+
+test('wizard: liest tl-steps', () => {
+  const css = ohneKommentar(readGenerated('wizard', 'wizard.css'));
+  assert.doesNotMatch(css, /tl-wizard__(steps|step-item|disc|step-name)\b/);
+});
+
+test('job-status: Live-Zeile, Fehler als alert', () => {
+  const md = readFileSync(new URL('../src/components/job-status/job-status.contract.md', import.meta.url), 'utf8');
+  assert.match(md, /`tl-job-status__live`[^\n]*`role="status"`/);
+  assert.match(md, /`tl-job-status__error`[^\n]*`role="alert"`/);
+  for (const n of ['tl-steps--vertical', 'tl-nums', 'tl-visually-hidden']) assert.ok(md.includes('`' + n), n);
+  assert.match(decl('job-status', '.tl-job-status__error'), /color:\s*var\(--tl-status-error-text\)/);
+  assert.match(decl('job-status', '.tl-job-status__elapsed'), /color:\s*var\(--tl-text-secondary\)/);
+  assert.match(decl('job-status', '.tl-job-status__message'), /color:\s*var\(--tl-text-secondary\)/);
+  const r = decl('job-status', '.tl-job-status');
+  assert.match(r, /flex-direction:\s*column/);
+  assert.match(r, /gap:\s*var\(--tl-space-xs\)/);
+  assert.match(decl('job-status', '.tl-job-status__header'), /gap:\s*var\(--tl-space-sm\)/);
+  assert.match(decl('job-status', '.tl-job-status__cancel'), /margin-inline-start:\s*auto/);
+});

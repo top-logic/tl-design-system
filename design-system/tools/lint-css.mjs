@@ -157,6 +157,8 @@ const MODIFIERS = {
   'tl-media': new Set(['cover', 'contain', 'document']), // Einpassung und Papier; gespiegelt: data-tl-state.
   'tl-prose': new Set([]),
   'tl-file': new Set([]), // Leer: data-tl-state.
+  'tl-steps': new Set(['vertical']), // Erledigt: data-tl-state; aktuell: aria-current.
+  'tl-job-status': new Set([]),
 };
 
 // Die einzige Ausnahme vom Ring: der Behälter mit virtuellem Cursor, nur in base.css (Spec 3b §3).

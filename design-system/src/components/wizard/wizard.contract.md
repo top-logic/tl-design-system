@@ -21,18 +21,16 @@ Zugänglichkeit der Position, nicht das Aussehen.
 | `tl-wizard` | Wurzel; zurück: `data-tl-state~="backward"` |
 | `tl-wizard__counter` | mit `tl-type-label` `tl-nums`; `aria-hidden`, wenn die Schrittliste steht |
 | `tl-wizard__progress` | Hülle des Fortschrittsbalkens |
-| `tl-wizard__steps` | an `ol`, `aria-label` aus i18n `js.wizard.steps` |
-| `tl-wizard__step-item` | an `li`; erledigt `data-tl-state~="done"`, aktuell `aria-current="step"` |
-| `tl-wizard__disc` | an `span`, mit `tl-type-label` `tl-nums`, `aria-hidden` |
+| `tl-steps` | die Schrittliste (`steps.contract.md`), waagrecht, an `ol`, `aria-label` aus i18n `js.wizard.steps` |
+| `tl-steps__item` | an `li`; erledigt `data-tl-state~="done"`, aktuell `aria-current="step"` |
+| `tl-steps__disc` | an `span`, mit `tl-type-label` `tl-nums`, `aria-hidden` |
 | `tl-button--link` | der Name eines erledigten Schritts |
-| `tl-wizard__step-name` | an `span`, der Name sonst, mit `tl-type-body` oder `tl-type-body-strong` |
+| `tl-steps__name` | an `span`, der Name sonst, mit `tl-type-body` oder `tl-type-body-strong` |
 | `tl-wizard__body`, `tl-wizard__step` | Bereich und Schritt; Übergang `data-tl-state~="entering"` / `"exiting"` |
 
 ## Tokens
 
 | Teil | Token |
 |---|---|
-| Scheibe kommend | `--tl-surface-layer-nested`, `--tl-border-control`, `--tl-text-secondary` |
-| Scheibe erledigt | `--tl-surface-brand-subtle`, `--tl-text-primary` |
-| Scheibe aktuell | `--tl-surface-brand`, `--tl-text-on-brand` |
+| Scheibe | aus `tl-steps` (`steps.contract.md`); der Wizard setzt keine eigene Farbe |
 | Balken | `--tl-size-wizard-progress` |
