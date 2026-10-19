@@ -1,5 +1,7 @@
 # TopLogic Design System — Präsentationsfassung
 
+> **Backup (Version 1), wird nicht mehr gepflegt.** Die aktuelle Präsentation ist [`praesentation-v2.md`](praesentation-v2.md): ein Überblick für alle Kollegen (Hendrik 19.10.).
+
 **Stand:** 2026-09-24 · Welle 1 · Ticket #29617
 
 Vorlage für die PowerPoint, mit der die Kollegen das Design System kennenlernen: was sich ändert, wie es funktioniert, warum so. Kurz und prägnant, eine Botschaft je Folie. Entscheidungen und Belege stehen allein in [`skalen.md`](skalen.md).

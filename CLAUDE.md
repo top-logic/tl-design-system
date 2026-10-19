@@ -7,7 +7,8 @@
 | `STATUS.md` | Wo die Arbeit steht und wo anzuknüpfen ist |
 | `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md` | Die Spec: Paket, Namensschema, Kundenvertrag, Wellen, Gates |
 | `docs/skalen.md` | Jede Entscheidung mit ihrer Begründung — die maßgebliche Quelle |
-| `docs/praesentation.md` | Die künftige PowerPoint für die Kollegen: kurz, prägnant, eher Marketing — was sich ändert und warum. Keine Entscheidungsquelle; wird bei jeder Entscheidung mitgezogen, aber als Botschaft, nicht als Beleg |
+| `docs/praesentation-v2.md` | Die PowerPoint für alle Kollegen, auch ohne Fachhintergrund: **was** das Design System ist, **wie** es funktioniert, **welche Vorteile** es bringt (z. B. unabhängig von der Basisversion). Oberflächlich und leicht verständlich, keine Beschreibung je Komponente, keine Entscheidungsquelle. Mitgezogen nur, wenn sich am Gesamtbild etwas ändert (Hendrik 19.10.) |
+| `docs/praesentation.md` | Version 1, die ausführliche Fassung mit Sprechnotizen je Welle — **Backup**, wird nicht mehr gepflegt |
 | `docs/migration/altlast.md` | Arbeitsliste für die Wellen 1–5: alte Rolle → neues Token je Lesestelle |
 | `docs/ui-durchgang.md` | Sammelliste für den UI-Durchgang nach Welle 5: was sicher eine Anpassung braucht. Jeder solche Befund einer Welle kommt hier dazu |
 
@@ -78,7 +79,7 @@ wenn die neue aussieht wie die alte.
 
 Keine Zeit- oder Aufwandsangaben — weder in Docs noch in Antworten; das überstimmt die
 Schätz-Regel des ADHD-Skills. Pläne gliedern sich nach Reihenfolge und Fertig-Bedingung.
-Änderungen an `docs/skalen.md` ziehen `docs/praesentation.md` und `STATUS.md` mit.
+Änderungen an `docs/skalen.md` ziehen `STATUS.md` mit; `docs/praesentation-v2.md` nur, wenn sie das Gesamtbild ändern (was, wie, Vorteile).
 
 Jedes Arbeitspaket endet committet (Präfix `Ticket #<Wellenticket>:`, für 3b `Ticket #29821:`, für 4a `Ticket #29836:`, für 4b `Ticket #29866:`, für 4c `Ticket #29870:`, für 5a `Ticket #29875:`, für 5b `Ticket #29904:`), nichts Halbfertiges
 bleibt liegen.

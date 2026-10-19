@@ -198,6 +198,8 @@ und Fokus): bestanden, Befunde U10–U12 in `docs/ui-durchgang.md`. Trac #29906:
 Beschreibung, `RequiresMigration`. Ledger `.superpowers/sdd/2026-10-19-welle-5c-planen-und-ziehen/`.
 **Weiter:** 5d (Fundament, `tlReactControls.css` löschen) — Ticket anlegen, Prognose, Spec; danach ein PR über Welle 5,
 Push nur mit Freigabe.
+**Präsentation neu (19.10., Hendrik):** `docs/praesentation-v2.md` — Überblick für alle Kollegen (was, wie, Vorteile wie
+„unabhängig von der Basisversion“), zwölf Folien mit Sprechnotiz und Bildhinweis; `praesentation.md` bleibt als Backup.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
