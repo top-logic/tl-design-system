@@ -21,7 +21,7 @@ V22). Bestand: Scratchpad-Notizen `5b-inventory.md`, `5b-engine-facts.md` (nur O
 **Plan-Review** 19.10. durch einen frischen Agenten (Fable), Probelauf der Tasks 1–3 in einer Paketkopie: Lint grün,
 `node --test` 518/523 (Wizard-Test und `published` erwartet; drei Planfehler). Tokens, Part-API, Glyphen (Font
 Awesome 6.7.1), `ALT_5B`-Regex und Abhängigkeit `layout.view` → `layout.react` bestätigt. **Befunde 1–9
-eingearbeitet** (Tasks 1–4, 6, 7).
+eingearbeitet** (Tasks 1–4, 7, 8).
 
 ## Global Constraints
 
@@ -52,14 +52,14 @@ eingearbeitet** (Tasks 1–4, 6, 7).
 ## Review Focus
 
 1. **Aufnahme ohne Mikrofonrecht** (`getUserMedia` wirft): der Recorder steht wieder auf „bereit“, nicht gedrückt, die
-   Meldung `js.audioRecorder.error.denied` steht in `role="alert"`. Vitest in Task 5.
+   Meldung `js.audioRecorder.error.denied` steht in `role="alert"`. Vitest in Task 6.
 2. **Kamera-Dialog in einem Server-Dialog** (`TLWindow`): Escape schließt nur den Kamera-Dialog, das Fenster bleibt; der
-   Fokus kehrt zum Kamera-Knopf zurück. Vitest in Task 5.
+   Fokus kehrt zum Kamera-Knopf zurück. Vitest in Task 6.
 3. **Ablegen mehrerer Dateien auf FileChips, während ein Upload läuft:** nichts wird gesendet, `dragover` endet. Ablegen
    auf ein lesendes FileChips (`editable: false`): kein `dragover`, kein Upload. Vitest in Task 4.
 4. **JobStatus mit Laufzeit:** die sekündlich wechselnde Laufzeit liegt außerhalb jedes Live-Bereichs; ein
-   Schrittwechsel ändert den Text der `role="status"`-Zeile. Vitest in Task 7.
-5. **Unmount während der Aufnahme:** der Recorder stoppt den Mikrofon-Stream (heute bleibt er offen). Vitest in Task 5.
+   Schrittwechsel ändert den Text der `role="status"`-Zeile. Vitest in Task 8.
+5. **Unmount während der Aufnahme:** der Recorder stoppt den Mikrofon-Stream (heute bleibt er offen). Vitest in Task 6.
 
 ---
 
@@ -311,7 +311,56 @@ eingearbeitet** (Tasks 1–4, 6, 7).
   file chips and download share them; file chips announce upload errors and honour the size limit.“; Paket „Ticket
   #29904: Ratsche -- TLDownload, TLFileChips gestrichen“.
 
-### Task 5: Engine — Recorder, Player, Kamera; `TLCounter` gestrichen
+### Task 5: Engine — View-Elemente und Demo-Ansicht „Medien“
+
+Hendrik 19.10.: Recorder, Player, Kamera und Download haben kein View-Element und darum keine Demo-Ansicht; die Welle
+baut beides, damit Task 6 und die Sichtprüfung sie im echten Zusammenspiel prüfen. Die Tag-Namen nennt der PR Bernhard
+ausdrücklich zur Prüfung (seine View-Schicht).
+
+**Files:**
+- Create: `com.top_logic.layout.view/src/main/java/com/top_logic/layout/view/element/AudioRecorderElement.java`,
+  `AudioPlayerElement.java`, `PhotoCaptureElement.java`, `DownloadElement.java`
+- Create: `com.top_logic.demo.react/src/main/webapp/WEB-INF/views/demo/media-demo.view.xml`
+- Modify: `com.top_logic.demo.react/src/main/webapp/WEB-INF/views/app.view.xml` (Eintrag nach „pdf“),
+  `com.top_logic.layout.view/src/main/java/META-INF/tl-docs/view-layer/display.md` (Abschnitt zu den vier Tags),
+  `messages_en.properties` (erzeugt) und `messages_de.properties` beider Module, falls Labels entstehen
+- Test: `com.top_logic.layout.view/src/test/java/test/com/top_logic/layout/view/element/TestMediaElements.java`
+
+**Interfaces:**
+- Muster: `element/PdfElement.java` (Config mit `@TagName`, `@Name(INPUT)` `ChannelRef` `@Nullable`
+  `@Format(ChannelRefFormat.class)`, `createControl` mit `SimpleBinaryDataValue`, Listener am Kanal,
+  `addCleanupAction`, `setCssClass`). Klassen-JavaDoc und Config-JavaDoc nach dem Muster der Nachbarn (sie werden zu
+  `messages_en`).
+- Tags und Controls: `<audio-recorder input="…">` → `ReactAudioRecorderControl`, `<audio-player input="…">` →
+  `ReactAudioPlayerControl`, `<photo-capture input="…">` → `ReactPhotoCaptureControl`, `<download input="…">` →
+  `ReactDownloadControl` (alle `(ReactContext, BinaryDataValue)`).
+- **Schreiben in den Kanal:** Recorder und Kamera hängen einen Listener an ihr `BinaryDataValue`
+  (`addListener`), der das hochgeladene `BinaryData` mit `channel.set(…)` in den Kanal schreibt; der Kanal-Listener
+  setzt das Modell nur, wenn sich der Wert unterscheidet (keine Schleife). Player und Download lesen nur.
+  Attributname `input` für alle vier — wie jedes lesende Element (`ImageElement`, `HtmlElement`, `PdfElement`); Recorder
+  und Kamera schreiben in denselben Kanal (Ruling, Bernhard prüft die Namen).
+
+- [ ] **Step 1: Failing test** `TestMediaElements` nach dem Muster eines bestehenden Element-Tests
+  (`TestImageElement`, `TestHtmlElement`): je Tag wird das Element aus XML gebaut, `createControl` liefert das
+  erwartete Control; ein Wert im Kanal erscheint im Modell von Player und Download; ein `setData` am Modell des
+  Recorders und der Kamera steht danach im Kanal; ein gleicher Wert löst keinen zweiten `set` aus.
+- [ ] **Step 2: Run** — FAIL.
+- [ ] **Step 3: Implement** die vier Elemente.
+- [ ] **Step 4: Demo-Ansicht** `media-demo.view.xml` (Kopfkommentar wie `pdf-demo.view.xml`): Kanäle `recording` und
+  `photo`; ein Panel „Aufnahme“ mit `<audio-recorder input="recording"/>`, `<audio-player input="recording"/>`,
+  `<download input="recording"/>`; ein Panel „Foto“ mit `<photo-capture input="photo"/>`, `<image input="photo"/>`,
+  `<download input="photo"/>`; Panels mit `with-inset="true"`. Navigation: `nav-item id="media"` nach „pdf“, Icon
+  `css:fa-solid fa-photo-film`, Label en „Media“, de „Medien“. Layout-XML normalisieren
+  (`XMLPrettyPrinter`, Engine-`CLAUDE.md` „Layout Normalization“).
+- [ ] **Step 5: Doku** — `display.md`: kurzer Abschnitt „Recording, playback and download“ mit den vier Tags, dem
+  Kanal und dem Verweis auf die Demo; `TestDocumentation` des Moduls grün.
+- [ ] **Step 6: Run** Maven `install` `layout.view` mit `-DskipTests=false -Dtest=test.com.top_logic.layout.view.element.TestMediaElements`
+  und `TestDocumentation`, `demo.react` `install`; `check-messages-en.sh` — grün, Messages-Diff committen, Deutsch
+  nachziehen.
+- [ ] **Step 7: Commit** Engine „Ticket #29904: View elements for audio recorder, audio player, photo capture and
+  download; media demo view.“
+
+### Task 6: Engine — Recorder, Player, Kamera; `TLCounter` gestrichen
 
 **Files:**
 - Modify: `react-src/bridge/icons.ts` (`ICON_RECORD`, `ICON_STOP`, `ICON_PLAY`, `ICON_PAUSE`, `ICON_CAMERA`,
@@ -373,13 +422,13 @@ eingearbeitet** (Tasks 1–4, 6, 7).
   filled red pressed button; the camera opens as a design system dialog; TLCounter removed.“; Paket „Ticket #29904:
   Ratsche -- TLAudioRecorder, TLAudioPlayer, TLPhotoCapture, TLCounter gestrichen“.
 
-### Task 6: Engine — Bild, PDF, HTML
+### Task 7: Engine — Bild, PDF, HTML
 
 **Files:**
 - Modify: `react-src/bridge/icons.ts` (`ICON_PRINT = 'css:fa-solid fa-print'`), `controls/TLImage.tsx`,
   `controls/TLPdfViewer.tsx`, `controls/TLHtml.tsx`; `ReactHtmlControl.java:153` (JavaDoc nennt die Klasse `tlHtml`),
   `com.top_logic.layout.view/src/main/java/META-INF/tl-docs/view-layer/display.md:92,106` (`.tlImage`, `tlHtml--`) —
-  sonst bleibt `ALT_5B` (Task 8) rot
+  sonst bleibt `ALT_5B` (Task 9) rot
 - Modify: `tlReactControls.css` (Blöcke „TLImage“, „TLPdfViewer“, „TLHtml“), `design-system/test/ratchet.json`
 - Test: `media.test.tsx`
 
@@ -404,7 +453,7 @@ eingearbeitet** (Tasks 1–4, 6, 7).
   document surface, print button over the document, embedded HTML as tl-prose.“; Paket „Ticket #29904: Ratsche --
   TLImage, TLPdfViewer, TLHtml gestrichen“.
 
-### Task 7: Engine — JobStatus
+### Task 8: Engine — JobStatus
 
 **Files:**
 - Modify: `react-src/controls/TLJobStatus.tsx`, `com.top_logic.layout.react/src/main/java/com/top_logic/layout/react/I18NConstants.java`,
@@ -435,7 +484,7 @@ eingearbeitet** (Tasks 1–4, 6, 7).
   state and current step, the elapsed time outside it, errors as alert.“; Paket „Ticket #29904: Ratsche -- TLJobStatus
   gestrichen“.
 
-### Task 8: Gates gesamt, altlast
+### Task 9: Gates gesamt, altlast
 
 **Files:**
 - Modify: `design-system/test/engine-classes.test.mjs` (anfügen), `design-system/test/ratchet.json`
@@ -450,7 +499,7 @@ eingearbeitet** (Tasks 1–4, 6, 7).
   `TLAudioPlayer.tsx`, `TLPhotoCapture.tsx`, `TLHtml.tsx` kein `css:bi ` und kein `<svg`; `TLPhotoCapture.tsx` enthält
   `tl-dialog__surface` und `createPortal`; kein `aria-label="[A-Za-z]` in den Controls der Welle.
 - [ ] **Step 2: Ratsche** — `node tools/inventory.mjs`; Budgets = Messwert; ein Vermerk „<Datum> Welle 5b (#29904):
-  zehn Blöcke gestrichen … lines = <n>.“ (nur, was die Vermerke der Tasks 4–7 nicht schon sagen).
+  zehn Blöcke gestrichen … lines = <n>.“ (nur, was die Vermerke der Tasks 4–8 nicht schon sagen).
 - [ ] **Step 3: Paket-Gates** `node tools/generate.mjs && node tools/lint-css.mjs && node tools/publish-to-worktree.mjs
   && node --test` — alles grün.
 - [ ] **Step 4: Maven und Messages** (JDK 21) — `install` für `layout.react`, `layout.view`, `layout.configedit`; `test`
@@ -478,18 +527,18 @@ eingearbeitet** (Tasks 1–4, 6, 7).
 - [ ] **Step 6: Commit** Paket „Ticket #29904: Ratsche und Engine-Gate Welle 5b; altlast Welle 5b“; Engine (nur bei
   Messages-Diff) englisch.
 
-### Task 9: Sichtprüfung lokal (Orchestrator)
+### Task 10: Sichtprüfung lokal (Orchestrator)
 
 - [ ] Demo `tl-demo-react` wie Memory „Lokale Demo statt Docker“, hell und dunkel, beide Dichten: FileChips im
   Kommentar-Formular eines Tickets (Datei ziehen, hochladen, herunterladen), Binärfeld lesend in „PDF“, Bilder
   („images“), PDF und HTML-Dokument mit Druckknopf („pdf“, „HTML-Inhalte“), eingebettetes HTML, Job („long-job“),
-  Wizard. **Recorder, Player, Kamera und TLDownload haben keine Demo-Ansicht** (kein View-Element) — geprüft über die
-  Specimen-Seiten (`button`, `file`, `media`, `overlay`) und die Vitests; Befund in `altlast.md` vermerken. Befunde in
+  Wizard, **„Medien“** (Task 5): aufnehmen, abspielen, herunterladen; Foto mit Spiegeln, Aufnehmen per Enter,
+  Escape, Fokus zurück; Bild zeigt das Foto. Befunde in
   `altlast.md` „Welle 5b“, Korrekturen als eigene Commits; was sicher in den UI-Durchgang gehört, nach
   `docs/ui-durchgang.md`.
 
-### Task 10: Abschluss (Orchestrator)
+### Task 11: Abschluss (Orchestrator)
 
-- [ ] Trac #29904: Solution, `== Migration ==` (Spec §11 und die Tabelle aus Task 8) und `RequiresMigration`;
+- [ ] Trac #29904: Solution, `== Migration ==` (Spec §11 und die Tabelle aus Task 9) und `RequiresMigration`;
   `skalen.md` („Beim Bauen entschieden“), Präsentation, STATUS nachziehen; Hendrik melden. **Kein Push** — Welle 5 kommt
   als ein PR nach 5d.

@@ -31,6 +31,11 @@ Zusammen 881 Zeilen. Alle TSX unter `com.top_logic.layout.react/react-src/contro
 ungenutzt). 5b zieht sie ins Paket, legt Gleiches zusammen und schließt die Lücken in Fokus, Ansage und Bewegung.
 Was sicher neu gestaltet werden muss, steht in `docs/ui-durchgang.md` (U2 Medien-Controls, U7 moderner Medien-Player).
 
+**Demo-Ansicht (Hendrik 19.10., nach der Freigabe):** Recorder, Player, Kamera und Download haben kein View-Element
+und darum keine Demo. Die Welle baut vier Elemente (`<audio-recorder>`, `<audio-player>`, `<photo-capture>`,
+`<download>`, je mit Kanal `input`; Recorder und Kamera schreiben ihr Hochgeladenes in den Kanal) und die Ansicht
+„Medien“ in `demo.react`. Die Tag-Namen nennt der PR Bernhard zur Prüfung.
+
 **Java ändert sich nur, wo ein Zustand fehlt:** `FileListControl` (`layout.view`, Leser `TLFileChips`) bekommt die
 Upload-Zustände der übrigen Upload-Controls — `error` (Text des gescheiterten Hochladens, heute nur geloggt) und
 `maxUploadSize` über `UploadSupport` (§6). Sonst bleiben Zustände, Befehle, Upload-Kanal und Teilnamen (`audio`, `photo`,
