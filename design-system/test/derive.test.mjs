@@ -266,6 +266,26 @@ test('ein dunklerer heller Kandidat dunkelt die gefüllte Fläche ab und sagt es
     r.hinweise.join(' | '));
 });
 
+test('beim dunkleren hellen Kandidaten bleibt die Schrift auf der Kategorie hell', () => {
+  // Abgedunkelt wird die Fläche, nicht die Schrift: text-on-category-N ist der helle Kandidat des
+  // Themes (gray-0 des Themes), nicht der dunkle.
+  const hell = '#D8D8D8';
+  const r = derive(P, T, { theme: 'a', color: { gray: { 0: hell } } });
+  for (const m of MODES) {
+    const kandidat = werte(r.ergebnis, m, 'text-contrast-light');
+    assert.equal(kandidat, hell, `${m}: text-contrast-light ist gray-0 des Themes`);
+    for (const k of KATS) {
+      assert.equal(werte(r.ergebnis, m, `text-on-category-${k}`), kandidat, `${m}: text-on-category-${k}`);
+    }
+  }
+});
+
+test('das Probe-Theme dunkelt nichts ab und sagt es im Kopf auch nicht', () => {
+  const kopf = ergebnis.css.slice(0, ergebnis.css.indexOf('[data-tl-theme'));
+  assert.ok(kopf.length > 0, 'die Ausgabe hat einen Kopf');
+  assert.doesNotMatch(kopf, /abgedunkelt/);
+});
+
 const CLI = new URL('../tools/derive.mjs', import.meta.url).pathname;
 const lauf = (json, ...args) => {
   const dir = mkdtempSync(join(tmpdir(), 'derive-'));
