@@ -46,7 +46,7 @@ garantiert Funktion, Tastatur, Fokus und Ansage, nicht das Aussehen; wer ins Bil
 | `tl-value-list__item` | ein Wert; in der Zeile nimmt er den Platz zwischen Griff und Entfernen-Knopf |
 | `tl-value-list__row` | eine Zeile beim Bearbeiten: Griff, Wert, Entfernen-Knopf |
 
-Der Griff und die Knöpfe sind Parts und haben keine eigene Regel. Die Schrift setzen die Typo-Klassen im TSX.
+Der Griff und die Knöpfe sind Parts und haben keine eigene Regel. Die Werteliste setzt keine Schrift: sie erbt sie von ihrem Ort (Tabellenzelle, Formularfeld), wie der Text, den sie dort ersetzt.
 
 ## In der Tabellenzelle
 
