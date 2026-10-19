@@ -87,7 +87,7 @@ test('base.css: der Body liest Grund, Text und Schrift aus Tokens', () => {
 });
 
 test('außerhalb von primitives.css steht keine Farbe und keine Dauer als Literal', () => {
-  const text = tok.replace(/--tl-(text|icon)-on-[a-z-]+: #[0-9A-F]{6};/g, '') + base;
+  const text = tok.replace(/--tl-(text|icon)-on-[a-z0-9-]+: #[0-9A-F]{6};/g, '') + base;
   assert.equal((text.match(/#[0-9a-fA-F]{3,8}\b|\brgba?\(|\bhsla?\(/g) ?? []).length, 0, 'Farbliteral');
   assert.equal((text.replace(/0\.01ms/g, '').match(/\b\d+m?s\b/g) ?? []).length, 0, 'Dauer-Literal');
 });

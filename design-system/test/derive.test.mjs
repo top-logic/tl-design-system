@@ -11,7 +11,7 @@ import { derive } from '../tools/derive.mjs';
 import { resolve } from '../tools/resolve.mjs';
 import { kontrastPaare, werte } from '../tools/lib/pairs.mjs';
 import { ratio, rgba, ueberlagert } from '../tools/lib/contrast.mjs';
-import { farbtonAbstand, hexZuOklch } from '../tools/lib/color.mjs';
+import { farbtonAbstand, hexZuOklch, kategorieRollen, grauRampe } from '../tools/lib/color.mjs';
 
 const P = JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.url)));
 const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)));
@@ -200,6 +200,70 @@ test('der gelieferte Wert unter AA steht in der Datei und im Bericht, als gelief
   assert.equal(ergebnis.befunde.length, 4);
   assert.ok(ergebnis.befunde.every((x) => x.fg === 'status-error-text' && x.geliefert));
   assert.ok(ergebnis.css.includes('Findings: 4 pairs below its threshold'));
+});
+
+// Welle 5c (Spec 2026-10-19 Planen und Ziehen §4): gefüllte Kategorie-Flächen und die Kandidaten als Rollen.
+const KATS = [1, 2, 3, 4, 5, 6, 7, 8];
+const ton = (hex) => ((hexZuOklch(hex).H * 180) / Math.PI + 360) % 360;
+
+test('kategorieRollen: die Rohstufe der gefüllten Fläche trägt Weiß mit 4,5 in beiden Modi, auf jedem Ton', () => {
+  // Die Rohstufe ist die TopLogic-Stufe; abdunkeln gegen einen anderen hellen Kandidaten tut derive.
+  const gruende = Object.fromEntries(MODES.map((m) => [m, [R0.color[m]['surface-base'], R0.color[m]['surface-layer']]]));
+  for (let grad = 0; grad < 360; grad += 15) {
+    const r = kategorieRollen(grad, gruende);
+    for (const m of MODES) {
+      const v = ratio('#ffffff', r[m].surface);
+      assert.ok(v >= 4.5, `${grad}° ${m}: ${r[m].surface} = ${v.toFixed(2)}`);
+    }
+  }
+});
+
+test('derive: jede gefüllte Kategorie hält den hellen Kandidaten des Themes mit 4,5', () => {
+  for (const json of [probe, { theme: 'a', color: { brand: '#0B5ED7' } }, { theme: 'b', color: { gray: 'cool' } }]) {
+    const r = derive(P, T, json);
+    for (const m of MODES) for (const k of KATS) {
+      const v = ratio(werte(r.ergebnis, m, 'text-contrast-light'), werte(r.ergebnis, m, `category-${k}-surface`));
+      assert.ok(v >= 4.5, `${json.theme} ${m}: category-${k}-surface = ${v.toFixed(2)}`);
+    }
+  }
+});
+
+test('eine eigene Kategorie bewegt auch ihre gefüllte Fläche', () => {
+  const eigen = '#8A1EB3';
+  const r = derive(P, T, { theme: 'a', color: { category: { 'category-3': eigen } } });
+  for (const m of MODES) {
+    const flaeche = r.rollen[m]['category-3-surface'];
+    assert.ok(flaeche, `${m}: category-3-surface fehlt in der Datei`);
+    assert.ok(farbtonAbstand(flaeche, eigen) < 10, `${m}: ${flaeche} hat nicht den Ton von ${eigen} (${ton(flaeche).toFixed(0)}°)`);
+  }
+});
+
+test('ein Kundengrau schreibt die Kandidaten als text-contrast-light und -dark', () => {
+  const r = derive(P, T, { theme: 'w', color: { gray: 'warm' } });
+  const rampe = grauRampe('warm', { 'gray-0': P.color['gray-0'], 'gray-77': P.color['gray-77'] });
+  for (const m of MODES) {
+    assert.equal(werte(r.ergebnis, m, 'text-contrast-light'), rampe['gray-0'], `${m}: text-contrast-light`);
+    assert.equal(werte(r.ergebnis, m, 'text-contrast-dark'), rampe['gray-77'], `${m}: text-contrast-dark`);
+  }
+  assert.equal(r.rollen.dark['text-contrast-dark'], rampe['gray-77'], 'der dunkle Kandidat weicht ab und steht in der Datei');
+});
+
+test('das Probe-Theme trägt die gefüllten Kategorien und den dunklen Kandidaten', () => {
+  for (const k of KATS) assert.match(ergebnis.css, new RegExp(`--tl-category-${k}-surface: #`), `category-${k}-surface`);
+  assert.match(ergebnis.css, /--tl-text-contrast-dark: #/);
+});
+
+test('ein dunklerer heller Kandidat dunkelt die gefüllte Fläche ab und sagt es', () => {
+  // Liefert der Kunde gray-0 dunkler, hält die Rohstufe den hellen Kandidaten nicht mehr: derive
+  // dunkelt die Fläche ab, die Schrift bleibt hell (Spec 5c §4).
+  const hell = '#D8D8D8';
+  const r = derive(P, T, { theme: 'a', color: { gray: { 0: hell } } });
+  for (const m of MODES) for (const k of KATS) {
+    const v = ratio(hell, werte(r.ergebnis, m, `category-${k}-surface`));
+    assert.ok(v >= 4.5, `${m}: category-${k}-surface = ${v.toFixed(2)}`);
+  }
+  assert.ok(r.hinweise.some((h) => /^(light|dark): category-\d-surface abgedunkelt, damit die helle Schrift 4,5:1 hält$/.test(h)),
+    r.hinweise.join(' | '));
 });
 
 const CLI = new URL('../tools/derive.mjs', import.meta.url).pathname;

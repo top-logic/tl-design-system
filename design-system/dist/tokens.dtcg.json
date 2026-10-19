@@ -1206,6 +1206,46 @@
           "$type": "color",
           "$value": "{primitive.color.magenta-34}"
         },
+        "category-1-surface": {
+          "$type": "color",
+          "$value": "{primitive.color.red-46}"
+        },
+        "category-2-surface": {
+          "$type": "color",
+          "$value": "{primitive.color.amber-47}"
+        },
+        "category-3-surface": {
+          "$type": "color",
+          "$value": "{primitive.color.green-48}"
+        },
+        "category-4-surface": {
+          "$type": "color",
+          "$value": "{primitive.color.teal-48}"
+        },
+        "category-5-surface": {
+          "$type": "color",
+          "$value": "{primitive.color.blue-48}"
+        },
+        "category-6-surface": {
+          "$type": "color",
+          "$value": "{primitive.color.blue-46}"
+        },
+        "category-7-surface": {
+          "$type": "color",
+          "$value": "{primitive.color.magenta-46}"
+        },
+        "category-8-surface": {
+          "$type": "color",
+          "$value": "{primitive.color.magenta-47}"
+        },
+        "text-contrast-light": {
+          "$type": "color",
+          "$value": "{primitive.color.gray-0}"
+        },
+        "text-contrast-dark": {
+          "$type": "color",
+          "$value": "{primitive.color.gray-77}"
+        },
         "text-on-brand": {
           "$type": "color",
           "$value": "#FFFFFF",
@@ -1274,6 +1314,62 @@
           "$value": "#1B1D21",
           "$extensions": {
             "com.top-logic.derived-from": "status-info-surface"
+          }
+        },
+        "text-on-category-1": {
+          "$type": "color",
+          "$value": "#FFFFFF",
+          "$extensions": {
+            "com.top-logic.derived-from": "category-1-surface"
+          }
+        },
+        "text-on-category-2": {
+          "$type": "color",
+          "$value": "#FFFFFF",
+          "$extensions": {
+            "com.top-logic.derived-from": "category-2-surface"
+          }
+        },
+        "text-on-category-3": {
+          "$type": "color",
+          "$value": "#FFFFFF",
+          "$extensions": {
+            "com.top-logic.derived-from": "category-3-surface"
+          }
+        },
+        "text-on-category-4": {
+          "$type": "color",
+          "$value": "#FFFFFF",
+          "$extensions": {
+            "com.top-logic.derived-from": "category-4-surface"
+          }
+        },
+        "text-on-category-5": {
+          "$type": "color",
+          "$value": "#FFFFFF",
+          "$extensions": {
+            "com.top-logic.derived-from": "category-5-surface"
+          }
+        },
+        "text-on-category-6": {
+          "$type": "color",
+          "$value": "#FFFFFF",
+          "$extensions": {
+            "com.top-logic.derived-from": "category-6-surface"
+          }
+        },
+        "text-on-category-7": {
+          "$type": "color",
+          "$value": "#FFFFFF",
+          "$extensions": {
+            "com.top-logic.derived-from": "category-7-surface"
+          }
+        },
+        "text-on-category-8": {
+          "$type": "color",
+          "$value": "#FFFFFF",
+          "$extensions": {
+            "com.top-logic.derived-from": "category-8-surface"
           }
         }
       },
@@ -1581,6 +1677,46 @@
           "$type": "color",
           "$value": "{primitive.color.magenta-47}"
         },
+        "category-1-surface": {
+          "$type": "color",
+          "$value": "{primitive.color.red-46}"
+        },
+        "category-2-surface": {
+          "$type": "color",
+          "$value": "{primitive.color.amber-47}"
+        },
+        "category-3-surface": {
+          "$type": "color",
+          "$value": "{primitive.color.green-48}"
+        },
+        "category-4-surface": {
+          "$type": "color",
+          "$value": "{primitive.color.teal-48}"
+        },
+        "category-5-surface": {
+          "$type": "color",
+          "$value": "{primitive.color.blue-48}"
+        },
+        "category-6-surface": {
+          "$type": "color",
+          "$value": "{primitive.color.blue-46}"
+        },
+        "category-7-surface": {
+          "$type": "color",
+          "$value": "{primitive.color.magenta-46}"
+        },
+        "category-8-surface": {
+          "$type": "color",
+          "$value": "{primitive.color.magenta-47}"
+        },
+        "text-contrast-light": {
+          "$type": "color",
+          "$value": "{primitive.color.gray-0}"
+        },
+        "text-contrast-dark": {
+          "$type": "color",
+          "$value": "{primitive.color.gray-77}"
+        },
         "text-on-brand": {
           "$type": "color",
           "$value": "#1B1D21",
@@ -1649,6 +1785,62 @@
           "$value": "#1B1D21",
           "$extensions": {
             "com.top-logic.derived-from": "status-info-surface"
+          }
+        },
+        "text-on-category-1": {
+          "$type": "color",
+          "$value": "#FFFFFF",
+          "$extensions": {
+            "com.top-logic.derived-from": "category-1-surface"
+          }
+        },
+        "text-on-category-2": {
+          "$type": "color",
+          "$value": "#FFFFFF",
+          "$extensions": {
+            "com.top-logic.derived-from": "category-2-surface"
+          }
+        },
+        "text-on-category-3": {
+          "$type": "color",
+          "$value": "#FFFFFF",
+          "$extensions": {
+            "com.top-logic.derived-from": "category-3-surface"
+          }
+        },
+        "text-on-category-4": {
+          "$type": "color",
+          "$value": "#FFFFFF",
+          "$extensions": {
+            "com.top-logic.derived-from": "category-4-surface"
+          }
+        },
+        "text-on-category-5": {
+          "$type": "color",
+          "$value": "#FFFFFF",
+          "$extensions": {
+            "com.top-logic.derived-from": "category-5-surface"
+          }
+        },
+        "text-on-category-6": {
+          "$type": "color",
+          "$value": "#FFFFFF",
+          "$extensions": {
+            "com.top-logic.derived-from": "category-6-surface"
+          }
+        },
+        "text-on-category-7": {
+          "$type": "color",
+          "$value": "#FFFFFF",
+          "$extensions": {
+            "com.top-logic.derived-from": "category-7-surface"
+          }
+        },
+        "text-on-category-8": {
+          "$type": "color",
+          "$value": "#FFFFFF",
+          "$extensions": {
+            "com.top-logic.derived-from": "category-8-surface"
           }
         }
       },

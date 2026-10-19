@@ -328,17 +328,26 @@ export function kategorienVerteilen(blockiert, anzahl = 8, mindest = 20) {
 
 export const KATEGORIE_SUBTLE = { light: { L: 0.955, C: 0.03 }, dark: { L: 0.27, C: 0.05 } };
 export const KATEGORIE_BORDER_CHROMA = 0.13;
+/**
+ * Die gefüllte Kategorie (Termine, Spec 5c §4): Helligkeit und Chroma der TopLogic-Stufe, in beiden
+ * Modi dieselbe — die Schrift darauf ist in beiden Modi hell. Gelesen aus den Stufen hinter
+ * category-N-surface (L 0,52–0,54, C 0,13); auf jedem Ton hält Weiß dort mindestens 4,7:1.
+ */
+export const KATEGORIE_SURFACE = { L: 0.54, C: 0.13 };
 
 /** Eine Kategorie aus einem Farbton: getönte Fläche und Linie je Modus, Linie der hellste
- *  (hell) bzw. dunkelste (dunkel) Wert mit 3,0 auf beiden Gründen. */
+ *  (hell) bzw. dunkelste (dunkel) Wert mit 3,0 auf beiden Gründen. Dazu die gefüllte Fläche als
+ *  Rohstufe — ob der helle Kandidat des Themes auf ihr hält, prüft derive, denn nur derive kennt ihn
+ *  und darf eine verfehlte Stufe zum Befund machen statt abzubrechen. */
 export function kategorieRollen(tonGrad, gruende) {
   const H = rad(tonGrad);
   const subtle = (m) => oklchZuHex({ ...KATEGORIE_SUBTLE[m], H }).hex;
   const border = (m) => aufKontrast(oklchZuHex({ L: m === 'light' ? 0.75 : 0.45, C: KATEGORIE_BORDER_CHROMA, H }).hex,
     gruende[m], 3.0, m === 'light' ? 'dunkler' : 'heller').hex;
+  const surface = oklchZuHex({ ...KATEGORIE_SURFACE, H }).hex;
   return {
-    light: { subtle: subtle('light'), border: border('light') },
-    dark: { subtle: subtle('dark'), border: border('dark') },
+    light: { subtle: subtle('light'), border: border('light'), surface },
+    dark: { subtle: subtle('dark'), border: border('dark'), surface },
   };
 }
 

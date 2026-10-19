@@ -243,8 +243,9 @@ test('die Fehlerfläche hat eine Rampe wie die Marke: hover und active je Modus,
 });
 
 // Acht Kategorien ohne Bedeutung — für Werte, die sich nur unterscheiden sollen (Projektfarben,
-// Diagrammreihen). Eine Kategorie hat zwei Rollen: subtle (die getönte Fläche) und border (die
-// Linie); Text darauf ist gewöhnlicher Text. skalen.md „Pill: Rolle statt Farbe“.
+// Diagrammreihen). Eine Kategorie hat drei Rollen: subtle (die getönte Fläche, Text darauf ist
+// gewöhnlicher Text), border (die Linie) und surface (die gefüllte Fläche der Termine, Beschriftung
+// gerechnet, Spec 5c §4). skalen.md „Pill: Rolle statt Farbe“.
 const KATEGORIEN = [1, 2, 3, 4, 5, 6, 7, 8];
 const BEDEUTUNGS_TINTS = ['surface-brand-subtle', 'status-error-subtle', 'status-warning-subtle',
   'status-success-subtle', 'status-info-subtle'];
@@ -280,11 +281,11 @@ test('Kategorien trennen sich im Farbton voneinander und von jeder Bedeutung', (
   }
 });
 
-test('eine Kategorie hat genau zwei Rollen: subtle und border', () => {
+test('eine Kategorie hat genau drei Rollen: subtle, border und surface', () => {
   for (const m of MODES) {
     const rollen = Object.keys(T.color[m]).filter((n) => n.startsWith('category-'));
-    assert.equal(rollen.length, 16, rollen.join(', '));
-    for (const n of rollen) assert.match(n, /^category-[1-8]-(subtle|border)$/, n);
+    assert.equal(rollen.length, 24, rollen.join(', '));
+    for (const n of rollen) assert.match(n, /^category-[1-8]-(subtle|border|surface)$/, n);
   }
 });
 

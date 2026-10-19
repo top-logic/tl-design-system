@@ -143,22 +143,36 @@ export function derive(P, T, json, quelle = 'input') {
   // Die Kategorien werden nur angefasst, wenn eine Farbe sie bewegt: die Marke blockiert einen
   // Ton auf dem Kreis, das Kundengrau verschiebt die Gründe der Linien, eigene Kategorien setzen
   // Töne fest. Rührt der Kunde keine Farbe an, bleiben die acht Kategorien die von TopLogic —
-  // sonst schriebe eine Datei, die nur einen Radius ändert, sechzehn Farbrollen um.
+  // sonst schriebe eine Datei, die nur einen Radius ändert, vierundzwanzig Farbrollen um.
   // Ein geliefertes Grau zählt als Farbe, ob es als Temperatur oder als Stufenobjekt kommt — die
   // Spec kennt da keinen Unterschied, und die Linien der Kategorien hängen an den Gründen.
   const grauGeliefert = Object.keys(geliefert).some((n) => n.startsWith('gray-'));
+  // Die beiden Kandidaten der Beschriftung aus dem Kundengrau: Pk ändert sich ab hier nicht mehr.
+  const prim = primitives(Pk);
+  const kandidaten = { dunklerKandidat: prim[REF.exec(T.derived.candidates.dark)[1]], hellerKandidat: prim[REF.exec(T.derived.candidates.light)[1]] };
   if (saat.brand || saat.gray || saat.category || grauGeliefert) {
     const eigene = saat.category ?? {};
     const fehlende = KATEGORIEN.filter((k) => !(`category-${k}` in eigene));
     const { toene, abstand } = kategorienVerteilen([markenTon, ...bedeutungen, ...Object.values(eigene).map(grad)], fehlende.length);
     const toneJeKategorie = Object.fromEntries([...KATEGORIEN.map((k) => [k, eigene[`category-${k}`] ? grad(eigene[`category-${k}`]) : null])]);
     fehlende.forEach((k, i) => { toneJeKategorie[k] = toene[i]; });
+    // Die gefüllte Fläche (Spec 5c §4) trägt helle Schrift in beiden Modi; hell ist der Kandidat des
+    // Kundengraus, aus dem Schritt 4 die Beschriftung wählt. Liefert der Kunde einen dunkleren
+    // hellen Kandidaten, wird die Fläche dunkler, nicht die Schrift dunkel. Reicht keine
+    // Helligkeit, bleibt die Rohstufe stehen und Schritt 7 meldet text-on-category-N — wie in
+    // Schritt 5 wirft hier nichts, sonst bräche ein Befund die Rechnung vor dem Bericht ab.
     let eineGeschrieben = false;
     for (const k of KATEGORIEN) {
       const r = kategorieRollen(toneJeKategorie[k], gruende);
       for (const mode of MODES) {
         eineGeschrieben = setze(mode, `category-${k}-subtle`, r[mode].subtle) || eineGeschrieben;
         eineGeschrieben = setze(mode, `category-${k}-border`, r[mode].border) || eineGeschrieben;
+        const roh = r[mode].surface;
+        let flaeche = roh;
+        try { flaeche = aufKontrast(roh, [kandidaten.hellerKandidat], 4.5, 'dunkler').hex; } catch { /* der Befund meldet es */ }
+        const geschriebenFlaeche = setze(mode, `category-${k}-surface`, flaeche);
+        eineGeschrieben = geschriebenFlaeche || eineGeschrieben;
+        if (geschriebenFlaeche && flaeche !== roh) hinweise.push(`${mode}: category-${k}-surface abgedunkelt, damit die helle Schrift 4,5:1 hält`);
       }
     }
     // Der gesenkte Abstand ist nur dann eine Aussage über die Datei, wenn die Verteilung auch
@@ -187,9 +201,8 @@ export function derive(P, T, json, quelle = 'input') {
     }
   }
 
-  // 4 Beschriftungen für jede Fläche neu, mit den Kandidaten des Kundengraus.
-  const prim = primitives(Pk);
-  const kandidaten = { dunklerKandidat: prim[REF.exec(T.derived.candidates.dark)[1]], hellerKandidat: prim[REF.exec(T.derived.candidates.light)[1]] };
+  // 4 Beschriftungen für jede Fläche neu, mit den Kandidaten des Kundengraus (berechnet vor Schritt 3,
+  // weil die gefüllten Kategorien den hellen schon brauchen).
   for (const mode of MODES) for (const [name, { surface }] of Object.entries(T.derived[mode]))
     Rk.derived[mode][name] = beschriftungAbleiten(Rk.color[mode][surface], kandidaten).hex;
 
