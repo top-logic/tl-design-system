@@ -2627,6 +2627,32 @@ und Kanban, ein Ablehnungshinweis (`tl-drop-hint`, vorher `tl-table__hint`), ein
 und Kalender. **Verworfen:** die Ablageposition im Kanban auf `dropZoneAt` umstellen (machte aus Lücken „ans Ende“);
 die Packrechnung des Dashboards ins Paket (neues Layout, kein Umzug).
 
+**Beim Bauen entschieden (19.10., Reviews der SDD und Sichtprüfung):**
+
+- **Die Tastatur kann, was der Zeiger kann, nicht mehr.** Alt+Pfeil links/rechts legt eine Karte auf einem Board ohne
+  Reihenfolge auf die Spalte als Ganzes (wie das Ablegen dort); eine Karte, die sich nicht ziehen lässt, oder eine Art,
+  die das Board nicht nimmt, bewegt auch die Tastatur nicht — kein Befehl, keine Warnung des Servers.
+- **Ein Ring auf einer Füllung trägt die Schrift der Füllung.** Der gewählte Termin zeigt seinen Ring in
+  `currentColor`, um die Linienbreite eingerückt: `border-interactive` verschwand auf der Marke und den blauen
+  Kategorien; die Schriftfarbe hält gegen jede Fläche 4,5:1, außen bleibt die Füllung, der Fokusring liegt davor.
+- **Die Kanban-Spalte ist eine Mulde.** Spalte auf `surface-base`, Karte auf `surface-layer`: in beiden Modi liegt die
+  Karte heller darauf (`layer-nested` war hell gleich der Karte, dunkel heller als sie). Die Karte hält die Ecke des
+  Auswahlhakens immer frei — er deckte sonst einen Knopf der Kartenansicht, und der Inhalt spränge beim Wählen.
+- **Das Arbeitszeitband ist deckend und fehlt an arbeitsfreien Tagen**; es steht im DOM vor den Stundenlinien.
+- **Das Anlegen-Feld ist nicht blass.** Die Vorschau (Ziehen, Länge) bleibt `opacity: 0.4`; trägt der Platzhalter das
+  Feld, ist er die Eingabe und voll deckend — blass fiel der getippte Titel unter 4,5:1 (Sichtprüfung).
+- **Ein Name braucht eine Rolle.** Die Kachel im Bearbeiten ist `role="group"`, das Raster des Mini-Monats auch; ein
+  `div` ohne Rolle darf keinen Namen tragen.
+- **Gleicher Trenner, gleiche Farbe.** Die Werteliste liest `tl-select__separator` in der Schriftfarbe wie das Select;
+  sie setzt keine eigene Schrift, sondern erbt die ihres Orts (Zelle, Feld).
+- **Gemeinsames auch im Kleinen:** der Tab-Halt folgt einem fokussierten Eintrag, den React verschiebt, allgemein in
+  `useRovingFocus`; die Art-Prüfung der Tastatur (`kindAccepted`) steht neben der des Zeigers; die Pfeile der
+  Kalenderleiste kommen aus `bridge/icons.ts`.
+- **Offen für den UI-Durchgang:** die Listbox des Monats umschließt Tagesknöpfe (U10), die Kachel heißt nach ihrer
+  Stelle statt nach ihrem Titel (U11), das Zeitraster öffnet bei 0 Uhr (U12). Liefert ein Kunde ein sehr dunkles
+  `gray-0`, dunkelt `derive` alle acht Füllungen fast bis Schwarz ab — die Kategorien bleiben lesbar, aber kaum
+  unterscheidbar; die Trennungsprüfung gilt bewusst nur den `-subtle`-Flächen (Review des Rechenkerns).
+
 ### Die Kopie in der Engine ist versiegelt (16.10.)
 
 **Befund:** Zweimal wurde die Kopie des Pakets in tl-engine-7 von Hand geändert — #29787 (sechs Stellen) und #29859

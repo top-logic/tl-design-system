@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-19 (5a, 5b gebaut; 5c Task 1 von 9 — Welle 5 als ein PR) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-19 (5a, 5b, 5c gebaut — Welle 5 als ein PR; weiter 5d) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -187,10 +187,17 @@ anlegen, Branch auf 5b, Spec; Push und PR erst nach 5d. Die lokale Demo läuft (
 wie vorgeschlagen“, V25 mit gefüllten Kategorie-Tokens. **Spec freigegeben** (§1–9 einzeln, Builder-Prüfung in §13):
 `docs/superpowers/specs/2026-10-19-welle-5c-planen-und-ziehen-design.md`; `skalen.md` „Welle 5c“, Präsentation.
 **Plan** `docs/superpowers/plans/2026-10-19-welle-5c-planen-und-ziehen.md` (elf Tasks), Plan-Review Fable mit Probelauf,
-Befunde 1–24 eingearbeitet. **SDD mit savvy-flow läuft:** Task 1 (Kategorie-Rollen, Kandidaten-Rollen, `derive`) fertig
-(Paket `ad201fd`, Engine `0587e27b54`, Paket 564/0). **Weiter (nach Neustart):** Opus-Review des `derive`-Teils von
-Task 1 (frischer Agent), dann Task 2 `tl-calendar`; Ledger `.superpowers/sdd/2026-10-19-welle-5c-planen-und-ziehen/`
-(`progress.md`, Briefs `task-N-brief.md`, `implementer-common.md`). Die lokale Demo (Port 8080) endet mit dem Neustart.
+Befunde 1–24 eingearbeitet. **5c gebaut (19.10., SDD Tasks 1–9 mit savvy-flow, Sichtprüfung und Abschluss), lokal, nicht gepusht.** Paket `main`
+bis `50d53fd`+, Engine-Branch bis `c3b462297b`. Gates: Paket 597/0, `tsc` 0, MUI-Vitest 739, `layout.react` 717/0,
+`layout.configedit` 343/0, `layout.view` 1513/0 (englische Locale per `argLine`), `demo.react` 13/0,
+`check-messages-en.sh` sauber. Ratsche `lines` 683 → 198 (TLValueList, Tabellenzellen, Dashboard, TLKanbanBoard,
+TLCalendar gestrichen). Opus-Review des Rechenkerns: kein Fehler. Beim Bauen entschieden: `skalen.md` „Welle 5c“
+(Tastatur nur, was der Zeiger kann; Ring in der Schriftfarbe; Spalte als Mulde; Anlegen-Feld deckend). Sichtprüfung in
+der lokalen Demo (Kalender Woche/Monat/Jahr, Anlegen, Escape; Kanban mit Alt+Pfeil und Maus; Dashboard mit Alt+Pfeil
+und Fokus): bestanden, Befunde U10–U12 in `docs/ui-durchgang.md`. Trac #29906: Lösung und Migration in der
+Beschreibung, `RequiresMigration`. Ledger `.superpowers/sdd/2026-10-19-welle-5c-planen-und-ziehen/`.
+**Weiter:** 5d (Fundament, `tlReactControls.css` löschen) — Ticket anlegen, Prognose, Spec; danach ein PR über Welle 5,
+Push nur mit Freigabe.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
@@ -213,7 +220,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 | 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay; mit der Spaltenwahl als Ebenen-Panel in !1852 (auf master 16.10.) | 7 | master | #29836, #29825 |
 | 4b | Navigation: AppShell, AppBar, Sidebar (mobiler Drawer, Flyout), BottomBar; Q10–Q13, Leiste aus Q14 (!1906, auf master 16.10.) | 4 | master | #29866 |
 | 4c | Behälter: Panel, SplitPanel, Card, Stack, Grid, DeckPane, TileStack, Inset, AdaptiveDetail, Accordion, Wizard, ViewError; Q3, Q7, Q8, Q13–Q23 | 12 | PR | #29870 |
-| 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | 5a und 5b gebaut, 5c im Bau, 5d geplant | #29875 (5a), #29904 (5b), #29906 (5c) |
+| 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | 5a, 5b und 5c gebaut, 5d geplant | #29875 (5a), #29904 (5b), #29906 (5c) |
 
 **Abnahme außerhalb der Wellen** (Spec „Abnahme“):
 
