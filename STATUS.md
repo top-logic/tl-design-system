@@ -198,6 +198,14 @@ und Fokus): bestanden, Befunde U10–U12 in `docs/ui-durchgang.md`. Trac #29906:
 Beschreibung, `RequiresMigration`. Ledger `.superpowers/sdd/2026-10-19-welle-5c-planen-und-ziehen/`.
 **Weiter:** 5d (Fundament, `tlReactControls.css` löschen) — Ticket anlegen, Prognose, Spec; danach ein PR über Welle 5,
 Push nur mit Freigabe.
+**Fremde PRs gegen Welle 5 geprüft (20.10., Probe-Merge auf 5c `3ec1eb2ad8`):** beim master-Merge in Welle 5 beachten.
+- **!1895** (#29781, benannte Kettenargumente): nur ein Textkonflikt, `view-layer/commands.md` Abschnitt Job-Status:
+  unsere Hook-Zeile behalten, `input="progress"` übernehmen. Keine stillen Brüche: `media-demo.view.xml` nutzt keine Ketten.
+- **!1891** (#29852, Datei-Chips, `<file-list>` entfällt): vier Konflikte. `TLFileChips.tsx`: unsere Fassung plus `accept`.
+  `TLValueList.tsx`: Mehrfach-Upload auf `useUpload` und `data-tl-state` umbauen; das Paket braucht dafür eine dragover-Regel
+  für `tl-value-list`. `tlReactControls.css`: `.tlValueList--dragover` verwerfen. `FileListControl.java`: Löschung annehmen,
+  `TestFileListUpload` löschen oder umziehen, `docs/skalen.md` nachziehen. `ReactFileChipsControl` fehlen `maxUploadSize`
+  und `error`; Kommentar in !1891 gepostet (Autor zieht nach, sonst wir beim master-Merge).
 **Präsentation neu (19.10., Hendrik):** `docs/praesentation-v2.md` — Überblick für alle Kollegen (was, wie, Vorteile wie
 „unabhängig von der Basisversion“), zwölf Folien mit Sprechnotiz und Bildhinweis; `praesentation.md` bleibt als Backup.
 **Offen, auszuarbeiten (Hendrik 19.10.): Lebenszyklus eines Kundenthemes.** Bestehen bleibt nur die gelieferte
