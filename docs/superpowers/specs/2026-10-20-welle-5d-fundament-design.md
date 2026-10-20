@@ -56,8 +56,9 @@ gibt es die Datei nicht mehr.
 - Schild `tl-drag-shield` (`pointer-drag.ts`), Bild `tl-drag-image` mit `--tl-shadow-drag` (`touch-drag.ts`), beide auf
   `layer-drag`, Regeln in `drag.css`.
 - Die Quelle beim Ziehen mit dem Finger trägt `data-tl-state~="dragging"` wie beim Ziehen mit der Maus (heute
-  `data-touch-drag="source"`); „bereit“ nach dem langen Drücken ist `data-tl-state~="drag-armed"` mit `--tl-shadow-drag`
-  und leichter Vergrößerung. `data-touch-drag` fällt.
+  `data-touch-drag="source"`); „bereit“ nach dem langen Drücken ist das eigene Attribut `data-tl-armed` (gebaut 20.10., K15: React
+  besitzt `data-tl-state` dieser Elemente, ein Re-Render verwürfe das Wort) mit `--tl-shadow-drag` und leichter
+  Vergrößerung. `data-touch-drag` fällt.
 - Auf Geräten ohne Maus (`pointer: coarse`) verhindert `drag.css` das Markieren und das Kontextmenü auf ziehbaren
   Elementen (heute im alten Sheet).
 - **Der Ablehnungshinweis liegt über dem Zieh-Bild** (V34): `tl-drop-hint` liest `layer-drag` und steht im DOM nach dem
@@ -71,7 +72,8 @@ eigenen Capture-Listener.
 
 ## 5 · Tooltip (V31)
 
-**Der Tooltip bleibt dunkel** (Hendrik 20.10.) — die einzige invertierte Fläche: Hinweis, nicht Menü.
+**Der Tooltip bleibt invertiert** (Hendrik 20.10.: „dunkel“) — im hellen Modus dunkel, im dunklen hell; die einzige
+invertierte Fläche: Hinweis, nicht Menü.
 
 - Neue Rollen **`surface-inverse`** und **`text-inverse`**: hell `{gray-77}` und `{gray-0}`, dunkel `{gray-1}` und
   `{gray-77}`. Das Paar steht in der Paarliste (4,5:1); `derive` rechnet beide für Kundenthemes aus den Kandidaten
@@ -123,7 +125,7 @@ Editor ein und prüft Paketklassen und `.ProseMirror` (Hendriks Bedingung, 20.10
 - **Menüs** (Absatzformat, Liste): Part `MenuTrigger` und `tl-menu` über `usePopover`. Dafür exportiert die Bridge
   `Menu`, `MenuItem` und `useRovingMenu` (heute nur im Controls-Bundle). Genau-eine-Wahl ist **`menuitemradio`** mit
   `aria-checked` — neu im Menü-Vertrag (Absatz/H1–H6, Aufzählung/Nummerierung).
-- **Link:** `tl-popover tl-popover--content` mit `label` + `tl-field` (`type="url"`) und Part-Knöpfen „Übernehmen“
+- **Link:** `tl-popover tl-popover--content` mit `label` + `tl-field` (`type="url"`) und Part-Knöpfen „Anwenden“ (gebaut 20.10.: die bestehende Beschriftung bleibt)
   (primary) und „Entfernen“ (danger). Der Fokus kehrt in den Text zurück, nicht zum Auslöser — der Popover-Vertrag
   bekommt dafür ein Rückgabeziel. Den Pfeil des Popups gibt es nicht mehr (kein Popover des Pakets hat einen).
 - **Radix fällt** (`@radix-ui/react-dropdown-menu`, `-popover`, `-separator`); kein anderes Modul nutzt es.

@@ -140,18 +140,18 @@ Framework neben `demo.react.corporate`. Begründung in `docs/skalen.md` „Ein V
 | Kein Literal in einer Klasse | Farben, Maße, Dauern, `z-index`, Kurven nur aus Tokens. Schriftgröße und -gewicht nur in `.tl-type-*`. Kein `:focus` ohne `-visible`, kein `outline: none`. |
 | Der Namensraum `--tl` gehört dem Paket | Jede Custom Property, die so beginnt, ist Design System. Außerhalb von `dist/` wird darin nichts definiert; lesen darf der Altbestand, was das Paket definiert. Was er heute selbst darin führt (`--tl-item-index`, `--tlGrid-gap`, `--tlPill-color`, `--tl-tt-padding`), steht auf einer Einfang-Liste und wird in seiner Welle zum Token mit Kategorie oder umbenannt. Neues bricht den Test. |
 | Kein Selektor von außen | Nicht `.tlToolbar .tl-button`. Der Container wählt die Erscheinung: Die Toolbar sagt `ghost`, der Dialogfuß `secondary`, über einen React-Kontext. |
-| Altlast wird abgeschnitten, nicht übersetzt | Keine Aliase alter Namen, kein Übergang. Eine Komponente ist fertig, wenn ihr alter Block in `tlReactControls.css` leer ist. |
+| Altlast wird abgeschnitten, nicht übersetzt | Keine Aliase alter Namen, kein Übergang. Eine Komponente war fertig, wenn ihr alter Block in `tlReactControls.css` leer war; seit Welle 5d ist die Datei gelöscht. |
 
 Jede Regel läuft als Test. `node --test` im Paket ist das Gate, nicht nur eine Prüfung: Kontraste
 gegen die richtige Fläche in beiden Modi, das 4-px-Raster, die 12-px-Untergrenze, kein Wert in der
 Rollenschicht, keine Primitive ohne Leser, der Kundentausch, das Klassen-Gate über jedes CSS,
-byte-identisches `dist/`, und die Ratsche über dem alten Stylesheet.
+byte-identisches `dist/`, und die Wache, die das gelöschte alte Stylesheet und seine Namen draußen hält.
 
 ## 4 · Wie wir es erreichen: Wellen
 
 Welle 0 hat Paket, Tokens und Grundklassen geliefert und ist auf `master`. Danach kommt Komponente
-für Komponente, jede nach demselben Rhythmus, bis `tlReactControls.css` leer ist. Die Ratsche zählt
-es und lässt es nur schrumpfen.
+für Komponente, jede nach demselben Rhythmus, bis `tlReactControls.css` leer war. Die Ratsche zählte
+es und ließ es nur schrumpfen; mit Welle 5d ist die Datei gelöscht und die Ratsche eine Wache.
 
 | Welle | Komponenten | Stand |
 |---|---|---|
@@ -160,7 +160,7 @@ es und lässt es nur schrumpfen.
 | 2 | Felder, Checkbox, BooleanChoice, DropdownSelect, FormField, FormGroup, FormLayout, dazu Chips, Segmented, Slider, Switch | auf master (!1740, mit 3a) |
 | 3 | TableView, TreeView, Menu, Toolbar, TabBar, Breadcrumb, Tooltip | 3a Navigation und Popups auf master (!1760); 3b Daten im Review (!1838), darauf die Spaltenwahl als Ebenen-Panel (!1852) |
 | 4 | 4a Overlays: Dialog, DialogManager, Window, Drawer, Snackbar, NoticeBar, Overlay · 4b Gerüst: AppShell, AppBar, Sidebar, BottomBar, Panel, SplitPanel, Card, Stack, Grid, Wizard | 4a im Review (!1882, auf der Spaltenwahl); 4b folgt |
-| 5 | Calendar, ColorInput, IconSelect, Medien, Dashboard, dann `tlReactControls.css` löschen | geplant |
+| 5 | Calendar, ColorInput, IconSelect, Medien, Dashboard, dann `tlReactControls.css` löschen | 5a–5d gebaut (20.10.), ein PR |
 
 **Der Rhythmus je Komponente**
 

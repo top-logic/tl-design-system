@@ -2447,7 +2447,8 @@ Tastatur und Screenreader.
 „Übersicht“ statt `‹`); ViewError und der Html-Fehler sind `tl-alert` `error`; das Accordion zieht ins Paket (Bernhard
 baute es im alten Stylesheet); Wizard und TileStack gleiten um einen Versatz `space-md` und markieren Übergänge als
 Attribute; `--tl-item-index` heißt `--item-index` — ein Datum der Engine für Anwendungs-CSS, kein Wort des Pakets.
-`tlFill`, Viewport und Mount bleiben bis Welle 5.
+`tlFill`, Viewport und Mount blieben bis Welle 5 (5d: `tl-fill` im Paket, Viewport und Mount als Seitenrahmen in
+`tlReactBase.css`).
 
 **Auswählbare Einträge (Q24, nach dem Merge von !1906).** Bernhard machte mit #29755 die Einträge von Stack und Grid
 auswählbar (Listbox, `role="option"`, `aria-selected`) und zeichnete sie im alten Stylesheet: Abheben beim Zeigen per
@@ -2664,7 +2665,7 @@ vorgeschlagen); Spec `docs/superpowers/specs/2026-10-20-welle-5d-fundament-desig
 kaputte Bedienung wird repariert. `tlReactControls.css` wird gelöscht. Die alten Theme-Tokens und `UIThemeService`
 bleiben als Brücke (V17), bis #29850 und #29909 entscheiden.
 
-**Der Tooltip bleibt dunkel (Hendrik).** Die einzige invertierte Fläche unterscheidet „Hinweis“ von „Menü“. Neue Rollen
+**Der Tooltip bleibt invertiert (Hendrik: „dunkel“).** Im hellen Modus dunkel, im dunklen hell. Die einzige invertierte Fläche unterscheidet „Hinweis“ von „Menü“. Neue Rollen
 `surface-inverse`/`text-inverse` mit Paar in der Paarliste; `derive` rechnet sie. Breite `size-13` statt 500 px (gut
 lesbare Zeilenlänge). Der Tooltip folgt beim Wechsel von Element zu Element dem neuen Anker (Fehler, Hendrik).
 **Verworfen:** hell wie `tl-popover` — Tooltip und Menü sähen gleich aus.
@@ -2673,8 +2674,9 @@ lesbare Zeilenlänge). Der Tooltip folgt beim Wechsel von Element zu Element dem
 Toasts; `layer-drag` (1400) für Schild, Zieh-Bild, Picker und Ablehnungshinweis. Der Hinweis liegt über dem Zieh-Bild,
 sonst verdeckt das Bild den Grund (Fehler beim Ziehen mit dem Finger).
 
-**Ein Zustand fürs Ziehen.** Die Quelle trägt beim Finger dasselbe `dragging` wie bei der Maus, „bereit“ ist
-`drag-armed`; ein Zieh-Bild `tl-drag-image` mit `shadow-drag`.
+**Ein Zustand fürs Ziehen.** Die Quelle trägt beim Finger dasselbe `dragging` wie bei der Maus, „bereit“ ist das
+eigene Attribut `data-tl-armed` (nicht `data-tl-state`: das gehört an diesen Elementen React, ein Re-Render verwürfe
+das Wort); ein Zieh-Bild `tl-drag-image` mit `shadow-drag`.
 
 **Wysiwyg wird umgebaut, nicht nur umgefärbt (Hendrik, mit Bedingung).** Bedingung: ein Update der Bibliothek darf die
 Styles nicht brechen. Erfüllt, weil Tiptap 3 headless ist — Leiste, Menüs und Popup zeichnet unser Code, die Bibliothek
@@ -2695,6 +2697,29 @@ vor dem ersten Bild gesetzt. Der UI-Durchgang kann ihn noch verschieben.
 
 **Fremde Stylesheets lesen Rollen** (Zuordnung Spec §10); Bibliotheksklassen bleiben; Schrift über Typo-Klassen, wo die
 Bibliothek es zulässt. Die Audit-Tests der Module lernen `tokens.css`.
+
+**Beim Bauen entschieden (20.10., SDD Tasks 1–12, Rulings im Plan-Ledger).**
+- **Viewport und Mount sind Seitenrahmen der Engine** (`tlReactBase.css`), nicht Paket: `overflow: hidden` am `body`
+  machte die Specimen-Seiten unscrollbar, `.is-control` bricht das BEM-Gate. Ins Paket zieht nur `tl-fill`.
+- **Anker-Aufblitzen ist ein halo** (`surface-state-hover-strong` → durchsichtig), kein Ring: der Ring gehört dem Fokus.
+- **`stateWords` an `ReactStackControl`** setzt `data-tl-state` am Stapel — Gegenstück zu `setCssClass`, weil ein
+  generischer Behälter „bearbeitbar“ nicht kennen kann (Compact field). Im PR an Bernhard angekündigt.
+- **Dichte als eigene Gruppe „Dichte“** im Benutzermenü (zwei Einträge, `aria-current`); der Server schreibt
+  `data-tl-density` immer ins erste HTML, auch ohne gewähltes Theme.
+- **Diagramme färben nach dem Zusammenführen** (Plugin je Diagramm): Chart.js baut, bindet und zeichnet genau, was es
+  ohne uns täte; drei Runden Nachbau des Zusammenführens trafen die Bindung nicht. Das Colors-Plugin ist aus (keine
+  Fremdpalette); eine unlesbare Kategorie bekommt die Trennerfarbe, die Reihen behalten ihre Nummer.
+- **Absatzformat ist ein Radio-Menü, die Listenart ein Umschalter** (`menuitemcheckbox`): die Wahl der gültigen Liste
+  hebt sie auf, ein Radio darf das nicht. „Überschrift n“ erneut gewählt bleibt Überschrift (vorher zurück auf Absatz).
+- **Nur-Lese-Editoren tragen kein `tl-field`** (kein Bearbeiten-Rahmen), wie der Nur-Lese-Rich-Text.
+- **Auswahl ist nicht Fokus:** die Auswahl im Flow-Diagramm zeichnet `border-interactive`, nicht `focus-ring`.
+- **Tooltip-Ankerfehler:** im aktuellen Code schon behoben (Popover je Aktivierung, #29497); ein Test misst jetzt die
+  Lage am neuen Anker. Lange Tooltips am Bildrand heften sich an den Rand, nur der Pfeil wandert — Sichtprüfung.
+- **Verlust, bewusst offen:** der Link-Knopf zeigt nicht mehr, dass der Cursor in einem Link steht — `tl-button` hat
+  keine rein sichtbare aktive Form ohne `aria-pressed`, und ein Popup-Auslöser darf kein Umschalter sein. Im
+  UI-Durchgang (`docs/ui-durchgang.md`).
+- **`tlReactControls.css` ist gelöscht; die Ratsche wird Wache** (der Test scheitert, wenn die Datei wiederkommt) und
+  `ALT_5D` hält die alten Namen draußen, jede Alternative mit Treffer und Fehltreffer belegt.
 
 ### Die Kopie in der Engine ist versiegelt (16.10.)
 

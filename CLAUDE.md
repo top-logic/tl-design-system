@@ -21,7 +21,7 @@ Alle in `design-system/`, alle mit `node` ohne Abhängigkeiten:
 | `node --test` | **Alle Gates.** Sie sind das Gate, nicht nur Prüfung. |
 | `node tools/generate.mjs` | Erzeugt `dist/` aus `src/`. Nach jeder Änderung an `src/` aufrufen; ein Test hält `dist/` byte-identisch. |
 | `node tools/lint-css.mjs` | **Klassen-Gate** über `dist/*.css` und `src/components/*.css`: kein Literal, kein `:focus` ohne `-visible`, kein `outline: none`, nur Tokens. |
-| `node tools/inventory.mjs` | Zählt das alte `tlReactControls.css` im Worktree je Block (Ratsche). Budget in `test/ratchet.json` unter `blocks`: kein Block wächst, ein abgeschnittener wird gestrichen, Fremdzuwachs hebt seinen Block mit Ticketvermerk. |
+| `node tools/inventory.mjs` | Meldet „gelöscht“: `tlReactControls.css` ist seit Welle 5d weg. `test/ratchet.test.mjs` ist die Wache — rot, wenn die Datei wiederkommt oder jemand außerhalb von `dist/` ein `--tl-…` definiert. |
 | `node tools/publish-to-worktree.mjs` | Kopiert `dist/` in den Worktree, bis das Paket einen Maven-Wrapper hat. Nach jedem `generate` aufrufen; `test/published.test.mjs` hält die Kopie byte-gleich. Jede Datei endet mit einem Siegel (SHA-256); `TestDesignSystemCopy` in der Engine bricht den Jenkins-Build bei einer Handänderung an der Kopie. |
 | `node tools/serve.mjs` | Specimen auf `http://localhost:8137/` |
 | `node tools/derive.mjs <theme>.primitives.json [<ausgabe>.css] [--strict]` | **Kundenstufe A.** Rechnet aus Hausfarbe und Grauwahl ein Theme und schreibt `<theme>.theme.css` mit Rollen unter `[data-tl-theme]`. Gerechnetes hält die Paarliste, Geliefertes darf sie verfehlen (Befund im Kopf). Beispiel: `test/fixtures/probe.primitives.json` → `specimen/probe.theme.css`. |
@@ -74,8 +74,8 @@ neuen Komponenten nachgeprüft. Anlass 01.10.: drei Popups mit drei Verhalten in
 Wellen 0–2 fand acht Positionsrechnungen, drei Upload-Fassungen, vier Fokus-Formen. Tabellen in
 `docs/migration/altlast.md` „Konsolidierung“.
 
-**Eine Komponente ist fertig, wenn ihr alter Block in `tlReactControls.css` leer ist** — nicht,
-wenn die neue aussieht wie die alte.
+**Eine Komponente war fertig, wenn ihr alter Block in `tlReactControls.css` leer war** — nicht,
+wenn die neue aussieht wie die alte. Seit Welle 5d ist die Datei gelöscht; neue Komponenten entstehen nur im Paket.
 
 Keine Zeit- oder Aufwandsangaben — weder in Docs noch in Antworten; das überstimmt die
 Schätz-Regel des ADHD-Skills. Pläne gliedern sich nach Reihenfolge und Fertig-Bedingung.
