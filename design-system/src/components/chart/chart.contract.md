@@ -29,7 +29,7 @@ Konfiguration mitgibt, behält sie, ebenso jede Farbe an einer Achse oder einem 
 Die Farben stehen in der Konfiguration dieses einen Diagramms, nie in den globalen Voreinstellungen von Chart.js: mehrere
 Diagramme in verschiedenen Themes teilen sich eine Seite. Gefärbt werden nur die Achsen, die Chart.js für die Konfiguration
 baut (die konfigurierten, die an den Reihen benannten `xAxisID`, `yAxisID`, `rAxisID` und die Achsen des Typs): keine
-zusätzliche, leere Achse.
+zusätzliche, leere Achse. Eine Achse, die eine Reihe mitbringt, schreibt das Control mit ihrer Achse (`axis`) und den Optionen ihres Typs in die Konfiguration, wie Chart.js sie selbst zusammenführt; Chart.js baut daraus dieselbe Achse (Achse, Typ, Lage) wie ohne Theme.
 
 Kein Fallback: Eine fremde Palette gibt es nicht, im Java-Code nicht und auf dem Canvas nicht — das Plugin `colors` von
 Chart.js ist je Diagramm ausgeschaltet (der Server darf es einschalten). Ist eine Kategorie keine lesbare Farbe, zeichnet
