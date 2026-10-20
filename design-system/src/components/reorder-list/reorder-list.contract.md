@@ -85,11 +85,11 @@ Klassen:
 |---|---|
 | `tl-reorder-list` | das `ul` |
 | `tl-reorder-list__item` | jedes `li` |
-| `tl-reorder-list__handle` | der Griff, zusammen mit `tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reveal-on-hover` |
+| `tl-reorder-list__handle` | der Griff, zusammen mit `tl-button tl-button--ghost tl-button--sm tl-button--icon` und `tl-reveal-on-hover` |
 | `tl-reorder-list__label` | die Beschriftung |
 | `tl-reorder-list__search` | an der `tl-field-group` der Suche vor der Liste |
 | `tl-reorder-list__actions` | `span` am Zeilenende um Schloss und Auge |
-| `tl-reorder-list__lock` | das Schloss, mit `tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reveal-on-hover` |
+| `tl-reorder-list__lock` | das Schloss, mit `tl-button tl-button--ghost tl-button--sm tl-button--icon` und `tl-reveal-on-hover` |
 | `tl-reorder-list__eye` | das Auge, ebenso |
 | `tl-reorder-list__section` | `li` mit der Überschrift „Fixiert“, `role="presentation"`, `tl-type-label` |
 | `tl-visually-hidden` | der Live-Bereich: gelesen, nicht gezeigt (der Hinweis trägt `hidden`, siehe Attribute) |

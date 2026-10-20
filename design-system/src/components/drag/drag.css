@@ -116,15 +116,22 @@
 }
 
 /* Element-Picker (element-picker.ts, ein Entwicklerwerkzeug): die Markierung über dem Element unter dem Zeiger, in
-   beiden Modi aus dem Theme. Sie liegt über dem Element, die Deckkraft lässt es durchscheinen — ein Anteil, kein Maß.
-   Der Zeiger „Fadenkreuz“ ist ein Zustand am body. */
+   beiden Modi aus dem Theme. Der Rand ist deckend; nur die Fläche auf ::before ist durchscheinend und lässt das Element
+   durchscheinen — die Deckkraft ist ein Anteil, kein Maß. Der Zeiger „Fadenkreuz“ ist ein Zustand am body. */
 .tl-pick-highlight {
   position: fixed;
   pointer-events: none;
   z-index: var(--tl-layer-drag);
   border: var(--tl-border-width-md) solid var(--tl-border-interactive);
+}
+
+.tl-pick-highlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
   background: var(--tl-surface-brand-subtle);
   opacity: 0.5;
+  pointer-events: none;
 }
 
 body[data-tl-state~="picking"],

@@ -103,11 +103,15 @@ test('drag.css: der Ablehnungshinweis liegt über dem Zieh-Bild', () => {
   assert.match(decl(drag(), '.tl-popover.tl-drop-hint'), /z-index:\s*var\(--tl-layer-drag\)/);
 });
 
+// Spec 5d §4: der Rand deckend in border-interactive, nur die Fläche durchscheinend (auf ::before).
 test('drag.css: Picker-Markierung auf layer-drag aus dem Theme, Fadenkreuz als Zustand am body', () => {
   const p = decl(drag(), '.tl-pick-highlight');
   for (const r of [/position:\s*fixed/, /pointer-events:\s*none/, /z-index:\s*var\(--tl-layer-drag\)/,
-    /border:\s*var\(--tl-border-width-md\) solid var\(--tl-border-interactive\)/,
-    /background:\s*var\(--tl-surface-brand-subtle\)/, /opacity:\s*0?\.\d+(;|$)/]) assert.match(p, r);
+    /border:\s*var\(--tl-border-width-md\) solid var\(--tl-border-interactive\)/]) assert.match(p, r);
+  assert.doesNotMatch(p, /opacity|background/, 'der Rand bleibt deckend, die Fläche liegt auf ::before');
+  const f = decl(drag(), '.tl-pick-highlight::before');
+  for (const r of [/content:\s*""/, /position:\s*absolute/, /inset:\s*0/, /background:\s*var\(--tl-surface-brand-subtle\)/,
+    /opacity:\s*0?\.\d+(;|$)/, /pointer-events:\s*none/]) assert.match(f, r);
   assert.match(decl(drag(), 'body[data-tl-state~="picking"]'), /cursor:\s*crosshair/);
   assert.match(decl(drag(), 'body[data-tl-state~="picking"] *'), /cursor:\s*crosshair/);
 });
