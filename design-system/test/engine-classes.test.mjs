@@ -247,26 +247,30 @@ test('Welle 5c im TSX: Interaktiv-Prüfung und Ablagehinweis zusammengelegt, kei
 
 // Welle 5d, Task 11 (Editoren, Flow, Demo, MUI-Text): die fremden Stylesheets und der Text-Adapter lesen Rollen des
 // Pakets, kein altes Theme-Token mehr. Ausgenommen sind das Glass-Theme der Demo (--shadow-glow, --surface-blur: Token,
-// die ein Theme einschaltet), `--item-index` (die Position, die ein Wiederholer je Eintrag setzt, kein Theme-Token)
-// und `background-image`. Die Wurzeln der Editoren behalten ihre Klassen als Geltungsbereich
-// der CodeMirror-Regeln und bekommen den Feldrahmen; nur der Zustand `--error` fällt.
-const ALT_THEME_TOKEN = /var\(--(?!tl-)/;
-const GLASS_TOKEN = /var\(--(shadow-glow|surface-blur|item-index)\)/;
+// die ein Theme einschaltet), und `--item-index` (die Position je Eintrag, kein Theme-Token) — beides nur in der Demo.
+// Die Wurzeln der Editoren behalten ihre Klassen als Geltungsbereich der CodeMirror-Regeln und bekommen den Feldrahmen; nur der Zustand `--error` fällt.
+const ALT_THEME_TOKEN = /var\(--(?!tl-)[a-z0-9-]*/g;
+// Ausnahmen, jede mit ihrem Grund: das Hintergrundbild der Seite (kein Rollen-Token), die Tokens, die das Glass-Theme der
+// Demo einschaltet, und die Position, die ein Wiederholer der Demo je Eintrag setzt (kein Theme-Token, kein Glass).
+const BACKGROUND_IMAGE = 'var(--background-image';
+const GLASS_TOKENS = ['var(--shadow-glow', 'var(--surface-blur'];
+const ITEM_INDEX = 'var(--item-index';
+const DEMO_CSS = 'com.top_logic.demo.react/src/main/webapp/style/tl-demo-react.css';
 
 test('Welle 5d: kein altes Theme-Token in den Editor-, Flow-, Demo- und Basis-Stylesheets und im MUI-Text', { skip: !existsSync(M) && 'kein Worktree' }, () => {
   const dateien = [
     'com.top_logic.layout.react.codeedit/src/main/webapp/style/tlCodeEditor.css',
     'com.top_logic.model.search.react/src/main/webapp/style/tlScriptEditor.css',
     'com.top_logic.react.flow.server/src/main/webapp/style/tl-react-flow.css',
-    'com.top_logic.demo.react/src/main/webapp/style/tl-demo-react.css',
+    DEMO_CSS,
     'com.top_logic.layout.react/src/main/webapp/style/tlReactBase.css',
     'com.top_logic.layout.react.mui/react-src/adapters/MuiTextAdapter.tsx',
   ];
   const hits = [];
   for (const d of dateien) {
     readFileSync(join(WT, d), 'utf8').split('\n').forEach((line, i) => {
-      if (/background-image/.test(line)) return;
-      if (ALT_THEME_TOKEN.test(line.replace(new RegExp(GLASS_TOKEN, 'g'), ''))) hits.push(`${d}:${i + 1}`);
+      const erlaubt = [BACKGROUND_IMAGE, ...(d === DEMO_CSS ? [...GLASS_TOKENS, ITEM_INDEX] : [])];
+      if ((line.match(ALT_THEME_TOKEN) ?? []).some((v) => !erlaubt.includes(v))) hits.push(`${d}:${i + 1}`);
     });
   }
   assert.deepEqual(hits, []);
