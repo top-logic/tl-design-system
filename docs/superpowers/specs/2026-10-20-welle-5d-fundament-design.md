@@ -80,6 +80,11 @@ eigenen Capture-Listener.
   (24 rem, statt 500 px), Abstände `--tl-space-2xs`/`--tl-space-sm`, Einblenden in `--tl-duration-fast`.
 - `TooltipPopover.tsx` setzt die neuen Klassen; der interaktive Tooltip ist ein Zustand (`data-tl-state~="interactive"`:
   Zeiger und Textauswahl), keine Klasse ohne Regel mehr. `--tl-tt-padding` fällt aus dem Namensraum.
+- **Fehler (Hendrik 20.10.): Der Tooltip folgt dem neuen Anker nicht.** Wechselt der Zeiger von einem Element zum
+  nächsten, während der Tooltip offen ist (Beispiel: von Spaltenkopf zu Spaltenkopf), zeigt er den neuen Inhalt, bleibt
+  aber am alten Element stehen. Ursache wird beim Bau gesucht (vermutlich bleibt die Referenz von floating-ui beim
+  Ankerwechsel stehen); Fertig-Bedingung: ein Vitest, der den Zeiger von einem Anker zum nächsten bewegt und prüft,
+  dass die Lage dem neuen folgt.
 
 ## 6 · Compact field und „Aktion beim Zeigen“ (V36)
 
@@ -89,6 +94,19 @@ eigenen Capture-Listener.
 - **Eine Regel für „Aktion erscheint beim Zeigen“:** `tl-reveal-on-hover` am Element — sichtbar beim Zeigen auf die
   Zeile (`tl-table__row`), auf das eigene Feld, mit Tastaturfokus, und immer auf Geräten ohne Hover. Der Öffner des
   Compact field und der Griff der Liste (`tl-reorder-list__handle`) lesen sie; die zwei Fassungen fallen.
+
+## 6a · Dichte im Benutzermenü (Hendrik 20.10., vorläufig)
+
+Die Dichte (`data-tl-density`, normal/kompakt) hat bisher keinen Schalter: `UIThemeService` setzt einmal `normal`
+(verschoben am 30.09., „Kandidat Benutzermenü unter der Themewahl“). 5d bringt ihn dorthin, **vorläufig** — der
+UI-Durchgang kann ihn noch verschieben.
+
+- Im Benutzermenü neben der Themewahl (`ThemeCommands`) ein Umschalter „Kompakt“ (`menuitemcheckbox`), Deutsch und
+  Englisch über `I18NConstants`.
+- Gespeichert je Person wie die Themewahl (`PersonalConfiguration`, eigener Schlüssel); der Server schreibt den Wert vor
+  dem ersten Bild an `html` (wie heute `normal`), damit nichts springt. Der Wechsel wirkt sofort ohne Neuladen;
+  Maße, die das TSX über `useTokenPx` liest, folgen (der Hook beobachtet `data-tl-density` schon).
+- Kein neues Bedienkonzept: ein Eintrag mehr in einem bestehenden Menü.
 
 ## 7 · Wysiwyg-Editor (V38)
 
@@ -181,6 +199,8 @@ Jede Datei liest Rollen des Pakets (Zuordnung in `altlast.md` V40 und unten); Kl
 - **Tooltip im Kundentheme lesbar** und über Toasts sichtbar.
 - **Diagramme im dunklen Modus und im Kundentheme lesbar.**
 - **Ablehnungsgrund beim Ziehen mit dem Finger sichtbar.**
+- **Tooltip bleibt am Element**, auf das man zeigt (heute bleibt er beim Wechsel von Spaltenkopf zu Spaltenkopf stehen).
+- **Kompakte Darstellung wählbar** im Benutzermenü.
 - **Ein Fokusring überall**, auch im Wysiwyg (heute fünf Stellen ohne) und in den Editoren.
 
 ## 13 · Gates
@@ -200,6 +220,7 @@ Ebenen, `menuitemradio` im Vertrag, `tl-reveal-on-hover`); `lint-css`; `tsc` in 
    Fertig: Blöcke leer, Vitest.
 3. **Tooltip.** Fertig: Block leer, Vitest.
 4. **Compact field und „Aktion beim Zeigen“.** Fertig: Block leer, `TestCompactField`.
+4a. **Dichte im Benutzermenü** (§6a). Fertig: Menüeintrag, Speicherung je Person, Wert vor dem ersten Bild, Test.
 5. **Bridge-Exporte** (`Menu`, `MenuItem`, `useRovingMenu`, Rückgabeziel des Popovers). Fertig: `tsc`, Vitest.
 6. **Wysiwyg.** Fertig: Radix weg, Vitest, Wysiwyg-Audit grün.
 7. **Diagramme.** Fertig: Java-Palette weg, Vitest, Chart-Audit grün.
@@ -227,3 +248,5 @@ Ebenen, `menuitemradio` im Vertrag, `tl-reveal-on-hover`); `lint-css`; `tsc` in 
 | 5 | Tooltip-Breite | `size-13` (24 rem) statt 500 px (Orchestrator) |
 | 6 | Pfeil am Link-Popup | entfällt (Orchestrator) |
 | 7 | Zehn Diagrammfarben → acht | acht, die neunte Reihe wiederholt (Orchestrator) |
+| 8 | Tooltip folgt dem Anker nicht | in 5d beheben, mit Vitest (Hendrik 20.10.) |
+| 9 | Dichte-Schalter | in 5d ins Benutzermenü, vorläufig bis zum UI-Durchgang (Hendrik 20.10.) |
