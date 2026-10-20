@@ -205,7 +205,10 @@ Push nur mit Freigabe.
   `TLValueList.tsx`: Mehrfach-Upload auf `useUpload` und `data-tl-state` umbauen; das Paket braucht dafür eine dragover-Regel
   für `tl-value-list`. `tlReactControls.css`: `.tlValueList--dragover` verwerfen. `FileListControl.java`: Löschung annehmen,
   `TestFileListUpload` löschen oder umziehen, `docs/skalen.md` nachziehen. `ReactFileChipsControl` fehlen `maxUploadSize`
-  und `error`; Kommentar in !1891 gepostet (Autor zieht nach, sonst wir beim master-Merge).
+  und `error`; Kommentar in !1891 gepostet. **Autor sagt zu (20.10.)**, beide Schlüssel kommen mit seinem nächsten Push.
+  !1891 ruht aber, bis Bernhard die Speicherfrage A/B entscheidet (mehrwertige Binärattribute persistent speichern oder
+  im React-Modelleditor verbieten); nicht unsere Entscheidung. Landet Welle 5 zuerst, löst der Autor die drei
+  TSX/CSS-Konflikte auf unserer Fassung auf.
 **Präsentation neu (19.10., Hendrik):** `docs/praesentation-v2.md` — Überblick für alle Kollegen (was, wie, Vorteile wie
 „unabhängig von der Basisversion“), zwölf Folien mit Sprechnotiz und Bildhinweis; `praesentation.md` bleibt als Backup.
 **Offen, auszuarbeiten (Hendrik 19.10.): Lebenszyklus eines Kundenthemes.** Bestehen bleibt nur die gelieferte
