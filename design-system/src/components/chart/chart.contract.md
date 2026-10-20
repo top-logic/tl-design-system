@@ -27,8 +27,15 @@ Neuladen, und auch im Kundentheme in dessen Farben.
 Die Werte sind `#RRGGBB`; Deckkraft hängt das Control als Hex-Suffix an. Eine Reihe, deren Farbe der Server in der
 Konfiguration mitgibt, behält sie, ebenso jede Farbe an einer Achse oder einem Plugin; nur was fehlt, kommt aus dem Theme.
 Die Farben stehen in der Konfiguration dieses einen Diagramms, nie in den globalen Voreinstellungen von Chart.js: mehrere
-Diagramme in verschiedenen Themes teilen sich eine Seite. Ist eine Kategorie keine lesbare Farbe, bleibt ihre Reihe
-ungefärbt, die übrigen behalten ihre Kategorie. Eine eigene Diagrammpalette im Java-Code gibt es nicht.
+Diagramme in verschiedenen Themes teilen sich eine Seite. Gefärbt werden nur die Achsen, die Chart.js für die Konfiguration
+baut (die konfigurierten, die an den Reihen benannten `xAxisID`, `yAxisID`, `rAxisID` und die Achsen des Typs): keine
+zusätzliche, leere Achse.
+
+Kein Fallback: Eine fremde Palette gibt es nicht, im Java-Code nicht und auf dem Canvas nicht — das Plugin `colors` von
+Chart.js ist je Diagramm ausgeschaltet (der Server darf es einschalten). Ist eine Kategorie keine lesbare Farbe, zeichnet
+ihre Reihe oder ihr Punkt in der neutralen Trennerfarbe (`--tl-border-separator`), sichtbar ohne Kategorie, und die
+übrigen behalten ihre Kategorie. Ist gar keine Kategorie lesbar (kein Design System), setzt das Control keine Farbe, auch
+kein Feld mit Lücken.
 
 ## Aufbau
 
