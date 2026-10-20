@@ -224,7 +224,10 @@ am 17.10. (V17) aus 5d heraus, der Fingerabdruck kommt mit dem Theme-Schritt.
 `CWS/CWS_29914_design_system_welle_5d` auf 5c (`3ec1eb2ad8`), lokal. Umfang nach V13, V15, V16, V21 (17.10.): Tooltip, Fill,
 Viewport, Mount, wiederholte Einträge, Drag shield, Touch drag, Element-Picker, Compact field, Anchor-Flash, `layer-drag`,
 fremde Stylesheets auf Paket-Tokens, `tlReactControls.css` gelöscht. **Weiter:** Erkundung Restbestand und fremde
-Stylesheets, Nachprüfung (V31 ff.) zum Ankreuzen, dann Spec.
+Stylesheets, Nachprüfung (V31 ff.) zum Ankreuzen, dann Spec. **Stand 20.10.:** Nachprüfung V31–V40 entschieden
+(Tooltip dunkel, Wysiwyg umbauen, Diagramme auf Kategorien); **Spec freigegeben** (§1–16, dazu Tooltip-Ankerfehler und
+Dichte im Benutzermenü): `docs/superpowers/specs/2026-10-20-welle-5d-fundament-design.md`; `skalen.md` „Welle 5d“.
+**Weiter:** Plan, Plan-Review (frischer Agent), dann SDD mit savvy-flow.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,

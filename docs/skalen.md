@@ -2657,6 +2657,45 @@ die Packrechnung des Dashboards ins Paket (neues Layout, kein Umzug).
   `gray-0`, dunkelt `derive` alle acht Füllungen fast bis Schwarz ab — die Kategorien bleiben lesbar, aber kaum
   unterscheidbar; die Trennungsprüfung gilt bewusst nur den `-subtle`-Flächen (Review des Rechenkerns).
 
+### Welle 5d: Fundament und Abschluss (20.10., Hendrik — #29914)
+
+**Grundlage.** V13, V15, V16, V17, V21 der Prognose (17.10.) und die Nachprüfung V31–V40 (20.10., alle wie
+vorgeschlagen); Spec `docs/superpowers/specs/2026-10-20-welle-5d-fundament-design.md`. **Kein neues Bedienkonzept**;
+kaputte Bedienung wird repariert. `tlReactControls.css` wird gelöscht. Die alten Theme-Tokens und `UIThemeService`
+bleiben als Brücke (V17), bis #29850 und #29909 entscheiden.
+
+**Der Tooltip bleibt dunkel (Hendrik).** Die einzige invertierte Fläche unterscheidet „Hinweis“ von „Menü“. Neue Rollen
+`surface-inverse`/`text-inverse` mit Paar in der Paarliste; `derive` rechnet sie. Breite `size-13` statt 500 px (gut
+lesbare Zeilenlänge). Der Tooltip folgt beim Wechsel von Element zu Element dem neuen Anker (Fehler, Hendrik).
+**Verworfen:** hell wie `tl-popover` — Tooltip und Menü sähen gleich aus.
+
+**Zwei Ebenen über dem Toast.** `layer-tooltip` (1300) — ein Tooltip gehört über alles, worauf er zeigt, auch über
+Toasts; `layer-drag` (1400) für Schild, Zieh-Bild, Picker und Ablehnungshinweis. Der Hinweis liegt über dem Zieh-Bild,
+sonst verdeckt das Bild den Grund (Fehler beim Ziehen mit dem Finger).
+
+**Ein Zustand fürs Ziehen.** Die Quelle trägt beim Finger dasselbe `dragging` wie bei der Maus, „bereit“ ist
+`drag-armed`; ein Zieh-Bild `tl-drag-image` mit `shadow-drag`.
+
+**Wysiwyg wird umgebaut, nicht nur umgefärbt (Hendrik, mit Bedingung).** Bedingung: ein Update der Bibliothek darf die
+Styles nicht brechen. Erfüllt, weil Tiptap 3 headless ist — Leiste, Menüs und Popup zeichnet unser Code, die Bibliothek
+liefert nur `.ProseMirror`; ein Vitest bindet den Editor ein. Leiste `tl-toolbar` mit Part-Knöpfen (Enter/Leertaste
+gehen wieder), Menüs `tl-menu` mit **`menuitemradio`** (neu im Vertrag), Link-Popup `tl-popover` mit Feld, Text in
+`tl-prose`, Editorteile in `tl-rich-text`. Radix und die Remix-Glyphen fallen. **Verworfen:** nur Tokens tauschen —
+der Editor bliebe anders als der Rest und ohne Fokusring.
+
+**Diagramme lesen die Kategorien (Hendrik).** Reihenfarben aus `category-1..8-surface`, neu gelesen bei Modus- und
+Themewechsel; Gitter und Beschriftung aus Rollen. Die Hex-Palette in Java fällt, aus zehn Farben werden acht.
+**Verworfen:** eigener Strang später — Diagramme blieben im Dunkelmodus unlesbar.
+
+**Eine Regel für „Aktion beim Zeigen“.** `tl-reveal-on-hover` für den Öffner des Compact field und den Griff der Liste;
+der Öffner liest dieselbe Regel wie der Knopf im Select.
+
+**Dichte im Benutzermenü (Hendrik, vorläufig).** Umschalter „Kompakt“ neben der Themewahl, je Person gespeichert,
+vor dem ersten Bild gesetzt. Der UI-Durchgang kann ihn noch verschieben.
+
+**Fremde Stylesheets lesen Rollen** (Zuordnung Spec §10); Bibliotheksklassen bleiben; Schrift über Typo-Klassen, wo die
+Bibliothek es zulässt. Die Audit-Tests der Module lernen `tokens.css`.
+
 ### Die Kopie in der Engine ist versiegelt (16.10.)
 
 **Befund:** Zweimal wurde die Kopie des Pakets in tl-engine-7 von Hand geändert — #29787 (sechs Stellen) und #29859

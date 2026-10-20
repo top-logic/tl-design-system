@@ -1,6 +1,6 @@
 # Welle 5d · Fundament und Abschluss — Spec
 
-**Stand:** Entwurf 20.10.2026 · Ticket #29914 · Engine-Branch `CWS/CWS_29914_design_system_welle_5d` (auf 5c)
+**Stand:** freigegeben 20.10.2026 (Hendrik, §1–8 und §9–16) · Ticket #29914 · Engine-Branch `CWS/CWS_29914_design_system_welle_5d` (auf 5c)
 **Grundlage:** Prognose Welle 5 (V13, V15, V16, V17, V21; entschieden 17.10.) und Nachprüfung 5d (V31–V40; entschieden
 20.10.) in `docs/migration/altlast.md`.
 
