@@ -257,8 +257,9 @@ Regel „Nachgeben“ gibt `tl-titlebar__actions` den ganzen Rest, die Toolbar s
 eigener Worktree `_Working-Tree/tl8-wt-29918`, Branch `CWS/CWS_29918_titlebar_actions_end` von `origin/master`
 (`ed1d3b7d30`), Commit `6c9fc97c30` — nur diese Regel in die master-Kopie übernommen und neu versiegelt (alle vier
 Siegel geprüft; Maven offline kommt auf master nicht an neue Snapshots, `TestDesignSystemCopy` läuft in Jenkins). Im
-5d-Branch über die Kopie `22586c78c2`. Sichtprüfung lokal: Toolbar am rechten Rand (1400 px). **Weiter:** Push und PR
-gegen master mit Hendriks Freigabe, Reviewer `bhu`, `jenkins`.
+5d-Branch über die Kopie `22586c78c2`. Sichtprüfung lokal: Toolbar am rechten Rand (1400 px). **Gepusht 20.10.** (Engine-Branch und Paket `main`
+bis `25884c0`, damit auch 5a–5d im Paket), **PR [!1930](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1930)**
+gegen master, Reviewer `bhu` und `jenkins`. **Weiter:** Jenkins und Bernhards Review.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
