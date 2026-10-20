@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-19 (5a, 5b, 5c gebaut — Welle 5 als ein PR; weiter 5d) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-20 (5a–5c gebaut; 5d Spec und Plan fertig, Umsetzung in neuer Sitzung — Welle 5 als ein PR) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -230,7 +230,12 @@ fremde Stylesheets auf Paket-Tokens, `tlReactControls.css` gelöscht. **Weiter:*
 Stylesheets, Nachprüfung (V31 ff.) zum Ankreuzen, dann Spec. **Stand 20.10.:** Nachprüfung V31–V40 entschieden
 (Tooltip dunkel, Wysiwyg umbauen, Diagramme auf Kategorien); **Spec freigegeben** (§1–16, dazu Tooltip-Ankerfehler und
 Dichte im Benutzermenü): `docs/superpowers/specs/2026-10-20-welle-5d-fundament-design.md`; `skalen.md` „Welle 5d“.
-**Weiter:** Plan, Plan-Review (frischer Agent), dann SDD mit savvy-flow.
+**Plan** `docs/superpowers/plans/2026-10-20-welle-5d-fundament.md` (14 Tasks), Plan-Review Fable 20.10.: nicht
+ausführungsreif (sechs Gate-Brüche, Lücken) → **Korrekturen K1–K16 eingearbeitet** (`fb76056`), Spec an vier Stellen
+nachgezogen (Anker als Hof, Viewport bleibt Engine-Seitenrahmen, Dichte als zwei Einträge mit `aria-current`,
+`tl-chart`). **Weiter (neue Sitzung, Hendrik 20.10.):** SDD mit savvy-flow ab Task 1; Ledger
+`.superpowers/sdd/2026-10-20-welle-5d-fundament/` (`progress.md` mit Stufen, `global-constraints.md` samt K1–K16,
+`implementer-common.md`, `task-1-brief.md` … `task-12-brief.md`); Tasks 13–14 beim Orchestrator.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
