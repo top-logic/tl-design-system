@@ -25,7 +25,9 @@ Ein Popover ist kein eigenes Control. Es ist die Fläche, die ein Control öffne
 
 - Escape schließt.
 - Ein Drücken außerhalb der Fläche und ihres Auslösers schließt.
-- Beim Schließen kehrt der Fokus zum Auslöser zurück.
+- Beim Schließen kehrt der Fokus zum Auslöser zurück — oder zu dem Rückgabeziel, das der Aufrufer nennt: das
+  Link-Popup des Wysiwyg-Editors gibt den Fokus in den Text zurück, nicht an den Knopf der Leiste
+  (`rich-text.contract.md`).
 - Die Fläche folgt ihrem Anker bei Scroll und Resize.
 - Fehlt der Platz auf der bevorzugten Seite, klappt sie um.
 - Sie bleibt im Viewport; reicht die Höhe nicht, scrollt sie bis `--tl-size-popover-max`.
@@ -58,7 +60,7 @@ Ein Popover ist kein eigenes Control. Es ist die Fläche, die ein Control öffne
 
 Ein Popover besteht den Vertrag, wenn es im Portal unter `document.body` liegt, `tl-popover` und
 `data-tl-anchored-overlay` trägt, mit Escape und Drücken außerhalb schließt, den Fokus an den Auslöser
-zurückgibt und im Klassen-Gate keine Klasse ohne `tl-`-Präfix hinterlässt.
+zurückgibt (oder an das Rückgabeziel des Aufrufers) und im Klassen-Gate keine Klasse ohne `tl-`-Präfix hinterlässt.
 
 ## Leser
 

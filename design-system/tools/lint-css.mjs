@@ -115,7 +115,7 @@ const MODIFIERS = {
   'tl-popover': new Set(['content']), // Inhalts-Popover (#29659): bündig, begrenzte Breite — eine Form, kein Zustand.
   'tl-menu': new Set([]),
   'tl-menu-region': new Set([]),
-  'tl-toolbar': new Set([]),
+  'tl-toolbar': new Set(['wrap']), // Bricht um statt zu kollabieren (Wysiwyg, 5d): eine Form, kein Zustand.
   'tl-tabs': new Set([]),
   'tl-breadcrumb': new Set([]),
   'tl-skeleton': new Set([]),
@@ -164,6 +164,10 @@ const MODIFIERS = {
   'tl-dashboard': new Set([]), // Bearbeiten: data-tl-state~="edit"; Aktion deaktiviert: disabled/aria-disabled am Knopf.
   'tl-value-list': new Set(['block']), // Untereinander statt in einer Zeile: eine Form, kein Zustand.
   'tl-drop-hint': new Set([]),
+  'tl-tooltip': new Set([]), // Interaktiv: data-tl-state~="interactive".
+  'tl-rich-text': new Set([]), // Fehler: aria-invalid am Rahmen (tl-field).
+  'tl-compact-field': new Set([]), // Bearbeitbar: data-tl-state~="edit".
+  'tl-chart': new Set([]),
 };
 
 // Die einzige Ausnahme vom Ring: der Behälter mit virtuellem Cursor, nur in base.css (Spec 3b §3).

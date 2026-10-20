@@ -5,7 +5,8 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from '../tools/resolve.mjs';
 import { ratio } from '../tools/lib/contrast.mjs';
-import { readComponent, readGenerated, declarationsOf } from './lib/component.mjs';
+import { readComponent, readGenerated, declarationsOf, rulesOf } from './lib/component.mjs';
+import { lint } from '../tools/lint-css.mjs';
 
 const P = JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.url)));
 const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)));
@@ -143,4 +144,108 @@ test('tl-reveal-on-hover: verborgen über opacity, sichtbar beim Zeigen, bei Tas
   assert.ok(m, '@media (hover: none) { .tl-reveal-on-hover { … } } fehlt');
   assert.match(m[1], /opacity:\s*1/);
   assert.doesNotMatch(ohneKommentar(l), /visibility:\s*hidden|:focus-within/);
+});
+
+// --- Task 3: tl-tooltip, tl-rich-text, tl-compact-field, Leiste mit Umbruch (Spec 5d §5, §6, §7; Plan-Review K3, K4, K5) ---
+
+const lies = (k, f) => { try { return readGenerated(k, f); } catch { return ''; } };
+const tooltip = () => lies('tooltip', 'tooltip.css');
+const richText = () => lies('rich-text', 'rich-text.css');
+const compactField = () => lies('compact-field', 'compact-field.css');
+
+test('tooltip: Fläche surface-inverse, Schrift text-inverse, layer-tooltip, Breite size-13, Ecke radius-md', () => {
+  const d = decl(tooltip(), '.tl-tooltip');
+  for (const r of [/background:\s*var\(--tl-surface-inverse\)/, /(^|;)\s*color:\s*var\(--tl-text-inverse\)/,
+    /z-index:\s*var\(--tl-layer-tooltip\)/, /max-width:\s*var\(--tl-size-13\)/, /border-radius:\s*var\(--tl-radius-md\)/,
+    /animation:\s*tl-tooltip-in var\(--tl-duration-fast\) var\(--tl-easing-[a-z]+\)/]) assert.match(d, r);
+  assert.match(decl(tooltip(), '.tl-tooltip[hidden]'), /display:\s*none/);
+});
+
+// K4: drop-shadow() nimmt die zweischichtige Liste nicht; der Schatten steht am Tooltip, der Pfeil hat keinen.
+test('tooltip: box-shadow aus shadow-popover am Tooltip, Pfeil gleich gefüllt und ohne Schatten', () => {
+  assert.match(decl(tooltip(), '.tl-tooltip'), /box-shadow:\s*var\(--tl-shadow-popover\)/);
+  const a = decl(tooltip(), '.tl-tooltip__arrow');
+  assert.match(a, /fill:\s*var\(--tl-surface-inverse\)/);
+  assert.doesNotMatch(a, /shadow|filter/);
+  assert.doesNotMatch(ohneKommentar(tooltip()), /drop-shadow|filter:/);
+});
+
+test('tooltip: Abstände space-2xs/space-sm, interaktiv als Zustand mit Zeiger und Textauswahl', () => {
+  for (const sel of ['.tl-tooltip__caption', '.tl-tooltip__body'])
+    assert.match(decl(tooltip(), sel), /padding:\s*var\(--tl-space-2xs\) var\(--tl-space-sm\)/, sel);
+  assert.match(decl(tooltip(), '.tl-tooltip'), /pointer-events:\s*none/);
+  const i = decl(tooltip(), '.tl-tooltip[data-tl-state~="interactive"]');
+  for (const r of [/pointer-events:\s*auto/, /cursor:\s*text/, /user-select:\s*text/]) assert.match(i, r);
+  assert.match(decl(tooltip(), '.tl-tooltip__body *'), /color:\s*inherit/);
+});
+
+test('tooltip: keine Schriftgröße, kein Gewicht, keine Zeilenhöhe im CSS — die Typo-Klassen tragen sie', () => {
+  const o = ohneKommentar(tooltip());
+  assert.ok(o.includes('.tl-tooltip'), 'tooltip.css fehlt');
+  assert.doesNotMatch(o, /font-size|font-weight|line-height|(^|[;{\s])font:/);
+});
+
+test('rich-text: Innenabstand space-sm/space-md und Mindesthöhe size-10 an der Fläche, Kopfzelle surface-layer-nested', () => {
+  const css = richText();
+  const f = decl(css, '.tl-rich-text .tl-prose');
+  assert.match(f, /padding:\s*var\(--tl-space-sm\) var\(--tl-space-md\)/);
+  assert.match(f, /min-height:\s*var\(--tl-size-10\)/);
+  assert.match(decl(css, '.tl-rich-text .tl-prose th'), /background:\s*var\(--tl-surface-layer-nested\)/);
+  assert.match(decl(css, '.tl-rich-text'), /padding:\s*0/);
+  assert.match(decl(css, '.tl-rich-text[hidden]'), /display:\s*none/);
+});
+
+// K3: keine Klassen der Bibliothek im Paket; Bildauswahl und Spaltengriff zeichnet das Engine-Sheet des Editors.
+test('rich-text: nur .tl-rich-text, .tl-prose und Elemente, kein outline: none, Ring der scrollenden Fläche innen', () => {
+  const o = ohneKommentar(richText());
+  assert.ok(o.includes('.tl-rich-text'), 'rich-text.css fehlt');
+  assert.doesNotMatch(o, /ProseMirror|column-resize-handle|selectednode/);
+  assert.doesNotMatch(o, /outline:\s*(none|0)/);
+  for (const [sel] of rulesOf(o)) assert.match(sel, /^\.tl-rich-text\b/, sel);
+  assert.match(decl(o, '.tl-rich-text .tl-prose:focus-visible'), /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/);
+});
+
+test('compact-field: Öffner teilt die Regel mit dem Knopf im Select (ein Selektor), bearbeitbar ist ein Zustand', () => {
+  const sel = readGenerated('select', 'select.css');
+  for (const z of ['hover', 'active']) {
+    const regel = rulesOf(sel).find(([s]) => s.split(',').map((x) => x.trim())
+      .includes(`.tl-select__controls > .tl-button--ghost:not(:disabled):${z}`));
+    assert.ok(regel, `Regel der Select-Knöpfe (:${z}) fehlt`);
+    assert.ok(regel[0].split(',').map((x) => x.trim())
+      .includes(`.tl-compact-field[data-tl-state~="edit"] > .tl-compact-field__opener.tl-button--ghost:not(:disabled):${z}`),
+      `der Öffner liest die Regel der Select-Knöpfe nicht (:${z})`);
+  }
+  const css = compactField();
+  const e = decl(css, '.tl-compact-field[data-tl-state~="edit"]');
+  for (const r of [/display:\s*flex/, /gap:\s*var\(--tl-space-xs\)/, /padding-inline-end:\s*var\(--tl-space-2xs\)/]) assert.match(e, r);
+  assert.match(decl(css, '.tl-compact-field[hidden]'), /display:\s*none/);
+  assert.match(decl(css, '.tl-compact-field > .tl-compact-field__opener'), /color:\s*var\(--tl-icon-secondary\)/);
+});
+
+// K6: „Aktion beim Zeigen“ ist eine Regel (layout.css); der Öffner trägt tl-reveal-on-hover im Markup.
+test('compact-field: liest tl-reveal-on-hover und blendet nichts selbst ein', () => {
+  const o = ohneKommentar(compactField());
+  assert.ok(o.includes('.tl-compact-field'), 'compact-field.css fehlt');
+  assert.doesNotMatch(o, /opacity|visibility|:hover|--edit|--view/);
+  const md = (() => { try { return readComponent('compact-field', 'compact-field.contract.md'); } catch { return ''; } })();
+  assert.match(md, /`tl-reveal-on-hover`/);
+});
+
+test('toolbar--wrap: bricht um, sonst nichts', () => {
+  const d = decl(readGenerated('toolbar', 'toolbar.css'), '.tl-toolbar--wrap');
+  assert.equal(d.trim().replace(/\s+/g, ' '), 'flex-wrap: wrap;');
+});
+
+// K5: die Modifier der neuen Blöcke sind entschieden — tl-toolbar kennt wrap, die neuen Blöcke keinen.
+test('lint-css: tl-toolbar--wrap erlaubt; tl-tooltip, tl-rich-text, tl-compact-field, tl-chart ohne Modifier', () => {
+  const known = new Set();
+  assert.deepEqual(lint('.tl-toolbar--wrap { flex-wrap: wrap; }', { known, file: 'x.css' }), []);
+  assert.equal(lint('.tl-toolbar--dense { flex-wrap: wrap; }', { known, file: 'x.css' }).length, 1);
+  for (const b of ['tl-tooltip', 'tl-rich-text', 'tl-compact-field', 'tl-chart'])
+    assert.equal(lint(`.${b}--x { flex-wrap: wrap; }`, { known, file: 'x.css' }).length, 1, b);
+});
+
+test('compact-field: der Ring des Öffners liegt innen (die Tabellenzelle schneidet)', () => {
+  assert.match(decl(compactField(), '.tl-compact-field > .tl-compact-field__opener:focus-visible'),
+    /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/);
 });

@@ -119,11 +119,14 @@
 
 /* Löschen und Chevron sind Knöpfe im Feld wie die Aktion der tl-field-group (field.css): quadratisch
    size-control-sm, am Ende space-2xs vom Rand (padding-inline-end von .tl-select), Zeigen surface-interactive-selected, Drücken
-   surface-interactive-active — auf surface-field ist die Zeigen-Stufe des Ghost-Knopfs hell nicht zu sehen. */
-.tl-select__controls > .tl-button--ghost:not(:disabled):hover {
+   surface-interactive-active — auf surface-field ist die Zeigen-Stufe des Ghost-Knopfs hell nicht zu sehen.
+   Der Öffner des bearbeitbaren Compact field (compact-field.css) ist derselbe Knopf im Feld: eine Regel, zwei Leser. */
+.tl-select__controls > .tl-button--ghost:not(:disabled):hover,
+.tl-compact-field[data-tl-state~="edit"] > .tl-compact-field__opener.tl-button--ghost:not(:disabled):hover {
   background: var(--tl-surface-interactive-selected);
 }
-.tl-select__controls > .tl-button--ghost:not(:disabled):active {
+.tl-select__controls > .tl-button--ghost:not(:disabled):active,
+.tl-compact-field[data-tl-state~="edit"] > .tl-compact-field__opener.tl-button--ghost:not(:disabled):active {
   background: var(--tl-surface-interactive-active);
 }
 

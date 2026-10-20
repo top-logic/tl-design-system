@@ -27,6 +27,12 @@
   justify-content: flex-start;
 }
 
+/* Eine Leiste, die nicht kollabiert, sondern umbricht (Wysiwyg-Editor, tl-rich-text): die Gruppen gehen ganz in die
+   nächste Zeile; der Abstand zwischen den Zeilen ist der zwischen den Einträgen. */
+.tl-toolbar--wrap {
+  flex-wrap: wrap;
+}
+
 .tl-toolbar__group {
   display: flex;
   align-items: center;

@@ -161,6 +161,10 @@ setzt feste ThemeImages (`css:fa-solid fa-chevron-down` / `fa-chevron-up`, `fa-x
 Leser auch `TLValueList` (`value-list.contract.md`): der Trenner „, “ zwischen lesenden Werten ist
 `tl-select__separator`.
 
+Leser auch `ReactCompactFieldControl` (`compact-field.contract.md`): der Öffner des bearbeitbaren Compact field
+(`tl-compact-field__opener`) ist ein Knopf im Feld wie die Knöpfe in `tl-select__controls` und zeigt Zeigen und Drücken
+mit derselben Regel (ein Selektor, zwei Leser).
+
 ## Konformität
 
 Eine Komponente besteht den Vertrag, wenn sie im Specimen-Harness des Pakets für jeden Zustand oben

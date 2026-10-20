@@ -55,6 +55,7 @@ Den Fokusring der Knöpfe liefert `base.css` über `:focus-visible`.
 |---|---|
 | `tl-toolbar` | immer, mit `role="toolbar"` und `aria-label` |
 | `tl-toolbar__group` | an einer Gruppe zusammengehöriger Einträge; eine leere Gruppe verschwindet |
+| `tl-toolbar--wrap` | die Toolbar bricht um, statt zu kollabieren (nur `flex-wrap: wrap`): eine Gruppe geht ganz in die nächste Zeile, der Zeilenabstand ist `--tl-space-xs`. Leser: die Leiste des Wysiwyg-Editors (`rich-text.contract.md`). Nicht zusammen mit `data-tl-overflow` |
 | `data-tl-overflow="trailing"` / `"leading"` | die Toolbar kollabiert zu diesem Ende; der Inhalt sitzt dort |
 | `data-tl-compact` | Knöpfe zeigen nur Icons; jeder trägt `tl-button--icon` mit `aria-label` |
 | `tl-divider tl-divider--vertical` | an einem Trenner zwischen Gruppen, mit `role="separator"` und `aria-orientation="vertical"` |
