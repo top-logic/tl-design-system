@@ -344,3 +344,24 @@ test('eine unbekannte Option endet mit Exit 2, Aufruf auf der Konsole, nichts ge
   assert.match(r.stderr, /Aufruf: node tools\/derive\.mjs/);
   assert.ok(!existsSync(r.datei));
 });
+
+test('das Probe-Theme trägt surface-inverse und text-inverse aus seiner Grauwahl', () => {
+  // derive schreibt jede abweichende Farbrolle in beide Blöcke; gray-0 bleibt in der warmen Rampe #FFFFFF,
+  // text-inverse steht hell darum mit dem Wert des Pakets in der Datei, weil es dunkel abweicht.
+  const stufen = Object.fromEntries(['gray-0', 'gray-1', 'gray-77'].map((n) => [n, P.color[n]]));
+  const rampe = grauRampe(probe.color.gray, stufen);
+  const soll = {
+    light: { 'surface-inverse': rampe['gray-77'], 'text-inverse': rampe['gray-0'] },
+    dark: { 'surface-inverse': rampe['gray-1'], 'text-inverse': rampe['gray-77'] },
+  };
+  for (const m of MODES) for (const [rolle, hex] of Object.entries(soll[m]))
+    assert.equal(ergebnis.rollen[m][rolle], hex, `${m}: ${rolle}`);
+  for (const rolle of ['surface-inverse', 'text-inverse'])
+    assert.equal(ergebnis.css.split(`--tl-${rolle}: `).length - 1, 2, `${rolle} steht nicht in beiden Blöcken`);
+});
+
+test('das Paar text-inverse/surface-inverse steht in der Paarliste', () => {
+  const paar = kontrastPaare(T).find((p) => p.fg === 'text-inverse' && p.bg === 'surface-inverse');
+  assert.ok(paar, 'Paar fehlt');
+  assert.equal(paar.soll, 4.5);
+});

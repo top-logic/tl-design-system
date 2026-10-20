@@ -211,7 +211,8 @@ test('Zeilenhöhen der Typo-Klassen liegen auf dem 4-px-Raster', () => {
 });
 
 test('die Ebenen steigen streng', () => {
-  const v = ['layer-base', 'layer-raised', 'layer-sticky', 'layer-overlay', 'layer-popover', 'layer-toast']
+  const v = ['layer-base', 'layer-raised', 'layer-sticky', 'layer-overlay', 'layer-popover', 'layer-toast',
+    'layer-tooltip', 'layer-drag']
     .map((n) => Number(R.layer[n]));
   for (let i = 1; i < v.length; i++) assert.ok(v[i] > v[i - 1], v.join(' < '));
 });

@@ -92,6 +92,8 @@ export function kontrastPaare(T) {
     paar('text-primary', `category-${k}-subtle`, 4.5);
     for (const bg of ['surface-base', 'surface-layer']) paar(`category-${k}-border`, bg, 3.0);
   }
+  // Tooltip: Text auf der inversen Fläche (Welle 5d).
+  paar('text-inverse', 'surface-inverse', 4.5);
   for (const [name, { surface }] of Object.entries(T.derived.light))
     paar(name, surface, name.startsWith('icon-') ? 3.0 : 4.5);
   return p;

@@ -60,6 +60,8 @@
   --tl-category-7-surface: #974F92;
   --tl-category-8-surface: #A84A6D;
   --tl-text-contrast-dark: #1F1C19;
+  --tl-surface-inverse: #1F1C19;
+  --tl-text-inverse: #FFFFFF;
   --tl-text-on-brand: #1F1C19;
   --tl-text-on-brand-hover: #FFFFFF;
   --tl-text-on-brand-active: #FFFFFF;
@@ -135,6 +137,8 @@
   --tl-category-7-surface: #974F92;
   --tl-category-8-surface: #A84A6D;
   --tl-text-contrast-dark: #1F1C19;
+  --tl-surface-inverse: #FEF9F4;
+  --tl-text-inverse: #1F1C19;
   --tl-text-on-brand: #1F1C19;
   --tl-text-on-brand-hover: #1F1C19;
   --tl-text-on-brand-active: #1F1C19;

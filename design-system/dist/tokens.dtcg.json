@@ -703,6 +703,14 @@
       "depth-5": {
         "$type": "number",
         "$value": 1200
+      },
+      "depth-6": {
+        "$type": "number",
+        "$value": 1300
+      },
+      "depth-7": {
+        "$type": "number",
+        "$value": 1400
       }
     },
     "font": {
@@ -1246,6 +1254,14 @@
           "$type": "color",
           "$value": "{primitive.color.gray-77}"
         },
+        "surface-inverse": {
+          "$type": "color",
+          "$value": "{primitive.color.gray-77}"
+        },
+        "text-inverse": {
+          "$type": "color",
+          "$value": "{primitive.color.gray-0}"
+        },
         "text-on-brand": {
           "$type": "color",
           "$value": "#FFFFFF",
@@ -1717,6 +1733,14 @@
           "$type": "color",
           "$value": "{primitive.color.gray-77}"
         },
+        "surface-inverse": {
+          "$type": "color",
+          "$value": "{primitive.color.gray-1}"
+        },
+        "text-inverse": {
+          "$type": "color",
+          "$value": "{primitive.color.gray-77}"
+        },
         "text-on-brand": {
           "$type": "color",
           "$value": "#1B1D21",
@@ -2137,6 +2161,14 @@
       "layer-toast": {
         "$type": "number",
         "$value": "{primitive.measure.depth-5}"
+      },
+      "layer-tooltip": {
+        "$type": "number",
+        "$value": "{primitive.measure.depth-6}"
+      },
+      "layer-drag": {
+        "$type": "number",
+        "$value": "{primitive.measure.depth-7}"
       }
     },
     "density": {
