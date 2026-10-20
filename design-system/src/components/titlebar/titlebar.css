@@ -29,10 +29,13 @@
 /* Alles außer dem Titel schrumpft nicht: Kopfknöpfe behalten ihre Maße bei langem Titel. */
 .tl-titlebar > .tl-button { flex: none; }
 
+/* Die Aktionen stehen am Ende des Kopfes, wie in der AppBar — auch wenn sie beim Nachgeben (unten) den ganzen Rest
+   nehmen (#29918). */
 .tl-titlebar__actions {
   display: flex;
   flex: 0 1 auto;
   align-items: center;
+  justify-content: end;
   gap: var(--tl-space-2xs);
   min-width: 0;
 }

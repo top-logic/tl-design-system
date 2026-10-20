@@ -42,7 +42,9 @@ const NACHGEBEN = (px) => `(() => {
   const title = stage.querySelector('.tl-titlebar__title');
   const actions = stage.querySelector('.tl-titlebar__actions');
   const control = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--tl-size-control')) * 16;
-  return { titelGekuerzt: title.scrollWidth > title.clientWidth + 0.5, aktionen: actions.getBoundingClientRect().width, control };
+  const toolbar = actions.querySelector(':scope > .tl-toolbar');
+  return { titelGekuerzt: title.scrollWidth > title.clientWidth + 0.5, aktionen: actions.getBoundingClientRect().width, control,
+    luecke: actions.getBoundingClientRect().right - toolbar.getBoundingClientRect().right };
 })()`;
 
 test('Panelkopf: bei 640 px ist der Titel ganz, bei 260 px hält die Toolbar am Knopf und der Titel kürzt', async () => {
@@ -53,4 +55,11 @@ test('Panelkopf: bei 640 px ist der Titel ganz, bei 260 px hält die Toolbar am 
   const schmal = await browser.evaluate(NACHGEBEN(260));
   assert.ok(Math.abs(schmal.aktionen - schmal.control) < 1, `Aktionen ${schmal.aktionen} px statt ${schmal.control}`);
   assert.equal(schmal.titelGekuerzt, true);
+});
+
+// #29918: die Aktionen nehmen beim Nachgeben den ganzen Rest; die Toolbar steht darin am Ende, nicht am Titel.
+test('Panelkopf: die Toolbar steht am Ende des Kopfes, auch wenn die Aktionen den Rest nehmen', async () => {
+  await browser.goto(origin + '/src/components/panel/panel.spec.html');
+  const breit = await browser.evaluate(NACHGEBEN(1200));
+  assert.ok(Math.abs(breit.luecke) < 1, `Toolbar endet ${breit.luecke} px vor dem Ende der Aktionen`);
 });

@@ -43,6 +43,10 @@ test('tl-titlebar: eine überlaufende Toolbar gibt vor dem Titel nach, ohne 1000
   assert.doesNotMatch(ohneKommentar(readGenerated('titlebar', 'titlebar.css')), /100000/);
 });
 
+test('tl-titlebar: die Aktionen stehen am Ende, wie in der AppBar (#29918)', () => {
+  assert.match(decl('titlebar', '.tl-titlebar__actions'), /justify-content:\s*end/);
+});
+
 test('tl-button-bar: rechtsbündig, Linie oben, verschwindet ohne Knopf — Fuß des Dialogs und des Panels', () => {
   const b = decl('button-bar', '.tl-button-bar');
   assert.match(b, /justify-content:\s*end/);
