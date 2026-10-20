@@ -17,7 +17,7 @@ Bild passen will, liest die Tokens.
 |---|---|
 | Rahmen | `tl-field` `tl-rich-text`: Rand, Zeigen und Fehler (`aria-invalid="true"`) aus `tl-field`; Leiste und Fläche untereinander. Den Fehler zeigt der Rahmen, ansagen lässt ihn die Schreibfläche: sie trägt `aria-invalid="true"` ebenso |
 | Leiste | `tl-toolbar` `tl-toolbar--wrap` mit `role="toolbar"` und übersetztem `aria-label`; Gruppen `tl-toolbar__group`, dazwischen `tl-divider` `tl-divider--vertical`. Die Knöpfe sind der Part `Button` (ghost, nur Icon) unter `ButtonDefaults`; Umschalter (fett, kursiv, unterstrichen, durchgestrichen, Zitat, Code) tragen `aria-pressed`. Die Befehle des Servers bleiben die eingebettete `TLToolbar`, in einer eigenen Gruppe, die schrumpfen darf (`tl-toolbar__group:has(> .tl-toolbar)`, `toolbar.contract.md`): die eingebettete Toolbar kollabiert dann in ihren Überlauf |
-| Menüs | Absatzformat und Listenart: Part `MenuTrigger` und `tl-menu` (`menu.contract.md`); jeder Eintrag einer Wahl, von der höchstens einer gilt, ist `menuitemradio` mit `aria-checked` (die Listenart hat keinen, solange der Text keine Liste ist) |
+| Menüs | Absatzformat und Listenart: Part `MenuTrigger` und `tl-menu` (`menu.contract.md`); jeder Eintrag des Absatzformats, von dem genau einer gilt, ist `menuitemradio` mit `aria-checked`; die Einträge der Listenart sind Umschalter, `menuitemcheckbox` mit `aria-checked` (keiner gilt, solange der Text keine Liste ist; die gewählte Listenart wählen hebt die Liste auf) |
 | Link | `tl-popover` `tl-popover--content` mit `label` und `tl-field` (`type="url"`), Knöpfe „Anwenden“ (primary) und, auf einem Link, „Link entfernen“ (danger). Beim Schließen kehrt der Fokus in den Text zurück (Rückgabeziel, `popover.contract.md`) |
 | Schreibfläche | die Fläche der Bibliothek (`.ProseMirror`, `role="textbox"`) mit `tl-prose`: Überschriften, Listen, Code, Zitat, Link und Tabelle aus `prose.contract.md`; den Fokusring liefert `base.css`. Bei einem Fehler trägt sie `aria-invalid="true"`, folgt ihm auch, wenn er später kommt oder geht |
 
@@ -62,6 +62,6 @@ ohne eigene `--tl-`-Variable, ohne `outline: none`, ohne z-index:
 
 Ein Editor besteht den Vertrag, wenn sein Rahmen `tl-field` `tl-rich-text` trägt, der Fehler `aria-invalid` an Rahmen
 und Schreibfläche ist und keine Klasse, die Schreibfläche `tl-prose` trägt, die Leiste `role="toolbar"` mit Namen
-trägt und jeden Knopf mit Enter und Leertaste bedienen lässt, Umschalter `aria-pressed` und die Einträge einer Wahl,
-von der höchstens einer gilt, `menuitemradio` mit `aria-checked` setzen und im Klassen-Gate keine Klasse ohne
+trägt und jeden Knopf mit Enter und Leertaste bedienen lässt, Umschalter `aria-pressed`, die Einträge des Absatzformats
+`menuitemradio` und die der Listenart `menuitemcheckbox`, beide mit `aria-checked`, setzen und im Klassen-Gate keine Klasse ohne
 `tl-`-Präfix bleibt.

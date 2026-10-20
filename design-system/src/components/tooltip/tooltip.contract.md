@@ -1,8 +1,9 @@
 # Vertrag: Tooltip
 
 Der Hinweis an einem Element: Text oder erlaubtes HTML vom Server, mit oder ohne Überschrift, beim Zeigen und beim
-Tastaturfokus (Spec 5d §5). Der Tooltip bleibt dunkel — die einzige invertierte Fläche des Pakets: ein Hinweis, kein
-Menü. TopLogic garantiert Zugänglichkeit, nicht das Aussehen; wer ins Bild passen will, liest die Tokens.
+Tastaturfokus (Spec 5d §5). Der Tooltip ist invertiert — im hellen Modus dunkel auf hell, im dunklen hell auf dunkel —
+und die einzige invertierte Fläche des Pakets: ein Hinweis, kein Menü. TopLogic garantiert Zugänglichkeit, nicht das
+Aussehen; wer ins Bild passen will, liest die Tokens.
 
 ## Leser
 

@@ -72,8 +72,8 @@ scrollt. In Kraft hat kein eigenes Gewicht im Stylesheet: es trägt die Typo-Kla
 | `tl-menu__item` | an jedem Eintrag; ein `<button type="button">` mit `role="menuitem"` und `tl-type-body` |
 | `aria-current="true"` | am Eintrag, dessen Befehl in Kraft ist; dazu `tl-type-body-strong` statt `tl-type-body` |
 | `tl-menu__item--danger` | am Eintrag einer destruktiven Aktion; folgt dem Ton des Kommandos (`tone`), nie vom Autor gesetzt. Deaktiviert gewinnt `--tl-text-disabled`; ein Eintrag kann in Kraft und destruktiv zugleich sein |
-| `role="menuitemcheckbox"` | statt `menuitem` an einem Umschalter; dazu `aria-checked` |
-| `menuitemradio` | als `role` statt `menuitem` an einem Eintrag einer Gruppe, aus der höchstens einer gilt (Absatzformat, Listenart im Wysiwyg); dazu `aria-checked`, `true` an höchstens einem Eintrag der Gruppe (die Listenart hat keinen, solange der Text keine Liste ist; wer die gewählte Listenart wählt, hebt die Liste auf). Die Gruppe entsteht über `ButtonDefaults` mit `radio`: jeder `TLButton` darunter wird ein Eintrag mit dieser Rolle, `aria-checked` folgt seinem `checked` |
+| `role="menuitemcheckbox"` | statt `menuitem` an einem Umschalter; dazu `aria-checked`. Auch die Listenart im Wysiwyg: zwei Umschalter, von denen höchstens einer an ist (keiner, solange der Text keine Liste ist); wer die gewählte Listenart wählt, hebt die Liste auf |
+| `menuitemradio` | als `role` statt `menuitem` an einem Eintrag einer Gruppe, aus der genau einer gilt (Absatzformat im Wysiwyg); dazu `aria-checked`, `true` an genau einem Eintrag der Gruppe; ein Eintrag, der sich selbst abwählt, ist kein Radio, sondern ein Umschalter (`menuitemcheckbox`). Die Gruppe entsteht über `ButtonDefaults` mit `radio`: jeder `TLButton` darunter wird ein Eintrag mit dieser Rolle, `aria-checked` folgt seinem `checked` |
 | `disabled` | am Eintrag, der nicht gewählt werden kann |
 | `tl-menu__icon` | am Icon des Eintrags, zusammen mit `tl-icon-sm`; `aria-hidden="true"` |
 | `tl-menu__label` | am Text des Eintrags; er schneidet mit Ellipse ab |
@@ -86,7 +86,7 @@ scrollt. In Kraft hat kein eigenes Gewicht im Stylesheet: es trägt die Typo-Kla
 ## Konformität
 
 Ein Menü besteht den Vertrag, wenn die Fläche `role="menu"` trägt, jeder Eintrag ein `<button>` mit
-`role="menuitem"` (oder `menuitemcheckbox` bzw. `menuitemradio` mit `aria-checked`) ist, in einer Radio-Gruppe höchstens
+`role="menuitem"` (oder `menuitemcheckbox` bzw. `menuitemradio` mit `aria-checked`) ist, in einer Radio-Gruppe genau
 ein Eintrag `aria-checked="true"` trägt, der Eintrag in Kraft
 `aria-current="true"` und `tl-type-body-strong` trägt, ein destruktiver Eintrag (`tone` ist
 `danger`) `tl-menu__item--danger` trägt, die Tastatur oben vollständig wirkt, ein Klick-Auslöser
