@@ -244,3 +244,42 @@ test('Welle 5c im TSX: Interaktiv-Prüfung und Ablagehinweis zusammengelegt, kei
   for (const n of ['TLKanbanBoard', 'TLDashboard', 'TLCalendar'])
     assert.doesNotMatch(tsx(n), /aria-label="[A-Za-z]/, `${n}: Name als Literal`);
 });
+
+// Welle 5d, Task 11 (Editoren, Flow, Demo, MUI-Text): die fremden Stylesheets und der Text-Adapter lesen Rollen des
+// Pakets, kein altes Theme-Token mehr. Ausgenommen sind das Glass-Theme der Demo (--shadow-glow, --surface-blur: Token,
+// die ein Theme einschaltet), `--item-index` (die Position, die ein Wiederholer je Eintrag setzt, kein Theme-Token)
+// und `background-image`. Die Wurzeln der Editoren behalten ihre Klassen als Geltungsbereich
+// der CodeMirror-Regeln und bekommen den Feldrahmen; nur der Zustand `--error` fällt.
+const ALT_THEME_TOKEN = /var\(--(?!tl-)/;
+const GLASS_TOKEN = /var\(--(shadow-glow|surface-blur|item-index)\)/;
+
+test('Welle 5d: kein altes Theme-Token in den Editor-, Flow-, Demo- und Basis-Stylesheets und im MUI-Text', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+  const dateien = [
+    'com.top_logic.layout.react.codeedit/src/main/webapp/style/tlCodeEditor.css',
+    'com.top_logic.model.search.react/src/main/webapp/style/tlScriptEditor.css',
+    'com.top_logic.react.flow.server/src/main/webapp/style/tl-react-flow.css',
+    'com.top_logic.demo.react/src/main/webapp/style/tl-demo-react.css',
+    'com.top_logic.layout.react/src/main/webapp/style/tlReactBase.css',
+    'com.top_logic.layout.react.mui/react-src/adapters/MuiTextAdapter.tsx',
+  ];
+  const hits = [];
+  for (const d of dateien) {
+    readFileSync(join(WT, d), 'utf8').split('\n').forEach((line, i) => {
+      if (/background-image/.test(line)) return;
+      if (ALT_THEME_TOKEN.test(line.replace(new RegExp(GLASS_TOKEN, 'g'), ''))) hits.push(`${d}:${i + 1}`);
+    });
+  }
+  assert.deepEqual(hits, []);
+});
+
+test('Welle 5d: die Editoren sind Felder (tl-field), der Fehler ist aria-invalid, kein --error-Modifier', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+  const code = readFileSync(join(WT, 'com.top_logic.layout.react.codeedit/react-src/controls/TLCodeEditor.tsx'), 'utf8');
+  const script = readFileSync(join(WT, 'com.top_logic.model.search.react/react-src/controls/TLScriptEditor.tsx'), 'utf8');
+  assert.match(code, /tl-field tl-type-code/);
+  assert.match(script, /tl-field tl-type-code/);
+  assert.doesNotMatch(code + script, /tl(CodeEditor|ScriptEditor)--/);
+  for (const css of [
+    'com.top_logic.layout.react.codeedit/src/main/webapp/style/tlCodeEditor.css',
+    'com.top_logic.model.search.react/src/main/webapp/style/tlScriptEditor.css',
+  ]) assert.doesNotMatch(readFileSync(join(WT, css), 'utf8'), /--error/, css);
+});
