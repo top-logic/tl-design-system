@@ -31,13 +31,15 @@ gibt es die Datei nicht mehr.
 - **Füllen:** Die Marke `tlFill` heißt `tl-fill` (`FILL_CLASS` in `bridge/fill.ts`); die Regeln `.tl-fill { flex: 1;
   min-height: 0 }` und `.tl-item:has(> .tl-fill) { flex: 1 }` stehen in `layout.css`. Die Vitest-Ausnahme für `tlFill`
   fällt.
-- **Viewport und Mount:** `html, body { height: 100%; overflow: hidden }`, `.is-control` und `[data-react-module]` mit
-  voller Höhe stehen in `baseCss` (Generator). `is-control` und `data-react-module` setzt weiter der Server.
+- **Viewport und Mount** bleiben der Seitenrahmen der Engine in `tlReactBase.css` (`html, body`, `.is-control`,
+  `[data-react-module]`): `.is-control` ist kein Paketname, und `overflow: hidden` am `body` machte die Specimen-Seiten
+  unscrollbar (Plan-Review K1). Sie lesen keine alten Tokens.
 - **Anker:** Das Aufblitzen nach einem Sprung ist ein Zustand, keine Klasse: `[data-tl-anchor][data-tl-state~="flash"]`
-  (`scroll.ts` setzt und entfernt ihn). Ring aus `--tl-focus-width` in `--tl-focus-ring`, Dauer `--tl-duration-loop`
-  (1200 ms), Ecke `--tl-radius-sm`. Die eigene Reduced-Motion-Regel fällt; die globale in `baseCss` gilt.
-- `tlReactBase.css` verliert die `body`-Regel (steht schon in `baseCss`); es bleibt nur `background-image` für das
-  Glass-Theme der Demo, bis #29850 entscheidet.
+  (`scroll.ts` setzt und entfernt ihn). Hof aus `--tl-focus-width` in `--tl-surface-state-hover-strong` (das Hof-Muster des
+  Pakets; ein Ring aus `--tl-focus-ring` bräche das Fokus-Gate — Plan-Review K2), Dauer `--tl-duration-loop` (1200 ms),
+  Ecke `--tl-radius-sm`. Die eigene Reduced-Motion-Regel fällt; die globale in `baseCss` gilt.
+- `tlReactBase.css` verliert die `body`-Farben und -Schrift (stehen schon in `baseCss`); es behält den Seitenrahmen und
+  `background-image` für das Glass-Theme der Demo, bis #29850 entscheidet.
 
 ## 4 · Ebenen und Ziehen (V13, V33, V34, V35)
 
@@ -76,7 +78,7 @@ eigenen Capture-Listener.
   (`text-contrast-light`/`-dark`), wie die gefüllten Kategorien.
 - Block `tl-tooltip` im Paket: `__caption` (`tl-type-label-strong`), `__body` (`tl-type-label`; erlaubtes HTML vom
   Server erbt Farbe und Schrift), `__arrow` (Füllung `surface-inverse`). Ebene `layer-tooltip`, Ecke `--tl-radius-md`,
-  Schatten `--tl-shadow-popover` als `drop-shadow` (damit der Pfeil ihn trägt), Breite höchstens `--tl-size-13`
+  Schatten `--tl-shadow-popover` am Tooltip, der Pfeil ohne Schatten, Breite höchstens `--tl-size-13`
   (24 rem, statt 500 px), Abstände `--tl-space-2xs`/`--tl-space-sm`, Einblenden in `--tl-duration-fast`.
 - `TooltipPopover.tsx` setzt die neuen Klassen; der interaktive Tooltip ist ein Zustand (`data-tl-state~="interactive"`:
   Zeiger und Textauswahl), keine Klasse ohne Regel mehr. `--tl-tt-padding` fällt aus dem Namensraum.
@@ -101,8 +103,8 @@ Die Dichte (`data-tl-density`, normal/kompakt) hat bisher keinen Schalter: `UITh
 (verschoben am 30.09., „Kandidat Benutzermenü unter der Themewahl“). 5d bringt ihn dorthin, **vorläufig** — der
 UI-Durchgang kann ihn noch verschieben.
 
-- Im Benutzermenü neben der Themewahl (`ThemeCommands`) ein Umschalter „Kompakt“ (`menuitemcheckbox`), Deutsch und
-  Englisch über `I18NConstants`.
+- Im Benutzermenü neben der Themewahl (`ThemeCommands`) zwei Einträge „Normal“ und „Kompakt“, der gewählte wie bei den
+  Themes mit `aria-current` (Plan-Review K8), Deutsch und Englisch über `I18NConstants`.
 - Gespeichert je Person wie die Themewahl (`PersonalConfiguration`, eigener Schlüssel); der Server schreibt den Wert vor
   dem ersten Bild an `html` (wie heute `normal`), damit nichts springt. Der Wechsel wirkt sofort ohne Neuladen;
   Maße, die das TSX über `useTokenPx` liest, folgen (der Hook beobachtet `data-tl-density` schon).
@@ -127,8 +129,9 @@ Editor ein und prüft Paketklassen und `.ProseMirror` (Hendriks Bedingung, 20.10
 - **Radix fällt** (`@radix-ui/react-dropdown-menu`, `-popover`, `-separator`); kein anderes Modul nutzt es.
 - **Glyphen** über Konstanten in `bridge/icons.ts` (Font Awesome wie überall), statt Remix-Klassen im Markup.
 - **Schreibfläche:** Rahmen und Fehler wie ein Feld (`tl-field`, `aria-invalid`); der Text trägt `tl-prose` (Überschriften,
-  Listen, Code, Zitat, Link, Tabelle aus dem Paket). Was nur der Editor braucht — Innenabstand, Mindesthöhe, Kopfzelle,
-  Bildauswahl (`.ProseMirror-selectednode`), Spaltengriffe der Tabelle — steht im Block `tl-rich-text` des Pakets.
+  Listen, Code, Zitat, Link, Tabelle aus dem Paket). Was nur der Editor braucht — Innenabstand, Mindesthöhe, Kopfzelle — steht im Block
+  `tl-rich-text` des Pakets; was an Klassen der Bibliothek hängt (Bildauswahl `.ProseMirror-selectednode`,
+  Spaltengriffe), bleibt im Engine-Sheet des Editors und liest Paket-Tokens (Plan-Review K3).
   Die Ansicht (nicht bearbeitbar) trägt `tl-prose` ohne Rahmen.
 - Namen auf Deutsch und Englisch über `I18NConstants` (auch „Editor toolbar“, heute hart englisch). `--tl-wysiwyg-*`
   fällt aus dem Namensraum.
@@ -141,7 +144,8 @@ Editor ein und prüft Paketklassen und `.ProseMirror` (Hendriks Bedingung, 20.10
   `CHART_TEXT_COLOR`) entfällt; aus zehn Farben werden acht (die neunte Reihe nimmt wieder die erste). Diagramme
   erscheinen damit auch im Kundentheme in dessen Farben und sind im dunklen Modus lesbar (heute Beschriftung
   `#374151` auf Dunkel).
-- **Tooltip im Diagramm:** die Fläche von `tl-popover` (Rand, Schatten, Ecke), Lage weiter am Datenpunkt.
+- **Tooltip im Diagramm:** Paketblock `tl-chart` (`__tooltip` mit der Fläche von `tl-popover`, `__zoom-reset`), Lage
+  weiter am Datenpunkt.
 - **Leer und Fehler:** `tl-status` wie in 5b (`role="status"` bzw. `role="alert"`); das Canvas ist `role="img"` mit
   Namen.
 

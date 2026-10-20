@@ -16,6 +16,77 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul, Tiptap 3 (headless), Char
 **Spec:** `docs/superpowers/specs/2026-10-20-welle-5d-fundament-design.md` (freigegeben 20.10.); Begründungen in
 `docs/skalen.md` „Welle 5d“; Befunde in `docs/migration/altlast.md` „Welle 5“ (V13, V15, V16, V17, V21, V31–V40).
 
+## Plan-Review 20.10. (Fable) — Korrekturen K1–K16, verbindlich
+
+Geprüft gegen `main` 7b44038 (597/597) und Worktree `3ec1eb2ad8`, mit Lint-Probe der geplanten Regeln, ALT-Regex über
+den Worktree und `derive` am Probe-Theme. Ergebnis „nicht ausführungsreif“; die Befunde sind unten entschieden. **Wo
+eine Korrektur dem Task-Text widerspricht, gilt die Korrektur.**
+
+- **K1 (Task 2, 4) Viewport und Mount bleiben Engine-Seitenrahmen.** `html, body { height:100%; overflow:hidden }`,
+  `.is-control`, `.is-control > .tl-stack` und `[data-react-module]` stehen in `tlReactBase.css` (Engine), nicht in
+  `baseCss`: `.is-control` bricht das BEM-Gate, und `overflow:hidden` am `body` machte die Specimen-Seiten unscrollbar.
+  Ins Paket zieht nur das Füllen (`tl-fill`). `tlReactBase.css` liest danach kein altes Token außer `background-image`.
+- **K2 (Task 2) Anker-Aufblitzen als Hof**, nicht als Ring: `box-shadow: 0 0 0 var(--tl-focus-width)
+  var(--tl-surface-state-hover-strong)` → `transparent` (Hof-Muster, lint-konform; der Ring aus `--tl-focus-ring` brach
+  `lint-css` bzw. `focus.test.mjs:21–24`). Spec §3 nachgezogen.
+- **K3 (Task 3, 9) `tl-rich-text` ohne Bibliotheksklassen.** Das Paket trägt nur Regeln an `.tl-rich-text`, `.tl-prose`
+  und Elementen (`th`, `img`). `.ProseMirror`, `.ProseMirror-selectednode`, `.column-resize-handle` bleiben im
+  Engine-Sheet `TLWysiwygEditor.css` (Bildauswahl dort als `outline` aus `--tl-focus-width`/`--tl-focus-ring`; das Audit
+  liest `tokens.css` mit, Task 9).
+- **K4 (Task 3) Tooltip-Schatten** als `box-shadow: var(--tl-shadow-popover)` am Tooltip, der Pfeil ohne Schatten
+  (`drop-shadow()` nimmt die zweischichtige Liste nicht); `test/popover.test.mjs:30–36` nimmt `tooltip/tooltip.css` als
+  Leser von `shadow-popover` aus.
+- **K5 (Task 3) `tools/lint-css.mjs`:** `MODIFIERS['tl-toolbar'] = new Set(['wrap'])`; neue Blöcke mit leeren Sets:
+  `tl-tooltip`, `tl-rich-text`, `tl-compact-field`, `tl-chart` (K12).
+- **K6 (Task 2, 6) „Aktion beim Zeigen“ einmal:** Die Regel `tl-reveal-on-hover` übernimmt, was `reorder-list.css` heute
+  für Griff und Knöpfe (`__actions > .tl-button`) hat: `opacity`-Übergang mit `background-color`, sichtbar bei `:hover`
+  und `:has(:focus-visible)` des direkten Elternteils, bei `.tl-table__row:hover`, bei eigenem `:focus-visible`, immer
+  unter `@media (hover: none)`. `test/drag.test.mjs:95–121` wird umgeschrieben (prüft die Reveal-Regel und dass
+  `reorder-list.css` keine eigene Einblendung mehr hat). Die Engine setzt die Klasse am Griff und an den Knöpfen
+  (`controls/TLColumnSelect.tsx`) in Task 6.
+- **K7 (Task 9, 10) Vitest erreicht Tiptap und Chart.js:** `com.top_logic.layout.react.mui/vitest.config.ts`
+  `server.deps.inline` um `/@tiptap/`, `/react-chartjs-2/`, `/chart\.js/`; in `test-setup.ts` Polyfills
+  `Range.prototype.getClientRects`/`getBoundingClientRect` für ProseMirror. Review Focus 3 über
+  `renderHook(useThemeDefaults)` mit `document.documentElement.style.setProperty('--tl-category-1-surface', …)` und
+  Attributwechsel, nicht über das Canvas (jsdom hat keinen 2D-Kontext).
+- **K8 (Task 7) Dichte wie die Themewahl:** zwei Einträge „Normal“ und „Kompakt“, der gewählte mit `setActive`
+  (`aria-current`) — derselbe Pfad wie die Theme-Einträge; kein `checked` durch `ButtonState`. Spec §6a nachgezogen.
+- **K9 (Task 7) Erstes HTML:** `UIThemeService.writeModeAttribute` (`UIThemeService.java:308–310`, aufgerufen in
+  `com.top_logic.layout.view/.../ViewServlet.java:905–907`) schreibt `data-tl-density` aus der `PersonalConfiguration`;
+  das Inline-Skript (`:502–504`) setzt nur den Rückfall `normal`. Test in `TestUIThemeService.java`.
+- **K10 (Task 8) Bridge-Exporte vollständig:** `Menu`, `MenuItem`, `useRovingMenu`, `MenuHeader`, `MenuSeparator`,
+  `menuItemClassName`. Leser: `TLToolbar.tsx:3`, `TLMenu.tsx:3`, `TLSidebar.tsx:7`, `TLTableView.tsx:5`,
+  `button/buttonClassName.ts:2`. `Menu.tsx` importiert nur Bridge-Teile — Umzug ohne Zyklus, Importe relativ, `React`
+  aus `'react'`.
+- **K11 (Task 9) Bundle:** Das Audit liest das gebündelte `src/main/webapp/script/tl-react-wysiwyg.css` (in Git). Nach
+  dem Umbau `npm run build` im Wysiwyg-Modul (bzw. der Maven-Lauf, der es tut) und das Bundle mit committen; `ALT_5D`
+  scannt das Bundle mit.
+- **K12 (Task 3, 9, 10, 11, 12) Namen und `ALT_5D`:** Wysiwyg-Wurzel und -Teile fallen (`tlWysiwygEditor*` →
+  `tl-field tl-rich-text`, Inhalt `tl-prose`); das Diagramm bekommt einen Paketblock `tl-chart` (`__tooltip` mit der
+  Fläche von `tl-popover`, `__zoom-reset`), `tlReactChart*` fällt. Code- und Script-Editor behalten ihre Wurzelklassen
+  `tlCodeEditor`, `tlCodeEditorSurface`, `tlScriptEditor` als Geltungsbereich der CodeMirror-Regeln (Engine-Sheet), nur
+  der Zustand `--error` fällt (→ `aria-invalid`). `ALT_5D =
+  /\btlFill\b|data-touch-drag|\btlDragShield\b|\btlTouchDragImage\b|\btlPick--active\b|\btlAnchor--flash\b|\btl-tooltip-(popover|caption|body|arrow)\b|\btlCompactField|\btl(WysiwygEditor|WysiwygToolbar|ReactChart)(__|--|\b)|\btl(CodeEditor|ScriptEditor)--|--tl-(tt-|wysiwyg-)/`
+  (vor dem Einsatz je Alternative ein Treffer und ein Fehltreffer). `tl-docs/view-layer/{layout,basics}.md` nennen
+  `tlFill` — in Task 4 nachziehen.
+- **K13 (Task 5) `foreignTl` leer:** `test/ratchet.json` `foreignTl` streicht `--tl-tt-padding` (sonst
+  `ratchet.test.mjs:61–65` rot).
+- **K14 (Task 12) Wache:** Skip in `ratchet.test.mjs:20,28,56,61` nur bei `!existsSync(MODULE)`; neuer Test
+  „`tlReactControls.css` existiert nicht“; `foreignTl` liest nur noch `react-src` und Engine-Sheets; `inventory.mjs` meldet
+  „gelöscht“ statt zu werfen.
+- **K15 (Task 4) Ziehen mit dem Finger:** `dragging` kommt über den bestehenden `dragstart`-Pfad der Controls (React
+  besitzt `data-tl-state` an diesen Elementen: `TLTableView.tsx:1519`, `TLKanbanBoard.tsx:604`, `TLCalendar.tsx:797`,
+  `list-reorder.ts:190`) — `touch-drag.ts` setzt es nicht von Hand. „Bereit“ setzt die Bridge an einem **eigenen**
+  Attribut `data-tl-armed` (ein Re-Render verwirft es nicht); `drag.css` zeichnet `[data-tl-armed]`. `data-touch-drag`
+  fällt. Vitest prüft `data-tl-armed` und dass `data-tl-state` unberührt bleibt.
+- **K16 (Task 1, 2, 4, 5) Kleines:** `derive`-Test so formulieren, wie `derive` schreibt (Rolle in beiden Blöcken, hell
+  ggf. `#FFFFFF`); Nachführung von `text-inverse` (`derive.mjs:214`) im Bericht vermerken. `form.css:206` (`tlFill`)
+  mitziehen. `TLChart.tsx` liegt in `react-src/controls/`. `tokens.test.mjs:213`. Picker-Escape über
+  `bridge/keyboard-dispatcher.ts:33–46` (`createScope`, `registerScope`); im Vitest `initKeyboardDispatcher()`. Tooltip:
+  zuerst `anchoring()` (`TooltipPopover.tsx:60–78`) und die Referenz im Layout-Effekt prüfen; im Test
+  `getBoundingClientRect` beider Anker mocken (wie `MuiSliderAdapter.test.tsx:48`), `ResizeObserver` stubben,
+  `vi.useFakeTimers` über `HOVER_DELAY_MS`.
+
 ## Global Constraints
 
 - Ticket **#29914**; Commits beider Repos mit Präfix `Ticket #29914:`, Paket-Commits deutsch, Engine-Commits englisch,
@@ -58,6 +129,8 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul, Tiptap 3 (headless), Char
 
 ### Task 1: Paket — Ebenen und inverse Rollen
 
+**Korrekturen aus dem Plan-Review: K16** (Abschnitt oben; sie gehen dem Task-Text vor).
+
 **Files:**
 - Modify: `design-system/src/primitives.json` (`depth-6` = `"1300"`, `depth-7` = `"1400"`), `design-system/src/tokens.json`
   (`layer.layer-tooltip` = `{depth-6}`, `layer.layer-drag` = `{depth-7}`; Farben hell `surface-inverse` = `{gray-77}`,
@@ -84,6 +157,8 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul, Tiptap 3 (headless), Char
   „Ticket #29914: Design system package -- tooltip and drag layers, inverse roles.“
 
 ### Task 2: Paket — Fundament, Ziehen, Picker, „Aktion beim Zeigen“
+
+**Korrekturen aus dem Plan-Review: K1, K2, K6, K15, K16** (Abschnitt oben; sie gehen dem Task-Text vor).
 
 **Files:**
 - Modify: `design-system/tools/generate.mjs` (baseCss: `html, body { height: 100%; overflow: hidden }`,
@@ -126,6 +201,8 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul, Tiptap 3 (headless), Char
 
 ### Task 3: Paket — `tl-tooltip`, `tl-rich-text`, `tl-compact-field`, Menü und Leiste
 
+**Korrekturen aus dem Plan-Review: K3, K4, K5, K12** (Abschnitt oben; sie gehen dem Task-Text vor).
+
 **Files:**
 - Create: `design-system/src/components/tooltip/tooltip.{css,contract.md,spec.html}`,
   `src/components/rich-text/rich-text.{css,contract.md,spec.html}`,
@@ -160,6 +237,8 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul, Tiptap 3 (headless), Char
 
 ### Task 4: Engine — Fundament: Füllen, Anker, Picker, Ziehen
 
+**Korrekturen aus dem Plan-Review: K1, K12, K15, K16** (Abschnitt oben; sie gehen dem Task-Text vor).
+
 **Files:**
 - Modify: `com.top_logic.layout.react/react-src/bridge/fill.ts:18` (`FILL_CLASS = 'tl-fill'`), `bridge/scroll.ts`
   (Zustand `flash` statt Klasse), `bridge/element-picker.ts` (`tl-pick-highlight` als Klasse statt `#tl-pick-highlight`,
@@ -193,6 +272,8 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul, Tiptap 3 (headless), Char
 
 ### Task 5: Engine — Tooltip
 
+**Korrekturen aus dem Plan-Review: K13, K16** (Abschnitt oben; sie gehen dem Task-Text vor).
+
 **Files:**
 - Modify: `com.top_logic.layout.react/react-src/bridge/TooltipPopover.tsx:117–147` (Klassen `tl-tooltip`,
   `tl-tooltip__caption`, `__body`, `__arrow`; `data-tl-state~="interactive"` statt `--interactive`),
@@ -212,6 +293,8 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul, Tiptap 3 (headless), Char
 
 ### Task 6: Engine — Compact field
 
+**Korrekturen aus dem Plan-Review: K6** (Abschnitt oben; sie gehen dem Task-Text vor).
+
 **Files:**
 - Modify: `com.top_logic.layout.react/src/main/java/com/top_logic/layout/react/control/form/ReactCompactFieldControl.java:161–176,
   250, 264, 342` (Klassen `tl-compact-field`, `__preview`, `__opener` mit `tl-reveal-on-hover` im Lesemodus; bearbeitbar
@@ -225,6 +308,8 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul, Tiptap 3 (headless), Char
 - [ ] **Step 5: Commit** Engine „Ticket #29914: The compact field reads the design system package.“
 
 ### Task 7: Engine — Dichte im Benutzermenü
+
+**Korrekturen aus dem Plan-Review: K8, K9** (Abschnitt oben; sie gehen dem Task-Text vor).
 
 **Files:**
 - Modify: `com.top_logic.layout.react/src/main/java/com/top_logic/layout/react/theme/UIThemeService.java:83–89,449–512`
@@ -248,6 +333,8 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul, Tiptap 3 (headless), Char
 
 ### Task 8: Engine — Menü-Bausteine in der Bridge, Radio-Einträge
 
+**Korrekturen aus dem Plan-Review: K10** (Abschnitt oben; sie gehen dem Task-Text vor).
+
 **Files:**
 - Move: `com.top_logic.layout.react/react-src/controls/menu/Menu.tsx` → `bridge/menu.tsx` (Importe wie die
   Nachbardateien in `bridge/`); Leser im Controls-Bundle importieren aus `'tl-react-bridge'`
@@ -267,6 +354,8 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul, Tiptap 3 (headless), Char
   radio items.“
 
 ### Task 9: Engine — Wysiwyg
+
+**Korrekturen aus dem Plan-Review: K3, K7, K11, K12** (Abschnitt oben; sie gehen dem Task-Text vor).
 
 **Files:**
 - Modify: `com.top_logic.layout.react.wysiwyg/react-src/controls/WysiwygToolbar.tsx` (ganz), `TLWysiwygEditor.tsx:55–61,
@@ -297,6 +386,8 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul, Tiptap 3 (headless), Char
 
 ### Task 10: Engine — Diagramme
 
+**Korrekturen aus dem Plan-Review: K7, K12** (Abschnitt oben; sie gehen dem Task-Text vor).
+
 **Files:**
 - Modify: `com.top_logic.layout.react.chartjs/react-src/controls/chart/useThemeDefaults.ts:15–88` (Farben aus
   `--tl-category-N-surface` am `<html>`, Gitter `--tl-border-separator`, Text `--tl-text-secondary`; neu lesen bei
@@ -318,6 +409,8 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul, Tiptap 3 (headless), Char
 
 ### Task 11: Engine — Editoren, Flow, Demo, MUI-Text
 
+**Korrekturen aus dem Plan-Review: K12** (Abschnitt oben; sie gehen dem Task-Text vor).
+
 **Files:**
 - Modify: `com.top_logic.layout.react.codeedit/src/main/webapp/style/tlCodeEditor.css`, `TLCodeEditor.tsx:105–106`
   (Rahmen `tl-field`, Fehler `aria-invalid`), `com.top_logic.model.search.react/src/main/webapp/style/tlScriptEditor.css`,
@@ -337,6 +430,8 @@ TypeScript, Vite, Java 17, Maven, Vitest im MUI-Modul, Tiptap 3 (headless), Char
 - [ ] **Step 5: Commit** Engine „Ticket #29914: Editors, flow, demo and base styles read the design system's roles.“
 
 ### Task 12: Löschen, Wache, Gate
+
+**Korrekturen aus dem Plan-Review: K12, K14** (Abschnitt oben; sie gehen dem Task-Text vor).
 
 **Files:**
 - Delete: `com.top_logic.layout.react/src/main/webapp/style/tlReactControls.css`
