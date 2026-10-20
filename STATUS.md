@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-20 (5a–5d gebaut, `tlReactControls.css` gelöscht; Sichtprüfung Hendrik, dann Welle 5 als ein PR) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-20 (Welle 5 gepusht, PR !1939 gegen master; #29918 als !1930 auf master) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -254,7 +254,14 @@ keine 5d-Frage). **Bleibt:** Ziehen mit dem Finger (Gerät; Vitest deckt `data-t
 Neue Punkte im UI-Durchgang U13–U19 (u. a. Link-Knopf ohne „auf Link“, bewusster Verlust). **PR-Text muss nennen:**
 `ReactStackControl.setStateWords` (an Bernhard), Überschrift erneut wählen bleibt Überschrift, Nur-Lese-Editor ohne
 Rahmen, `use-sync-external-store` als devDependency im MUI-Modul nachholen (offline nicht installierbar), demo.react.mui
-TS2769 fremd. **Weiter:** Sichtprüfung Hendrik, dann Welle 5 als ein PR — Push nur mit Freigabe.
+TS2769 fremd. **Gepusht 20.10. (Hendrik: „ohne Gerät, push Welle 5“):** master
+(`cf6066594e`, u. a. 4c, !1930) in 5d gemergt (`ea1a32d9b5`; Wysiwyg-Lockfile von 5d, Kopie neu publiziert),
+generierte `messages_en` von `com.top_logic` (`e3021adea9`). Gates danach: Paket 648/0, layout.react 755, layout.view
+1517 (en), wysiwyg 43, chartjs 10, codeedit 12, model.search.react 35, react.flow.server 76, demo.react 13, MUI-Vitest
+823, `tsc` 0, Messages ohne Diff. Branches 5a, 5b, 5c, 5d in Reihenfolge gepusht (Hook: je Branch nur eigene
+Tickets neu), **PR [!1939](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1939)** vom 5d-Branch gegen master,
+Reviewer `bhu` und `jenkins`; Trac #29875/#29904/#29906/#29914 kommentiert. **Weiter:** Jenkins und Bernhards Review;
+nach jedem Push `bhu` neu anfragen, `jenkins` erst am Ende.
 
 **#29918 (20.10., accepted, CC bhu): Panel-Toolbar klebte am Titel** — Regression aus 4c (#29870, auf master): die
 Regel „Nachgeben“ gibt `tl-titlebar__actions` den ganzen Rest, die Toolbar stand darin am Anfang. Fix wie in der AppBar:
@@ -287,7 +294,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 | 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay; mit der Spaltenwahl als Ebenen-Panel in !1852 (auf master 16.10.) | 7 | master | #29836, #29825 |
 | 4b | Navigation: AppShell, AppBar, Sidebar (mobiler Drawer, Flyout), BottomBar; Q10–Q13, Leiste aus Q14 (!1906, auf master 16.10.) | 4 | master | #29866 |
 | 4c | Behälter: Panel, SplitPanel, Card, Stack, Grid, DeckPane, TileStack, Inset, AdaptiveDetail, Accordion, Wizard, ViewError; Q3, Q7, Q8, Q13–Q23 | 12 | PR | #29870 |
-| 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | 5a–5d gebaut | #29875 (5a), #29904 (5b), #29906 (5c), #29914 (5d) |
+| 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | PR !1939 | #29875 (5a), #29904 (5b), #29906 (5c), #29914 (5d) |
 
 **Abnahme außerhalb der Wellen** (Spec „Abnahme“):
 
