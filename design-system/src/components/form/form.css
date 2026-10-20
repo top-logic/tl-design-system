@@ -203,9 +203,8 @@
 
 /* Ein Formular, das eine füllende Region trägt, ist eine Spalte: das füllende Kind nimmt die Höhe, die
    das Formular bekommt, jedes andere Kind behält die Höhe seines Inhalts. Das füllende Kind trägt die
-   Füllklasse der Engine (tlFill, Welle 3/4); das Klassen-Gate lässt sie nicht in einem Selektor zu, darum
-   gilt die Regel für alle Kinder — und :where gibt ihr die Spezifität null, sodass die Füllregel der
-   Engine das Schrumpfverbot für das füllende Kind aufhebt. */
+   Füllklasse tl-fill (layout.css); die Regel gilt für alle Kinder — und :where gibt ihr die Spezifität
+   null, sodass die Füllregel das Schrumpfverbot für das füllende Kind aufhebt. */
 .tl-form-layout--fill {
   display: flex;
   flex-direction: column;

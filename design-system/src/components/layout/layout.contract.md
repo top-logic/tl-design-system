@@ -1,7 +1,8 @@
 # Vertrag: Reihen und Abstände
 
 Stack, Grid, Inset, Bounded, Item und Deck — die Bausteine, mit denen Ansichten ihre Kinder ordnen. Kein Aussehen,
-nur Lage und Abstand. Die Gap-Skala teilen sie mit `tl-columns`.
+nur Lage und Abstand. Die Gap-Skala teilen sie mit `tl-columns`. Dazu zwei Marken, die jedes Control tragen kann:
+füllen (`tl-fill`) und erst beim Zeigen erscheinen (`tl-reveal-on-hover`).
 
 ## Zustand
 
@@ -14,6 +15,30 @@ nur Lage und Abstand. Die Gap-Skala teilen sie mit `tl-columns`.
 | Hülle wiederholter Kinder | `itemClass` | `tl-item` und die konfigurierte Klasse; Position als `--item-index` (0-basiert) |
 | Haken der ausgewählten Option | `selectable`, `selected` | `tl-item__check`: ein dekoratives `<span aria-hidden="true">` in der Hülle, nur bei `aria-selected="true"`; sitzt oben am Ende, fängt keinen Klick; die Auswahl bleibt allein in `aria-selected` |
 | Auswahl unter den Einträgen | `selectable`, `itemKeys`, `selected`, `multiSelect` | der Behälter `role="listbox"` (mehrfach: `aria-multiselectable`), jede Hülle `role="option"` mit `aria-selected`; kein Modifier |
+
+## Füllen
+
+Ein Kind, das die übrige Höhe seines Behälters nehmen soll, trägt `tl-fill` (`FILL_CLASS` in `bridge/fill.ts`):
+`flex: 1` und `min-height: 0`, damit es unter seinen Inhalt schrumpft und selbst scrollt. Ob ein Kind füllt, entscheidet
+der Control-Baum (`useFill`, `useFillHost`): ein Behälter mit füllendem Kind füllt seinerseits, bis zur ersten Box, die
+ohnehin begrenzt ist. Die Hülle eines wiederholten Kindes füllt mit, solange ihr Kind füllt
+(`.tl-item:has(> .tl-fill)`). Viewport und Mount-Punkt sind der Seitenrahmen der Engine (`tlReactBase.css`), nicht
+Teil des Pakets.
+
+## Aktion beim Zeigen
+
+Ein Element, das erst beim Zeigen erscheint — Griff und Knöpfe der umsortierbaren Liste (`reorder-list.contract.md`),
+der Öffner des Compact field —, trägt `tl-reveal-on-hover`. Es gibt diese eine Regel; kein Block verbirgt oder zeigt
+eine Aktion selbst.
+
+| Wann | Bild |
+|---|---|
+| sonst | `opacity: 0`, Übergang `--tl-duration-fast` mit `--tl-easing-standard` (zusammen mit Fläche, Rand und Farbe des Knopfs) |
+| Zeigen auf den direkten Elternteil, auf die Tabellenzeile (`tl-table__row`) oder den Eintrag der Liste (`tl-reorder-list__item`) | `opacity: 1` |
+| Tastaturfokus am Element, im direkten Elternteil oder im Eintrag der Liste (`:focus-visible`, nicht `:focus-within`) | `opacity: 1` |
+| ohne Zeigen (`@media (hover: none)`) | immer `opacity: 1` |
+
+`opacity`, nie `visibility`: ein unsichtbarer Knopf bleibt mit Tab erreichbar und erscheint, sobald er den Fokus hat.
 
 Leser der Auswahl auch `TLKanbanBoard` (`board.contract.md`): jede Karte ist ein `tl-item` mit `tl-board__card`,
 `role="option"` und `aria-selected`, mit Haken `tl-item__check`; die Karten-Liste einer Spalte ist die Listbox.

@@ -48,14 +48,32 @@ Tabelle, Baum und Board gleich: Rand `--tl-status-error-border`, Schrift `--tl-s
 hindurch. Lage aus `bridge/popover.ts`. Vorher hieß die Klasse `tl-table__hint`; sie gehört nicht mehr der Tabelle.
 Die Regel steht als `.tl-popover.tl-drop-hint`: `popover.css` steht im Bundle nach `drag.css`.
 
+## Über allem beim Ziehen
+
+Was beim Ziehen über jeder anderen Ebene liegt, steht auf `--tl-layer-drag` (über Tooltip und Toast):
+
+| Klasse / Attribut | Leser | Bild |
+|---|---|---|
+| `tl-drag-shield` | `pointer-drag.ts` | deckt das Fenster (`position: fixed`, `inset: 0`), keine Textauswahl; die Geste geht über Pointer-Capture an den Griff |
+| `tl-drag-image` | `touch-drag.ts` | die Kopie unter dem Finger: `opacity: 0.9`, Schatten `--tl-shadow-drag` |
+| `data-tl-armed` | `touch-drag.ts` | bereit nach langem Drücken, noch nicht bewegt: Schatten `--tl-shadow-drag`, `transform: scale(1.02)`, Übergang `--tl-duration-fast`. Ein eigenes Attribut, nicht `data-tl-state`: dort schreibt das Control, ein Re-Render verwürfe ein fremdes Wort. Danach trägt die Quelle `dragging` wie beim Ziehen mit der Maus |
+| `tl-drop-hint` | `DropHint` | liegt über dem Zieh-Bild (steht im DOM danach) |
+| `tl-pick-highlight` | `element-picker.ts` | Markierung des Element-Pickers: Rand `--tl-border-width-md` in `--tl-border-interactive`, Fläche `--tl-surface-brand-subtle` mit Deckkraft, der Zeiger geht hindurch |
+| `data-tl-state~="picking"` am `body` | `element-picker.ts` | Zeiger Fadenkreuz am ganzen Fenster, solange der Picker wählt |
+
+Auf Geräten ohne Maus (`@media (pointer: coarse)`) öffnet langes Drücken auf `[draggable="true"]` weder Kontextmenü
+noch Textauswahl.
+
 ## Attribute
 
 | Attribut | Wann |
 |---|---|
 | `data-tl-state` | am Ziel bzw. an der Quelle, mit einem der Wörter oben; neben anderen Wörtern (`~=`) |
 | `data-tl-axis="horizontal"` | am Behälter von Einträgen, die nebeneinander stehen (Select-Chips, Spaltenköpfe): die Einfügemarke steht links und rechts statt oben und unten |
+| `data-tl-armed` | an der Quelle, solange der Finger sie aufgenommen und sich noch nicht bewegt hat |
 
-Klassen gibt es nicht: die Optik liest nur die Attribute.
+Ziel und Quelle haben keine Klassen: ihre Optik liest nur die Attribute. Klassen tragen nur Schild, Zieh-Bild,
+Hinweis und Picker-Markierung — eigene Elemente, die die Bridge anlegt.
 
 ## Konformität
 

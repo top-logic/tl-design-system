@@ -2,7 +2,7 @@
 // liest nur Zustände; kein Block zeichnet ein Drop-Ziel oder die gezogene Quelle selbst.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readGenerated, declarationsOf, componentCssFiles } from './lib/component.mjs';
+import { readComponent, readGenerated, declarationsOf, componentCssFiles } from './lib/component.mjs';
 
 const css = readGenerated('drag', 'drag.css');
 
@@ -107,28 +107,42 @@ test('jede Fläche eines Ablage-Ziels steht in :where, Ablegen darauf übermalt 
 });
 
 // Spaltenwahl als Ebenen-Panel (#29825, Spec 2026-10-12 §3): Griff und Knöpfe erscheinen beim Zeigen oder Fokus,
-// über opacity — ein Knopf bleibt mit Tab erreichbar; gesetzte Zustände halten ihr Icon sichtbar.
-test('tl-reorder-list: Griff, Schloss und Auge erscheinen beim Zeigen oder Fokus, nie über visibility', () => {
+// über opacity — ein Knopf bleibt mit Tab erreichbar; gesetzte Zustände halten ihr Icon sichtbar. Seit 5d (K6) liest
+// die Liste dafür die eine Regel tl-reveal-on-hover (layout.css); reorder-list.css hat keine eigene Fassung mehr.
+test('tl-reorder-list: Griff und Knöpfe erscheinen über tl-reveal-on-hover, nie über visibility; gesetzte Zustände bleiben sichtbar', () => {
   const liste = readGenerated('reorder-list', 'reorder-list.css');
   const ohne = liste.replace(/\/\*[\s\S]*?\*\//g, '');
-  assert.match(declarationsOf(liste, '.tl-reorder-list__handle') ?? '', /opacity:\s*0/);
-  assert.match(declarationsOf(liste, '.tl-reorder-list__actions > .tl-button') ?? '', /opacity:\s*0/);
+  // Keine zweite Fassung: kein Verbergen, kein Einblenden beim Zeigen, kein eigener Touch-Fall.
+  assert.doesNotMatch(declarationsOf(liste, '.tl-reorder-list__handle') ?? '', /opacity|transition/);
+  assert.equal(declarationsOf(liste, '.tl-reorder-list__actions > .tl-button'), null);
+  assert.doesNotMatch(ohne, /opacity:\s*0(;|\s|$)/, 'reorder-list.css verbirgt nichts mehr selbst');
+  assert.doesNotMatch(ohne, /:hover\s*>|@media \(hover: none\)/, 'reorder-list.css blendet nichts mehr selbst ein');
+  assert.doesNotMatch(ohne, /:focus-within/, 'Zeigen bei Fokus nur über :focus-visible');
+  assert.doesNotMatch(ohne, /visibility:\s*hidden/);
   for (const sel of [
-    '.tl-reorder-list__item:hover > .tl-reorder-list__handle',
-    '.tl-reorder-list__item:has(:focus-visible) > .tl-reorder-list__handle',
-    '.tl-reorder-list__item:hover > .tl-reorder-list__actions > .tl-button',
-    '.tl-reorder-list__item:has(:focus-visible) > .tl-reorder-list__actions > .tl-button',
     '.tl-reorder-list__item[data-tl-state~="off"] .tl-reorder-list__eye',
     '.tl-reorder-list__item[data-tl-state~="locked"] .tl-reorder-list__lock',
   ]) assert.match(declarationsOf(liste, sel) ?? '', /opacity:\s*1/, sel);
+
+  // Die Regel, die die Liste liest: dieselbe Mechanik wie vorher, einmal (layout.css).
+  const reveal = readGenerated('layout', 'layout.css');
+  assert.match(declarationsOf(reveal, '.tl-reveal-on-hover') ?? '', /opacity:\s*0/);
   // Die Übergangsliste ersetzt die von .tl-button: opacity kommt dazu, die weichen Hover-Übergänge bleiben.
-  for (const sel of ['.tl-reorder-list__handle', '.tl-reorder-list__actions > .tl-button'])
-    assert.match(declarationsOf(liste, sel) ?? '', /transition:[^;]*opacity[^;]*background-color/, `${sel}: transition`);
-  // Nur der Tastaturfokus zeigt die Knöpfe: nach einem Mausklick bleibt der Fokus im Knopf, und :focus-within hielte
-  // dann Auge und Schloss der Zeile sichtbar, auch wenn der Zeiger längst weg ist (Bernhard, !1852, 12.10.).
-  assert.doesNotMatch(ohne, /:focus-within/, 'Zeigen bei Fokus nur über :focus-visible');
-  assert.doesNotMatch(ohne, /visibility:\s*hidden/);
-  assert.match(ohne, /@media \(hover: none\)/, 'ohne Zeigen (Touch) bleibt alles sichtbar');
+  assert.match(declarationsOf(reveal, '.tl-reveal-on-hover') ?? '', /transition:[^;]*opacity[^;]*background-color/);
+  // Die Zeile der Liste zeigt Griff und Knöpfe wie bisher, auch wenn der Zeiger nicht auf der Knopfgruppe steht.
+  for (const sel of [
+    '.tl-reorder-list__item:hover .tl-reveal-on-hover',
+    '.tl-reorder-list__item:has(:focus-visible) .tl-reveal-on-hover',
+  ]) assert.match(declarationsOf(reveal, sel) ?? '', /opacity:\s*1/, sel);
+  assert.match(reveal, /@media \(hover: none\)/, 'ohne Zeigen (Touch) bleibt alles sichtbar');
+
+  // Das Specimen der Liste trägt die Klasse an Griff, Schloss und Auge.
+  const spec = readComponent('reorder-list', 'reorder-list.spec.html');
+  for (const teil of ['handle', 'lock', 'eye']) {
+    const knoepfe = [...spec.matchAll(new RegExp(`class="[^"]*tl-reorder-list__${teil}[^"]*"`, 'g'))].map((m) => m[0]);
+    assert.ok(knoepfe.length > 0, teil);
+    for (const k of knoepfe) assert.match(k, /\btl-reveal-on-hover\b/, `${teil}: ${k}`);
+  }
 });
 
 test('tl-reorder-list: ausgeblendet gedämpft (text-secondary), Block mit Linie, Überschrift, Knöpfe rechts; kein Kästchen mehr', () => {

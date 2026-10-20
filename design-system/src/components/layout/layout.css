@@ -2,7 +2,8 @@
    Gap-Skala, die tl-columns seit 3b liest: compact space-sm, default space-md, loose space-lg. Inset ist der Abstand
    eines Inhalts zum Rand; wie weit, sagt die nächste Fläche über React-Kontext (useSurface) als Modifier — ohne
    Modifier die Seite. Bounded begrenzt die Breite und mittelt, Item umhüllt wiederholte Kinder, Deck zeigt eines zur
-   Zeit und nimmt seine Größe. Wer füllt, entscheidet der Fill-Vertrag (tlFill, bis Welle 5 im alten Stylesheet). */
+   Zeit und nimmt seine Größe. Wer füllt, trägt tl-fill (unten). Ein Element, das erst beim Zeigen erscheint, trägt
+   tl-reveal-on-hover (unten). */
 
 .tl-stack {
   display: flex;
@@ -141,3 +142,50 @@
   min-height: 0;
 }
 .tl-deck[hidden] { display: none; }
+
+/* Füllen (Spec 5d §3): ein Kind mit tl-fill nimmt die Höhe, die sein Behälter in der Hauptachse übrig lässt, und darf
+   unter seinen Inhalt schrumpfen, damit es selbst scrollt. Ob ein Kind füllt, entscheidet der Control-Baum (useFill /
+   useFillHost der Bridge): ein Behälter mit füllendem Kind füllt seinerseits, bis zur ersten Box, die ohnehin begrenzt
+   ist. Die Hülle eines wiederholten Kindes (tl-item) füllt mit, solange ihr Kind füllt. */
+.tl-fill {
+  flex: 1;
+  min-height: 0;
+}
+
+.tl-item:has(> .tl-fill) {
+  flex: 1;
+}
+
+/* Aktion beim Zeigen (Spec 5d §6, Plan-Review K6): eine Regel für jedes Element, das erst beim Zeigen erscheint — der
+   Griff und die Knöpfe der umsortierbaren Liste, der Öffner des Compact field. opacity, nicht visibility: ein
+   unsichtbarer Knopf bleibt mit Tab erreichbar und erscheint, sobald er den Fokus hat. Die Übergangsliste ersetzt die
+   von .tl-button (button.css steht im Bundle davor): opacity kommt dazu, die weichen Hover-Übergänge bleiben. */
+.tl-reveal-on-hover {
+  opacity: 0;
+  transition:
+    opacity var(--tl-duration-fast) var(--tl-easing-standard),
+    background-color var(--tl-duration-fast) var(--tl-easing-standard),
+    border-color var(--tl-duration-fast) var(--tl-easing-standard),
+    color var(--tl-duration-fast) var(--tl-easing-standard);
+}
+
+/* Sichtbar beim Zeigen auf das eigene Feld (den direkten Elternteil) oder die Zeile, und bei Tastaturfokus. Fokus heißt
+   hier :focus-visible, nicht :focus-within: nach einem Mausklick bleibt der Fokus im Knopf, und die Zeile hielte ihre
+   Knöpfe sichtbar, auch wenn der Zeiger längst weg ist (Review !1852, 12.10.). Die Zeile der umsortierbaren Liste zeigt
+   Griff und Knöpfe wie bisher als Ganzes: die Knöpfe stehen in tl-reorder-list__actions, und der Zeiger auf der
+   Beschriftung soll sie zeigen. */
+:hover > .tl-reveal-on-hover,
+:has(:focus-visible) > .tl-reveal-on-hover,
+.tl-reveal-on-hover:focus-visible,
+.tl-table__row:hover .tl-reveal-on-hover,
+.tl-reorder-list__item:hover .tl-reveal-on-hover,
+.tl-reorder-list__item:has(:focus-visible) .tl-reveal-on-hover {
+  opacity: 1;
+}
+
+/* Ohne Zeigen (Touch) gäbe es nie :hover — dort steht die Aktion immer. */
+@media (hover: none) {
+  .tl-reveal-on-hover {
+    opacity: 1;
+  }
+}

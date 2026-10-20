@@ -2,7 +2,7 @@
    ul.tl-reorder-list > li.tl-reorder-list__item: vorn der Griff (tl-reorder-list__handle, ein
    tl-button--icon --sm --ghost: Ziehen mit der Maus, Alt + Pfeil mit der Tastatur), dahinter die
    Beschriftung und rechts Schloss und Auge (tl-reorder-list__actions); Griff und Knöpfe erscheinen beim Zeigen
-   oder Fokus (Spec 2026-10-12, #29825). Die Ziehen-Optik zeichnet
+   oder Fokus (Spec 2026-10-12, #29825) über tl-reveal-on-hover (layout.css, Spec 5d §6). Die Ziehen-Optik zeichnet
    drag.css, den Ring base.css — am Griff innen, weil die Liste scrollt. Höchstens size-popover-max
    hoch; dann scrollt die Liste in sich. Steht die Suche davor, füllen beide ihren Behälter: die
    Suche bleibt stehen, nur die Liste scrollt, und die Höhe gibt der Behälter (Sichtprüfung 12.10.). */
@@ -54,12 +54,6 @@
 .tl-reorder-list__handle {
   color: var(--tl-icon-secondary);
   cursor: grab;
-  opacity: 0;
-  transition:
-    opacity var(--tl-duration-fast) var(--tl-easing-standard),
-    background-color var(--tl-duration-fast) var(--tl-easing-standard),
-    border-color var(--tl-duration-fast) var(--tl-easing-standard),
-    color var(--tl-duration-fast) var(--tl-easing-standard);
 }
 
 .tl-reorder-list__handle:active {
@@ -90,39 +84,11 @@
   margin-inline-start: auto;
 }
 
-/* Die Knöpfe erscheinen beim Zeigen oder wenn ein Element der Zeile den Tastaturfokus hat (der Griff ebenso, seine opacity
-   steht in seiner Grundregel oben). opacity, nicht visibility: ein unsichtbarer Knopf bleibt mit Tab erreichbar und
-   erscheint, sobald er den Fokus hat. */
-.tl-reorder-list__actions > .tl-button {
-  opacity: 0;
-  transition:
-    opacity var(--tl-duration-fast) var(--tl-easing-standard),
-    background-color var(--tl-duration-fast) var(--tl-easing-standard),
-    border-color var(--tl-duration-fast) var(--tl-easing-standard),
-    color var(--tl-duration-fast) var(--tl-easing-standard);
-}
-
-/* Fokus heißt hier Tastaturfokus (:focus-visible), nicht :focus-within: nach einem Mausklick bleibt der Fokus im Knopf,
-   und die Zeile hielte Auge und Schloss sichtbar, auch wenn der Zeiger längst weg ist (Review !1852, 12.10.). */
-.tl-reorder-list__item:hover > .tl-reorder-list__handle,
-.tl-reorder-list__item:has(:focus-visible) > .tl-reorder-list__handle,
-.tl-reorder-list__item:hover > .tl-reorder-list__actions > .tl-button,
-.tl-reorder-list__item:has(:focus-visible) > .tl-reorder-list__actions > .tl-button {
-  opacity: 1;
-}
-
-/* Gesetzte Zustände bleiben zu sehen: das Auge einer ausgeblendeten, das Schloss einer fixierten Spalte. */
+/* Gesetzte Zustände bleiben zu sehen, auch ohne Zeigen (tl-reveal-on-hover verbirgt sie sonst): das Auge einer
+   ausgeblendeten, das Schloss einer fixierten Spalte. */
 .tl-reorder-list__item[data-tl-state~="off"] .tl-reorder-list__eye,
 .tl-reorder-list__item[data-tl-state~="locked"] .tl-reorder-list__lock {
   opacity: 1;
-}
-
-/* Ohne Zeigen (Touch) gäbe es nie :hover — dort stehen Griff und Knöpfe immer. */
-@media (hover: none) {
-  .tl-reorder-list__handle,
-  .tl-reorder-list__actions > .tl-button {
-    opacity: 1;
-  }
 }
 
 /* Ausgeblendet: die Spalte behält ihren Platz, ihr Name tritt zurück. Der Eintrag bleibt bedienbar — die

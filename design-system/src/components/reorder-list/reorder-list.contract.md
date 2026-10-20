@@ -55,7 +55,7 @@ Nach jedem Verschieben sagt ein Live-Bereich mit `role="status"` „<Name>, Posi
 | Liste | höchstens `--tl-size-popover-max` hoch, dann scrollt sie in sich; mit Suche davor füllt sie den Rest ihres Behälters (`flex: 1 1 auto`, `min-block-size: 0`) |
 | Behälter mit Suche | Spalte, Abstand `--tl-space-xs`, Innenabstand `--tl-space-md` oben und seitlich, so hoch wie sein Behälter |
 | Eintrag | Höhe `--tl-size-row` (als `min-height`), Innenabstand seitlich `--tl-space-control-x`, Lücke `--tl-space-xs`; beim Zeigen `--tl-surface-interactive-hover`; Beschriftung `--tl-text-secondary` bei `off` |
-| Knöpfe rechts | `tl-reorder-list__actions`, Lücke `--tl-space-2xs`; Griff und Knöpfe `opacity` 0, beim Zeigen und bei Tastaturfokus in der Zeile (`:has(:focus-visible)`, nicht `:focus-within`) 1, Übergang `--tl-duration-fast`; ohne Zeigen (`hover: none`) immer 1 |
+| Knöpfe rechts | `tl-reorder-list__actions`, Lücke `--tl-space-2xs`; Griff und Knöpfe tragen `tl-reveal-on-hover` (`layout.contract.md`): `opacity` 0, beim Zeigen und bei Tastaturfokus in der Zeile (`:has(:focus-visible)`, nicht `:focus-within`) 1, Übergang `--tl-duration-fast`; ohne Zeigen (`hover: none`) immer 1 |
 | Block „Fixiert“ | Überschrift `tl-reorder-list__section` in `tl-type-label`, `--tl-text-secondary`; Linie unter `section-end` `--tl-border-width-sm` `--tl-border-separator` |
 | Griff | `tl-button--icon --sm --ghost`, Icon in `--tl-icon-secondary`; der Fokusring aus `base.css` liegt innen (`outline-offset` −`--tl-focus-offset`), weil die Liste scrollt; das gilt auch für Schloss und Auge |
 | Suche | Abstand zur Liste `--tl-space-xs`, an der `tl-field-group` |
@@ -85,11 +85,11 @@ Klassen:
 |---|---|
 | `tl-reorder-list` | das `ul` |
 | `tl-reorder-list__item` | jedes `li` |
-| `tl-reorder-list__handle` | der Griff, zusammen mit `tl-button tl-button--ghost tl-button--sm tl-button--icon` |
+| `tl-reorder-list__handle` | der Griff, zusammen mit `tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reveal-on-hover` |
 | `tl-reorder-list__label` | die Beschriftung |
 | `tl-reorder-list__search` | an der `tl-field-group` der Suche vor der Liste |
 | `tl-reorder-list__actions` | `span` am Zeilenende um Schloss und Auge |
-| `tl-reorder-list__lock` | das Schloss, mit `tl-button tl-button--ghost tl-button--sm tl-button--icon` |
+| `tl-reorder-list__lock` | das Schloss, mit `tl-button tl-button--ghost tl-button--sm tl-button--icon tl-reveal-on-hover` |
 | `tl-reorder-list__eye` | das Auge, ebenso |
 | `tl-reorder-list__section` | `li` mit der Überschrift „Fixiert“, `role="presentation"`, `tl-type-label` |
 | `tl-visually-hidden` | der Live-Bereich: gelesen, nicht gezeigt (der Hinweis trägt `hidden`, siehe Attribute) |
