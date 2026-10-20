@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-20 (5a–5c gebaut; 5d Spec und Plan fertig, Umsetzung in neuer Sitzung — Welle 5 als ein PR) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-20 (5a–5d gebaut, `tlReactControls.css` gelöscht; Sichtprüfung Hendrik, dann Welle 5 als ein PR) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -236,6 +236,20 @@ nachgezogen (Anker als Hof, Viewport bleibt Engine-Seitenrahmen, Dichte als zwei
 `tl-chart`). **Weiter (neue Sitzung, Hendrik 20.10.):** SDD mit savvy-flow ab Task 1; Ledger
 `.superpowers/sdd/2026-10-20-welle-5d-fundament/` (`progress.md` mit Stufen, `global-constraints.md` samt K1–K16,
 `implementer-common.md`, `task-1-brief.md` … `task-12-brief.md`); Tasks 13–14 beim Orchestrator.
+**5d gebaut (20.10., SDD Tasks 1–12, Schluss-Review Fable „with fixes“ → eine Fix-Welle, Re-Review sauber), lokal,
+nicht gepusht.** Engine-Branch `CWS/CWS_29914_design_system_welle_5d` `3ec1eb2ad8..0508804c37`, Paket `main` bis
+`b4efc98`. **`tlReactControls.css` ist gelöscht**, die Ratsche ist Wache, Gate `ALT_5D`. Gates: Paket 646/0, Lint grün;
+`tsc` aller React-Module 0 (außer fremd `demo.react.mui` TS2769 `MuiChipAdapter.tsx:67`, vor 5d); MUI-Vitest 818/818;
+Maven layout.react 722, wysiwyg 43, chartjs 10, codeedit 12, model.search.react 35, react.flow.server 76, layout.view
+1514 (englische Locale), demo.react 13; Messages ohne Diff. Sichtprüfung lokal (Demo auf 8080): Dichte „Kompakt“ im
+Benutzermenü und im ersten HTML, Tooltip folgt dem Anker (invertiert), Diagramm wechselt hell/dunkel ohne Neuladen,
+Rich-Text (Fett mit Markierung, Absatzformat, Fokus bleibt im Text). **Offen für Hendriks Sichtprüfung:** Picker mit
+Escape im Dialog, Ziehen mit dem Finger, Compact field in der Tabelle, Code-/Script-Editor (Fokusring, Nur-Lese),
+Tooltip-Ankerwechsel an abgeschnittenen Spaltenköpfen. Trac #29914: Lösung, `== Migration ==`, `RequiresMigration`.
+Neue Punkte im UI-Durchgang U13–U19 (u. a. Link-Knopf ohne „auf Link“, bewusster Verlust). **PR-Text muss nennen:**
+`ReactStackControl.setStateWords` (an Bernhard), Überschrift erneut wählen bleibt Überschrift, Nur-Lese-Editor ohne
+Rahmen, `use-sync-external-store` als devDependency im MUI-Modul nachholen (offline nicht installierbar), demo.react.mui
+TS2769 fremd. **Weiter:** Sichtprüfung Hendrik, dann Welle 5 als ein PR — Push nur mit Freigabe.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
@@ -258,7 +272,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 | 4a | Overlays: Dialog, DialogManager, Fenster, Drawer, Snackbar, NoticeBar, Overlay; mit der Spaltenwahl als Ebenen-Panel in !1852 (auf master 16.10.) | 7 | master | #29836, #29825 |
 | 4b | Navigation: AppShell, AppBar, Sidebar (mobiler Drawer, Flyout), BottomBar; Q10–Q13, Leiste aus Q14 (!1906, auf master 16.10.) | 4 | master | #29866 |
 | 4c | Behälter: Panel, SplitPanel, Card, Stack, Grid, DeckPane, TileStack, Inset, AdaptiveDetail, Accordion, Wizard, ViewError; Q3, Q7, Q8, Q13–Q23 | 12 | PR | #29870 |
-| 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | 5a, 5b und 5c gebaut, 5d geplant | #29875 (5a), #29904 (5b), #29906 (5c) |
+| 5 | Calendar, ColorInput, IconSelect, Medien (Audio, Photo, PDF, Upload N3), Dashboard; fremde `tl…`-Stylesheets (`TLWysiwygEditor.css` u. a.), Ebene `layer-drag`, `drop-hint`; danach `tlReactControls.css` gelöscht | 8 | 5a–5d gebaut | #29875 (5a), #29904 (5b), #29906 (5c), #29914 (5d) |
 
 **Abnahme außerhalb der Wellen** (Spec „Abnahme“):
 

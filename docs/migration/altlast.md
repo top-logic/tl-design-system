@@ -1123,7 +1123,7 @@ statt alter Theme-Tokens (Ausnahmen der Demo: `--shadow-glow`, `--surface-blur`,
 |---|---|
 | `.tlFill` | `.tl-fill` |
 | `body.tlPick--active`, `#tl-pick-highlight` | `body[data-tl-state~="picking"]`, `.tl-pick-highlight` |
-| `.tlAnchor--flash` | `[data-tl-anchor][data-tl-state~="flash"]` |
+| `.tlAnchor`, `.tlAnchor--flash` | `[data-tl-anchor]`, `[data-tl-anchor][data-tl-state~="flash"]` |
 | `.tlDragShield`, `.tlTouchDragImage`, `[data-touch-drag]` | `.tl-drag-shield`, `.tl-drag-image`, `[data-tl-state~="dragging"]` bzw. `[data-tl-armed]` |
 | `.tl-tooltip-popover`, `-caption`, `-body`, `-arrow` | `.tl-tooltip`, `.tl-tooltip__caption`, `__body`, `__arrow`; `--tl-tt-padding` entfällt |
 | `.tlCompactField*`, `--edit`, `--view` | `.tl-compact-field__*`, `.tl-field` mit `[data-tl-state~="edit"]` |
