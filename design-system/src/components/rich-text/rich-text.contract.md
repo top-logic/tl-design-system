@@ -15,11 +15,11 @@ Bild passen will, liest die Tokens.
 
 | Teil | Form |
 |---|---|
-| Rahmen | `tl-field` `tl-rich-text`: Rand, Zeigen und Fehler (`aria-invalid="true"`) aus `tl-field`; Leiste und Fläche untereinander |
+| Rahmen | `tl-field` `tl-rich-text`: Rand, Zeigen und Fehler (`aria-invalid="true"`) aus `tl-field`; Leiste und Fläche untereinander. Den Fehler zeigt der Rahmen, ansagen lässt ihn die Schreibfläche: sie trägt `aria-invalid="true"` ebenso |
 | Leiste | `tl-toolbar` `tl-toolbar--wrap` mit `role="toolbar"` und übersetztem `aria-label`; Gruppen `tl-toolbar__group`, dazwischen `tl-divider` `tl-divider--vertical`. Die Knöpfe sind der Part `Button` (ghost, nur Icon) unter `ButtonDefaults`; Umschalter (fett, kursiv, unterstrichen, durchgestrichen, Zitat, Code) tragen `aria-pressed`. Die Befehle des Servers bleiben die eingebettete `TLToolbar`, in einer eigenen Gruppe, die schrumpfen darf (`tl-toolbar__group:has(> .tl-toolbar)`, `toolbar.contract.md`): die eingebettete Toolbar kollabiert dann in ihren Überlauf |
-| Menüs | Absatzformat und Listenart: Part `MenuTrigger` und `tl-menu` (`menu.contract.md`); genau eine Wahl ist `menuitemradio` mit `aria-checked` |
+| Menüs | Absatzformat und Listenart: Part `MenuTrigger` und `tl-menu` (`menu.contract.md`); jeder Eintrag einer Wahl, von der höchstens einer gilt, ist `menuitemradio` mit `aria-checked` (die Listenart hat keinen, solange der Text keine Liste ist) |
 | Link | `tl-popover` `tl-popover--content` mit `label` und `tl-field` (`type="url"`), Knöpfe „Anwenden“ (primary) und, auf einem Link, „Link entfernen“ (danger). Beim Schließen kehrt der Fokus in den Text zurück (Rückgabeziel, `popover.contract.md`) |
-| Schreibfläche | die Fläche der Bibliothek mit `tl-prose`: Überschriften, Listen, Code, Zitat, Link und Tabelle aus `prose.contract.md`; den Fokusring liefert `base.css` |
+| Schreibfläche | die Fläche der Bibliothek (`.ProseMirror`, `role="textbox"`) mit `tl-prose`: Überschriften, Listen, Code, Zitat, Link und Tabelle aus `prose.contract.md`; den Fokusring liefert `base.css`. Bei einem Fehler trägt sie `aria-invalid="true"`, folgt ihm auch, wenn er später kommt oder geht |
 
 ## Was das Paket zeichnet
 
@@ -55,12 +55,13 @@ ohne eigene `--tl-`-Variable, ohne `outline: none`, ohne z-index:
 | `tl-rich-text` | am Rahmen des bearbeitbaren Editors, immer zusammen mit `tl-field` |
 | `tl-field` | am Rahmen; Rand, Zeigen, Fehler |
 | `tl-prose` | an der Schreibfläche, und allein an der Ansicht |
-| `aria-invalid="true"` | am Rahmen, wenn der Wert fehlerhaft ist |
+| `aria-invalid="true"` | am Rahmen (Rand) und an der Schreibfläche (`.ProseMirror`, `role="textbox"`, Ansage), wenn der Wert fehlerhaft ist |
 | `tl-toolbar--wrap` | an der Leiste: sie bricht um, statt zu kollabieren |
 
 ## Konformität
 
-Ein Editor besteht den Vertrag, wenn sein Rahmen `tl-field` `tl-rich-text` trägt, der Fehler `aria-invalid` ist und
-keine Klasse, die Schreibfläche `tl-prose` trägt, die Leiste `role="toolbar"` mit Namen trägt und jeden Knopf mit Enter
-und Leertaste bedienen lässt, Umschalter `aria-pressed` und Menüs mit genau einer Wahl `menuitemradio` mit
-`aria-checked` setzen und im Klassen-Gate keine Klasse ohne `tl-`-Präfix bleibt.
+Ein Editor besteht den Vertrag, wenn sein Rahmen `tl-field` `tl-rich-text` trägt, der Fehler `aria-invalid` an Rahmen
+und Schreibfläche ist und keine Klasse, die Schreibfläche `tl-prose` trägt, die Leiste `role="toolbar"` mit Namen
+trägt und jeden Knopf mit Enter und Leertaste bedienen lässt, Umschalter `aria-pressed` und die Einträge einer Wahl,
+von der höchstens einer gilt, `menuitemradio` mit `aria-checked` setzen und im Klassen-Gate keine Klasse ohne
+`tl-`-Präfix bleibt.
