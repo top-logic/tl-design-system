@@ -258,3 +258,44 @@ test('compact-field: der Ring des Öffners liegt innen (die Tabellenzelle schnei
   assert.match(decl(compactField(), '.tl-compact-field > .tl-compact-field__opener:focus-visible'),
     /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/);
 });
+
+// --- Task 10: tl-chart (Spec 5d §8; Plan-Review K12, Ruling R3) ---
+
+const chart = () => lies('chart', 'chart.css');
+
+test('chart: die Wurzel liegt relativ, füllt ihren Behälter und hat eine Mindesthöhe aus den Maßen', () => {
+  const d = decl(chart(), '.tl-chart');
+  for (const r of [/position:\s*relative/, /width:\s*100%/, /height:\s*100%/, /min-height:\s*var\(--tl-size-12\)/])
+    assert.match(d, r);
+});
+
+test('chart: leer und Fehler stehen als tl-status mittig in der Fläche; die Wurzel setzt hidden zurück', () => {
+  const d = decl(chart(), '.tl-chart:has(> .tl-status)');
+  for (const r of [/display:\s*flex/, /align-items:\s*center/, /justify-content:\s*center/]) assert.match(d, r);
+  assert.match(decl(chart(), '.tl-chart[hidden]'), /display:\s*none/);
+});
+
+// Ruling R3: der Tooltip liest die Fläche von tl-popover (Klasse am Element), das Chart-CSS schreibt keinen Wert davon
+// ab — nur Lage und Ebene. Der Selektor trägt beide Klassen: components.css ordnet chart vor popover, ein einzelner
+// Klassenselektor verlöre gegen `.tl-popover { position: fixed }`.
+test('chart: der Tooltip liegt absolut am Datenpunkt, über der Fläche, fängt keinen Zeiger und kopiert keine Popover-Werte', () => {
+  const d = decl(chart(), '.tl-chart__tooltip.tl-popover');
+  for (const r of [/position:\s*absolute/, /z-index:\s*var\(--tl-layer-sticky\)/, /pointer-events:\s*none/,
+    /min-width:\s*0/]) assert.match(d, r);
+  assert.doesNotMatch(d, /background|box-shadow|border|padding|color:/);
+  assert.doesNotMatch(ohneKommentar(chart()), /--tl-shadow-popover|--tl-surface-overlay/);
+});
+
+test('chart: der Zurücksetzen-Knopf schwebt oben rechts auf einer eigenen Fläche, Ebene raised', () => {
+  const d = decl(chart(), '.tl-chart__zoom-reset');
+  for (const r of [/position:\s*absolute/, /top:\s*var\(--tl-space-xs\)/, /inset-inline-end:\s*var\(--tl-space-xs\)/,
+    /z-index:\s*var\(--tl-layer-raised\)/, /background:\s*var\(--tl-surface-layer\)/,
+    /border-radius:\s*var\(--tl-radius-md\)/]) assert.match(d, r);
+});
+
+test('chart: nur Selektoren des Blocks, keine Schrift, kein Literal', () => {
+  const o = ohneKommentar(chart());
+  assert.ok(o.includes('.tl-chart'), 'chart.css fehlt');
+  for (const [sel] of rulesOf(o)) assert.match(sel, /^\.tl-chart(__[a-z-]+)?\b/, sel);
+  assert.doesNotMatch(o, /font-size|font-weight|line-height|(^|[;{\s])font:/);
+});

@@ -17,11 +17,16 @@ const SOLL = {
     '--tl-border-interactive', '--tl-surface-layer-nested', '--tl-size-10', 'TLWysiwygEditor'],
   'compact-field/compact-field.contract.md': ['tl-compact-field', 'tl-compact-field__preview', 'tl-compact-field__opener',
     'tl-reveal-on-hover', 'tl-field', 'data-tl-state~="edit"', 'tl-select__controls', 'ReactCompactFieldControl'],
+  // Task 10 (Spec 5d §8; Plan-Review K12, Ruling R3).
+  'chart/chart.contract.md': ['tl-chart', 'tl-chart__tooltip', 'tl-chart__zoom-reset', 'tl-popover', 'tl-status',
+    'role="status"', 'role="alert"', 'role="img"', '--tl-category-1-surface', '--tl-category-8-surface',
+    '--tl-border-separator', '--tl-text-secondary', '--tl-layer-sticky', '--tl-layer-raised', 'data-tl-mode',
+    'data-tl-theme', 'TLChart'],
   'menu/menu.contract.md': ['menuitemradio', 'aria-checked', 'ButtonDefaults', 'radio'],
   'toolbar/toolbar.contract.md': ['tl-toolbar--wrap'],
   'select/select.contract.md': ['tl-compact-field__opener'],
 };
-const SPECIMEN = ['tooltip', 'rich-text', 'compact-field'];
+const SPECIMEN = ['tooltip', 'rich-text', 'compact-field', 'chart'];
 
 for (const [file, names] of Object.entries(SOLL)) test(`${file} nennt ${names.length} Pflichtbegriffe`, () => {
   const [d, f] = file.split('/');
@@ -41,7 +46,7 @@ test('popover.contract.md: der Fokus kehrt zum Auslöser oder zum Rückgabeziel 
   assert.match(datei('popover', 'popover.contract.md'), /Rückgabeziel/);
 });
 
-test('specimen/index.html verlinkt Tooltip, Rich Text und Compact field', () => {
+test('specimen/index.html verlinkt Tooltip, Rich Text, Compact field und Chart', () => {
   const html = readFileSync(new URL('../specimen/index.html', import.meta.url), 'utf8');
   for (const name of SPECIMEN) assert.ok(html.includes(`/src/components/${name}/${name}.spec.html`), name);
 });
