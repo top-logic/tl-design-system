@@ -251,6 +251,15 @@ Neue Punkte im UI-Durchgang U13–U19 (u. a. Link-Knopf ohne „auf Link“, bew
 Rahmen, `use-sync-external-store` als devDependency im MUI-Modul nachholen (offline nicht installierbar), demo.react.mui
 TS2769 fremd. **Weiter:** Sichtprüfung Hendrik, dann Welle 5 als ein PR — Push nur mit Freigabe.
 
+**#29918 (20.10., accepted, CC bhu): Panel-Toolbar klebte am Titel** — Regression aus 4c (#29870, auf master): die
+Regel „Nachgeben“ gibt `tl-titlebar__actions` den ganzen Rest, die Toolbar stand darin am Anfang. Fix wie in der AppBar:
+`justify-content: end` (Paket `f1e8c98`, Test statisch und im Browser, RED 490 px Lücke → grün; Paket 648/0). Engine:
+eigener Worktree `_Working-Tree/tl8-wt-29918`, Branch `CWS/CWS_29918_titlebar_actions_end` von `origin/master`
+(`ed1d3b7d30`), Commit `6c9fc97c30` — nur diese Regel in die master-Kopie übernommen und neu versiegelt (alle vier
+Siegel geprüft; Maven offline kommt auf master nicht an neue Snapshots, `TestDesignSystemCopy` läuft in Jenkins). Im
+5d-Branch über die Kopie `22586c78c2`. Sichtprüfung lokal: Toolbar am rechten Rand (1400 px). **Weiter:** Push und PR
+gegen master mit Hendriks Freigabe, Reviewer `bhu`, `jenkins`.
+
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
 axe auf `li role="presentation"`, `format()` dreifach).
