@@ -30,7 +30,7 @@ Alle in `design-system/`, alle mit `node` ohne Abhängigkeiten:
 Der Worktree liegt unter `_Working-Tree/tl8-wt-29584` im Projektordner (ignoriert; oder `TL_WORKTREE`), das
 Hauptrepo daneben. Beides muss dort liegen: die Sandbox sieht nur den Projektordner und `~/.m2`, nicht `~/git`. Welle 0 ist auf `master`; jede weitere
 Welle arbeitet auf einem eigenen Branch `CWS/CWS_<ticket>_design_system_welle_<n>` mit eigenem Trac-Ticket (Wellen 0–3a
-#29617, mit alpha10 geschlossen; 3b #29821; 4a #29836; 4b #29866; 4c #29870; 5a #29875; 5b #29904). Ein Release schließt jedes Ticket, dessen Arbeit auf master liegt — darum
+#29617, mit alpha10 geschlossen; 3b #29821; 4a #29836; 4b #29866; 4c #29870; 5a #29875; 5b #29904; 5c #29906; 5d #29914). Ein Release schließt jedes Ticket, dessen Arbeit auf master liegt — darum
 vor jeder Welle ein neues Ticket anlegen und annehmen.
 
 ## Die zwei Schichten
@@ -81,7 +81,7 @@ Keine Zeit- oder Aufwandsangaben — weder in Docs noch in Antworten; das übers
 Schätz-Regel des ADHD-Skills. Pläne gliedern sich nach Reihenfolge und Fertig-Bedingung.
 Änderungen an `docs/skalen.md` ziehen `STATUS.md` mit; `docs/praesentation-v2.md` nur, wenn sie das Gesamtbild ändern (was, wie, Vorteile).
 
-Jedes Arbeitspaket endet committet (Präfix `Ticket #<Wellenticket>:`, für 3b `Ticket #29821:`, für 4a `Ticket #29836:`, für 4b `Ticket #29866:`, für 4c `Ticket #29870:`, für 5a `Ticket #29875:`, für 5b `Ticket #29904:`), nichts Halbfertiges
+Jedes Arbeitspaket endet committet (Präfix `Ticket #<Wellenticket>:`, für 3b `Ticket #29821:`, für 4a `Ticket #29836:`, für 4b `Ticket #29866:`, für 4c `Ticket #29870:`, für 5a `Ticket #29875:`, für 5b `Ticket #29904:`, für 5c `Ticket #29906:`, für 5d `Ticket #29914:`), nichts Halbfertiges
 bleibt liegen.
 
 **Gepusht wird nur nach Hendriks ausdrücklicher Freigabe** — Engine-Branches im Worktree wie Projekt-`main`; eine

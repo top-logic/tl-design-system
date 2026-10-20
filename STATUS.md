@@ -217,7 +217,14 @@ Präsentation v2 Folie 8 verspricht das Neurechnen, nicht den Zeitpunkt. **Optio
 Empfehlung A (Rechnen im Build der Anwendung) mit Versionsstempel (Fingerabdruck der Rollenliste in `tokens.css` und
 jedem Theme), C (Theme-Editor) nur bei Laufzeitbedarf; offen F1–F4. Hendrik: Laufzeit-Änderung **ja**, Bernhard entscheidet mit → Vorschlag als Trac **#29909** (Owner hpe,
 CC bhu, 19.10.). **Weiter:** Bernhards Antwort auf #29909 abwarten, dann Entscheidung in `skalen.md` „Themes: eine dritte
-Achse“, Spec; 5d erst danach (berührt `UIThemeService`, Fingerabdruck in `tokens.css`).
+Achse“, Spec. **Korrektur 20.10.:** 5d hängt nicht daran — `UIThemeService` und die alten Theme-Tokens waren schon
+am 17.10. (V17) aus 5d heraus, der Fingerabdruck kommt mit dem Theme-Schritt.
+
+**5d Fundament und Abschluss gestartet (20.10.):** Trac **#29914** (accepted, CC bhu), Engine-Branch
+`CWS/CWS_29914_design_system_welle_5d` auf 5c (`3ec1eb2ad8`), lokal. Umfang nach V13, V15, V16, V21 (17.10.): Tooltip, Fill,
+Viewport, Mount, wiederholte Einträge, Drag shield, Touch drag, Element-Picker, Compact field, Anchor-Flash, `layer-drag`,
+fremde Stylesheets auf Paket-Tokens, `tlReactControls.css` gelöscht. **Weiter:** Erkundung Restbestand und fremde
+Stylesheets, Nachprüfung (V31 ff.) zum Ankreuzen, dann Spec.
 
 **Weitere Kandidaten, solange gewartet wird (Hendrik entscheidet):** #29826 „Ziehen sichtbar“ erst nach Merge von !1825;
 #29828 (Tabellenzustand) mit Bernhard abstimmen; offene Kleinpunkte der Spaltenwahl in `altlast.md` (Firefox-Tooltip,
