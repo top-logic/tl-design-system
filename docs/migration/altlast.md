@@ -1079,6 +1079,66 @@ Dashboard, Kalender). Die Vitest-Prüfungen in `planen.test.tsx` fragen positiv:
   die Trennung prüft `derive` an `-subtle`).
 - Blöcke „Touch drag“ und „Compact field“ bleiben unlisted bis 5d.
 
+## Welle 5d · Fundament und Abschluss — gebaut 20.10.2026
+
+Branch `CWS/CWS_29914_design_system_welle_5d` (Engine, lokal, nicht gepusht; gestapelt auf 5c) und Paket (`main`).
+`tlReactControls.css` ist **gelöscht**; die Ratsche ist eine Wache: `test/ratchet.json` hat keinen Block mehr, der Test
+„`tlReactControls.css` existiert nicht“ bricht, wenn die Datei wieder entsteht, `tools/inventory.mjs` meldet „gelöscht“.
+Der Schutz des Namensraums `--tl` liest nur noch `react-src` und die Stylesheets des Moduls (die versiegelte Kopie des
+Pakets ausgenommen); `foreignTl` ist leer. Engine-Gate `ALT_5D` in `test/engine-classes.test.mjs` (react-src, Stylesheets,
+Java, tl-docs, Views der React-Module und das gebündelte `tl-react-wysiwyg.css`; je Alternative ein Treffer und ein
+Fehltreffer als Tabelle). In den Vitest-Dateien sind nur verneinende Zeilen erlaubt (`not`, `toBeNull`, `toBe(false)`).
+Rot war in Task 12 nur die Wache; die alten Namen hatten Tasks 4–11 schon entfernt, das Gate hält sie weg.
+
+### Gestrichene Blöcke
+
+| Block (`tlReactControls.css`) | Zeilen alt | Nachfolger |
+|---|---|---|
+| Viewport-filling layout, Fill contract, Repeated items, React mount point | 21, 14, 8, 7 | `tl-fill` (`layout.css`); Viewport und Mount bleiben Seitenrahmen der Engine in `tlReactBase.css` |
+| Drag shield | 14 | `tl-drag-shield` (`drag.css`) |
+| Touch drag (ungelistet) | – | `tl-drag-image`, `data-tl-armed`, `dragging` über `data-tl-state` (`drag.css`) |
+| Element picker | 40 | `tl-pick-highlight`, `body[data-tl-state~="picking"]` (`drag.css`) |
+| Tooltip | 57 | `tl-tooltip` mit `__caption`, `__body`, `__arrow`, `data-tl-state~="interactive"` (`tooltip.css`) |
+| Compact field (ungelistet) | – | `tl-compact-field`, `__preview`, `__opener` (`compact-field.css`), `tl-reveal-on-hover` |
+| Kopf (nur Kommentar) | 37 | Datei gelöscht |
+
+Außerdem umgezogen: Wysiwyg `tlWysiwygEditor*` → `tl-field tl-rich-text` mit Inhalt `tl-prose` (`rich-text.css`),
+Leiste aus den Bausteinen des Pakets (Radix entfällt, `remixicon` ist als Abhängigkeit des Wysiwyg-Moduls entfallen);
+Diagramm `tlReactChart*` → `tl-chart` (`__tooltip` auf der Fläche von `tl-popover`, `__zoom-reset`); Code- und
+Script-Editor behalten `tlCodeEditor`, `tlCodeEditorSurface`, `tlScriptEditor` als Geltungsbereich der CodeMirror-Regeln,
+bekommen `tl-field`, der Fehler ist `aria-invalid`; Editoren, Flow, Demo-Stylesheet und `MuiTextAdapter` lesen Rollen
+statt alter Theme-Tokens (Ausnahmen der Demo: `--shadow-glow`, `--surface-blur`, `--item-index`).
+
+### Neu im Paket
+
+- Ebenen `layer-tooltip` (1300) und `layer-drag` (1400); Rollen `surface-inverse`, `text-inverse` (Tooltip).
+- Blöcke `tooltip`, `rich-text`, `compact-field`, `chart`; `tl-reveal-on-hover` (Aktion beim Zeigen, einmal);
+  `menuitemradio` im Menüvertrag; `tl-toolbar--wrap`.
+- Bridge: `Menu`, `MenuItem`, `useRovingMenu`, `MenuHeader`, `MenuSeparator`, `menuItemClassName`; Dichte „Kompakt“ im
+  Benutzermenü, je Person gespeichert (`data-tl-density` schon im ersten HTML).
+
+### Alt → neu für Anwendungs-Stylesheets
+
+| Alt | Neu |
+|---|---|
+| `.tlFill` | `.tl-fill` |
+| `body.tlPick--active`, `#tl-pick-highlight` | `body[data-tl-state~="picking"]`, `.tl-pick-highlight` |
+| `.tlAnchor--flash` | `[data-tl-anchor][data-tl-state~="flash"]` |
+| `.tlDragShield`, `.tlTouchDragImage`, `[data-touch-drag]` | `.tl-drag-shield`, `.tl-drag-image`, `[data-tl-state~="dragging"]` bzw. `[data-tl-armed]` |
+| `.tl-tooltip-popover`, `-caption`, `-body`, `-arrow` | `.tl-tooltip`, `.tl-tooltip__caption`, `__body`, `__arrow`; `--tl-tt-padding` entfällt |
+| `.tlCompactField*`, `--edit`, `--view` | `.tl-compact-field__*`, `.tl-field` mit `[data-tl-state~="edit"]` |
+| `.tlWysiwygEditor*`, `.tlWysiwygToolbar*`, `--tl-wysiwyg-*` | `.tl-field.tl-rich-text`, `.tl-prose`, `.tl-toolbar` |
+| `.tlReactChart*` | `.tl-chart`, `.tl-chart__tooltip`, `.tl-chart__zoom-reset` |
+| `.tlCodeEditor--error`, `.tlScriptEditor--error` | `[aria-invalid="true"]` |
+| `tlReactControls.css` im `requires` eines Stylesheets | `tl-design-system-components` (oder `tl-react-base`) |
+
+### Offen
+
+- `SPEC-audio-recorder.md` im Modul `layout.react` nennt `tlReactControls.css` noch als Ablageort (Entwurf der
+  ersten Welle, nicht gelesen); die Pläne unter `docs/plans` und `docs/superpowers` der Engine ebenso (Geschichte).
+- Die Gates der Wellen 2–5c lesen das gelöschte Stylesheet nicht mehr; ihre Namen prüfen sie weiter in react-src, Java,
+  tl-docs und Views (und die Wellen 4a–5c im Stylesheet der Demo), nicht in den übrigen Engine-Stylesheets.
+
 ## Konsolidierung (01.10.) — Gleiches wird zusammengelegt
 
 Regel (CLAUDE.md „Arbeitsweise“, skalen.md „Gleiches wird zusammengelegt“): findet eine Erkundung zwei Stellen, die

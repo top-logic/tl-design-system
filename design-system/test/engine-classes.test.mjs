@@ -1,5 +1,5 @@
 // Die Wellen 2, 3a und 3b sind fertig, wenn keine ihrer alten Klassen (Formular, Menü, Toolbar, Tabs,
-// Breadcrumb, Tabelle, Baum, Spaltenwahl, Spalten, Text) mehr in der Engine steht — weder im TSX noch im alten Stylesheet. Ohne Worktree (Kundenrechner, CI des Pakets) wird der Test übersprungen.
+// Breadcrumb, Tabelle, Baum, Spaltenwahl, Spalten, Text) mehr in der Engine steht — weder im TSX noch im Stylesheet (das alte, tlReactControls.css, ist seit Welle 5d gelöscht). Ohne Worktree (Kundenrechner, CI des Pakets) wird der Test übersprungen.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
@@ -30,9 +30,9 @@ function* reactSources() {
   }
 }
 
-test('keine alte Klasse der Wellen 2, 3a und 3b in react-src eines Moduls und in tlReactControls.css', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+test('keine alte Klasse der Wellen 2, 3a und 3b in react-src eines Moduls', { skip: !existsSync(M) && 'kein Worktree' }, () => {
   const hits = [];
-  for (const p of [...reactSources(), join(M, 'src/main/webapp/style/tlReactControls.css')]) {
+  for (const p of reactSources()) {
     readFileSync(p, 'utf8').split('\n').forEach((line, i) => { if (ALT.test(line)) hits.push(`${p.slice(WT.length + 1)}:${i + 1}`); });
   }
   assert.deepEqual(hits, []);
@@ -59,7 +59,6 @@ function* tree(dir, pattern) {
 test('keine alte Klasse der Welle 4a in react-src, Stylesheets, Java, tl-docs und Views', { skip: !existsSync(M) && 'kein Worktree' }, () => {
   const quellen = [
     ...reactSources(),
-    join(M, 'src/main/webapp/style/tlReactControls.css'),
     join(WT, 'com.top_logic.demo.react/src/main/webapp/style/tl-demo-react.css'),
     ...tree(join(M, 'src/main/java'), /\.java$/),
     ...tree(join(WT, 'com.top_logic.layout.view/src/main/java/META-INF/tl-docs'), /\.md$/),
@@ -71,14 +70,12 @@ test('keine alte Klasse der Welle 4a in react-src, Stylesheets, Java, tl-docs un
   assert.deepEqual(hits, []);
 });
 
-// Welle 4b (#29866): keine alte Klasse der Navigation mehr — im TSX jedes Moduls (MUI eingeschlossen), im alten
-// Stylesheet, in Java, tl-docs und Views. Modulnamen (TLSidebar) treffen nicht: großes TL.
+// Welle 4b (#29866): keine alte Klasse der Navigation mehr — im TSX jedes Moduls (MUI eingeschlossen), in Java, tl-docs und Views. Modulnamen (TLSidebar) treffen nicht: großes TL.
 const ALT_4B = /\btl(Sidebar|AppBar|BottomBar|AppShell|DrawerToggle)(__|--|\b)/;
 
 test('keine alte Klasse der Welle 4b in react-src, Stylesheets, Java, tl-docs und Views', { skip: !existsSync(M) && 'kein Worktree' }, () => {
   const quellen = [
     ...reactSources(),
-    join(M, 'src/main/webapp/style/tlReactControls.css'),
     join(WT, 'com.top_logic.demo.react/src/main/webapp/style/tl-demo-react.css'),
     ...tree(join(M, 'src/main/java'), /\.java$/),
     ...tree(join(WT, 'com.top_logic.layout.view/src/main/java'), /\.(java|md)$/),
@@ -102,14 +99,12 @@ test('Welle 4b im TSX: main in der Shell, aria-current an den Seiten, aria-expan
   assert.deepEqual(mit768, ['com.top_logic.layout.react/react-src/controls/TLAppShell.tsx']);
 });
 
-// Welle 4c (#29870): keine alte Klasse der Behälter mehr — im TSX jedes Moduls (MUI eingeschlossen), im alten
-// Stylesheet, in Java, tl-docs, Views und der Demo; kein --page-inset, kein --tl-item-index, kein Dialog-Fuß der 4a.
+// Welle 4c (#29870): keine alte Klasse der Behälter mehr — im TSX jedes Moduls (MUI eingeschlossen), in Java, tl-docs, Views und der Demo; kein --page-inset, kein --tl-item-index, kein Dialog-Fuß der 4a.
 const ALT_4C = /\btl(Panel|Card|Stack|Grid|Inset|Bounded|Item|DeckPane|SplitPanel|TileStack|Wizard|AdaptiveDetail|ViewError)(__|--|\b)|\btlHtml__error\b|--page-inset\b|--tl-item-index\b|--tlGrid-gap\b|\btl-dialog__footer\b/;
 
 test('keine alte Klasse der Welle 4c in react-src, Stylesheets, Java, tl-docs und Views', { skip: !existsSync(M) && 'kein Worktree' }, () => {
   const quellen = [
     ...reactSources(),
-    join(M, 'src/main/webapp/style/tlReactControls.css'),
     join(WT, 'com.top_logic.demo.react/src/main/webapp/style/tl-demo-react.css'),
     ...tree(join(M, 'src/main/java'), /\.java$/),
     ...tree(join(WT, 'com.top_logic.layout.view/src/main/java'), /\.(java|md)$/),
@@ -149,7 +144,6 @@ const ALT_5A = /\btl(ColorInput|IconSelect|Slider)(__|--|\b)|--tlSlider-/;
 test('keine alte Klasse der Welle 5a in react-src, Stylesheets, Java, tl-docs und Views', { skip: !existsSync(M) && 'kein Worktree' }, () => {
   const quellen = [
     ...reactSources(),
-    join(M, 'src/main/webapp/style/tlReactControls.css'),
     join(WT, 'com.top_logic.demo.react/src/main/webapp/style/tl-demo-react.css'),
     ...tree(join(M, 'src/main/java'), /\.java$/),
     ...tree(join(WT, 'com.top_logic.layout.view/src/main/java'), /\.(java|md)$/),
@@ -182,7 +176,6 @@ const ALT_5B = /\btl(AudioRecorder|AudioPlayer|PhotoCapture|Download|FileChips|I
 test('keine alte Klasse der Welle 5b in react-src, Stylesheets, Java, tl-docs und Views', { skip: !existsSync(M) && 'kein Worktree' }, () => {
   const quellen = [
     ...reactSources(),
-    join(M, 'src/main/webapp/style/tlReactControls.css'),
     join(WT, 'com.top_logic.demo.react/src/main/webapp/style/tl-demo-react.css'),
     ...tree(join(M, 'src/main/java'), /\.java$/),
     ...tree(join(WT, 'com.top_logic.layout.view/src/main/java'), /\.(java|md)$/),
@@ -220,7 +213,6 @@ const ALT_5C = /\btl(Cal[A-Z]\w*|Calendar|KanbanBoard|Dashboard|ValueList|RowCom
 test('keine alte Klasse der Welle 5c in react-src, Stylesheets, Java, tl-docs und Views', { skip: !existsSync(M) && 'kein Worktree' }, () => {
   const quellen = [
     ...reactSources(),
-    join(M, 'src/main/webapp/style/tlReactControls.css'),
     join(WT, 'com.top_logic.demo.react/src/main/webapp/style/tl-demo-react.css'),
     ...tree(join(M, 'src/main/java'), /\.java$/),
     ...tree(join(WT, 'com.top_logic.layout.view/src/main/java'), /\.(java|md)$/),
@@ -286,4 +278,68 @@ test('Welle 5d: die Editoren sind Felder (tl-field), der Fehler ist aria-invalid
     'com.top_logic.layout.react.codeedit/src/main/webapp/style/tlCodeEditor.css',
     'com.top_logic.model.search.react/src/main/webapp/style/tlScriptEditor.css',
   ]) assert.doesNotMatch(readFileSync(join(WT, css), 'utf8'), /--error/, css);
+});
+
+// Welle 5d, Task 12 (Fundament): keine alte Klasse, kein altes Attribut und keine alte Custom Property des Fundaments mehr —
+// Füllen (tlFill), Ziehen mit dem Finger, Aufblitzen und Wahl-Modus, Tooltip, Kompaktfeld, Wysiwyg und Diagramm,
+// die Fehlerklassen der Editoren und die Custom Properties --tl-tt-*/--tl-wysiwyg-*. Die Wurzeln `tlCodeEditor`,
+// `tlCodeEditorSurface` und `tlScriptEditor` bleiben als Geltungsbereich der CodeMirror-Regeln, nur ihr `--`-Zustand fällt.
+const ALT_5D = /\btlFill\b|data-touch-drag|\btlDragShield\b|\btlTouchDragImage\b|\btlPick--active\b|\btlAnchor--flash\b|\btl-tooltip-(popover|caption|body|arrow)\b|\btlCompactField|\btl(WysiwygEditor|WysiwygToolbar|ReactChart)(__|--|\b)|\btl(CodeEditor|ScriptEditor)--|--tl-(tt-|wysiwyg-)/;
+
+// Je Alternative ein Treffer und ein Fehltreffer: ohne diese Tabelle kann ein Tippfehler im Regex das Gate still leeren.
+const ALT_5D_TABELLE = [
+  ['tlFill', '<div className="tlFill">', 'tl-fill tlFillColor'],
+  ['data-touch-drag', "el.setAttribute('data-touch-drag', '')", 'data-tl-armed'],
+  ['tlDragShield', '.tlDragShield { }', 'tl-drag-shield tlDragShieldX'],
+  ['tlTouchDragImage', 'tlTouchDragImage', 'tl-touch-drag-image'],
+  ['tlPick--active', 'body.tlPick--active', 'tlPick tlPick-active'],
+  ['tlAnchor--flash', 'tlAnchor--flash', 'tlAnchor tl-anchor'],
+  ['tl-tooltip-popover', 'tl-tooltip-popover', 'tl-tooltip tl-tooltip__popover'],
+  ['tl-tooltip-caption', 'tl-tooltip-caption', 'tl-tooltip-captions'],
+  ['tl-tooltip-body', 'tl-tooltip-body', 'tl-tooltip-bodyguard'],
+  ['tl-tooltip-arrow', 'tl-tooltip-arrow', 'tl-tooltip__arrow'],
+  ['tlCompactField', 'tlCompactField__input', 'tl-compact-field'],
+  ['tlWysiwygEditor', 'tlWysiwygEditor__content', 'TLWysiwygEditor tlWysiwygEditorLegacy'],
+  ['tlWysiwygToolbar', 'tlWysiwygToolbar--sticky', 'tl-toolbar'],
+  ['tlReactChart', 'tlReactChart__tooltip', 'tl-chart__tooltip tlReactChartX'],
+  ['tlCodeEditor--', 'tlCodeEditor--error', 'tlCodeEditor tlCodeEditorSurface'],
+  ['tlScriptEditor--', 'tlScriptEditor--error', 'tlScriptEditor'],
+  ['--tl-tt-', 'padding: var(--tl-tt-padding)', 'var(--tl-text-primary) var(--tl-tone)'],
+  ['--tl-wysiwyg-', 'var(--tl-wysiwyg-bg)', 'var(--tl-wysiwygx)'],
+];
+
+test('ALT_5D trifft je Alternative einen Fall und verfehlt den Gegenfall', () => {
+  for (const [name, treffer, fehltreffer] of ALT_5D_TABELLE) {
+    assert.match(treffer, ALT_5D, `${name}: kein Treffer`);
+    assert.doesNotMatch(fehltreffer, ALT_5D, `${name}: Fehltreffer`);
+  }
+});
+
+// Engine-Module, die Controls zeichnen oder deren Stylesheets das Fundament lesen.
+function* reactModules() {
+  for (const d of readdirSync(WT)) if (/^com\.top_logic\.(layout\.react|model\.search\.react|react\.flow|demo\.react|layout\.view$)/.test(d)) yield join(WT, d);
+}
+
+// Die Vitest-Dateien prüfen die Abwesenheit alter Namen und müssen sie dafür nennen: erlaubt sind dort nur
+// Zeilen, die verneinen (not, toBeNull, toBe(false)) oder die alten Namen sammeln (old.push).
+const VERNEINUNG = /\.not\.|toBeNull\(\)|toBe\(false\)|\bold\.push\(/;
+
+test('Welle 5d: keine alte Klasse, kein altes Attribut und keine alte Custom Property in react-src, Stylesheets, Java, tl-docs, Views und im Wysiwyg-Bundle', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+  // Nicht gelesen wird docs/ der Engine (Pläne und Entwürfe vergangener Wochen nennen die alten Namen als Geschichte).
+  const quellen = [...reactSources()];
+  for (const m of reactModules()) {
+    quellen.push(
+      ...tree(join(m, 'src/main/webapp'), /\.(css|view\.xml)$/),
+      ...tree(join(m, 'src/main/java'), /\.(java|md)$/),
+    );
+  }
+  quellen.push(join(WT, 'com.top_logic.layout.react.wysiwyg/src/main/webapp/script/tl-react-wysiwyg.css'));
+  const hits = [];
+  for (const p of new Set(quellen)) {
+    const vitest = /\.test\.tsx?$/.test(p);
+    readFileSync(p, 'utf8').split('\n').forEach((line, i) => {
+      if (ALT_5D.test(line) && !(vitest && VERNEINUNG.test(line))) hits.push(`${p.slice(WT.length + 1)}:${i + 1}`);
+    });
+  }
+  assert.deepEqual(hits, []);
 });

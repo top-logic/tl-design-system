@@ -1,5 +1,6 @@
-// Die Ratsche über dem Altbestand: zählt je Block des alten tlReactControls.css die Zeilen und
-// über die Blöcke die Literale (Farben, Schriftgrößen, Zeitangaben, z-index, outline: none).
+// Die Ratsche über dem Altbestand: zählte je Block des alten tlReactControls.css die Zeilen und
+// über die Blöcke die Literale (Farben, Schriftgrößen, Zeitangaben, z-index, outline: none). Seit Welle 5d
+// ist die Datei gelöscht; die CLI meldet „gelöscht“, die Funktionen bleiben für den Namensraum-Schutz.
 //
 // Das frühere Abbildungswerkzeug (ein hand-geschriebener Regex-Parser, der Werte
 // gruppiert nach px auszählte) ist nach dem Schnitt vom 17.09. exportiert und
@@ -11,7 +12,7 @@
 
 import { declarations } from './lib/css.mjs';
 import { knownVariables } from './lint-css.mjs';
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -46,7 +47,8 @@ export function foreignOf(names, known) {
 function* walk(dir, re) {
   for (const name of readdirSync(dir)) {
     const p = join(dir, name);
-    if (name === 'node_modules') continue;
+    // tl-design-system ist die versiegelte Kopie des Pakets im Stylesheet-Ordner der Engine: sie gehört dem Paket.
+    if (name === 'node_modules' || name === 'tl-design-system') continue;
     if (statSync(p).isDirectory()) yield* walk(p, re);
     else if (re.test(name)) yield p;
   }
@@ -122,20 +124,25 @@ export function measure(css) {
 // ---------------------------------------------------------------------------
 if (import.meta.url === `file://${process.argv[1]}`) {
 
-  const pfad = process.argv[2] ?? join(
+  const modul = join(
     process.env.TL_WORKTREE ?? fileURLToPath(new URL('../../_Working-Tree/tl8-wt-29584', import.meta.url)),
-    'com.top_logic.layout.react/src/main/webapp/style/tlReactControls.css',
+    'com.top_logic.layout.react',
   );
-  const css = readFileSync(pfad, 'utf8');
-  const sources = join(pfad, '../../../../../react-src');
+  const pfad = process.argv[2] ?? join(modul, 'src/main/webapp/style/tlReactControls.css');
   const dist = new URL('../dist/', import.meta.url);
   const known = knownVariables(
     readFileSync(new URL('primitives.css', dist), 'utf8')
     + readFileSync(new URL('tokens.css', dist), 'utf8')
     + readFileSync(new URL('base.css', dist), 'utf8'),
   );
-  const alle = [...foreignTlNames(css), ...foreignTlInSources(sources)];
-  const budget = JSON.parse(readFileSync(new URL('../test/ratchet.json', import.meta.url), 'utf8'));
-  const ist = measureBlocks(css, Object.keys(budget.blocks));
-  console.log(JSON.stringify({ ...ist, file: measure(css).lines, foreignTl: foreignOf(alle, known) }, null, 2));
+  const gelesen = [...foreignTlInSources(join(modul, 'react-src')), ...foreignTlInSources(join(modul, 'src/main/webapp/style'))];
+  if (!existsSync(pfad)) {
+    // Sollzustand seit Welle 5d: das alte Stylesheet ist gelöscht, es gibt nichts zu zählen.
+    console.log(JSON.stringify({ file: 'gelöscht', foreignTl: foreignOf(gelesen, known) }, null, 2));
+  } else {
+    const css = readFileSync(pfad, 'utf8');
+    const budget = JSON.parse(readFileSync(new URL('../test/ratchet.json', import.meta.url), 'utf8'));
+    const ist = measureBlocks(css, Object.keys(budget.blocks));
+    console.log(JSON.stringify({ ...ist, file: measure(css).lines, foreignTl: foreignOf([...foreignTlNames(css), ...gelesen], known) }, null, 2));
+  }
 }
