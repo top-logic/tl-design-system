@@ -236,6 +236,15 @@ test('toolbar--wrap: bricht um, sonst nichts', () => {
   assert.equal(d.trim().replace(/\s+/g, ' '), 'flex-wrap: wrap;');
 });
 
+// Fix-Runde Task 9: eine Gruppe, die eine eingebettete Toolbar hält (die Befehle des Servers in der Leiste des
+// Wysiwyg-Editors), schrumpft unter ihren Inhalt — sonst kollabiert die eingebettete Toolbar nie in ihren Überlauf.
+test('toolbar: eine Gruppe mit eingebetteter Toolbar darf schrumpfen', () => {
+  const d = decl(readGenerated('toolbar', 'toolbar.css'), '.tl-toolbar__group:has(> .tl-toolbar)');
+  assert.match(d, /flex-shrink:\s*1(;|$)/);
+  assert.match(d, /min-width:\s*0(;|$)/);
+  assert.match(readComponent('toolbar', 'toolbar.contract.md'), /`tl-toolbar__group:has\(> \.tl-toolbar\)`/);
+});
+
 // K5: die Modifier der neuen Blöcke sind entschieden — tl-toolbar kennt wrap, die neuen Blöcke keinen.
 test('lint-css: tl-toolbar--wrap erlaubt; tl-tooltip, tl-rich-text, tl-compact-field, tl-chart ohne Modifier', () => {
   const known = new Set();

@@ -16,9 +16,9 @@ Bild passen will, liest die Tokens.
 | Teil | Form |
 |---|---|
 | Rahmen | `tl-field` `tl-rich-text`: Rand, Zeigen und Fehler (`aria-invalid="true"`) aus `tl-field`; Leiste und Fläche untereinander |
-| Leiste | `tl-toolbar` `tl-toolbar--wrap` mit `role="toolbar"` und übersetztem `aria-label`; Gruppen `tl-toolbar__group`, dazwischen `tl-divider` `tl-divider--vertical`. Die Knöpfe sind der Part `Button` (ghost, nur Icon) unter `ButtonDefaults`; Umschalter (fett, kursiv, unterstrichen, durchgestrichen, Zitat, Code) tragen `aria-pressed`. Die Befehle des Servers bleiben die eingebettete `TLToolbar` |
+| Leiste | `tl-toolbar` `tl-toolbar--wrap` mit `role="toolbar"` und übersetztem `aria-label`; Gruppen `tl-toolbar__group`, dazwischen `tl-divider` `tl-divider--vertical`. Die Knöpfe sind der Part `Button` (ghost, nur Icon) unter `ButtonDefaults`; Umschalter (fett, kursiv, unterstrichen, durchgestrichen, Zitat, Code) tragen `aria-pressed`. Die Befehle des Servers bleiben die eingebettete `TLToolbar`, in einer eigenen Gruppe, die schrumpfen darf (`tl-toolbar__group:has(> .tl-toolbar)`, `toolbar.contract.md`): die eingebettete Toolbar kollabiert dann in ihren Überlauf |
 | Menüs | Absatzformat und Listenart: Part `MenuTrigger` und `tl-menu` (`menu.contract.md`); genau eine Wahl ist `menuitemradio` mit `aria-checked` |
-| Link | `tl-popover` `tl-popover--content` mit `label` und `tl-field` (`type="url"`), Knöpfe „Übernehmen“ (primary) und „Entfernen“ (danger). Beim Schließen kehrt der Fokus in den Text zurück (Rückgabeziel, `popover.contract.md`) |
+| Link | `tl-popover` `tl-popover--content` mit `label` und `tl-field` (`type="url"`), Knöpfe „Anwenden“ (primary) und, auf einem Link, „Link entfernen“ (danger). Beim Schließen kehrt der Fokus in den Text zurück (Rückgabeziel, `popover.contract.md`) |
 | Schreibfläche | die Fläche der Bibliothek mit `tl-prose`: Überschriften, Listen, Code, Zitat, Link und Tabelle aus `prose.contract.md`; den Fokusring liefert `base.css` |
 
 ## Was das Paket zeichnet
@@ -40,10 +40,13 @@ Der Rahmen hat kein `overflow`: er schnitte den Fokusring der Knöpfe am Rand ab
 Klassen der Bibliothek stehen nicht im Paket (Plan-Review K3). `TLWysiwygEditor.css` zeichnet sie aus Paket-Tokens,
 ohne eigene `--tl-`-Variable, ohne `outline: none`, ohne z-index:
 
-| Teil | Token |
+| Teil | Regel |
 |---|---|
 | ausgewähltes Bild (`.ProseMirror-selectednode`) | `outline` aus `--tl-focus-width` in `--tl-focus-ring` |
-| Spaltengriff einer Tabelle (`.column-resize-handle`) | `--tl-border-interactive` |
+| Tabelle (`.ProseMirror table`) | `width: 100%`: auch eine frisch eingefügte, leere Tabelle ist erreichbar |
+| Zellen (`.ProseMirror td`, `th`) | `position: relative`: sie tragen den Spaltengriff an ihrer Endkante |
+| Spaltengriff einer Tabelle (`.column-resize-handle`) | an der Endkante der Zelle, Breite `--tl-border-width-md`, Fläche `--tl-border-interactive`; fängt keinen Zeiger |
+| Zeiger beim Ziehen der Spaltenbreite (`.ProseMirror.resize-cursor`) | `cursor: col-resize` |
 
 ## Attribute
 

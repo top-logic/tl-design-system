@@ -43,3 +43,11 @@
 .tl-toolbar__group > :empty {
   display: none;
 }
+
+/* Eine Gruppe, die eine eingebettete Toolbar hält (die Befehle des Servers in der Leiste des Wysiwyg-Editors),
+   schrumpft unter ihren Inhalt: erst dann bekommt die eingebettete Toolbar weniger als ihre natürliche Breite und
+   kollabiert in ihren Überlauf, statt die Leiste über den Rand zu schieben. */
+.tl-toolbar__group:has(> .tl-toolbar) {
+  flex-shrink: 1;
+  min-width: 0;
+}
