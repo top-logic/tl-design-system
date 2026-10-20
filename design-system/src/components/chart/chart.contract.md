@@ -20,12 +20,15 @@ Neuladen, und auch im Kundentheme in dessen Farben.
 | Teil | Token |
 |---|---|
 | Reihe 1 bis 8 | `--tl-category-1-surface` bis `--tl-category-8-surface`; die neunte Reihe nimmt wieder die erste, die zehnte die zweite |
-| Gitter | `--tl-border-separator` |
-| Beschriftung und Teilstriche | `--tl-text-secondary` |
+| Gitter und Achsenlinien (auch die Speichen und Ringe eines Radars) | `--tl-border-separator` |
+| Beschriftung, Teilstriche, Achsentitel, Titel, Untertitel und Legende | `--tl-text-secondary` |
+| Hinterlegung der Teilstriche einer Radialachse (Radar, Polar) | `--tl-surface-layer` mit 75 % Deckkraft |
 
 Die Werte sind `#RRGGBB`; Deckkraft hängt das Control als Hex-Suffix an. Eine Reihe, deren Farbe der Server in der
-Konfiguration mitgibt, behält sie; nur was fehlt, kommt aus dem Theme. Eine eigene Diagrammpalette im Java-Code gibt es
-nicht.
+Konfiguration mitgibt, behält sie, ebenso jede Farbe an einer Achse oder einem Plugin; nur was fehlt, kommt aus dem Theme.
+Die Farben stehen in der Konfiguration dieses einen Diagramms, nie in den globalen Voreinstellungen von Chart.js: mehrere
+Diagramme in verschiedenen Themes teilen sich eine Seite. Ist eine Kategorie keine lesbare Farbe, bleibt ihre Reihe
+ungefärbt, die übrigen behalten ihre Kategorie. Eine eigene Diagrammpalette im Java-Code gibt es nicht.
 
 ## Aufbau
 
