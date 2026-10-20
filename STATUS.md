@@ -245,7 +245,12 @@ Maven layout.react 722, wysiwyg 43, chartjs 10, codeedit 12, model.search.react 
 Benutzermenü und im ersten HTML, Tooltip folgt dem Anker (invertiert), Diagramm wechselt hell/dunkel ohne Neuladen,
 Rich-Text (Fett mit Markierung, Absatzformat, Fokus bleibt im Text). **Offen für Hendriks Sichtprüfung:** Picker mit
 Escape im Dialog, Ziehen mit dem Finger, Compact field in der Tabelle, Code-/Script-Editor (Fokusring, Nur-Lese),
-Tooltip-Ankerwechsel an abgeschnittenen Spaltenköpfen. Trac #29914: Lösung, `== Migration ==`, `RequiresMigration`.
+Tooltip-Ankerwechsel an abgeschnittenen Spaltenköpfen. **Sichtprüfung fortgesetzt (20.10.):** Compact field in der
+editierbaren Tabelle (Feld, `edit`, kleiner Öffner) ok; Tooltip folgt auch an abgeschnittenen Spaltenköpfen; Script-
+Editor: Ring verdeckt links von den Zeilennummern → behoben (`ac78b86688`); Nur-Lese-Editoren ohne Rahmen sahen kaputt
+aus → Rahmen zurück (Hendrik, `4ab5675861`). **Bleibt für Hendrik:** Element-Picker mit Escape im Dialog (der Designer
+ersetzt im Browser-Fenster des App-Bereichs das Hauptfenster — nur im eigenen Chrome prüfbar) und Ziehen mit dem Finger
+(Gerät). Trac #29914: Lösung, `== Migration ==`, `RequiresMigration`.
 Neue Punkte im UI-Durchgang U13–U19 (u. a. Link-Knopf ohne „auf Link“, bewusster Verlust). **PR-Text muss nennen:**
 `ReactStackControl.setStateWords` (an Bernhard), Überschrift erneut wählen bleibt Überschrift, Nur-Lese-Editor ohne
 Rahmen, `use-sync-external-store` als devDependency im MUI-Modul nachholen (offline nicht installierbar), demo.react.mui

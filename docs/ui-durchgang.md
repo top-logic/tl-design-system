@@ -32,7 +32,7 @@ Neue Einträge: Datum, Welle, woher (Sichtprüfung, Hendrik, Review), Quelle in 
 | U15 | **Leisten ohne Pfeiltasten:** `tl-toolbar` (auch im Rich-Text) hat kein Roving mit Pfeiltasten (WAI-ARIA Toolbar); war vorher so | Review 5d Task 9, 20.10. | `TLToolbar.tsx`, `WysiwygToolbar.tsx` |
 | U16 | **`tl-toolbar--wrap` lässt den Trenner am Zeilenende stehen**, wenn die Leiste umbricht | Task 3 5d, 20.10. | `toolbar.css` |
 | U17 | **Überschrift-Auslöser nennt die gültige Ebene nicht** mehr im Tooltip (vor 5d schon) | Review 5d Task 9, 20.10. | `WysiwygToolbar.tsx` |
-| U18 | **Code- und Script-Editor:** CodeMirrors `defaultHighlightStyle` ist eine Fremdpalette, im Dunkelmodus etwa 2:1 — Syntaxfarben aus Rollen; Nur-Lese-Editor steht ohne Rahmen im Formular (eigene Lese-Form, z. B. wie `tl-prose pre`); Doc-Popups könnten `tl-type-*` tragen statt Schriftgrößen zu lesen | Review 5d Task 11, 20.10. | `tlCodeEditor.css`, `tlScriptEditor.css` |
+| U18 | **Code- und Script-Editor:** CodeMirrors `defaultHighlightStyle` ist eine Fremdpalette, im Dunkelmodus etwa 2:1 — Syntaxfarben aus Rollen; Nur-Lese-Editor trägt bis dahin den Feldrahmen, eine eigene Lese-Form fehlt (z. B. wie `tl-prose pre`, ohne Leerraum unter kurzem Inhalt); Doc-Popups könnten `tl-type-*` tragen statt Schriftgrößen zu lesen | Review 5d Task 11, 20.10. | `tlCodeEditor.css`, `tlScriptEditor.css` |
 
 ## Bewegung
 

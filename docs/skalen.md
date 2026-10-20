@@ -2711,7 +2711,10 @@ Bibliothek es zulässt. Die Audit-Tests der Module lernen `tokens.css`.
   Fremdpalette); eine unlesbare Kategorie bekommt die Trennerfarbe, die Reihen behalten ihre Nummer.
 - **Absatzformat ist ein Radio-Menü, die Listenart ein Umschalter** (`menuitemcheckbox`): die Wahl der gültigen Liste
   hebt sie auf, ein Radio darf das nicht. „Überschrift n“ erneut gewählt bleibt Überschrift (vorher zurück auf Absatz).
-- **Nur-Lese-Editoren tragen kein `tl-field`** (kein Bearbeiten-Rahmen), wie der Nur-Lese-Rich-Text.
+- **Nur-Lese-Code-Editoren behalten `tl-field`** (Sichtprüfung, Hendrik): ohne Rahmen standen Zeilennummern und leere
+  Zeilen lose im Formular. Eine eigene Lese-Form kommt mit dem UI-Durchgang (U18).
+- **Der Fokusring der Editoren liegt auf einer Ebene über dem Editor** (`layer-sticky`), die Zeilennummern darunter
+  (`layer-raised`): CodeMirrors Zeilennummern sind sticky und deckend und verdeckten sonst den linken Rand des Rings.
 - **Auswahl ist nicht Fokus:** die Auswahl im Flow-Diagramm zeichnet `border-interactive`, nicht `focus-ring`.
 - **Tooltip-Ankerfehler:** im aktuellen Code schon behoben (Popover je Aktivierung, #29497); ein Test misst jetzt die
   Lage am neuen Anker. Lange Tooltips am Bildrand heften sich an den Rand, nur der Pfeil wandert — Sichtprüfung.
