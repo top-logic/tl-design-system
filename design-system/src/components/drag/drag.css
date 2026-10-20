@@ -111,6 +111,7 @@
 @media (pointer: coarse) {
   [draggable="true"] {
     -webkit-touch-callout: none;
+    -webkit-user-select: none;
     user-select: none;
   }
 }
