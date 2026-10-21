@@ -4,22 +4,26 @@
    ist der Knoten positioniert), aria-selected die Fläche — kein Balken links. Der Einzug je Ebene ist die
    Breite des Toggles, inline aus dem TSX; ein Blatt hält ihren Platz mit tl-tree__spacer frei. Ein
    Knoten, dessen Kinder kommen, trägt aria-busy; unter ihm steht eine tl-status-Zeile mit unbestimmtem
-   tl-progress — selbst ein treeitem eine Ebene tiefer, benannt „Lädt“ (js.tree.loading). Ziehen und
-   Ablegen zeichnet drag.css. */
+   tl-progress — selbst ein treeitem eine Ebene tiefer, benannt „Lädt“ (js.tree.loading). Ein Knoten
+   bricht nicht um und endet nicht mit Ellipse: ist er breiter als der Baum, rollt der Baum waagerecht.
+   Ziehen und Ablegen zeichnet drag.css. */
 
 .tl-tree {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow-y: auto;
+  overflow: auto;
   isolation: isolate;
   list-style: none;
   color: var(--tl-text-primary);
 }
 
+/* Mindestens so breit wie sein Inhalt: Fläche beim Zeigen und Auswählen und die Ablagemarken reichen
+   über die ganze gerollte Breite, nicht nur über den sichtbaren Teil. */
 .tl-tree__node {
   position: relative;
   display: flex;
+  min-width: max-content;
   align-items: center;
   gap: var(--tl-space-2xs);
   min-height: var(--tl-size-row);
@@ -43,10 +47,15 @@
   width: var(--tl-size-control-sm);
 }
 
+/* Eine Zeile, ungekürzt; die automatische Mindestbreite des Flex-Elements (mit nowrap die Breite des
+   Texts) hält es so breit wie seinen Inhalt. */
 .tl-tree__content {
   flex: 1 1 auto;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Ein tl-text als Inhalt bleibt auf seiner Zeile. (0,2,0): text.css setzt pre-line mit (0,1,0) und steht
+   im Bundle danach — wie in der Tabellenzelle. */
+.tl-tree__content > .tl-text {
   white-space: nowrap;
 }
