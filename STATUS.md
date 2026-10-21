@@ -281,7 +281,7 @@ Auswahl mit Fokusring, hell und dunkel lesbar. Constraint-Test „Neu“: Dialog
 (180 px, Kopf/Körper/Fuß). Meilenstein-Löschen: Bestätigung dreizeilig. Vorher nötig: `rebuild-stale.sh` (veraltete
 Jars im Worktree-Repo, `NoSuchMethodError` in `tl-contact`).
 **Gepusht 21.10.** (Engine `e9e151664a..966b471b8d`, Paket `main` bis `57e89f5`), `jenkins` neu angefragt; !1939 wieder
-mergebar. **Weiter:** Jenkins abwarten, dann `bhu` (Hendrik: erst bei grünem Build); PR-Text („Merge of master“, „Checked“) nachziehen.
+mergebar. **Weiter:** Jenkins abwarten, dann `bhu` (Hendrik: erst bei grünem Build); PR-Text („Merge of master“, „Checked“) am 21.10. nachgezogen.
 
 **#29918 (20.10., accepted, CC bhu): Panel-Toolbar klebte am Titel** — Regression aus 4c (#29870, auf master): die
 Regel „Nachgeben“ gibt `tl-titlebar__actions` den ganzen Rest, die Toolbar stand darin am Anfang. Fix wie in der AppBar:
