@@ -2724,6 +2724,19 @@ Bibliothek es zulässt. Die Audit-Tests der Module lernen `tokens.css`.
 - **`tlReactControls.css` ist gelöscht; die Ratsche wird Wache** (der Test scheitert, wenn die Datei wiederkommt) und
   `ALT_5D` hält die alten Namen draußen, jede Alternative mit Treffer und Fehltreffer belegt.
 
+**Nachgetragen beim master-Merge (21.10.):** master hatte drei Dinge in Dateien geschrieben, die 5d löscht oder neu
+zeichnet. Sie ziehen ins Paket, statt verloren zu gehen:
+- **Eine füllende Tabelle behält Kopf, drei Zeilen und Fuß** (#29922): `.tl-table.tl-fill` mit `min-height` aus
+  `size-bar` + 3 × `size-row` + `size-control`. In einer zu kleinen scrollenden Region (Dialogkörper) scrollt die Region,
+  statt dass die Tabelle auf 0 px fällt.
+- **`tl-text` behält die Zeilenumbrüche seines Werts** (#29886): `white-space: pre-line`; `--truncate` bleibt einzeilig.
+  Bernhard hatte die Regel nur in die versiegelte Kopie geschrieben.
+- **Quellansicht und behaltenes Markup des Wysiwyg-Editors** (#29860): der Umschalter ist ein `ToolButton` der Leiste
+  (`ICON_SOURCE`, `aria-pressed`); solange die Quelle steht, ist er der einzige Knopf. Die Quelle ist eine Textarea
+  `tl-rich-text__source` an Stelle der Schreibfläche, mit deren Innenabstand und Ring innen; Rand und Fehler zeichnet
+  der Rahmen. Markup ohne Schema steht als Quelltext `tl-rich-text__markup` im Text, leise, gestrichelt umrandet:
+  auswählen und löschen ja, formatieren nein. Die Remix-Glyphen bleiben draußen.
+
 ### Die Kopie in der Engine ist versiegelt (16.10.)
 
 **Befund:** Zweimal wurde die Kopie des Pakets in tl-engine-7 von Hand geändert — #29787 (sechs Stellen) und #29859

@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-20 (Welle 5 gepusht, PR !1939 gegen master; #29918 als !1930 auf master) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-21 (master lokal in 5d gemergt, #29922/#29886/#29860 ins Paket; Push offen) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -264,15 +264,17 @@ Reviewer `bhu` und `jenkins`; Trac #29875/#29904/#29906/#29914 kommentiert. Jenk
 veralteten lokalen Doclet erzeugt (Akronym „PowerPoint“, #29854) → zurückgenommen (`e9e151664a`), gepusht 21.10.,
 `jenkins` neu angefragt; `bhu` erst, wenn Jenkins grün ist (Hendrik). Build 250 davor: CI-Änderung #29919, nicht wir. **Weiter:** Jenkins und Bernhards Review;
 nach jedem Push `bhu` neu anfragen, `jenkins` erst am Ende.
-**21.10. — !1939 nicht mergebar** (`needs-manual-intervention`): master ist 61 Commits weiter. Zwei master-Regeln stehen
-nur in Engine-Dateien, die 5d löscht bzw. neu publiziert, und sind jetzt im Paket (`main`, nicht gepusht):
-`.tl-table.tl-fill` Mindesthöhe Kopf + 3 Zeilen + Fuß (#29922, `5aedb4c`; master hatte `.tl-table.tlFill` in
-`tlReactControls.css`) und `.tl-text { white-space: pre-line }` (#29886, `39243b8`; Bernhard schrieb sie direkt in die
-versiegelte Kopie). Paket 647/1 — rot ist nur `published.test` bis zur Kopie im Worktree. Probe-Merge von master in 5d
-(abgebrochen) zeigte Konflikte: `tlReactControls.css` (ändern/löschen → löschen), Kopie `components.css` (neu
-publizieren), Wysiwyg (`TLWysiwygEditor.tsx/.css`, `WysiwygToolbar.tsx`, `tl-react-wysiwyg.css`, `pom.xml`,
-`package-lock.json` — #29860 Quellansicht, Schema-fremdes Markup), `TLHtml.tsx`, `TLTableView.tsx` (#29920, #29860).
-**Weiter:** master in 5d mergen (Hendriks Go), Kopie publizieren, Gates, Push mit Freigabe.
+**21.10. — master in 5d gemergt (lokal, nicht gepusht):** !1939 war nicht mergebar (master 61 Commits weiter). Drei
+master-Stände standen in Dateien, die 5d löscht oder neu zeichnet, und sind jetzt im Paket (`main`, nicht gepusht):
+`.tl-table.tl-fill` Mindesthöhe (#29922, `5aedb4c`), `.tl-text` `pre-line` (#29886, `39243b8`), Quellansicht
+`tl-rich-text__source` und behaltenes Markup `tl-rich-text__markup` des Wysiwyg-Editors (#29860, `1ecb3c1`; `skalen.md`
+„Nachgetragen beim master-Merge“). Engine (Branch `CWS/CWS_29914_…_5d`, 63 Commits vor origin): Merge `1cd018c421`
+(`tlReactControls.css` bleibt gelöscht; Toolbar und Editor in 5d-Form mit Umschalter `ICON_SOURCE`; remixicon raus,
+`tl-layout-configedit` rein; Lockfile von 5d; TLHtml/TLTableView beide Seiten), Kopie `288fa0e87f`, Bundle `2247a1d5d4`.
+Gates: Paket 648/0, layout.react 774, layout.view 1540 (en), wysiwyg 55, chartjs 10, codeedit 18, model.search.react 35,
+react.flow.server 76, demo.react 13, MUI-Vitest 823, `tsc` ohne neuen Fehler, Messages ohne Diff. Offen klein: Tests
+erzeugen `_core_theme.css` untracked in wysiwyg und codeedit (dort fehlt die `.gitignore`-Zeile).
+**Weiter:** Push 5d und Paket `main` mit Hendriks Freigabe, danach `jenkins` neu anfragen.
 
 **#29918 (20.10., accepted, CC bhu): Panel-Toolbar klebte am Titel** — Regression aus 4c (#29870, auf master): die
 Regel „Nachgeben“ gibt `tl-titlebar__actions` den ganzen Rest, die Toolbar stand darin am Anfang. Fix wie in der AppBar:
