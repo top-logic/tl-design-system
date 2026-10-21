@@ -5712,6 +5712,11 @@ button.tl-swatch:not(:disabled):hover {
    stehen, bevor seine Meldung kommt. */
 .tl-text:empty:not([role]) { display: none; }
 
+/* Der Text behält die Zeilenumbrüche seines Werts: ein \n vom Server ist ein Umbruch (#29886). Folgen von
+   Leerzeichen fallen zusammen, und der Text bricht an der verfügbaren Breite um. --truncate
+   (unten) und die Tabellenzelle bleiben einzeilig. */
+.tl-text { white-space: pre-line; }
+
 /* Eine Zeile, die mit Ellipse endet: als Block, sonst schneidet ein Inline-Element nicht ab. Den vollen
    Text als Tooltip bietet der Tooltip-Host der Engine von selbst an (text-overflow: ellipsis, master
    #29752) — keine Deklaration nötig. */
@@ -6238,4 +6243,4 @@ button.tl-swatch:not(:disabled):hover {
 .tl-wizard[data-tl-state~="backward"] .tl-wizard__step[data-tl-state~="exiting"]:dir(rtl) {
   animation-name: tl-slide-out-forward;
 }
-/* tl-design-system sha256:b28240892bcfc031cdc88fa9df5df48bd4b815d6f02ef848d959f52dd6ec002d — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */
+/* tl-design-system sha256:eaaf9d8e925b286447d3f2d6bf7bbc6a0d23074e6f389606de118c8d6297abb1 — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */

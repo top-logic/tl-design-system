@@ -17,6 +17,11 @@
    stehen, bevor seine Meldung kommt. */
 .tl-text:empty:not([role]) { display: none; }
 
+/* Der Text behält die Zeilenumbrüche seines Werts: ein \n vom Server ist ein Umbruch (#29886). Folgen von
+   Leerzeichen fallen zusammen, und der Text bricht an der verfügbaren Breite um. --truncate
+   (unten) und die Tabellenzelle bleiben einzeilig. */
+.tl-text { white-space: pre-line; }
+
 /* Eine Zeile, die mit Ellipse endet: als Block, sonst schneidet ein Inline-Element nicht ab. Den vollen
    Text als Tooltip bietet der Tooltip-Host der Engine von selbst an (text-overflow: ellipsis, master
    #29752) — keine Deklaration nötig. */

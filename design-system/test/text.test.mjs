@@ -10,7 +10,10 @@ test('tl-text: Ton als data-tl-tone, ohne Ton erbt der Text; Ellipse ist --trunc
     success: 'status-success-text', warning: 'status-warning-text', error: 'status-error-text', 'on-brand': 'text-on-brand' };
   for (const [ton, rolle] of Object.entries(TOENE))
     assert.match(declarationsOf(css, `.tl-text[data-tl-tone="${ton}"]`) ?? '', new RegExp(`color:\\s*var\\(--tl-${rolle}\\)`), ton);
-  assert.equal(declarationsOf(css, '.tl-text'), null, 'ohne Ton keine Farbregel: der Text erbt');
+  assert.doesNotMatch(declarationsOf(css, '.tl-text') ?? '', /color/, 'ohne Ton keine Farbregel: der Text erbt');
+  // master #29886: ein \n vom Server ist ein Umbruch; --truncate bleibt einzeilig.
+  assert.match(declarationsOf(css, '.tl-text') ?? '', /white-space:\s*pre-line/);
+  assert.match(declarationsOf(css, '.tl-text--truncate') ?? '', /white-space:\s*nowrap/);
   assert.doesNotMatch(css, /accent|font-style|font-weight/);
   assert.match(declarationsOf(css, '.tl-text--truncate') ?? '', /text-overflow:\s*ellipsis/);
   // master #29752: ein Text ohne Wert nimmt keinen Platz, einer mit Rolle (Live-Bereich) bleibt.
