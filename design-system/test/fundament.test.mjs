@@ -196,13 +196,19 @@ test('rich-text: Innenabstand space-sm/space-md und Mindesthöhe size-10 an der 
 });
 
 // K3: keine Klassen der Bibliothek im Paket; Bildauswahl und Spaltengriff zeichnet das Engine-Sheet des Editors.
-test('rich-text: nur .tl-rich-text, .tl-prose und Elemente, kein outline: none, Ring der scrollenden Fläche innen', () => {
+test('rich-text: nur .tl-rich-text, seine Elemente und .tl-prose, kein outline: none, Ring der scrollenden Fläche und der Quelle innen', () => {
   const o = ohneKommentar(richText());
   assert.ok(o.includes('.tl-rich-text'), 'rich-text.css fehlt');
   assert.doesNotMatch(o, /ProseMirror|column-resize-handle|selectednode/);
   assert.doesNotMatch(o, /outline:\s*(none|0)/);
-  for (const [sel] of rulesOf(o)) assert.match(sel, /^\.tl-rich-text\b/, sel);
+  for (const [sel] of rulesOf(o)) assert.match(sel, /^\.tl-rich-text(__[a-z-]+)?\b/, sel);
   assert.match(decl(o, '.tl-rich-text .tl-prose:focus-visible'), /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/);
+  // master #29860: die Quelle steht an Stelle der Schreibfläche, ihr Ring liegt ebenso innen; behaltenes Markup
+  // steht als Quelltext im Text, im Fließtext ohne Abstand oben und unten.
+  assert.match(decl(o, '.tl-rich-text__source:focus-visible'), /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/);
+  assert.match(decl(o, '.tl-rich-text__source'), /min-height:\s*var\(--tl-size-10\)/);
+  assert.match(decl(o, '.tl-rich-text__markup'), /border:\s*var\(--tl-border-width-sm\) dashed var\(--tl-border-separator\)/);
+  assert.match(decl(o, '.tl-rich-text__markup--inline'), /display:\s*inline/);
 });
 
 test('compact-field: Öffner teilt die Regel mit dem Knopf im Select (ein Selektor), bearbeitbar ist ein Zustand', () => {
