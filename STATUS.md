@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-21 (master lokal in 5d gemergt, #29922/#29886/#29860 ins Paket; Push offen) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-21 (master in 5d gemergt und gepusht, #29922/#29886/#29860 im Paket; Jenkins läuft) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -280,7 +280,8 @@ Feldfehler (roter Rahmen, Meldung); leeres Inline-Element und gemischter Block e
 Auswahl mit Fokusring, hell und dunkel lesbar. Constraint-Test „Neu“: Dialog scrollt bis zur Tabelle „Einträge“
 (180 px, Kopf/Körper/Fuß). Meilenstein-Löschen: Bestätigung dreizeilig. Vorher nötig: `rebuild-stale.sh` (veraltete
 Jars im Worktree-Repo, `NoSuchMethodError` in `tl-contact`).
-**Weiter:** Push 5d und Paket `main` mit Hendriks Freigabe, danach `jenkins` neu anfragen.
+**Gepusht 21.10.** (Engine `e9e151664a..966b471b8d`, Paket `main` bis `57e89f5`), `jenkins` neu angefragt; !1939 wieder
+mergebar. **Weiter:** Jenkins abwarten, dann `bhu` (Hendrik: erst bei grünem Build); PR-Text („Merge of master“, „Checked“) nachziehen.
 
 **#29918 (20.10., accepted, CC bhu): Panel-Toolbar klebte am Titel** — Regression aus 4c (#29870, auf master): die
 Regel „Nachgeben“ gibt `tl-titlebar__actions` den ganzen Rest, die Toolbar stand darin am Anfang. Fix wie in der AppBar:
