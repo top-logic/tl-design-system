@@ -282,6 +282,11 @@ Auswahl mit Fokusring, hell und dunkel lesbar. Constraint-Test „Neu“: Dialog
 Jars im Worktree-Repo, `NoSuchMethodError` in `tl-contact`).
 **Gepusht 21.10.** (Engine `e9e151664a..966b471b8d`, Paket `main` bis `57e89f5`), `jenkins` neu angefragt; !1939 wieder
 mergebar. **Weiter:** Jenkins abwarten, dann `bhu` (Hendrik: erst bei grünem Build); PR-Text („Merge of master“, „Checked“) am 21.10. nachgezogen.
+**21.10. mittags — master (#29798, !1897) erneut gemergt** (`0fd3f168d2`, ohne Konflikt; Bernhards Kommentar 162085):
+`TestFileListUpload` (5b) wechselte in `setUp` den Benutzer — seit #29798 im Systemkontext unzulässig. Fix `4fb4946ae9`:
+`initialUser()` = `_responsible`, Formular im Testkörper. Gates: `rebuild-stale.sh` grün, layout.react 774, layout.view
+1540/0, wysiwyg 55, chartjs 10, codeedit 18, model.search.react 35, react.flow.server 76, demo.react 13, MUI 823, Paket
+648/0, Messages ohne Diff. **Nicht gepusht.** Weiter: Push mit Freigabe, `jenkins` neu, Antwort an Bernhard.
 
 **#29918 (20.10., accepted, CC bhu): Panel-Toolbar klebte am Titel** — Regression aus 4c (#29870, auf master): die
 Regel „Nachgeben“ gibt `tl-titlebar__actions` den ganzen Rest, die Toolbar stand darin am Anfang. Fix wie in der AppBar:
