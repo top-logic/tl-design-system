@@ -5023,6 +5023,13 @@ button.tl-swatch:not(:disabled):hover {
 }
 .tl-table[hidden] { display: none; }
 
+/* Eine füllende Tabelle behält Kopf, drei Zeilen und Fuß (#29922): kürzer zeigt sie nichts Brauchbares. Ist die
+   begrenzte Region, in der sie steht (Dialogkörper, scrollender Panelkörper), dafür zu klein, scrollt die Region,
+   statt dass die Tabelle auf 0 px zusammenfällt. */
+.tl-table.tl-fill {
+  min-height: calc(var(--tl-size-bar) + 3 * var(--tl-size-row) + var(--tl-size-control));
+}
+
 /* --- Filterleiste ---------------------------------------------------------------- */
 
 /* Benannte Filter als entfernbare Kapseln (tl-chip-group), die Suche über die angezeigten Spalten und
@@ -6231,4 +6238,4 @@ button.tl-swatch:not(:disabled):hover {
 .tl-wizard[data-tl-state~="backward"] .tl-wizard__step[data-tl-state~="exiting"]:dir(rtl) {
   animation-name: tl-slide-out-forward;
 }
-/* tl-design-system sha256:bcc969085a2effc895ca970c621c79af7852146afd8ac0371f7301702518f41d — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */
+/* tl-design-system sha256:b28240892bcfc031cdc88fa9df5df48bd4b815d6f02ef848d959f52dd6ec002d — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */
