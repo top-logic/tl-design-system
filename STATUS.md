@@ -264,6 +264,15 @@ Reviewer `bhu` und `jenkins`; Trac #29875/#29904/#29906/#29914 kommentiert. Jenk
 veralteten lokalen Doclet erzeugt (Akronym „PowerPoint“, #29854) → zurückgenommen (`e9e151664a`), gepusht 21.10.,
 `jenkins` neu angefragt; `bhu` erst, wenn Jenkins grün ist (Hendrik). Build 250 davor: CI-Änderung #29919, nicht wir. **Weiter:** Jenkins und Bernhards Review;
 nach jedem Push `bhu` neu anfragen, `jenkins` erst am Ende.
+**21.10. — !1939 nicht mergebar** (`needs-manual-intervention`): master ist 61 Commits weiter. Zwei master-Regeln stehen
+nur in Engine-Dateien, die 5d löscht bzw. neu publiziert, und sind jetzt im Paket (`main`, nicht gepusht):
+`.tl-table.tl-fill` Mindesthöhe Kopf + 3 Zeilen + Fuß (#29922, `5aedb4c`; master hatte `.tl-table.tlFill` in
+`tlReactControls.css`) und `.tl-text { white-space: pre-line }` (#29886, `39243b8`; Bernhard schrieb sie direkt in die
+versiegelte Kopie). Paket 647/1 — rot ist nur `published.test` bis zur Kopie im Worktree. Probe-Merge von master in 5d
+(abgebrochen) zeigte Konflikte: `tlReactControls.css` (ändern/löschen → löschen), Kopie `components.css` (neu
+publizieren), Wysiwyg (`TLWysiwygEditor.tsx/.css`, `WysiwygToolbar.tsx`, `tl-react-wysiwyg.css`, `pom.xml`,
+`package-lock.json` — #29860 Quellansicht, Schema-fremdes Markup), `TLHtml.tsx`, `TLTableView.tsx` (#29920, #29860).
+**Weiter:** master in 5d mergen (Hendriks Go), Kopie publizieren, Gates, Push mit Freigabe.
 
 **#29918 (20.10., accepted, CC bhu): Panel-Toolbar klebte am Titel** — Regression aus 4c (#29870, auf master): die
 Regel „Nachgeben“ gibt `tl-titlebar__actions` den ganzen Rest, die Toolbar stand darin am Anfang. Fix wie in der AppBar:
