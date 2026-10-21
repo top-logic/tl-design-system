@@ -260,7 +260,9 @@ generierte `messages_en` von `com.top_logic` (`e3021adea9`). Gates danach: Paket
 1517 (en), wysiwyg 43, chartjs 10, codeedit 12, model.search.react 35, react.flow.server 76, demo.react 13, MUI-Vitest
 823, `tsc` 0, Messages ohne Diff. Branches 5a, 5b, 5c, 5d in Reihenfolge gepusht (Hook: je Branch nur eigene
 Tickets neu), **PR [!1939](https://git.top-logic.com/TopLogic/tl-engine-7/pulls/1939)** vom 5d-Branch gegen master,
-Reviewer `bhu` und `jenkins`; Trac #29875/#29904/#29906/#29914 kommentiert. **Weiter:** Jenkins und Bernhards Review;
+Reviewer `bhu` und `jenkins`; Trac #29875/#29904/#29906/#29914 kommentiert. Jenkins 278 rot: `messages_en` von `com.top_logic` aus einem
+veralteten lokalen Doclet erzeugt (Akronym „PowerPoint“, #29854) → zurückgenommen (`e9e151664a`), gepusht 21.10.,
+`jenkins` neu angefragt; `bhu` erst, wenn Jenkins grün ist (Hendrik). Build 250 davor: CI-Änderung #29919, nicht wir. **Weiter:** Jenkins und Bernhards Review;
 nach jedem Push `bhu` neu anfragen, `jenkins` erst am Ende.
 
 **#29918 (20.10., accepted, CC bhu): Panel-Toolbar klebte am Titel** — Regression aus 4c (#29870, auf master): die
