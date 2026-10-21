@@ -20,7 +20,10 @@ test('tl-tree: Knoten bricht nicht um und endet nicht mit Ellipse, der Baum roll
   const baum = declarationsOf(css, '.tl-tree') ?? '';
   assert.match(baum, /(^|[;\s])overflow:\s*auto/);
   assert.doesNotMatch(baum, /overflow-y/);
-  assert.match(declarationsOf(css, '.tl-tree__node') ?? '', /min-width:\s*max-content/);
+  assert.match(baum, /display:\s*grid/);
+  assert.match(baum, /grid-template-columns:\s*minmax\(max-content,\s*100%\)/);
+  assert.match(baum, /align-content:\s*start/);
+  assert.doesNotMatch(declarationsOf(css, '.tl-tree__node') ?? '', /min-width/);
   const inhalt = declarationsOf(css, '.tl-tree__content') ?? '';
   assert.match(inhalt, /white-space:\s*nowrap/);
   assert.doesNotMatch(inhalt, /text-overflow|overflow|min-width/);

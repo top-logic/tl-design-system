@@ -6101,9 +6101,19 @@ button.tl-swatch:not(:disabled):hover {
    Knoten, dessen Kinder kommen, trägt aria-busy; unter ihm steht eine tl-status-Zeile mit unbestimmtem
    tl-progress — selbst ein treeitem eine Ebene tiefer, benannt „Lädt“ (js.tree.loading). Ein Knoten
    bricht nicht um und endet nicht mit Ellipse: ist er breiter als der Baum, rollt der Baum waagerecht.
-   Ziehen und Ablegen zeichnet drag.css. */
+   Der Baum ist ein Raster aus einer Spalte, so breit wie der breiteste Knoten, mindestens aber so breit
+   wie sichtbar; jeder Knoten und die Ladezeile füllen sie, so reichen Fläche beim Zeigen und Auswählen
+   und die Ablagemarken über die ganze gerollte Breite. Die Spalte ist minmax(max-content, 100%), nicht
+   umgekehrt: eine Spur wächst über ihr Minimum nur in freien Platz, und ein Rollkasten hat keinen —
+   minmax(100%, max-content) bliebe bei 100 %. So ist max-content das Minimum; liegt 100 % darunter, zählt
+   als Maximum das Minimum, und ein schmalerer Inhalt wächst bis 100 % in die sichtbare Breite.
+   align-content: start hält die Zeilen oben, wenn der Baum kürzer ist als sein Kasten. Ziehen und
+   Ablegen zeichnet drag.css. */
 
 .tl-tree {
+  display: grid;
+  grid-template-columns: minmax(max-content, 100%);
+  align-content: start;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -6113,12 +6123,9 @@ button.tl-swatch:not(:disabled):hover {
   color: var(--tl-text-primary);
 }
 
-/* Mindestens so breit wie sein Inhalt: Fläche beim Zeigen und Auswählen und die Ablagemarken reichen
-   über die ganze gerollte Breite, nicht nur über den sichtbaren Teil. */
 .tl-tree__node {
   position: relative;
   display: flex;
-  min-width: max-content;
   align-items: center;
   gap: var(--tl-space-2xs);
   min-height: var(--tl-size-row);
@@ -6290,4 +6297,4 @@ button.tl-swatch:not(:disabled):hover {
 .tl-wizard[data-tl-state~="backward"] .tl-wizard__step[data-tl-state~="exiting"]:dir(rtl) {
   animation-name: tl-slide-out-forward;
 }
-/* tl-design-system sha256:1bedba9dfcb3376e09c0d387cdd2b7ccfa938d56c308533da4a51e534aba1ff0 — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */
+/* tl-design-system sha256:a9781f29b2c27b165c896c5a7df03ef779d04b1a83d02f04bedb98c3932487db — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */

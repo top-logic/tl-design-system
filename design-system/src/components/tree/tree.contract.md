@@ -76,8 +76,11 @@ Ein `aria-activedescendant` auf eine Id, die es nicht gibt, ließe den Fokus uns
 Schrift: `.tl-type-body` am Baum, von außen gesetzt. Ein Knoten schwebt nicht: kein Schatten, kein
 Balken links. Ein Knoten bricht nicht um und endet nicht mit Ellipse: `tl-tree__content` steht auf einer
 Zeile (`white-space: nowrap`, auch für einen `tl-text` darin, dessen `pre-line` aus `text.css` sonst
-umbräche), der Knoten ist mindestens so breit wie sein Inhalt, und ist er breiter als der Baum, rollt
-`tl-tree` waagerecht (`overflow: auto`). Fläche und Ablagemarken reichen dann über die ganze Breite. Ziehen und Ablegen zeichnet `drag.css` (`drag.contract.md`), den Cursor-Ring `base.css`.
+umbräche); ist ein Knoten breiter als der Baum, rollt `tl-tree` waagerecht (`overflow: auto`). `tl-tree`
+ist ein Raster aus einer Spalte (`grid-template-columns: minmax(max-content, 100%)`): so breit wie der
+breiteste Knoten, mindestens aber so breit wie sichtbar. Jeder Knoten und die Ladezeile füllen diese
+Spalte, Fläche und Ablagemarken reichen so über die ganze gerollte Breite; `align-content: start` hält
+die Zeilen oben. Ziehen und Ablegen zeichnet `drag.css` (`drag.contract.md`), den Cursor-Ring `base.css`.
 
 ## Attribute
 

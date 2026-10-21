@@ -6,9 +6,19 @@
    Knoten, dessen Kinder kommen, trägt aria-busy; unter ihm steht eine tl-status-Zeile mit unbestimmtem
    tl-progress — selbst ein treeitem eine Ebene tiefer, benannt „Lädt“ (js.tree.loading). Ein Knoten
    bricht nicht um und endet nicht mit Ellipse: ist er breiter als der Baum, rollt der Baum waagerecht.
-   Ziehen und Ablegen zeichnet drag.css. */
+   Der Baum ist ein Raster aus einer Spalte, so breit wie der breiteste Knoten, mindestens aber so breit
+   wie sichtbar; jeder Knoten und die Ladezeile füllen sie, so reichen Fläche beim Zeigen und Auswählen
+   und die Ablagemarken über die ganze gerollte Breite. Die Spalte ist minmax(max-content, 100%), nicht
+   umgekehrt: eine Spur wächst über ihr Minimum nur in freien Platz, und ein Rollkasten hat keinen —
+   minmax(100%, max-content) bliebe bei 100 %. So ist max-content das Minimum; liegt 100 % darunter, zählt
+   als Maximum das Minimum, und ein schmalerer Inhalt wächst bis 100 % in die sichtbare Breite.
+   align-content: start hält die Zeilen oben, wenn der Baum kürzer ist als sein Kasten. Ziehen und
+   Ablegen zeichnet drag.css. */
 
 .tl-tree {
+  display: grid;
+  grid-template-columns: minmax(max-content, 100%);
+  align-content: start;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -18,12 +28,9 @@
   color: var(--tl-text-primary);
 }
 
-/* Mindestens so breit wie sein Inhalt: Fläche beim Zeigen und Auswählen und die Ablagemarken reichen
-   über die ganze gerollte Breite, nicht nur über den sichtbaren Teil. */
 .tl-tree__node {
   position: relative;
   display: flex;
-  min-width: max-content;
   align-items: center;
   gap: var(--tl-space-2xs);
   min-height: var(--tl-size-row);
