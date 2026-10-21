@@ -290,6 +290,10 @@ mergebar. **Weiter:** Jenkins abwarten, dann `bhu` (Hendrik: erst bei grünem Bu
 Datei-Chips, löscht `FileListControl`, neue Regeln in `tlReactControls.css` — Doppelarbeit mit 5b), !1947 (#29924
 tl-ai, `requires="tl-react-controls-css"`, alte Tokens), !1895/!1926 (Textkonflikte `user-menu.view.xml`,
 `ReactChartJsControl`), !1953 (tiptap-Lockfile). Dann einmal master mergen, Fremdregeln ins Paket, pushen, `jenkins`.
+**21.10. abends:** Bernhard hat master (bis !1954) selbst in 5d gemergt und gepusht (`5bd6dcd395`, Kommentar 162412) —
+ohne den Test-Fix; Jenkins 341 rot nur an `TestFileListUpload`. Lokal: sein Head + Fix `aed57009bd`, unser Merge
+verworfen (`backup/5d-vor-bhu-merge-21-10`). Gates grün: layout.react 775, layout.view 1573, wysiwyg 55, chartjs 10,
+codeedit 18, model.search.react 35, react.flow.server 76, demo.react 13, MUI 823, Paket 648/0, Messages ohne Diff.
 
 **#29918 (20.10., accepted, CC bhu): Panel-Toolbar klebte am Titel** — Regression aus 4c (#29870, auf master): die
 Regel „Nachgeben“ gibt `tl-titlebar__actions` den ganzen Rest, die Toolbar stand darin am Anfang. Fix wie in der AppBar:
