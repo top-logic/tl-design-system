@@ -286,7 +286,10 @@ mergebar. **Weiter:** Jenkins abwarten, dann `bhu` (Hendrik: erst bei grünem Bu
 `TestFileListUpload` (5b) wechselte in `setUp` den Benutzer — seit #29798 im Systemkontext unzulässig. Fix `4fb4946ae9`:
 `initialUser()` = `_responsible`, Formular im Testkörper. Gates: `rebuild-stale.sh` grün, layout.react 774, layout.view
 1540/0, wysiwyg 55, chartjs 10, codeedit 18, model.search.react 35, react.flow.server 76, demo.react 13, MUI 823, Paket
-648/0, Messages ohne Diff. **Nicht gepusht.** Weiter: Push mit Freigabe, `jenkins` neu, Antwort an Bernhard.
+648/0, Messages ohne Diff. **Nicht gepusht — bewusst (Hendrik 21.10.):** erst warten, bis die überschneidenden PRs durch sind: !1891 (#29852
+Datei-Chips, löscht `FileListControl`, neue Regeln in `tlReactControls.css` — Doppelarbeit mit 5b), !1947 (#29924
+tl-ai, `requires="tl-react-controls-css"`, alte Tokens), !1895/!1926 (Textkonflikte `user-menu.view.xml`,
+`ReactChartJsControl`), !1953 (tiptap-Lockfile). Dann einmal master mergen, Fremdregeln ins Paket, pushen, `jenkins`.
 
 **#29918 (20.10., accepted, CC bhu): Panel-Toolbar klebte am Titel** — Regression aus 4c (#29870, auf master): die
 Regel „Nachgeben“ gibt `tl-titlebar__actions` den ganzen Rest, die Toolbar stand darin am Anfang. Fix wie in der AppBar:
