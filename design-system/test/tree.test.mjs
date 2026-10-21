@@ -15,6 +15,21 @@ test('tl-tree: Knoten size-row, positioniert für den Cursor-Ring, Auswahl als F
   assert.deepEqual(colorVarsOf(css), ['surface-interactive-hover', 'surface-interactive-selected', 'text-primary']);
 });
 
+test('tl-tree: Knoten bricht nicht um und endet nicht mit Ellipse, der Baum rollt waagerecht', () => {
+  const css = readGenerated('tree', 'tree.css');
+  const baum = declarationsOf(css, '.tl-tree') ?? '';
+  assert.match(baum, /(^|[;\s])overflow:\s*auto/);
+  assert.doesNotMatch(baum, /overflow-y/);
+  assert.match(baum, /display:\s*grid/);
+  assert.match(baum, /grid-template-columns:\s*minmax\(max-content,\s*100%\)/);
+  assert.match(baum, /align-content:\s*start/);
+  assert.doesNotMatch(declarationsOf(css, '.tl-tree__node') ?? '', /min-width/);
+  const inhalt = declarationsOf(css, '.tl-tree__content') ?? '';
+  assert.match(inhalt, /white-space:\s*nowrap/);
+  assert.doesNotMatch(inhalt, /text-overflow|overflow|min-width/);
+  assert.match(declarationsOf(css, '.tl-tree__content > .tl-text') ?? '', /white-space:\s*nowrap/);
+});
+
 test('tl-tree: Vertrag nennt Cursor ohne Knoten (aria-activedescendant nur mit Knoten) und die Ladezeile als treeitem', () => {
   const md = readComponent('tree', 'tree.contract.md');
   assert.deepEqual(missingInContract(md, ['tl-tree', 'tl-tree__node', 'tl-tree__spacer', 'tl-tree__content', 'aria-activedescendant', 'aria-busy', 'js.tree.loading', 'js.tree.label']), []);

@@ -4,16 +4,18 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { readGenerated, declarationsOf } from './lib/component.mjs';
 
-test('tl-text: Ton als data-tl-tone, ohne Ton erbt der Text; Ellipse ist --truncate; leer nimmt keinen Platz', () => {
+test('tl-text: Ton als data-tl-tone, ohne Ton erbt der Text; Ellipse ist --truncate; leer nimmt keinen Platz; Zeilenumbrüche bleiben', () => {
   const css = readGenerated('text', 'text.css');
   const TOENE = { secondary: 'text-secondary', helper: 'text-helper', placeholder: 'text-placeholder',
     success: 'status-success-text', warning: 'status-warning-text', error: 'status-error-text', 'on-brand': 'text-on-brand' };
   for (const [ton, rolle] of Object.entries(TOENE))
     assert.match(declarationsOf(css, `.tl-text[data-tl-tone="${ton}"]`) ?? '', new RegExp(`color:\\s*var\\(--tl-${rolle}\\)`), ton);
   assert.doesNotMatch(declarationsOf(css, '.tl-text') ?? '', /color/, 'ohne Ton keine Farbregel: der Text erbt');
-  // master #29886: ein \n vom Server ist ein Umbruch; --truncate bleibt einzeilig.
+  // #29886: der Text behält die Zeilenumbrüche seines Werts; --truncate bleibt einzeilig und steht dahinter,
+  // damit es bei gleicher Spezifität gewinnt.
   assert.match(declarationsOf(css, '.tl-text') ?? '', /white-space:\s*pre-line/);
   assert.match(declarationsOf(css, '.tl-text--truncate') ?? '', /white-space:\s*nowrap/);
+  assert.ok(css.search(/^\.tl-text\s*\{/m) < css.search(/^\.tl-text--truncate\s*\{/m), '.tl-text vor .tl-text--truncate');
   assert.doesNotMatch(css, /accent|font-style|font-weight/);
   assert.match(declarationsOf(css, '.tl-text--truncate') ?? '', /text-overflow:\s*ellipsis/);
   // master #29752: ein Text ohne Wert nimmt keinen Platz, einer mit Rolle (Live-Bereich) bleibt.

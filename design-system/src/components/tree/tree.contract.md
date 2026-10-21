@@ -74,7 +74,13 @@ Ein `aria-activedescendant` auf eine Id, die es nicht gibt, ließe den Fokus uns
 | Stapel | `tl-tree` isoliert (`isolation: isolate`); Ring und Marke eines Knotens liegen auf `--tl-layer-sticky` |
 
 Schrift: `.tl-type-body` am Baum, von außen gesetzt. Ein Knoten schwebt nicht: kein Schatten, kein
-Balken links. Ziehen und Ablegen zeichnet `drag.css` (`drag.contract.md`), den Cursor-Ring `base.css`.
+Balken links. Ein Knoten bricht nicht um und endet nicht mit Ellipse: `tl-tree__content` steht auf einer
+Zeile (`white-space: nowrap`, auch für einen `tl-text` darin, dessen `pre-line` aus `text.css` sonst
+umbräche); ist ein Knoten breiter als der Baum, rollt `tl-tree` waagerecht (`overflow: auto`). `tl-tree`
+ist ein Raster aus einer Spalte (`grid-template-columns: minmax(max-content, 100%)`): so breit wie der
+breiteste Knoten, mindestens aber so breit wie sichtbar. Jeder Knoten und die Ladezeile füllen diese
+Spalte, Fläche und Ablagemarken reichen so über die ganze gerollte Breite; `align-content: start` hält
+die Zeilen oben. Ziehen und Ablegen zeichnet `drag.css` (`drag.contract.md`), den Cursor-Ring `base.css`.
 
 ## Attribute
 
@@ -105,4 +111,4 @@ Klassen:
 | `tl-tree` | die Wurzel (`ul`) |
 | `tl-tree__node` | ein Knoten (`li`) |
 | `tl-tree__spacer` | hält den Platz des Toggles an einem Blatt frei |
-| `tl-tree__content` | der Inhalt des Knotens, endet mit Ellipse |
+| `tl-tree__content` | der Inhalt des Knotens, auf einer Zeile und ungekürzt; ein `tl-text` darin bleibt ebenso auf seiner Zeile |

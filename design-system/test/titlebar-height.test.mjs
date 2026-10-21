@@ -13,8 +13,12 @@ before(async () => {
   browser = await launch();
 });
 after(async () => {
-  await browser?.close();
-  await new Promise((resolve) => (server ? server.close(resolve) : resolve()));
+  // Der Server schließt auch, wenn der Browser beim Beenden scheitert; offen hielte er den Prozess am Leben.
+  try {
+    await browser?.close();
+  } finally {
+    await new Promise((resolve) => (server ? server.close(resolve) : resolve()));
+  }
 });
 
 const HOEHEN = (density) => `(() => {

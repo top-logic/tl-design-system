@@ -11,7 +11,7 @@ Zugänglichkeit, nicht das Aussehen; wer ins Bild passen will, liest die Tokens.
 | `text` | string | Der Wert. Ein leerer Wert nimmt keinen Platz (siehe unten). |
 | `variant` | `display` \| `headline` \| `title` \| `body` \| `label` \| `caption` | Wird zur Typo-Klasse: `display` → `tl-type-display`, `headline` → `tl-type-heading-lg`, `title` → `tl-type-heading-sm`, `body` → `tl-type-body`, `label` → `tl-type-label`, `caption` → `tl-type-label`. |
 | `tone` | `primary` \| `secondary` \| `helper` \| `placeholder` \| `success` \| `warning` \| `error` \| `on-color` | `primary` setzt kein Attribut, der Text erbt. `on-color` wird `data-tl-tone="on-brand"`. Alle anderen werden `data-tl-tone` mit ihrem Namen. `accent` gibt es nicht (02.10.). Platzhalter ist ein Ton, keine Kursive: die Typo kennt keinen Schriftstil. |
-| `overflow` | `ellipsis` | Wird zur Klasse `tl-text--truncate`: eine Zeile, die mit Ellipse endet. Ohne Wert bricht der Text um. |
+| `overflow` | `ellipsis` | Wird zur Klasse `tl-text--truncate`: eine Zeile, die mit Ellipse endet. Ohne Wert bricht der Text um und behält die Zeilenumbrüche seines Werts. |
 | `appearance` | `pill` | Oder eine Farbrolle: der Text wird als Pill gezeichnet. |
 
 Als Pill (`appearance: pill` oder eine Farbrolle) ist `span.tl-pill` **selbst die Wurzel**, mit
@@ -23,6 +23,10 @@ bleibt ohne `data-tl-role` (neutral: die Pill ohne Attribut ist neutral, siehe `
 Stark ist die `-strong`-Klasse der Variante als `css-class`: `tl-type-body-strong` oder `tl-type-label-strong`. Überschriften sind schon fett genug und brauchen keine. Die Varianten-Klasse bleibt daneben stehen: `base.css` stellt jede `-strong`-Klasse hinter ihre Grundklasse, bei gleicher Spezifität gewinnt sie (Test `text.test.mjs`). So macht die Tabelle ihre Gruppenzeile stark: der Server gibt dem Text jeder Zelle der Gruppenzeile `tl-type-body-strong` (`table.contract.md`).
 
 Ein Text ohne Wert (`text` leer) nimmt keinen Platz, außer er trägt `role` (Live-Bereich); master #29752.
+
+Ein Text behält die Zeilenumbrüche seines Werts (`white-space: pre-line`): ein `\n` ist ein Umbruch,
+Folgen von Leerzeichen fallen zusammen, und der Text bricht an der verfügbaren Breite um. Mit Ellipse
+(`--truncate`) und in der Tabellenzelle bleibt er einzeilig (#29886).
 
 Abgeschnittener Text (`--truncate`) zeigt seinen vollen Text als Tooltip über den Tooltip-Host, ohne
 Deklaration (master #29752).
