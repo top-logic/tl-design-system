@@ -273,7 +273,13 @@ master-Stände standen in Dateien, die 5d löscht oder neu zeichnet, und sind je
 `tl-layout-configedit` rein; Lockfile von 5d; TLHtml/TLTableView beide Seiten), Kopie `288fa0e87f`, Bundle `2247a1d5d4`.
 Gates: Paket 648/0, layout.react 774, layout.view 1540 (en), wysiwyg 55, chartjs 10, codeedit 18, model.search.react 35,
 react.flow.server 76, demo.react 13, MUI-Vitest 823, `tsc` ohne neuen Fehler, Messages ohne Diff. Offen klein: Tests
-erzeugen `_core_theme.css` untracked in wysiwyg und codeedit (dort fehlt die `.gitignore`-Zeile).
+erzeugen `_core_theme.css` untracked — `.gitignore` in wysiwyg und codeedit ergänzt (`966b471b8d`).
+Sichtprüfung lokal (tl-demo-react, 21.10.): Konfigurationseditor — „Inhalt mit Quelltext“ hat den Umschalter, „Inhalt“
+nicht; Quellansicht zeigt nur den Umschalter (`aria-pressed`), Textarea mit Label und Monospace, unzulässiges HTML als
+Feldfehler (roter Rahmen, Meldung); leeres Inline-Element und gemischter Block erscheinen als `tl-rich-text__markup`,
+Auswahl mit Fokusring, hell und dunkel lesbar. Constraint-Test „Neu“: Dialog scrollt bis zur Tabelle „Einträge“
+(180 px, Kopf/Körper/Fuß). Meilenstein-Löschen: Bestätigung dreizeilig. Vorher nötig: `rebuild-stale.sh` (veraltete
+Jars im Worktree-Repo, `NoSuchMethodError` in `tl-contact`).
 **Weiter:** Push 5d und Paket `main` mit Hendriks Freigabe, danach `jenkins` neu anfragen.
 
 **#29918 (20.10., accepted, CC bhu): Panel-Toolbar klebte am Titel** — Regression aus 4c (#29870, auf master): die
