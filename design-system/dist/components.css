@@ -6122,6 +6122,7 @@ button.tl-swatch:not(:disabled):hover {
   list-style: none;
   color: var(--tl-text-primary);
 }
+.tl-tree[hidden] { display: none; }
 
 .tl-tree__node {
   position: relative;
@@ -6297,4 +6298,4 @@ button.tl-swatch:not(:disabled):hover {
 .tl-wizard[data-tl-state~="backward"] .tl-wizard__step[data-tl-state~="exiting"]:dir(rtl) {
   animation-name: tl-slide-out-forward;
 }
-/* tl-design-system sha256:a9781f29b2c27b165c896c5a7df03ef779d04b1a83d02f04bedb98c3932487db — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */
+/* tl-design-system sha256:0d15ba18546dbb503b623b3012de53c126dd3aa72e8dabb35c559b10ceee4297 — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */

@@ -27,6 +27,7 @@
   list-style: none;
   color: var(--tl-text-primary);
 }
+.tl-tree[hidden] { display: none; }
 
 .tl-tree__node {
   position: relative;

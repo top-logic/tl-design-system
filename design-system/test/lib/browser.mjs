@@ -24,7 +24,9 @@ export function findChrome() {
 export async function launch() {
   const profile = mkdtempSync(join(tmpdir(), 'tl-chrome-'));
   const proc = spawn(findChrome(), ['--headless=new', '--remote-debugging-port=0', `--user-data-dir=${profile}`,
-    '--no-first-run', '--no-default-browser-check', 'about:blank'], { stdio: 'ignore' });
+    '--no-first-run', '--no-default-browser-check', 'about:blank'],
+    // Eigene Prozessgruppe: close() wartet auf sie, nicht nur auf den Hauptprozess.
+    { stdio: 'ignore', detached: process.platform !== 'win32' });
   // Chrome schreibt Port und Pfad des Browser-Sockets in DevToolsActivePort, sobald er lauscht.
   const portFile = join(profile, 'DevToolsActivePort');
   let endpoint;
@@ -80,7 +82,15 @@ export async function launch() {
       ws.close();
       proc.kill();
       await new Promise((resolve) => (proc.exitCode !== null ? resolve() : proc.once('exit', resolve)));
-      rmSync(profile, { recursive: true, force: true });
+      // Chromes Hilfsprozesse überleben den Hauptprozess um einige hundert Millisekunden und schreiben dabei
+      // noch ins Profil; ein Löschen, das darauf trifft, scheitert mit ENOTEMPTY. Sie bilden mit ihm eine
+      // Prozessgruppe: warten, bis sie leer ist, zuletzt abbrechen; das Löschen wiederholt, was noch auftritt.
+      if (process.platform !== 'win32') {
+        const alive = () => { try { process.kill(-proc.pid, 0); return true; } catch { return false; } };
+        for (let i = 0; i < 100 && alive(); i++) await sleep(50);
+        if (alive()) { try { process.kill(-proc.pid, 'SIGKILL'); } catch { /* schon weg */ } }
+      }
+      rmSync(profile, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
     },
   };
 }
