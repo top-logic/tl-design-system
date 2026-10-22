@@ -45,12 +45,9 @@ function rgbZuHex({ r, g, b }) {
   return `#${zweistellig(r)}${zweistellig(g)}${zweistellig(b)}`;
 }
 
-// Ottossons OKLab-Matrizen (linear sRGB → LMS → OKLab und zurück).
-function rgbZuOklab({ r, g, b }) {
-  const lr = srgbKanalZuLinear(r);
-  const lg = srgbKanalZuLinear(g);
-  const lb = srgbKanalZuLinear(b);
-
+/** Lineares sRGB [r, g, b] (je 0–1) zu OKLab {L,a,b} — Ottossons Matrizen (linear sRGB → LMS → OKLab).
+ *  Ohne Rundung auf 8 Bit, damit auch gerechnete Zwischenwerte (Farbsehschwäche) exakt bleiben. */
+export function linearRgbZuOklab([lr, lg, lb]) {
   const l = 0.4122214708 * lr + 0.5363325363 * lg + 0.0514459929 * lb;
   const m = 0.2119034982 * lr + 0.6806995451 * lg + 0.1073969566 * lb;
   const s = 0.0883024619 * lr + 0.2817188376 * lg + 0.6299787005 * lb;
@@ -64,6 +61,12 @@ function rgbZuOklab({ r, g, b }) {
     a: 1.9779984951 * l_ - 2.4285922050 * m_ + 0.4505937099 * s_,
     b: 0.0259040371 * l_ + 0.7827717662 * m_ - 0.8086757660 * s_,
   };
+}
+
+/** Hexwert zu linearem sRGB [r, g, b], je 0–1. */
+export function hexZuLinearRgb(hex) {
+  const { r, g, b } = hexZuRgb(hex);
+  return [srgbKanalZuLinear(r), srgbKanalZuLinear(g), srgbKanalZuLinear(b)];
 }
 
 /** OKLab {L,a,b} → lineares sRGB {lr,lg,lb}, UNBEGRENZT — kann außerhalb von 0…1 liegen. Reine
@@ -99,7 +102,7 @@ function oklchZuOklab({ L, C, H }) {
 
 /** Hexwert zu OKLCH. */
 export function hexZuOklch(hex) {
-  return oklabZuOklch(rgbZuOklab(hexZuRgb(hex)));
+  return oklabZuOklch(linearRgbZuOklab(hexZuLinearRgb(hex)));
 }
 
 /**
