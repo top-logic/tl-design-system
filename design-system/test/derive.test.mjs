@@ -423,11 +423,23 @@ test('ein gelieferter Grund ohne zulässige Stufe: Hinweis, Marke bis 3:1 nachge
   // Beide Gründe auf mittlerem Grau: im hellen Modus trägt kein Ton des Bands 3:1.
   const r = derive(P, T, { theme: 'mittelgrau', color: { gray: { '0': '#8A8A8A', '1': '#8A8A8A' } } });
   const C = r.ergebnis.color.light;
-  assert.ok(r.hinweise.some((h) => /^light: category-\d-mark erreicht keine zulässige Stufe; gewählt ist die Stufe mit dem höchsten Kontrast$/.test(h)), r.hinweise.join('\n'));
+  const ohne = r.hinweise.filter((h) => h.includes('keine zulässige Stufe'));
+  assert.equal(ohne.length, 1, r.hinweise.join('\n'));
+  assert.equal(ohne[0], `light: ${REIHEN.map((k) => `category-${k}-mark`).join(', ')} erreichen auf diesem Grund keine zulässige Stufe`);
+  assert.ok(!ohne[0].includes('gewählt'), 'der Hinweis behauptet keinen Wert');
   assert.ok(r.hinweise.some((h) => /^light: category-\d-mark in der Helligkeit nachgeführt/.test(h)), 'Schritt 5 meldet die Nachführung');
   // derive führt die Marke nach, sie ist nicht geliefert: also entsteht kein Befund an ihr.
   for (const k of REIHEN) for (const g of ['surface-base', 'surface-layer']) {
     assert.ok(ratio(C[`category-${k}-mark`], C[g]) >= 3, `category-${k}-mark auf ${g}`);
   }
   assert.ok(!r.befunde.some((b) => b.fg.endsWith('-mark')), 'kein Befund an einer Diagrammmarke');
+});
+
+test('eine gelieferte Marke ohne zulässige Stufe wird nicht als gewählt gemeldet', () => {
+  // Grauer Grund, dazu category-1-mark über die gelieferte Stufe blue-56: die Marke ist die des Kunden.
+  const r = derive(P, T, { theme: 'geliefert', color: { gray: { '0': '#8A8A8A', '1': '#8A8A8A' }, brand: { '49': '#1060C0', '56': '#2070D0', '44': '#0050A0' } } });
+  assert.ok(r.hinweise.some((h) => h.startsWith('light: category-1-mark bleibt bei der gelieferten Stufe blue-56')), r.hinweise.join('\n'));
+  for (const h of r.hinweise.filter((x) => x.includes('keine zulässige Stufe'))) {
+    assert.ok(!/category-1-mark/.test(h), h);
+  }
 });

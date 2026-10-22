@@ -194,8 +194,13 @@ export function derive(P, T, json, quelle = 'input') {
     // mit dem höchsten Kontrast, und Schritt 5 führt die Marke bis 3:1 nach. Der Abstand der Reihen wird
     // deshalb erst am fertigen Ergebnis geprüft (Schritt 5b), nicht an der Suche.
     if (eineGeschrieben) {
-      for (const { nummer, modus } of reihen.ohneStufe) {
-        hinweise.push(`${modus}: category-${nummer}-mark erreicht keine zulässige Stufe; gewählt ist die Stufe mit dem höchsten Kontrast`);
+      // Ein Hinweis je Modus, ohne einen Wert zu behaupten: Schritt 5 kann die Marke noch nachführen
+      // und nennt dann den Wert, der in der Datei steht. Genannt wird nur, was derive geschrieben hat —
+      // eine gelieferte Marke ist die Wahl des Kunden.
+      for (const mode of MODES) {
+        const betroffen = reihen.ohneStufe.filter(({ modus, nummer }) => modus === mode && geschrieben.has(`${mode}:category-${nummer}-mark`))
+          .map(({ nummer }) => `category-${nummer}-mark`);
+        if (betroffen.length) hinweise.push(`${mode}: ${betroffen.join(', ')} ${betroffen.length === 1 ? 'erreicht' : 'erreichen'} auf diesem Grund keine zulässige Stufe`);
       }
       reihenGerechnet = true;
     }
