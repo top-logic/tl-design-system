@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { DIAGRAMM, diagrammPaare, pruefeReihen, zulaessigeStufen, diagrammReihen, groessterSprung } from '../tools/lib/diagramm.mjs';
 import { ratio } from '../tools/lib/contrast.mjs';
-import { hexZuOklch } from '../tools/lib/color.mjs';
+import { hexZuOklch, oklchZuHex } from '../tools/lib/color.mjs';
 
 test('Paarliste: Nachbarn und der Ring', () => {
   assert.deepEqual(diagrammPaare(2), [[0, 1]]);
@@ -133,4 +133,33 @@ test('das gemerkte Ergebnis lässt sich vom Aufrufer nicht verändern', () => {
 test('nicht genau acht Töne oder eine Nummer außerhalb 1–8 werfen', () => {
   assert.throws(() => diagrammReihen({ ...TL, toene: TL.toene.slice(1) }), /8/);
   assert.throws(() => diagrammReihen({ ...TL, toene: TL.toene.slice(1), fest: { 9: 56 } }), /1–8/);
+});
+
+test('der Lauf ohne Sprunggrenze zählt nur, wenn er den Abstand echt erhöht', () => {
+  // Drei gelieferte Kategorien mit demselben Ton: keine Belegung hält die Schwellen. Mit und
+  // ohne Grenze erreicht die Suche denselben Abstand 0,6796; ohne Grenze springt eine Reihe um
+  // 0,636, mit Grenze höchstens um 0,167. Der kleine Sprung muss bleiben.
+  const e = { ...TL, toene: [123, 186, 285, 311, 337], fest: { 1: 238, 2: 238, 3: 238 } };
+  const r = diagrammReihen(e);
+  assert.ok(r.abstand < 1, String(r.abstand));
+  assert.deepEqual(r.toene.slice(0, 3), [238, 238, 238]);
+  assert.ok(groessterSprung(r, e) <= 0.5, String(groessterSprung(r, e)));
+});
+
+test('ein Ton ohne zulässige Stufe bricht nicht ab: Ersatz mit dem höchsten Kontrast, gemeldet', () => {
+  const gruende = { light: ['#E0E0E0', '#EEEEEE'], dark: TL.gruende.dark };
+  const e = { ...TL, toene: [2, 56, 123, 200, 238, 285, 311, 337], gruende };
+  assert.deepEqual(zulaessigeStufen(200, 0.15, 'light', gruende.light), []);
+  const r = diagrammReihen(e);
+  const k = r.toene.indexOf(200);
+  assert.deepEqual(r.ohneStufe, [{ nummer: k + 1, modus: 'light' }]);
+  // Ersatz: von allen Stufen des Bands (Raster 0,02, gleiche Chroma) die mit dem höchsten
+  // Kontrast gegen den schwächeren Grund.
+  const schwaecher = (hex) => Math.min(...gruende.light.map((g) => ratio(hex, g)));
+  const band = [];
+  for (let h = 43; h <= 77; h += 2) band.push(oklchZuHex({ L: h / 100, C: 0.15, H: (200 * Math.PI) / 180 }).hex);
+  assert.equal(schwaecher(r.light[k]), Math.max(...band.map(schwaecher)));
+  // Eine einzelne Stufe hat die Lage 0; Sprungmaß und Vorauswahl kommen damit zurecht.
+  assert.ok(groessterSprung(r, e) <= 0.5);
+  assert.deepEqual(diagrammReihen(TL).ohneStufe, []);
 });

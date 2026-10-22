@@ -75,6 +75,13 @@ export function pruefeReihen(farben) {
  * 0,10 beträgt, abzüglich der Rundungstoleranz.
  */
 export function zulaessigeStufen(tonGrad, chroma, modus, gruende) {
+  return rasterStufen(tonGrad, chroma, modus).filter(({ hex }) =>
+    hexZuOklch(hex).C >= DIAGRAMM.CHROMA_MIN - C_TOLERANZ
+    && gruende.every((g) => ratio(hex, g) >= DIAGRAMM.KONTRAST));
+}
+
+/** Alle Stufen des Bands auf dem Raster, aufsteigend, noch ohne Kontrast- und Chromafilter. */
+function rasterStufen(tonGrad, chroma, modus) {
   const [unten, oben] = DIAGRAMM.BAND[modus];
   const H = (tonGrad * Math.PI) / 180;
   const vonH = Math.round(unten * 100);
@@ -82,10 +89,7 @@ export function zulaessigeStufen(tonGrad, chroma, modus, gruende) {
   const stufen = [];
   for (let h = vonH; h <= bisH; h += L_RASTER_HUNDERTSTEL) {
     const L = h / 100;
-    const { hex } = oklchZuHex({ L, C: chroma, H });
-    if (hexZuOklch(hex).C < DIAGRAMM.CHROMA_MIN - C_TOLERANZ) continue;
-    if (gruende.some((g) => ratio(hex, g) < DIAGRAMM.KONTRAST)) continue;
-    stufen.push({ L, hex });
+    stufen.push({ L, hex: oklchZuHex({ L, C: chroma, H }).hex });
   }
   return stufen;
 }
@@ -151,17 +155,23 @@ function lageJeStufe(stufen) {
  */
 const sprung = ([p, q], [r, s]) => Math.abs(p * s - r * q) / (q * s);
 
-/** Stufen beider Modi für einen Ton; wirft, wenn ein Modus keine trägt. */
-function stufenBeiderModi(ton, chroma, gruende) {
-  const stufen = {};
-  for (const m of MODI) {
-    stufen[m] = zulaessigeStufen(ton, chroma, m, gruende[m]);
-    if (stufen[m].length === 0) {
-      throw new Error(`Ton ${ton}° trägt im Modus ${m} keine Stufe mit Kontrast ${DIAGRAMM.KONTRAST}:1 `
-        + `auf ${gruende[m].join(', ')} und Chroma ${DIAGRAMM.CHROMA_MIN}`);
-    }
+/**
+ * Die Stufen eines Tons in einem Modus, für Suche und Sprungmaß gleich.
+ *
+ * Trägt der Ton keine zulässige Stufe (nur bei ungewöhnlichen Gründen möglich), bricht nichts ab:
+ * Ersatz ist die eine Stufe des Bands (gleiche Chroma, Raster 0,02), die gegen den schwächeren
+ * Grund den höchsten Kontrast hat; bei Gleichstand die dunklere. `ersatz` meldet das. Eine
+ * einzelne Stufe hat die Lage 0 (`lageJeStufe`).
+ */
+function stufenMitErsatz(ton, chroma, modus, gruende) {
+  const stufen = zulaessigeStufen(ton, chroma, modus, gruende);
+  if (stufen.length > 0) return { stufen, ersatz: false };
+  let beste = null, besterKontrast = -Infinity;
+  for (const stufe of rasterStufen(ton, chroma, modus)) {
+    const kontrast = Math.min(...gruende.map((g) => ratio(stufe.hex, g)));
+    if (kontrast > besterKontrast) { beste = stufe; besterKontrast = kontrast; }
   }
-  return stufen;
+  return { stufen: [beste], ersatz: true };
 }
 
 /** OKLab einer Farbe bei normalem Sehen, protan und deutan — derselbe Weg wie `deltaE`. */
@@ -411,7 +421,12 @@ function rechneReihen({ frei, fest, marke, gruende }) {
   // Tonpaars (u, v) im Modus m ist paare[m][u·U + v], Zeile = Stufe von u, Spalte = Stufe von v.
   const grade = [...new Set([...belegtGrad.filter((t) => t !== null), ...restGrad])].sort((a, b) => a - b);
   const U = grade.length;
-  const daten = { stufen: grade.map((t) => stufenBeiderModi(t, chroma, gruende)), paare: {}, paarMax: {} };
+  const daten = { stufen: [], ersatz: [], paare: {}, paarMax: {} };
+  for (const t of grade) {
+    const je = Object.fromEntries(MODI.map((m) => [m, stufenMitErsatz(t, chroma, m, gruende[m])]));
+    daten.stufen.push({ light: je.light.stufen, dark: je.dark.stufen });
+    daten.ersatz.push({ light: je.light.ersatz, dark: je.dark.ersatz });
+  }
   for (const m of MODI) {
     const lab = daten.stufen.map((s) => s[m].map(({ hex }) => labDreifach(hex)));
     const paare = new Array(U * U), max = new Float64Array(U * U);
@@ -440,9 +455,13 @@ function rechneReihen({ frei, fest, marke, gruende }) {
   const index = (t) => grade.indexOf(t);
   const belegt = belegtGrad.map((t) => (t === null ? -1 : index(t)));
   const rest = restGrad.map(index);
-  // Erst mit der Sprunggrenze; hält das die Schwellen nicht, ohne sie (Global Constraints).
+  // Erst mit der Sprunggrenze. Hält das die Schwellen nicht, ein zweiter Lauf ohne sie; sein
+  // Ergebnis zählt nur, wenn es echt besser ist. Bei gleichem Abstand bleibt der kleine Sprung.
   let beste = durchsuche(belegt, rest, daten, SPRUNG_MAX);
-  if (beste.wert < 1) beste = durchsuche(belegt, rest, daten, Infinity);
+  if (beste.wert < 1) {
+    const ohneGrenze = durchsuche(belegt, rest, daten, Infinity);
+    if (ohneGrenze.wert > beste.wert) beste = ohneGrenze;
+  }
 
   const reihe = beste.reihe.map((u) => grade[u]);
   const farben = {};
@@ -454,12 +473,17 @@ function rechneReihen({ frei, fest, marke, gruende }) {
   }
   const je = { light: pruefeReihen(farben.light), dark: pruefeReihen(farben.dark) };
   const modus = je.dark.abstand < je.light.abstand ? 'dark' : 'light';
+  const ohneStufe = [];
+  beste.reihe.forEach((u, j) => {
+    for (const m of MODI) if (daten.ersatz[u][m]) ohneStufe.push({ nummer: j + 1, modus: m });
+  });
   return {
     toene: reihe,
     light: farben.light,
     dark: farben.dark,
     abstand: je[modus].abstand,
     schwaechstes: { modus, ...je[modus].schwaechstes },
+    ohneStufe,
   };
 }
 
@@ -476,15 +500,19 @@ const GEMERKT = new Map();
  * Rückgabe in der Reihenfolge der Kategorien 1–8: `toene` (Grad), `light` und `dark` (Hex).
  * `abstand` und `schwaechstes` sind die des Prüfers über beide Modi (`schwaechstes.modus` nennt
  * den Modus; bei Gleichstand hell); `abstand ≥ 1` heißt: alle Schwellen erfüllt.
+ * `ohneStufe` listet `{ nummer, modus }` (Nummer 1–8 in dieser Reihenfolge) für jede Reihe, deren
+ * Ton in dem Modus keine zulässige Stufe trägt; leer, wenn es keine gibt. Für sie gilt die eine
+ * Stufe des Bands mit dem höchsten Kontrast gegen den schwächeren Grund (gleiche Chroma, Raster
+ * 0,02), auch wenn sie 3:1 oder Chroma 0,10 verfehlt; der Rest der Suche bleibt gleich.
  *
  * Reihe 1 ist der freie Ton nächst der Marke (bei unbunter Marke der kleinste), es sei denn,
  * Kategorie 1 ist geliefert. Chroma: `clamp(C der Marke, 0,10, 0,15)`, unbunt 0,10. Je Ton gelten
  * nur Stufenpaare mit normiertem Helligkeitssprung ≤ 0,5; hält das `abstand ≥ 1` nicht, rechnet
- * die Suche ohne diese Grenze erneut und nimmt deren (nie schlechteres) Ergebnis.
+ * die Suche ohne diese Grenze erneut und nimmt deren Ergebnis nur, wenn es echt besser ist.
  *
  * Deterministisch und unabhängig von der Reihenfolge der Eingabetöne; das Ergebnis wird je
  * Eingabe gemerkt, jeder Aufruf bekommt eine eigene Kopie. Wirft, wenn es nicht genau acht Töne
- * sind, eine Nummer außerhalb 1–8 liegt oder ein Ton in einem Modus keine zulässige Stufe hat.
+ * sind oder eine Nummer außerhalb 1–8 liegt.
  */
 export function diagrammReihen(eingabe) {
   const normiert = normiereEingabe(eingabe);
@@ -501,15 +529,16 @@ export function diagrammReihen(eingabe) {
  * Größter normierter Helligkeitssprung einer Reihe zwischen hell und dunkel (Spec §3).
  *
  * Die Stufen jedes Tons rechnet die Funktion aus `eingabe` neu (Marke und Gründe wie bei
- * `diagrammReihen`); je Modus ist die Lage der gewählten Stufe (L − L_min) / (L_max − L_min)
- * über die zulässigen Stufen des Tons, der Sprung der Betrag der Differenz beider Lagen.
+ * `diagrammReihen`, samt Ersatzstufe); je Modus ist die Lage der gewählten Stufe
+ * (L − L_min) / (L_max − L_min) über die Stufen des Tons, 0 bei nur einer, der Sprung der Betrag
+ * der Differenz beider Lagen.
  */
 export function groessterSprung(ergebnis, { marke, gruende }) {
   const { chroma } = markenChroma(marke);
   let groesster = 0;
   ergebnis.toene.forEach((ton, k) => {
     const [hell, dunkel] = MODI.map((m) => {
-      const stufen = zulaessigeStufen(ton, chroma, m, gruende[m]);
+      const { stufen } = stufenMitErsatz(ton, chroma, m, gruende[m]);
       const i = stufen.findIndex(({ hex }) => hex === ergebnis[m][k]);
       if (i < 0) throw new Error(`Reihe ${k + 1}: ${ergebnis[m][k]} ist keine zulässige Stufe von ${ton}° im Modus ${m}`);
       return lageJeStufe(stufen)[i];
