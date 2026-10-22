@@ -12,12 +12,15 @@ garantiert Funktion, Tastatur, Fokus und Ansage, nicht das Aussehen; wer ins Bil
 | `editable` | boolean | bearbeitend: Zeilen mit Entfernen-Knopf, darunter Hinzufügen |
 | `disabled` | boolean | die Knöpfe sind deaktiviert |
 | `ordered` | boolean | die Reihenfolge zählt: jede Zeile hat einen Griff (ab zwei Werten) |
+| `upload` | boolean | die Werte kommen durch Hochladen (#29852): Hinzufügen öffnet die Dateiauswahl (mehrere Dateien, Name `js.valueList.addFiles`), auf die bearbeitende Liste gelegte Dateien werden hochgeladen; der Server fügt je Datei einen Wert an |
+| `accept` | string, optional | bei `upload`: Filter der Dateiauswahl (HTML `accept`) |
 
 ## Aktionen
 
 | Aktion | Auslöser |
 |---|---|
-| `addElement` | der Hinzufügen-Knopf |
+| `addElement` | der Hinzufügen-Knopf, außer bei `upload` |
+| Upload über den Upload-Kanal, Teil `file` (`upload.contract.md`) | bei `upload`: gewählte oder auf die Liste gelegte Dateien |
 | `removeElement` | der Entfernen-Knopf einer Zeile |
 | `moveElement` | Ziehen am Griff; Alt+Pfeil hoch, runter auf dem Griff (`useListReorder`) |
 
@@ -59,6 +62,8 @@ Variante `--block` steht in der Zelle in einer Zeile, mit Trenner (`table.contra
 |---|---|
 | `role="group"` | an der bearbeitenden Liste |
 | `data-tl-state~="dragging"`, `~="drop-before"`, `~="drop-after"` | an der Zeile beim Ziehen (`drag.css`) |
+| `data-tl-state~="dragover"` | an der Wurzel bei `upload`, solange Dateien darüber gezogen werden: dieselbe gestrichelte Linie wie `tl-file-upload` (`upload.css`, eine Regel); ein Wert, der umsortiert wird, ist kein Datei-Ziehen |
+| `aria-busy="true"` | am Hinzufügen-Knopf, solange hochgeladen wird; der Knopf ist dabei `disabled` |
 | `hidden` | verbirgt Liste oder Zeile |
 
 ## Tokens
