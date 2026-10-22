@@ -306,8 +306,10 @@ innen, Specimen in `form.spec.html`; `skalen.md` „Nachgetragen beim master-Mer
 (focus-clip mit dem kompakten Specimen), Lint, `tsc` 0, Vite-Build, MUI 823, layout.react 813, layout.view 1604, flow 76,
 chartjs 10, codeedit 18, wysiwyg 55, model.search.react 35, demo.react 13, Messages ohne Diff. Offline fehlten
 `commons-codec` 1.23.0 und `jakarta.websocket-api` 2.2.0 (Renovate) — einmal lesend geholt.
-**Weiter:** Push erst, wenn !1947 (tl-ai), !1895 und !1926 durch sind (Hendrik 21.10.); dann master erneut mergen,
-pushen (Freigabe nennen: tl-engine-7 `CWS/CWS_29914_design_system_welle_5d`, Paket `main`), `jenkins` anfragen.
+Danach kamen !1895 (#29781) und !1926 (#29872) auf master: zweiter Merge `1bcfdcc877`, **gepusht 22.10.** (`aed57009bd..1bcfdcc877`), Gates wieder grün (Paket 649, layout.react 831, layout.view 1783, chartjs 13, demo.react 84, model.search.react 42, flow 81, wysiwyg 55, codeedit 18, MUI 823, Messages ohne Diff; `model.search` 13 rot nur an Fremd-DBs und Rundung, 5d ändert dort nichts) — nur Textkonflikte: chartjs-Messages
+mit masters Tooltip-JavaDoc und unserem `js.chart.label`; `commands.md` masters `input="progress"`, unsere CSS-Hooks).
+Hendrik 22.10.: pushen und auf !1947 warten. **`bhu` erst anfragen, wenn !1947 (tl-ai) auf master ist** — es verlangt
+`tl-react-controls-css` und liest alte Tokens; !1939 darf nicht vor ihm gemergt werden (wir mergen zuletzt).
 
 **#29918 (20.10., accepted, CC bhu): Panel-Toolbar klebte am Titel** — Regression aus 4c (#29870, auf master): die
 Regel „Nachgeben“ gibt `tl-titlebar__actions` den ganzen Rest, die Toolbar stand darin am Anfang. Fix wie in der AppBar:
