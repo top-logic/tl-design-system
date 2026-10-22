@@ -310,6 +310,13 @@ Danach kamen !1895 (#29781) und !1926 (#29872) auf master: zweiter Merge `1bcfdc
 mit masters Tooltip-JavaDoc und unserem `js.chart.label`; `commands.md` masters `input="progress"`, unsere CSS-Hooks).
 Hendrik 22.10.: pushen und auf !1947 warten. **`bhu` erst anfragen, wenn !1947 (tl-ai) auf master ist** — es verlangt
 `tl-react-controls-css` und liest alte Tokens; !1939 darf nicht vor ihm gemergt werden (wir mergen zuletzt).
+**22.10. abends — !1947 ist auf master, dritter Merge `a3a6156bf3`, gepusht** (`1bcfdcc877..a3a6156bf3`, Hendriks
+Freigabe). Textkonflikte: keine. `tl-chat` und `tl-ai-demo` verlangen jetzt `tl-design-system-components` statt des
+gelöschten `tl-react-controls-css`. Die CSS von tl-chat/tl-ai liest ~690-mal alte Tokens; diese laufen über die Brücke
+`tl-react-theme.config.xml` (V17) weiter. Auf Paket-Tokens umstellen wie V16: offen, eigenes Paket nach #29850.
+Gates: Paket 649/0, Messages ohne Diff (7 Module), tl-chat 453/0, tl-ai-demo 516/0. **Weiter:** `bhu` für !1939 anfragen
+(Bedingung „!1947 auf master“ erfüllt), nur mit Hendriks Freigabe. Geprüft, ohne Folgen: !1966 (#29887 Textvorschläge)
+merget sauber, sein `ListboxPart` nutzt nur Paketklassen (`tl-popover`, `tl-select__*`).
 
 **#29918 (20.10., accepted, CC bhu): Panel-Toolbar klebte am Titel** — Regression aus 4c (#29870, auf master): die
 Regel „Nachgeben“ gibt `tl-titlebar__actions` den ganzen Rest, die Toolbar stand darin am Anfang. Fix wie in der AppBar:
