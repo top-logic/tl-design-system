@@ -19,12 +19,19 @@ Neuladen, und auch im Kundentheme in dessen Farben.
 
 | Teil | Token |
 |---|---|
-| Reihe 1 bis 8 | `--tl-category-1-surface` bis `--tl-category-8-surface`; die neunte Reihe nimmt wieder die erste, die zehnte die zweite |
+| Reihe 1 bis 8 | `--tl-category-1-mark` bis `--tl-category-8-mark`; die neunte Reihe nimmt wieder die erste, die zehnte die zweite |
+| Füllung von Balken und Segmenten | die Farbe der Reihe, deckend (kein Deckkraft-Suffix) |
+| Punkte (Linie, Streuung, Radar) | `pointBackgroundColor` in der Farbe der Reihe, deckend |
+| Fläche unter einer Linie oder einem Radar, wenn der Server `fill` einschaltet | die Farbe der Reihe mit 20 % Deckkraft |
+| Fuge zwischen den Segmenten von Ring, Torte und Polar | `--tl-surface-layer` als `borderColor` |
 | Gitter und Achsenlinien (auch die Speichen und Ringe eines Radars) | `--tl-border-separator` |
 | Beschriftung, Teilstriche, Achsentitel, Titel, Untertitel und Legende | `--tl-text-secondary` |
 | Hinterlegung der Teilstriche einer Radialachse (Radar, Polar) | `--tl-surface-layer` mit 75 % Deckkraft |
 
-Die Werte sind `#RRGGBB`; Deckkraft hängt das Control als Hex-Suffix an. Eine Reihe, deren Farbe der Server in der
+Die Werte sind `#RRGGBB`; Deckkraft hängt das Control als Hex-Suffix an, nur wo die Tabelle sie nennt.
+Die Reihenfarben sind gerechnet, nicht gewählt: `category-N-mark` hat gegen `--tl-surface-base` und `--tl-surface-layer`
+mindestens 3:1, und Nachbarn in der Reihenfolge sind unterscheidbar; die Reihenfolge ist in Hell und Dunkel dieselbe. Im
+Kundentheme rechnet `derive` sie aus Hausfarbe und Grauwahl neu. Eine Reihe, deren Farbe der Server in der
 Konfiguration mitgibt, behält sie, ebenso jede Farbe an einer Achse oder einem Plugin; nur was fehlt, kommt aus dem Theme.
 Die Farben stehen in der Konfiguration dieses einen Diagramms, nie in den globalen Voreinstellungen von Chart.js: mehrere
 Diagramme in verschiedenen Themes teilen sich eine Seite. Gefärbt werden nur die Achsen, die Chart.js für die Konfiguration
@@ -79,6 +86,8 @@ Fläche, Rand, Schatten und Innenabstand des Tooltips kommen von `tl-popover`; `
 
 Ein Diagramm besteht den Vertrag, wenn die Wurzel `tl-chart` trägt, das Canvas `role="img"` mit Namen hat, leer
 `role="status"` und Fehler `role="alert"` als `tl-status`-Zeile sagen, der Tooltip `tl-popover` `tl-chart__tooltip` trägt,
-die Reihen ihre Farben aus `--tl-category-N-surface` nehmen (die neunte wieder aus der ersten), Gitter und Beschriftung aus
+die Reihen ihre Farben aus `--tl-category-N-mark` nehmen (die neunte wieder aus der ersten), Flächen von Balken und
+Segmenten und Punkte deckend füllen, die Fläche unter Linie oder Radar (bei `fill`) mit 20 % Deckkraft, zwischen den
+Segmenten von Ring, Torte und Polar eine Fuge in `--tl-surface-layer` stehen lassen, Gitter und Beschriftung aus
 `--tl-border-separator` und `--tl-text-secondary`, nach einem Wechsel von `data-tl-mode` oder `data-tl-theme` neu gelesen
 werden und im Klassen-Gate keine Klasse ohne `tl-`-Präfix bleibt.

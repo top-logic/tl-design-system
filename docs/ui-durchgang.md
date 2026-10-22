@@ -33,6 +33,8 @@ Neue Einträge: Datum, Welle, woher (Sichtprüfung, Hendrik, Review), Quelle in 
 | U16 | **`tl-toolbar--wrap` lässt den Trenner am Zeilenende stehen**, wenn die Leiste umbricht | Task 3 5d, 20.10. | `toolbar.css` |
 | U17 | **Überschrift-Auslöser nennt die gültige Ebene nicht** mehr im Tooltip (vor 5d schon) | Review 5d Task 9, 20.10. | `WysiwygToolbar.tsx` |
 | U18 | **Code- und Script-Editor:** CodeMirrors `defaultHighlightStyle` ist eine Fremdpalette, im Dunkelmodus etwa 2:1 — Syntaxfarben aus Rollen; Nur-Lese-Editor trägt bis dahin den Feldrahmen, eine eigene Lese-Form fehlt (z. B. wie `tl-prose pre`, ohne Leerraum unter kurzem Inhalt); Doc-Popups könnten `tl-type-*` tragen statt Schriftgrößen zu lesen | Review 5d Task 11, 20.10. | `tlCodeEditor.css`, `tlScriptEditor.css` |
+| U20 | **Mengenskala aus der Marke:** ein Ton hell → dunkel für Heatmaps und Stufen; heute braucht sie kein Diagramm (Chart.js ohne Heatmap-Plugin) | Spec Diagrammfarben, 22.10. | `docs/superpowers/specs/2026-10-22-diagrammfarben-design.md` |
+| U21 | **Hervorheben:** alle Reihen grau, eine in Farbe (NN/g „Highlighter“); braucht eine Aussage des Servers, welche Reihe zählt | Spec Diagrammfarben, 22.10. | `docs/superpowers/specs/2026-10-22-diagrammfarben-design.md` |
 
 ## Bewegung
 

@@ -19,7 +19,7 @@ const SOLL = {
     'tl-reveal-on-hover', 'tl-field', 'data-tl-state~="edit"', 'tl-select__controls', 'ReactCompactFieldControl'],
   // Task 10 (Spec 5d §8; Plan-Review K12, Ruling R3).
   'chart/chart.contract.md': ['tl-chart', 'tl-chart__tooltip', 'tl-chart__zoom-reset', 'tl-popover', 'tl-status',
-    'role="status"', 'role="alert"', 'role="img"', '--tl-category-1-surface', '--tl-category-8-surface',
+    'role="status"', 'role="alert"', 'role="img"', '--tl-category-1-mark', '--tl-category-8-mark',
     '--tl-border-separator', '--tl-text-secondary', '--tl-layer-sticky', '--tl-layer-raised', 'data-tl-mode',
     'data-tl-theme', 'TLChart'],
   'menu/menu.contract.md': ['menuitemradio', 'aria-checked', 'ButtonDefaults', 'radio'],
