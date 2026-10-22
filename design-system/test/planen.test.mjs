@@ -19,8 +19,9 @@ const blockVon = (selektor) => {
 };
 
 test('kategorie: gefüllte Fläche je Kategorie in beiden Modi', () => {
-  // Die heutigen dunklen -border-Stufen: weiße Schrift hält dort 5,3–5,4:1 (Spec 5c §4).
-  const soll = ['{red-46}', '{amber-47}', '{green-48}', '{teal-48}', '{blue-48}', '{blue-46}', '{magenta-46}', '{magenta-47}'];
+  // Die dunklen -border-Stufen, nach der Rechnung der Diagrammfarben nummeriert (Töne 238°, 186°, 2°, 285°, 56°,
+  // 311°, 123°, 337°): weiße Schrift hält dort 5,3–5,4:1 (Spec 5c §4).
+  const soll = ['{blue-48}', '{teal-48}', '{red-46}', '{blue-46}', '{amber-47}', '{magenta-46}', '{green-48}', '{magenta-47}'];
   for (const m of MODES) for (const k of KATEGORIEN)
     assert.equal(T.color[m][`category-${k}-surface`], soll[k - 1], `${m}: category-${k}-surface`);
 });

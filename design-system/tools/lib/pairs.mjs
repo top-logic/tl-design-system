@@ -91,6 +91,8 @@ export function kontrastPaare(T) {
   for (const k of KATEGORIEN) {
     paar('text-primary', `category-${k}-subtle`, 4.5);
     for (const bg of ['surface-base', 'surface-layer']) paar(`category-${k}-border`, bg, 3.0);
+    // Diagrammmarke (Spec Diagrammfarben §2): nicht-textliche Grafik, 3:1 auf Grund und Layer.
+    for (const bg of ['surface-base', 'surface-layer']) paar(`category-${k}-mark`, bg, 3.0);
   }
   // Tooltip: Text auf der inversen Fläche (Welle 5d).
   paar('text-inverse', 'surface-inverse', 4.5);

@@ -149,9 +149,9 @@ test('ein Hinweis behauptet keine Korrektur, die der Kunde überschrieben hat', 
 });
 
 test('eine gelieferte Stufe unter einer Kategorie bleibt nicht lautlos', () => {
-  // category-5-subtle ist {blue-4}: wer blue-4 liefert, kippt die Kategorie auf den Markenton.
+  // category-1-subtle ist {blue-4} (alte Nummer 5, nach der Rechnung der Diagrammfarben Nummer 1): wer blue-4 liefert, kippt die Kategorie auf den Markenton.
   const r = derive(P, T, { theme: 'a', color: { brand: { 49: '#E8541E', 4: '#FDEDE7' } } });
-  assert.ok(r.hinweise.some((h) => h.includes('category-5-subtle')), r.hinweise.join(' | '));
+  assert.ok(r.hinweise.some((h) => h.includes('category-1-subtle')), r.hinweise.join(' | '));
 });
 
 test('der Kollaps-Hinweis bleibt, wenn die Marke als Stufe 49 kommt — hover und active sind gerechnet', () => {

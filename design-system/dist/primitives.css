@@ -108,6 +108,21 @@
   --tl-teal-73: #002E2A;
   --tl-blue-75: #092A3C;
   --tl-teal-75: #002830;
+  --tl-blue-56: #005C86;
+  --tl-teal-37: #009E93;
+  --tl-red-57: #8C1C49;
+  --tl-blue-37: #8179DF;
+  --tl-amber-57: #7A3D00;
+  --tl-magenta-39: #A066C4;
+  --tl-green-47: #5E7700;
+  --tl-magenta-35: #C768B0;
+  --tl-blue-44: #007DB4;
+  --tl-teal-26: #00C5B7;
+  --tl-red-44: #B8476E;
+  --tl-blue-26: #A29DFF;
+  --tl-amber-46: #A75600;
+  --tl-magenta-28: #C387E9;
+  --tl-magenta-24: #EC8AD4;
   --tl-size-1: 0.25rem;
   --tl-size-2: 0.5rem;
   --tl-size-3: 0.75rem;
@@ -177,4 +192,4 @@
   --tl-veil-5: rgba(27, 29, 33, 0.16);
   --tl-veil-6: rgba(240, 243, 249, 0.13);
 }
-/* tl-design-system sha256:c39c2fbf6fc90b846787ad31831c845aca3d6c76e34f8c9727aca7dfc9cede12 — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */
+/* tl-design-system sha256:661e61fb7756cb5cfb4e3e923ed5806bb6996713c010e95c8ceee049026bdf95 — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */

@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs';
 import { ratio, rgba, ueberlagert } from '../tools/lib/contrast.mjs';
 import { farbtonAbstand, FARBTON_ABSTAND_MIN, hexZuOklch } from '../tools/lib/color.mjs';
 import { resolve } from '../tools/resolve.mjs';
+import { diagrammReihen, pruefeReihen } from '../tools/lib/diagramm.mjs';
 
 const lum = (hex) => hexZuOklch(hex).L;
 
@@ -244,9 +245,9 @@ test('die Fehlerfläche hat eine Rampe wie die Marke: hover und active je Modus,
 });
 
 // Acht Kategorien ohne Bedeutung — für Werte, die sich nur unterscheiden sollen (Projektfarben,
-// Diagrammreihen). Eine Kategorie hat drei Rollen: subtle (die getönte Fläche, Text darauf ist
-// gewöhnlicher Text), border (die Linie) und surface (die gefüllte Fläche der Termine, Beschriftung
-// gerechnet, Spec 5c §4). skalen.md „Pill: Rolle statt Farbe“.
+// Diagrammreihen). Eine Kategorie hat vier Rollen: subtle (die getönte Fläche, Text darauf ist
+// gewöhnlicher Text), border (die Linie), surface (die gefüllte Fläche der Termine, Beschriftung
+// gerechnet, Spec 5c §4) und mark (die Diagrammmarke, gerechnet nach der Reihenfolge der Töne). skalen.md „Pill: Rolle statt Farbe“.
 const KATEGORIEN = [1, 2, 3, 4, 5, 6, 7, 8];
 const BEDEUTUNGS_TINTS = ['surface-brand-subtle', 'status-error-subtle', 'status-warning-subtle',
   'status-success-subtle', 'status-info-subtle'];
@@ -282,11 +283,43 @@ test('Kategorien trennen sich im Farbton voneinander und von jeder Bedeutung', (
   }
 });
 
-test('eine Kategorie hat genau drei Rollen: subtle, border und surface', () => {
+test('eine Kategorie hat genau vier Rollen: subtle, border, surface und mark', () => {
   for (const m of MODES) {
     const rollen = Object.keys(T.color[m]).filter((n) => n.startsWith('category-'));
-    assert.equal(rollen.length, 24, rollen.join(', '));
-    for (const n of rollen) assert.match(n, /^category-[1-8]-(subtle|border|surface)$/, n);
+    assert.equal(rollen.length, 32, rollen.join(', '));
+    for (const n of rollen) assert.match(n, /^category-[1-8]-(subtle|border|surface|mark)$/, n);
+  }
+});
+
+/** Die Eingabe der Rechnung, wie sie für TopLogic gilt: Töne der hellen Linien, Marke, Gründe je Modus. */
+const diagrammEingabe = () => ({
+  toene: KATEGORIEN.map((k) => Math.round(hexZuOklch(R.color.light[`category-${k}-border`]).H * 180 / Math.PI)),
+  marke: R.color.light['surface-brand'],
+  gruende: Object.fromEntries(MODES.map((m) => [m, [R.color[m]['surface-base'], R.color[m]['surface-layer']]])),
+});
+
+test('Diagrammreihen: TopLogic ist das Ergebnis der Rechnung', () => {
+  const eingabe = diagrammEingabe();
+  const r = diagrammReihen(eingabe);
+  // Die Nummerierung ist schon die gerechnete: Kategorie k trägt den Ton, den die Rechnung als k-ten setzt.
+  assert.deepEqual(r.toene, eingabe.toene);
+  assert.deepEqual(r.ohneStufe, []);
+  for (const m of MODES) for (const k of KATEGORIEN)
+    assert.equal(R.color[m][`category-${k}-mark`], r[m][k - 1], `${m}: category-${k}-mark`);
+});
+
+test('Diagrammreihen halten die Schwellen (Kontrast, Abstand, keine Bedeutungsfarbe)', () => {
+  for (const m of MODES) {
+    const C = R.color[m];
+    const marken = KATEGORIEN.map((k) => C[`category-${k}-mark`]);
+    const { abstand, schwaechstes } = pruefeReihen(marken);
+    assert.ok(abstand >= 1, `${m}: abstand = ${abstand.toFixed(3)}, schwächstes ${JSON.stringify(schwaechstes)}`);
+    for (const k of KATEGORIEN) for (const g of ['surface-base', 'surface-layer']) {
+      const b = ratio(C[`category-${k}-mark`], C[g]);
+      assert.ok(b >= 3.0, `${m}: category-${k}-mark auf ${g} = ${b.toFixed(2)}`);
+    }
+    for (const [rolle, hex] of Object.entries(C).filter(([n]) => n.startsWith('status-'))) for (const k of KATEGORIEN)
+      assert.notEqual(C[`category-${k}-mark`], hex, `${m}: category-${k}-mark gleicht ${rolle}`);
   }
 });
 
