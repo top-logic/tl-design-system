@@ -1426,14 +1426,17 @@ stehen zwischen den Bedeutungen: 2°, 56°, 123°, 186°, 238°, 285°, 311°, 3
 
 | Kategorie | Farbton | hell `subtle` / `border` | dunkel `subtle` / `border` |
 |---|---|---|---|
-| 1 | 2° | `red-5` / `red-33` | `red-73` / `red-46` |
-| 2 | 56° | `amber-5` / `amber-35` | `amber-73` / `amber-47` |
-| 3 | 123° | `green-6` / `green-37` | `green-73` / `green-48` |
-| 4 | 186° | `teal-5` / `teal-36` | `teal-73` / `teal-48` |
-| 5 | 238° | `blue-4` / `blue-35` | `blue-75` / `blue-48` |
-| 6 | 285° | `blue-7` / `blue-33` | `blue-73` / `blue-46` |
-| 7 | 311° | `magenta-5` / `magenta-33` | `magenta-73` / `magenta-46` |
+| 1 | 238° | `blue-4` / `blue-35` | `blue-75` / `blue-48` |
+| 2 | 186° | `teal-5` / `teal-36` | `teal-73` / `teal-48` |
+| 3 | 2° | `red-5` / `red-33` | `red-73` / `red-46` |
+| 4 | 285° | `blue-7` / `blue-33` | `blue-73` / `blue-46` |
+| 5 | 56° | `amber-5` / `amber-35` | `amber-73` / `amber-47` |
+| 6 | 311° | `magenta-5` / `magenta-33` | `magenta-73` / `magenta-46` |
+| 7 | 123° | `green-6` / `green-37` | `green-73` / `green-48` |
 | 8 | 337° | `magenta-4` / `magenta-34` | `magenta-74` / `magenta-47` |
+
+Nummeriert seit 22.10. nach der Rechnung der Diagrammreihen (Abschnitt „Diagramme rechnen ihre Reihen“ unter Welle 5d),
+nicht mehr nach dem Farbkreis; dazu kamen `surface` (5c) und `mark` (22.10.).
 
 **Das Gate wird für die Kategorien weicher, und das steht hier.** Dreizehn getönte Flächen
 (Marke, vier Bedeutungen, acht Kategorien) teilen sich 360°; im Mittel bleiben 27,7°, die 30° der
@@ -2685,7 +2688,7 @@ gehen wieder), Menüs `tl-menu` mit **`menuitemradio`** (neu im Vertrag), Link-P
 `tl-prose`, Editorteile in `tl-rich-text`. Radix und die Remix-Glyphen fallen. **Verworfen:** nur Tokens tauschen —
 der Editor bliebe anders als der Rest und ohne Fokusring.
 
-**Diagramme lesen die Kategorien (Hendrik).** Reihenfarben aus `category-1..8-surface`, neu gelesen bei Modus- und
+**Diagramme lesen die Kategorien (Hendrik; abgelöst 22.10. durch „Diagramme rechnen ihre Reihen“).** Reihenfarben aus `category-1..8-surface`, neu gelesen bei Modus- und
 Themewechsel; Gitter und Beschriftung aus Rollen. Die Hex-Palette in Java fällt, aus zehn Farben werden acht.
 **Verworfen:** eigener Strang später — Diagramme blieben im Dunkelmodus unlesbar.
 
@@ -2749,6 +2752,39 @@ Datei-Chips und der hochladenden Werteliste in `tlReactControls.css`, die 5d lö
 - **Ein Upload-Hook:** Chips und Werteliste laden über `useUpload` hoch (5b), auch die neue Hochladen-Variante der
   Werteliste; master hatte je Control einen eigenen `uploading`-Zustand. `TestFileListUpload` (5b) fällt mit
   `FileListControl`, `TestReactFileChipsControl` deckt Grenze und Fehler.
+
+**Diagramme rechnen ihre Reihen (22.10., Hendrik — Spec `2026-10-22-diagrammfarben-design.md`).** Löst „Diagramme
+lesen die Kategorien“ oben ab. Anlass: Bernhards Freigabe von !1939 mit „die Farben … sind aber kein Gewinn“. Die
+Reihen lasen `category-N-surface`, die Termin-Füllungen für weiße Schrift: alle auf L 0,52–0,54, Nachbarn bei
+Rot-Grün-Schwäche ΔE 2,4 (Ziel 8), 5/6 und 7/8 im selben Ton, die Nummern in Kreisreihenfolge. Wieder das Muster „ein
+Token, zwei Aufgaben“.
+- **Ein Satz Töne für alles (Hendrik).** Die acht Kategorietöne bleiben die einzige Quelle; Kalender, Pill, Avatar und
+  Diagramm tragen je Nummer denselben Ton, nur die Stufe unterscheidet sich je Aufgabe.
+- **Vierte Rolle `category-N-mark` je Modus:** die Datenmarke (Balken, Linie, Punkt, Segment). Hält 3:1 auf
+  `surface-base` und `surface-layer`, Nachbarn bei Rot-Grün-Schwäche (Machado 2009) ΔE ≥ 8 und bei normalem Sehen ≥ 15
+  (OKLab × 100), Reihe 1 auch gegen jede ab 3 (der Ring schließt sich), Chroma 0,10–0,15 nach der Marke („gedeckt statt
+  grell“, NN/g). Der Prüfer ist ein Gate (`tools/lib/cvd.mjs`, `tools/lib/diagramm.mjs`).
+- **Gerechnet, nie gewählt:** `diagrammReihen` sucht Reihenfolge und Helligkeit beider Modi zugleich, deterministisch,
+  und maximiert den kleinsten Abstand zur Schwelle; eine Vorauswahl hält den Helligkeitssprung einer Reihe zwischen hell
+  und dunkel klein (≤ 0,5 des zulässigen Bereichs), nur ohne Lösung fällt sie weg. Dieselbe Funktion liefert unsere
+  Werte (ein Test hält `tokens.json` gleich ihrem Ergebnis) und läuft in `derive`. TopLogic: Abstand 1,34, Reihenfolge
+  238°, 186°, 2°, 285°, 56°, 311°, 123°, 337°.
+- **Die Kategorien sind nach der Rechnung nummeriert:** Kategorie N ist Reihe N. Neu ← alt: 1 ← 5, 2 ← 4, 3 ← 1, 4 ← 6,
+  5 ← 2, 6 ← 7, 7 ← 3, 8 ← 8. Reihe 1 ist der Ton neben der Marke, nie die Marke selbst (sie heißt „klickbar,
+  ausgewählt“); bei einer unbunten Marke der kleinste Ton. Gelieferte Kategorien behalten ihre Nummer.
+- **Was das Diagramm malt, ist geprüft:** Flächen und Punkte deckend, Fuge zwischen Segmenten in `surface-layer`; nur
+  die Fläche unter einer Linie oder einem Radar (`fill`) bleibt bei 20 %, die Identität trägt dort die Linie.
+- **Kundenthemes:** Findet `derive` für eine Marke keine Palette über den Schwellen, ist das ein Hinweis mit dem
+  schwächsten Paar, kein Abbruch (die Ursache ist die gelieferte Farbe); geprüft wird am fertigen Ergebnis, nach dem
+  Nachführen. Hat ein Ton auf dem Grund eines Kundengraus keine zulässige Stufe, nimmt die Suche die mit dem höchsten
+  Kontrast, `derive` führt nach und nennt die Kategorien in einem Hinweis je Modus. Über alle Markentöne in 5°-Schritten
+  entsteht mit TopLogic-Grau kein Hinweis.
+- **Absehbar:** `category-1-mark` und `-4-mark` hängen an `blue-*`, der Familie der Marke; liefert ein Kunde Markenstufen
+  mit denselben Namen, bleiben sie geliefert, und `derive` meldet es — wie bei `category-1-subtle`.
+- **Verworfen:** die Termin-Füllung weiter lesen (eine Aufgabe zu viel); eine fremde Palette (Tableau auf master: auf
+  Weiß Gelb 1,6:1, keine TopLogic-Werte); die Marke als Reihe 1; eine harte Regel „gleiche Hälfte in beiden Modi“ (die
+  gewählte Richtung hätte sie selbst verletzt); neue Tonleitern Orange und Violett (die Prüfung besteht ohne sie).
+- **Später** (`ui-durchgang.md` U20, U21): Mengenskala aus der Marke, Hervorheben (alles grau, eine Reihe farbig).
 
 ### Die Kopie in der Engine ist versiegelt (16.10.)
 
