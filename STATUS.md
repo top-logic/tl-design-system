@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-21 (master in 5d gemergt und gepusht, #29922/#29886/#29860 im Paket; Jenkins läuft) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-22 (master bis !1962 lokal in 5d gemergt, !1891-Regeln im Paket; nicht gepusht) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -296,6 +296,18 @@ verworfen (`backup/5d-vor-bhu-merge-21-10`). Gates grün: layout.react 775, layo
 codeedit 18, model.search.react 35, react.flow.server 76, demo.react 13, MUI 823, Paket 648/0, Messages ohne Diff.
 Jenkins 341 (sein Stand) UNSTABLE nur an `TestFileListUpload` (2/2937). **Fix gepusht 21.10.** (`5bd6dcd395..aed57009bd`),
 `jenkins` neu angefragt, Antwort an Bernhard (Kommentar 162470). **Weiter:** Jenkins grün → `bhu` anfragen.
+**22.10. — master (bis !1962) in 5d gemergt, lokal, nicht gepusht.** Anlass: Kommentar 162609 (Bernhards Claude) zu
+fünf Konflikten nach !1891 (#29852 Datei-Chips) und !1958 (#29933); nicht beantwortet (wir mergen zuletzt). Engine
+`f09ea0ce16`: `tlReactControls.css` bleibt gelöscht, `FileListControl` und `TestFileListUpload` fallen (Grenze und Fehler
+deckt master mit `TestReactFileChipsControl`), TLFileChips/TLValueList mit masters `accept`/`compact`/Hochladen auf
+`useUpload`, Kopie neu publiziert. Paket `b15b5c2` (Branch `claude/feedback-mit-konflikten-421f15`, nicht in `main`):
+Drop-Linie auch an `tl-value-list`, kompakt `tl-chip-group[data-tl-state~="compact"]` mit `tl-chip-group__chips`, Ringe
+innen, Specimen in `form.spec.html`; `skalen.md` „Nachgetragen beim master-Merge (22.10.)“. Gates grün: Paket 649/0
+(focus-clip mit dem kompakten Specimen), Lint, `tsc` 0, Vite-Build, MUI 823, layout.react 813, layout.view 1604, flow 76,
+chartjs 10, codeedit 18, wysiwyg 55, model.search.react 35, demo.react 13, Messages ohne Diff. Offline fehlten
+`commons-codec` 1.23.0 und `jakarta.websocket-api` 2.2.0 (Renovate) — einmal lesend geholt.
+**Weiter:** Push erst, wenn !1947 (tl-ai), !1895 und !1926 durch sind (Hendrik 21.10.); dann master erneut mergen,
+pushen (Freigabe nennen: tl-engine-7 `CWS/CWS_29914_design_system_welle_5d`, Paket `main`), `jenkins` anfragen.
 
 **#29918 (20.10., accepted, CC bhu): Panel-Toolbar klebte am Titel** — Regression aus 4c (#29870, auf master): die
 Regel „Nachgeben“ gibt `tl-titlebar__actions` den ganzen Rest, die Toolbar stand darin am Anfang. Fix wie in der AppBar:

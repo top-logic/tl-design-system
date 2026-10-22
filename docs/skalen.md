@@ -2737,6 +2737,19 @@ zeichnet. Sie ziehen ins Paket, statt verloren zu gehen:
   der Rahmen. Markup ohne Schema steht als Quelltext `tl-rich-text__markup` im Text, leise, gestrichelt umrandet:
   auswählen und löschen ja, formatieren nein. Die Remix-Glyphen bleiben draußen.
 
+**Nachgetragen beim master-Merge (22.10.), Datei-Chips aus !1891 (#29852):** master schrieb die neuen Regeln der
+Datei-Chips und der hochladenden Werteliste in `tlReactControls.css`, die 5d löscht.
+- **Eine Drop-Linie für alle Drop-Zonen:** die hochladende Werteliste (`upload` im Zustand) trägt `dragover` als
+  Zustandswort und kommt in die eine Regel von `tl-file-upload` und `tl-chip-group`, statt eine vierte Fassung zu
+  bekommen.
+- **Kompakt ist ein Zustand der Chip-Gruppe:** `data-tl-state~="compact"` (Feldzustand `compact`, Tabellenzelle), keine
+  Klasse `--compact`. Eine Zeile; die Chips rollen seitwärts in der Hülle `tl-chip-group__chips`, die sonst
+  `display: contents` ist; der Knopf bleibt außerhalb am Ende. Weil Reihe und Zelle schneiden, liegen die Ringe innen,
+  wie beim Compact field. Der Fehler unter den Chips war schon Paket (5b) und bleibt es.
+- **Ein Upload-Hook:** Chips und Werteliste laden über `useUpload` hoch (5b), auch die neue Hochladen-Variante der
+  Werteliste; master hatte je Control einen eigenen `uploading`-Zustand. `TestFileListUpload` (5b) fällt mit
+  `FileListControl`, `TestReactFileChipsControl` deckt Grenze und Fehler.
+
 ### Die Kopie in der Engine ist versiegelt (16.10.)
 
 **Befund:** Zweimal wurde die Kopie des Pakets in tl-engine-7 von Hand geändert — #29787 (sechs Stellen) und #29859
