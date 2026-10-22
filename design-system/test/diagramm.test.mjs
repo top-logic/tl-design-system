@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { DIAGRAMM, diagrammPaare, pruefeReihen, zulaessigeStufen } from '../tools/lib/diagramm.mjs';
+import { DIAGRAMM, diagrammPaare, pruefeReihen, zulaessigeStufen, diagrammReihen, groessterSprung } from '../tools/lib/diagramm.mjs';
 import { ratio } from '../tools/lib/contrast.mjs';
 import { hexZuOklch } from '../tools/lib/color.mjs';
 
@@ -63,4 +63,74 @@ test('zulässige Stufen: keine Stufe unter Chroma 0,10 abzüglich Toleranz', () 
   for (const { hex } of alle) assert.ok(hexZuOklch(hex).C >= DIAGRAMM.CHROMA_MIN - 2e-3, hex);
   // Mit Chroma-Wunsch 0,05 ist jede Stufe zu blass: nichts bleibt übrig.
   assert.deepEqual(zulaessigeStufen(238, 0.05, 'light', ['#FAFAFA', '#FFFFFF']), []);
+});
+
+// --- Die Suche: Reihenfolge und Helligkeit je Modus ---
+
+const TL = { toene: [2, 56, 123, 186, 238, 285, 311, 337], marke: '#0B5ED7',
+  gruende: { light: ['#FAFAFA', '#FFFFFF'], dark: ['#16181B', '#1D2023'] } };
+test('TopLogic: alle Schwellen erfüllt, Reihe 1 neben der Marke', () => {
+  const r = diagrammReihen(TL);
+  assert.ok(r.abstand >= 1, JSON.stringify(r.schwaechstes));
+  assert.equal(r.toene[0], 238);
+  assert.deepEqual([...r.toene].sort((a, b) => a - b), TL.toene);
+  for (const m of ['light', 'dark']) assert.ok(pruefeReihen(r[m]).abstand >= 1, m);
+});
+test('Probe-Marke (orange): alle Schwellen erfüllt', () => {
+  const r = diagrammReihen({ ...TL, toene: [111, 136, 187, 242, 271, 301, 330, 359], marke: '#E8541E' });
+  assert.ok(r.abstand >= 1, JSON.stringify(r.schwaechstes));
+});
+test('deterministisch, unabhängig von der Reihenfolge der Eingabe', () => {
+  assert.deepEqual(diagrammReihen(TL), diagrammReihen({ ...TL, toene: [...TL.toene].reverse() }));
+});
+test('Chroma zwischen 0,10 und 0,15', () => {
+  for (const hex of [...diagrammReihen(TL).light, ...diagrammReihen(TL).dark]) {
+    const { C } = hexZuOklch(hex);
+    assert.ok(C >= 0.10 - 2e-3 && C <= 0.15 + 2e-3, `${hex} C ${C}`);
+  }
+});
+test('eine unbunte Marke wirft nicht, nimmt Chroma 0,10 und beginnt mit dem kleinsten Ton', () => {
+  const r = diagrammReihen({ ...TL, marke: '#6B6B6B' });
+  assert.equal(r.toene[0], 2);
+  for (const hex of r.light) assert.ok(hexZuOklch(hex).C <= 0.10 + 2e-3);
+});
+test('der Helligkeitssprung je Reihe bleibt bei TopLogic und der Probe-Marke ≤ 0,5', () => {
+  for (const eingabe of [TL, { ...TL, toene: [111, 136, 187, 242, 271, 301, 330, 359], marke: '#E8541E' }])
+    assert.ok(groessterSprung(diagrammReihen(eingabe), eingabe) <= 0.5);
+});
+test('acht gelieferte Kategorien behalten ihre Nummern', () => {
+  const fest = Object.fromEntries(TL.toene.map((t, i) => [i + 1, t]));
+  assert.deepEqual(diagrammReihen({ ...TL, toene: [], fest }).toene, TL.toene);
+});
+test('eine gelieferte Kategorie behält ihre Nummer, die anderen ordnen sich um sie', () => {
+  const r = diagrammReihen({ ...TL, toene: TL.toene.filter((t) => t !== 123), fest: { 4: 123 } });
+  assert.equal(r.toene[3], 123);
+});
+
+test('abstand und schwaechstes sind die des Prüfers, über beide Modi', () => {
+  const r = diagrammReihen(TL);
+  const je = { light: pruefeReihen(r.light), dark: pruefeReihen(r.dark) };
+  assert.equal(r.abstand, Math.min(je.light.abstand, je.dark.abstand));
+  assert.deepEqual(r.schwaechstes, { modus: r.schwaechstes.modus, ...je[r.schwaechstes.modus].schwaechstes });
+  assert.equal(je[r.schwaechstes.modus].abstand, r.abstand);
+  // Jede Marke ist eine zulässige Stufe ihres Tons: Kontrast und Chroma hält die Suche nie verfehlt.
+  r.toene.forEach((ton, k) => {
+    for (const m of ['light', 'dark']) {
+      const stufen = zulaessigeStufen(ton, 0.15, m, TL.gruende[m]).map((s) => s.hex);
+      assert.ok(stufen.includes(r[m][k]), `${m} Reihe ${k + 1}`);
+    }
+  });
+});
+
+test('das gemerkte Ergebnis lässt sich vom Aufrufer nicht verändern', () => {
+  const r = diagrammReihen(TL);
+  const vorher = structuredClone(r);
+  r.light[0] = '#000000';
+  r.toene.reverse();
+  assert.deepEqual(diagrammReihen(TL), vorher);
+});
+
+test('nicht genau acht Töne oder eine Nummer außerhalb 1–8 werfen', () => {
+  assert.throws(() => diagrammReihen({ ...TL, toene: TL.toene.slice(1) }), /8/);
+  assert.throws(() => diagrammReihen({ ...TL, toene: TL.toene.slice(1), fest: { 9: 56 } }), /1–8/);
 });
