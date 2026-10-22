@@ -139,9 +139,11 @@ gehören zum Gate; sie stehen in `tools/lib`, ohne Abhängigkeit.
 
 Unter allen Paletten, die Kontrast und Chroma halten, gewinnt die mit dem größten **kleinsten Abstand zur Schwelle**,
 über beide Modi und alle Paare aus Abschnitt 2: `min(ΔE_Rot-Grün / 8, ΔE_normal / 15)`. Das ist das Ziel, mit dem der
-Prototyp C gefunden hat. Bei Gleichstand (auf zwei Nachkommastellen) gewinnt der kleinere größte Helligkeitssprung
-zwischen den Modi (Abschnitt 3), danach das höhere mittlere Chroma. Reihe 1 ist vorab festgelegt (Abschnitt 4). (Meine
-Entscheidung nach dem Builder-Check.)
+Prototyp C gefunden hat. Den Helligkeitssprung (Abschnitt 3) hält eine Vorauswahl klein: je Ton nur Stufenpaare mit
+normiertem Sprung ≤ 0,5; hält die Suche damit die Schwellen nicht, läuft sie ohne diese Grenze. Bei Gleichstand gilt die
+erste optimale Belegung in Rasterreihenfolge. Reihe 1 ist vorab festgelegt (Abschnitt 4); bei einer unbunten Marke ist es
+der kleinste freie Ton. (Meine Entscheidung nach Builder-Check und Plan-Review: eine zweite lexikographische Auswahl über
+Sprung und Chroma war im Verfahren teuer und nicht prüfbar.)
 
 Die Funktion findet deterministisch womöglich eine andere Palette als C, mit mindestens so viel Abstand. Abgenommen wird
 sie von Hendrik im Specimen hell und dunkel, bevor die Engine sie liest.

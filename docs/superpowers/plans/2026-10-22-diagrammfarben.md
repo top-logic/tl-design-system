@@ -24,10 +24,18 @@ im Modul `com.top_logic.layout.react.mui`).
 - Chroma (§6): `clamp(C der Marke, 0,10, 0,15)`; wo der Farbraum weniger hergibt, sinkt C (wie `oklchZuHex`).
 - Helligkeitsbereiche (aus dem gewählten Prototyp C): hell L ∈ [0,43; 0,77], dunkel L ∈ [0,48; 0,77]; der Kontrast
   beschränkt sie zusätzlich.
-- Ziel der Suche (§11): maximiere `abstand = min über Modi und Paare (ΔE_rotgruen / 8, ΔE_normal / 15)`; Gleichstand auf
-  zwei Nachkommastellen → kleinerer größter Helligkeitssprung (L normiert auf den zulässigen Bereich des Modus, 0 dunkelste,
-  1 hellste zulässige Stufe), dann höheres mittleres Chroma.
-- Reihe 1 (§4): der freie Ton, der der Marke (Grad) am nächsten liegt, es sei denn `category-1` ist geliefert.
+- Ziel der Suche (§11): maximiere `abstand = min über Modi und Paare (ΔE_rotgruen / 8, ΔE_normal / 15)`.
+- Helligkeitssprung (§3, nach dem Plan-Review präzisiert): je Ton werden nur Stufenpaare (hell, dunkel) betrachtet, deren
+  Sprung — L normiert auf die zulässigen Stufen des Tons im Modus, 0 dunkelste, 1 hellste — höchstens 0,5 beträgt. Hält
+  die Suche damit `abstand ≥ 1` nicht, läuft sie ohne diese Grenze erneut. Das ersetzt die Gleichstand-Regel aus §11
+  (zweite lexikographische Auswahl, im Verfahren teuer und ungetestet); bei Gleichstand gilt die erste optimale Belegung in
+  Rasterreihenfolge.
+- Raster der Helligkeit: 0,02 (Plan-Review: 0,01 braucht für TopLogic 2,6 s, 0,03 verliert „acht geliefert“).
+- Reihe 1 (§4): der freie Ton, der der Marke (Grad) am nächsten liegt, es sei denn `category-1` ist geliefert. Bei einer
+  unbunten Marke (C < `UNBUNT_C`) der kleinste freie Ton (deterministisch; frei gewählt kostete ×8 Laufzeit).
+- Rundung: Vergleiche von C gegen 0,10 und 0,15 mit Toleranz 2e-3 (8-Bit-Rundung von `oklchZuHex` bewegt C um bis zu 0,0015).
+- Dateien: Prüfer und Suche in `tools/lib/cvd.mjs` und `tools/lib/diagramm.mjs` statt in `color.mjs` (§5 nennt
+  `color.mjs`; getrennt, weil eigene Aufgabe und eigenes Gate).
 - Deterministisch: gleiche Eingabe → gleiche Ausgabe, unabhängig von der Reihenfolge der Eingabetöne; kein `Math.random`.
 - Keine Werte in `tokens.json`, nur Referenzen; Primitivnamen über `primitiveAbleiten` (`tools/lib/naming.mjs`).
 - Namen öffentlich englisch, kebab-case, Präfix `tl`: Rolle `category-N-mark`, Variable `--tl-category-N-mark`.
@@ -39,12 +47,13 @@ im Modul `com.top_logic.layout.react.mui`).
 
 ## Review Focus
 
-1. **Unbunte Marke** (C < `UNBUNT_C`): ihr Farbton ist Rauschen. Erwartet: Chroma 0,10, Reihe 1 wird von der Suche
-   frei gewählt, keine Ausnahme. → Test in Task 3.
+1. **Unbunte Marke** (C < `UNBUNT_C`): ihr Farbton ist Rauschen. Erwartet: Chroma 0,10, Reihe 1 der kleinste freie
+   Ton, keine Ausnahme. → Test in Task 3.
 2. **Alle acht Kategorien geliefert:** keine freien Töne. Erwartet: Reihenfolge = Nummern der Lieferung, nur die
    Helligkeiten werden gesucht, Ergebnis mit `abstand`. → Test in Task 3.
-3. **Zwei gelieferte Kategorien mit demselben Ton:** keine Palette hält die Schwellen. Erwartet: `derive` schreibt die
-   Datei, Exit 0, ein Hinweis nennt das schwächste Paar; kein Wurf. → Test in Task 5.
+3. **Drei gelieferte Kategorien mit demselben Ton** (zwei trennt die Helligkeit noch, Plan-Review: abstand 1,50; drei
+   nicht: 0,75): keine Palette hält die Schwellen. Erwartet: `derive` schreibt die Datei, Exit 0, ein Hinweis nennt das
+   schwächste Paar; kein Wurf. → Test in Task 5.
 4. **Kundengrau** (Probe: `warm`): die Gründe ändern sich. Erwartet: jede `mark` hält 3,0 gegen die Gründe des Kunden.
    → über die Paarliste (Task 4) und Test in Task 5.
 5. **Eingabetöne in anderer Reihenfolge:** Erwartet: identisches Ergebnis. → Test in Task 3.
@@ -80,9 +89,10 @@ test('ΔE ist symmetrisch und null für gleiche Farben', () => {
 ```
 
 - [ ] **Step 2: Run, expect FAIL** — `cd design-system && node --test test/cvd.test.mjs` → „Cannot find module“.
-- [ ] **Step 3: Implement** mit den Machado-Matrizen (Schwere 1,0) auf linearem sRGB und der OKLab-Umrechnung; die
-  Umrechnung hex → OKLab gibt es schon in `tools/lib/color.mjs` (wiederverwenden, nicht nachbauen; ist sie nicht
-  exportiert, exportieren). Matrizen:
+- [ ] **Step 3: Implement** mit den Machado-Matrizen (Schwere 1,0) auf linearem sRGB, simuliert **linear → OKLab
+  direkt, ohne Rückweg über Hex** (8-Bit-Rundung reißt die Sollwerte: protan 4,60 statt 4,67). Dazu in `color.mjs` die
+  Ottosson-Matrizen aus `rgbZuOklab` als `export function linearRgbZuOklab([r, g, b])` herausziehen und `hexZuOklch`
+  darauf aufbauen (Verhalten unverändert, `color.test.mjs` grün). Matrizen:
   protan `[[0.152286,1.052583,-0.204868],[0.114503,0.786281,0.099216],[-0.003882,-0.048116,1.051998]]`,
   deutan `[[0.367322,0.860646,-0.227968],[0.280085,0.672501,0.047413],[-0.011820,0.042940,0.968881]]`.
 - [ ] **Step 4: Run, expect PASS.**
@@ -102,7 +112,8 @@ test('ΔE ist symmetrisch und null für gleiche Farben', () => {
   - `pruefeReihen(farben: string[]): { abstand: number, schwaechstes: { art: 'rot-gruen' | 'normal', reihen: [number, number], wert: number, soll: number } }`
     (`abstand` wie Global Constraints, für einen Modus; `reihen` 1-basiert)
   - `zulaessigeStufen(tonGrad: number, chroma: number, modus: 'light' | 'dark', gruende: string[]): { L: number, hex: string }[]`
-    (L in 0,01-Schritten im Band; nur Stufen mit Kontrast ≥ 3,0 gegen jeden Grund und tatsächlichem C ≥ 0,10)
+    (L im Raster 0,02 ab der Untergrenze des Bands; nur Stufen mit Kontrast ≥ 3,0 gegen jeden Grund und tatsächlichem
+    C ≥ 0,10 − 2e-3)
 
 - [ ] **Step 1: Failing tests**
 
@@ -149,6 +160,10 @@ test('zulässige Stufen halten 3:1 auf beiden Gründen und liegen im Band', () =
   - `toene`: freie Töne in Grad; `fest`: Nummer (1–8) → Grad, geliefert, behält die Nummer; zusammen genau 8.
   - Rückgabe in Reihenfolge der Kategorien 1–8: Ton, `mark` hell, `mark` dunkel.
   - `abstand ≥ 1` heißt: alle Schwellen erfüllt. `schwaechstes` über beide Modi.
+  - `groessterSprung(ergebnis, eingabe): number` — größter normierter Helligkeitssprung einer Reihe zwischen den Modi
+    (Global Constraints), exportiert für Tests.
+  - Ergebnisse werden je Eingabe (sortierte Töne, `fest`, Marke, Gründe) im Modul memoisiert: `derive.test.mjs` ruft
+    `derive` zwei Dutzend Mal mit denselben Eingaben.
 
 - [ ] **Step 1: Failing tests**
 
@@ -172,12 +187,17 @@ test('deterministisch, unabhängig von der Reihenfolge der Eingabe', () => {
 test('Chroma zwischen 0,10 und 0,15', () => {
   for (const hex of [...diagrammReihen(TL).light, ...diagrammReihen(TL).dark]) {
     const { C } = hexZuOklch(hex);
-    assert.ok(C >= 0.10 - 1e-3 && C <= 0.15 + 1e-3, `${hex} C ${C}`);
+    assert.ok(C >= 0.10 - 2e-3 && C <= 0.15 + 2e-3, `${hex} C ${C}`);
   }
 });
-test('eine unbunte Marke wirft nicht und nimmt Chroma 0,10', () => {
+test('eine unbunte Marke wirft nicht, nimmt Chroma 0,10 und beginnt mit dem kleinsten Ton', () => {
   const r = diagrammReihen({ ...TL, marke: '#6B6B6B' });
-  for (const hex of r.light) assert.ok(hexZuOklch(hex).C <= 0.10 + 1e-3);
+  assert.equal(r.toene[0], 2);
+  for (const hex of r.light) assert.ok(hexZuOklch(hex).C <= 0.10 + 2e-3);
+});
+test('der Helligkeitssprung je Reihe bleibt bei TopLogic und der Probe-Marke ≤ 0,5', () => {
+  for (const eingabe of [TL, { ...TL, toene: [111, 136, 187, 242, 271, 301, 330, 359], marke: '#E8541E' }])
+    assert.ok(groessterSprung(diagrammReihen(eingabe), eingabe) <= 0.5);
 });
 test('acht gelieferte Kategorien behalten ihre Nummern', () => {
   const fest = Object.fromEntries(TL.toene.map((t, i) => [i + 1, t]));
@@ -187,19 +207,19 @@ test('eine gelieferte Kategorie behält ihre Nummer, die anderen ordnen sich um 
   const r = diagrammReihen({ ...TL, toene: TL.toene.filter((t) => t !== 123), fest: { 4: 123 } });
   assert.equal(r.toene[3], 123);
 });
-test('eine Palette rechnet in höchstens 1 s', () => {
-  const t0 = performance.now(); diagrammReihen(TL);
-  assert.ok(performance.now() - t0 < 1000);
-});
 ```
+
+(Keine Zeitgrenze im Test: `node --test` startet Dateien parallel, eine CPU-abhängige Schwelle flackert. Richtwert aus
+dem Plan-Review: TopLogic ≈ 0,3 s bei Raster 0,02.)
 
 - [ ] **Step 2: Run, expect FAIL.**
 - [ ] **Step 3: Implement.** Eingabetöne zuerst sortieren (Determinismus). Chroma aus der Marke (Global Constraints;
-  unbunt → 0,10). Je Ton und Modus die Stufen aus `zulaessigeStufen`. Suche über Reihenfolge (Reihe 1 und gelieferte
-  Nummern fest, bei acht Tönen höchstens 7! = 5040) und Helligkeiten beider Modi zugleich, Ziel und Gleichstand wie
-  Global Constraints. Verfahren frei (Spec: dem Bauenden überlassen), z. B. Branch-and-Bound über die Positionen mit
-  vorab berechneten Paarmatrizen; das Raster darf gröber als 0,01 sein, solange TopLogic `abstand ≥ 1` hält. Bezugswert:
-  der zufällig gefundene Prototyp C erreichte `abstand` 1,04.
+  unbunt → 0,10). Je Ton und Modus die Stufen aus `zulaessigeStufen`, je Ton die Stufenpaare mit Sprung ≤ 0,5 (zweiter
+  Lauf ohne Grenze, falls `abstand < 1`). Suche über Reihenfolge (Reihe 1 und gelieferte Nummern fest, bei acht Tönen
+  höchstens 7! = 5040) und Helligkeiten beider Modi zugleich. Bewährt im Plan-Review: je Reihenfolge eine DP über die
+  Kette (Paarliste = Kette plus Stern von Reihe 1, also bei fester Belegung von Reihe 1 eine Kette), vorab gerechnete
+  Paarmatrizen, Schranke über die beste bisherige Reihenfolge. Erwartete Größenordnung: TopLogic `abstand` ≈ 1,34, Probe
+  ≈ 1,5, acht geliefert ≈ 1,0 (Prototyp C: 1,04).
 - [ ] **Step 4: Run, expect PASS** — `node --test test/diagramm.test.mjs`.
 - [ ] **Step 5: Commit** `Ticket #29914: Paket -- diagrammReihen: Reihenfolge und Helligkeit je Modus gerechnet`
 
@@ -231,10 +251,14 @@ test('eine Palette rechnet in höchstens 1 s', () => {
      `category-1..8-border` (hell), auf ganze Grad gerundet (≈ 2°, 56°, 123°, 186°, 238°, 285°, 311°, 337°); Marke
      `R.color.light['surface-brand']`; Gründe aus `resolve`. Sonst weichen Test und Werte um Rundungen ab.
   2. Neue Kategorie N = alte Kategorie, deren Ton `toene[N-1]` ist: `subtle`, `border` und `surface` beider Modi werden
-     als Block umgehängt (Referenzen permutieren, keine neuen Werte).
-  3. Die 16 `mark`-Werte als Primitive in `primitives.json`, Namen über `primitiveAbleiten` (alle Farbwerte zusammen
-     neu ableiten, damit keine Stufe doppelt vergeben ist; bestehende Namen dürfen sich dabei nicht ändern — sonst stoppen
-     und melden). `category-N-mark` je Modus referenziert sie.
+     als Block umgehängt (Referenzen permutieren, keine neuen Werte). **Schlüsselreihenfolge in `tokens.json` nicht
+     ändern** — nur die Werte tauschen, `category-N-mark` hinter `category-8-surface` anhängen; `derive` schreibt in der
+     Reihenfolge der Schlüssel, eine umsortierte Datei macht den Byte-Test des Probe-Themes rot.
+  3. Die 16 `mark`-Werte als Primitive in `primitives.json`. **Nur die neuen Werte benennen**, bestehende Namen bleiben
+     unberührt: Name = `${familie(hex)}-${stufe(hex)}` (`naming.mjs`, Stufe ohne führende Null wie im Bestand), und
+     solange der Name in `P.color` oder unter den schon vergebenen neuen steht, Stufe + 1. (`primitiveAbleiten` über alle
+     Werte benennt heute 31 bestehende Primitive um — nicht verwenden.) Ein Wert, den es als Primitive schon gibt, wird
+     wiederverwendet statt doppelt angelegt. `category-N-mark` je Modus referenziert sie.
   4. `pairs.mjs`: für k = 1..8 `paar('category-k-mark', 'surface-base', 3.0)` und `paar('category-k-mark', 'surface-layer', 3.0)`.
 - [ ] **Step 4: Generate und alle Gates** — `node tools/generate.mjs && node tools/lint-css.mjs && node --test`.
   Erwartet grün bis auf `published.test.mjs` (die Kopie folgt in Task 7). Rot an anderer Stelle (Specimen, Kalender,
@@ -257,12 +281,11 @@ test('eine Palette rechnet in höchstens 1 s', () => {
     `pruefeReihen(category-1..8-mark).abstand ≥ 1` und jede `mark` ≥ 3,0 auf den Gründen des Probe-Themes (warmes Grau).
   - „die Kategorie N trägt in allen vier Rollen denselben Ton“: Farbton von `category-N-border` und `-mark` (hell)
     höchstens 3° auseinander, für N = 1..8, im Probe-Ergebnis.
-  - „zwei gelieferte Kategorien mit demselben Ton: Datei, Exit 0, Hinweis mit dem schwächsten Paar“:
-    Eingabe `{ theme: 'gleich', color: { category: { 'category-1': '#0B5ED7', 'category-2': '#0B5ED7' } } }`;
+  - „drei gelieferte Kategorien mit demselben Ton: Datei, Exit 0, Hinweis mit dem schwächsten Paar“:
+    Eingabe `{ theme: 'gleich', color: { category: { 'category-1': '#0B5ED7', 'category-2': '#0B5ED7', 'category-3': '#0B5ED7' } } }`;
     erwartet kein Wurf, ein Hinweis, der `Diagrammreihen` und die Werte nennt.
-  - „Markentöne von 0° bis 355°: Befunde festgehalten“: je 5° eine Marke mit L 0,55, C 0,19 (`oklchZuHex`), TopLogic-Grau;
-    die Liste der Töne mit Hinweis wird als Konstante im Test festgehalten (erst laufen lassen, dann eintragen);
-    TopLogic-Blau und die Probe-Marke stehen nicht darin. Laufzeit der ganzen Schleife < 60 s.
+  - „Markentöne von 0° bis 355°: kein Befund“: je 5° eine Marke mit L 0,55, C 0,19 (`oklchZuHex`), TopLogic-Grau; kein
+    Hinweis „Diagrammreihen“ (Plan-Review: 0 von 72). Keine Zeitgrenze im Test (Richtwert ≈ 25 s bei Raster 0,02).
 - [ ] **Step 2: Run, expect FAIL.**
 - [ ] **Step 3: Implement.** Nach der Verteilung: freie Töne = `toene` aus `kategorienVerteilen`, `fest` = gelieferte
   Kategorien (Nummer → Grad); `diagrammReihen({ toene, fest, marke: Rk.color.light['surface-brand'], gruende })`.
@@ -270,7 +293,8 @@ test('eine Palette rechnet in höchstens 1 s', () => {
   `setze(mode, 'category-k-mark', r[mode][k-1])`. `r.abstand < 1` →
   `hinweise.push(\`Diagrammreihen ${a} und ${b} trennen sich ${modus} nur mit ΔE ${wert} (${art}, gefordert ${soll}); Ursache ist die gelieferte Farbe\`)`
   (Spec §8: Befund, kein Abbruch). Kontrast und Chroma kann die Suche nicht verfehlen (nur zulässige Stufen).
-- [ ] **Step 4: Probe neu erzeugen, alle Gates** — Befehl oben, dann `node --test`. Erwartet grün bis auf `published`.
+- [ ] **Step 4: Probe neu erzeugen, alle Gates** — Befehl oben, dann `node --test`. Erwartet grün bis auf `published`;
+  `derive.test.mjs` läuft merklich länger (Suche je Farbeingabe, memoisiert). Wächst es um mehr als ≈ 30 s, melden.
 - [ ] **Step 5: Commit** `Ticket #29914: Paket -- derive rechnet Diagrammreihen; Probe-Theme neu`
 
 ### Task 6: Verträge, Specimen, Doku
@@ -286,7 +310,9 @@ test('eine Palette rechnet in höchstens 1 s', () => {
   deckend; Punkte deckend (`pointBackgroundColor`); Fläche unter Linie/Radar bei `fill` 20 % Deckkraft; Fuge zwischen
   Segmenten (Ring, Torte, Polar) in `--tl-surface-layer`; Absatz „Konformität“ entsprechend. Spec §9.
 - [ ] **Step 3: Specimen** `chart.spec.html`: liest `--tl-category-N-mark`, malt deckend; ein Ring mit sechs Segmenten
-  und Fuge, hell und dunkel nebeneinander, damit Hendrik abnehmen kann.
+  und Fuge, hell und dunkel nebeneinander, damit Hendrik abnehmen kann. Das dunkle Panel trägt `data-tl-mode="dark"`,
+  das Skript liest dort `getComputedStyle(<panel>)` statt `<html>`; kein `style=`-Attribut (Specimen-Harness
+  `specimenProblems`), Gestaltung nur im `<style>`-Block.
 - [ ] **Step 4: `skalen.md`** neuer Abschnitt „Diagramme rechnen ihre Reihen (22.10., Hendrik)“ unter Welle 5d: Befund,
   Entscheidung (§1–§11 knapp), Verworfen (Termin-Füllung, fremde Palette, Marke als Reihe, harte Hälften-Regel);
   Kategorietabelle (Ton je Nummer) auf die neue Nummerierung. `ui-durchgang.md`: Mengenskala aus der Marke;
@@ -311,12 +337,14 @@ Pill und Avatar (neue Nummerierung). Erst nach Hendriks Ok weiter. Befunde → z
 
 - [ ] **Step 1: Failing tests** in `chart.test.tsx`: `applyTokens` setzt `--tl-category-${i+1}-mark`; Erwartungen:
   Balken `backgroundColor` = `LIGHT[i % 8]` (ohne `'cc'`); Ring `backgroundColor` = `[LIGHT[0], LIGHT[1], LIGHT[2]]`,
-  `borderColor` = `COLORS.light.layer` je Segment; Linie `backgroundColor` = `LIGHT[0] + '33'`,
+  `borderColor` `toBe(COLORS.light.layer)` (ein String für alle Segmente; Chart.js 4 zieht die Fuge über `borderColor`,
+  `borderWidth` 2 ist Standard); Linie `backgroundColor` = `LIGHT[0] + '33'`,
   `pointBackgroundColor` = `LIGHT[0]`, `fill` false; unlesbare Kategorie: `COLORS.light.grid` ohne Suffix; der Test
   „rgb() oder kurzes Hex“ auf `-mark`. Kopfkommentar des Tests nennt `-mark`.
 - [ ] **Step 2: Run, expect FAIL** — `cd com.top_logic.layout.react.mui && NODE_OPTIONS=--no-experimental-webstorage npx vitest run react-src/adapters/chart.test.tsx`.
 - [ ] **Step 3: Implement** in `useThemeDefaults.ts`: Token `--tl-category-${i + 1}-mark`; `FILL_ALPHA` entfällt; Ring/Torte/
-  Polar: `borderColor` = gelesener `--tl-surface-layer` (fehlt er, kein `borderColor` setzen); Linie/Radar:
+  Polar: `borderColor` = gelesener `--tl-surface-layer` (fehlt er, kein `borderColor` setzen) — dafür liefert
+  `readThemeColors` den Grund als eigenes Feld `layerColor` (ohne Suffix) und `sameColors` vergleicht es; Linie/Radar:
   `pointBackgroundColor` = Farbe, sofern der Server keinen setzt; `POINT_ALPHA` umbenennen in `AREA_ALPHA` (`'33'`,
   Fläche unter Linie/Radar). JSDoc nachziehen. Server-Farben gewinnen weiter.
 - [ ] **Step 4: Kopie publizieren und Gates** — im Paket `node tools/publish-to-worktree.mjs && node --test` (jetzt auch
