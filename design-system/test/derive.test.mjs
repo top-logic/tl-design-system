@@ -11,7 +11,8 @@ import { derive } from '../tools/derive.mjs';
 import { resolve } from '../tools/resolve.mjs';
 import { kontrastPaare, werte } from '../tools/lib/pairs.mjs';
 import { ratio, rgba, ueberlagert } from '../tools/lib/contrast.mjs';
-import { farbtonAbstand, hexZuOklch, kategorieRollen, grauRampe } from '../tools/lib/color.mjs';
+import { farbtonAbstand, hexZuOklch, oklchZuHex, kategorieRollen, grauRampe } from '../tools/lib/color.mjs';
+import { pruefeReihen } from '../tools/lib/diagramm.mjs';
 
 const P = JSON.parse(readFileSync(new URL('../src/primitives.json', import.meta.url)));
 const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)));
@@ -364,4 +365,69 @@ test('das Paar text-inverse/surface-inverse steht in der Paarliste', () => {
   const paar = kontrastPaare(T).find((p) => p.fg === 'text-inverse' && p.bg === 'surface-inverse');
   assert.ok(paar, 'Paar fehlt');
   assert.equal(paar.soll, 4.5);
+});
+
+const REIHEN = Array.from({ length: 8 }, (_, i) => i + 1);
+
+test('das Probe-Theme trägt Diagrammreihen, die die Schwellen halten', () => {
+  const Rk = ergebnis.ergebnis;
+  for (const mode of MODES) {
+    const marken = REIHEN.map((k) => Rk.color[mode][`category-${k}-mark`]);
+    const grund = [Rk.color[mode]['surface-base'], Rk.color[mode]['surface-layer']];
+    assert.ok(pruefeReihen(marken).abstand >= 1, `${mode}: Reihen trennen sich nicht genug: ${JSON.stringify(pruefeReihen(marken).schwaechstes)}`);
+    marken.forEach((hex, i) => {
+      for (const g of grund) assert.ok(ratio(hex, g) >= 3, `${mode}: category-${i + 1}-mark ${hex} auf ${g} = ${ratio(hex, g).toFixed(2)}`);
+    });
+  }
+  assert.ok(!ergebnis.hinweise.some((h) => h.includes('Diagrammreihen')), ergebnis.hinweise.join('\n'));
+});
+
+test('die Kategorie N trägt in allen vier Rollen denselben Ton', () => {
+  const C = ergebnis.ergebnis.color.light;
+  for (const k of REIHEN) {
+    const rollen = ['subtle', 'border', 'surface', 'mark'].map((r) => C[`category-${k}-${r}`]);
+    for (const hex of rollen.slice(1)) {
+      assert.ok(farbtonAbstand(rollen[0], hex) <= 3, `category-${k}: ${rollen[0]} und ${hex} liegen ${farbtonAbstand(rollen[0], hex).toFixed(1)}° auseinander`);
+    }
+  }
+  // Auch dunkel: dort folgt die Marke demselben Ton wie die Linie.
+  const D = ergebnis.ergebnis.color.dark;
+  for (const k of REIHEN) assert.ok(farbtonAbstand(D[`category-${k}-border`], D[`category-${k}-mark`]) <= 3, `dunkel category-${k}`);
+});
+
+test('drei gelieferte Kategorien mit demselben Ton: Datei, Hinweis mit dem schwächsten Paar, kein Abbruch', () => {
+  const gleich = { theme: 'gleich', color: { category: { 'category-1': '#0B5ED7', 'category-2': '#0B5ED7', 'category-3': '#0B5ED7' } } };
+  const r = derive(P, T, gleich);
+  const h = r.hinweise.filter((x) => x.includes('Diagrammreihen'));
+  assert.equal(h.length, 1, r.hinweise.join('\n'));
+  assert.match(h[0], /Diagrammreihen \d und \d trennen sich (light|dark) nur mit ΔE [\d.]+ \((rot-gruen|normal), gefordert (8|15)\)/);
+  assert.match(h[0], /Ursache ist die gelieferte Farbe/);
+  assert.ok(r.css.includes('--tl-category-1-mark:') && r.css.includes('note     '), 'Datei trägt die Marken und den Hinweis');
+  // Die gelieferten Kategorien behalten ihre Nummer und ihren Ton in allen Rollen.
+  for (const k of [1, 2, 3]) assert.ok(farbtonAbstand(r.ergebnis.color.light[`category-${k}-border`], r.ergebnis.color.light[`category-${k}-mark`]) <= 3, `category-${k}`);
+});
+
+test('Markentöne von 0° bis 355°: kein Befund der Diagrammreihen', () => {
+  for (let h = 0; h < 360; h += 5) {
+    const marke = oklchZuHex({ L: 0.55, C: 0.19, H: (h * Math.PI) / 180 }).hex;
+    const r = derive(P, T, { theme: 'kreis', color: { brand: marke } });
+    assert.deepEqual(r.hinweise.filter((x) => x.includes('Diagrammreihen') || x.includes('erreicht keine zulässige Stufe')), [], `Marke ${marke} (${h}°)`);
+    for (const mode of MODES) {
+      const marken = REIHEN.map((k) => r.ergebnis.color[mode][`category-${k}-mark`]);
+      assert.ok(pruefeReihen(marken).abstand >= 1, `Marke ${marke} (${h}°), ${mode}`);
+    }
+  }
+});
+
+test('ein gelieferter Grund ohne zulässige Stufe: Hinweis, Marke bis 3:1 nachgeführt, kein Abbruch', () => {
+  // Beide Gründe auf mittlerem Grau: im hellen Modus trägt kein Ton des Bands 3:1.
+  const r = derive(P, T, { theme: 'mittelgrau', color: { gray: { '0': '#8A8A8A', '1': '#8A8A8A' } } });
+  const C = r.ergebnis.color.light;
+  assert.ok(r.hinweise.some((h) => /^light: category-\d-mark erreicht keine zulässige Stufe; gewählt ist die Stufe mit dem höchsten Kontrast$/.test(h)), r.hinweise.join('\n'));
+  assert.ok(r.hinweise.some((h) => /^light: category-\d-mark in der Helligkeit nachgeführt/.test(h)), 'Schritt 5 meldet die Nachführung');
+  // derive führt die Marke nach, sie ist nicht geliefert: also entsteht kein Befund an ihr.
+  for (const k of REIHEN) for (const g of ['surface-base', 'surface-layer']) {
+    assert.ok(ratio(C[`category-${k}-mark`], C[g]) >= 3, `category-${k}-mark auf ${g}`);
+  }
+  assert.ok(!r.befunde.some((b) => b.fg.endsWith('-mark')), 'kein Befund an einer Diagrammmarke');
 });

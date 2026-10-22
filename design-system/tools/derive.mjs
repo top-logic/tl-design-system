@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { resolve, primitives } from './resolve.mjs';
 import { grauRampe, kategorienVerteilen, kategorieRollen, markenRollen, beschriftungAbleiten, hexZuOklch, aufKontrast, farbtonAbstand, UNBUNT_C }
   from './lib/color.mjs';
+import { diagrammReihen, pruefeReihen } from './lib/diagramm.mjs';
 import { kontrastPaare, werte } from './lib/pairs.mjs';
 import { leseThemeEingabe, ThemeEingabeFehler } from './lib/theme-input.mjs';
 import { ratio, rgba, color } from './lib/contrast.mjs';
@@ -150,12 +151,25 @@ export function derive(P, T, json, quelle = 'input') {
   // Die beiden Kandidaten der Beschriftung aus dem Kundengrau: Pk ändert sich ab hier nicht mehr.
   const prim = primitives(Pk);
   const kandidaten = { dunklerKandidat: prim[REF.exec(T.derived.candidates.dark)[1]], hellerKandidat: prim[REF.exec(T.derived.candidates.light)[1]] };
+  let reihenGerechnet = false;
   if (saat.brand || saat.gray || saat.category || grauGeliefert) {
     const eigene = saat.category ?? {};
     const fehlende = KATEGORIEN.filter((k) => !(`category-${k}` in eigene));
     const { toene, abstand } = kategorienVerteilen([markenTon, ...bedeutungen, ...Object.values(eigene).map(grad)], fehlende.length);
     const toneJeKategorie = Object.fromEntries([...KATEGORIEN.map((k) => [k, eigene[`category-${k}`] ? grad(eigene[`category-${k}`]) : null])]);
     fehlende.forEach((k, i) => { toneJeKategorie[k] = toene[i]; });
+    // Die Reihen der Diagrammlinien (Spec 2026-10-22 §5): die Suche ordnet die acht Töne neu und wählt je
+    // Modus die Helligkeit der Marke. Gelieferte Kategorien gehen als `fest` hinein und behalten ihre
+    // Nummer; die freien Töne verteilt die Suche. Erst danach bekommt jede Nummer ihren Ton, damit
+    // subtle, border, surface und mark derselben Nummer demselben Ton folgen.
+    const mod360 = (t) => ((t % 360) + 360) % 360;
+    const reihen = diagrammReihen({
+      toene: toene.map(mod360),
+      fest: Object.fromEntries(KATEGORIEN.filter((k) => `category-${k}` in eigene).map((k) => [k, mod360(grad(eigene[`category-${k}`]))])),
+      marke: Rk.color.light['surface-brand'],
+      gruende,
+    });
+    KATEGORIEN.forEach((k) => { toneJeKategorie[k] = reihen.toene[k - 1]; });
     // Die gefüllte Fläche (Spec 5c §4) trägt helle Schrift in beiden Modi; hell ist der Kandidat des
     // Kundengraus, aus dem Schritt 4 die Beschriftung wählt. Liefert der Kunde einen dunkleren
     // hellen Kandidaten, wird die Fläche dunkler, nicht die Schrift dunkel. Reicht keine
@@ -165,6 +179,7 @@ export function derive(P, T, json, quelle = 'input') {
     for (const k of KATEGORIEN) {
       const r = kategorieRollen(toneJeKategorie[k], gruende);
       for (const mode of MODES) {
+        eineGeschrieben = setze(mode, `category-${k}-mark`, reihen[mode][k - 1]) || eineGeschrieben;
         eineGeschrieben = setze(mode, `category-${k}-subtle`, r[mode].subtle) || eineGeschrieben;
         eineGeschrieben = setze(mode, `category-${k}-border`, r[mode].border) || eineGeschrieben;
         const roh = r[mode].surface;
@@ -174,6 +189,15 @@ export function derive(P, T, json, quelle = 'input') {
         eineGeschrieben = geschriebenFlaeche || eineGeschrieben;
         if (geschriebenFlaeche && flaeche !== roh) hinweise.push(`${mode}: category-${k}-surface abgedunkelt, damit die helle Schrift 4,5:1 hält`);
       }
+    }
+    // Ein Ton ohne zulässige Stufe gibt es nur auf einem gelieferten Grund; die Suche nimmt dann die Stufe
+    // mit dem höchsten Kontrast, und Schritt 5 führt die Marke bis 3:1 nach. Der Abstand der Reihen wird
+    // deshalb erst am fertigen Ergebnis geprüft (Schritt 5b), nicht an der Suche.
+    if (eineGeschrieben) {
+      for (const { nummer, modus } of reihen.ohneStufe) {
+        hinweise.push(`${modus}: category-${nummer}-mark erreicht keine zulässige Stufe; gewählt ist die Stufe mit dem höchsten Kontrast`);
+      }
+      reihenGerechnet = true;
     }
     // Der gesenkte Abstand ist nur dann eine Aussage über die Datei, wenn die Verteilung auch
     // irgendwo angekommen ist.
@@ -239,6 +263,18 @@ export function derive(P, T, json, quelle = 'input') {
       if (hex === vorher) continue;
       Rk.color[mode][rolle] = hex;
       hinweise.push(`${mode}: ${rolle} in der Helligkeit nachgeführt, damit es auf seinem Grund hält (${vorher} → ${hex})`);
+    }
+  }
+
+  // 5b Die Abstände der Diagrammreihen am fertigen Ergebnis (Spec §8: Befund, kein Abbruch). Die Suche
+  // hält sie bei jeder Marke; verfehlt sie die fertige Datei, liegt es an einer gelieferten Farbe —
+  // Kategorien, Grau oder eine Marken-Stufe der Kunden, nicht an den freien Tönen, die die Suche setzt.
+  if (reihenGerechnet) {
+    const letzte = MODES.map((modus) => ({ modus, ...pruefeReihen(KATEGORIEN.map((k) => Rk.color[modus][`category-${k}-mark`])) }))
+      .reduce((a, b) => (b.abstand < a.abstand ? b : a));
+    if (letzte.abstand < 1) {
+      const { modus, schwaechstes: { art, reihen: paar, wert, soll } } = letzte;
+      hinweise.push(`Diagrammreihen ${paar[0]} und ${paar[1]} trennen sich ${modus} nur mit ΔE ${wert.toFixed(1)} (${art}, gefordert ${soll}); Ursache ist die gelieferte Farbe`);
     }
   }
 
