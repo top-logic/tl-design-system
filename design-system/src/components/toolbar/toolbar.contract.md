@@ -60,6 +60,7 @@ Den Fokusring der Knöpfe liefert `base.css` über `:focus-visible`.
 | `data-tl-overflow="trailing"` / `"leading"` | die Toolbar kollabiert zu diesem Ende; der Inhalt sitzt dort |
 | `data-tl-compact` | Knöpfe zeigen nur Icons; jeder trägt `tl-button--icon` mit `aria-label` |
 | `tl-divider tl-divider--vertical` | an einem Trenner zwischen Gruppen, mit `role="separator"` und `aria-orientation="vertical"` |
+| `data-tl-break` | an einem Trenner einer `tl-toolbar--wrap`, an dem die Leiste umbricht (die Gruppe danach steht in der nächsten Zeile): der Trenner ist unsichtbar, behält aber seinen Platz, damit das Verbergen keinen neuen Umbruch auslöst. Das Control misst die Zeilen und setzt das Attribut bei jeder Größenänderung neu |
 | Überlauf-Trigger | ein `button.tl-button.tl-button--icon` mit `bi bi-three-dots`, `aria-haspopup="menu"` und `aria-expanded` |
 
 ## Konformität
