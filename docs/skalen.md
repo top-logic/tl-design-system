@@ -1427,9 +1427,9 @@ stehen zwischen den Bedeutungen: 2°, 56°, 123°, 186°, 238°, 285°, 311°, 3
 | Kategorie | Farbton | hell `subtle` / `border` | dunkel `subtle` / `border` |
 |---|---|---|---|
 | 1 | 238° | `blue-4` / `blue-35` | `blue-75` / `blue-48` |
-| 2 | 186° | `teal-5` / `teal-36` | `teal-73` / `teal-48` |
-| 3 | 2° | `red-5` / `red-33` | `red-73` / `red-46` |
-| 4 | 285° | `blue-7` / `blue-33` | `blue-73` / `blue-46` |
+| 2 | 2° | `red-5` / `red-33` | `red-73` / `red-46` |
+| 3 | 285° | `blue-7` / `blue-33` | `blue-73` / `blue-46` |
+| 4 | 186° | `teal-5` / `teal-36` | `teal-73` / `teal-48` |
 | 5 | 56° | `amber-5` / `amber-35` | `amber-73` / `amber-47` |
 | 6 | 311° | `magenta-5` / `magenta-33` | `magenta-73` / `magenta-46` |
 | 7 | 123° | `green-6` / `green-37` | `green-73` / `green-48` |
@@ -2767,10 +2767,15 @@ Token, zwei Aufgaben“.
 - **Gerechnet, nie gewählt:** `diagrammReihen` sucht Reihenfolge und Helligkeit beider Modi zugleich, deterministisch,
   und maximiert den kleinsten Abstand zur Schwelle; eine Vorauswahl hält den Helligkeitssprung einer Reihe zwischen hell
   und dunkel klein (≤ 0,5 des zulässigen Bereichs), nur ohne Lösung fällt sie weg. Dieselbe Funktion liefert unsere
-  Werte (ein Test hält `tokens.json` gleich ihrem Ergebnis) und läuft in `derive`. TopLogic: Abstand 1,34, Reihenfolge
-  238°, 186°, 2°, 285°, 56°, 311°, 123°, 337°.
-- **Die Kategorien sind nach der Rechnung nummeriert:** Kategorie N ist Reihe N. Neu ← alt: 1 ← 5, 2 ← 4, 3 ← 1, 4 ← 6,
-  5 ← 2, 6 ← 7, 7 ← 3, 8 ← 8. Reihe 1 ist der Ton neben der Marke, nie die Marke selbst (sie heißt „klickbar,
+  Werte (ein Test hält `tokens.json` gleich ihrem Ergebnis) und läuft in `derive`. TopLogic: Abstand 1,27, Reihenfolge
+  238°, 2°, 285°, 186°, 56°, 311°, 123°, 337°.
+- **Rot und warme Töne nicht zu dunkel (23.10., Hendrik, Sichtabnahme):** Im hellen Modus kippten Rot zu Weinrot und
+  Orange zu Braun. Seitdem beginnt die Helligkeit dort je Ton: Rot (≥ 345° oder < 30°) bei L 0,50, warm (30°–110°) bei
+  0,54, sonst bei 0,46. Kostet Abstand (1,34 → 1,27), hält alle Schwellen; allgemein ab 0,50 fielen 8 von 72 Marken
+  unter die Schwelle. Verworfen: Handwerte für die zwei Reihen.
+- **Die Kategorien sind nach der Rechnung nummeriert:** Kategorie N ist Reihe N. Neu ← vor dem 22.10.: 1 ← 5, 2 ← 1,
+  3 ← 6, 4 ← 4, 5 ← 2, 6 ← 7, 7 ← 3, 8 ← 8. Damit trägt dieselbe Nummer in Kalender, Pill und Avatar einen anderen Ton als
+  vorher; jede Person bekommt im Avatar eine andere Farbe (Welle 5, noch nicht auf master). Reihe 1 ist der Ton neben der Marke, nie die Marke selbst (sie heißt „klickbar,
   ausgewählt“); bei einer unbunten Marke der kleinste Ton. Gelieferte Kategorien behalten ihre Nummer.
 - **Was das Diagramm malt, ist geprüft:** Flächen und Punkte deckend, Fuge zwischen Segmenten in `surface-layer`; nur
   die Fläche unter einer Linie oder einem Radar (`fill`) bleibt bei 20 %, die Identität trägt dort die Linie.
