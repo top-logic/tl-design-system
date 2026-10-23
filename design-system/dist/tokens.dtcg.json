@@ -414,65 +414,57 @@
         "$type": "color",
         "$value": "#002830"
       },
-      "blue-56": {
+      "blue-54": {
         "$type": "color",
-        "$value": "#005C86"
+        "$value": "#005F8A"
       },
-      "teal-37": {
+      "red-36": {
         "$type": "color",
-        "$value": "#009E93"
+        "$value": "#DA668B"
       },
-      "red-57": {
+      "blue-38": {
         "$type": "color",
-        "$value": "#8C1C49"
+        "$value": "#7F76DC"
       },
-      "blue-37": {
+      "teal-38": {
         "$type": "color",
-        "$value": "#8179DF"
+        "$value": "#00A296"
       },
-      "amber-57": {
+      "magenta-40": {
         "$type": "color",
-        "$value": "#7A3D00"
+        "$value": "#9D63C1"
       },
-      "magenta-39": {
+      "green-50": {
         "$type": "color",
-        "$value": "#A066C4"
+        "$value": "#566E00"
       },
-      "green-47": {
+      "magenta-36": {
         "$type": "color",
-        "$value": "#5E7700"
+        "$value": "#C464AD"
       },
-      "magenta-35": {
+      "red-28": {
         "$type": "color",
-        "$value": "#C768B0"
+        "$value": "#EF799D"
       },
-      "blue-44": {
+      "blue-34": {
         "$type": "color",
-        "$value": "#007DB4"
+        "$value": "#9088F0"
       },
-      "teal-26": {
+      "teal-32": {
         "$type": "color",
-        "$value": "#00C5B7"
+        "$value": "#00B0A3"
       },
-      "red-44": {
+      "magenta-32": {
         "$type": "color",
-        "$value": "#B8476E"
+        "$value": "#B67BDC"
       },
-      "blue-26": {
+      "magenta-29": {
         "$type": "color",
-        "$value": "#A29DFF"
+        "$value": "#DF7DC7"
       },
       "amber-46": {
         "$type": "color",
         "$value": "#A75600"
-      },
-      "magenta-28": {
-        "$type": "color",
-        "$value": "#C387E9"
-      },
-      "magenta-24": {
-        "$type": "color",
-        "$value": "#EC8AD4"
       }
     },
     "measure": {
@@ -1220,27 +1212,27 @@
         },
         "category-2-subtle": {
           "$type": "color",
-          "$value": "{primitive.color.teal-5}"
+          "$value": "{primitive.color.red-5}"
         },
         "category-2-border": {
           "$type": "color",
-          "$value": "{primitive.color.teal-36}"
+          "$value": "{primitive.color.red-33}"
         },
         "category-3-subtle": {
           "$type": "color",
-          "$value": "{primitive.color.red-5}"
+          "$value": "{primitive.color.blue-7}"
         },
         "category-3-border": {
           "$type": "color",
-          "$value": "{primitive.color.red-33}"
+          "$value": "{primitive.color.blue-33}"
         },
         "category-4-subtle": {
           "$type": "color",
-          "$value": "{primitive.color.blue-7}"
+          "$value": "{primitive.color.teal-5}"
         },
         "category-4-border": {
           "$type": "color",
-          "$value": "{primitive.color.blue-33}"
+          "$value": "{primitive.color.teal-36}"
         },
         "category-5-subtle": {
           "$type": "color",
@@ -1280,15 +1272,15 @@
         },
         "category-2-surface": {
           "$type": "color",
-          "$value": "{primitive.color.teal-48}"
+          "$value": "{primitive.color.red-46}"
         },
         "category-3-surface": {
           "$type": "color",
-          "$value": "{primitive.color.red-46}"
+          "$value": "{primitive.color.blue-46}"
         },
         "category-4-surface": {
           "$type": "color",
-          "$value": "{primitive.color.blue-46}"
+          "$value": "{primitive.color.teal-48}"
         },
         "category-5-surface": {
           "$type": "color",
@@ -1308,35 +1300,35 @@
         },
         "category-1-mark": {
           "$type": "color",
-          "$value": "{primitive.color.blue-56}"
+          "$value": "{primitive.color.blue-54}"
         },
         "category-2-mark": {
           "$type": "color",
-          "$value": "{primitive.color.teal-37}"
+          "$value": "{primitive.color.red-36}"
         },
         "category-3-mark": {
           "$type": "color",
-          "$value": "{primitive.color.red-57}"
+          "$value": "{primitive.color.blue-38}"
         },
         "category-4-mark": {
           "$type": "color",
-          "$value": "{primitive.color.blue-37}"
+          "$value": "{primitive.color.teal-38}"
         },
         "category-5-mark": {
           "$type": "color",
-          "$value": "{primitive.color.amber-57}"
+          "$value": "{primitive.color.amber-46}"
         },
         "category-6-mark": {
           "$type": "color",
-          "$value": "{primitive.color.magenta-39}"
+          "$value": "{primitive.color.magenta-40}"
         },
         "category-7-mark": {
           "$type": "color",
-          "$value": "{primitive.color.green-47}"
+          "$value": "{primitive.color.green-50}"
         },
         "category-8-mark": {
           "$type": "color",
-          "$value": "{primitive.color.magenta-35}"
+          "$value": "{primitive.color.magenta-36}"
         },
         "text-contrast-light": {
           "$type": "color",
@@ -1731,27 +1723,27 @@
         },
         "category-2-subtle": {
           "$type": "color",
-          "$value": "{primitive.color.teal-73}"
+          "$value": "{primitive.color.red-73}"
         },
         "category-2-border": {
           "$type": "color",
-          "$value": "{primitive.color.teal-48}"
+          "$value": "{primitive.color.red-46}"
         },
         "category-3-subtle": {
           "$type": "color",
-          "$value": "{primitive.color.red-73}"
+          "$value": "{primitive.color.blue-73}"
         },
         "category-3-border": {
           "$type": "color",
-          "$value": "{primitive.color.red-46}"
+          "$value": "{primitive.color.blue-46}"
         },
         "category-4-subtle": {
           "$type": "color",
-          "$value": "{primitive.color.blue-73}"
+          "$value": "{primitive.color.teal-73}"
         },
         "category-4-border": {
           "$type": "color",
-          "$value": "{primitive.color.blue-46}"
+          "$value": "{primitive.color.teal-48}"
         },
         "category-5-subtle": {
           "$type": "color",
@@ -1791,15 +1783,15 @@
         },
         "category-2-surface": {
           "$type": "color",
-          "$value": "{primitive.color.teal-48}"
+          "$value": "{primitive.color.red-46}"
         },
         "category-3-surface": {
           "$type": "color",
-          "$value": "{primitive.color.red-46}"
+          "$value": "{primitive.color.blue-46}"
         },
         "category-4-surface": {
           "$type": "color",
-          "$value": "{primitive.color.blue-46}"
+          "$value": "{primitive.color.teal-48}"
         },
         "category-5-surface": {
           "$type": "color",
@@ -1819,19 +1811,19 @@
         },
         "category-1-mark": {
           "$type": "color",
-          "$value": "{primitive.color.blue-44}"
+          "$value": "{primitive.color.blue-48}"
         },
         "category-2-mark": {
           "$type": "color",
-          "$value": "{primitive.color.teal-26}"
+          "$value": "{primitive.color.red-28}"
         },
         "category-3-mark": {
           "$type": "color",
-          "$value": "{primitive.color.red-44}"
+          "$value": "{primitive.color.blue-34}"
         },
         "category-4-mark": {
           "$type": "color",
-          "$value": "{primitive.color.blue-26}"
+          "$value": "{primitive.color.teal-32}"
         },
         "category-5-mark": {
           "$type": "color",
@@ -1839,7 +1831,7 @@
         },
         "category-6-mark": {
           "$type": "color",
-          "$value": "{primitive.color.magenta-28}"
+          "$value": "{primitive.color.magenta-32}"
         },
         "category-7-mark": {
           "$type": "color",
@@ -1847,7 +1839,7 @@
         },
         "category-8-mark": {
           "$type": "color",
-          "$value": "{primitive.color.magenta-24}"
+          "$value": "{primitive.color.magenta-29}"
         },
         "text-contrast-light": {
           "$type": "color",

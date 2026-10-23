@@ -19,8 +19,22 @@ export const DIAGRAMM = {
   NORMAL: 15,
   CHROMA_MIN: 0.10,
   CHROMA_MAX: 0.15,
-  /** Helligkeitsbereich je Modus (Prototyp C); der Kontrast engt ihn weiter ein. */
-  BAND: { light: [0.43, 0.77], dark: [0.48, 0.77] },
+  /**
+   * Helligkeitsbereich je Modus (Prototyp C); der Kontrast engt ihn weiter ein. Hell beginnt das
+   * Band bei 0,46, die Untergrenze gilt für alle Töne außer denen in `UNTERGRENZE_HELL`.
+   */
+  BAND: { light: [0.46, 0.77], dark: [0.48, 0.77] },
+  /**
+   * Höhere Untergrenzen im hellen Modus je Farbtonbereich (Spec §3, Nachtrag 23.10.): Rot und
+   * warme Töne wurden bei tiefer Helligkeit zu Weinrot und Braun. Gradzahlen normalisiert auf
+   * 0 ≤ Ton < 360; `von` und `bis` schließen ein, `von > bis` heißt über 0° hinweg. Es gilt die
+   * erste passende Zeile (die Warm-Zeile steht vorn, damit 30° warm ist und Rot unter 30° endet).
+   * Töne in keiner Zeile beginnen bei `BAND.light[0]`. Obergrenze und dunkler Modus bleiben.
+   */
+  UNTERGRENZE_HELL: [
+    { von: 30, bis: 110, L: 0.54 }, // warm: 30° ≤ Ton ≤ 110°, Orange bis Gelb
+    { von: 345, bis: 30, L: 0.50 }, // Rot: Ton ≥ 345° oder < 30° (30° fängt die Zeile davor)
+  ],
 };
 
 /** Raster der Helligkeit (Plan-Review: 0,01 ist zu teuer, 0,03 verliert „acht geliefert“). */
@@ -69,7 +83,9 @@ export function pruefeReihen(farben) {
  *
  * Raster 0,02 ab der Untergrenze des Bands bis höchstens zur Obergrenze (aus ganzen Hundertsteln
  * gebaut, damit keine Gleitkommadrift entsteht; die Obergrenze 0,77 liegt im dunklen Modus
- * zwischen zwei Stufen, dort ist 0,76 die letzte). `tonGrad` ist der Farbton in Grad.
+ * zwischen zwei Stufen, dort ist 0,76 die letzte). `tonGrad` ist der Farbton in Grad. Im hellen
+ * Modus hängt die Untergrenze vom Ton ab (`untergrenze`, Spec §3 Nachtrag 23.10.): Rot ab 0,50,
+ * warme Töne ab 0,54, alle anderen ab 0,46; das Raster beginnt dort.
  * Behalten wird eine Stufe nur, wenn ihr Hexwert gegen jeden Grund Kontrast ≥ 3,0 hält und die
  * tatsächliche Chroma des Hexwerts (der Farbraum kann sie unter `chroma` drücken) mindestens
  * 0,10 beträgt, abzüglich der Rundungstoleranz.
@@ -80,9 +96,22 @@ export function zulaessigeStufen(tonGrad, chroma, modus, gruende) {
     && gruende.every((g) => ratio(hex, g) >= DIAGRAMM.KONTRAST));
 }
 
+/**
+ * Untergrenze der Helligkeit für einen Ton in einem Modus. Dunkel: die des Bands. Hell: die
+ * erste Zeile von `UNTERGRENZE_HELL`, in der der normalisierte Ton liegt, sonst die des Bands.
+ */
+function untergrenze(tonGrad, modus) {
+  if (modus !== 'light') return DIAGRAMM.BAND[modus][0];
+  const ton = ((tonGrad % 360) + 360) % 360;
+  for (const { von, bis, L } of DIAGRAMM.UNTERGRENZE_HELL) {
+    if (von <= bis ? ton >= von && ton <= bis : ton >= von || ton <= bis) return L;
+  }
+  return DIAGRAMM.BAND.light[0];
+}
+
 /** Alle Stufen des Bands auf dem Raster, aufsteigend, noch ohne Kontrast- und Chromafilter. */
 function rasterStufen(tonGrad, chroma, modus) {
-  const [unten, oben] = DIAGRAMM.BAND[modus];
+  const unten = untergrenze(tonGrad, modus), oben = DIAGRAMM.BAND[modus][1];
   const H = (tonGrad * Math.PI) / 180;
   const vonH = Math.round(unten * 100);
   const bisH = Math.round(oben * 100);

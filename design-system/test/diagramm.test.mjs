@@ -51,10 +51,41 @@ test('zulässige Stufen: Raster 0,02 ab der Untergrenze, aufsteigend, ohne Drift
 test('zulässige Stufen: der Kontrast schneidet die dunkle Seite ab', () => {
   // 0,48 auf #1D2023 bringt nur 2,55:1, 0,52 trägt 3:1.
   assert.equal(zulaessigeStufen(238, 0.15, 'dark', ['#16181B', '#1D2023'])[0].L, 0.52);
-  // Hell: 0,43 und 0,44 bleiben unter C 0,098 (0,0958 und 0,0979), erst 0,45 reicht.
+  // Hell: das Band beginnt bei 0,46 (Nachtrag 23.10.); die erste Stufe des Blautons trägt C 0,10.
   const hell = zulaessigeStufen(238, 0.15, 'light', ['#FAFAFA', '#FFFFFF']);
-  assert.equal(hell[0].L, 0.45);
+  assert.equal(hell[0].L, 0.46);
   assert.ok(hexZuOklch(hell[0].hex).C >= DIAGRAMM.CHROMA_MIN - 2e-3);
+});
+
+test('im hellen Modus beginnt Rot bei 0,50, warm bei 0,54, sonst bei 0,46 (Spec §3, Nachtrag 23.10.)', () => {
+  const G = ['#FAFAFA', '#FFFFFF'];
+  const erste = (ton, modus = 'light') => zulaessigeStufen(ton, 0.15, modus, G)[0].L;
+  assert.ok(erste(2) >= 0.50, `Rot ${erste(2)}`);
+  assert.ok(erste(56) >= 0.54, `warm ${erste(56)}`);
+  assert.ok(erste(238) >= 0.46 && erste(238) < 0.50, `sonst ${erste(238)}`);
+  // Grenzfälle: 345° und 0° sind Rot, 29° noch Rot, 30° und 110° warm, 111° wieder „sonst“.
+  for (const ton of [345, 350, 0, 29]) assert.ok(erste(ton) >= 0.50, `Rot ${ton}°: ${erste(ton)}`);
+  for (const ton of [30, 110]) assert.ok(erste(ton) >= 0.54, `warm ${ton}°: ${erste(ton)}`);
+  for (const ton of [344, 111]) assert.ok(erste(ton) < 0.50, `sonst ${ton}°: ${erste(ton)}`);
+  // Töne außerhalb 0–360 werden normalisiert: −10° = 350° (Rot), 370° = 10° (Rot), 420° = 60° (warm).
+  assert.ok(erste(-10) >= 0.50 && erste(370) >= 0.50 && erste(420) >= 0.54);
+  // Das Raster beginnt an der Untergrenze des Tons und bleibt 0,02, der Hexwert der ersten Stufe liegt auf ihr.
+  const rot = zulaessigeStufen(2, 0.15, 'light', G);
+  assert.equal(Math.round(rot[0].L * 100) % 2, 0);
+  for (let i = 1; i < rot.length; i++) assert.equal(Math.round((rot[i].L - rot[i - 1].L) * 100), 2);
+  // Die Obergrenze bleibt für alle Töne 0,77, das Band hell beginnt bei 0,46.
+  assert.deepEqual(DIAGRAMM.BAND.light, [0.46, 0.77]);
+  for (const ton of [2, 56, 238]) assert.ok(zulaessigeStufen(ton, 0.15, 'light', G).at(-1).L <= 0.77);
+});
+
+test('der dunkle Modus bleibt: keine Untergrenze je Ton, nur der Kontrast schneidet', () => {
+  const G = ['#16181B', '#1D2023'];
+  // Werte wie vor dem Nachtrag (erste und letzte Stufe, Anzahl).
+  for (const [ton, erste, letzte, anzahl] of [[2, 0.56, 0.76, 11], [56, 0.54, 0.76, 12], [238, 0.52, 0.76, 13]]) {
+    const s = zulaessigeStufen(ton, 0.15, 'dark', G);
+    assert.deepEqual([s[0].L, s.at(-1).L, s.length], [erste, letzte, anzahl], `${ton}°`);
+  }
+  assert.deepEqual(DIAGRAMM.BAND.dark, [0.48, 0.77]);
 });
 
 test('zulässige Stufen: keine Stufe unter Chroma 0,10 abzüglich Toleranz', () => {
@@ -147,7 +178,9 @@ test('der Lauf ohne Sprunggrenze zählt nur, wenn er den Abstand echt erhöht', 
 });
 
 test('ein Ton ohne zulässige Stufe bricht nicht ab: Ersatz mit dem höchsten Kontrast, gemeldet', () => {
-  const gruende = { light: ['#E0E0E0', '#EEEEEE'], dark: TL.gruende.dark };
+  // Gründe so dunkel, dass 200° keine Stufe trägt (das Raster ab 0,46 liegt auf geraden Hundertsteln:
+  // mit #E0E0E0 trüge 0,58 noch 3:1, mit #D8D8D8 nicht mehr).
+  const gruende = { light: ['#D8D8D8', '#EEEEEE'], dark: TL.gruende.dark };
   const e = { ...TL, toene: [2, 56, 123, 200, 238, 285, 311, 337], gruende };
   assert.deepEqual(zulaessigeStufen(200, 0.15, 'light', gruende.light), []);
   const r = diagrammReihen(e);
@@ -157,7 +190,7 @@ test('ein Ton ohne zulässige Stufe bricht nicht ab: Ersatz mit dem höchsten Ko
   // Kontrast gegen den schwächeren Grund.
   const schwaecher = (hex) => Math.min(...gruende.light.map((g) => ratio(hex, g)));
   const band = [];
-  for (let h = 43; h <= 77; h += 2) band.push(oklchZuHex({ L: h / 100, C: 0.15, H: (200 * Math.PI) / 180 }).hex);
+  for (let h = 46; h <= 77; h += 2) band.push(oklchZuHex({ L: h / 100, C: 0.15, H: (200 * Math.PI) / 180 }).hex);
   assert.equal(schwaecher(r.light[k]), Math.max(...band.map(schwaecher)));
   // Eine einzelne Stufe hat die Lage 0; Sprungmaß und Vorauswahl kommen damit zurecht.
   assert.ok(groessterSprung(r, e) <= 0.5);

@@ -292,8 +292,10 @@ test('eine Kategorie hat genau vier Rollen: subtle, border, surface und mark', (
 });
 
 /** Die Eingabe der Rechnung, wie sie für TopLogic gilt: Töne der hellen Linien, Marke, Gründe je Modus. */
+// Töne in 0 ≤ Ton < 360, wie `derive` sie reicht: bei gleichem Abstand entscheidet die Reihenfolge der aufsteigenden Töne,
+// und −122° sortiert vor 186°, wo 238° dahinter steht (Nachtrag 23.10.: zwei Reihenfolgen mit demselben Abstand).
 const diagrammEingabe = () => ({
-  toene: KATEGORIEN.map((k) => Math.round(hexZuOklch(R.color.light[`category-${k}-border`]).H * 180 / Math.PI)),
+  toene: KATEGORIEN.map((k) => (Math.round(hexZuOklch(R.color.light[`category-${k}-border`]).H * 180 / Math.PI) + 360) % 360),
   marke: R.color.light['surface-brand'],
   gruende: Object.fromEntries(MODES.map((m) => [m, [R.color[m]['surface-base'], R.color[m]['surface-layer']]])),
 });

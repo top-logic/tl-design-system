@@ -436,9 +436,9 @@ test('ein gelieferter Grund ohne zulässige Stufe: Hinweis, Marke bis 3:1 nachge
 });
 
 test('eine gelieferte Marke ohne zulässige Stufe wird nicht als gewählt gemeldet', () => {
-  // Grauer Grund, dazu category-1-mark über die gelieferte Stufe blue-56: die Marke ist die des Kunden.
-  const r = derive(P, T, { theme: 'geliefert', color: { gray: { '0': '#8A8A8A', '1': '#8A8A8A' }, brand: { '49': '#1060C0', '56': '#2070D0', '44': '#0050A0' } } });
-  assert.ok(r.hinweise.some((h) => h.startsWith('light: category-1-mark bleibt bei der gelieferten Stufe blue-56')), r.hinweise.join('\n'));
+  // Grauer Grund, dazu category-1-mark über die gelieferte Stufe blue-54: die Marke ist die des Kunden.
+  const r = derive(P, T, { theme: 'geliefert', color: { gray: { '0': '#8A8A8A', '1': '#8A8A8A' }, brand: { '49': '#1060C0', '54': '#2070D0', '48': '#0050A0' } } });
+  assert.ok(r.hinweise.some((h) => h.startsWith('light: category-1-mark bleibt bei der gelieferten Stufe blue-54')), r.hinweise.join('\n'));
   for (const h of r.hinweise.filter((x) => x.includes('keine zulässige Stufe'))) {
     assert.ok(!/category-1-mark/.test(h), h);
   }

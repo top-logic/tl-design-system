@@ -26,10 +26,10 @@
     "red-77": "#35110D", "teal-5": "#D7F8F4", "teal-6": "#CEF3FB", "teal-25": "#33C1DB",
     "teal-34": "#1FA4BB", "teal-35": "#159FB6", "teal-36": "#00A398", "teal-45": "#007F92", "teal-48": "#00786F",
     "blue-48": "#0071A3", "teal-73": "#002E2A", "blue-75": "#092A3C", "teal-75": "#002830",
-    "blue-56": "#005C86", "teal-37": "#009E93", "red-57": "#8C1C49", "blue-37": "#8179DF",
-    "amber-57": "#7A3D00", "magenta-39": "#A066C4", "green-47": "#5E7700", "magenta-35": "#C768B0",
-    "blue-44": "#007DB4", "teal-26": "#00C5B7", "red-44": "#B8476E", "blue-26": "#A29DFF",
-    "amber-46": "#A75600", "magenta-28": "#C387E9", "magenta-24": "#EC8AD4"
+    "blue-54": "#005F8A", "red-36": "#DA668B", "blue-38": "#7F76DC", "teal-38": "#00A296",
+    "magenta-40": "#9D63C1", "green-50": "#566E00", "magenta-36": "#C464AD",
+    "red-28": "#EF799D", "blue-34": "#9088F0", "teal-32": "#00B0A3", "magenta-32": "#B67BDC",
+    "magenta-29": "#DF7DC7", "amber-46": "#A75600"
   },
   "measure": {
     "size-1": "0.25rem", "size-2": "0.5rem", "size-3": "0.75rem", "size-4": "1rem",
