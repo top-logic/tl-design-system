@@ -141,6 +141,8 @@ test('board: Spalten und Karten aus Tokens', () => {
   assert.doesNotMatch(karte, /box-shadow/, 'eine Karte schwebt nicht (tl-item, Q24)');
   assert.match(karte, /padding:[^;]*calc\(var\(--tl-space-xs\) \+ var\(--tl-size-icon-md\) \+ var\(--tl-space-xs\)\)/,
     'die Karte hält die Ecke des Auswahlhakens frei');
+  assert.match(karte, /flex-shrink:\s*0/,
+    'die Karten-Liste rollt, statt ihre Karten unter den Text zu stauchen (tl-item setzt min-height: 0; Sichtprüfung 23.10.)');
   const ohne = ohneKommentar(BOARD);
   assert.ok(ohne.trim(), 'board.css fehlt');
   assert.doesNotMatch(ohne, /999px/);
