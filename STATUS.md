@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-22 (master bis !1962 lokal in 5d gemergt, !1891-Regeln im Paket; nicht gepusht) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-23 (!1939: Diagrammfarben gerechnet und abgenommen, master bis !1957 lokal in 5d; nicht gepusht) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -317,6 +317,28 @@ gelöschten `tl-react-controls-css`. Die CSS von tl-chat/tl-ai liest ~690-mal al
 Gates: Paket 649/0, Messages ohne Diff (7 Module), tl-chat 453/0, tl-ai-demo 516/0. **Weiter:** `bhu` für !1939 anfragen
 (Bedingung „!1947 auf master“ erfüllt), nur mit Hendriks Freigabe. Geprüft, ohne Folgen: !1966 (#29887 Textvorschläge)
 merget sauber, sein `ListboxPart` nutzt nur Paketklassen (`tl-popover`, `tl-select__*`).
+
+**22.–23.10. — !1939 Diagrammfarben (Bernhard: „die Farben … sind aber kein Gewinn“), gebaut, nichts gepusht.** bhu hatte
+!1939 am 22.10. 17:44 freigegeben, Build 386 grün; Gitea lehnte den Merge zweimal mit 409 ab (Ursache unsichtbar).
+Hinweis an Bernhard im PR (22.10.): Diagrammfarben kommen auf dem Branch, dann master-Merge und Build. Hendrik: !1939 erst
+mergen, wenn die Diagrammfarben drin sind.
+- **Entschieden** (Spec `2026-10-22-diagrammfarben-design.md`, `skalen.md` „Diagramme rechnen ihre Reihen“): vierte
+  Kategorie-Rolle `category-N-mark` je Modus, gerechnet (`tools/lib/cvd.mjs`, `tools/lib/diagramm.mjs`), Kategorien nach
+  der Rechnung nummeriert (ein Satz Töne für Kalender, Pill, Avatar, Diagramm), `derive` rechnet dasselbe für Kunden.
+  Sichtabnahme 23.10.: Rot/Orange hell nicht zu dunkel (Nachtrag §3), danach abgenommen. TopLogic Abstand 1,27, 72
+  Markentöne ohne Befund.
+- **Paket** (Branch `claude/1939-merge-fehler-farben-9f692c`, nicht in `main`): Spec, Plan, Tasks 1–6, 3b, Doku, ab `e6c8a53`.
+  Gates 681/0 inkl. `published` (mit `TL_WORKTREE`).
+- **Engine** (`CWS/CWS_29914_design_system_welle_5d`, lokal, 9 Commits vor origin): Bernhards master-Merge mit !1966
+  (`3f1c1ab19e`, gepusht von ihm) per Fast-Forward übernommen; `8d469523e4`/`fb42e790b2` Charts malen mit
+  `category-N-mark` (deckend, Punkte gefüllt, Fuge, Typ je Datensatz); `9b415f4ffc` master-Merge (!1957 #29926); `84802990ce` Kopie
+  neu publiziert. Gates: MUI 848, chartjs build, Messages ohne Diff, Maven (`-DskipTests=false`, Locale über
+  `JAVA_TOOL_OPTIONS`) react 836, view 1791, chartjs 13, wysiwyg 55, codeedit 18, model.search.react 42, flow 81,
+  demo.react 84.
+- **Folgen, die Bernhard wissen muss:** Die Umnummerierung färbt auch Kalender-Termine, Pills und Avatare um (jede Person
+  bekommt im Avatar eine andere Farbe). Neue Commits verwerfen seine Freigabe vermutlich.
+- **Weiter (Hendrik entscheidet):** eigener PR für die Diagrammfarben oder in !1939; Push nur mit Freigabe (Repo und
+  Branch nennen), danach PR-Text, `bhu` und `jenkins` anfragen; Paket-Branch nach `main` mergen.
 
 **#29918 (20.10., accepted, CC bhu): Panel-Toolbar klebte am Titel** — Regression aus 4c (#29870, auf master): die
 Regel „Nachgeben“ gibt `tl-titlebar__actions` den ganzen Rest, die Toolbar stand darin am Anfang. Fix wie in der AppBar:
