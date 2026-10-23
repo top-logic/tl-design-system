@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-23 (!1939: Diagrammfarben gerechnet und abgenommen, master bis !1957 lokal in 5d; nicht gepusht) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-23 (!1939: Diagrammfarben gerechnet und abgenommen, master bis !1957 in 5d, Engine gepusht; Paket-Branch noch nicht in main) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`
@@ -337,8 +337,10 @@ mergen, wenn die Diagrammfarben drin sind.
   demo.react 84.
 - **Folgen, die Bernhard wissen muss:** Die Umnummerierung färbt auch Kalender-Termine, Pills und Avatare um (jede Person
   bekommt im Avatar eine andere Farbe). Neue Commits verwerfen seine Freigabe vermutlich.
-- **Weiter (Hendrik entscheidet):** eigener PR für die Diagrammfarben oder in !1939; Push nur mit Freigabe (Repo und
-  Branch nennen), danach PR-Text, `bhu` und `jenkins` anfragen; Paket-Branch nach `main` mergen.
+- **23.10. gepusht (Hendrik: „A“, in !1939):** Engine `3f1c1ab19e..84802990ce`, PR-Text ergänzt („Chart colours“),
+  Kommentar an Bernhard (Umnummerierung färbt Kalender, Pill, Avatar um), `bhu` und `jenkins` neu angefragt.
+  **Weiter:** Jenkins und Bernhards Review; Paket-Branch `claude/1939-merge-fehler-farben-9f692c` nach `main` (nur mit
+  Freigabe). master hat danach !1970/!1973 (Renovate) — nicht gemergt.
 
 **#29918 (20.10., accepted, CC bhu): Panel-Toolbar klebte am Titel** — Regression aus 4c (#29870, auf master): die
 Regel „Nachgeben“ gibt `tl-titlebar__actions` den ganzen Rest, die Toolbar stand darin am Anfang. Fix wie in der AppBar:
