@@ -28,7 +28,7 @@ Ansage, nicht das Aussehen; wer ins Bild passen will, liest die Tokens.
 | `selectEvent` | Klick auf einen Termin; Enter oder Leertaste am fokussierten Termin |
 | `goto` | Tageskopf, Tageszahl im Monat, „+n weitere“, Tag des Mini-Monats (`DAY`); Titel des Mini-Monats (`MONTH`) |
 | `moveEvent`, `resizeEvent` | Ziehen eines Termins bzw. seines Griffs (nur Zeiger) |
-| `createSlot` | Enter im Feld des Platzhalters nach Ziehen über freie Zeit oder Klick auf einen Tag (nur Zeiger) |
+| `createSlot` | Enter im Feld des Platzhalters nach Ziehen über freie Zeit oder Klick auf einen Tag (nur Zeiger); ebenso ein Druck daneben, wenn ein Titel eingegeben ist (ohne Titel verschwindet der Platzhalter). Ein Druck auf den Platzhalter selbst behält ihn und den Fokus im Feld (23.10.) |
 
 ## Tastatur
 
