@@ -341,6 +341,13 @@ mergen, wenn die Diagrammfarben drin sind.
   Kommentar an Bernhard (Umnummerierung färbt Kalender, Pill, Avatar um), `bhu` und `jenkins` neu angefragt.
   **Weiter:** Jenkins und Bernhards Review; Paket-Branch `claude/1939-merge-fehler-farben-9f692c` nach `main` (nur mit
   Freigabe). master hat danach !1970/!1973 (Renovate) — nicht gemergt.
+- **Paket `main` gepusht 23.10.** (`b03d79b..c5403e4`, Fast-Forward des Branches, Gates 681/0).
+- **Offen (Hendrik, 23.10.): Rich-Text-Editor im Config-Editor** (`…/view/config-editor`, Bearbeiten-Modus): die Icons der
+  Werkzeugleiste sind riesig und brechen das Layout. Nicht nachgestellt — die Docker-Instanz verlangt Anmeldung, Klicken
+  dort war nicht freigegeben. Code-Stand: `WysiwygToolbar.tsx` → Part `Button` → `ThemeIcon` malt
+  `<i class="fa-solid fa-… tl-button__icon tl-icon-md">`; der Config-Editor ist die React-Ansicht
+  `demo/config-editor-demo.view.xml` (`config-form`). Nächster Schritt: am Icon die berechneten Stile lesen (fremde Regel
+  auf `i`/`svg`/Schriftgröße oder fehlende Paketregel für `tl-icon-md` in diesem Kontext), dann Test und Fix im 5d-Branch.
 
 **#29918 (20.10., accepted, CC bhu): Panel-Toolbar klebte am Titel** — Regression aus 4c (#29870, auf master): die
 Regel „Nachgeben“ gibt `tl-titlebar__actions` den ganzen Rest, die Toolbar stand darin am Anfang. Fix wie in der AppBar:
