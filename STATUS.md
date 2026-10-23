@@ -753,6 +753,11 @@ Siehe `CLAUDE.md`. Alles in `design-system/`, alles mit `node`, keine Abhängigk
   überholt), #10 (`@layer` nicht geplant), #13 (Theming → #16, Accessibility → Welle 4, Storybook gestrichen — das
   Specimen ist das Schaufenster). Neu gefasst: #7 Figma-Push, #9 TSX-Lint, #12 Kunden-Typografie, #16 Themes (Paket
   fertig, Engine offen). Neu: #18 Dichte-Schalter. Issues im Design-System-Repo sind deutsch wie ihre Docs.
+* **Zur Diskussion (Hendrik, 23.10.): Gantt und Flow-Diagramm nativ neu bauen** statt der SVG-Zeichnung über den
+  GWT-Client (`com.top_logic.react.flow.*`) — als eigenes Projekt, nicht in Welle 5. Bis dahin keine großen Eingriffe,
+  nur funktionale Fixes (U24). Vor der Spec klären: Die Module sind Eigenbau (Bernhard, 137 von 145 Commits), kein
+  Fremdtool; das Layout rechnet in Java und dient zugleich dem PDF-Export (Batik); Anwendungen bauen Diagramme über
+  TL-Script (`FlowFactory`, `reactFlow*`). Bernhard gehört an den Tisch.
 * Zwei Commits von Welle 0 (`5ab2ae3`, `6d709f4`) tragen den Trailer eines anderen Modells; ein
   Umschreiben der Historie wurde nicht durchgeführt.
 
