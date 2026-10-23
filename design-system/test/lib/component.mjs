@@ -19,7 +19,8 @@ export function declarationsOf(css, selector) {
   // Kommentare zuerst weg — sonst hängt der Kopfkommentar der Datei vor dem ersten Selektor.
   const ohne = css.replace(/\/\*[\s\S]*?\*\//g, '');
   for (const m of ohne.matchAll(/([^{}]+)\{([^}]*)\}/g)) {
-    const selectors = m[1].split(',').map((s) => s.trim());
+    // Nur Kommata außerhalb von Klammern trennen Selektoren: `:not(:disabled, [readonly])` ist einer.
+    const selectors = m[1].split(/,(?![^(]*\))/).map((s) => s.trim());
     if (selectors.includes(selector)) return m[2];
   }
   return null;

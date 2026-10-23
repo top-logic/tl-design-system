@@ -170,7 +170,7 @@ Körper scrollen waagerecht gemeinsam: das TSX überträgt `scrollLeft` des Kör
 | Zeile | `--tl-size-row` hoch (`min-height`), Fläche `--tl-surface-layer`, Linie darunter `--tl-border-width-sm` in `--tl-border-separator`; gezeigt `--tl-surface-interactive-hover`, ausgewählt `--tl-surface-interactive-selected`; jede Fläche der Zeile steht in `:where`, Ablegen darauf (`drop-onto`, `drag.css`) übermalt sie |
 | Zelle | Innenabstand `--tl-space-control-x`, Trennlinie `--tl-border-separator` |
 | Kante zur scrollenden Fläche | `frozen-last` rechts, `pinned-first` links: `--tl-border-width-sm` in `--tl-border-emphasis` |
-| Feld in der Zelle | randlos; Fokusring innen (`outline-offset` −`--tl-focus-offset`); Warnung innere Linie `--tl-border-width-md` in `--tl-status-warning-border`, Fehler in `--tl-status-error-border` |
+| Feld in der Zelle | randlos; ein beschreibbares Feld (nicht `disabled`, nicht `readonly`) zeigt eine innere Linie unten in `--tl-border-width-sm`, `--tl-border-control`, auf gezeigter und ausgewählter Zeile `--tl-border-interactive` (23.10.); Fokusring innen (`outline-offset` −`--tl-focus-offset`); Warnung innere Linie `--tl-border-width-md` in `--tl-status-warning-border`, Fehler in `--tl-status-error-border` |
 | Baum | Toggle und Einzug je Ebene `--tl-size-control-sm` (Platzhalter `tl-table__spacer`); Abstand der Anzahl `--tl-space-xs` |
 | Platzhalter | Innenabstand `--tl-space-control-x`, Linie darunter wie die Zeile |
 | Ablehnung | Rand `--tl-status-error-border`, Text `--tl-status-error-text` |

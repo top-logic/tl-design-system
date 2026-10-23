@@ -33,6 +33,22 @@ test('tl-table: Zeile size-row, Kopf size-bar, Zustände als Attribute, keine Li
   assert.match(declarationsOf(css, '.tl-table__header-cell[data-tl-state~="filtered"] .tl-table__filter') ?? '', /icon-primary/);
 });
 
+test('ein bearbeitbares Feld in der Zelle zeigt sich durch eine Linie unten, auf gezeigter und ausgewählter Zeile in border-interactive', () => {
+  // Sichtprüfung 23.10.: randlos und durchsichtig sah die Zelle im Bearbeiten-Modus aus wie im Lesen. Gemessen gegen die
+  // Zeile: border-control hält auf surface-layer 3,42 hell / 3,69 dunkel, auf der ausgewählten Zeile nur 2,78 / 2,44;
+  // border-interactive dort 4,75 / 3,63, gezeigt 5,21 / 3,87.
+  // Das Feld ist so hoch wie die Zeile: die Zelle streckt ihre Hülle, sonst sitzt die Linie mitten in der Zeile.
+  assert.match(declarationsOf(css, '.tl-table__cell:has(.tl-field)') ?? '', /align-items:\s*stretch/);
+  const feld = '.tl-table__cell .tl-field:not(:disabled, [readonly])';
+  assert.match(declarationsOf(css, feld) ?? '',
+    /box-shadow:\s*inset 0 calc\(-1 \* var\(--tl-border-width-sm\)\) 0 var\(--tl-border-control\)/);
+  assert.match(declarationsOf(css, `:where(.tl-table__row:hover, .tl-table__row[aria-selected="true"]) ${feld}`) ?? '',
+    /box-shadow:\s*inset 0 calc\(-1 \* var\(--tl-border-width-sm\)\) 0 var\(--tl-border-interactive\)/);
+  // Fehler und Warnung stehen danach und gewinnen: ihr Rahmen ist die ganze Zelle.
+  assert.ok(css.indexOf(`:where(.tl-table__row:hover, .tl-table__row[aria-selected="true"]) ${feld}`)
+    < css.indexOf('.tl-table__cell .tl-field[data-tl-state~="warning"]'));
+});
+
 test('der Körper isoliert seinen Stapel, Spaltenwahl und Fixiergrenze sind so hoch wie die Kopfzeile', () => {
   // Fix-Welle 3b (7): die Wurzel isoliert ebenso — ihre Ablage-Marke (layer-sticky) bleibt in der Tabelle.
   assert.match(declarationsOf(css, '.tl-table') ?? '', /isolation:\s*isolate/);
