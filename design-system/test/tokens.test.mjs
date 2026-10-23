@@ -292,10 +292,9 @@ test('eine Kategorie hat genau vier Rollen: subtle, border, surface und mark', (
 });
 
 /** Die Eingabe der Rechnung, wie sie für TopLogic gilt: Töne der hellen Linien, Marke, Gründe je Modus. */
-// Töne in 0 ≤ Ton < 360, wie `derive` sie reicht: bei gleichem Abstand entscheidet die Reihenfolge der aufsteigenden Töne,
-// und −122° sortiert vor 186°, wo 238° dahinter steht (Nachtrag 23.10.: zwei Reihenfolgen mit demselben Abstand).
+// Die Töne stehen so da, wie `hexZuOklch` sie liefert (auch negativ): die Rechnung normalisiert selbst.
 const diagrammEingabe = () => ({
-  toene: KATEGORIEN.map((k) => (Math.round(hexZuOklch(R.color.light[`category-${k}-border`]).H * 180 / Math.PI) + 360) % 360),
+  toene: KATEGORIEN.map((k) => Math.round(hexZuOklch(R.color.light[`category-${k}-border`]).H * 180 / Math.PI)),
   marke: R.color.light['surface-brand'],
   gruende: Object.fromEntries(MODES.map((m) => [m, [R.color[m]['surface-base'], R.color[m]['surface-layer']]])),
 });
@@ -304,7 +303,7 @@ test('Diagrammreihen: TopLogic ist das Ergebnis der Rechnung', () => {
   const eingabe = diagrammEingabe();
   const r = diagrammReihen(eingabe);
   // Die Nummerierung ist schon die gerechnete: Kategorie k trägt den Ton, den die Rechnung als k-ten setzt.
-  assert.deepEqual(r.toene, eingabe.toene);
+  assert.deepEqual(r.toene, eingabe.toene.map((t) => (t + 360) % 360));
   assert.deepEqual(r.ohneStufe, []);
   for (const m of MODES) for (const k of KATEGORIEN)
     assert.equal(R.color[m][`category-${k}-mark`], r[m][k - 1], `${m}: category-${k}-mark`);

@@ -107,6 +107,21 @@ test('TopLogic: alle Schwellen erfüllt, Reihe 1 neben der Marke', () => {
   assert.deepEqual([...r.toene].sort((a, b) => a - b), TL.toene);
   for (const m of ['light', 'dark']) assert.ok(pruefeReihen(r[m]).abstand >= 1, m);
 });
+test('die Schreibweise der Töne ändert nichts: rohe Winkel (negativ) und 0–360 geben dasselbe Ergebnis', () => {
+  // Wie `hexZuOklch` sie liefert (atan2, −180…180): TopLogic hat zwei Reihenfolgen mit gleichem Abstand,
+  // die Schreibweise darf nicht zwischen ihnen entscheiden (Spec §5).
+  const roh = TL.toene.map((t) => (t > 180 ? t - 360 : t));
+  assert.ok(roh.some((t) => t < 0));
+  const a = diagrammReihen(TL);
+  const b = diagrammReihen({ ...TL, toene: roh });
+  assert.deepEqual(b, a);
+  assert.deepEqual(a.toene, [238, 2, 285, 186, 56, 311, 123, 337]);
+  // Auch Töne ≥ 360, gelieferte Kategorien und das Sprungmaß.
+  assert.deepEqual(diagrammReihen({ ...TL, toene: TL.toene.map((t) => t + 360) }), a);
+  const fest = { toene: [2, 56, 123, 186, 285, 311, 337], fest: { 3: 238 } };
+  assert.deepEqual(diagrammReihen({ ...TL, ...fest, fest: { 3: -122 } }), diagrammReihen({ ...TL, ...fest }));
+  assert.equal(groessterSprung({ ...a, toene: roh.map((t, k) => (a.toene[k] > 180 ? a.toene[k] - 360 : a.toene[k])) }, TL), groessterSprung(a, TL));
+});
 test('Probe-Marke (orange): alle Schwellen erfüllt', () => {
   const r = diagrammReihen({ ...TL, toene: [111, 136, 187, 242, 271, 301, 330, 359], marke: '#E8541E' });
   assert.ok(r.abstand >= 1, JSON.stringify(r.schwaechstes));

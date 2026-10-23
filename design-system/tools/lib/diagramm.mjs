@@ -216,20 +216,28 @@ const paarWert = (a, b) => Math.min(
   dE(a[0], b[0]) / DIAGRAMM.NORMAL,
 );
 
-/** Eingabe prüfen und in eine Form bringen, die nicht von der Reihenfolge der Töne abhängt. */
+/** Ton auf 0 ≤ Ton < 360 bringen: −122° und 238° sind derselbe Ton und rechnen gleich. */
+const mod360 = (g) => ((g % 360) + 360) % 360;
+
+/**
+ * Eingabe prüfen und in eine Form bringen, die weder von der Reihenfolge noch von der Schreibweise
+ * der Töne abhängt (Spec §5, gleiche Eingabe gleiche Ausgabe): alle Töne, freie wie gelieferte,
+ * stehen danach in 0 ≤ Ton < 360. Bei gleichem Abstand entscheidet die Reihenfolge der
+ * aufsteigenden Töne, also darf sie nicht an der Darstellung hängen (−122° sortiert vor 186°).
+ */
 function normiereEingabe({ toene, fest = {}, marke, gruende }) {
-  const frei = [...toene].sort((a, b) => a - b);
   const geliefert = Object.entries(fest).map(([nr, ton]) => [Number(nr), ton]).sort((a, b) => a[0] - b[0]);
   for (const [nr] of geliefert) {
     if (!Number.isInteger(nr) || nr < 1 || nr > REIHEN) throw new Error(`Gelieferte Kategorie ${nr}: die Nummer muss 1–${REIHEN} sein`);
   }
-  for (const ton of [...frei, ...geliefert.map(([, t]) => t)]) {
+  for (const ton of [...toene, ...geliefert.map(([, t]) => t)]) {
     if (!Number.isFinite(ton)) throw new Error(`Ton ${ton} ist keine Gradzahl`);
   }
-  if (frei.length + geliefert.length !== REIHEN) {
-    throw new Error(`Diagrammreihen brauchen genau ${REIHEN} Töne, erhalten ${frei.length} freie und ${geliefert.length} gelieferte`);
+  if (toene.length + geliefert.length !== REIHEN) {
+    throw new Error(`Diagrammreihen brauchen genau ${REIHEN} Töne, erhalten ${toene.length} freie und ${geliefert.length} gelieferte`);
   }
-  return { frei, fest: geliefert, marke: marke.toUpperCase(), gruende: { light: [...gruende.light], dark: [...gruende.dark] } };
+  const frei = toene.map(mod360).sort((a, b) => a - b);
+  return { frei, fest: geliefert.map(([nr, ton]) => [nr, mod360(ton)]), marke: marke.toUpperCase(), gruende: { light: [...gruende.light], dark: [...gruende.dark] } };
 }
 
 /**
@@ -522,7 +530,8 @@ const GEMERKT = new Map();
 /**
  * Reihenfolge der Kategorien und `mark` je Modus, gerechnet (Spec §2–§4, §6, §11).
  *
- * Eingabe: `toene` die freien Töne in Grad, `fest` gelieferte Kategorien (Nummer 1–8 → Grad, sie
+ * Eingabe: `toene` die freien Töne in Grad (jede Schreibweise, −122° gilt wie 238°; zurück kommen die
+ * Töne in 0–360), `fest` gelieferte Kategorien (Nummer 1–8 → Grad, sie
  * behalten ihre Nummer), zusammen genau acht; `marke` der Hexwert der Marke; `gruende` je Modus
  * `surface-base` und `surface-layer`.
  *
@@ -565,7 +574,8 @@ export function diagrammReihen(eingabe) {
 export function groessterSprung(ergebnis, { marke, gruende }) {
   const { chroma } = markenChroma(marke);
   let groesster = 0;
-  ergebnis.toene.forEach((ton, k) => {
+  // Auch hier gilt die Schreibweise 0–360 (wie in `diagrammReihen`); der Hexwert ändert sich dadurch nicht.
+  ergebnis.toene.map(mod360).forEach((ton, k) => {
     const [hell, dunkel] = MODI.map((m) => {
       const { stufen } = stufenMitErsatz(ton, chroma, m, gruende[m]);
       const i = stufen.findIndex(({ hex }) => hex === ergebnis[m][k]);

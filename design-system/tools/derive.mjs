@@ -96,7 +96,7 @@ export function derive(P, T, json, quelle = 'input') {
     const prim = primitiveVon(T, mode, rolle);
     if (prim && Object.hasOwn(geliefert, prim)) {
       // Eine gelieferte Stufe bleibt gelieferte Stufe — aber lautlos wird sie nicht: eine
-      // Kategorie, die an einer Markenstufe hängt (category-5-subtle ist {blue-4}), kippt sonst
+      // Kategorie, die an einer Markenstufe hängt (category-1-subtle ist {blue-4}), kippt sonst
       // unbemerkt auf den Markenton.
       if (rolle.startsWith('category-')) {
         hinweise.push(`${mode}: ${rolle} bleibt bei der gelieferten Stufe ${prim} und folgt damit nicht der Verteilung`);
@@ -212,7 +212,7 @@ export function derive(P, T, json, quelle = 'input') {
   // 3b Die Trennung im Farbton am fertigen Ergebnis prüfen, nicht an der Verteilung.
   //
   // Die Verteilung rechnet mit Tönen; was am Ende in der Datei steht, kann ein anderer Ton sein —
-  // eine gelieferte Stufe unter einer Kategorie (category-5-subtle ist {blue-4}) zieht sie auf den
+  // eine gelieferte Stufe unter einer Kategorie (category-1-subtle ist {blue-4}) zieht sie auf den
   // Markenton, ohne dass die Verteilung davon weiß. Geprüft wird deshalb der Befund, nicht die
   // Absicht: jede Kategorie gegen jede andere und gegen jede feste Bedeutung.
   // Ein unbuntes Paar (die getönte Fläche einer grauen Marke) hat keinen Ton und fällt heraus.
