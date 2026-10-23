@@ -1944,7 +1944,8 @@ der 54 Zeilen; das Gruppier-Icon steht 54-mal für eine Wahl, die nur eine Spalt
 * **Ausgeblendet bleibt am Platz,** der Name blass — keine getrennten Bereiche Sichtbar/Ausgeblendet.
 * **Das Schloss fixiert die Spalte:** fixierte Spalten stehen als Block „Fixiert“ oben; Schloss und Fixiergriff
   zwischen den Köpfen schreiben dieselbe Anzahl.
-* **Das Gruppieren der Zeilen verlässt den Dialog;** es bleibt im Kontextmenü am Spaltenkopf.
+* ~~**Das Gruppieren der Zeilen verlässt den Dialog;** es bleibt im Kontextmenü am Spaltenkopf.~~ Revidiert, siehe
+  unten „Gruppieren bleibt in der Spaltenwahl“.
 * **Stufe 2: Spaltengruppen** — Spalten aufeinanderziehen ergibt eine benannte Gruppe, in der Tabelle ein Band über
   ihren Köpfen. Die Logik baut Bernhard, das Aussehen wir; ein Pivot (Zeilen über mehrere Ebenen gruppieren) geht als
   Idee an ihn.
@@ -1952,6 +1953,15 @@ der 54 Zeilen; das Gruppier-Icon steht 54-mal für eine Wahl, die nur eine Spalt
 **Verworfen (am selben Tag zuerst entschieden, dann ersetzt):** Gruppieren als ein Select über der Liste; Kästchen vorn
 und Griff rechts; zwei Bereiche Sichtbar/Ausgeblendet. Ebenso verworfen: Gruppieren ins Kopf-Menü allein ohne
 Spaltengruppen, das Icon behalten und nur erklären.
+
+**Gruppieren bleibt in der Spaltenwahl (revidiert 23.10., Bernhard — #29967).** *Befund:* Ohne Gruppieren im Dialog
+lässt sich nach einer ausgeblendeten Spalte nicht gruppieren — sie hat keinen Kopf, an dem das Kontextmenü hängt. Eine
+Tabelle, die nach einer ausgeblendeten Spalte gruppiert startet (die Dienstverwaltung nach „Kategorie“), ist nach
+„Gruppierung aufheben“ nicht mehr so zu gruppieren. *Entschieden:* Jede Zeile trägt wieder den Schalter „nach dieser
+Spalte gruppieren“ als Button-Part neben Schloss und Auge (Zeile = Griff · Name · Gruppieren · Schloss · Auge); er
+erscheint beim Zeigen oder bei Fokus, auf der gruppierten Zeile bleibt er sichtbar und steht gedrückt (`aria-pressed`).
+Ein Baum bietet kein Gruppieren an. Das Kontextmenü am Spaltenkopf bleibt daneben bestehen. *Warum:* Gruppieren ist eine
+Wahl über alle Spalten, auch die ausgeblendeten; nur der Dialog zeigt alle.
 
 **Nachgetragen beim Bau (12.10., Hendrik):**
 * **Ausgeblendet ist blass, nicht deaktiviert:** der Name steht in `--tl-text-secondary`, nicht in `--tl-text-disabled`.
