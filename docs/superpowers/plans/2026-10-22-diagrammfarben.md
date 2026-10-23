@@ -24,6 +24,7 @@ im Modul `com.top_logic.layout.react.mui`).
 - Chroma (§6): `clamp(C der Marke, 0,10, 0,15)`; wo der Farbraum weniger hergibt, sinkt C (wie `oklchZuHex`).
 - Helligkeitsbereiche (aus dem gewählten Prototyp C): hell L ∈ [0,43; 0,77], dunkel L ∈ [0,48; 0,77]; der Kontrast
   beschränkt sie zusätzlich.
+  **Überholt 23.10.:** hell beginnt je Ton bei 0,46 / Rot 0,50 / warm 0,54 (Spec §3 Nachtrag, Task 3b).
 - Ziel der Suche (§11): maximiere `abstand = min über Modi und Paare (ΔE_rotgruen / 8, ΔE_normal / 15)`.
 - Helligkeitssprung (§3, nach dem Plan-Review präzisiert): je Ton werden nur Stufenpaare (hell, dunkel) betrachtet, deren
   Sprung — L normiert auf die zulässigen Stufen des Tons im Modus, 0 dunkelste, 1 hellste — höchstens 0,5 beträgt. Hält

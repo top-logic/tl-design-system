@@ -1442,7 +1442,7 @@ nicht mehr nach dem Farbkreis; dazu kamen `surface` (5c) und `mark` (22.10.).
 (Marke, vier Bedeutungen, acht Kategorien) teilen sich 360°; im Mittel bleiben 27,7°, die 30° der
 Bedeutungen sind also nicht zu halten. Kategorien halten **20°** zueinander und zu jeder Bedeutung
 (`KATEGORIE_ABSTAND_MIN`). Das reicht, um zwei Pillen nebeneinander zu unterscheiden; es reicht
-nicht, damit eine Kategorie niemals an eine Bedeutung erinnert — Kategorie 1 liegt 26° neben dem
+nicht, damit eine Kategorie niemals an eine Bedeutung erinnert — Kategorie 2 (2°) liegt 26° neben dem
 Fehlerrot. Deshalb trägt eine Kategorie ihre Bedeutung nie in der Farbe, sondern im Text, und
 deshalb sind es Kategorien und keine „Farben“: Wer Rot meint, nimmt `error`.
 
@@ -2783,8 +2783,9 @@ Token, zwei Aufgaben“.
   schwächsten Paar, kein Abbruch (die Ursache ist die gelieferte Farbe); geprüft wird am fertigen Ergebnis, nach dem
   Nachführen. Hat ein Ton auf dem Grund eines Kundengraus keine zulässige Stufe, nimmt die Suche die mit dem höchsten
   Kontrast, `derive` führt nach und nennt die Kategorien in einem Hinweis je Modus. Über alle Markentöne in 5°-Schritten
-  entsteht mit TopLogic-Grau kein Hinweis.
-- **Absehbar:** `category-1-mark` und `-4-mark` hängen an `blue-*`, der Familie der Marke; liefert ein Kunde Markenstufen
+  entsteht mit TopLogic-Grau kein Hinweis. Liefert ein Kunde alle acht Kategorien in Kreisreihenfolge, bleibt deren
+  Reihenfolge und die Palette verfehlt die Schwelle knapp (Abstand 0,95): Geliefertes darf verfehlen, `derive` meldet es.
+- **Absehbar:** `category-1-mark` und `-3-mark` hängen an `blue-*`, der Familie der Marke; liefert ein Kunde Markenstufen
   mit denselben Namen, bleiben sie geliefert, und `derive` meldet es — wie bei `category-1-subtle`.
 - **Verworfen:** die Termin-Füllung weiter lesen (eine Aufgabe zu viel); eine fremde Palette (Tableau auf master: auf
   Weiß Gelb 1,6:1, keine TopLogic-Werte); die Marke als Reihe 1; eine harte Regel „gleiche Hälfte in beiden Modi“ (die
