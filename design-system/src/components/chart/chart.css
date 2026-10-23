@@ -1,6 +1,6 @@
 /* Chart — Spec 2026-10-20 Welle 5d §8 (Plan-Review K12, Ruling R3). Das Diagramm (Chart.js, TLChart) zeichnet seine
    Reihen, Gitter und Beschriftung auf ein Canvas; die Farben liest das Control im Browser aus den Kategorien
-   (--tl-category-N-surface), --tl-border-separator und --tl-text-secondary. Hier steht, was im DOM um das Canvas
+   (--tl-category-N-mark), --tl-border-separator und --tl-text-secondary. Hier steht, was im DOM um das Canvas
    liegt: die Wurzel, der Tooltip am Datenpunkt, der Knopf zum Zurücksetzen des Zooms, und leer oder Fehler als
    tl-status. Die Schrift tragen die Typo-Klassen am Element. */
 
