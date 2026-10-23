@@ -64,6 +64,13 @@ Reihe der Sprung der Helligkeit, normiert auf den zulässigen Bereich des Modus 
 Stufe); die Suche hält den größten Sprung klein (Abschnitt 11). Eine harte Hälften-Regel hätte die gewählte Richtung C
 selbst verletzt (Reihe 2 und 3 wechseln dort die Hälfte, sichtbar unauffällig).
 
+**Nachtrag 23.10. (Hendrik, Sichtabnahme): Rot und warme Töne nicht zu dunkel.** Im hellen Modus wurden Rot zu Weinrot
+und Orange zu Braun, weil die Suche sie dunkel setzte. Seitdem beginnt die Helligkeit im hellen Modus je Ton:
+Rot (Ton ≥ 345° oder < 30°) bei L 0,50, warme Töne (30° bis 110°, Orange bis Gelb) bei L 0,54, alle anderen bei L 0,46
+(vorher 0,43 für alle). Der dunkle Modus bleibt. Gerechnet: TopLogic Abstand 1,27 (vorher 1,34), Reihenfolge 238°, 2°,
+285°, 186°, 56°, 311°, 123°, 337°; über alle Markentöne in 5°-Schritten kein Befund. Strenger (allgemein ab 0,50)
+kippten 8 von 72 Marken unter die Schwelle. Verworfen: Handwerte für die zwei Reihen.
+
 ### 4. Reihenfolge gerechnet, Kategorien neu nummeriert
 
 Die Kategorien werden so nummeriert, dass Kategorie N die Reihe N ist: Die Nummer folgt nicht mehr dem Farbkreis, sondern
