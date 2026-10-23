@@ -1,4 +1,4 @@
-**Letzte Sitzung:** 2026-10-23 (!1939: Diagrammfarben gerechnet und abgenommen, master bis !1957 in 5d, Engine gepusht; Paket-Branch noch nicht in main) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
+**Letzte Sitzung:** 2026-10-23 (!1939: Diagrammfarben gerechnet und abgenommen, master bis !1957 in 5d, Engine gepusht; Paket-Branch noch nicht in main. Danach: Rich-Text-Leiste klein — Knöpfe und Trigger `small`, `MenuTrigger` kann `small`, Regel „Leiste in einem Feld“ in `skalen.md`; Engine lokal committet, nicht gepusht) · **Basis:** `tl-engine-7@master` (TopLogic 8.0.0-SNAPSHOT) ·
 **Specs:** `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`,
 `docs/superpowers/specs/2026-09-25-derive-design.md`,
 `docs/superpowers/specs/2026-09-25-ui-paket-design.md`

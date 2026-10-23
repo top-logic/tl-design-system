@@ -1158,6 +1158,8 @@ Das ist der eigentliche Mangel im Bestand, und er ist ein Mechanismusfehler. Zwe
 
 Die kleine Control-Höhe liegt bei genau 24 px. **Solange eine Icon-Schaltfläche eine Control-Höhe nimmt, kann sie die Norm nicht verfehlen** — und der einzige Verstoß im Bestand ist genau der, der keine genommen hat.
 
+**Eine Leiste in einem Feld nimmt die kleine Icon-Schaltfläche** (23.10.). Das Feld ist das Control, die Leiste gehört zu ihm — dieselbe Überlegung wie beim Glyph im Control. Anlass ist die Leiste des Rich-Text-Editors. Mit der Standardstufe (32 px, Icon 20 px) brach sie in einem Formularfeld von 217 px Breite in drei Zeilen um, mit Quellansicht in vier. Ihre Glyphen standen 20 px hoch neben 14 px Text. Klein (24 px, Icon 16 px) braucht sie zwei Zeilen. Das ist auch das Maß vor dem Umbau: 30 px mit 16-px-Icons. Die Norm hält, denn 24 px ist die kleine Control-Höhe. Der Part `MenuTrigger` kann dafür `small` wie der Part `Button`. Eine Leiste über einem Bereich (Panel, App-Bar, Kalender) bleibt bei der Standardstufe.
+
 #### Zwei Eigenschaften, die zur Stufe gehören
 
 * **`line-height: 1` ist Pflicht.** Ein Font-Glyph erbt sonst die Zeilenhöhe des Fließtextes und macht die Zeile um ihre Differenz höher. Das steht in der Klasse, nicht in jeder Komponente.
