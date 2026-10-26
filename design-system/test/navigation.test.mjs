@@ -74,7 +74,7 @@ test('tl-sidebar: Nav size-sidebar auf surface-layer mit Linie; eingeklappt eine
 test('tl-sidebar: die aktuelle Seite und der Kopf einer zugeklappten Gruppe, die sie enthält, tragen die Fläche der Auswahl — kein Balken', () => {
   const css = readGenerated('sidebar', 'sidebar.css');
   const regel = declarationsOf(css, '.tl-sidebar__item[aria-current="page"]') ?? '';
-  assert.match(regel, /background:\s*var\(--tl-surface-interactive-selected\)/);
+  assert.match(regel, /background:\s*var\(--tl-surface-interactive-strong\)/);
   assert.notEqual(declarationsOf(css, '.tl-sidebar__item[data-tl-state~="contains-current"]'), null);
   assert.doesNotMatch(ohneKommentar(css), /border-left|border-width-accent|font-weight/);
 });
@@ -94,7 +94,7 @@ test('tl-sidebar: im Drawer füllt die Nav die Schublade, Breite und Linie träg
 test('tl-bottom-bar: Höhe size-shell-bar; die aktuelle Seite trägt die Fläche hinter dem Icon', () => {
   assert.match(decl('bottom-bar', '.tl-bottom-bar'), /height:\s*var\(--tl-size-shell-bar\)/);
   assert.match(decl('bottom-bar', '.tl-bottom-bar__item[aria-current="page"] .tl-bottom-bar__icon'),
-    /background:\s*var\(--tl-surface-interactive-selected\)/);
+    /background:\s*var\(--tl-surface-interactive-strong\)/);
   assert.match(decl('bottom-bar', '.tl-bottom-bar__item:focus-visible'), /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/);
 });
 

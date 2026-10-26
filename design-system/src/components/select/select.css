@@ -86,7 +86,7 @@
 }
 
 /* Der Entfernen-Knopf liegt auf der Pille, nicht auf dem Feld: die neutrale Pille ist selbst
-   surface-interactive-selected, die Ghost-Stufe verschwindet auf ihr und auf den getönten Pillen. Zeigen und
+   surface-interactive-strong, die Ghost-Stufe verschwindet auf ihr und auf den getönten Pillen. Zeigen und
    Drücken nehmen darum beide surface-interactive-active, die einzige Stufe, die sich auf allen 14
    Pillenflächen abhebt (docs/skalen.md „Knöpfe im Feld zeigen eine Stufe kräftiger“). Eine kräftigere
    Drücken-Stufe gibt es nicht; die Kategorie bleibt geschlossen. */
@@ -118,12 +118,12 @@
 }
 
 /* Löschen und Chevron sind Knöpfe im Feld wie die Aktion der tl-field-group (field.css): quadratisch
-   size-control-sm, am Ende space-2xs vom Rand (padding-inline-end von .tl-select), Zeigen surface-interactive-selected, Drücken
+   size-control-sm, am Ende space-2xs vom Rand (padding-inline-end von .tl-select), Zeigen surface-interactive-strong, Drücken
    surface-interactive-active — auf surface-field ist die Zeigen-Stufe des Ghost-Knopfs hell nicht zu sehen.
    Der Öffner des bearbeitbaren Compact field (compact-field.css) ist derselbe Knopf im Feld: eine Regel, zwei Leser. */
 .tl-select__controls > .tl-button--ghost:not(:disabled):hover,
 .tl-compact-field[data-tl-state~="edit"] > .tl-compact-field__opener.tl-button--ghost:not(:disabled):hover {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 .tl-select__controls > .tl-button--ghost:not(:disabled):active,
 .tl-compact-field[data-tl-state~="edit"] > .tl-compact-field__opener.tl-button--ghost:not(:disabled):active {
@@ -145,7 +145,7 @@
 }
 
 .tl-select:not([aria-disabled="true"]) .tl-select__arrow:hover {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 .tl-select:not([aria-disabled="true"]) .tl-select__arrow:active {
   background: var(--tl-surface-interactive-active);
@@ -194,11 +194,11 @@
 }
 
 /* Die Hervorhebung ist die Tastaturposition (aria-activedescendant), nicht die Wahl: Fläche und
-   Akzentlinie. Die Akzentlinie ist der Indikator, die Tönung nur ein Zusatz: surface-interactive-selected
+   Akzentlinie. Die Akzentlinie ist der Indikator, die Tönung nur ein Zusatz: surface-interactive-strong
    ist auf surface-layer abgestimmt, nicht auf die gehobene Overlay-Fläche; gehobene Flächen bekommen
    ihre eigenen Rollen in Welle 3. */
 .tl-select__option[data-tl-state~="highlighted"] {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
   box-shadow: inset var(--tl-border-width-accent) 0 0 0 var(--tl-border-interactive);
 }
 

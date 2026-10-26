@@ -24,7 +24,7 @@ Das Control ist `TLBottomBar` (`ReactBottomBarControl`).
 |---|---|
 | Höhe | `--tl-size-shell-bar` |
 | Fläche, Linie | `--tl-surface-layer`, `--tl-border-separator` |
-| Aktuelle Seite | `--tl-surface-interactive-selected` hinter dem Icon, Label `tl-type-label-strong` |
+| Aktuelle Seite | `--tl-surface-interactive-strong` hinter dem Icon, Label `tl-type-label-strong` |
 | Icon, Label | `tl-icon-md`, `tl-type-label` |
 
 ## Attribute

@@ -44,7 +44,7 @@
 }
 
 .tl-icon-picker__cell[aria-selected="true"] {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 
 .tl-icon-picker__advanced {

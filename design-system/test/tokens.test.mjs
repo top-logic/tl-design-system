@@ -37,7 +37,7 @@ test('Text und Linien erfüllen ihre Anforderung gegen die richtige Fläche', ()
 
 test('Text steht auf jeder Fläche, auf der er liegen kann', () => {
   for (const m of MODES) for (const bg of ['surface-layer', 'surface-layer-nested', 'surface-overlay',
-    'surface-interactive-hover', 'surface-interactive-selected', 'surface-interactive-active']) {
+    'surface-interactive-hover', 'surface-interactive-strong', 'surface-interactive-active']) {
     const ist = ratio(R.color[m]['text-primary'], R.color[m][bg]);
     assert.ok(ist >= 4.5, `${m}: text-primary auf ${bg} = ${ist.toFixed(2)}`);
   }
@@ -326,10 +326,10 @@ test('Diagrammreihen halten die Schwellen (Kontrast, Abstand, keine Bedeutungsfa
 
 test('Zeigen auf allen Gründen (01.10.): dunkel liegen hover, selected, active über dem Overlay', () => {
   const C = R.color.dark;
-  for (const rolle of ['surface-interactive-hover', 'surface-interactive-selected', 'surface-interactive-active']) {
+  for (const rolle of ['surface-interactive-hover', 'surface-interactive-strong', 'surface-interactive-active']) {
     assert.ok(ratio(C[rolle], C['surface-overlay']) >= 1.1, `${rolle} auf surface-overlay < 1,1`);
   }
-  assert.ok(ratio(C['border-interactive'], C['surface-interactive-selected']) >= 3.0);
+  assert.ok(ratio(C['border-interactive'], C['surface-interactive-strong']) >= 3.0);
   assert.equal(T.measure['size-popover-min'], '{size-11}');
   assert.equal(T.measure['size-popover-max'], '{view-1}');
   assert.equal(T.measure['size-popover-content-max'], '{size-14}');
@@ -342,9 +342,9 @@ test('Zeigen auf allen Gründen (01.10.): dunkel liegen hover, selected, active 
 test('Knöpfe im Feld (06.10.): Zeigen und Drücken heben sich von surface-field ab, Drücken vom Zeigen', () => {
   for (const m of MODES) {
     const C = R.color[m];
-    const zeigen = ratio(C['surface-interactive-selected'], C['surface-field']);
-    const druecken = ratio(C['surface-interactive-active'], C['surface-interactive-selected']);
-    assert.ok(zeigen >= 1.1, `${m}: surface-interactive-selected auf surface-field = ${zeigen.toFixed(2)}, gefordert 1,1`);
+    const zeigen = ratio(C['surface-interactive-strong'], C['surface-field']);
+    const druecken = ratio(C['surface-interactive-active'], C['surface-interactive-strong']);
+    assert.ok(zeigen >= 1.1, `${m}: surface-interactive-strong auf surface-field = ${zeigen.toFixed(2)}, gefordert 1,1`);
     assert.ok(druecken >= 1.1, `${m}: surface-interactive-active auf -selected = ${druecken.toFixed(2)}, gefordert 1,1`);
   }
   // Der Befund: die Zeigen-Stufe des Ghost-Knopfs verschwindet hell auf dem Feld.
@@ -352,7 +352,7 @@ test('Knöpfe im Feld (06.10.): Zeigen und Drücken heben sich von surface-field
 });
 
 test('Knöpfe im Feld (06.10.): der Entfernen-Knopf im Chip hebt sich auf jeder der 14 Pillenflächen ab', () => {
-  const pillen = ['surface-interactive-selected', 'surface-brand-subtle',
+  const pillen = ['surface-interactive-strong', 'surface-brand-subtle',
     ...['error', 'warning', 'success', 'info'].map((s) => `status-${s}-subtle`),
     ...[1, 2, 3, 4, 5, 6, 7, 8].map((k) => `category-${k}-subtle`)];
   assert.equal(pillen.length, 14);
@@ -401,8 +401,26 @@ test('das Status-Gate meldet den verworfenen Tausch (dunkel Rand und Fläche bei
 test('hell: Hilfetext steht auch auf der ausgewählten Zeile (09.10., Hendrik)', () => {
   // Dunkel verfehlen text-helper (3,64) und text-secondary (4,27) dieses Paar noch; entschieden wird dort,
   // wenn ein Nebentext in einer ausgewählten Zeile gebraucht wird (docs/migration/altlast.md „Offen nach 3b“).
-  const ist = ratio(R.color.light['text-helper'], R.color.light['surface-interactive-selected']);
-  assert.ok(ist >= 4.5, `hell: text-helper auf surface-interactive-selected = ${ist.toFixed(2)}`);
+  const ist = ratio(R.color.light['text-helper'], R.color.light['surface-interactive-strong']);
+  assert.ok(ist >= 4.5, `hell: text-helper auf surface-interactive-strong = ${ist.toFixed(2)}`);
   assert.ok(ratio(R.color.light['text-secondary'], R.color.light['surface-base'])
     > ratio(R.color.light['text-helper'], R.color.light['surface-base']), 'Hilfetext nicht heller als Nebentext');
+});
+
+test('Auswahl hat eigene Rollen, der alte Name ist weg', () => {
+  for (const mode of ['light', 'dark']) {
+    for (const r of ['surface-selected', 'surface-selected-hover', 'border-selected', 'surface-interactive-strong'])
+      assert.ok(T.color[mode][r], `${mode}: ${r}`);
+    assert.equal(T.color[mode]['surface-interactive-selected'], undefined);
+    for (const r of ['surface-selected', 'surface-layer-muted'])
+      assert.ok(ratio(R.color[mode][r], R.color[mode]['surface-layer']) >= 1.1, `${mode}: ${r} gegen surface-layer`);
+  }
+});
+
+test('Typo-Klasse overline: Größe, Gewicht und Zeilenhöhe wie label, Sperrung 0.04em', () => {
+  const o = T.type.overline;
+  assert.ok(o, 'overline fehlt');
+  for (const k of ['family', 'size', 'weight', 'lineHeight']) assert.equal(o[k], T.type.label[k], k);
+  assert.equal(o.tracking, '0.04em');
+  assert.ok(readFileSync(new URL('../dist/base.css', import.meta.url), 'utf8').includes('.tl-type-overline {'));
 });

@@ -341,7 +341,7 @@
   height: var(--tl-size-avatar-md);
   border: var(--tl-border-width-sm) solid var(--tl-border-control);
   border-radius: var(--tl-radius-round);
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
   color: var(--tl-text-primary);
   overflow: hidden;
   text-transform: uppercase;
@@ -551,7 +551,7 @@
 }
 
 .tl-bottom-bar__item[aria-current="page"] .tl-bottom-bar__icon {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 
 .tl-bottom-bar__label {
@@ -1767,7 +1767,7 @@
 .tl-segmented__segment[data-tl-role="category-8"] { background: var(--tl-category-8-subtle); border-color: var(--tl-category-8-border); }
 
 .tl-segmented__segment:where(:not(:disabled)):hover {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 
 /* Das Segment liegt auf der Feldfläche: dort rückt die Skala eine Stufe vor wie bei den Knöpfen im Feld
@@ -1852,7 +1852,7 @@
 .tl-chip[data-tl-role="category-8"] { background: var(--tl-category-8-subtle); border-color: var(--tl-category-8-border); }
 
 .tl-chip:where(:not(:disabled)):hover {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 
 /* Die Kapsel ist selbst Feldfläche (surface-field): Zeigen und Drücken rücken eine Stufe vor wie bei den
@@ -2362,7 +2362,7 @@
 }
 
 [data-tl-state~="drop-onto"] {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 
 [data-tl-state~="drop-onto"]::before {
@@ -2612,7 +2612,7 @@ body[data-tl-state~="picking"] * {
   transition: background-color var(--tl-duration-fast) var(--tl-easing-standard);
 }
 .tl-field:enabled::-webkit-calendar-picker-indicator:hover {
-  background-color: var(--tl-surface-interactive-selected);
+  background-color: var(--tl-surface-interactive-strong);
 }
 .tl-field:enabled::-webkit-calendar-picker-indicator:active {
   background-color: var(--tl-surface-interactive-active);
@@ -2659,11 +2659,11 @@ body[data-tl-state~="picking"] * {
 
 /* Knopf im Feld (docs/skalen.md „Knöpfe im Feld zeigen eine Stufe kräftiger“): der Ghost-Knopf liegt auf
    surface-field, auf dem surface-interactive-hover hell nicht zu sehen ist (1,01). Im Feld zeigt er darum
-   surface-interactive-selected und drückt surface-interactive-active — dieselben Stufen am Chevron des
+   surface-interactive-strong und drückt surface-interactive-active — dieselben Stufen am Chevron des
    Select und am Kalenderknopf des Datumsfelds. Der Wächter hält einen deaktivierten Knopf leer: die Regel
    steht nach button.css und schlüge sonst dessen :disabled bei gleicher Spezifität. */
 .tl-field-group > .tl-button--ghost:not(:disabled):hover {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 .tl-field-group > .tl-button--ghost:not(:disabled):active {
   background: var(--tl-surface-interactive-active);
@@ -3136,7 +3136,7 @@ a.tl-field-value:hover {
 }
 
 .tl-icon-picker__cell[aria-selected="true"] {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 
 .tl-icon-picker__advanced {
@@ -3759,7 +3759,7 @@ a.tl-field-value:hover {
   padding: 0 var(--tl-space-xs);
   border: var(--tl-border-width-sm) solid var(--tl-border-control);
   border-radius: var(--tl-radius-full);
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
   color: var(--tl-text-primary);
   white-space: nowrap;
 }
@@ -3847,7 +3847,7 @@ a.tl-field-value:hover {
   height: var(--tl-size-progress);
   overflow: hidden;
   border-radius: var(--tl-radius-full);
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 
 .tl-progress__fill {
@@ -3890,7 +3890,7 @@ a.tl-field-value:hover {
   box-sizing: border-box;
   width: var(--tl-size-icon-lg);
   height: var(--tl-size-icon-lg);
-  border: var(--tl-border-width-md) solid var(--tl-surface-interactive-selected);
+  border: var(--tl-border-width-md) solid var(--tl-surface-interactive-strong);
   border-top-color: var(--tl-surface-brand);
   border-radius: var(--tl-radius-full);
   animation: tl-spinner-turn var(--tl-duration-loop) var(--tl-easing-linear) infinite;
@@ -4284,7 +4284,7 @@ a.tl-field-value:hover {
 }
 
 /* Der Entfernen-Knopf liegt auf der Pille, nicht auf dem Feld: die neutrale Pille ist selbst
-   surface-interactive-selected, die Ghost-Stufe verschwindet auf ihr und auf den getönten Pillen. Zeigen und
+   surface-interactive-strong, die Ghost-Stufe verschwindet auf ihr und auf den getönten Pillen. Zeigen und
    Drücken nehmen darum beide surface-interactive-active, die einzige Stufe, die sich auf allen 14
    Pillenflächen abhebt (docs/skalen.md „Knöpfe im Feld zeigen eine Stufe kräftiger“). Eine kräftigere
    Drücken-Stufe gibt es nicht; die Kategorie bleibt geschlossen. */
@@ -4316,12 +4316,12 @@ a.tl-field-value:hover {
 }
 
 /* Löschen und Chevron sind Knöpfe im Feld wie die Aktion der tl-field-group (field.css): quadratisch
-   size-control-sm, am Ende space-2xs vom Rand (padding-inline-end von .tl-select), Zeigen surface-interactive-selected, Drücken
+   size-control-sm, am Ende space-2xs vom Rand (padding-inline-end von .tl-select), Zeigen surface-interactive-strong, Drücken
    surface-interactive-active — auf surface-field ist die Zeigen-Stufe des Ghost-Knopfs hell nicht zu sehen.
    Der Öffner des bearbeitbaren Compact field (compact-field.css) ist derselbe Knopf im Feld: eine Regel, zwei Leser. */
 .tl-select__controls > .tl-button--ghost:not(:disabled):hover,
 .tl-compact-field[data-tl-state~="edit"] > .tl-compact-field__opener.tl-button--ghost:not(:disabled):hover {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 .tl-select__controls > .tl-button--ghost:not(:disabled):active,
 .tl-compact-field[data-tl-state~="edit"] > .tl-compact-field__opener.tl-button--ghost:not(:disabled):active {
@@ -4343,7 +4343,7 @@ a.tl-field-value:hover {
 }
 
 .tl-select:not([aria-disabled="true"]) .tl-select__arrow:hover {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 .tl-select:not([aria-disabled="true"]) .tl-select__arrow:active {
   background: var(--tl-surface-interactive-active);
@@ -4392,11 +4392,11 @@ a.tl-field-value:hover {
 }
 
 /* Die Hervorhebung ist die Tastaturposition (aria-activedescendant), nicht die Wahl: Fläche und
-   Akzentlinie. Die Akzentlinie ist der Indikator, die Tönung nur ein Zusatz: surface-interactive-selected
+   Akzentlinie. Die Akzentlinie ist der Indikator, die Tönung nur ein Zusatz: surface-interactive-strong
    ist auf surface-layer abgestimmt, nicht auf die gehobene Overlay-Fläche; gehobene Flächen bekommen
    ihre eigenen Rollen in Welle 3. */
 .tl-select__option[data-tl-state~="highlighted"] {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
   box-shadow: inset var(--tl-border-width-accent) 0 0 0 var(--tl-border-interactive);
 }
 
@@ -4493,7 +4493,7 @@ a.tl-field-value:hover {
    Gruppenkopf bleibt im Grundgewicht. */
 .tl-sidebar__item[aria-current="page"],
 .tl-sidebar__item[data-tl-state~="contains-current"] {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 
 .tl-sidebar[data-tl-state~="collapsed"] .tl-sidebar__item {
@@ -4574,7 +4574,7 @@ a.tl-field-value:hover {
   display: block;
   min-height: var(--tl-size-icon-sm);
   border-radius: var(--tl-radius-sm);
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
   animation: tl-skeleton-pulse var(--tl-duration-loop) var(--tl-easing-standard) infinite alternate;
 }
 .tl-skeleton[hidden] { display: none; }
@@ -5426,7 +5426,7 @@ button.tl-swatch:not(:disabled):hover {
 }
 
 :where(.tl-table__row[aria-selected="true"]) {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 
 .tl-table__row[draggable="true"] {
@@ -6217,7 +6217,7 @@ button.tl-swatch:not(:disabled):hover {
 }
 
 :where(.tl-tree__node[aria-selected="true"]) {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 
 .tl-tree__spacer {
@@ -6373,4 +6373,4 @@ button.tl-swatch:not(:disabled):hover {
 .tl-wizard[data-tl-state~="backward"] .tl-wizard__step[data-tl-state~="exiting"]:dir(rtl) {
   animation-name: tl-slide-out-forward;
 }
-/* tl-design-system sha256:5eee426e61fb6a821f76758694a780695f8f380a9f5fecf1ac3e1bce9c3b9ef7 — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */
+/* tl-design-system sha256:c1dbd986df45b4fb6db21ac6f0ebc0bf22176010f5c913074cfe63d43789ac58 — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */

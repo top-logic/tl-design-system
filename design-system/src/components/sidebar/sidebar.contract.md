@@ -43,7 +43,7 @@ Das Control ist `TLSidebar` (`ReactSidebarControl`).
 |---|---|
 | Fläche, Linie | `--tl-surface-layer`, `--tl-border-separator` |
 | Breite | `--tl-size-sidebar`; eingeklappt `--tl-size-row` plus `--tl-space-2xs` je Seite |
-| Aktuelle Seite | `--tl-surface-interactive-selected`, `tl-type-body-strong` |
+| Aktuelle Seite | `--tl-surface-interactive-strong`, `tl-type-body-strong` |
 | Bewegung | Breite `--tl-duration-base` `--tl-easing-standard`; Chevron `--tl-duration-fast` |
 | Fuß | `--tl-size-bar` |
 

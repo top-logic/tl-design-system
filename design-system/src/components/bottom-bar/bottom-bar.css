@@ -53,7 +53,7 @@
 }
 
 .tl-bottom-bar__item[aria-current="page"] .tl-bottom-bar__icon {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 
 .tl-bottom-bar__label {

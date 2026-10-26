@@ -69,7 +69,7 @@ Ein `aria-activedescendant` auf eine Id, die es nicht gibt, ließe den Fokus uns
 | Teil | Token |
 |---|---|
 | Schrift | `--tl-text-primary` |
-| Knoten | `--tl-size-row` hoch (`min-height`), Lücke `--tl-space-2xs`, rechts `--tl-space-control-x`; gezeigt `--tl-surface-interactive-hover`, ausgewählt `--tl-surface-interactive-selected` |
+| Knoten | `--tl-size-row` hoch (`min-height`), Lücke `--tl-space-2xs`, rechts `--tl-space-control-x`; gezeigt `--tl-surface-interactive-hover`, ausgewählt `--tl-surface-interactive-strong` |
 | Einzug, Platzhalter | `--tl-size-control-sm` breit |
 | Stapel | `tl-tree` isoliert (`isolation: isolate`); Ring und Marke eines Knotens liegen auf `--tl-layer-sticky` |
 

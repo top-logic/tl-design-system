@@ -139,11 +139,11 @@ test('markenRollen: subtle liegt auf den Helligkeiten der TopLogic-Tönung', () 
   assert.ok(Math.abs(hexZuOklch(r.dark['surface-brand-subtle']).L - 0.255) < 0.01);
 });
 
-test('markenRollen: alle neun Rollen sind in beiden Modi vorhanden', () => {
+test('markenRollen: alle zwölf Rollen sind in beiden Modi vorhanden', () => {
   const r = markenRollen('#0B5ED7', GRUENDE);
   const rollen = ['surface-brand', 'surface-brand-hover', 'surface-brand-active',
     'surface-brand-subtle', 'surface-brand-subtle-hover', 'text-link', 'text-link-hover',
-    'border-interactive', 'focus-ring'];
+    'border-interactive', 'focus-ring', 'surface-selected', 'surface-selected-hover', 'border-selected'];
   for (const mode of ['light', 'dark']) for (const rolle of rollen) assert.ok(r[mode][rolle], `${mode}.${rolle}`);
 });
 

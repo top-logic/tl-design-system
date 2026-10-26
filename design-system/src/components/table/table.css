@@ -333,7 +333,7 @@
 }
 
 :where(.tl-table__row[aria-selected="true"]) {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 
 .tl-table__row[draggable="true"] {

@@ -11,7 +11,7 @@ const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)
 test('select.css liest genau diese Farbrollen', () => {
   assert.deepEqual(colorVarsOf(css), [
     'border-interactive', 'icon-secondary', 'surface-interactive-active', 'surface-interactive-hover',
-    'surface-interactive-selected', 'text-placeholder',
+    'surface-interactive-strong', 'text-placeholder',
   ]);
 });
 
@@ -38,7 +38,8 @@ test('Hervorhebung ist data-tl-state, das Ziehen zeichnet drag.css, gewählt ist
 
 test('eine Option ist eine Zeile hoch, ein Treffer ist fett über die Typo-Klasse', () => {
   assert.match(declarationsOf(css, '.tl-select__option') ?? '', /min-height:\s*var\(--tl-size-row\)/);
-  const ohneKommentare = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  // Die Rolle surface-interactive-strong ist ein Name, kein Gewicht: Token-Namen fallen vor der Prüfung heraus.
+  const ohneKommentare = css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/--tl-[\w-]+/g, '');
   assert.doesNotMatch(ohneKommentare, /\bstrong\b|font-weight/);
 });
 
@@ -108,13 +109,13 @@ test('ein Feld mit entfernbaren Chips bleibt size-control hoch, in jeder Dichte'
 
 test('Knöpfe im Feld (06.10.): Löschen und Pfeil zeigen selected und drücken active, am Ende space-2xs', () => {
   assert.match(declarationsOf(css, '.tl-select') ?? '', /padding-inline-end:\s*var\(--tl-space-2xs\)/);
-  assert.match(declarationsOf(css, '.tl-select__controls > .tl-button--ghost:not(:disabled):hover') ?? '', /background:\s*var\(--tl-surface-interactive-selected\)/);
+  assert.match(declarationsOf(css, '.tl-select__controls > .tl-button--ghost:not(:disabled):hover') ?? '', /background:\s*var\(--tl-surface-interactive-strong\)/);
   assert.match(declarationsOf(css, '.tl-select__controls > .tl-button--ghost:not(:disabled):active') ?? '', /background:\s*var\(--tl-surface-interactive-active\)/);
   const pfeil = declarationsOf(css, '.tl-select__arrow') ?? '';
   for (const r of [/width:\s*var\(--tl-size-control-sm\)/, /height:\s*var\(--tl-size-control-sm\)/,
     /border-radius:\s*var\(--tl-radius-sm\)/, /justify-content:\s*center/, /color:\s*var\(--tl-icon-secondary\)/])
     assert.match(pfeil, r);
-  assert.match(declarationsOf(css, '.tl-select:not([aria-disabled="true"]) .tl-select__arrow:hover') ?? '', /background:\s*var\(--tl-surface-interactive-selected\)/);
+  assert.match(declarationsOf(css, '.tl-select:not([aria-disabled="true"]) .tl-select__arrow:hover') ?? '', /background:\s*var\(--tl-surface-interactive-strong\)/);
   assert.match(declarationsOf(css, '.tl-select:not([aria-disabled="true"]) .tl-select__arrow:active') ?? '', /background:\s*var\(--tl-surface-interactive-active\)/);
   // Der Pfeil ist ein span um das Icon, wie TLDropdownSelect ihn rendert.
   const html = readComponent('select', 'select.spec.html');

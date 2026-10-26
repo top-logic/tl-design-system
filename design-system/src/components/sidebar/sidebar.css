@@ -82,7 +82,7 @@
    Gruppenkopf bleibt im Grundgewicht. */
 .tl-sidebar__item[aria-current="page"],
 .tl-sidebar__item[data-tl-state~="contains-current"] {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 
 .tl-sidebar[data-tl-state~="collapsed"] .tl-sidebar__item {

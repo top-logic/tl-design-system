@@ -1010,6 +1010,10 @@
           "$type": "color",
           "$value": "{primitive.color.gray-0}"
         },
+        "surface-layer-muted": {
+          "$type": "color",
+          "$value": "{primitive.color.gray-3}"
+        },
         "surface-overlay": {
           "$type": "color",
           "$value": "{primitive.color.gray-0}"
@@ -1026,7 +1030,7 @@
           "$type": "color",
           "$value": "{primitive.color.gray-4}"
         },
-        "surface-interactive-selected": {
+        "surface-interactive-strong": {
           "$type": "color",
           "$value": "{primitive.color.gray-7}"
         },
@@ -1055,6 +1059,14 @@
           "$value": "{primitive.color.blue-6}"
         },
         "surface-brand-subtle-hover": {
+          "$type": "color",
+          "$value": "{primitive.color.blue-9}"
+        },
+        "surface-selected": {
+          "$type": "color",
+          "$value": "{primitive.color.blue-6}"
+        },
+        "surface-selected-hover": {
           "$type": "color",
           "$value": "{primitive.color.blue-9}"
         },
@@ -1111,6 +1123,10 @@
           "$value": "{primitive.color.gray-45}"
         },
         "border-interactive": {
+          "$type": "color",
+          "$value": "{primitive.color.blue-49}"
+        },
+        "border-selected": {
           "$type": "color",
           "$value": "{primitive.color.blue-49}"
         },
@@ -1521,6 +1537,10 @@
           "$type": "color",
           "$value": "{primitive.color.gray-74}"
         },
+        "surface-layer-muted": {
+          "$type": "color",
+          "$value": "{primitive.color.gray-72}"
+        },
         "surface-overlay": {
           "$type": "color",
           "$value": "{primitive.color.gray-70}"
@@ -1537,7 +1557,7 @@
           "$type": "color",
           "$value": "{primitive.color.gray-67}"
         },
-        "surface-interactive-selected": {
+        "surface-interactive-strong": {
           "$type": "color",
           "$value": "{primitive.color.gray-64}"
         },
@@ -1568,6 +1588,14 @@
         "surface-brand-subtle-hover": {
           "$type": "color",
           "$value": "{primitive.color.blue-69}"
+        },
+        "surface-selected": {
+          "$type": "color",
+          "$value": "{primitive.color.blue-69}"
+        },
+        "surface-selected-hover": {
+          "$type": "color",
+          "$value": "{primitive.color.blue-62}"
         },
         "text-primary": {
           "$type": "color",
@@ -1622,6 +1650,10 @@
           "$value": "{primitive.color.gray-39}"
         },
         "border-interactive": {
+          "$type": "color",
+          "$value": "{primitive.color.blue-32}"
+        },
+        "border-selected": {
           "$type": "color",
           "$value": "{primitive.color.blue-32}"
         },
@@ -2436,6 +2468,16 @@
           "fontWeight": 600,
           "lineHeight": 1.3333,
           "letterSpacing": "0.01em"
+        }
+      },
+      "overline": {
+        "$type": "typography",
+        "$value": {
+          "fontFamily": "{semantic.measure.font-family-sans}",
+          "fontSize": "{semantic.measure.font-size-label}",
+          "fontWeight": 400,
+          "lineHeight": 1.3333,
+          "letterSpacing": "0.04em"
         }
       },
       "code": {

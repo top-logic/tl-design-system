@@ -47,7 +47,7 @@
 }
 
 :where(.tl-tree__node[aria-selected="true"]) {
-  background: var(--tl-surface-interactive-selected);
+  background: var(--tl-surface-interactive-strong);
 }
 
 .tl-tree__spacer {

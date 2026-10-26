@@ -104,11 +104,11 @@ test('color-picker: die gewählte Palettenoption trägt einen Ring in border-int
   assert.doesNotMatch(d, /outline/);
 });
 
-test('icon-picker: Zelle size-control, gewählt in surface-interactive-selected, Popup size-13 mit resize', () => {
+test('icon-picker: Zelle size-control, gewählt in surface-interactive-strong, Popup size-13 mit resize', () => {
   const c = decl('icon-picker', '.tl-icon-picker__cell');
   assert.match(c, /inline-size:\s*var\(--tl-size-control\)/);
   assert.match(c, /block-size:\s*var\(--tl-size-control\)/);
-  assert.match(decl('icon-picker', '.tl-icon-picker__cell[aria-selected="true"]'), /--tl-surface-interactive-selected/);
+  assert.match(decl('icon-picker', '.tl-icon-picker__cell[aria-selected="true"]'), /--tl-surface-interactive-strong/);
   const p = decl('icon-picker', '.tl-picker.tl-icon-picker');
   assert.match(p, /inline-size:\s*var\(--tl-size-13\)/);
   assert.match(p, /block-size:\s*var\(--tl-size-13\)/);
