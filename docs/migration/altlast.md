@@ -1139,6 +1139,16 @@ statt alter Theme-Tokens (Ausnahmen der Demo: `--shadow-glow`, `--surface-blur`,
 - Die Gates der Wellen 2–5c lesen das gelöschte Stylesheet nicht mehr; ihre Namen prüfen sie weiter in react-src, Java,
   tl-docs und Views (und die Wellen 4a–5c im Stylesheet der Demo), nicht in den übrigen Engine-Stylesheets.
 
+## UI-Durchgang 1 · Tabelle und Auswahl — gebaut 26.10.2026 (lokal, Ticket folgt)
+
+| Alt | Neu | Lesestellen |
+|---|---|---|
+| `--tl-surface-interactive-selected` | `--tl-surface-interactive-strong` (Grau, keine Auswahl mehr) | Hover auf Knöpfen in Feldern, Segment/Chip-Hover, Spur, Spinner, Skeleton, Pill, Avatar, Ablageziel, CodeMirror `cm-activeLine`, MUI `themeProperties` |
+| gewählt = `surface-interactive-selected` | `--tl-surface-selected`, `-hover`, `--tl-border-selected` (Kante links) | Tabellenzeile, Baumknoten, Navigation (`aria-current`), Bottom-Bar, Icon-Picker, Kalender-Ring, Karten `tl-item` |
+| Select-Tastaturposition: Grau + Akzentlinie | `surface-interactive-strong` + zentraler Cursor-Ring aus `base.css` | `.tl-select__option[data-tl-state~="highlighted"]` |
+| Zahnrad öffnet die Spaltenwahl | Zahnrad öffnet „Ansicht“ (jede Tabelle); Spaltenwahl als Eintrag darin | `TLTableView.tsx`, `TableViewOptions.tsx` |
+| Spaltenlinien immer | nur mit `data-tl-column-lines` | `table.css` |
+
 ## Konsolidierung (01.10.) — Gleiches wird zusammengelegt
 
 Regel (CLAUDE.md „Arbeitsweise“, skalen.md „Gleiches wird zusammengelegt“): findet eine Erkundung zwei Stellen, die

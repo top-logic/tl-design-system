@@ -2796,6 +2796,56 @@ Token, zwei Aufgaben“.
   gewählte Richtung hätte sie selbst verletzt); neue Tonleitern Orange und Violett (die Prüfung besteht ohne sie).
 - **Später** (`ui-durchgang.md` U20, U21): Mengenskala aus der Marke, Hervorheben (alles grau, eine Reihe farbig).
 
+### UI-Durchgang 1: Tabelle mit Tiefe, eine Auswahl-Form (26.10., Hendrik — Ticket folgt)
+
+**Befund (Bestandsaufnahme 26.10., `ui-durchgang.md` U25–U31):** Tabellen wirken flach; gewählt und Hover sind zwei
+fast gleiche Grautöne (`surface-interactive-selected` = `gray-7`/`gray-64` gegen `gray-4`/`gray-67`), Zahlen stehen
+links, jede Spalte zeigt dauernd ihre Werkzeuge. Hendrik: Tabellen sind in echten Anwendungen die meistgenutzte
+Komponente. Spec `docs/superpowers/specs/2026-10-26-ui-durchgang-1-tabelle-design.md`, Plan
+`docs/superpowers/plans/2026-10-26-ui-durchgang-1-tabelle.md`.
+
+**Entschieden:**
+- **Gewählt heißt überall Markenton und Kante** (Hendrik: „gleich für alle wählbaren Dinge“). Eigene Rollen
+  `surface-selected`, `surface-selected-hover`, `border-selected` — nicht `surface-brand-subtle`, damit Auswahl und Marke
+  getrennt nachgeführt werden; `derive` rechnet sie aus der Kundenmarke. Hell `blue-6`/`blue-8`, dunkel `blue-72`/`blue-69`
+  (zwei neue Stufen): Text, Nebentext, Link und Hilfetext halten auf beiden Flächen 4,5 — Hendriks Regel vom 09.10.
+  („Hilfetext auf der gewählten Zeile“) gilt jetzt für die Auswahl, nicht mehr für ein Grau. Die Kante liegt links
+  (`inset … border-width-accent`); RTL ist im Paket nirgends gelöst und bleibt draußen. Karten (`tl-item`) behalten
+  Ring und Haken (4c, S2) in den neuen Rollen; Kalendertermine nur der Ring; Reiter, Segmente, Chips, Knöpfe unverändert.
+- **`surface-interactive-selected` heißt `surface-interactive-strong`** — nach dem Umzug trägt es keine Auswahl mehr,
+  nur kräftigeres Grau (Hover auf Knöpfen in Feldern, Spur, Platzhalter, Pill, Avatar, CodeMirror-Zeilenmarke). Kein
+  Alias.
+- **Die Tastaturposition im Select ist Fokus, keine Auswahl** — Fläche `surface-interactive-strong` und der eine zentrale
+  Cursor-Ring aus `base.css`. Hendriks Kreuz lautete „neutral wie Hover“; das ergab 1,1:1 und hätte die Position
+  unsichtbar gemacht. Kein eigener Ring in der Komponente (Fokus-Gate, Konsolidierung 01.10.). Der Zeiger setzt dieselbe
+  Position: eine aktive Option wie in nativen Menüs.
+- **Tabelle mit Tiefe** (Hendrik: Richtung B): Fläche mit `shadow-1` (nicht `shadow-popover` — ein Token, eine Aufgabe),
+  füllt sie ein Panel (`tl-fill`), kein Schatten; Kopf auf `surface-layer-muted` (neu: hell sind `surface-layer` und
+  `-nested` gleich) in `tl-type-overline` (neu) und Großbuchstaben; Trichter über das vorhandene `tl-reveal-on-hover`,
+  gefiltert immer sichtbar; Sortierpfeil immer sichtbar; Spaltenlinien und Zebra als Attribut, ab Werk aus (Hendrik);
+  Zebra-Parität aus dem Zeilenindex (`even`), weil die Zeilen virtualisiert sind; Zahlen rechts (`data-tl-align="end"`,
+  automatisch für Zahlen, Datum bleibt links); Gruppenzeile als eigene Form mit Kapsel.
+- **Dichte je Tabelle:** `[data-tl-density="normal"]` ist jetzt ein eigener Block, damit eine Tabelle eine kompakte
+  Seite überstimmt. Zwei Stufen, keine dritte (Hendrik).
+- **Zahnrad wird „Ansicht“** für jede Tabelle: Dichte (Wie überall/Normal/Kompakt), Zebrastreifen, Spaltenlinien,
+  „Spalten wählen und ordnen …“, „Zurücksetzen“; wirkt sofort, gespeichert je Person und Tabelle. Fixieren und
+  Gruppieren bleiben, wo sie sind; „Zeilen umbrechen“ entfällt (Virtualisierung mit fester Zeilenhöhe).
+- **Presets:** was passt, steht da, der Rest hinter „+ n weitere“ (Hendrik: kein Fade — ein Mausrad ohne Seitwärtsrad
+  scrollt nicht seitlich). Das aktive Preset steht immer in der Reihe; die Einträge im Menü sind deshalb einfache
+  `menuitem`, keine Radio-Gruppe ohne Gewähltes (Menüvertrag). Entfernen im Menü per Entf/Rücktaste, der Knopf ist kein
+  Tab-Stopp.
+- **Fußzeile nennt den Filter:** „· Filter: <Preset>“ oder „· n Filter aktiv“.
+
+**Verworfen:** Fade mit Chevron für die Presets; eine dritte Dichte; `shadow-popover` an der Tabelle; eigene
+Einblend-Regeln für die Kopfwerkzeuge; ein eigener Fokusring im Select; Auswahl als Umdeutung von
+`surface-interactive-selected`.
+
+**Als Test:** `tokens.test.mjs` (Auswahl und `surface-layer-muted` ≥ 1,1 gegen `surface-layer`; Text auf Auswahl ≥ 4,5),
+`pairs.mjs` (AUSWAHL-Schleife), `color.test.mjs` (mehrere Kundenmarken), `generate.test.mjs` (Dichte-Block),
+`table.test.mjs` (Reihenfolge gewählt > Hover > Zebra, kein `nth-child`), `select.test.mjs`, `focus.test.mjs`
+unverändert; Engine `TestTableViewStateCodec`, `TestDefaultTableView`, `TestTableViewOptions`, `TestRowSetTableAlignment`,
+Vitest `table-view-attributes`, `table-view-options`, `chips`.
+
 ### Die Kopie in der Engine ist versiegelt (16.10.)
 
 **Befund:** Zweimal wurde die Kopie des Pakets in tl-engine-7 von Hand geändert — #29787 (sechs Stellen) und #29859

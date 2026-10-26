@@ -80,14 +80,14 @@ Erfolg heißt:
 - **Wie viele sichtbar sind, rechnet die Breite**, nicht eine feste Zahl — auch beim Ändern der Fensterbreite.
 - **Das aktive Preset steht immer in der sichtbaren Reihe**; ist es eines aus dem Menü, rückt es in die Reihe und das
   letzte sichtbare wandert ins Menü. *(Meine Festlegung, von Hendrik nicht widersprochen.)*
-- Mit Tastatur: Tab erreicht die sichtbaren Chips und „+ n weitere“; das Menü ist ein Paket-Menü mit `menuitemradio`-Einträgen —
+- Mit Tastatur: Tab erreicht die sichtbaren Chips und „+ n weitere“; das Menü ist ein Paket-Menü mit einfachen `menuitem`-Einträgen (nachgetragen nach dem Review: das aktive Preset steht nie im Menü, eine Radio-Gruppe ohne Gewähltes bräche den Menüvertrag) —
   höchstens eines gilt; es kann auch keines gelten (Klick auf den aktiven Chip hebt den Filter auf, Kriterien von Hand
   passen zu keinem Preset). Ein eigenes Preset trägt im Menü wie als Chip seine Entfernen-Aktion (am Ende des Eintrags).
   *(Meine Festlegung.)*
 
 ### 3. Das Zahnrad wird „Ansicht“ — Einstellungen je Person und Tabelle
 
-Das Zahnrad öffnet ein Popover „Ansicht dieser Tabelle“ (Mockup B rechts) statt direkt den Spalten-Dialog:
+Das Zahnrad öffnet ein Popover „Ansicht“ (gebaut; im Mockup „Ansicht dieser Tabelle“) (Mockup B rechts) statt direkt den Spalten-Dialog:
 
 | Eintrag | Form | Ab Werk |
 |---|---|---|
