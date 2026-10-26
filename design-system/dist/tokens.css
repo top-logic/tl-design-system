@@ -203,6 +203,17 @@
   --tl-space-control-gap: var(--tl-size-4);
 }
 
+[data-tl-density="normal"] {
+  --tl-size-control: var(--tl-height-3);
+  --tl-size-control-sm: var(--tl-height-1);
+  --tl-size-row: var(--tl-height-4);
+  --tl-size-bar: var(--tl-height-5);
+  --tl-size-shell-bar: var(--tl-size-8);
+  --tl-space-control-x: var(--tl-size-3);
+  --tl-space-control-y: var(--tl-size-2);
+  --tl-space-control-gap: var(--tl-size-4);
+}
+
 [data-tl-mode="dark"] {
   color-scheme: dark;
   --tl-surface-base: var(--tl-gray-79);
@@ -334,4 +345,4 @@
   --tl-space-control-y: var(--tl-size-1);
   --tl-space-control-gap: var(--tl-size-3);
 }
-/* tl-design-system sha256:3e307fe9ec5b48d45b72693511cadd27c99a88bbff1a955c508f353d91389254 — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */
+/* tl-design-system sha256:0542b8cab31de5af9ff0767bddb85343844f6ed62b743540793abf3ee7410a9a — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */
