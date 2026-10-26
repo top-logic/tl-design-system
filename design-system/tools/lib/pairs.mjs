@@ -76,7 +76,7 @@ export function kontrastPaare(T) {
   // Daten (3b §13): ausgewählte Zeile und Knoten, Cursor-Ring, Marken im Kopf, Kante fixierter Spalten,
   // Fehler- und Warnlinie im Zelleditor und Ablehnung beim Ziehen auf einer ausgewählten oder gezeigten
   // Zeile (Stufen seit 07.10.: hell red-41/amber-43, dunkel red-34/amber-36), Platzhalter-Ton im Text.
-  for (const bg of [...AUSWAHL, 'surface-interactive-hover']) paar('focus-ring', bg, 3.0);
+  for (const bg of [...AUSWAHL, 'surface-interactive-hover', 'surface-interactive-strong']) paar('focus-ring', bg, 3.0);
   // Auswahl (UI-Durchgang 1): Icons und die Kante `border-selected` auf beiden gewählten Flächen; die Kante ist nur
   // Vordergrund. Kopfzeile, Zebra und Gruppenzeile der Tabelle tragen Text auf surface-layer-muted.
   for (const bg of AUSWAHL) {
@@ -87,7 +87,7 @@ export function kontrastPaare(T) {
   }
   // Der Ring `border-selected` steht auch außen: um eine gewählte Karte (tl-item) und einen Termin-Chip, auf dem Grund,
   // auf Panels und im Dialog.
-  for (const bg of ['surface-base', 'surface-layer', 'surface-layer-nested', 'surface-overlay']) paar('border-selected', bg, 3.0);
+  for (const bg of ['surface-base', 'surface-layer', 'surface-layer-nested', 'surface-overlay', 'surface-interactive-hover']) paar('border-selected', bg, 3.0);
   paar('text-primary', 'surface-layer-muted', 4.5); paar('text-secondary', 'surface-layer-muted', 4.5);
   // icon-secondary auf surface-interactive-strong steht seit Bernhards Knöpfen im Feld schon in der Liste (b985047).
   paar('icon-secondary', 'surface-layer', 3.0);

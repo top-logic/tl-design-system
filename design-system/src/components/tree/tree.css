@@ -41,7 +41,7 @@
 .tl-tree__node[hidden] { display: none; }
 
 /* Gezeigt und ausgewählt stehen in :where: Ablegen darauf (drag.css, eine Attribut-Spezifität) übermalt
-   sie, wie in der Tabelle. Gewählt heißt Markenton und Kante (innerer Schatten am Anfang des Knotens, wie in der Tabelle);
+   sie, wie in der Tabelle. Gewählt heißt Markenton und Kante (innerer Schatten links am Knoten (Anfangsseite in LTR), wie in der Tabelle);
    Zeigen auf einen gewählten Knoten steht danach. Die Kante steht nicht in :where: der Ring des Cursors (::after) ist
    ein eigenes Element, der Schatten übermalt nichts, was Ablegen setzt (drag.css setzt Fläche und Rahmen). */
 :where(.tl-tree__node:hover) {

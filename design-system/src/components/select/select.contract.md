@@ -97,7 +97,7 @@ Chip an die Wurzel (WCAG 2.4.3; derselbe Helfer wie bei der Filterkapsel der Tab
 | Popup-Höhe | höchstens 8 × `--tl-size-row` + `--tl-size-control` + 2 × `--tl-space-xs` (acht Optionen und das Suchfeld) |
 | Suchfeld | ein `tl-field`; Abstand zur Liste `--tl-space-xs` |
 | Option | Höhe `--tl-size-row` (als `min-height`), Innenabstand `--tl-space-control-x`, Ecke `--tl-radius-sm`, Lücke `--tl-space-xs`; beim Zeigen `--tl-surface-interactive-hover` |
-| hervorgehobene Option | Fläche `--tl-surface-interactive-hover` (wie das Zeigen), keine Linie; Markenton und Kante heißen im Paket „gewählt“, die Wahl ist der Haken |
+| hervorgehobene Option (Tastaturposition) | Fläche `--tl-surface-interactive-strong` und der Fokusring innen (`--tl-focus-width` in `--tl-focus-ring`, als innerer Schatten); Zeigen bleibt `--tl-surface-interactive-hover`; Markenton und Kante heißen im Paket „gewählt“, die Wahl ist der Haken |
 | Status (Laden, keine Treffer, Ladefehler) | eine `tl-status`-Zeile, siehe `status.contract.md` |
 
 Schrift: Klasse `.tl-type-body` an Wurzel, Suchfeld und Liste, `.tl-type-label` an Pill und Wert-Chip, von
@@ -116,7 +116,7 @@ außen gesetzt; `tl-select` hat keine Schriftregel. Laden, keine Treffer und Lad
 | `role="listbox"` | an `tl-select__list`. |
 | `role="option"` | an jeder `tl-select__option`. |
 | `aria-selected` | an jeder `tl-select__option`: `"true"` an der gewählten Option einer Einfachauswahl (mit Haken), sonst `"false"`. Die Liste einer Einfachauswahl führt alle Optionen; die einer Mehrfachauswahl nur die ungewählten, das Gewählte steht als Wert-Chip in der Wurzel. Hervorgehoben ist nicht gewählt (#29859). |
-| `data-tl-state="highlighted"` | an der hervorgehobenen Option (Tastatur oder Zeiger). Neutral: dieselbe Fläche wie das Zeigen (`--tl-surface-interactive-hover`), keine Linie; sie ist nur die Tastaturposition, nicht die Wahl (die zeigt der Haken). |
+| `data-tl-state="highlighted"` | an der hervorgehobenen Option (Tastatur oder Zeiger). Die Tastaturposition ist Fokus, nicht Auswahl: Fläche `--tl-surface-interactive-strong` mit innerem Fokusring (`--tl-focus-ring`, Gate 3,0 auf `surface-interactive-strong`); sie trägt weder Markenton noch Kante, die Wahl zeigt der Haken. |
 | `data-tl-state="dragging"` | am Wert-Chip, der gerade gezogen wird; die Optik zeichnet `drag.css`. |
 | `data-tl-state="drop-before"` / `"drop-after"` | am Wert-Chip, vor bzw. hinter dem der gezogene landet; die Optik zeichnet `drag.css`. |
 | `data-tl-axis="horizontal"` | an `tl-select__values`: die Wert-Chips stehen nebeneinander, die Einfügemarke links oder rechts. |

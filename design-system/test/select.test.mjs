@@ -10,7 +10,7 @@ const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)
 
 test('select.css liest genau diese Farbrollen', () => {
   assert.deepEqual(colorVarsOf(css), [
-    'icon-secondary', 'surface-interactive-active', 'surface-interactive-hover',
+    'focus-ring', 'focus-width', 'icon-secondary', 'surface-interactive-active', 'surface-interactive-hover',
     'surface-interactive-strong', 'text-placeholder',
   ]);
 });
@@ -30,9 +30,12 @@ test('das Select-Popup trägt die Fläche nicht selbst: tl-popover liefert sie',
 test('Hervorhebung ist data-tl-state, das Ziehen zeichnet drag.css, gewählt ist aria-selected', () => {
   const hervor = declarationsOf(css, '.tl-select__option[data-tl-state~="highlighted"]');
   assert.ok(hervor, 'Hervorhebung fehlt');
-  // Die Tastaturposition ist neutral (Zeigen-Stufe), keine Linie: Markenton und Kante heißen nur noch „gewählt“.
-  assert.match(hervor, /background:\s*var\(--tl-surface-interactive-hover\)/);
-  assert.doesNotMatch(hervor, /box-shadow|surface-selected|border/);
+  // Die Tastaturposition ist Fokus: kräftige neutrale Fläche und der Ring innen in der Form des Fokus; Markenton und
+  // Kante heißen nur noch „gewählt“, Zeigen bleibt surface-interactive-hover.
+  assert.match(hervor, /background:\s*var\(--tl-surface-interactive-strong\)/);
+  assert.match(hervor, /box-shadow:\s*inset 0 0 0 var\(--tl-focus-width\) var\(--tl-focus-ring\)/);
+  assert.doesNotMatch(hervor, /surface-selected|border/);
+  assert.match(declarationsOf(css, '.tl-select__option:hover') ?? '', /background:\s*var\(--tl-surface-interactive-hover\)/);
   assert.doesNotMatch(css.replace(/\/\*[\s\S]*?\*\//g, ''), /data-tl-state~="(dragging|drop-)/, 'die Ziehen-Optik steht in drag.css');
   // Der Griff ist ein Kreis wie das Entfernen (eine Regel .tl-select__chip > .tl-button); am Anfang der Pille
   // trägt sie dieselbe Lücke als Innenabstand wie am Ende (Entscheidung 07.10.: ein Modell).

@@ -78,7 +78,7 @@
 }
 
 /* Die aktuelle Seite und der Kopf einer zugeklappten Gruppe, die sie enthält: Markenton wie in Baum und Tabelle. Die
-   Seite trägt dazu die Kante (innerer Schatten am Anfang, kein border-left), der Gruppenkopf nur die Fläche: er zeigt,
+   Seite trägt dazu die Kante (innerer Schatten links (Anfangsseite in LTR), kein border-left), der Gruppenkopf nur die Fläche: er zeigt,
    wo man ist, ohne die Seite selbst zu sein. Zeigen steht danach und hebt die Fläche eine Stufe (surface-selected-hover);
    mit :hover ist es spezifischer als der Menüeintrag. Das Gewicht der Seite trägt die Typo-Klasse (tl-type-body-strong),
    die das TSX setzt; der Gruppenkopf bleibt im Grundgewicht. */

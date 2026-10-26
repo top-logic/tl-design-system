@@ -193,11 +193,13 @@
   background: var(--tl-surface-interactive-hover);
 }
 
-/* Die Hervorhebung ist die Tastaturposition (aria-activedescendant), nicht die Wahl: dieselbe neutrale Fläche wie das
-   Zeigen, keine Linie. Markenton und Kante heißen im ganzen Paket „gewählt“ (surface-selected, border-selected); die
-   Wahl dieser Liste ist der Haken. */
+/* Die Hervorhebung ist die Tastaturposition (aria-activedescendant), nicht die Wahl: sie ist Fokus und trägt die
+   Form des Fokus, den Ring innen (focus-width in focus-ring) auf der kräftigen neutralen Fläche. Zeigen bleibt
+   surface-interactive-hover. Markenton und Kante heißen im ganzen Paket „gewählt“ (surface-selected, border-selected);
+   die Wahl dieser Liste ist der Haken. */
 .tl-select__option[data-tl-state~="highlighted"] {
-  background: var(--tl-surface-interactive-hover);
+  background: var(--tl-surface-interactive-strong);
+  box-shadow: inset 0 0 0 var(--tl-focus-width) var(--tl-focus-ring);
 }
 
 /* Die Wahl ist ein Haken am Zeilenende (aria-selected), unabhängig von der Hervorhebung. Die Liste
