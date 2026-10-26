@@ -6,16 +6,12 @@ import { componentCssFiles } from './lib/component.mjs';
 
 const OFFSET = /^(calc\(-1 \* var\(--tl-focus-offset\)\)|var\(--tl-focus-offset\))$/;
 
-test('kein Komponentenblock setzt den Fokusring; outline nur als Drop-Ziel in border-interactive; Ausnahme: der innere Ring der Select-Tastaturposition', () => {
+test('kein Komponentenblock setzt den Fokusring; outline nur als Drop-Ziel in border-interactive', () => {
   const bad = [];
   for (const [name, css] of componentCssFiles()) {
     for (const d of declarations(css)) {
       if (/^outline(-color|-width)?$/.test(d.property) && !/--tl-border-interactive/.test(d.value)) bad.push(`${name}:${d.line} ${d.property}: ${d.value}`);
-      // Die einzige Ausnahme: die Tastaturposition der Select-Liste (aria-activedescendant, Fokus ohne echten Fokus) zeichnet
-      // den Ring innen als Schatten, weil das Element selbst nicht fokussiert ist (UI-Durchgang 1, Entscheid Controller).
-      const innen = name === 'select/select.css' && d.property === 'box-shadow'
-        && /^inset 0 0 0 var\(--tl-focus-width\) var\(--tl-focus-ring\)$/.test(d.value.trim());
-      if (/--tl-focus-ring/.test(d.value) && !innen) bad.push(`${name}:${d.line} liest focus-ring`);
+      if (/--tl-focus-ring/.test(d.value)) bad.push(`${name}:${d.line} liest focus-ring`);
       if (d.property === 'outline-offset' && !OFFSET.test(d.value.trim())) bad.push(`${name}:${d.line} ${d.value}`);
     }
   }

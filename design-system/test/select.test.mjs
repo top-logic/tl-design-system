@@ -10,7 +10,7 @@ const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)
 
 test('select.css liest genau diese Farbrollen', () => {
   assert.deepEqual(colorVarsOf(css), [
-    'focus-ring', 'focus-width', 'icon-secondary', 'surface-interactive-active', 'surface-interactive-hover',
+    'icon-secondary', 'surface-interactive-active', 'surface-interactive-hover',
     'surface-interactive-strong', 'text-placeholder',
   ]);
 });
@@ -33,8 +33,17 @@ test('Hervorhebung ist data-tl-state, das Ziehen zeichnet drag.css, gewählt ist
   // Die Tastaturposition ist Fokus: kräftige neutrale Fläche und der Ring innen in der Form des Fokus; Markenton und
   // Kante heißen nur noch „gewählt“, Zeigen bleibt surface-interactive-hover.
   assert.match(hervor, /background:\s*var\(--tl-surface-interactive-strong\)/);
-  assert.match(hervor, /box-shadow:\s*inset 0 0 0 var\(--tl-focus-width\) var\(--tl-focus-ring\)/);
-  assert.doesNotMatch(hervor, /surface-selected|border/);
+  // Der Ring ist der eine von base.css: der ::after der Option steht in dessen Selektorliste, die Komponente zeichnet keinen.
+  assert.doesNotMatch(hervor, /box-shadow|focus|surface-selected|border|outline/);
+  assert.match(declarationsOf(css, '.tl-select__option') ?? '', /position:\s*relative/);
+  const base = readFileSync(new URL('../dist/base.css', import.meta.url), 'utf8');
+  const ring = /([^{}]+)\{\s*outline:\s*var\(--tl-focus-width\) solid var\(--tl-focus-ring\);/.exec(base);
+  assert.ok(ring[1].includes('.tl-select__option[data-tl-state~="highlighted"]::after'), 'die Option steht in der Ring-Liste');
+  const flaeche = [...base.matchAll(/\.tl-select__option\[data-tl-state~="highlighted"\]::after\s*\{([^}]*)\}/g)]
+    .map((m) => m[1]).find((d) => /content:/.test(d)) ?? '';
+  assert.ok(base.indexOf(flaeche) > base.indexOf(ring[0]), 'die Fläche steht nach dem Ring: ihr Versatz nach innen gewinnt');
+  assert.match(flaeche,
+    /position:\s*absolute[\s\S]*inset:\s*0[\s\S]*outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)[\s\S]*pointer-events:\s*none/);
   assert.match(declarationsOf(css, '.tl-select__option:hover') ?? '', /background:\s*var\(--tl-surface-interactive-hover\)/);
   assert.doesNotMatch(css.replace(/\/\*[\s\S]*?\*\//g, ''), /data-tl-state~="(dragging|drop-)/, 'die Ziehen-Optik steht in drag.css');
   // Der Griff ist ein Kreis wie das Entfernen (eine Regel .tl-select__chip > .tl-button); am Anfang der Pille
