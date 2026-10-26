@@ -67,6 +67,7 @@ test('UI-Durchgang 1: die Paare der Auswahl und der gedämpften Fläche stehen i
   for (const k of ['border-interactive|surface-selected', 'border-selected|surface-selected', 'border-selected|surface-selected-hover',
     'icon-primary|surface-selected', 'icon-primary|surface-selected-hover', 'text-primary|surface-selected', 'text-primary|surface-selected-hover',
     'text-primary|surface-layer-muted', 'text-secondary|surface-layer-muted',
+    'icon-primary|surface-layer-muted', 'icon-secondary|surface-layer-muted',
     'border-interactive|surface-selected-hover', 'text-secondary|surface-selected', 'text-secondary|surface-selected-hover',
     'text-link|surface-selected', 'text-link|surface-selected-hover', 'text-helper|surface-selected', 'text-helper|surface-selected-hover'])
     assert.ok(namen.has(k), k);

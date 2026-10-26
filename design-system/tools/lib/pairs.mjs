@@ -89,6 +89,8 @@ export function kontrastPaare(T) {
   // auf Panels und im Dialog.
   for (const bg of ['surface-base', 'surface-layer', 'surface-layer-nested', 'surface-overlay', 'surface-interactive-hover']) paar('border-selected', bg, 3.0);
   paar('text-primary', 'surface-layer-muted', 4.5); paar('text-secondary', 'surface-layer-muted', 4.5);
+  // Die Icons der Kopfzeile (Trichter, Sortierpfeil, Zahnrad) stehen auf surface-layer-muted.
+  paar('icon-primary', 'surface-layer-muted', 3.0); paar('icon-secondary', 'surface-layer-muted', 3.0);
   // icon-secondary auf surface-interactive-strong steht seit Bernhards Knöpfen im Feld schon in der Liste (b985047).
   paar('icon-secondary', 'surface-layer', 3.0);
   paar('border-emphasis', 'surface-layer', 3.0);

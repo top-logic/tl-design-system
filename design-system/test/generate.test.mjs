@@ -45,7 +45,7 @@ test('hell ist der Standard, dunkel und kompakt sind Attribute', () => {
   assert.ok(!tok.includes('data-modus'), 'alte Attribute');
 });
 
-test('normal ist als Attribut setzbar und überstimmt kompakt im Teilbaum', () => {
+test('Dichte: der Block normal steht vor dem Block kompakt und setzt --tl-size-row', () => {
   const i = tok.indexOf('[data-tl-density="normal"] {'), j = tok.indexOf('[data-tl-density="compact"] {');
   assert.ok(i > 0 && j > i, 'normal-Block steht vor dem kompakt-Block');
   assert.match(tok.slice(i, j), /--tl-size-row:/);

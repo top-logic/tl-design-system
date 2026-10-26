@@ -136,6 +136,23 @@ außen wäre weg. Ebenso innen: der Körper und die Spaltenwahl in der Ecke (`fo
 Cursorzeile ab: `base.css` zeichnet ihn innen auf ihrem `::after`. Ein `aria-activedescendant` auf eine
 Id, die es nicht gibt, ließe den Fokus unsichtbar.
 
+## Ansicht (Popover des Zahnrads)
+
+Das Zahnrad (`tl-table__columns`) öffnet ein Popover `tl-popover tl-picker tl-menu tl-table-view-options` mit
+`role="dialog"`. Die Einträge, die Anatomie und das Verhalten des Menüs gelten (`menu.contract.md`); was dazukommt:
+
+| Element | Aufbau |
+|---|---|
+| `tl-table-view-options__title` | Titel „Ansicht“: `tl-type-label-strong` in Primärtext, kein Abschnittskopf |
+| `tl-menu__header` | Abschnittskopf „Dichte“ (`tl-type-label`, leiser Sekundärtext); er benennt die Gruppe der Segmente (`aria-labelledby`) |
+| `tl-segmented tl-table-view-options__segments` | die drei Dichten als Radiogruppe (`choice.contract.md`), von den Rändern um `--tl-space-control-x` eingerückt wie der Text der Einträge |
+| `tl-table-view-options__switch` | Schalter (`tl-choice` mit `tl-checkbox--switch`) für Streifen und Spaltenlinien, mit derselben Einrückung |
+| `tl-divider` | die Trennlinie vor den Einträgen („Spalten …“, „Zurücksetzen“): eine Linie in `--tl-border-separator` |
+
+Die Ansichtsoptionen (Dichte, Streifen, Spaltenlinien) gibt es nur, wo sie bleiben: Der Server schickt `viewOptions`
+nur für eine Tabelle, die ihre Ansicht speichert (`TableView.isPersonalized()`). Ohne sie zeigt das Popover nur
+„Spalten …“ (falls `columnSelect`) und „Zurücksetzen“; ohne beides steht das Zahnrad nicht da.
+
 ## Stapel
 
 Ring (`::after`, `base.css`) und Einfügemarke (`::before`, `drag.css`) einer Zeile liegen auf
@@ -175,6 +192,8 @@ Körper scrollen waagerecht gemeinsam: das TSX überträgt `scrollLeft` des Kör
 | Baum | Toggle und Einzug je Ebene `--tl-size-control-sm` (Platzhalter `tl-table__spacer`); Abstand der Anzahl `--tl-space-xs` |
 | Platzhalter | Innenabstand `--tl-space-control-x`, Linie darunter wie die Zeile |
 | Ablehnung | Rand `--tl-status-error-border`, Text `--tl-status-error-text` |
+| Ansicht, Popover | Fläche, Rand und Schatten die von `tl-popover`; Lücke zwischen den Zeilen `--tl-space-2xs`; Titel `--tl-text-primary` in `tl-type-label-strong`, Innenabstand `--tl-space-2xs` `--tl-space-control-x`; Segmente und Schalter rücken um `--tl-space-control-x` ein; Trennlinie `--tl-border-width-sm` in `--tl-border-separator` (`tl-divider`) |
+| „+ n weitere“ | der Chevron steht im Label, die Lücke zum Text ist `--tl-space-2xs` |
 
 Der Kopf scrollt waagerecht ohne eigenen Balken (`scrollbar-width: none`); Kopf und Körper folgen einander in beide Richtungen (12.10.). Schrift: `.tl-type-body` am `tl-table__body`, von der Komponente gesetzt. Die Gruppenzeile ist stark: jede ihrer Zellen
 trägt `tl-type-body-strong`, und ein Lesewert darin erbt sie (`field.contract.md`, 09.10.). Ein Text setzt seine
