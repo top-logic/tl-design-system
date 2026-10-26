@@ -324,12 +324,14 @@ test('Diagrammreihen halten die Schwellen (Kontrast, Abstand, keine Bedeutungsfa
   }
 });
 
-test('Zeigen auf allen Gründen (01.10.): dunkel liegen hover, selected, active über dem Overlay', () => {
+test('Zeigen auf allen Gründen (01.10.): dunkel liegen hover, strong, active über dem Overlay', () => {
   const C = R.color.dark;
   for (const rolle of ['surface-interactive-hover', 'surface-interactive-strong', 'surface-interactive-active']) {
     assert.ok(ratio(C[rolle], C['surface-overlay']) >= 1.1, `${rolle} auf surface-overlay < 1,1`);
   }
-  assert.ok(ratio(C['border-interactive'], C['surface-interactive-strong']) >= 3.0);
+  // Zeilencursor und Zelleditor-Linie liegen auf der gewählten Zeile, gewählt und gezeigt.
+  for (const bg of ['surface-selected', 'surface-selected-hover'])
+    assert.ok(ratio(C['border-interactive'], C[bg]) >= 3.0, `border-interactive auf ${bg}`);
   assert.equal(T.measure['size-popover-min'], '{size-11}');
   assert.equal(T.measure['size-popover-max'], '{view-1}');
   assert.equal(T.measure['size-popover-content-max'], '{size-14}');
@@ -345,7 +347,7 @@ test('Knöpfe im Feld (06.10.): Zeigen und Drücken heben sich von surface-field
     const zeigen = ratio(C['surface-interactive-strong'], C['surface-field']);
     const druecken = ratio(C['surface-interactive-active'], C['surface-interactive-strong']);
     assert.ok(zeigen >= 1.1, `${m}: surface-interactive-strong auf surface-field = ${zeigen.toFixed(2)}, gefordert 1,1`);
-    assert.ok(druecken >= 1.1, `${m}: surface-interactive-active auf -selected = ${druecken.toFixed(2)}, gefordert 1,1`);
+    assert.ok(druecken >= 1.1, `${m}: surface-interactive-active auf -strong = ${druecken.toFixed(2)}, gefordert 1,1`);
   }
   // Der Befund: die Zeigen-Stufe des Ghost-Knopfs verschwindet hell auf dem Feld.
   assert.ok(ratio(R.color.light['surface-interactive-hover'], R.color.light['surface-field']) < 1.1);
@@ -398,11 +400,16 @@ test('das Status-Gate meldet den verworfenen Tausch (dunkel Rand und Fläche bei
     ['dark/error: {red-35} trägt status-error-border und status-error-surface']);
 });
 
-test('hell: Hilfetext steht auch auf der ausgewählten Zeile (09.10., Hendrik)', () => {
-  // Dunkel verfehlen text-helper (3,64) und text-secondary (4,27) dieses Paar noch; entschieden wird dort,
-  // wenn ein Nebentext in einer ausgewählten Zeile gebraucht wird (docs/migration/altlast.md „Offen nach 3b“).
-  const ist = ratio(R.color.light['text-helper'], R.color.light['surface-interactive-strong']);
-  assert.ok(ist >= 4.5, `hell: text-helper auf surface-interactive-strong = ${ist.toFixed(2)}`);
+test('Hilfetext, Nebentext und Link stehen auch auf der ausgewählten Zeile, gewählt und gezeigt (09.10., Hendrik)', () => {
+  // Seit UI-Durchgang 1 in beiden Modi: die dunkle Fläche `surface-selected` liegt auf blue-72, damit die gezeigte
+  // Stufe (blue-69) den Hilfetext noch trägt.
+  for (const m of MODES) for (const bg of ['surface-selected', 'surface-selected-hover']) for (const fg of ['text-helper', 'text-secondary', 'text-link']) {
+    const ist = ratio(R.color[m][fg], R.color[m][bg]);
+    assert.ok(ist >= 4.5, `${m}: ${fg} auf ${bg} = ${ist.toFixed(2)}`);
+  }
+  // Gewählt und gezeigt unterscheiden sich sichtbar.
+  for (const m of MODES)
+    assert.ok(ratio(R.color[m]['surface-selected'], R.color[m]['surface-selected-hover']) >= 1.05, `${m}: selected gegen selected-hover`);
   assert.ok(ratio(R.color.light['text-secondary'], R.color.light['surface-base'])
     > ratio(R.color.light['text-helper'], R.color.light['surface-base']), 'Hilfetext nicht heller als Nebentext');
 });

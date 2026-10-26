@@ -92,7 +92,7 @@
   --tl-surface-brand-subtle: var(--tl-blue-6);
   --tl-surface-brand-subtle-hover: var(--tl-blue-9);
   --tl-surface-selected: var(--tl-blue-6);
-  --tl-surface-selected-hover: var(--tl-blue-9);
+  --tl-surface-selected-hover: var(--tl-blue-8);
   --tl-text-primary: var(--tl-gray-77);
   --tl-text-secondary: var(--tl-gray-55);
   --tl-text-helper: var(--tl-gray-49);
@@ -221,8 +221,8 @@
   --tl-surface-brand-active: var(--tl-blue-43);
   --tl-surface-brand-subtle: var(--tl-blue-74);
   --tl-surface-brand-subtle-hover: var(--tl-blue-69);
-  --tl-surface-selected: var(--tl-blue-69);
-  --tl-surface-selected-hover: var(--tl-blue-62);
+  --tl-surface-selected: var(--tl-blue-72);
+  --tl-surface-selected-hover: var(--tl-blue-69);
   --tl-text-primary: var(--tl-gray-5);
   --tl-text-secondary: var(--tl-gray-29);
   --tl-text-helper: var(--tl-gray-33);
@@ -334,4 +334,4 @@
   --tl-space-control-y: var(--tl-size-1);
   --tl-space-control-gap: var(--tl-size-3);
 }
-/* tl-design-system sha256:6ce1b918da7c2a8c1ac115a68d6ebaaf259ddc530fb9bbfcd79f66770e9b7c9f — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */
+/* tl-design-system sha256:3e307fe9ec5b48d45b72693511cadd27c99a88bbff1a955c508f353d91389254 — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */

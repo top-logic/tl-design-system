@@ -62,6 +62,10 @@
         "$type": "color",
         "$value": "#EEEEFF"
       },
+      "blue-8": {
+        "$type": "color",
+        "$value": "#D7E6FD"
+      },
       "blue-9": {
         "$type": "color",
         "$value": "#CEE1FF"
@@ -109,6 +113,10 @@
       "blue-69": {
         "$type": "color",
         "$value": "#1E2F4B"
+      },
+      "blue-72": {
+        "$type": "color",
+        "$value": "#1A2941"
       },
       "blue-73": {
         "$type": "color",
@@ -1068,7 +1076,7 @@
         },
         "surface-selected-hover": {
           "$type": "color",
-          "$value": "{primitive.color.blue-9}"
+          "$value": "{primitive.color.blue-8}"
         },
         "text-primary": {
           "$type": "color",
@@ -1591,11 +1599,11 @@
         },
         "surface-selected": {
           "$type": "color",
-          "$value": "{primitive.color.blue-69}"
+          "$value": "{primitive.color.blue-72}"
         },
         "surface-selected-hover": {
           "$type": "color",
-          "$value": "{primitive.color.blue-62}"
+          "$value": "{primitive.color.blue-69}"
         },
         "text-primary": {
           "$type": "color",

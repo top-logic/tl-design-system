@@ -81,6 +81,9 @@ export function kontrastPaare(T) {
   // Vordergrund. Kopfzeile, Zebra und Gruppenzeile der Tabelle tragen Text auf surface-layer-muted.
   for (const bg of AUSWAHL) {
     paar('icon-primary', bg, 3.0); paar('icon-secondary', bg, 3.0); paar('border-selected', bg, 3.0);
+    paar('border-interactive', bg, 3.0); // Linie des Zelleditors auf der gewählten Zeile, auch gezeigt
+    // Nebentext, Hilfetext und Link in einer gewählten Zeile (09.10.): 4,5 auf beiden Zuständen.
+    paar('text-secondary', bg, 4.5); paar('text-link', bg, 4.5); paar('text-helper', bg, 4.5);
   }
   paar('text-primary', 'surface-layer-muted', 4.5); paar('text-secondary', 'surface-layer-muted', 4.5);
   // icon-secondary auf surface-interactive-strong steht seit Bernhards Knöpfen im Feld schon in der Liste (b985047).

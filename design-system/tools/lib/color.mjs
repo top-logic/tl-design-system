@@ -360,11 +360,12 @@ export const MARKE_SUBTLE = {
   dark: { subtle: { L: 0.255, C: 0.044 }, hover: { L: 0.305, C: 0.056 } },
 };
 
-/** Helligkeit und Chroma der Auswahlflächen: hell wie die getönte Marke, dunkel eine Stufe kräftiger
- *  (blue-69 und blue-62), weil blue-74 mit 1,04 kaum über surface-layer läge. */
+/** Helligkeit und Chroma der Auswahlflächen. Hell liegt die gewählte Fläche auf der getönten Marke, die gezeigte
+ *  (blue-8) knapp darunter. Dunkel läge blue-74 mit 1,04 kaum über surface-layer; gewählt ist blue-72 (1,12), gezeigt
+ *  blue-69. Die gezeigte Stufe muss Hilfetext und Link noch mit 4,5 tragen (Paarliste), darum sind die Stufen eng. */
 export const MARKE_AUSWAHL = {
-  light: { selected: { L: 0.937, C: 0.03 }, hover: { L: 0.905, C: 0.046 } },
-  dark: { selected: { L: 0.305, C: 0.056 }, hover: { L: 0.375, C: 0.151 } },
+  light: { selected: MARKE_SUBTLE.light.subtle, hover: { L: 0.921, C: 0.0353 } },
+  dark: { selected: { L: 0.28, C: 0.05 }, hover: MARKE_SUBTLE.dark.hover },
 };
 
 /**
