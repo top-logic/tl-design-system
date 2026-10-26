@@ -89,7 +89,7 @@ test('keine alte Klasse der Welle 4b in react-src, Stylesheets, Java, tl-docs un
 
 test('Welle 4b im TSX: main in der Shell, aria-current an den Seiten, aria-expanded am Hamburger, kein englischer Name, 768 nur in der Shell', { skip: !existsSync(M) && 'kein Worktree' }, () => {
   const tsx = (n) => readFileSync(join(M, `react-src/controls/${n}.tsx`), 'utf8');
-  assert.match(tsx('TLAppShell'), /<main className="tl-app-shell__content"/);
+  assert.match(tsx('TLAppShell'), /<main className="tl-app-shell__content tl-region"/);
   assert.match(tsx('TLSidebar'), /aria-current=\{active \? 'page' : undefined\}/);
   assert.match(tsx('TLBottomBar'), /aria-current=\{isActive \? 'page' : undefined\}/);
   assert.match(tsx('TLDrawerToggle'), /aria-expanded=\{open\}/);

@@ -1,8 +1,8 @@
 # Vertrag: Reihen und Abstände
 
-Stack, Grid, Inset, Bounded, Item und Deck — die Bausteine, mit denen Ansichten ihre Kinder ordnen. Kein Aussehen,
-nur Lage und Abstand. Die Gap-Skala teilen sie mit `tl-columns`. Dazu zwei Marken, die jedes Control tragen kann:
-füllen (`tl-fill`) und erst beim Zeigen erscheinen (`tl-reveal-on-hover`).
+Stack, Grid, Inset, Bounded, Item, Deck und Region — die Bausteine, mit denen Ansichten ihre Kinder ordnen. Kein
+Aussehen, nur Lage und Abstand. Die Gap-Skala teilen sie mit `tl-columns`. Dazu zwei Marken, die jedes Control tragen
+kann: füllen (`tl-fill`) und erst beim Zeigen erscheinen (`tl-reveal-on-hover`).
 
 ## Zustand
 
@@ -11,7 +11,8 @@ füllen (`tl-fill`) und erst beim Zeigen erscheinen (`tl-reveal-on-hover`).
 | `TLStack` | `direction`, `gap`, `align`, `justify`, `wrap`, `growFirst`, `maxWidth`, `itemClass` | `tl-stack` mit `tl-stack--<richtung>`, `--gap-<stufe>`, `--align-<wert>`, `--justify-<wert>`, `--wrap`, `--grow-first`; mit `maxWidth` zusätzlich `tl-bounded` |
 | `TLGrid` | `columns`, `minColumnWidth`, `maxColumns`, `gap`, `maxWidth`, `itemClass` | `tl-grid tl-grid--gap-<stufe>`; die Spaltenvorlage inline; Abstand im TSX aus derselben Stufe |
 | `TLInset` | `child` | `tl-inset`, in einem Panel `tl-inset--panel`, in einer Karte `tl-inset--card` (aus `useSurface()`) |
-| `TLDeckPane` | `activeChild` | `tl-deck` |
+| `TLDeckPane` | `activeChild` | `tl-deck`: ohne eigene Box (`display: contents`), das gezeigte Kind steht im Behälter des Decks |
+| begrenzte Region | — | `tl-region` an der Fläche, die ihren einen Inhalt hält: Split-Fläche (`tl-split__pane`), Reiterinhalt der TabBar (`tl-tabs__panel`), `tl-app-shell__content`, `tl-sidebar__content`, Körper von Fenster (`tl-dialog__body`) und Drawer (`tl-drawer__body`) |
 | Hülle wiederholter Kinder | `itemClass` | `tl-item` und die konfigurierte Klasse; Position als `--item-index` (0-basiert) |
 | Haken der ausgewählten Option | `selectable`, `selected` | `tl-item__check`: ein dekoratives `<span aria-hidden="true">` in der Hülle, nur bei `aria-selected="true"`; sitzt oben am Ende, fängt keinen Klick; die Auswahl bleibt allein in `aria-selected` |
 | Auswahl unter den Einträgen | `selectable`, `itemKeys`, `selected`, `multiSelect` | der Behälter `role="listbox"` (mehrfach: `aria-multiselectable`), jede Hülle `role="option"` mit `aria-selected`; kein Modifier |
@@ -22,7 +23,9 @@ Ein Kind, das die übrige Höhe seines Behälters nehmen soll, trägt `tl-fill` 
 `flex: 1` und `min-height: 0`, damit es unter seinen Inhalt schrumpft und selbst scrollt. Ob ein Kind füllt, entscheidet
 der Control-Baum (`useFill`, `useFillHost`): ein Behälter mit füllendem Kind füllt seinerseits, bis zur ersten Box, die
 ohnehin begrenzt ist. Die Hülle eines wiederholten Kindes füllt mit, solange ihr Kind füllt
-(`.tl-item:has(> .tl-fill)`). Viewport und Mount-Punkt sind der Seitenrahmen der Engine (`tlReactBase.css`), nicht
+(`.tl-item:has(> .tl-fill)`). Die Box, die ohnehin begrenzt ist, trägt `tl-region` (eine Zelle aus
+`minmax(0, 1fr)`): sie hält einen füllenden Inhalt auf genau ihrer Höhe und streckt einen Inhalt eigener Größe auf
+ihre Höhe; ist er höher, scrollt die Region (ein Panel scrollt seinen Körper). Viewport und Mount-Punkt sind der Seitenrahmen der Engine (`tlReactBase.css`), nicht
 Teil des Pakets.
 
 ## Aktion beim Zeigen
