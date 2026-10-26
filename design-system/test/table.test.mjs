@@ -136,7 +136,7 @@ test('Tiefe: die Tabelle steht auf einer abgesetzten Fläche mit Rundung, Rand u
   assert.match(d, /background:\s*var\(--tl-surface-layer\)/);
   assert.match(d, /border-radius:\s*var\(--tl-radius-md\)/);
   assert.match(d, /border:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-separator\)/);
-  assert.match(d, /box-shadow:\s*var\(--tl-shadow-[a-z]+\)/);
+  assert.match(d, /box-shadow:\s*var\(--tl-shadow-1\)/);
   // Die füllende Tabelle schwebt nicht: kein Schatten (ihre Tiefe kommt vom abgesetzten Kopf).
   assert.doesNotMatch(declarationsOf(css, '.tl-table.tl-fill') ?? '', /shadow/);
   assert.doesNotMatch(declarationsOf(css, '.tl-table') ?? '', /shadow/);
@@ -159,22 +159,26 @@ const alleDeklarationen = (css, selector) => rulesOf(css)
   .filter(([sels]) => sels.split(/,(?![^(]*\))/).map((x) => x.trim()).includes(selector)).map(([, d]) => d).join(';');
 const ohneKommentar = (t) => t.replace(/\/\*[\s\S]*?\*\//g, '');
 
-test('Tiefe: der Trichter steht nur beim Zeigen und bei Fokus in der Kopfzelle, aktiv immer; Sortierpfeil und Gruppenmarke bleiben', () => {
-  assert.match(declarationsOf(css, '.tl-table__filter') ?? '', /opacity:\s*0(;|$)/);
-  for (const sel of [
-    '.tl-table__header-cell:hover .tl-table__filter',
-    '.tl-table__header-cell:focus-within .tl-table__filter',
-    '.tl-table__header-cell[data-tl-state~="filtered"] .tl-table__filter',
-  ]) assert.match(alleDeklarationen(css, sel), /opacity:\s*1/, sel);
-  // opacity, nicht visibility/display: ein verborgener Trichter bleibt mit Tab erreichbar.
-  assert.doesNotMatch(declarationsOf(css, '.tl-table__filter') ?? '', /visibility|display/);
+test('Tiefe: der Trichter ist ein tl-reveal-on-hover (layout.css), nur eine gefilterte Spalte zeigt ihn immer; Sortierpfeil und Gruppenmarke bleiben', () => {
+  // Keine eigene Reveal-Regel in table.css: opacity, :focus-within und @media (hover: none) kommen aus layout.css.
+  assert.doesNotMatch(alleDeklarationen(css, '.tl-table__filter'), /opacity|transition/);
+  assert.doesNotMatch(ohneKommentar(css), /focus-within|hover: none|\.tl-table__header-cell:hover/);
+  const gefiltert = alleDeklarationen(css, '.tl-table__header-cell[data-tl-state~="filtered"] .tl-table__filter');
+  assert.match(gefiltert, /opacity:\s*1/);
+  assert.match(gefiltert, /color:\s*var\(--tl-icon-primary\)/);
+  // Die Regel schlägt .tl-reveal-on-hover (0,1,0) und sein @media (hover: none) durch Spezifität (0,3,0).
+  const layout = readGenerated('layout', 'layout.css');
+  assert.match(alleDeklarationen(layout, '.tl-reveal-on-hover'), /opacity:\s*0/);
+  assert.match(alleDeklarationen(layout, ':hover > .tl-reveal-on-hover'), /opacity:\s*1/);
+  // Im Specimen trägt jeder Trichter die Klasse und steht direkt in der Kopfzelle (:hover > .tl-reveal-on-hover).
+  const html = readComponent('table', 'table.spec.html');
+  const trichter = [...html.matchAll(/<button[^>]*class="[^"]*\btl-table__filter\b[^"]*"/g)].map((m) => m[0]);
+  assert.ok(trichter.length >= 4);
+  for (const t of trichter) assert.match(t, /\btl-reveal-on-hover\b/);
+  assert.match(html, /<\/button>\s*<button[^>]*tl-table__filter/, 'der Trichter steht neben dem Sortierknopf in der Kopfzelle');
   // Was in Kraft ist, bleibt zu sehen: Sortierpfeil (im Sortierknopf) und Gruppenmarke haben keine Verbergen-Regel.
   for (const [sels, body] of rulesOf(css))
     if (/\.tl-table__mark/.test(sels)) assert.doesNotMatch(body, /opacity\s*:\s*0|visibility/, sels);
-  // Ohne Zeigen (Touch) steht der Trichter immer, wie tl-reveal-on-hover.
-  const touch = /@media \(hover: none\)\s*\{\s*\.tl-table__filter\s*\{([^}]*)\}/.exec(css.replace(/\/\*[\s\S]*?\*\//g, ''));
-  assert.ok(touch, '@media (hover: none) { .tl-table__filter { … } } fehlt');
-  assert.match(touch[1], /opacity:\s*1/);
 });
 
 test('Tiefe: Spaltenlinien sind ab Werk aus und kommen mit data-tl-column-lines, ohne die Kante fixierter Spalten zu überstimmen', () => {
@@ -230,7 +234,7 @@ test('Tiefe: „+ n weitere“ ist ein Element der Filterleiste, das nur sein La
 test('Tiefe: Vertrag und Specimen nennen die neuen Attribute und Klassen', () => {
   const md = readComponent('table', 'table.contract.md');
   assert.deepEqual(missingInContract(md, ['data-tl-striped', 'data-tl-column-lines', 'data-tl-align="end"', 'data-tl-density',
-    'data-tl-state~="group"', 'data-tl-state~="even"', 'tl-table__more', 'tl-type-overline', '--tl-surface-layer-muted']), []);
+    'data-tl-state~="group"', 'data-tl-state~="even"', 'tl-table__more', 'tl-type-overline', '--tl-surface-layer-muted', 'tl-reveal-on-hover']), []);
   const html = readComponent('table', 'table.spec.html');
   for (const t of ['data-tl-striped', 'data-tl-column-lines', 'data-tl-align="end"', 'tl-table__more', 'tl-type-overline',
     'data-tl-state="filtered"', 'aria-sort="ascending"'])

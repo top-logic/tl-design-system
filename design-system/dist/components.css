@@ -5153,7 +5153,7 @@ button.tl-swatch:not(:disabled):hover {
   border: var(--tl-border-width-sm) solid var(--tl-border-separator);
   border-radius: var(--tl-radius-md);
   background: var(--tl-surface-layer);
-  box-shadow: var(--tl-shadow-popover);
+  box-shadow: var(--tl-shadow-1);
 }
 
 /* Eine füllende Tabelle behält Kopf, drei Zeilen und Fuß (#29922): kürzer zeigt sie nichts Brauchbares. Ist die
@@ -5318,34 +5318,16 @@ button.tl-swatch:not(:disabled):hover {
 .tl-table__filter {
   flex-shrink: 0;
   color: var(--tl-icon-secondary);
-  opacity: 0;
-  transition:
-    opacity var(--tl-duration-fast) var(--tl-easing-standard),
-    background-color var(--tl-duration-fast) var(--tl-easing-standard),
-    border-color var(--tl-duration-fast) var(--tl-easing-standard),
-    color var(--tl-duration-fast) var(--tl-easing-standard);
 }
 
+/* Werkzeuge nur bei Bedarf (UI-Durchgang 1): der Trichter trägt tl-reveal-on-hover (layout.css) und steht damit beim Zeigen
+   auf die Kopfzelle (sein direkter Elternteil), bei Tastaturfokus und ohne Zeigen (Touch). Eine Spalte mit aktivem
+   Filter zeigt ihn immer: was in Kraft ist, steht im Bild. Zwei Klassen und ein Attribut schlagen .tl-reveal-on-hover.
+   Sortierpfeil und Gruppenmarke (.tl-table__mark) bleiben immer, sie stehen nur dort, wo sie gelten; der Titel bekommt
+   die Breite zurück (U29). */
 .tl-table__header-cell[data-tl-state~="filtered"] .tl-table__filter {
   color: var(--tl-icon-primary);
-}
-
-/* Werkzeuge nur bei Bedarf (UI-Durchgang 1): der Trichter steht beim Zeigen auf die Kopfzelle und, solange der Fokus in
-   ihr ist — Tab erreicht ihn auch unsichtbar (opacity, nicht visibility), :focus-within zeigt ihn dann. Eine Spalte mit
-   aktivem Filter zeigt ihn immer: was in Kraft ist, steht im Bild. Sortierpfeil und Gruppenmarke (.tl-table__mark) bleiben
-   immer, sie stehen nur dort, wo sie gelten; der Titel bekommt die Breite zurück (U29). Die Übergangsliste oben ersetzt die
-   von .tl-button (button.css steht im Bundle davor), wie bei tl-reveal-on-hover (layout.css). */
-.tl-table__header-cell:hover .tl-table__filter,
-.tl-table__header-cell:focus-within .tl-table__filter,
-.tl-table__header-cell[data-tl-state~="filtered"] .tl-table__filter {
   opacity: 1;
-}
-
-/* Ohne Zeigen (Touch) gäbe es nie :hover — dort steht der Trichter immer. */
-@media (hover: none) {
-  .tl-table__filter {
-    opacity: 1;
-  }
 }
 
 /* Die Spaltenwahl (Zahnrad) ist ein tl-button--icon --ghost über der rechten Kante des Kopfes, so hoch
@@ -6511,4 +6493,4 @@ button.tl-swatch:not(:disabled):hover {
 .tl-wizard[data-tl-state~="backward"] .tl-wizard__step[data-tl-state~="exiting"]:dir(rtl) {
   animation-name: tl-slide-out-forward;
 }
-/* tl-design-system sha256:86d5311a747ec862e0a81572d4c7d8d0b9d5316a83b30c098b1e225581c02c4a — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */
+/* tl-design-system sha256:825ea9c207c6690b416e4c170b46b182873fbece4a5a4e15e9b110e38cb58285 — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */

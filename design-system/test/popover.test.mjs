@@ -33,9 +33,7 @@ test('nur tl-popover setzt die Popup-Fläche: kein anderer Block liest shadow-po
     // Ausnahme 19.10. (Welle 5b): der Knopf über einer Fläche (tl-overlay__action) schwebt wie ein Popover, ohne Portal.
     // Ausnahme 20.10. (Welle 5d, Plan-Review K4): der Tooltip schwebt am Anker wie ein Popover, auf seiner inversen
     // Fläche; drop-shadow() nimmt die zweischichtige Liste nicht, darum box-shadow aus derselben Rolle.
-    // Ausnahme 26.10. (UI-Durchgang 1, Task 4): die Tabelle steht auf einer abgesetzten Fläche mit „leichtem Schatten“
-    // (Spec §1, Hendrik 26.10.); der leichteste Schatten der Skala ist shadow-popover. Ein eigenes Token ist offen.
-    if (!name.startsWith('popover/') && !['overlay/overlay.css', 'tooltip/tooltip.css', 'table/table.css'].includes(name)
+    if (!name.startsWith('popover/') && !['overlay/overlay.css', 'tooltip/tooltip.css'].includes(name)
       && /--tl-shadow-popover/.test(css)) hits.push(name);
   assert.deepEqual(hits, []);
 });
