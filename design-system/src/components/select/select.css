@@ -193,13 +193,11 @@
   background: var(--tl-surface-interactive-hover);
 }
 
-/* Die Hervorhebung ist die Tastaturposition (aria-activedescendant), nicht die Wahl: Fläche und
-   Akzentlinie. Die Akzentlinie ist der Indikator, die Tönung nur ein Zusatz: surface-interactive-strong
-   ist auf surface-layer abgestimmt, nicht auf die gehobene Overlay-Fläche; gehobene Flächen bekommen
-   ihre eigenen Rollen in Welle 3. */
+/* Die Hervorhebung ist die Tastaturposition (aria-activedescendant), nicht die Wahl: dieselbe neutrale Fläche wie das
+   Zeigen, keine Linie. Markenton und Kante heißen im ganzen Paket „gewählt“ (surface-selected, border-selected); die
+   Wahl dieser Liste ist der Haken. */
 .tl-select__option[data-tl-state~="highlighted"] {
-  background: var(--tl-surface-interactive-strong);
-  box-shadow: inset var(--tl-border-width-accent) 0 0 0 var(--tl-border-interactive);
+  background: var(--tl-surface-interactive-hover);
 }
 
 /* Die Wahl ist ein Haken am Zeilenende (aria-selected), unabhängig von der Hervorhebung. Die Liste

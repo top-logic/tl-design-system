@@ -10,7 +10,7 @@ const T = JSON.parse(readFileSync(new URL('../src/tokens.json', import.meta.url)
 
 test('select.css liest genau diese Farbrollen', () => {
   assert.deepEqual(colorVarsOf(css), [
-    'border-interactive', 'icon-secondary', 'surface-interactive-active', 'surface-interactive-hover',
+    'icon-secondary', 'surface-interactive-active', 'surface-interactive-hover',
     'surface-interactive-strong', 'text-placeholder',
   ]);
 });
@@ -28,7 +28,11 @@ test('das Select-Popup trägt die Fläche nicht selbst: tl-popover liefert sie',
 });
 
 test('Hervorhebung ist data-tl-state, das Ziehen zeichnet drag.css, gewählt ist aria-selected', () => {
-  assert.ok(declarationsOf(css, '.tl-select__option[data-tl-state~="highlighted"]'), 'Hervorhebung fehlt');
+  const hervor = declarationsOf(css, '.tl-select__option[data-tl-state~="highlighted"]');
+  assert.ok(hervor, 'Hervorhebung fehlt');
+  // Die Tastaturposition ist neutral (Zeigen-Stufe), keine Linie: Markenton und Kante heißen nur noch „gewählt“.
+  assert.match(hervor, /background:\s*var\(--tl-surface-interactive-hover\)/);
+  assert.doesNotMatch(hervor, /box-shadow|surface-selected|border/);
   assert.doesNotMatch(css.replace(/\/\*[\s\S]*?\*\//g, ''), /data-tl-state~="(dragging|drop-)/, 'die Ziehen-Optik steht in drag.css');
   // Der Griff ist ein Kreis wie das Entfernen (eine Regel .tl-select__chip > .tl-button); am Anfang der Pille
   // trägt sie dieselbe Lücke als Innenabstand wie am Ende (Entscheidung 07.10.: ein Modell).

@@ -85,6 +85,9 @@ export function kontrastPaare(T) {
     // Nebentext, Hilfetext und Link in einer gewählten Zeile (09.10.): 4,5 auf beiden Zuständen.
     paar('text-secondary', bg, 4.5); paar('text-link', bg, 4.5); paar('text-helper', bg, 4.5);
   }
+  // Der Ring `border-selected` steht auch außen: um eine gewählte Karte (tl-item) und einen Termin-Chip, auf dem Grund,
+  // auf Panels und im Dialog.
+  for (const bg of ['surface-base', 'surface-layer', 'surface-layer-nested', 'surface-overlay']) paar('border-selected', bg, 3.0);
   paar('text-primary', 'surface-layer-muted', 4.5); paar('text-secondary', 'surface-layer-muted', 4.5);
   // icon-secondary auf surface-interactive-strong steht seit Bernhards Knöpfen im Feld schon in der Liste (b985047).
   paar('icon-secondary', 'surface-layer', 3.0);

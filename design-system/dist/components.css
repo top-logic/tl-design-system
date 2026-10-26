@@ -550,8 +550,9 @@
   border-radius: var(--tl-radius-full);
 }
 
+/* Die Kapsel trägt den Markenton wie die Seitenleiste, keine Kante: eine Kante am Rand einer Kapsel wäre ein Strich im Bogen. */
 .tl-bottom-bar__item[aria-current="page"] .tl-bottom-bar__icon {
-  background: var(--tl-surface-interactive-strong);
+  background: var(--tl-surface-selected);
 }
 
 .tl-bottom-bar__label {
@@ -1100,9 +1101,9 @@
   pointer-events: auto;
 }
 
-/* Ausgewählt ist ein Ring wie tl-item[aria-selected] (layout.css); die Fläche bleibt die Kategorie. Auf dem
+/* Ausgewählt ist ein Ring wie tl-item[aria-selected] (layout.css), in border-selected; die Fläche bleibt die Kategorie. Auf dem
    gefüllten Termin zieht der Ring die Schriftfarbe (currentColor = text-on der Fläche): sie hält 4,5:1 gegen jede
-   Fläche, border-interactive verschwände auf der Marke und den blauen Kategorien. Um die Linienbreite eingerückt,
+   Fläche, border-selected verschwände auf der Marke und den blauen Kategorien. Um die Linienbreite eingerückt,
    damit außen die Füllung stehen bleibt und der Ring als Linie liest, nicht als hellerer Rand. Der Chip liegt auf der Tageszelle
    und trägt den Ring von tl-item. */
 .tl-calendar__event[aria-selected="true"]::after,
@@ -1110,7 +1111,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  border: var(--tl-border-width-md) solid var(--tl-border-interactive);
+  border: var(--tl-border-width-md) solid var(--tl-border-selected);
   border-radius: inherit;
   pointer-events: none;
 }
@@ -3135,8 +3136,10 @@ a.tl-field-value:hover {
   background: var(--tl-surface-interactive-hover);
 }
 
+/* Gewählt ist eine Zelle im Raster: Markenton und Ring (innerer Schatten rundum), keine Kante am Anfang. */
 .tl-icon-picker__cell[aria-selected="true"] {
-  background: var(--tl-surface-interactive-strong);
+  background: var(--tl-surface-selected);
+  box-shadow: inset 0 0 0 var(--tl-border-width-md) var(--tl-border-selected);
 }
 
 .tl-icon-picker__advanced {
@@ -3270,7 +3273,7 @@ a.tl-field-value:hover {
 
 /* Auswählbar (Q24, #29755): ist der Behälter eine Listbox, ist jeder Eintrag eine Option, und die ganze Fläche nimmt
    den Klick. Ein Eintrag schwebt nicht: beim Zeigen ein Hof, kein Schatten. Ausgewählt liegt ein Ring über dem Rand
-   des Eintrags — eine Auswahlfläche läge hinter einer Karte mit eigener Fläche —, der Zustand ist aria-selected; der
+   des Eintrags, der Zustand ist aria-selected; der
    Fokus ist der Ring aus base.css. Die Spalte von tl-columns ist dieselbe Hülle (useItems) und trägt dieselbe Regel. */
 .tl-item[role="option"],
 .tl-columns__column[role="option"] {
@@ -3290,9 +3293,22 @@ a.tl-field-value:hover {
   content: "";
   position: absolute;
   inset: 0;
-  border: var(--tl-border-width-md) solid var(--tl-border-interactive);
+  border: var(--tl-border-width-md) solid var(--tl-border-selected);
   border-radius: inherit;
   pointer-events: none;
+}
+
+/* Ausgewählt heißt auch hier Markenton: die Hülle trägt surface-selected (eine Karte, die selbst die Hülle ist, wie
+   tl-board__card, übermalt ihre Fläche; die Regel ist spezifischer). Eine Karte in der Hülle (tl-card) deckt sie
+   ganz, darum erbt die Karte die Fläche der gewählten Hülle, statt hinter ihr zu liegen. */
+.tl-item[aria-selected="true"],
+.tl-columns__column[aria-selected="true"] {
+  background: var(--tl-surface-selected);
+}
+
+.tl-item[aria-selected="true"] > .tl-card,
+.tl-columns__column[aria-selected="true"] > .tl-card {
+  background: inherit;
 }
 
 /* Ausgewählt heißt Ring und Haken (Nachtrag 4c, S2): die Marke ist ein dekoratives Element der Hülle, nur bei
@@ -4391,13 +4407,11 @@ a.tl-field-value:hover {
   background: var(--tl-surface-interactive-hover);
 }
 
-/* Die Hervorhebung ist die Tastaturposition (aria-activedescendant), nicht die Wahl: Fläche und
-   Akzentlinie. Die Akzentlinie ist der Indikator, die Tönung nur ein Zusatz: surface-interactive-strong
-   ist auf surface-layer abgestimmt, nicht auf die gehobene Overlay-Fläche; gehobene Flächen bekommen
-   ihre eigenen Rollen in Welle 3. */
+/* Die Hervorhebung ist die Tastaturposition (aria-activedescendant), nicht die Wahl: dieselbe neutrale Fläche wie das
+   Zeigen, keine Linie. Markenton und Kante heißen im ganzen Paket „gewählt“ (surface-selected, border-selected); die
+   Wahl dieser Liste ist der Haken. */
 .tl-select__option[data-tl-state~="highlighted"] {
-  background: var(--tl-surface-interactive-strong);
-  box-shadow: inset var(--tl-border-width-accent) 0 0 0 var(--tl-border-interactive);
+  background: var(--tl-surface-interactive-hover);
 }
 
 /* Die Wahl ist ein Haken am Zeilenende (aria-selected), unabhängig von der Hervorhebung. Die Liste
@@ -4488,12 +4502,23 @@ a.tl-field-value:hover {
   flex: none;
 }
 
-/* Die aktuelle Seite und der Kopf einer zugeklappten Gruppe, die sie enthält: die Fläche der Auswahl wie in Baum und
-   Tabelle, kein Balken. Das Gewicht der Seite trägt die Typo-Klasse (tl-type-body-strong), die das TSX setzt; der
-   Gruppenkopf bleibt im Grundgewicht. */
-.tl-sidebar__item[aria-current="page"],
+/* Die aktuelle Seite und der Kopf einer zugeklappten Gruppe, die sie enthält: Markenton wie in Baum und Tabelle. Die
+   Seite trägt dazu die Kante (innerer Schatten am Anfang, kein border-left), der Gruppenkopf nur die Fläche: er zeigt,
+   wo man ist, ohne die Seite selbst zu sein. Zeigen steht danach und hebt die Fläche eine Stufe (surface-selected-hover);
+   mit :hover ist es spezifischer als der Menüeintrag. Das Gewicht der Seite trägt die Typo-Klasse (tl-type-body-strong),
+   die das TSX setzt; der Gruppenkopf bleibt im Grundgewicht. */
+.tl-sidebar__item[aria-current="page"] {
+  background: var(--tl-surface-selected);
+  box-shadow: inset var(--tl-border-width-accent) 0 0 0 var(--tl-border-selected);
+}
+
 .tl-sidebar__item[data-tl-state~="contains-current"] {
-  background: var(--tl-surface-interactive-strong);
+  background: var(--tl-surface-selected);
+}
+
+.tl-sidebar__item[aria-current="page"]:hover,
+.tl-sidebar__item[data-tl-state~="contains-current"]:hover {
+  background: var(--tl-surface-selected-hover);
 }
 
 .tl-sidebar[data-tl-state~="collapsed"] .tl-sidebar__item {
@@ -5425,8 +5450,21 @@ button.tl-swatch:not(:disabled):hover {
   background: var(--tl-surface-interactive-hover);
 }
 
+/* Gewählt heißt überall Markenton und Kante (UI-Durchgang 1): die Fläche surface-selected, die Kante als innerer Schatten
+   auf der ersten Zelle der Zeile. Die Kante liegt auf der Zelle, nicht auf der Zeile: haftende Zellen (frozen, pinned)
+   tragen ihre Fläche über der der Zeile — sie erben sie per inherit —, ein Schatten der Zeile läge darunter. Ohne
+   fixierte Spalte rollt die Kante mit der ersten Zelle seitlich weg (hingenommen: die Fläche der Zeile bleibt). Zeigen auf
+   einer gewählten Zeile steht nach beiden Regeln, gleiche Spezifität: die Reihenfolge entscheidet. */
 :where(.tl-table__row[aria-selected="true"]) {
-  background: var(--tl-surface-interactive-strong);
+  background: var(--tl-surface-selected);
+}
+
+:where(.tl-table__row[aria-selected="true"]:hover) {
+  background: var(--tl-surface-selected-hover);
+}
+
+.tl-table__row[aria-selected="true"] > .tl-table__cell:first-child {
+  box-shadow: inset var(--tl-border-width-accent) 0 0 0 var(--tl-border-selected);
 }
 
 .tl-table__row[draggable="true"] {
@@ -6171,7 +6209,7 @@ button.tl-swatch:not(:disabled):hover {
 /* Baum — docs/skalen.md „Gleiches wird zusammengelegt“ (W3, W4, W10), 3b §7.
    ul.tl-tree[role=tree] > li.tl-tree__node[role=treeitem], flach, die Ebene in aria-level. Cursor und
    Auswahl wie in der Tabelle: data-tl-state~="cursor" (den Ring zeichnet base.css über ::after, darum
-   ist der Knoten positioniert), aria-selected die Fläche — kein Balken links. Der Einzug je Ebene ist die
+   ist der Knoten positioniert), aria-selected Markenton und Kante, wie in der Tabelle. Der Einzug je Ebene ist die
    Breite des Toggles, inline aus dem TSX; ein Blatt hält ihren Platz mit tl-tree__spacer frei. Ein
    Knoten, dessen Kinder kommen, trägt aria-busy; unter ihm steht eine tl-status-Zeile mit unbestimmtem
    tl-progress — selbst ein treeitem eine Ebene tiefer, benannt „Lädt“ (js.tree.loading). Ein Knoten
@@ -6211,13 +6249,23 @@ button.tl-swatch:not(:disabled):hover {
 .tl-tree__node[hidden] { display: none; }
 
 /* Gezeigt und ausgewählt stehen in :where: Ablegen darauf (drag.css, eine Attribut-Spezifität) übermalt
-   sie, wie in der Tabelle. */
+   sie, wie in der Tabelle. Gewählt heißt Markenton und Kante (innerer Schatten am Anfang des Knotens, wie in der Tabelle);
+   Zeigen auf einen gewählten Knoten steht danach. Die Kante steht nicht in :where: der Ring des Cursors (::after) ist
+   ein eigenes Element, der Schatten übermalt nichts, was Ablegen setzt (drag.css setzt Fläche und Rahmen). */
 :where(.tl-tree__node:hover) {
   background: var(--tl-surface-interactive-hover);
 }
 
 :where(.tl-tree__node[aria-selected="true"]) {
-  background: var(--tl-surface-interactive-strong);
+  background: var(--tl-surface-selected);
+}
+
+:where(.tl-tree__node[aria-selected="true"]:hover) {
+  background: var(--tl-surface-selected-hover);
+}
+
+.tl-tree__node[aria-selected="true"] {
+  box-shadow: inset var(--tl-border-width-accent) 0 0 0 var(--tl-border-selected);
 }
 
 .tl-tree__spacer {
@@ -6373,4 +6421,4 @@ button.tl-swatch:not(:disabled):hover {
 .tl-wizard[data-tl-state~="backward"] .tl-wizard__step[data-tl-state~="exiting"]:dir(rtl) {
   animation-name: tl-slide-out-forward;
 }
-/* tl-design-system sha256:c1dbd986df45b4fb6db21ac6f0ebc0bf22176010f5c913074cfe63d43789ac58 — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */
+/* tl-design-system sha256:2d18956e81034dbe893bb7cb6498fde0fac0fd451a3acd10eb8c8aea1c168740 — checked by TestDesignSystemCopy in tl-engine-7; edit the source and regenerate. */
