@@ -30,12 +30,10 @@
   gap: 0;
 }
 
-/* Begrenzte Spalte: die aktive Ansicht löst ihre Höhe gegen diesen Bereich auf, füllt ihn und rollt in sich, die
-   AppBar bleibt stehen. Bündig: die Ansicht trägt ihren Abstand selbst (Abstandsmodell). */
+/* Begrenzte Region (tl-region): die aktive Ansicht löst ihre Höhe gegen diesen Bereich auf, füllt ihn und rollt in
+   sich, die AppBar bleibt stehen. Bündig: die Ansicht trägt ihren Abstand selbst (Abstandsmodell). */
 .tl-app-shell__content {
-  display: flex;
   flex: 1 1 auto;
-  flex-direction: column;
   min-height: 0;
   overflow: hidden;
 }

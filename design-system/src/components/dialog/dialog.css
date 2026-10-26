@@ -76,11 +76,15 @@
 }
 
 .tl-dialog__body {
-  display: flex;
   flex: 1 1 auto;
-  flex-direction: column;
   min-height: 0;
   overflow: auto;
+}
+
+/* Ein Körper ohne Region (Fotoaufnahme) ordnet seinen Inhalt als Spalte; der Körper eines Fensters ist eine Region. */
+.tl-dialog__body:not(.tl-region) {
+  display: flex;
+  flex-direction: column;
 }
 
 /* Acht Griffe zum Ändern der Größe, halb über dem Rand. Kanten xs breit, Ecken sm groß. */
