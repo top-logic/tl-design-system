@@ -449,6 +449,10 @@ test('Tabs: die Reiterreihe scrollt in sich, die Leiste trägt Linie und Knöpfe
   assert.match(strip, /min-width:\s*0/);
   assert.match(strip, /border-bottom:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-separator\)/);
   assert.match(declarationsOf(tabs, '.tl-tabs__scroll') ?? '', /flex-shrink:\s*0/);
+  // Am Ende ohne Weiteres unsichtbar, aber mit Platz: Scrollen ändert die Breite der Reiterreihe nie.
+  const amEnde = declarationsOf(tabs, '.tl-tabs__scroll:disabled') ?? '';
+  assert.match(amEnde, /visibility:\s*hidden/);
+  assert.doesNotMatch(amEnde, /display/);
   // Die Reiterreihe schneidet: ein Ring außen wäre abgeschnitten.
   assert.match(declarationsOf(tabs, '.tl-tabs__tab:focus-visible') ?? '', /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/);
 });

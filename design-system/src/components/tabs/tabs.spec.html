@@ -43,7 +43,7 @@
       <span class="tl-type-label">Überlauf: zwölf Reiter, die Reiterreihe scrollt, Knöpfe nur in verdeckter Richtung</span>
       <div class="tl-tabs">
         <div class="tl-tabs__strip">
-        <button type="button" class="tl-button tl-button--icon tl-button--sm tl-button--ghost tl-tabs__scroll" data-tl-edge="start" tabindex="-1" aria-label="Reiter davor zeigen" hidden><i class="tl-icon-sm bi bi-chevron-left" aria-hidden="true"></i></button>
+        <button type="button" class="tl-button tl-button--icon tl-button--sm tl-button--ghost tl-tabs__scroll" data-tl-edge="start" tabindex="-1" aria-label="Reiter davor zeigen" disabled><i class="tl-icon-sm bi bi-chevron-left" aria-hidden="true"></i></button>
         <div class="tl-tabs__list" role="tablist" aria-label="Viele Bereiche">
           <button type="button" class="tl-tabs__tab tl-type-body" role="tab" id="tab-ov-1" aria-selected="true" aria-controls="panel-ov" tabindex="0">Übersicht</button>
           <button type="button" class="tl-tabs__tab tl-type-body" role="tab" id="tab-ov-2" aria-selected="false" aria-controls="panel-ov" tabindex="-1">Stammdaten</button>
@@ -78,13 +78,16 @@
       for (const a of ['aria-controls', 'aria-labelledby']) if (el.hasAttribute(a)) el.setAttribute(a, el.getAttribute(a) + '-' + id);
     document.getElementById(id).append(rows);
   }
-  // Die Knöpfe der Leiste wie in der Engine (useScrollStrip): da, solange in ihrer Richtung etwas verdeckt ist.
+  // Die Knöpfe der Leiste wie in der Engine (useScrollStrip): da, solange die Reiter überlaufen; disabled (unsichtbar,
+  // Platz bleibt), solange in ihrer Richtung nichts verdeckt ist.
   for (const list of document.querySelectorAll('.tl-tabs__list')) {
     const strip = list.parentElement;
     const start = strip.querySelector('[data-tl-edge="start"]'), end = strip.querySelector('[data-tl-edge="end"]');
     const update = () => {
-      start.hidden = list.scrollLeft <= 0.5;
-      end.hidden = list.scrollLeft + list.clientWidth >= list.scrollWidth - 0.5;
+      const spare = start.getBoundingClientRect().width + end.getBoundingClientRect().width;
+      start.hidden = end.hidden = list.scrollWidth <= list.clientWidth + spare + 0.5;
+      start.disabled = list.scrollLeft <= 0.5;
+      end.disabled = list.scrollLeft + list.clientWidth >= list.scrollWidth - 0.5;
     };
     list.addEventListener('scroll', update);
     new ResizeObserver(update).observe(list);
