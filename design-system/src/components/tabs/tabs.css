@@ -83,10 +83,15 @@
 }
 
 .tl-tabs__panel {
-  display: flex;
-  flex-direction: column;
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
+}
+
+/* Ein Reiterfeld ohne Region (Farb- und Icon-Picker) ordnet seinen Inhalt als Spalte; der Inhalt der TabBar ist eine
+   Region. */
+.tl-tabs__panel:not(.tl-region) {
+  display: flex;
+  flex-direction: column;
 }
 .tl-tabs__panel[hidden] { display: none; }

@@ -119,10 +119,26 @@ test('tl-inset: auf der Seite space-lg, im Panel space-md, in der Karte space-xs
   assert.doesNotMatch(ohneKommentar(readGenerated('layout', 'layout.css')), /page-inset|--tl-grid-gap|tlFill/);
 });
 
-test('tl-bounded, tl-item, tl-deck: Breite mittig begrenzt, Hülle durchlässig, ein Kind ohne eigene Größe', () => {
+test('tl-bounded, tl-item, tl-deck: Breite mittig begrenzt, Hülle durchlässig, ein Deck ohne eigene Box', () => {
   assert.match(decl('layout', '.tl-bounded'), /margin-inline:\s*auto/);
   assert.match(decl('layout', '.tl-item'), /min-height:\s*0/);
-  assert.match(decl('layout', '.tl-deck'), /flex-direction:\s*column/);
+  assert.match(decl('layout', '.tl-deck'), /display:\s*contents/);
+  assert.match(decl('layout', '.tl-deck[hidden]'), /display:\s*none/);
+});
+
+// #29990: eine begrenzte Region gibt ihrem einen Inhalt ihre Höhe — ein füllender genau, einer eigener Größe gestreckt.
+test('tl-region: eine Zelle aus minmax(0, 1fr); Reiterfeld und Dialogkörper ohne Region bleiben Spalten', () => {
+  const region = decl('layout', '.tl-region');
+  assert.match(region, /display:\s*grid/);
+  assert.match(region, /grid-template-rows:\s*minmax\(0, 1fr\)/);
+  assert.match(region, /grid-template-columns:\s*minmax\(0, 1fr\)/);
+  assert.match(decl('layout', '.tl-region[hidden]'), /display:\s*none/);
+  assert.match(decl('tabs', '.tl-tabs__panel:not(.tl-region)'), /flex-direction:\s*column/);
+  assert.match(decl('dialog', '.tl-dialog__body:not(.tl-region)'), /flex-direction:\s*column/);
+  for (const [dir, sel] of [['tabs', '.tl-tabs__panel'], ['dialog', '.tl-dialog__body'], ['drawer', '.tl-drawer__body'],
+    ['app-shell', '.tl-app-shell__content'], ['sidebar', '.tl-sidebar__content']]) {
+    assert.doesNotMatch(decl(dir, sel), /display:/, `${sel} überlässt das Layout der Region`);
+  }
 });
 
 // Q24 (#29755): eine Option schwebt nicht — beim Zeigen ein Hof; ausgewählt ein Ring über dem Eintrag, Zustand aus
