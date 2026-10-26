@@ -1,7 +1,7 @@
 // Die Tabelle — 3b §3–§6: Zeile size-row, Kopf size-bar, Lage und Cursor als Attribute.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readComponent, readGenerated, declarationsOf, rulesOf } from './lib/component.mjs';
+import { readComponent, readGenerated, declarationsOf, rulesOf, missingInContract } from './lib/component.mjs';
 
 const css = readGenerated('table', 'table.css');
 
@@ -79,7 +79,7 @@ test('der Körper isoliert seinen Stapel, Spaltenwahl und Fixiergrenze sind so h
 // scrollende Überschriften laufen. Jede Kopfzelle isoliert ihren Stapel: die Einfügemarke eines Spaltenzugs
 // (::before, layer-sticky) einer Überschrift, die unter die fixierten rollt, malt nicht über deren Zellen.
 test('Kopf: haftende Zellen deckend, Einfügemarke einer Überschrift bleibt in ihrer Zelle', () => {
-  assert.match(declarationsOf(css, '.tl-table__header-row') ?? '', /background:\s*var\(--tl-surface-layer\)/);
+  assert.match(declarationsOf(css, '.tl-table__header-row') ?? '', /background:\s*var\(--tl-surface-layer-muted\)/);
   for (const lage of ['frozen', 'pinned']) {
     const d = declarationsOf(css, `.tl-table__header-cell[data-tl-state~="${lage}"]`) ?? '';
     assert.match(d, /position:\s*sticky/, lage);
@@ -126,4 +126,114 @@ test('der Kopf scrollt waagerecht ohne eigenen Balken (Hendrik 12.10.)', () => {
   assert.match(d, /overflow-x:\s*auto/);
   assert.match(d, /overflow-y:\s*hidden/);
   assert.match(d, /scrollbar-width:\s*none/);
+});
+
+
+// --- UI-Durchgang 1, Task 4: Tabelle mit Tiefe (Spec §1) ---------------------------------------------------------
+
+test('Tiefe: die Tabelle steht auf einer abgesetzten Fläche mit Rundung, Rand und leichtem Schatten, die füllende ohne Schatten', () => {
+  const d = declarationsOf(css, '.tl-table:not(.tl-fill)') ?? '';
+  assert.match(d, /background:\s*var\(--tl-surface-layer\)/);
+  assert.match(d, /border-radius:\s*var\(--tl-radius-md\)/);
+  assert.match(d, /border:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-separator\)/);
+  assert.match(d, /box-shadow:\s*var\(--tl-shadow-[a-z]+\)/);
+  // Die füllende Tabelle schwebt nicht: kein Schatten (ihre Tiefe kommt vom abgesetzten Kopf).
+  assert.doesNotMatch(declarationsOf(css, '.tl-table.tl-fill') ?? '', /shadow/);
+  assert.doesNotMatch(declarationsOf(css, '.tl-table') ?? '', /shadow/);
+});
+
+test('Tiefe: leiser Kopf — surface-layer-muted, Titel text-secondary in Großbuchstaben, auch unter der Spaltenwahl', () => {
+  assert.match(declarationsOf(css, '.tl-table__header-row') ?? '', /background:\s*var\(--tl-surface-layer-muted\)/);
+  const label = declarationsOf(css, '.tl-table__label') ?? '';
+  assert.match(label, /(^|;)\s*color:\s*var\(--tl-text-secondary\)/);
+  assert.match(label, /text-transform:\s*uppercase/);
+  // Das Zahnrad deckt die Überschriften unter sich: es trägt die Fläche des Kopfes, ebenso der Verlauf davor.
+  assert.match(declarationsOf(css, '.tl-table__columns') ?? '', /background:\s*var\(--tl-surface-layer-muted\)/);
+  const verlauf = declarationsOf(css, '.tl-table__frame:has(.tl-table__header[data-tl-state~="covered"]) > .tl-table__columns::before') ?? '';
+  assert.match(verlauf, /var\(--tl-surface-layer-muted\)/);
+  assert.doesNotMatch(verlauf, /var\(--tl-surface-layer\)/);
+});
+
+// Alle Deklarationen, die ein Selektor in der Datei bekommt (declarationsOf liefert nur den ersten Block).
+const alleDeklarationen = (css, selector) => rulesOf(css)
+  .filter(([sels]) => sels.split(/,(?![^(]*\))/).map((x) => x.trim()).includes(selector)).map(([, d]) => d).join(';');
+const ohneKommentar = (t) => t.replace(/\/\*[\s\S]*?\*\//g, '');
+
+test('Tiefe: der Trichter steht nur beim Zeigen und bei Fokus in der Kopfzelle, aktiv immer; Sortierpfeil und Gruppenmarke bleiben', () => {
+  assert.match(declarationsOf(css, '.tl-table__filter') ?? '', /opacity:\s*0(;|$)/);
+  for (const sel of [
+    '.tl-table__header-cell:hover .tl-table__filter',
+    '.tl-table__header-cell:focus-within .tl-table__filter',
+    '.tl-table__header-cell[data-tl-state~="filtered"] .tl-table__filter',
+  ]) assert.match(alleDeklarationen(css, sel), /opacity:\s*1/, sel);
+  // opacity, nicht visibility/display: ein verborgener Trichter bleibt mit Tab erreichbar.
+  assert.doesNotMatch(declarationsOf(css, '.tl-table__filter') ?? '', /visibility|display/);
+  // Was in Kraft ist, bleibt zu sehen: Sortierpfeil (im Sortierknopf) und Gruppenmarke haben keine Verbergen-Regel.
+  for (const [sels, body] of rulesOf(css))
+    if (/\.tl-table__mark/.test(sels)) assert.doesNotMatch(body, /opacity\s*:\s*0|visibility/, sels);
+  // Ohne Zeigen (Touch) steht der Trichter immer, wie tl-reveal-on-hover.
+  const touch = /@media \(hover: none\)\s*\{\s*\.tl-table__filter\s*\{([^}]*)\}/.exec(css.replace(/\/\*[\s\S]*?\*\//g, ''));
+  assert.ok(touch, '@media (hover: none) { .tl-table__filter { … } } fehlt');
+  assert.match(touch[1], /opacity:\s*1/);
+});
+
+test('Tiefe: Spaltenlinien sind ab Werk aus und kommen mit data-tl-column-lines, ohne die Kante fixierter Spalten zu überstimmen', () => {
+  assert.doesNotMatch(declarationsOf(css, '.tl-table__cell') ?? '', /border-right/);
+  assert.doesNotMatch(declarationsOf(css, '.tl-table__header-cell') ?? '', /border-right/);
+  const linie = /border-right:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-separator\)/;
+  for (const el of ['cell', 'header-cell'])
+    assert.match(declarationsOf(css, `:where(.tl-table[data-tl-column-lines]) .tl-table__${el}`) ?? '', linie, el);
+  // Die Linien stehen in :where (Spezifität (0,1,0)): frozen-last (0,2,0) behält border-emphasis, die letzte Zelle bleibt ohne.
+  assert.match(declarationsOf(css, '.tl-table__cell:last-child') ?? '', /border-right:\s*0/);
+  assert.match(declarationsOf(css, '.tl-table__cell[data-tl-state~="frozen-last"]') ?? '', /border-emphasis/);
+});
+
+test('Tiefe: Zebra als Attribut über das Zustandswort even — nie nth-child, und Auswahl und Zeigen gewinnen', () => {
+  const zebra = ':where(.tl-table[data-tl-striped] .tl-table__row[data-tl-state~="even"])';
+  assert.match(declarationsOf(css, zebra) ?? '', /background:\s*var\(--tl-surface-layer-muted\)/);
+  assert.doesNotMatch(ohneKommentar(css), /nth-child|nth-of-type|:nth-/);
+  // Gleiche Spezifität (0,0,0) wie Zeigen und Auswahl: die Reihenfolge entscheidet. Zebra nach der Grundfläche, vor beiden.
+  const i = (t) => css.indexOf(t);
+  assert.ok(i(':where(.tl-table__row) {') < i(zebra));
+  assert.ok(i(zebra) < i(':where(.tl-table__row:hover)'));
+  assert.ok(i(zebra) < i(':where(.tl-table__row[aria-selected="true"]) {'));
+  assert.ok(i(zebra) < i(':where(.tl-table__row[aria-selected="true"]:hover)'));
+  // Alle drei in :where: eine Klasse stark (Ablegen, drag.css) übermalt sie weiterhin ohne Spezifitätskampf.
+  assert.doesNotMatch(css, /(^|\n)\.tl-table\[data-tl-striped\]/);
+});
+
+test('Tiefe: Zahlen rechtsbündig mit tabular-nums, Kopf mit ausgerichtet', () => {
+  for (const el of ['cell', 'header-cell']) {
+    const d = declarationsOf(css, `.tl-table__${el}[data-tl-align="end"]`) ?? '';
+    assert.match(d, /text-align:\s*end/, el);
+    assert.match(d, /justify-content:\s*flex-end/, el);
+    assert.match(d, /font-variant-numeric:\s*tabular-nums/, el);
+  }
+});
+
+test('Tiefe: die Gruppenzeile ist eine eigene Zeilenform, ihre Anzahl eine Kapsel', () => {
+  assert.match(declarationsOf(css, ':where(.tl-table__row[data-tl-state~="group"])') ?? '', /background:\s*var\(--tl-surface-layer-muted\)/);
+  const i = (t) => css.indexOf(t);
+  assert.ok(i(':where(.tl-table__row[data-tl-state~="group"])') < i(':where(.tl-table__row:hover)'), 'Zeigen und Auswahl gewinnen');
+  const k = declarationsOf(css, '.tl-table__count') ?? '';
+  assert.match(k, /border-radius:\s*var\(--tl-radius-full\)/);
+  assert.match(k, /background:\s*var\(--tl-surface-interactive-strong\)/);
+  // text-secondary hielte auf der Kapsel dunkel nur 4,27: text-primary, Paar steht in pairs.mjs.
+  assert.match(k, /(^|;)\s*color:\s*var\(--tl-text-primary\)/);
+  assert.doesNotMatch(k, /text-secondary/);
+});
+
+test('Tiefe: „+ n weitere“ ist ein Element der Filterleiste, das nur sein Layout braucht (Chip liefert die Form)', () => {
+  assert.match(declarationsOf(css, '.tl-table__more') ?? '', /flex:\s*none/);
+});
+
+test('Tiefe: Vertrag und Specimen nennen die neuen Attribute und Klassen', () => {
+  const md = readComponent('table', 'table.contract.md');
+  assert.deepEqual(missingInContract(md, ['data-tl-striped', 'data-tl-column-lines', 'data-tl-align="end"', 'data-tl-density',
+    'data-tl-state~="group"', 'data-tl-state~="even"', 'tl-table__more', 'tl-type-overline', '--tl-surface-layer-muted']), []);
+  const html = readComponent('table', 'table.spec.html');
+  for (const t of ['data-tl-striped', 'data-tl-column-lines', 'data-tl-align="end"', 'tl-table__more', 'tl-type-overline',
+    'data-tl-state="filtered"', 'aria-sort="ascending"'])
+    assert.ok(html.includes(t), `Specimen zeigt ${t}`);
+  for (const wort of ['group', 'even']) assert.match(html, new RegExp(`data-tl-state="[^"]*\\b${wort}\\b`), `Specimen zeigt das Zustandswort ${wort}`);
 });
