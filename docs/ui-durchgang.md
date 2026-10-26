@@ -7,6 +7,46 @@ hinnimmt, stehen mit Verweis dabei.
 
 Neue Einträge: Datum, Welle, woher (Sichtprüfung, Hendrik, Review), Quelle in `altlast.md` oder `skalen.md`.
 
+## Reihenfolge (Hendrik, 26.10.)
+
+0. **Bestandsaufnahme:** die meistgenutzten Views der Demo in hell, dunkel und kompakt fotografieren, Kritik und
+   Audit darüber; Befunde kommen als neue U-Einträge hierher, Doppelungen mit Konsolidierungs-Prognose. **Tabellen
+   zuerst** — in echten Anwendungen die meistgenutzte Komponente; bei Konflikten gewinnt die Tabelle.
+1. **Systemweit:** Bewegung (U6, U19); Zustandssprache als ein Paket (U3, U13, U14); Icon-Bibliothek entscheiden;
+   Pfeiltasten in Leisten (U15); Tabellen-Befunde aus Schritt 0.
+2. **Signature-Komponenten:** Farb- und Icon-Picker (U1, U4); Kalender (U23, U12); Player (U7).
+3. **Kleine Korrekturen, ein Paket:** U8, U9, U11, U17, U22, U5, U10, U18.
+4. **Wartet auf Klärung oder Server:** U2, U20, U21, U24.
+
+## Tabellen (Bestandsaufnahme 26.10.)
+
+Demo auf master `7def158f02`, Views „Objektliste“ (`tickets.view.xml`) und „Tabellenspalten“, hell und dunkel.
+
+| # | Was | Woher | Quelle |
+|---|---|---|---|
+| U25 | **Auswahl kaum von Hover zu unterscheiden:** `surface-interactive-selected` ist ein Grau eine Stufe neben `-hover` (hell `gray-7`/`gray-4`, dunkel `gray-64`/`gray-67`); ohne Fokusring sieht man nicht, welche Zeile gewählt ist. Gewählt braucht eine eigene Aussage (Markenton, Kante links o. Ä.) — gehört zur Zustandssprache (U3, U13, U14) | Bestandsaufnahme 26.10. | `table.css` `.tl-table__row[aria-selected]`, `tokens.json` |
+| U26 | **Seite springt beim Wählen:** in der Objektliste fügt die Auswahl über der Tabelle Inhalt ein (Chip, Status), die Tabelle rutscht um etwa 70 px nach unten — der nächste Klick trifft daneben. Platz reservieren oder die Anzeige an eine Stelle legen, die nichts verschiebt | Bestandsaufnahme 26.10. | `tickets.view.xml` |
+| U27 | **Filter und Spaltenwahl als modaler Dialog:** für eine Liste von Häkchen verdunkelt sich die ganze Seite, angewandt wird erst mit „Ok“. Modern: Popover am Spaltenkopf, wirkt sofort, Suche bei langen Listen, Anzahl je Wert; Spaltenwahl mit viel Leerraum unter den Einträgen | Bestandsaufnahme 26.10. | `TLColumnSelect`, Filter-Dialog der Tabelle |
+| U28 | **Zahlen linksbündig:** Zählspalten („Tickets“, „M1“, „M2“) stehen links, ohne Ziffern gleicher Breite. Zahlen rechtsbündig mit `tabular-nums`, Kopf mit ausgerichtet; die Spalte braucht eine Aussage ihres Typs | Bestandsaufnahme 26.10. | `table.css` (keine Ausrichtung je Typ) |
+| U29 | **Kopfzeile laut:** jede Spalte zeigt Filtertrichter, Gruppierung und Sortierpfeil dauerhaft; Titel werden abgeschnitten („Statusbezeich…“, „Anfan…“). Werkzeuge nur bei Hover/Fokus oder wenn aktiv; aktiver Filter deutlich markiert, inaktiver leise | Bestandsaufnahme 26.10. | `table.css` Kopfzelle |
+| U30 | **Letzte Spalte füllt die ganze Breite** bei wenigen Spalten (Map-Zeilen: zwei Spalten über 1300 px); Zeilen und Leerraum darunter ohne Ende. Füllspalte oder begrenzte Breite prüfen | Bestandsaufnahme 26.10. | Tabellenspalten-Demo |
+| U31 | **Gruppenzeilen:** Gruppenwert als Chip neben einem kleinen Zähler, Summen fett in denselben Spalten wie die Werte — Hierarchie unklar. Gruppenkopf als eigene Zeilenform (Fläche, Zähler als Badge, Summen abgesetzt) | Bestandsaufnahme 26.10. | `table.css` Gruppenzeile |
+| U32 | **Formular ohne Objekt übernimmt das erste Objekt nicht (Fehler, kein Gestaltungsthema):** wird ein Formular gebaut, solange sein Kanal kein Objekt trägt, zeigen die Felder Platzhalter (Rohname als Beschriftung, leeres bearbeitbares `TLTextInput`); kommt danach ein Objekt, bekommt es das Formular („Bearbeiten“ erscheint), die Felder aber nicht. Mit Objekt beim Aufbau und beim Wechsel zwischen Objekten stimmt alles. Betrifft jedes Detail neben einer Liste, auch die Administration. Ursache offen, Untersuchung läuft (26.10.) — nicht vorschnell master oder Welle 5 zuschreiben | Bestandsaufnahme 26.10. | `AttributeFieldControl` `newPlaceholder`/`onFormStateChanged` |
+| U33 | **Anmeldung klebt oben:** die Karte steht am oberen Rand statt mittig, „Anonym stöbern“ als nackter Link darunter — erster Eindruck der Anwendung | Bestandsaufnahme 26.10. | Login-Seite |
+
+Gut gelöst und zu halten: Pfeiltasten bewegen Auswahl und Detail sofort, der Fokusring der Zeile ist klar, Status-Chips
+lesen sich in beiden Modi, die Zeilenhöhe ist ruhig.
+
+## Weitere Views (Bestandsaufnahme 26.10.)
+
+| # | Was | Woher | Quelle |
+|---|---|---|---|
+| U34 | **Board-Karten leer und laut:** Karte trägt nur Titel und den Status-Chip, der in seiner Statusspalte nichts sagt; Öffnen-Symbol auf jeder Karte; hohe Karten für eine Zeile Inhalt. Karte zeigt, was beim Sortieren hilft (Verantwortlich, Fälligkeit, Kommentare), Öffnen bei Hover/Fokus | Bestandsaufnahme 26.10. | Board-Demo, `tl-card` |
+| U35 | **Leerer Zustand ohne Form:** „Kein Objekt ausgewählt“ als graue Zeile oben links, im Seitenformular sogar ohne Innenabstand. Leerzustand mit Mitte, Symbol und nächstem Schritt („Ticket links wählen oder neu anlegen“) | Bestandsaufnahme 26.10. | Detailbereiche, `tl-empty`? |
+| U36 | **Zahlen und Beträge linksbündig** auch in Projekten („120.000,00“), das Budgetfeld über die ganze Breite mit zweizeiliger Beschriftung — bestätigt U28 als systemweit | Bestandsaufnahme 26.10. | Projekte |
+| U37 | **Aktionsknöpfe als volle Balken:** „Fehler und Hinweise“ stapelt acht seitenbreite, mittig beschriftete Knöpfe — Knöpfe nehmen ihre Breite, nicht die der Seite | Bestandsaufnahme 26.10. | Fehler-und-Hinweise-Demo |
+| U38 | **Navigation wächst ohne Halt:** aufgeklappte „Demos“ (über 30 Einträge) schieben Administration, Board, Info aus dem Blick; Klickziele verrutschen beim Aufklappen. In echten Anwendungen ähnlich bei großen Gruppen — Suche in der Navigation, Gruppen eingeklappt merken | Bestandsaufnahme 26.10. | `tl-sidebar` |
+
 ## Bedienkonzept neu
 
 | # | Was | Woher | Quelle |
