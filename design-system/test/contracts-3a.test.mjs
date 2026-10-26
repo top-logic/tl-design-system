@@ -7,7 +7,8 @@ const SOLL = {
   'popover/popover.contract.md': ['tl-popover', 'data-tl-anchored-overlay', 'layer-popover'],
   'menu/menu.contract.md': ['tl-menu', 'tl-menu__item', 'role="menu"', 'aria-current', 'Home', 'End', 'Escape', 'tl-menu-region', 'aria-expanded'],
   'toolbar/toolbar.contract.md': ['tl-toolbar', 'data-tl-overflow', 'data-tl-compact', 'tl-divider--vertical', 'iconOnly'],
-  'tabs/tabs.contract.md': ['tl-tabs', 'role="tablist"', 'aria-selected', 'aria-controls', 'ArrowRight', 'Home'],
+  'tabs/tabs.contract.md': ['tl-tabs', 'role="tablist"', 'aria-selected', 'aria-controls', 'ArrowRight', 'Home',
+    'tl-tabs__strip', 'tl-tabs__scroll', 'data-tl-edge', 'preventScroll', 'useScrollStrip', 'js.tabs.scrollStart', 'js.tabs.scrollEnd'],
   'breadcrumb/breadcrumb.contract.md': ['tl-breadcrumb', 'aria-current="page"', 'tl-button--link', 'js.breadcrumb.label'],
   'toggle/toggle.contract.md': ['tl-toggle', 'aria-expanded', 'aria-controls', 'aria-label'],
 };
