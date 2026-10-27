@@ -243,3 +243,7 @@ test('Tiefe: Vertrag und Specimen nennen die neuen Attribute und Klassen', () =>
     assert.ok(html.includes(t), `Specimen zeigt ${t}`);
   for (const wort of ['group', 'even']) assert.match(html, new RegExp(`data-tl-state="[^"]*\\b${wort}\\b`), `Specimen zeigt das Zustandswort ${wort}`);
 });
+
+test('der Knopf im Streifen der Spaltenwahl trägt den Ring innen: tl-table schneidet, rechts bündig wäre er weg (Hendrik 27.10.)', () => {
+  assert.match(declarationsOf(css, '.tl-table__columns > .tl-button:focus-visible') ?? '', /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/);
+});

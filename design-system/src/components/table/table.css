@@ -364,10 +364,13 @@
 
 /* Was bündig an der Kante von tl-table liegt, trägt den Ring innen — tl-table schneidet (overflow: hidden),
    ein Ring außen wäre ganz oder halb weg (focus-clip.test.mjs): das Raster ohne Cursor (leer, kein
-   aria-activedescendant — es zeigt den Ring selbst), der Körper, die Spaltenwahl in der Ecke. */
+   aria-activedescendant — es zeigt den Ring selbst), der Körper, die Spaltenwahl in der Ecke. In der Engine ist
+   tl-table__columns der Streifen und der Knopf darin das Ziel des Fokus (Part Button seit #29787): der Ring gehört an
+   den Knopf, sonst stand er außen und war rechts abgeschnitten (Hendrik 27.10.). */
 .tl-table__grid:focus-visible,
 .tl-table__body:focus-visible,
-.tl-table__columns:focus-visible {
+.tl-table__columns:focus-visible,
+.tl-table__columns > .tl-button:focus-visible {
   outline-offset: calc(-1 * var(--tl-focus-offset));
 }
 
