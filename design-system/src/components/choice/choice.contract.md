@@ -119,7 +119,7 @@ Klassen:
 | `tl-chip` | `button type="button"` je Option, mit `aria-pressed` |
 | `tl-chip` + `data-tl-role` | die Rolle des Werts (`colorRole`); keine Pill im Chip oder Segment, Bild und Beschriftung stehen nebeneinander mit `--tl-space-2xs` |
 | `tl-chip__label` | `span` um das Label im Chip; endet mit Ellipse |
-| `tl-chip__detail` | `span` hinter dem Label, der leisere Text (etwa die Größe einer Datei, Part `Chip`, #29787); `--tl-text-secondary`, kürzt nicht |
+| `tl-chip__detail` | `span` hinter dem Label, der leisere Text (etwa die Größe einer Datei, Part `Chip`, #29787); `--tl-text-secondary`, auf einem gewählten Chip die Farbe der Beschriftung (#29968); kürzt nicht |
 | `tl-chip__toggle` | `button` in einem `span.tl-chip`, `aria-pressed`; trägt das Label |
 | `tl-chip__remove` | `tl-button tl-button--ghost tl-button--sm tl-button--icon`, `aria-label` und Tooltip Pflicht; Kreis innerhalb der Kapsellinie wie im Select-Chip |
 | `tl-choice-group--vertical` | die Optionen untereinander; ohne den Modifier nebeneinander mit Umbruch, Zustand `orientation` |

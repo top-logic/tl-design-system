@@ -146,17 +146,11 @@
   border-top: var(--tl-border-width-sm) solid var(--tl-border-separator);
 }
 
-/* Der Inhalt: die aktive Ansicht füllt ihn und trägt ihren Abstand selbst (Abstandsmodell). */
+/* Der Inhalt: eine begrenzte Region (tl-region), die aktive Ansicht füllt ihn und trägt ihren Abstand selbst
+   (Abstandsmodell). */
 .tl-sidebar__content {
   position: relative;
-  display: flex;
   flex: 1 1 auto;
-  flex-direction: column;
   min-width: 0;
   overflow: auto;
-}
-
-.tl-sidebar__content > * {
-  flex: 1 1 0;
-  min-height: 0;
 }

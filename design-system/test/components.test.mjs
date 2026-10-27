@@ -431,8 +431,30 @@ test('Toolbar, Tabs, Breadcrumb lesen nur Tokens und kennen keine Zustandsklasse
   assert.doesNotMatch(aktiv, /font-weight/);
   assert.match(declarationsOf(tabs, '.tl-tabs__tab'), /min-height:\s*var\(--tl-size-bar\)/);
   assert.match(declarationsOf(readGenerated('toolbar', 'toolbar.css'), '.tl-toolbar'), /min-height:\s*var\(--tl-size-bar\)/);
-  assert.match(declarationsOf(tabs, '.tl-tabs__panel'), /flex-direction:\s*column/);
+  assert.match(declarationsOf(tabs, '.tl-tabs__panel:not(.tl-region)'), /flex-direction:\s*column/);
   assert.match(declarationsOf(tabs, '.tl-tabs__panel[hidden]'), /display:\s*none/);
+});
+
+// Ticket #29983: Reiter breiter als ihr Behälter scrollen in der Reiterreihe, nicht im Vorfahren; die Linie und die
+// Scrollknöpfe gehören der Leiste, damit beides beim Scrollen stehen bleibt.
+test('Tabs: die Reiterreihe scrollt in sich, die Leiste trägt Linie und Knöpfe', () => {
+  const tabs = readGenerated('tabs', 'tabs.css');
+  const list = declarationsOf(tabs, '.tl-tabs__list');
+  assert.match(list, /overflow-x:\s*auto/);
+  assert.match(list, /scrollbar-width:\s*none/);
+  assert.match(list, /min-width:\s*0/);
+  assert.doesNotMatch(list, /border-bottom/, 'die Linie liefe mit den Reitern weg');
+  assert.match(declarationsOf(tabs, '.tl-tabs') ?? '', /min-width:\s*0/);
+  const strip = declarationsOf(tabs, '.tl-tabs__strip') ?? '';
+  assert.match(strip, /min-width:\s*0/);
+  assert.match(strip, /border-bottom:\s*var\(--tl-border-width-sm\) solid var\(--tl-border-separator\)/);
+  assert.match(declarationsOf(tabs, '.tl-tabs__scroll') ?? '', /flex-shrink:\s*0/);
+  // Am Ende ohne Weiteres unsichtbar, aber mit Platz: Scrollen ändert die Breite der Reiterreihe nie.
+  const amEnde = declarationsOf(tabs, '.tl-tabs__scroll:disabled') ?? '';
+  assert.match(amEnde, /visibility:\s*hidden/);
+  assert.doesNotMatch(amEnde, /display/);
+  // Die Reiterreihe schneidet: ein Ring außen wäre abgeschnitten.
+  assert.match(declarationsOf(tabs, '.tl-tabs__tab:focus-visible') ?? '', /outline-offset:\s*calc\(-1 \* var\(--tl-focus-offset\)\)/);
 });
 
 // Entscheidung 07.10. (Hendrik): Zeigen und Drücken des Auf-/Zuklappers sind der durchscheinende Schleier,

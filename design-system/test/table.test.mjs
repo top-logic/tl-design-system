@@ -40,7 +40,9 @@ test('tl-table: Zeile size-row, Kopf size-bar, Zustände als Attribute, keine Li
     /box-shadow:\s*inset 0 0 0 var\(--tl-border-width-md\) var\(--tl-status-error-border\)/);
   assert.match(declarationsOf(css, '.tl-table__cell .tl-field[data-tl-state~="warning"]') ?? '', /status-warning-border/);
   assert.doesNotMatch(css, /shadow-raised|clip-path|accent-color|outline\s*:|font-weight|--(selected|cursor|group|frozen|pinned|active)\b/);
-  assert.match(declarationsOf(css, '.tl-table__header-cell[data-tl-state~="filtered"] .tl-table__filter') ?? '', /icon-primary/);
+  // Ein aktiver Filter ist farbig, nicht nur ein dunkleres Grau (#29999: icon-primary neben icon-secondary war nicht zu sehen).
+  assert.match(declarationsOf(css, '.tl-table__filter') ?? '', /icon-secondary/);
+  assert.match(declarationsOf(css, '.tl-table__header-cell[data-tl-state~="filtered"] .tl-table__filter') ?? '', /text-link/);
 });
 
 test('ein bearbeitbares Feld in der Zelle zeigt sich durch eine Linie unten, auf gezeigter und ausgewählter Zeile in border-interactive', () => {
@@ -165,7 +167,7 @@ test('Tiefe: der Trichter ist ein tl-reveal-on-hover (layout.css), nur eine gefi
   assert.doesNotMatch(ohneKommentar(css), /focus-within|hover: none|\.tl-table__header-cell:hover/);
   const gefiltert = alleDeklarationen(css, '.tl-table__header-cell[data-tl-state~="filtered"] .tl-table__filter');
   assert.match(gefiltert, /opacity:\s*1/);
-  assert.match(gefiltert, /color:\s*var\(--tl-icon-primary\)/);
+  assert.match(gefiltert, /color:\s*var\(--tl-text-link\)/); // Markenblau seit #29999
   // Die Regel schlägt .tl-reveal-on-hover (0,1,0) und sein @media (hover: none) durch Spezifität (0,3,0).
   const layout = readGenerated('layout', 'layout.css');
   assert.match(alleDeklarationen(layout, '.tl-reveal-on-hover'), /opacity:\s*0/);

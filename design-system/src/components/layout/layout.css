@@ -147,14 +147,25 @@
   transform: translateY(calc(var(--tl-size-icon-md) * -0.06)) rotate(45deg);
 }
 
-/* Zeigt ein Kind zur Zeit und nimmt dessen Größe: neben einer Breadcrumb, in der AppBar so groß wie sein Inhalt. */
+/* Zeigt ein Kind zur Zeit und erzeugt keine eigene Box: das Kind steht, als stünde es im Behälter des Decks selbst —
+   neben einer Breadcrumb, in der AppBar so groß wie sein Inhalt, in einer begrenzten Region (tl-region) auf deren Höhe
+   gestreckt. Eine Klasse am Deck gestaltet darum keine Box. */
 .tl-deck {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  min-height: 0;
+  display: contents;
 }
 .tl-deck[hidden] { display: none; }
+
+/* Begrenzte Region: eine Fläche, die ohnehin begrenzt ist und die Füllkette beendet (Split-Fläche, Reiterinhalt,
+   Inhalt von AppShell und Sidebar, Körper von Fenster und Drawer), gibt ihrem einen Inhalt ihre Höhe. Eine Zelle
+   aus minmax(0, 1fr): ein füllender Inhalt (tl-fill) ist genau so hoch wie die Region und scrollt in sich, ein Inhalt
+   eigener Größe wird auf ihre Höhe gestreckt. Ist er höher, scrollt ein Panel seinen Körper und behält Kopf und
+   Knopfleiste im Blick; anderer Inhalt läuft über seine Box hinaus, und die Region scrollt (overflow der Region). */
+.tl-region {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+}
+.tl-region[hidden] { display: none; }
 
 /* Füllen (Spec 5d §3): ein Kind mit tl-fill nimmt die Höhe, die sein Behälter in der Hauptachse übrig lässt, und darf
    unter seinen Inhalt schrumpfen, damit es selbst scrollt. Ob ein Kind füllt, entscheidet der Control-Baum (useFill /

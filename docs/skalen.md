@@ -1861,8 +1861,10 @@ Spec `docs/superpowers/specs/2026-10-02-welle-3b-daten-design.md`. Neu entschied
 * **Stark ist eine Typo-Klasse, Platzhalter ein Ton.** `TextElement` hat kein Form-Attribut: `strong` wird
   `tl-type-body-strong`, der Platzhalter der neue Ton `placeholder` — das Vokabular gewinnt einen Wert, nachdem es
   `accent` verloren hat.
-* **Eine Filter-Glyphe.** Font Awesome Free hat keinen leeren Trichter; aktiv heißt `icon-primary` **und**
-  Beschriftung „Filter (aktiv)“, damit der Zustand nicht an der Farbe allein hängt (WCAG 1.4.1).
+* **Eine Filter-Glyphe.** Font Awesome Free hat keinen leeren Trichter; aktiv heißt `text-link` (Markenblau) **und**
+  Beschriftung „Filter (aktiv)“, damit der Zustand nicht an der Farbe allein hängt (WCAG 1.4.1). Revidiert 27.10.
+  (#29999): zuerst `icon-primary` statt `icon-secondary` — gray-77 neben gray-55 war nicht zu unterscheiden, aktive
+  Filter fielen nicht mehr auf.
 * **Historische Pläne sind nicht im Gate.** `docs/plans/` bekommt je Datei einen Vermerk wie in 3a; `docs/faq/` wird
   umgeschrieben und geprüft.
 * **Gleiches mit master zusammengelegt (07.10., nach dem Vorziehen auf master):** Bernhards Paket-Branch
@@ -1951,7 +1953,8 @@ der 54 Zeilen; das Gruppier-Icon steht 54-mal für eine Wahl, die nur eine Spalt
 * **Ausgeblendet bleibt am Platz,** der Name blass — keine getrennten Bereiche Sichtbar/Ausgeblendet.
 * **Das Schloss fixiert die Spalte:** fixierte Spalten stehen als Block „Fixiert“ oben; Schloss und Fixiergriff
   zwischen den Köpfen schreiben dieselbe Anzahl.
-* **Das Gruppieren der Zeilen verlässt den Dialog;** es bleibt im Kontextmenü am Spaltenkopf.
+* ~~**Das Gruppieren der Zeilen verlässt den Dialog;** es bleibt im Kontextmenü am Spaltenkopf.~~ Revidiert, siehe
+  unten „Gruppieren bleibt in der Spaltenwahl“.
 * **Stufe 2: Spaltengruppen** — Spalten aufeinanderziehen ergibt eine benannte Gruppe, in der Tabelle ein Band über
   ihren Köpfen. Die Logik baut Bernhard, das Aussehen wir; ein Pivot (Zeilen über mehrere Ebenen gruppieren) geht als
   Idee an ihn.
@@ -1959,6 +1962,15 @@ der 54 Zeilen; das Gruppier-Icon steht 54-mal für eine Wahl, die nur eine Spalt
 **Verworfen (am selben Tag zuerst entschieden, dann ersetzt):** Gruppieren als ein Select über der Liste; Kästchen vorn
 und Griff rechts; zwei Bereiche Sichtbar/Ausgeblendet. Ebenso verworfen: Gruppieren ins Kopf-Menü allein ohne
 Spaltengruppen, das Icon behalten und nur erklären.
+
+**Gruppieren bleibt in der Spaltenwahl (revidiert 23.10., Bernhard — #29967).** *Befund:* Ohne Gruppieren im Dialog
+lässt sich nach einer ausgeblendeten Spalte nicht gruppieren — sie hat keinen Kopf, an dem das Kontextmenü hängt. Eine
+Tabelle, die nach einer ausgeblendeten Spalte gruppiert startet (die Dienstverwaltung nach „Kategorie“), ist nach
+„Gruppierung aufheben“ nicht mehr so zu gruppieren. *Entschieden:* Jede Zeile trägt wieder den Schalter „nach dieser
+Spalte gruppieren“ als Button-Part neben Schloss und Auge (Zeile = Griff · Name · Gruppieren · Schloss · Auge); er
+erscheint beim Zeigen oder bei Fokus, auf der gruppierten Zeile bleibt er sichtbar und steht gedrückt (`aria-pressed`).
+Ein Baum bietet kein Gruppieren an. Das Kontextmenü am Spaltenkopf bleibt daneben bestehen. *Warum:* Gruppieren ist eine
+Wahl über alle Spalten, auch die ausgeblendeten; nur der Dialog zeigt alle.
 
 **Nachgetragen beim Bau (12.10., Hendrik):**
 * **Ausgeblendet ist blass, nicht deaktiviert:** der Name steht in `--tl-text-secondary`, nicht in `--tl-text-disabled`.
