@@ -38,9 +38,15 @@ test('keine alte Klasse der Wellen 2, 3a und 3b in react-src eines Moduls', { sk
   assert.deepEqual(hits, []);
 });
 
-test('die Spaltenwahl ist ein Ebenen-Panel: kein Kästchen, kein Zeilen-Gruppieren, kein Gruppier-Icon, kein aria-pressed (#29825)', { skip: !existsSync(M) && 'kein Worktree' }, () => {
+// Gruppieren blieb erst nicht im Dialog (#29825) und kam zurück (#29967): eine ausgeblendete Spalte hat keinen Kopf, an
+// dem das Kontextmenü hängt. Der Schalter ist ein Button-Part — gedrückt über `checked`, nie ein handgeschriebenes
+// aria-pressed — und erscheint beim Zeigen, außer auf der gruppierten Zeile.
+test('die Spaltenwahl ist ein Ebenen-Panel: kein Kästchen, Gruppieren als Button-Part beim Zeigen (#29825, revidiert #29967)', { skip: !existsSync(M) && 'kein Worktree' }, () => {
   const tsx = readFileSync(join(M, 'react-src/controls/TLColumnSelect.tsx'), 'utf8');
-  assert.doesNotMatch(tsx, /aria-pressed|tl-checkbox|tl-choice|grouped|groupBy|ICON_GROUP/);
+  assert.doesNotMatch(tsx, /aria-pressed|tl-checkbox|tl-choice/);
+  assert.match(tsx, /image=\{ICON_GROUP\}/);
+  assert.match(tsx, /checked=\{grouped\}/);
+  assert.match(tsx, /'tl-reveal-on-hover'/);
 });
 
 // Welle 4a (#29836): keine alte Overlay-Klasse mehr — im TSX jedes Moduls, im alten Stylesheet, in den Java-Quellen,
