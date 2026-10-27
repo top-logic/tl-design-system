@@ -170,15 +170,16 @@
 }
 
 /* Der Trichter ist ein tl-button--icon --sm --ghost mit einer Glyphe. Ein aktiver Filter ist ein Zustand
-   der Spalte: dieselbe Glyphe in icon-primary statt icon-secondary, der Name des Knopfs sagt es mit
-   (js.table.filterActive) — die Farbe allein trägt keine Bedeutung. */
+   der Spalte: dieselbe Glyphe in text-link (Markenblau) statt icon-secondary, der Name des Knopfs sagt es
+   mit (js.table.filterActive) — die Farbe allein trägt keine Bedeutung. icon-primary neben icon-secondary
+   war nicht zu unterscheiden (#29999). */
 .tl-table__filter {
   flex-shrink: 0;
   color: var(--tl-icon-secondary);
 }
 
 .tl-table__header-cell[data-tl-state~="filtered"] .tl-table__filter {
-  color: var(--tl-icon-primary);
+  color: var(--tl-text-link);
 }
 
 /* Die Spaltenwahl (Zahnrad) ist ein tl-button--icon --ghost über der rechten Kante des Kopfes, so hoch

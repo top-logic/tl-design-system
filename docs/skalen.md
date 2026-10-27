@@ -1861,8 +1861,10 @@ Spec `docs/superpowers/specs/2026-10-02-welle-3b-daten-design.md`. Neu entschied
 * **Stark ist eine Typo-Klasse, Platzhalter ein Ton.** `TextElement` hat kein Form-Attribut: `strong` wird
   `tl-type-body-strong`, der Platzhalter der neue Ton `placeholder` — das Vokabular gewinnt einen Wert, nachdem es
   `accent` verloren hat.
-* **Eine Filter-Glyphe.** Font Awesome Free hat keinen leeren Trichter; aktiv heißt `icon-primary` **und**
-  Beschriftung „Filter (aktiv)“, damit der Zustand nicht an der Farbe allein hängt (WCAG 1.4.1).
+* **Eine Filter-Glyphe.** Font Awesome Free hat keinen leeren Trichter; aktiv heißt `text-link` (Markenblau) **und**
+  Beschriftung „Filter (aktiv)“, damit der Zustand nicht an der Farbe allein hängt (WCAG 1.4.1). Revidiert 27.10.
+  (#29999): zuerst `icon-primary` statt `icon-secondary` — gray-77 neben gray-55 war nicht zu unterscheiden, aktive
+  Filter fielen nicht mehr auf.
 * **Historische Pläne sind nicht im Gate.** `docs/plans/` bekommt je Datei einen Vermerk wie in 3a; `docs/faq/` wird
   umgeschrieben und geprüft.
 * **Gleiches mit master zusammengelegt (07.10., nach dem Vorziehen auf master):** Bernhards Paket-Branch
