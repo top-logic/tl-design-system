@@ -2184,6 +2184,14 @@
         "$type": "dimension",
         "$value": "{primitive.measure.size-15}"
       },
+      "size-fab": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.size-8}"
+      },
+      "size-fab-action": {
+        "$type": "dimension",
+        "$value": "{primitive.measure.height-5}"
+      },
       "size-choice": {
         "$type": "dimension",
         "$value": "{primitive.measure.size-4}"
