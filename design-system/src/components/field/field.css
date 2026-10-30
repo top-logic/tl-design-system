@@ -82,6 +82,14 @@
   resize: vertical;
 }
 
+/* Vorformatiert (Schrift tl-type-code aus dem TSX): jede Zeile bleibt eine Zeile, eine breite Zeile
+   rollt waagrecht statt umzubrechen. */
+.tl-field--preformatted {
+  white-space: pre;
+  overflow-wrap: normal;
+  overflow-x: auto;
+}
+
 /* --- Feld mit Icon oder Endknopf ------------------------------------------------- */
 
 /* Das echte Eingabefeld trägt den Rahmen und den Fokusring; Icon und Endknopf liegen darüber, das
@@ -183,6 +191,38 @@
   white-space: inherit;
   overflow-wrap: anywhere;
 }
+
+/* Vorformatierter Lesewert (Schrift tl-type-code aus dem TSX): die Zeilen brechen nicht um und sind
+   so breit wie ihr Text und stehen ohne Abstand untereinander; ist eine breiter als der Wert, rollt
+   der Wert waagrecht. */
+.tl-field-value--preformatted {
+  align-items: flex-start;
+  row-gap: 0;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.tl-field-value--preformatted > .tl-field-value__text {
+  overflow: visible;
+  overflow-wrap: normal;
+}
+
+/* Mehrzeiliger Lesewert mit Aktion (etwa dem Kopierknopf): die Aktion steht oben am Ende in einer Spalte
+   für sich, neben dem Wert, der ihr Platz lässt — sie verdeckt keine Zeile, auch nicht, wenn der Wert
+   waagrecht rollt, und ist ohne Hover sichtbar, also auch auf Touch-Geräten. */
+.tl-field-value-group {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: var(--tl-space-xs);
+}
+.tl-field-value-group[hidden] { display: none; }
+
+.tl-field-value-group__action,
+.tl-copy-button {
+  display: inline-flex;
+}
+.tl-copy-button[hidden] { display: none; }
 
 /* Farbe allein kennzeichnet keinen Link (WCAG 1.4.1): der Link-Lesewert ist unterstrichen. */
 a.tl-field-value {

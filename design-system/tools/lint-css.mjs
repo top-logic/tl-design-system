@@ -89,9 +89,9 @@ const MODIFIERS = {
   'tl-pill': new Set([]), // Die Rolle ist ein Attribut (data-tl-role), kein Modifier.
   'tl-avatar': new Set(['sm', 'lg', 'xl']), // Die Kategorie ist ein Attribut (data-tl-role).
   'tl-progress': new Set([]), // Unbestimmt ist ein Zustand (aria-busy), keine Klasse.
-  'tl-field': new Set(['multiline']), // Fehler, Warnung, Schreibschutz sind Attribute bzw. ein anderes Element.
+  'tl-field': new Set(['multiline', 'preformatted']), // Fehler, Warnung, Schreibschutz sind Attribute bzw. ein anderes Element.
   'tl-field-group': new Set([]),
-  'tl-field-value': new Set(['multiline']),
+  'tl-field-value': new Set(['multiline', 'preformatted']),
   'tl-checkbox': new Set(['switch']),
   'tl-radio': new Set([]),
   'tl-choice': new Set([]),

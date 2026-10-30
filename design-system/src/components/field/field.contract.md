@@ -71,6 +71,7 @@ Zusätze je Control:
 | Kalenderknopf (Datum, Zeit, Zeitpunkt) | das native `::-webkit-calendar-picker-indicator` als Knopf im Feld: Quadrat `--tl-size-control-sm`, Ecke `--tl-radius-sm`, das native Icon in `--tl-size-icon-sm` mittig, Abstand zum Text `--tl-space-xs`, zum Rand `--tl-space-2xs`; Zeigen `--tl-surface-interactive-selected`, Drücken `--tl-surface-interactive-active`, Übergang `--tl-duration-fast` `--tl-easing-standard`; deaktiviert ohne Fläche. Das Icon zeichnet der Browser und folgt `color-scheme` aus `tokens.css`. Nur Chromium und WebKit; Firefox zeichnet einen eigenen Knopf, den kein Stylesheet erreicht |
 | reservierter Platz im Feld | Icon: `--tl-space-control-x` + `--tl-size-icon-sm` + `--tl-space-xs`. Endknopf: `--tl-space-2xs` + `--tl-size-control-sm` (der Knopf) + eine Lücke `--tl-space-xs` |
 | Lesewert | Text `--tl-text-primary`, Abstand `--tl-space-xs` |
+| Lesewert mit Aktion | Lücke zwischen Wert und Aktion `--tl-space-xs` |
 | Lesewert als Link | `--tl-text-link`, `--tl-text-link-hover`; unterstrichen |
 
 Schrift: Klasse `.tl-type-body` am Feld, von außen gesetzt; `tl-field` hat keine Schriftregel.
@@ -117,11 +118,16 @@ Klassen:
 |---|---|
 | `tl-field` | das echte `input`, `textarea` oder `select`; die Wurzel von `TLDropdownSelect` |
 | `tl-field--multiline` | das `textarea` bei `multiline` |
+| `tl-field--preformatted` | das `textarea` eines vorformatierten Textes (mit `tl-type-code`): keine Zeile bricht um, eine breite rollt waagrecht |
 | `tl-field-group` | `span` um Feld mit Icon oder Endknopf (`tl-button--icon`); das Feld darin trägt Rahmen und Fokusring |
 | `tl-field-group__icon` | `span` mit dem Icon vor dem Wert |
 | `tl-field-value` | der Lesewert bei `editable: false` |
 | `tl-field-value--multiline` | der mehrzeilige Lesewert (`div`): die Zeilen untereinander |
+| `tl-field-value--preformatted` | zum mehrzeiligen Lesewert eines vorformatierten Textes (mit `tl-type-code`): die Zeilen brechen nicht um, der Wert rollt waagrecht |
 | `tl-field-value__text` | der Text im Lesewert, endet mit Ellipse; im mehrzeiligen eine Zeile |
+| `tl-field-value-group` | Raster um einen mehrzeiligen Lesewert und seine Aktion: die Aktion oben am Ende in einer eigenen Spalte |
+| `tl-field-value-group__action` | die Aktion neben dem Wert, ohne Hover sichtbar |
+| `tl-copy-button` | der Kopierknopf eines vorformatierten Lesewerts |
 
 ## Konformität
 
