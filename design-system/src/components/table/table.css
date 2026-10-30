@@ -465,6 +465,12 @@
   flex-shrink: 0;
 }
 
+/* In der Reihe schrumpfen Wert und Zeilen wieder, damit eine lange Zeile mit Ellipse endet. */
+.tl-table__cell .tl-field-value--multiline,
+.tl-table__cell .tl-field-value--multiline > .tl-field-value__text {
+  flex-shrink: 1;
+}
+
 .tl-table__cell .tl-field-value--multiline {
   flex-direction: row;
   white-space: nowrap;

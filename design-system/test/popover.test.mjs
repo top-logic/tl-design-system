@@ -33,7 +33,9 @@ test('nur tl-popover setzt die Popup-Fläche: kein anderer Block liest shadow-po
     // Ausnahme 19.10. (Welle 5b): der Knopf über einer Fläche (tl-overlay__action) schwebt wie ein Popover, ohne Portal.
     // Ausnahme 20.10. (Welle 5d, Plan-Review K4): der Tooltip schwebt am Anker wie ein Popover, auf seiner inversen
     // Fläche; drop-shadow() nimmt die zweischichtige Liste nicht, darum box-shadow aus derselben Rolle.
-    if (!name.startsWith('popover/') && !['overlay/overlay.css', 'tooltip/tooltip.css'].includes(name)
+    // Ausnahme 29.10. (#29658): die schwebenden Aktionen (tl-fab) liegen über dem Körper eines Rahmens wie der Knopf über
+    // einer Fläche, ohne Portal aus dem Rahmen heraus.
+    if (!name.startsWith('popover/') && !['overlay/overlay.css', 'tooltip/tooltip.css', 'floating-action/floating-action.css'].includes(name)
       && /--tl-shadow-popover/.test(css)) hits.push(name);
   assert.deepEqual(hits, []);
 });
