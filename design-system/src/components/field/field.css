@@ -167,15 +167,19 @@
 
 /* Mehrzeiliger Lesewert: eine Zeile je __text, untereinander, und jede Zeile bricht um — ein langer
    Absatz endet nicht in einer Ellipse. In der Tabellenzelle stellt die Engine ihn wieder in eine Reihe
-   ohne Umbruch. */
+   ohne Umbruch. Wert und Zeilen schrumpfen nicht: in einem Flex-Container (der Rumpf eines Dialogs)
+   hätten sie wegen overflow: hidden die Mindesthöhe 0 und würden auf dessen Höhe zusammengedrückt,
+   statt ihn scrollen zu lassen. */
 .tl-field-value--multiline {
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
   align-items: stretch;
   white-space: pre-wrap;
 }
 
 .tl-field-value--multiline > .tl-field-value__text {
+  flex-shrink: 0;
   white-space: inherit;
   overflow-wrap: anywhere;
 }
