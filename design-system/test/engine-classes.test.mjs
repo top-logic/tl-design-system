@@ -290,7 +290,7 @@ test('Welle 5d: die Editoren sind Felder (tl-field), der Fehler ist aria-invalid
 // Füllen (tlFill), Ziehen mit dem Finger, Aufblitzen und Wahl-Modus, Tooltip, Kompaktfeld, Wysiwyg und Diagramm,
 // die Fehlerklassen der Editoren und die Custom Properties --tl-tt-*/--tl-wysiwyg-*. Die Wurzeln `tlCodeEditor`,
 // `tlCodeEditorSurface` und `tlScriptEditor` bleiben als Geltungsbereich der CodeMirror-Regeln, nur ihr `--`-Zustand fällt.
-const ALT_5D = /\btlFill\b|data-touch-drag|\btlDragShield\b|\btlTouchDragImage\b|\btlPick--active\b|\btlAnchor\b|\btl-tooltip-(popover|caption|body|arrow)\b|\btlCompactField|\btl(WysiwygEditor|WysiwygToolbar|ReactChart)(__|--|\b)|\btl(CodeEditor|ScriptEditor)--|--tl-(tt-|wysiwyg-)/;
+const ALT_5D = /\btlFill\b|data-touch-drag|\btlDragShield\b|\btlTouchDragImage\b|\btlPick--active\b|(?<!dataset\.)\btlAnchor\b|\btl-tooltip-(popover|caption|body|arrow)\b|\btlCompactField|\btl(WysiwygEditor|WysiwygToolbar|ReactChart)(__|--|\b)|\btl(CodeEditor|ScriptEditor)--|--tl-(tt-|wysiwyg-)/;
 
 // Je Alternative ein Treffer und ein Fehltreffer: ohne diese Tabelle kann ein Tippfehler im Regex das Gate still leeren.
 const ALT_5D_TABELLE = [
@@ -299,7 +299,7 @@ const ALT_5D_TABELLE = [
   ['tlDragShield', '.tlDragShield { }', 'tl-drag-shield tlDragShieldX'],
   ['tlTouchDragImage', 'tlTouchDragImage', 'tl-touch-drag-image'],
   ['tlPick--active', 'body.tlPick--active', 'tlPick tlPick-active'],
-  ['tlAnchor', '<div className={rootClassName(state, \'tlAnchor\')} data-tl-anchor={anchor}>', 'data-tl-anchor tlAnchors'],
+  ['tlAnchor', '<div className={rootClassName(state, \'tlAnchor\')} data-tl-anchor={anchor}>', 'data-tl-anchor tlAnchors root.dataset.tlAnchor'],
   ['tlAnchor--flash', 'tlAnchor--flash', 'tl-anchor-flash'],
   ['tl-tooltip-popover', 'tl-tooltip-popover', 'tl-tooltip tl-tooltip__popover'],
   ['tl-tooltip-caption', 'tl-tooltip-caption', 'tl-tooltip-captions'],
