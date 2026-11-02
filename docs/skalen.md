@@ -1641,12 +1641,14 @@ zeigt der Stern im Feld-Label (`tl-form-field__required`), und `aria-labelledby`
 *Warum:* ARIA verbietet das Attribut an der Rolle; es bliebe ohne Wirkung und wäre ungültig. Der Parameter hieß zuerst `ariaInvalidAllowed`; er steuert zwei Attribute und heißt deshalb
 `roleAllowsAria`.
 
-**Der Lesewert ist ein anderes Element, und er hat fünf Regeln.** Die Ausgangsregel steht oben
+**Der Lesewert ist ein anderes Element, und er hat sieben Regeln.** Die Ausgangsregel steht oben
 (`tl-field-value`, kein Zustand). Beim Bauen dazu:
 
 | Achse | Regel | Warum |
 |---|---|---|
 | Mehrzeilig | `tl-field-value--multiline`: eine Spalte, je Zeile ein `tl-field-value__text`, jede Zeile bricht um (`pre-wrap`, `overflow-wrap: anywhere`); in der Tabellenzelle wieder eine Reihe ohne Umbruch | Als `inline-flex`-Reihe lagen die Zeilen nebeneinander; eine Zelle hat eine Zeile. Ein langer Absatz, der mit Ellipse endete, verlöre seinen Inhalt |
+| Vorformatiert | `tl-field-value--preformatted` zum mehrzeiligen Lesewert, `tl-field--preformatted` am `textarea`, beide mit `tl-type-code`: keine Zeile bricht um (`white-space: pre`), eine breite Zeile rollt waagrecht; die Zeilen stehen ohne Abstand untereinander und sind so breit wie ihr Text | Einrückung und Spalten eines Protokolls, einer Konfiguration oder eines Stacktraces tragen Bedeutung; ein Umbruch zerstört sie |
+| Aktion am mehrzeiligen Lesewert | `tl-field-value-group`: Raster aus Wert (`minmax(0, 1fr)`) und Aktion (`auto`), oben ausgerichtet, Lücke `space-xs`; die Aktion (`tl-field-value-group__action`, der Kopierknopf `tl-copy-button`) ist ohne Hover sichtbar | Über dem Wert verdeckte die Aktion eine Zeile, auch beim waagrechten Rollen; ein Hover-Knopf fehlt auf Touch-Geräten |
 | Link | **unterstrichen** | Farbe allein kennzeichnet keinen Link (WCAG 1.4.1); `text-link` löst den Kontrast, nicht die Kennzeichnung |
 | Dropdown, Segmente, Chips | Der Lesewert aller drei Formen ist eine Liste in `span.tl-select__values`; Pill, Bild und `goto`-Link bleiben erhalten | Ein Lesewert „Bezeichnung, Komma“ hätte Rolle, Bild und Verweis verloren — das wäre ein Vertragsbruch |
 | Checkbox | **Ausnahme:** `editable: false` bleibt ein Kästchen mit Haken — seit dem Final-Review schreibgeschützt, nicht deaktiviert (siehe unten) | Der Wert eines Booleans ist als Haken lesbarer denn als Text |
