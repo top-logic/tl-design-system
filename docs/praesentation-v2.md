@@ -66,15 +66,14 @@ Kundenprojekte greifen unten an: Sie tauschen Grundwerte aus. Alles darüber pas
 
 ## 5 · Ein eigenes Paket, an einer Stelle gepflegt
 
-**Das Design System lebt als eigenes Paket neben der Engine.**
+**Das Design System ist ein eigenes Modul in der Engine.**
 
 * Es wird an einer Stelle entwickelt und geprüft, mit einer Musterseite, die jeden Baustein hell und dunkel zeigt.
-* In die Engine kommt eine versiegelte Kopie. Wer sie von Hand ändert, bricht das Siegel, und der Build schlägt
-  fehl.
-* Das alte Stylesheet wird Baustein für Baustein abgeschnitten, nicht weiter gepflegt.
+* Der Build der Engine erzeugt die Stylesheets aus der Quelle. Es gibt keine Kopie, die man von Hand ändern könnte.
+* Das alte Stylesheet ist abgeschnitten, nicht weiter gepflegt.
 
-> Sprechnotiz: Es gibt genau eine Wahrheit. Abweichungen schleichen sich nicht ein, weil der Build sie nicht
-> durchlässt.
+> Sprechnotiz: Es gibt genau eine Wahrheit, und sie liegt neben dem Code, der sie benutzt. Eine Änderung am
+> Aussehen ist ein Commit, ein PR, ein Build.
 
 ---
 
@@ -194,7 +193,7 @@ begeistert.
 | 2 | Eine alte Maske, darüber die 17 Schriftgrößen als Liste |
 | 3 | Eine Ampel neben einem Knopf „Löschen“ in Rot |
 | 4 | Drei Stockwerke: Palette unten, Bedeutungen in der Mitte, Bausteine oben; ein Pfeil vom Kunden auf das untere |
-| 5 | Die Musterseite (Specimen), daneben ein Siegel auf der Kopie in der Engine |
+| 5 | Die Musterseite (Specimen), daneben die Engine mit dem Modul als einem ihrer Bausteine |
 | 6 | Eine rote Build-Meldung neben einem grünen Haken |
 | 7 | Dieselbe Maske im TopLogic-Theme und mit Kundenfarbe nebeneinander |
 | 8 | Zeitstrahl mit drei TopLogic-Versionen; darunter durchgehend dieselbe Basisdatei des Kunden, je Version ein Pfeil „neu gerechnet“ auf ein Theme |

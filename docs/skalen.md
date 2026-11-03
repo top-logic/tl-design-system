@@ -2879,6 +2879,30 @@ Paket-Repo in Jenkins nötig. Die beiden Fremdänderungen stehen in der Quelle (
 demselben Muster); in der Engine `TestDesignSystemCopy` — rot ohne Siegel, grün nach `publish`, rot nach einer
 Handänderung (16.10. so gelaufen).
 
+**Abgelöst 02.11.** durch den folgenden Abschnitt: Es gibt keine Kopie mehr, die sich versiegeln ließe.
+
+### Das Paket ist ein Modul der Engine (02.11.)
+
+**Befund:** Bernhard blockierte !2014 am 27.10.: „Das Design-System muss in das engine-Repo integriert werden.
+Generierte CSS-Dateien mit Checksummen sind nicht handelbar.“ Zwei Repos hießen zwei Merges je Änderung, eine
+eingecheckte Kopie mit Siegel und die Regel, dass Paket-`main` erst nach dem Engine-Merge folgen darf. Das Siegel
+fing die Handänderung, beseitigte aber nicht die zweite Quelle.
+
+**Entschieden (Hendrik, Option 1; Name von Bernhard):** Das Paket ist das Modul `tl-design-system` in tl-engine-7
+(Verzeichnis und artifactId gleich, #30098, !2101). Maven baut es mit dem `frontend-maven-plugin`: `npm run build`
+in `generate-resources` schreibt `dist/` und `src/main/webapp/style/tl-design-system/`, beides in `.gitignore`;
+`npm test` in `test`. `com.top_logic.layout.react` hängt am Modul und liest die Stylesheets über die
+`-web-fragment.war`. Import ohne Historie; deutsche Kommentare bleiben (Bernhard: Sprache egal). Kopie, Siegel,
+`publish-to-worktree`, `published.test.mjs`, `seal.test.mjs` und `TestDesignSystemCopy` entfallen. Das Paket-Repo
+behält `docs/`, `STATUS.md` und `check-messages-en.sh`; `design-system/` ist dort gelöscht.
+
+Die drei Tests, die Chrome brauchen, laufen als `npm run test:dom` außerhalb von Maven, bis Chrome auf dem
+Jenkins-Knoten bestätigt ist. Lokal gehören beide Läufe zum Gate.
+
+**Als Test:** `webapp.test.mjs` (beide Ziele von `generate` byte-gleich, kein Siegel, neue Kopfzeile);
+`engine-classes` und `ratchet` lesen die Repo-Wurzel zwei Ebenen über dem Modul und scheitern, statt zu überspringen,
+wenn `com.top_logic.layout.react` dort fehlt.
+
 ## Befunde aus dem Specimen
 
 ### Inter trägt nur zwei Gewichte

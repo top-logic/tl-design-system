@@ -6,13 +6,12 @@ so prompten, und die Regeldatei, die Claude dabei selbst liest.
 
 ## 1 · Einmal einrichten
 
-1. **Design-System-Repo neben den Worktree legen.**
+1. **Doku-Repo klonen.** Das Paket selbst ist das Modul `tl-design-system/` in tl-engine-7 und liegt in
+   deinem Engine-Checkout. Die Entscheidungen (`docs/skalen.md`) und die Regeldatei liegen im Doku-Repo:
    ```
    git clone https://git.top-logic.com/TopLogic/tl-design-system.git ~/git/tl-design-system
-   export TL_WORKTREE=~/git/<dein-tl-engine-7-worktree>
    ```
-   Die Werkzeuge brauchen nur `node` (22+), keine Installation. `TL_WORKTREE` sagt der Wache und
-   dem Kopierwerkzeug, wo TopLogic liegt.
+   Die Werkzeuge im Modul brauchen nur `node` (22+), keine Installation; Maven ruft sie beim Build.
 2. **Regeldatei als persönlichen Skill ablegen.** `docs/claude/tl-design-system-SKILL.md` aus diesem
    Repo nach `~/.claude/skills/tl-design-system/SKILL.md` kopieren. Claude lädt sie von selbst, sobald
    ein Auftrag CSS, Klassen, Farben, Maße oder eine neue Komponente betrifft; die `description` im Kopf
@@ -33,9 +32,9 @@ Zustände: <disabled, aria-checked, aria-busy … — als Attribute>
 Kontexte: <wo sie liegt: Formular, Toolbar, Tabellenzeile>
 
 Ablauf: Entscheidung in docs/skalen.md begründen → CSS unter
-design-system/src/components/<name>/ → Kontrasttest, Specimen, Vertrag →
-node tools/generate.mjs && node --test && node tools/lint-css.mjs grün →
-publish-to-worktree → TSX auf tl-<name>-Klassen → beide Repos committen.
+tl-design-system/src/components/<name>/ → Kontrasttest, Specimen, Vertrag →
+node tools/generate.mjs && npm test && npm run test:dom && node tools/lint-css.mjs grün →
+TSX auf tl-<name>-Klassen → ein Engine-Commit für Paket und TSX.
 Kein CSS in Engine-Stylesheets außer Bibliotheksklassen. Kein Literal, nur var(--tl-*).
 ```
 
@@ -54,13 +53,13 @@ Jeder dieser Punkte ist ein Testfehler im Paket; die Gates sind die Prüfung, ni
 | Situation | So geht es ohne Doppelarbeit |
 |---|---|
 | Neue Komponente, die in keiner Welle steht (etwa ein Steuerelement aus einem Kundenprojekt) | Gleich im Paket bauen, nach dem Skill. Kurz an hpe: Name und Welle, dann steht sie in der Wellentabelle und in `altlast.md`. |
-| Änderung an einer Komponente, die schon im Paket ist (Button ab Welle 1) | Im Paket ändern, Gates laufen lassen, `publish-to-worktree`, beide Repos committen. Der Kontrasttest der Komponente ist der Review. |
+| Änderung an einer Komponente, die schon im Paket ist (Button ab Welle 1) | Im Modul `tl-design-system` ändern, Gates laufen lassen, mit dem TSX in einem Engine-Commit. Der Kontrasttest der Komponente ist der Review. |
 | Änderung an einer alten Komponente | Seit Welle 5d gibt es kein altes Stylesheet mehr (`tlReactControls.css` ist gelöscht, eine Wache schlägt an, wenn es wiederkommt): jede Änderung im Paket. |
 | App-spezifischer Look (Glas, Serifen, Hintergrundbild) | App-Stylesheet über `css-class` am Element. Keine Engine-Tokens dafür; eine Display-Schrift kommt als Primitive. |
 | Ein Token fehlt oder ein Wert wirkt falsch | Nicht lokal überschreiben. In `tokens.json` anlegen oder in `docs/skalen.md` entscheiden; Beschriftungen auf Flächen werden gerechnet, nicht geschrieben. |
-| PR | tl-engine-7-PR mit `hpe` und `jenkins` als Reviewer (ohne `jenkins` baut Jenkins den PR nicht), Design-System-PR mit `bhu`. Beide Repos nennen dieselbe Ticketnummer. |
+| PR | Ein tl-engine-7-PR mit `hpe` und `jenkins` als Reviewer (ohne `jenkins` baut Jenkins den PR nicht). Neue Entscheidungen in `docs/skalen.md` gehen mit derselben Ticketnummer ins Doku-Repo. |
 
-Der eine Satz, der alles trägt: Aussehen entsteht im Paket, Verhalten in tl-engine-7. Wer `tlReactControls.css`
+Der eine Satz, der alles trägt: Aussehen entsteht im Paket-Modul, Verhalten in den übrigen Modulen. Wer `tlReactControls.css`
 wieder anlegt, scheitert an der Wache.
 
 ## 4 · Die Regeldatei

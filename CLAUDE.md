@@ -14,23 +14,29 @@
 
 ## Werkzeuge — nichts davon von Hand nachbauen
 
-Alle in `design-system/`, alle mit `node` ohne Abhängigkeiten:
+**Das Paket ist seit 02.11. ein Modul in tl-engine-7** (#30098, !2101): Verzeichnis und artifactId
+`tl-design-system`, gebaut von Maven über das `frontend-maven-plugin`. Paketänderungen sind Engine-Commits und gehen
+über einen Engine-PR. Dieses Repo trägt nur noch `docs/`, `STATUS.md` und `tools/check-messages-en.sh`; der
+alte Ordner `design-system/` ist gelöscht (letzter Stand siehe `archive/README.md`). Kopie, Siegel,
+`publish-to-worktree` und `TestDesignSystemCopy` gibt es nicht mehr.
+
+Alle Aufrufe im Modul `tl-design-system/` des Engine-Worktrees, alle mit `node` ohne Abhängigkeiten:
 
 | Aufruf | Was es tut |
 |---|---|
-| `node --test` | **Alle Gates.** Sie sind das Gate, nicht nur Prüfung. |
-| `node tools/generate.mjs` | Erzeugt `dist/` aus `src/`. Nach jeder Änderung an `src/` aufrufen; ein Test hält `dist/` byte-identisch. |
+| `npm test` | **Alle Gates ohne Browser** — läuft auch im Maven-Build (`-DskipTests=false`, Jenkins). Sie sind das Gate, nicht nur Prüfung. |
+| `npm run test:dom` | Die Gates, die Chrome brauchen (`focus-clip`, `app-bar-shrink`, `titlebar-height`). Lokal Pflicht neben `npm test`; in Jenkins nicht, solange Chrome auf dem Knoten nicht bestätigt ist. |
+| `node tools/generate.mjs` (`npm run build`) | Erzeugt `dist/` und `src/main/webapp/style/tl-design-system/` aus `src/` — beides nicht eingecheckt; Maven ruft es in `generate-resources`. Nach jeder Änderung an `src/` aufrufen, damit Gates und laufende Demo den neuen Stand sehen. |
 | `node tools/lint-css.mjs` | **Klassen-Gate** über `dist/*.css` und `src/components/*.css`: kein Literal, kein `:focus` ohne `-visible`, kein `outline: none`, nur Tokens. |
-| `node tools/inventory.mjs` | Meldet „gelöscht“: `tlReactControls.css` ist seit Welle 5d weg. `test/ratchet.test.mjs` ist die Wache — rot, wenn die Datei wiederkommt oder jemand außerhalb von `dist/` ein `--tl-…` definiert. |
-| `node tools/publish-to-worktree.mjs` | Kopiert `dist/` in den Worktree, bis das Paket einen Maven-Wrapper hat. Nach jedem `generate` aufrufen; `test/published.test.mjs` hält die Kopie byte-gleich. Jede Datei endet mit einem Siegel (SHA-256); `TestDesignSystemCopy` in der Engine bricht den Jenkins-Build bei einer Handänderung an der Kopie. |
+| `node tools/inventory.mjs` | Meldet „gelöscht“: `tlReactControls.css` ist seit Welle 5d weg. `test/ratchet.test.mjs` ist die Wache — rot, wenn die Datei wiederkommt oder jemand außerhalb der erzeugten Stylesheets ein `--tl-…` definiert. |
 | `node tools/serve.mjs` | Specimen auf `http://localhost:8137/` |
 | `node tools/derive.mjs <theme>.primitives.json [<ausgabe>.css] [--strict]` | **Kundenstufe A.** Rechnet aus Hausfarbe und Grauwahl ein Theme und schreibt `<theme>.theme.css` mit Rollen unter `[data-tl-theme]`. Gerechnetes hält die Paarliste, Geliefertes darf sie verfehlen (Befund im Kopf). Beispiel: `test/fixtures/probe.primitives.json` → `specimen/probe.theme.css`. |
-| `tools/check-messages-en.sh` | **Push-Gate für den Worktree.** Erzeugt `messages_en.properties` aus dem JavaDoc für jedes Modul mit Java-Änderungen und schlägt fehl, wenn ein Diff bleibt. Jenkins scheitert sonst mit „Files have been changed during build“. Prüft auch die Sortierung aller `messages_*.properties` (Ressourcen-Check; sonst wird der PR-Build UNSTABLE). Vor **jedem** Push in den Worktree aufrufen — auch nach reinen JavaDoc-Änderungen. |
+| `tools/check-messages-en.sh` (in **diesem** Repo) | **Push-Gate für den Worktree.** Erzeugt `messages_en.properties` aus dem JavaDoc für jedes Modul mit Java-Änderungen und schlägt fehl, wenn ein Diff bleibt. Jenkins scheitert sonst mit „Files have been changed during build“. Prüft auch die Sortierung aller `messages_*.properties` (Ressourcen-Check; sonst wird der PR-Build UNSTABLE). Vor **jedem** Push in den Worktree aufrufen — auch nach reinen JavaDoc-Änderungen. |
 
 Der Worktree liegt unter `_Working-Tree/tl8-wt-29584` im Projektordner (ignoriert; oder `TL_WORKTREE`), das
 Hauptrepo daneben. Beides muss dort liegen: die Sandbox sieht nur den Projektordner und `~/.m2`, nicht `~/git`. Welle 0 ist auf `master`; jede weitere
 Welle arbeitet auf einem eigenen Branch `CWS/CWS_<ticket>_design_system_welle_<n>` mit eigenem Trac-Ticket (Wellen 0–3a
-#29617, mit alpha10 geschlossen; 3b #29821; 4a #29836; 4b #29866; 4c #29870; 5a #29875; 5b #29904; 5c #29906; 5d #29914; UI-Durchgang 1 #30000, Branch `CWS/CWS_30000_ui_durchgang_1`). Ein Release schließt jedes Ticket, dessen Arbeit auf master liegt — darum
+#29617, mit alpha10 geschlossen; 3b #29821; 4a #29836; 4b #29866; 4c #29870; 5a #29875; 5b #29904; 5c #29906; 5d #29914; UI-Durchgang 1 #30000, Branch `CWS/CWS_30000_ui_durchgang_1`; Modul-Umzug #30098; UI-Durchgang 2 #30102). Ein Release schließt jedes Ticket, dessen Arbeit auf master liegt — darum
 vor jeder Welle ein neues Ticket anlegen und annehmen.
 
 ## Die zwei Schichten
@@ -50,8 +56,8 @@ Alles Öffentliche ist Englisch, kebab-case, Präfix `tl`: Variablen `--tl-surfa
 geschlossen: `surface`, `text`, `icon`, `border`, `focus`, `shadow`, `space`, `radius`, `size`,
 `font`, `duration`, `easing`, `layer`, `status`, `category`. Zustände sind Attribute, nicht Klassen.
 
-Der Namensraum `--tl` (jede Custom Property, die so beginnt) gehört dem Paket. Außerhalb von
-`dist/` wird darin nichts definiert; gelesen werden darf, was das Paket definiert — eine
+Der Namensraum `--tl` (jede Custom Property, die so beginnt) gehört dem Paket. Außerhalb der
+erzeugten Stylesheets des Moduls wird darin nichts definiert; gelesen werden darf, was das Paket definiert — eine
 Übergangsregel im alten Stylesheet liest Tokens, definiert sie aber nicht. Was der Altbestand
 selbst darin definiert, steht in `test/ratchet.json` unter `foreignTl` und wird in seiner Welle
 eingefangen.
@@ -88,7 +94,7 @@ bleibt liegen.
 Freigabe gilt für einen Push. **Subagenten pushen nie**, auch nicht mit Freigabe: sie committen lokal und melden; den
 freigegebenen Push macht der Orchestrator. Steht „push“ als Schritt in einem Plan, ist das ein Vorschlag, keine Freigabe.
 **Nie direkt auf `master` von tl-engine-7** — dort nur über PR und Merge in Gitea; gepusht werden nur die
-`CWS/CWS_<ticket>_…`-Branches und `main` dieses Repos (`TopLogic/tl-design-system`). Jede Push-Frage nennt Repo und Branch.
+`CWS/CWS_<ticket>_…`-Branches und `main` dieses Repos (`TopLogic/tl-design-system`, nur noch Doku). Jede Push-Frage nennt Repo und Branch.
 
 **Kein Plan geht ohne Plan-Review in die Ausführung.** Die Selbstprüfung des Autors (`writing-plans`) prüft
 gegen die Spec; sie findet nicht, was am Code scheitert. Vor dem Start der SDD prüft ein **frischer Agent**

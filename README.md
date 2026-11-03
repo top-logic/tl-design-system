@@ -10,21 +10,26 @@ dokumentiert ist, sondern weil alles andere nicht durch CI kommt.
 
 ## Werkzeuge
 
+**Das Paket ist seit 02.11.2026 ein Modul in tl-engine-7** (`tl-design-system/`, Ticket #30098). Quelle,
+Werkzeuge, Gates und Specimen liegen dort; Maven erzeugt die Stylesheets beim Build, nichts Erzeugtes ist
+eingecheckt. Dieses Repo trägt die Doku (`docs/`), den Stand (`STATUS.md`) und das Push-Gate.
+
 ```bash
-cd design-system
-node --test                 # alle Gates
-node tools/generate.mjs     # dist/ aus src/ erzeugen
+cd <tl-engine-7>/tl-design-system
+npm test                    # alle Gates ohne Browser (läuft auch im Maven-Build)
+npm run test:dom            # die Gates mit Chrome (Fokusringe, Titelleisten)
+node tools/generate.mjs     # dist/ und src/main/webapp/style/tl-design-system/ aus src/ erzeugen
 node tools/lint-css.mjs     # Klassen-Gate
-node tools/inventory.mjs    # Ratsche: Altbestand in tlReactControls.css je Block zählen
-node tools/publish-to-worktree.mjs   # dist/ in den tl-engine-7-Worktree kopieren
 node tools/derive.mjs acme.primitives.json   # Kundentheme aus Hausfarbe und Grauwahl rechnen
 node tools/serve.mjs        # Specimen auf http://localhost:8137/
+
+# in diesem Repo:
 bash tools/check-messages-en.sh      # Push-Gate für Java-Änderungen im Worktree
 ```
 
-Das Paket `@toplogic/design-system` liegt in `design-system/`: `src/` ist die Quelle
-(Primitive und Tokens als JSON, Komponenten unter `src/components/`), `dist/` das eingecheckte
-Erzeugnis (`primitives.css`, `tokens.css`, `base.css`, `components.css`, `tokens.dtcg.json`). Details in [`CLAUDE.md`](CLAUDE.md), die Spec in
+Das Paket `@toplogic/design-system`: `src/` ist die Quelle (Primitive und Tokens als JSON, Komponenten unter
+`src/components/`), das Erzeugnis sind `primitives.css`, `tokens.css`, `base.css`, `components.css` und
+`tokens.dtcg.json`. Details in [`CLAUDE.md`](CLAUDE.md), die Spec in
 [`docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md`](docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md).
 
 ## Die eine nicht verhandelbare Regel
@@ -43,13 +48,13 @@ Im Bestand wurden zu Beginn (09/2026) **drei konkurrierende Paletten** gefunden:
 | Tailwind | 16 Tokens in `tl-react-chartjs.css` und `tl-react-wysiwyg.css` (`#2563eb`, `#6b7280`, `#374151`) | entfernt |
 | TopLogic | `theme-settings.xml` | bleibt, wird zur einzigen Quelle |
 
-Durchgesetzt wird das durch die tatsächlichen Gates in `design-system/`:
+Durchgesetzt wird das durch die tatsächlichen Gates im Modul `tl-design-system`:
 
 | Prüfung | Wirkung |
 |---|---|
-| `node --test` | Schichten, Kontrast, Maße, Erzeugtes, Ratsche — alles aus `docs/skalen.md` als Test |
+| `npm test` | Schichten, Kontrast, Maße, Erzeugtes, Ratsche — alles aus `docs/skalen.md` als Test |
 | `node tools/lint-css.mjs` | Klassen-Gate: Literale, Fremdvariablen, Fokusring, `!important`, Kurven u. a. im ausgelieferten CSS |
-| Ratsche (`test/ratchet.json`) | `tlReactControls.css` darf je Block nur schrumpfen; ein geleerter Block wird gestrichen |
+| Ratsche (`test/ratchet.json`) | `tlReactControls.css` bleibt gelöscht; niemand außerhalb des Pakets definiert ein `--tl-…` |
 | TSX-Lint | geplant, siehe `STATUS.md` |
 
 Die Verzeichnisse `tools/` und `inventory/` auf Repo-Ebene sind Vorarbeit der ersten
@@ -63,9 +68,9 @@ Arbeitspakete (Auszählung des Altbestands, nicht Teil des laufenden Gates).
 |---|---|
 | `STATUS.md` | Sitzungsstand: was erledigt ist, wo weitergeht |
 | `docs/skalen.md` | jede Skala mit Regel und Begründung |
-| `docs/praesentation.md` | die künftige Präsentation für die Kollegen: was sich ändert und warum (Botschaft, keine Entscheidungsquelle) |
+| `docs/praesentation-v2.md` | die Präsentation für alle Kollegen: was, wie, Vorteile (Botschaft, keine Entscheidungsquelle) |
 | `docs/migration/altlast.md` | Arbeitsliste für die Migration der Komponenten |
-| `design-system/` | das Paket: Quelle, Erzeugnis, Werkzeuge, Gates, Specimen |
+| tl-engine-7 `tl-design-system/` | das Paket: Quelle, Werkzeuge, Gates, Specimen |
 
 ## Sichtbarkeit
 

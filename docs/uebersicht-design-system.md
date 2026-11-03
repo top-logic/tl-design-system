@@ -138,14 +138,14 @@ Framework neben `demo.react.corporate`. Begründung in `docs/skalen.md` „Ein V
 | Geschlossene Kategorien | `surface`, `text`, `icon`, `border`, `focus`, `shadow`, `space`, `radius`, `size`, `font`, `duration`, `easing`, `layer`, `status`, `category`. Eine neue Kategorie ist eine Entscheidung, kein Nebeneffekt. |
 | Zustände sind Attribute | `:disabled`, `[aria-pressed]`, `[aria-busy]`, `:focus-visible`, sonst `data-tl-state`. Eine Klasse `--active` bricht das Gate. Kundenkomponenten bekommen dieselben Zustände geschenkt. |
 | Kein Literal in einer Klasse | Farben, Maße, Dauern, `z-index`, Kurven nur aus Tokens. Schriftgröße und -gewicht nur in `.tl-type-*`. Kein `:focus` ohne `-visible`, kein `outline: none`. |
-| Der Namensraum `--tl` gehört dem Paket | Jede Custom Property, die so beginnt, ist Design System. Außerhalb von `dist/` wird darin nichts definiert; lesen darf der Altbestand, was das Paket definiert. Was er heute selbst darin führt (`--tl-item-index`, `--tlGrid-gap`, `--tlPill-color`, `--tl-tt-padding`), steht auf einer Einfang-Liste und wird in seiner Welle zum Token mit Kategorie oder umbenannt. Neues bricht den Test. |
+| Der Namensraum `--tl` gehört dem Paket | Jede Custom Property, die so beginnt, ist Design System. Außerhalb der erzeugten Stylesheets des Pakets wird darin nichts definiert; lesen darf der Altbestand, was das Paket definiert. Was er heute selbst darin führt (`--tl-item-index`, `--tlGrid-gap`, `--tlPill-color`, `--tl-tt-padding`), steht auf einer Einfang-Liste und wird in seiner Welle zum Token mit Kategorie oder umbenannt. Neues bricht den Test. |
 | Kein Selektor von außen | Nicht `.tlToolbar .tl-button`. Der Container wählt die Erscheinung: Die Toolbar sagt `ghost`, der Dialogfuß `secondary`, über einen React-Kontext. |
 | Altlast wird abgeschnitten, nicht übersetzt | Keine Aliase alter Namen, kein Übergang. Eine Komponente war fertig, wenn ihr alter Block in `tlReactControls.css` leer war; seit Welle 5d ist die Datei gelöscht. |
 
-Jede Regel läuft als Test. `node --test` im Paket ist das Gate, nicht nur eine Prüfung: Kontraste
+Jede Regel läuft als Test. `npm test` im Paket ist das Gate (es läuft auch im Maven-Build), nicht nur eine Prüfung: Kontraste
 gegen die richtige Fläche in beiden Modi, das 4-px-Raster, die 12-px-Untergrenze, kein Wert in der
 Rollenschicht, keine Primitive ohne Leser, der Kundentausch, das Klassen-Gate über jedes CSS,
-byte-identisches `dist/`, und die Wache, die das gelöschte alte Stylesheet und seine Namen draußen hält.
+gleiche Erzeugnisse in `dist/` und `src/main/webapp`, und die Wache, die das gelöschte alte Stylesheet und seine Namen draußen hält.
 
 ## 4 · Wie wir es erreichen: Wellen
 
@@ -199,10 +199,10 @@ Beide Systeme koexistieren, bis die letzte Welle durch ist: die alte XML-Tokenko
 
 | | |
 |---|---|
-| Paket | Gitea `TopLogic/tl-design-system`, Ordner `design-system/`; `node --test`, `node tools/generate.mjs`, `node tools/lint-css.mjs`, `node tools/derive.mjs` für Kundenthemes, `node tools/serve.mjs` für das Specimen |
-| Entscheidungen | `docs/skalen.md`, jede mit Begründung; folienweise in `docs/praesentation.md` |
+| Paket | Modul `tl-design-system/` in tl-engine-7 (seit 02.11.2026, #30098); `npm test`, `npm run test:dom`, `node tools/generate.mjs`, `node tools/lint-css.mjs`, `node tools/derive.mjs` für Kundenthemes, `node tools/serve.mjs` für das Specimen |
+| Entscheidungen | Gitea `TopLogic/tl-design-system`: `docs/skalen.md`, jede mit Begründung; Überblick in `docs/praesentation-v2.md` |
 | Spec | `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md` |
 | Arbeitsliste | `docs/migration/altlast.md`: alte Tokens → neue, Befunde aus der laufenden App je Welle, Einfang-Liste |
 | Ticket | Eins je Welle: Wellen 0–3a Trac #29617 (mit alpha10 geschlossen), 3b #29821, Spaltenwahl #29825, 4a #29836; Branch `CWS/CWS_<ticket>_design_system_welle_<n>` |
-| Einbindung | `com.top_logic.layout.react`: `style/tl-design-system/*.css` als `ClientResources`, `UIThemeService` setzt `data-tl-mode` und `data-tl-density` |
+| Einbindung | `com.top_logic.layout.react` hängt am Modul und lädt `style/tl-design-system/*.css` aus dessen `-web-fragment.war` als `ClientResources`; `UIThemeService` setzt `data-tl-mode` und `data-tl-density` |
 | Anleitung für Claude | `docs/anleitung-claude-komponenten.md`, Regeldatei `docs/claude/tl-design-system-SKILL.md` |
