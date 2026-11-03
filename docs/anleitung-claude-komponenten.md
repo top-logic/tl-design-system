@@ -1,7 +1,7 @@
 # Komponenten mit Claude bauen
 
 Wie Claude in tl-engine-7 neue oder geänderte React-Komponenten direkt richtig auf das Design System
-setzt, auch wenn parallel zu den Wellen gearbeitet wird. Drei Teile: einmal einrichten, je Komponente
+setzt. Alle Wellen sind auf master; jede Änderung am Aussehen geht ins Paket-Modul. Drei Teile: einmal einrichten, je Komponente
 so prompten, und die Regeldatei, die Claude dabei selbst liest.
 
 ## 1 · Einmal einrichten
@@ -48,12 +48,12 @@ Hex-Wert, ein `px`, ein `rgba` in einer Klasse; eine Klasse `--active`, `--open`
 neue `--tl-…`-Variable außerhalb des Pakets; `node tools/lint-css.mjs` oder die Wache (`ratchet.test.mjs`) sind rot.
 Jeder dieser Punkte ist ein Testfehler im Paket; die Gates sind die Prüfung, nicht der Review.
 
-## 3 · Parallel zu den Wellen arbeiten
+## 3 · Typische Fälle
 
 | Situation | So geht es ohne Doppelarbeit |
 |---|---|
-| Neue Komponente, die in keiner Welle steht (etwa ein Steuerelement aus einem Kundenprojekt) | Gleich im Paket bauen, nach dem Skill. Kurz an hpe: Name und Welle, dann steht sie in der Wellentabelle und in `altlast.md`. |
-| Änderung an einer Komponente, die schon im Paket ist (Button ab Welle 1) | Im Modul `tl-design-system` ändern, Gates laufen lassen, mit dem TSX in einem Engine-Commit. Der Kontrasttest der Komponente ist der Review. |
+| Neue Komponente (etwa ein Steuerelement aus einem Kundenprojekt) | Im Paket-Modul bauen, nach dem Skill, mit Demo-Ansicht. Kurz an hpe: Name und Zweck, die Entscheidung kommt nach `docs/skalen.md`. |
+| Änderung an einer Komponente im Paket | Im Modul `tl-design-system` ändern, Gates laufen lassen, mit dem TSX in einem Engine-Commit. Der Kontrasttest der Komponente ist der Review. |
 | Änderung an einer alten Komponente | Seit Welle 5d gibt es kein altes Stylesheet mehr (`tlReactControls.css` ist gelöscht, eine Wache schlägt an, wenn es wiederkommt): jede Änderung im Paket. |
 | App-spezifischer Look (Glas, Serifen, Hintergrundbild) | App-Stylesheet über `css-class` am Element. Keine Engine-Tokens dafür; eine Display-Schrift kommt als Primitive. |
 | Ein Token fehlt oder ein Wert wirkt falsch | Nicht lokal überschreiben. In `tokens.json` anlegen oder in `docs/skalen.md` entscheiden; Beschriftungen auf Flächen werden gerechnet, nicht geschrieben. |

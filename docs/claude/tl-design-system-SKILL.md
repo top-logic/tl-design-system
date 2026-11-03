@@ -21,9 +21,8 @@ Die Doku (`docs/skalen.md`, Specs) liegt im Repo `TopLogic/tl-design-system`.
    `node tools/generate.mjs` oder dem Maven-Build).
 2. Prüfe, ob die Komponente schon im Paket ist: `ls tl-design-system/src/components/`. Wenn ja, ändere
    sie dort. Wenn nein, entsteht sie dort — nie in `tlReactControls.css`.
-3. Ist die Komponente in einer späteren Welle geplant (`docs/praesentation.md`, Abschnitt 14 „Der Weg: fünf Wellen“) und du
-   brauchst sie jetzt: baue sie trotzdem gleich im Paket, nach diesen Regeln, und sag dem
-   Design-System-Verantwortlichen (hpe) Bescheid. Das spart die zweite Umstellung.
+3. Ist die Komponente neu, sag dem Design-System-Verantwortlichen (hpe) Bescheid: Name und Zweck. Die
+   Entscheidung (Varianten, Zustände) kommt nach `docs/skalen.md`.
 
 ## Die Regeln (jede läuft als Test im Paket)
 
