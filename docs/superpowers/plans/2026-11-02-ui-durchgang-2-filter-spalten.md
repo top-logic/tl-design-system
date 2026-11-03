@@ -80,6 +80,9 @@ ihre `FilterEditor`-Felder; `ColumnFilterUI` behält „Anwenden“. Die Dialoge
 
 - [ ] Nach beiden Merges: im Hauptrepo `git fetch origin`,
       `git worktree add ../tl8-wt-30102 -b CWS/CWS_30102_ui_pass_2_filter_columns origin/master`.
+      **Vorgezogen 03.11. (Hendrik):** Worktree und Branch stehen schon, auf `origin/CWS/CWS_30000_ui_durchgang_1`
+      (`a8426306e7`, ohne Upstream). Nach dem Merge von !2014: `git merge origin/master` (bringt den Merge-Commit), dann
+      Task 2. Änderungen aus Bernhards Review an !2014 kommen auf demselben Weg.
 - [ ] Workspace-lokales Maven-Repo (`.claude/scripts/local-m2.sh`), dann aus der Wurzel `mvn -B -N install -pl tl-bom`
       (Falle aus #30098) und `mvn -B install -pl tl-design-system,com.top_logic.layout.react`.
 - [ ] Fertig, wenn beides grün ist.
