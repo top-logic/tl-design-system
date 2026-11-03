@@ -136,6 +136,11 @@ Ergebnis eines Subagenten gegen Gates, Datei und laufende Instanz geprüft, bevo
   Nachprüfung die Ersparnis.
 - **Gates gibt der Orchestrator standardmäßig ab**; ihre Logs gehören nicht in seinen Kontext.
 - **Kleiner als der Auftrag → selbst:** was in wenigen Handgriffen erledigt ist, wird nicht delegiert.
+- **Eskalation nach zwei Fehlschlägen:** scheitert ein Sonnet-Auftrag zweimal an denselben Gates, übernimmt
+  `savvy-heavy` (Opus) mit einem **frischen** Auftrag: Ziel, Fehlerlog, Diff des letzten Versuchs. Er setzt nicht
+  im Kontext des Sonnet-Agenten fort; dessen Ansatz gilt als verdächtig, nicht als Vorlage. Kein Modellwechsel in
+  der laufenden Sitzung als Ersatz für Subagenten — der Cache gilt je Modell, und das Plan-Review braucht einen
+  unbefangenen Blick (03.11.).
 
 Ein Fork erbt das Orchestrator-Modell; für ein anderes Modell einen frischen Agenten mit
 vollständigem Auftrag starten. Das Plan-Review bleibt bei einem frischen Agenten, nicht beim Autor.
