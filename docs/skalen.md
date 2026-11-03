@@ -2841,7 +2841,8 @@ Komponente. Spec `docs/superpowers/specs/2026-10-26-ui-durchgang-1-tabelle-desig
   automatisch für Zahlen, Datum bleibt links); Gruppenzeile als eigene Form mit Kapsel.
 - **Dichte je Tabelle:** `[data-tl-density="normal"]` ist jetzt ein eigener Block, damit eine Tabelle eine kompakte
   Seite überstimmt. Zwei Stufen, keine dritte (Hendrik).
-- **Zahnrad wird „Ansicht“** für jede Tabelle: Dichte (Wie überall/Normal/Kompakt), Zebrastreifen, Spaltenlinien,
+- **Zahnrad wird „Ansicht“** (03.11. aus !2014 genommen, kommt mit U27 — siehe „Kein neues Menü, bevor alle Menüs
+  funktionieren“) für jede Tabelle: Dichte (Wie überall/Normal/Kompakt), Zebrastreifen, Spaltenlinien,
   „Spalten wählen und ordnen …“, „Zurücksetzen“; wirkt sofort, gespeichert je Person und Tabelle. Fixieren und
   Gruppieren bleiben, wo sie sind; „Zeilen umbrechen“ entfällt (Virtualisierung mit fester Zeilenhöhe).
 - **Presets:** was passt, steht da, der Rest hinter „+ n weitere“ (Hendrik: kein Fade — ein Mausrad ohne Seitwärtsrad
@@ -2902,6 +2903,28 @@ Jenkins-Knoten bestätigt ist. Lokal gehören beide Läufe zum Gate.
 **Als Test:** `webapp.test.mjs` (beide Ziele von `generate` byte-gleich, kein Siegel, neue Kopfzeile);
 `engine-classes` und `ratchet` lesen die Repo-Wurzel zwei Ebenen über dem Modul und scheitern, statt zu überspringen,
 wenn `com.top_logic.layout.react` dort fehlt.
+
+### Kein neues Menü, bevor alle Menüs funktionieren (03.11., Hendrik)
+
+**Befund:** Bernhard lehnte !2014 am 03.11. erneut ab: „TableViewOptions.tsx - NO“ und „Keine neuen Formen von
+Menüs, die alle nicht richtig funktionieren...“. Die Sichtprüfung auf Docker bestätigt drei Formen nebeneinander:
+Filter und Spaltenwahl als modaler Dialog mit „Ok“ (der Filter wirkt nicht beim Tippen), in der Spaltenwahl
+schaltet nur das Auge, nicht der Eintrag; daneben das neue Popover „Ansicht“, das sofort wirkt, dessen Schalter aber
+nur auf Kästchen und Text reagieren (U42).
+
+**Entscheidung (Hendrik):** Bernhard beim Wort nehmen. Das Popover „Ansicht“ geht aus !2014 heraus; das Zahnrad
+öffnet wieder direkt die Spaltenwahl. Paketblock `tl-table-view-options`, Vertrag, Specimen und die i18n-Schlüssel
+gehen mit, ebenso die Serverseite (`TableViewState` mit Dichte, Streifen, Spaltenlinien; `setViewOptions`,
+`resetView`, `isPersonalized`) und der Abschnitt in den tl-docs (Hendrik: „Server auch raus“). Die Attribute
+`data-tl-striped`, `data-tl-column-lines`, `data-tl-density` bleiben Vokabular des Pakets, die Engine setzt sie bis
+dahin nicht. „Ansicht“ kommt in einem eigenen PR zurück, zusammen mit U27 (Filter und
+Spaltenwahl als Popover, wirkt sofort) und U42 (ganze Zeile klickbar) — und wird Bernhard erst vorgelegt, wenn alle
+Menüs der Tabelle dieselbe Form haben und auf Docker durchgetestet sind. Stand vor dem Rückbau: lokaler Branch
+`local/table-view-options` (`a8426306e7`).
+
+**Verworfen:** U27 in !2014 nachziehen (der PR wächst, Bernhard prüft alles neu); nur die Schalter reparieren (der
+Einwand gilt der Form, nicht dem Fehler); Serverseite ohne Oberfläche stehen lassen (Bernhard prüfte Code eines
+abgelehnten Features).
 
 ## Befunde aus dem Specimen
 
