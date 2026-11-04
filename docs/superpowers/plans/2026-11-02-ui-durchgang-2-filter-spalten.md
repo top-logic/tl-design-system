@@ -95,7 +95,11 @@ neu oder erweitert): Plan-Review 04.11., frischer Agent (Fable), 14 Befunde (9 s
   wechseln auf einem Segment die Dichte (wie heute `radioArrowTarget`, aber nur noch waagerecht). `useRovingMenu`
   überspringt Ereignisse mit `defaultPrevented`. Startfokus: `[role="menuitemradio"][aria-checked="true"]`.
   **Zeilenbau:** jede Zeile ist **ein** `<button role="menuitemcheckbox|menuitemradio" aria-checked>` mit Glyph
-  (`ThemeIcon`) — kein `Checkbox`-Part darin (interaktiv in interaktiv), kein `tl-choice`.
+  (`ThemeIcon`) — kein `Checkbox`-Part darin (interaktiv in interaktiv), kein `tl-choice`. **Aussehen bleibt wie im
+  Mockup (Hendrik 04.11.):** Streifen und Spaltenlinien zeigen rechts den Schalter — als Zeichnung ohne Eingabe
+  (`<span class="tl-checkbox tl-checkbox--switch" aria-hidden>`), deren Zustand am `aria-checked` der Zeile hängt;
+  die Dichte bleibt die Segmentleiste (`tl-segmented`, Segmente `menuitemradio` mit `aria-checked`, das die Leiste
+  schon auswertet). Neu ist nur: die ganze Zeile schaltet.
 
 ## Review Focus
 
@@ -168,8 +172,10 @@ bleibt unverändert, Review 04.11.: `.tl-picker` ist schon die Flex-Spalte);
 Tests in `tl-design-system/test/`.
 
 - [ ] Tests zuerst (`node --test`), je Regel ein Test im Stil der vorhandenen Komponenten-Tests:
-  - `tl-menu__item--check`: `display:flex`, volle Breite, Hover-Fläche wie `tl-menu__item`, Glyph-Spalte für das
-    Häkchen bzw. den Schalter (`aria-checked` steuert die Glyphe), kein `tl-choice` darin (U42).
+  - `tl-menu__item--check`: `display:flex`, volle Breite, Hover-Fläche wie `tl-menu__item`, kein `tl-choice` darin
+    (U42). Häkchen der Werteliste als Glyphe; Schalter in „Ansicht“ als gezeichneter `tl-checkbox--switch` ohne
+    Eingabe: Choice-Regeln für „gewählt“ greifen auch bei `.tl-menu__item--check[aria-checked="true"]` an diesem
+    Element (gleiches Bild wie heute, Test vergleicht beide Zustände).
   - `tl-filter-list`: Zeile = `tl-menu__item--check`, Anzahl rechts `tl-filter-list__count` mit `tl-nums`, leiser
     Wert (`data-tl-state~="empty"`) in `text-helper`, Kopfzeile „Alle“ mit Trennlinie, Fuß mit zwei Aktionen.
   - `.tl-picker__scroll`: `flex: 1 1 auto; min-block-size: 0; overflow-y: auto` (kein `var()`-Rückfall, keine neue
