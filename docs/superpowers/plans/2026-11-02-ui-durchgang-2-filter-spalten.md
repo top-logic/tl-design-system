@@ -16,7 +16,7 @@ ihre `FilterEditor`-Felder; `ColumnFilterUI` behält „Anwenden“. Die Dialoge
 **Technik:** Java 21, React/TSX (Vite, Vitest), Paket `tl-design-system` (Node, `node --test`).
 
 **Plan-Review:** 02.11., frischer Agent (Fable): 13 Befunde, alle eingearbeitet. **Nachtrag 04.11.** (Tasks 1, 4, 7–10
-neu oder erweitert) braucht ein neues Plan-Review vor dem Start.
+neu oder erweitert): Plan-Review 04.11., frischer Agent (Fable), 14 Befunde (9 should-fix, 5 nit), alle eingearbeitet.
 
 **Spec:** `docs/superpowers/specs/2026-11-02-ui-durchgang-2-filter-spalten-design.md` (freigegeben 02.11.), Mockup
 `.superpowers/brainstorm/25838-1793614286/content/u27-filter-popover.html`. **Ticket:** #30102.
@@ -65,23 +65,37 @@ neu oder erweitert) braucht ein neues Plan-Review vor dem Start.
 - **Nicht modal (E1):** `PickerPopover` bekommt `trapFocus?: boolean` (Standard `true`); beide neuen Popovers
   setzen `false`. Esc und Klick daneben schließen wie heute.
 - **Hülle (K2):** ein Hook `usePopupSurface({ open, anchor, placement, onClose, initialFocus, trapFocus, inside })`
-  in `bridge/popup-surface.ts` bündelt `usePopover`, `useCloseOnOutsidePress`, `useStandaloneKeyboardScope` (Esc),
-  `useFocusTrap` und die Rückgabe an den Anker; liefert `{ setFloating, style }`. `Menu`, `PickerPopover` und die
+  in `bridge/popup-surface.ts` bündelt `usePopover`, `useCloseOnOutsidePress`, `useStandaloneKeyboardScope(open)` (Esc),
+  `useFocusTrap(open, …)` und die Rückgabe an den Anker; liefert `{ surfaceRef, setRefs, style }` (`setRefs` setzt
+  `surfaceRef` und `setFloating`, wie heute `menu.tsx:74-78`); Klick daneben prüft `[surfaceRef, ...inside]`.
+  `useRovingMenu` bekommt `surfaceRef`. **Regel Auslöser:** steht der Auslöser in `inside`, schaltet sein Klick um
+  (Toolbar); sonst verhindert `pressClosedSurface` das Wiederöffnen (Zahnrad, „+ n weitere“, Trichter). Alle Hooks
+  bekommen `open`, damit die gemountete, verborgene `MenuGroup` keinen Scope und keine Falle hält, solange sie zu ist.
+  **`TLPopover` bleibt außerhalb** (Hover-Öffnen, eigener Trigger, nicht an der Tabelle); nach diesem PR prüfen, ob
+  er die Hülle übernimmt — Eintrag in `docs/ui-durchgang.md`. `Menu`, `PickerPopover` und die
   Toolbar-`MenuGroup` nutzen ihn; `useRovingMenu` verliert seinen Esc-Zweig (der Scope übernimmt). Kein neuer
   sichtbarer Baustein. Grund: drei Esc-Wege, drei Auslöser, eine fehlende Höhe — Fehler, die je Baustein einzeln
   wiederkämen.
 - **Fokus am Zeigerpunkt (K2):** findet die Falle beim Öffnen kein Ziel, weil die Fläche erst im nächsten Frame
-  steht, versucht die Hülle es einmal per `requestAnimationFrame` erneut (wie `MuiMenuAdapter` heute).
-- **Auslöser (K2):** Hook `usePopupTrigger(open, setOpen, kind: 'menu' | 'dialog')` → `{ onClick, 'aria-haspopup',
-  'aria-expanded' }`; `onClick` schaltet um und ignoriert den Druck, der gerade geschlossen hat (`pressClosedSurface`).
+  steht, versucht die Hülle es einmal per `requestAnimationFrame` erneut (wie `MuiMenuAdapter` heute). Für die
+  Bridge-`Menu` ist das Vorsorge, kein heutiger Fehler (Review 04.11.: `firstFocusable` findet den Eintrag schon) —
+  der Test dazu ist eine Wache, kein „scheitert heute“.
+- **Auslöser (K2):** Hook `usePopupTrigger(open, setOpen, kind: 'menu' | 'dialog')` → `{ onClick, expanded,
+  haspopup }` — die Props des Parts `MenuTrigger` (`parts.ts:177-191`); ein `Button`-Part (Trichter) übersetzt sie
+  selbst in `aria-expanded`/`aria-haspopup` über `PartAttributes`; `onClick` schaltet um und ignoriert den Druck, der gerade geschlossen hat (`pressClosedSurface`).
   Zahnrad, „+ n weitere“, Trichter, Toolbar-`MenuGroup` (die behält ihr `onMouseDown preventDefault`, Grund im
   Kommentar dort).
-- **Höhe (K2/E13):** `usePopover` hängt `size()` an und setzt `maxHeight` = freie Höhe; die CSS-Kappe
-  `max-height: var(--tl-size-popover-max)` an `.tl-popover` bleibt als Obergrenze (das Inline-`maxHeight` greift nur,
-  wo der Platz kleiner ist: der Hook setzt `min(verfügbar, Kappe)`, die Kappe aus dem Token gelesen).
+- **Höhe (K2/E13):** `usePopover` hängt `size()` an und setzt
+  `maxHeight: \`min(${availableHeight}px, var(--tl-size-popover-max))\`` (Vorbild inline-`var()`: `ColorPalette.tsx:100`);
+  die CSS-Kappe an `.tl-popover` bleibt (Gate `test/popover.test.mjs:9`). Kein Token-Lesen in JS.
 - **„Ansicht“ als Menü (K4):** die erste Seite ist `role="menu"` mit `useRovingMenu`; Dichte als drei
   `menuitemradio`, Streifen und Spaltenlinien als `menuitemcheckbox`, „Spalten“ und „Zurücksetzen“ als `menuitem`.
-  Die Fläche bleibt `PickerPopover` (`role="dialog"`), weil Seite 2 kein Menü ist.
+  Die Fläche bleibt `PickerPopover` (`role="dialog"`), weil Seite 2 kein Menü ist. **Tasten:** Hoch/Runter/Home/End
+  gehören dem Roving über alle Einträge (die drei Dichte-Segmente zählen als ein Halt: das gewählte); Links/Rechts
+  wechseln auf einem Segment die Dichte (wie heute `radioArrowTarget`, aber nur noch waagerecht). `useRovingMenu`
+  überspringt Ereignisse mit `defaultPrevented`. Startfokus: `[role="menuitemradio"][aria-checked="true"]`.
+  **Zeilenbau:** jede Zeile ist **ein** `<button role="menuitemcheckbox|menuitemradio" aria-checked>` mit Glyph
+  (`ThemeIcon`) — kein `Checkbox`-Part darin (interaktiv in interaktiv), kein `tl-choice`.
 
 ## Review Focus
 
@@ -95,7 +109,7 @@ neu oder erweitert) braucht ein neues Plan-Review vor dem Start.
    Popover bleibt offen, Anker bleibt der Trichter, Fokus bleibt im Popover. (Vitest Task 5.)
 4. **Letzte sichtbare Spalte bei sofortiger Wirkung:** Server-Guard bleibt, Tabelle bekommt nie 0 Spalten.
    (Java Task 6.)
-5. **Popover in niedrigem Fenster (600 px):** bleibt im Fenster, Rollbereich rollt. (Sichtprüfung Task 8.)
+5. **Popover in niedrigem Fenster (600 px):** bleibt im Fenster, Rollbereich rollt. (Sichtprüfung Task 10.)
 
 ---
 
@@ -149,16 +163,20 @@ Test `com.top_logic/src/test/java/test/com/top_logic/table/TestOptionChecks.java
 **Dateien:** `tl-design-system/src/components/` — neu `filter-list/filter-list.css`, `filter-list.contract.md`,
 `filter-list.spec.html`; ändern `menu/menu.css` + Vertrag (Zeile mit Häkchen/Schalter), `table/table.css` +
 `table.contract.md` (Abschnitt „Ansicht“: zweite Seite, Kopf mit Zurück; Filter-Popover am Trichter),
-`popover/popover.css` + Vertrag (Höchsthöhe aus `--tl-popover-available-height`, Rollbereich `tl-popover__scroll`);
+`picker/picker.css` + Vertrag (Rollbereich `tl-picker__scroll` neben dem vorhandenen `tl-picker__tabs`; `.tl-popover`
+bleibt unverändert, Review 04.11.: `.tl-picker` ist schon die Flex-Spalte);
 Tests in `tl-design-system/test/`.
 
 - [ ] Tests zuerst (`node --test`), je Regel ein Test im Stil der vorhandenen Komponenten-Tests:
-  - `tl-menu__item--check` (Name im Vertrag festlegen): `display:flex`, volle Breite, Hover-Fläche wie `tl-menu__item`;
-    `tl-choice` darin wird nicht mehr `inline-flex` (U42).
+  - `tl-menu__item--check`: `display:flex`, volle Breite, Hover-Fläche wie `tl-menu__item`, Glyph-Spalte für das
+    Häkchen bzw. den Schalter (`aria-checked` steuert die Glyphe), kein `tl-choice` darin (U42).
   - `tl-filter-list`: Zeile = `tl-menu__item--check`, Anzahl rechts `tl-filter-list__count` mit `tl-nums`, leiser
     Wert (`data-tl-state~="empty"`) in `text-helper`, Kopfzeile „Alle“ mit Trennlinie, Fuß mit zwei Aktionen.
-  - `.tl-popover` als Flex-Spalte; `.tl-popover__scroll`: `flex: 1 1 auto; min-height: 0; overflow-y: auto` (kein
-    `var()`-Rückfall, keine neue Variable; die Höhe setzt `usePopover` als `maxHeight`).
+  - `.tl-picker__scroll`: `flex: 1 1 auto; min-block-size: 0; overflow-y: auto` (kein `var()`-Rückfall, keine neue
+    Variable; die Höhe setzt `usePopover` als `maxHeight`). `.tl-popover` bleibt unberührt.
+  - Wurzel der Spaltenwahl bekommt eine Paketklasse (`tl-reorder-list__host`, mit Vertrag);
+    `.tl-table-view-options__page` und diese Wurzel: `display:flex; flex-direction:column; flex:1 1 auto;
+    min-block-size:0` — ein Rollbereich (die Liste), nicht zwei (Review 04.11., Befund 8).
   - `.tl-reveal-on-hover[aria-expanded="true"]` ist sichtbar (Anker des offenen Filter-Popovers).
   - `.tl-table-view-options__page` und `__back`: Kopf mit Zurück-Knopf.
 - [ ] CSS + Verträge + Specimen; `node tools/generate.mjs`, `node tools/lint-css.mjs`, `npm test` und
@@ -170,8 +188,9 @@ Tests in `tl-design-system/test/`.
 **Dateien:** `com.top_logic.layout.react/react-src/bridge/popover.ts`, neu `bridge/popup-surface.ts` und
 `bridge/popup-trigger.ts` (+ Export in `bridge-entry.ts`), `bridge/menu.tsx`, `controls/picker/PickerPopover.tsx`,
 `controls/TLToolbar.tsx` (`MenuGroup`), Auslöser in `controls/table/TableViewOptions.tsx` (Zahnrad) und
-`controls/table/FilterPresets.tsx`; Vitest in `com.top_logic.layout.react.mui/react-src/adapters/pickers.test.tsx` und
-neu `popup-surface.test.tsx`.
+`controls/table/FilterPresets.tsx`; Vitest: Hook-Tests neu `com.top_logic.layout.react/react-src/bridge/popup-surface.test.tsx`
+(eigenes Vitest von `layout.react`), Bausteintests in `com.top_logic.layout.react.mui/react-src/adapters/pickers.test.tsx`
+und `inline-buttons.test.tsx`.
 
 - [ ] Vitest zuerst, je Baustein (`Menu`, `PickerPopover`, `MenuGroup`): Esc schließt, auch wenn der Fokus noch am
       Auslöser liegt; Klick daneben schließt; zweiter Klick auf den Auslöser schließt und öffnet nicht neu; Auslöser
@@ -256,7 +275,7 @@ State-Key `columnSelection` an `TLTableView` (Kind oder `null`); Kommandos `open
 - [ ] Server: `onChange` → `applyColumns(sel.visibleColumns(), sel.lockedColumns(), sel.groupedColumn())`.
       Ersetzen/Schließen: altes Kind mit `cleanupTree()` freigeben.
 - [ ] Client `TLColumnSelect`: Klick auf die Zeile (nicht auf Griff, Nadel, Gruppieren, Auge) sendet `columnVisible`
-      (E8, E14; heute schaltet nur das Auge, `TLColumnSelect.tsx:194-205`); die gesperrte letzte Spalte reagiert
+      (E8, E14; heute schaltet nur das Auge, `TLColumnSelect.tsx:241-252`); die gesperrte letzte Spalte reagiert
       nicht. Vitest dazu.
 - [ ] Client: `TableViewOptions` Seite 2 „Spalten“ (Eintrag „Spalten · n von m ›“ statt „Spalten wählen …“), Kopf
       mit Zurück, Inhalt `<TLChild control={columnSelection}/>` — **kein** zusätzlicher `tl-popover__scroll`: `.tl-reorder-list`
@@ -277,17 +296,23 @@ State-Key `columnSelection` an `TLTableView` (Kind oder `null`); Kommandos `open
 
 - [ ] Vitest zuerst: Klick auf die Zeile (nicht auf Kästchen oder Text) von „Streifen“ schaltet; Pfeile, Home, End
       wandern über alle Einträge der ersten Seite (K4); „Zurücksetzen“ schickt `resetView` und schließt (K5).
-- [ ] Schalter in `tl-menu__item--check` (Task 3) statt `tl-table-view-options__switch` mit `tl-choice`; Rollen nach
-      „‚Ansicht‘ als Menü“.
+- [ ] Schalter in `tl-menu__item--check` (Task 3) statt `tl-table-view-options__switch` mit `tl-choice`; Rollen und
+      Tasten nach „‚Ansicht‘ als Menü“.
+- [ ] `react-src/table-view-options.test.tsx` (MUI-Modul, Wurzel `react-src/`) umstellen: `radiogroup`/`radio`/`switch`,
+      `.checked` und `tabindex` der Segmente (heute :119-121, :141-146, :210-230) → `menuitemradio`/`menuitemcheckbox`
+      mit `aria-checked`; Aussage je Test beibehalten.
 - [ ] Gates, Commit.
 
 ### Task 8: Kopfmenü per Tastatur (K4)
 
 **Dateien:** `TLTableView.tsx` (Kontextmenü des Spaltenkopfs), Vitest in `layout.react.mui`.
 
-- [ ] Vitest zuerst: Shift+F10 und `ContextMenu` auf dem fokussierten Kopf öffnen das Kopfmenü, verankert am Kopf
-      (nicht an einem Zeigerpunkt), Fokus auf dem ersten Eintrag; Esc schließt, Fokus zurück am Kopf.
-- [ ] Umsetzen wie `TLMenuRegion` (gleiche Tasten); Gates, Commit.
+- [ ] Vitest zuerst: Fokus auf dem Sortierknopf (die Kopfzelle selbst ist nicht fokussierbar), Shift+F10 bzw.
+      `ContextMenu` öffnen das Kopfmenü, verankert an der Kopfzelle (Element, nicht Punkt), Fokus auf dem ersten
+      Eintrag; Esc schließt, Fokus zurück am Sortierknopf. Dasselbe vom Trichter und vom Resizer aus (Spalte ohne
+      Sortierung und Filter: nur der Resizer trägt Fokus).
+- [ ] `onKeyDown` an der Kopfzelle (`role="columnheader"`, fängt per Bubbling), Tasten wie `TLMenuRegion.tsx:64-70`;
+      Anker `event.currentTarget`. Gates, Commit.
 
 ### Task 9: Tabellensuche verliert nichts (K6)
 
@@ -296,8 +321,10 @@ State-Key `columnSelection` an `TLTableView` (Kind oder `null`); Kommandos `open
 - [ ] Vitest zuerst: Tippen, dann innerhalb der Pause Klick auf einen Vorlagen-Chip bzw. einen Sortierkopf → erst
       `search`, dann das andere Kommando; Tippen, dann Blur → `search` ohne Warten; Tippen, dann Aushängen → `search`
       wird gesendet.
-- [ ] Eine Funktion `flushSearch()`; jeder andere `sendCommand` der Tabelle ruft sie vorher (eine Hülle um
-      `sendCommand`, nicht je Aufrufer), dazu `onBlur` und das Unmount-Cleanup. Gates, Commit.
+- [ ] Vorhandene Mechanik, keine Hülle um `sendCommand`: beim Tippen `registerPendingFlush(flushSearch)`
+      (`bridge/command-channel.ts:199`; `enqueueCommand` flusht vor jedem Aktionskommando, auch anderer Controls,
+      FIFO), in `sendSearch` abmelden — Vorbild `useTLTypingField` (`tl-react-bridge.ts:657-691`). Dazu `onBlur`
+      sendet, und das Unmount-Cleanup sendet statt nur den Timer zu löschen. Gates, Commit.
 
 ### Task 10: Sichtprüfung und Abschluss
 
