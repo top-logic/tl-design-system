@@ -348,6 +348,9 @@ State-Key `columnSelection` an `TLTableView` (Kind oder `null`); Kommandos `open
 **Anlass:** Docker-Prüfung von !2149 durch Hendrik; Spec-Abschnitt „Spaltenwahl: Abschnitte als Ablagezonen“.
 **Basis:** Branch-Kopf `50aa13fde4` (gepusht). Jenkins-Build danach nur einmal am Ende (`jenkins` neu anfordern).
 
+**Plan-Review Nachtrag 2 (04.11., frischer Agent, Fable):** 18 Befunde (1 blocker, 13 should-fix, 4 nit), alle unten
+eingearbeitet (Marken „R<n>“).
+
 ### Entscheidungen des Orchestrators (Nachtrag 2)
 
 - **Neuer Befehl statt Erweiterung:** `ColumnReorderArguments` gehört auch dem Kopf-Ziehen von `TableViewControl`
@@ -364,10 +367,23 @@ State-Key `columnSelection` an `TLTableView` (Kind oder `null`); Kommandos `open
     `block` nach dem Entfernen gezählt). `targetIndex` ist die Stelle in der **ganzen** Server-Liste nach dem
     Entfernen — so wie `handleMove` sie heute rechnet.
 - **Revision gegen das Springen (Z8):** State-Key `revision` (int) an `ReactColumnSelectControl`, +1 nach **jedem**
-  Befehl der Spaltenwahl (`columnMove`, `columnVisible`, `columnLock`, `group`), auch einem abgelehnten, und dann
-  immer `putState`. Der Client hält nach jeder Zug-/Tastatur-Geste ein **vorhergesagtes** Bild (`optimistic`
-  entries) und zählt seine gesendeten Befehle; das Bild gilt, bis `state.revision >= revisionBeimErstenSenden +
-  gesendet`, dann zeigt er die Server-Liste. Weicht die Antwort ab, gilt sie (Z8). Kein Timer.
+  Befehl der Spaltenwahl (`columnMove`, `columnVisible`, `columnLock`, `group`), **auch auf jedem frühen `return`**
+  (unbekannte Spalte, letzte sichtbare, Lock ohne Änderung, Gruppe abgelehnt — heute laufen diese Pfade nicht durch
+  `afterEdit` und pushen nichts; R2). Helfer `refused()` oder `afterEdit` in jedem Pfad. **Ein Patch (R3):** in
+  `afterEdit` `beginUpdate()`, `pushEntries()` + `putState(REVISION)`, `commitUpdate()` (`ReactControl.java:999-1010`),
+  erst danach `_onChange`. Client: Zähler `expected` = Revision beim ersten offenen Senden + Zahl **aller** gesendeten
+  Befehle der Spaltenwahl (auch Auge, Schloss, Gruppe, Zeilenklick; R2). Ein vorhergesagtes Bild (nur nach Zug und
+  Alt+Pfeil) gilt, solange `state.revision < expected`; danach zeigt er die Server-Liste. Weicht die Antwort ab, gilt
+  sie (Z8). Kein Timer.
+- **Vorhersage (R7):** reine Funktion `applyColumnMove(entries, {column, targetIndex, locked, visible})` im Client,
+  exakter Spiegel der Server-Semantik (ausblenden an Ort und Stelle, eine fixierte zuerst hinter den Block;
+  einblenden an `targetIndex` der ganzen Liste mit Block-Klemmung; letzte sichtbare abgelehnt → Liste unverändert).
+  Vitest mit denselben Fällen wie die Java-Tests aus Task 11. **Alle Leser** in `TLColumnSelect` (`visibleEntries`,
+  `lastVisible`, `handleRowClick`, `handleMove`, das `useLayoutEffect([entries])`) lesen die **angezeigte** Liste
+  (vorhergesagt oder Server), nicht `state.entries`.
+- **Fokus nach abweichender Antwort (R14):** `TLColumnSelect` merkt beim Senden einer Zug-/Tastatur-Geste
+  `name:handle` in seinem `pendingFocus` (Mechanik `TLColumnSelect.tsx:115-140`, Griff per `buttonRef` registrieren)
+  und fokussiert beim Revisionsabgleich den Griff, wenn der Fokus auf `body` gefallen ist.
 - **Hook-API (`bridge/list-reorder.ts`), rückwärtskompatibel** — andere Leser des Hooks ändern sich nicht:
   - `onMove(from, to, target?)`: drittes Argument `ReorderDropTarget` der Ablage (bei Tastatur `undefined`); die
     Spaltenwahl braucht es, weil „nach der letzten fixierten“ und „vor der ersten beweglichen“ dieselbe flache
@@ -377,13 +393,20 @@ State-Key `columnSelection` an `TLTableView` (Kind oder `null`); Kommandos `open
     `zoneProps(zone)` (für Platzhalter-Elemente: `onDragOver`/`onDrop`) und `dropZone: string | null` (für die
     Hervorhebung). Nicht angenommen → kein `preventDefault`, `dropEffect` bleibt `none` (Z6).
   - Tastatur: Option `onStep?(index, direction): { to: number; announcement: string } | null | undefined` —
-    `undefined`: Standardschritt des Hooks; `null`: nichts (keine Ansage); Objekt: die Spaltenwahl hat den Befehl
-    selbst gesendet, der Hook setzt den Fokus-Rückweg auf die Anzeige-Stelle `to` und sagt `announcement` an.
+    wird in `step()` **vor** Bereichs- und `accepts`-Prüfung gefragt (R1, `list-reorder.ts:393-397`): Objekt oder
+    `null` beenden `step()` ohne diese Prüfungen; nur `undefined` läuft in den Standardweg. `null`: nichts (keine
+    Ansage); Objekt: die Spaltenwahl hat den Befehl selbst gesendet, der Hook setzt den Fokus-Rückweg auf die
+    Anzeige-Stelle `to` und sagt `announcement` an. `TLColumnSelect` gibt **kein** `accepts` mehr (Blockregel
+    entfällt mit Z1).
     Die Warteschlange für Alt+Pfeil bleibt; mit dem vorhergesagten Bild steht der Eintrag sofort an `to`, der
     nächste Schritt folgt daher ohne Warten auf den Server.
 - **Indexraum der Spaltenwahl:** der Hook zählt über die **Anzeige-Liste** D = fixierte sichtbare ++ bewegliche
   sichtbare ++ ausgeblendete (vorhergesagt, falls vorhanden), nicht mehr nur über die sichtbaren. Ausgeblendete
   liegen in Zone `hidden`. Mit Suche rendert die Liste nur Treffer, die Indizes bleiben die von D (wie heute).
+- **Überschriften sind Ziel (R8):** `zoneProps(zone)` liegt auch auf den drei Überschriften `tl-reorder-list__section`
+  (Ablage wie auf dem Platzhalter der Zone). `zoneOf(index)` liefert nur für ausgeblendete Zeilen `'hidden'`, für
+  sichtbare `null` (die zeigen Einfügemarken). Den hervorgehobenen Abschnitt leitet die Spaltenwahl für Fixiert/
+  Beweglich aus `dropTarget.index` ab, für `hidden`, Platzhalter und Überschriften aus `dropZone`.
 - **Platzhalter (Z4):** ohne Suchbegriff stehen alle drei Abschnitte; ein leerer zeigt `li.tl-reorder-list__empty`
   mit Text und Zone `locked` / `movable` / `hidden`. **Ruling:** auch „Beweglich“ bekommt einen Platzhalter
   („Hierher ziehen, um zu lösen“), wenn alle sichtbaren fixiert sind — sonst gäbe es keinen Weg per Zug zurück.
@@ -400,11 +423,15 @@ State-Key `columnSelection` an `TLTableView` (Kind oder `null`); Kommandos `open
   Deutsch: „Hierher ziehen, um zu fixieren“, „Hierher ziehen, um zu lösen“, „Hierher ziehen, um auszublenden“,
   „{0}, fixiert, Position {1} von {2}“, „{0}, beweglich, Position {1} von {2}“, „{0}, ausgeblendet“. Position zählt
   unter den sichtbaren.
-- **Paketbild:** Trennlinie wie `tl-divider` (dieselben Tokens, nachschlagen in
-  `tl-design-system/src/components/divider/`), oben an jedem `tl-reorder-list__section` außer dem ersten;
-  Zielabschnitt: `data-tl-state~="drop-target"` an Überschrift, Zeilen und Platzhalter der Zone (Fläche getönt mit
-  dem Token, den `drop-before/after` schon nutzen, oder dem Hover-Token der Liste — nachschlagen, nicht erfinden);
-  `tl-reorder-list__empty`: leiser Text (`--tl-text-secondary`), Zeilenhöhe wie ein Eintrag.
+- **Paketbild (R12):** Trennlinie `border-top: var(--tl-border-width-sm) solid var(--tl-border-separator)`
+  (`divider.css:8`) mit Abstand `--tl-space-2xs`, an jedem `.tl-reorder-list__section:not(:first-child)`.
+  Zielabschnitt: neues Zustandswort `drop-target` an Überschrift, Zeilen und Platzhalter der Zone, Fläche
+  `--tl-surface-interactive-strong` (die Fläche von `drop-onto`, `drag.css:55`) — **nicht** `drop-onto` selbst
+  (zeichnet je Element einen Rahmen) und nicht der Hover-Token. `drop-target` in `drag.contract.md` (Tabelle Z. 18),
+  in `lint-css.mjs` (`STATE_MODIFIER`/`ELEMENT_STATE_MODIFIER`) und `lint-css.test.mjs:245` aufnehmen; Spezifität
+  über `:where(.tl-reorder-list__item:hover)`. `tl-reorder-list__empty`: leiser Text (`--tl-text-secondary`),
+  Zeilenhöhe wie ein Eintrag. **Kein `cursor`** für Z6 (Gate `lint-css.mjs:208`): der Zeiger kommt aus
+  `dropEffect = 'none'` (R16).
 
 ### Task 11: Server — `columnMove` und `revision`
 
@@ -419,27 +446,41 @@ jede Argument-Klasse geprüft wird).
 - [ ] Umsetzung nach „Semantik `columnMove`“; `columnReorder`-Handler und `CMD_COLUMN_REORDER` entfernen (vorher
       `git grep columnReorder` — `TableViewControl` hat ein eigenes, das bleibt). Klassen-JavaDoc (Satz „that is the
       only way from one block to the other, a drag stays within the block“) an Z1 anpassen.
+- [ ] Bestehende Tests umschreiben (R4): `TestReactColumnSelect.java` (sieben `reorder(...)`-Aufrufe Z. 87, 97, 106,
+      153, 164, 249, 284, Helfer Z. 324) auf `columnMove`; `TestColumnSelectionApply.java:400`
+      (`CMD_COLUMN_REORDER` + `ColumnReorderArguments`) ebenso. `TestColumnCommandArguments` bleibt (prüft nur
+      `TableViewControl`); die Variante „nicht ganzzahliger `targetIndex` abgelehnt“ für `ColumnMoveArguments` in
+      `TestReactColumnSelect`.
+- [ ] `ColumnMoveArguments`: JavaDoc und `@Label` (Muster `ColumnVisibleArguments.java:12`) sagen, dass `targetIndex`
+      bei `visible=false` ignoriert wird (R18). `ColumnReorderArguments`-JavaDoc (Z. 14-16) nennt die Spaltenwahl
+      nicht mehr (R15); `check-messages-en.sh`, Deutsch (`messages_de.properties:757`) von Hand.
 - [ ] Gates: `mvn -B -o clean install -pl com.top_logic.layout.react -DskipTests=false`
       `-Dtest=test.com.top_logic.layout.react.control.table.TestReactColumnSelect` und danach ohne `-Dtest`; Commit.
 
 ### Task 12: Paket — Trennlinie, Zielabschnitt, Platzhalter
 
 **Dateien:** `tl-design-system/src/components/reorder-list/reorder-list.css`, `reorder-list.contract.md`,
-`reorder-list.spec.html`, ggf. `tl-design-system/test/engine-classes.test.mjs` (neue Klasse
-`tl-reorder-list__empty` registrieren, wenn die Datei Klassen aufzählt).
+`reorder-list.spec.html`, `drag.contract.md`, `tools/lint-css.mjs` + `test/lint-css.test.mjs`, `test/drag.test.mjs`.
+`engine-classes.test.mjs` registriert nichts (R17) — nur seine drei Regexe auf `TLColumnSelect.tsx` (Z. 46-52)
+müssen wahr bleiben.
 
 - [ ] CSS nach „Paketbild“; Vertrag: Abschnittsabsatz ersetzen (alle drei Abschnitte, Platzhalter, Ziehen über
       Grenzen = Zustandswechsel Z1, Ausgeblendet als Zone Z3, Ablehnung Z6), Aktionen-Tabelle `columnReorder` →
       `columnMove`, Tastatur-Tabelle um Z7 und die drei Ansagen erweitern; Specimen zeigt Trennlinie, Platzhalter
       und einen hervorgehobenen Zielabschnitt.
+- [ ] `drag.test.mjs:148-155` („Blöcke mit Überschrift ohne Linie“): Titel und Kommentar umschreiben, Assertion für
+      `.tl-reorder-list__section:not(:first-child)` mit `border-top` ergänzen; Vertragszeile „eine Linie gibt es nicht“
+      in `reorder-list.contract.md` ersetzen (R13). `contracts-3b.test.mjs:10-11` bleibt erfüllt.
 - [ ] Gates: `npm test`, `npm run test:dom`, `node tools/lint-css.mjs`, `node tools/generate.mjs`; Commit.
 
 ### Task 13: Hook — Zonen, Ablageziel, Schritt der Steuerung
 
-**Dateien:** `com.top_logic.layout.react/react-src/bridge/list-reorder.ts`, Vitest daneben (vorhandene
-`list-reorder*.test.*` erweitern), Export in `bridge-entry.ts` falls neue Typen.
+**Dateien:** `com.top_logic.layout.react/react-src/bridge/list-reorder.ts`, **neu** `react-src/bridge/list-reorder.test.tsx`
+(es gibt noch keinen Hook-Test, R5; Vitest-Include `vitest.config.ts:13`, i18n-Mock wie `scroll-strip.test.tsx:9`),
+Export in `bridge-entry.ts` falls neue Typen.
 
-- [ ] Vitest zuerst: `onMove` bekommt das Ablageziel; Zeigen über einer Zone setzt `dropZone`, ohne Einfügemarke;
+- [ ] Vitest zuerst: `onStep` wird vor Bereichs-/`accepts`-Prüfung gefragt (Schritt über das Listenende mit Objekt
+      → Ansage, kein Standardweg; R1); `onMove` bekommt das Ablageziel; Zeigen über einer Zone setzt `dropZone`, ohne Einfügemarke;
       `acceptsZone` false → kein `preventDefault`; Ablage in Zone ruft `onZoneDrop`; `zoneProps` auf einem
       Platzhalter nimmt an; `onStep` mit Objekt → Ansage und Fokus am Griff an `to`; `null` → nichts; `undefined` →
       wie bisher; Warteschlange Alt+Pfeil über `onStep` hinweg.
@@ -458,7 +499,12 @@ Vitest der Spaltenwahl (`inline-buttons.test.tsx` in `layout.react.mui`, ggf. ei
       ohne fixierte; Alt+↑ auf erster beweglicher → `columnMove locked:true` und Ansage „…, fixiert, …“; nach der
       Ablage zeigt die Liste sofort die neue Reihenfolge, auch bevor `revision` steigt; nach `revision`-Anstieg
       gilt die Server-Liste.
-- [ ] Umsetzung nach „Indexraum“, „Platzhalter“, „Tastatur über Grenzen“, „Revision“; Komponenten-Doc
+- [ ] Bestehende Blöcke in `inline-buttons.test.tsx` **umschreiben**, nicht nur ergänzen (R6): 390-495, 502-660
+      („sections and blocks“: `columnReorder`/`targetIndex` Z. 592/625/636 und die Ablehnung über die Blockgrenze —
+      Ablehnung entfällt mit Z1), 666-760 („fast series of keyboard moves“: mit vorhergesagtem Bild sendet jeder
+      Alt+Pfeil sofort, nicht erst nach `patchState`).
+- [ ] Umsetzung nach „Indexraum“, „Überschriften sind Ziel“, „Platzhalter“, „Tastatur über Grenzen“, „Revision“,
+      „Vorhersage“, „Fokus nach abweichender Antwort“; Komponenten-Doc
       (Absätze „A column is dragged within its block…“, „The sections are the display only…“, „A hidden column has no
       handle…“) an Z1–Z8 anpassen. Ausgeblendete Zeilen bekommen den Griff.
 - [ ] I18N nach Liste; `TL_WORKTREE=… tools/check-messages-en.sh`, Diff committen, Deutsch von Hand.
@@ -468,15 +514,21 @@ Vitest der Spaltenwahl (`inline-buttons.test.tsx` in `layout.react.mui`, ggf. ei
 
 **Dateien:** `tl-design-system/src/components/menu/menu.css` + `menu.contract.md` + Specimen,
 `engine-classes.test.mjs` falls Klassen registriert werden; `TableViewOptions.tsx` (Zeilen 218–231),
-`I18NConstants` (layout.react) + `messages_de.properties`, Vitest `table-view-options.test.tsx`.
+`I18NConstants` (layout.react) + `messages_de.properties`, Vitest `table-view-options.test.tsx` +
+`inline-buttons.test.tsx:144`; Tabellen-Vertrag `table.contract.md` (Z. 60, 84, 163, 168), Specimen `table.spec.html`
+(Z. 313, 339) und Gate `tabellenmenues.test.mjs:269-274` (R9).
 
 - [ ] Paket: `.tl-menu__item--nav` (Zeile als Flex, Wert und Chevron ans Ende: `margin-inline-start: auto` am Wert),
-      `.tl-menu__value` (`--tl-text-secondary`), `.tl-menu__chevron` (Größe/Farbe wie `.tl-menu__icon`); Vertrag und
-      Specimen. Nur Tokens.
+      `.tl-menu__value` (`--tl-text-secondary`), `.tl-menu__chevron` (Farbe `--tl-icon-secondary` wie der Griff,
+      Größe über `tl-icon-sm`); Menü-Vertrag und Specimen; Tabellen-Vertrag, -Specimen und `tabellenmenues.test.mjs`
+      auf das neue Markup (R9). Nur Tokens.
 - [ ] Client: Beschriftung `js.table.viewColumns` „Columns“, neu `js.table.viewColumnsCount` „{0} of {1}“
-      (Deutsch „Spalten“, „{0} von {1}“); Icon `fa-solid fa-chevron-right` mit `aria-hidden`; zugänglicher Name
+      (Deutsch „Spalten“, „{0} von {1}“); Icon **`<ThemeIcon icon={ICON_NEXT} className="tl-icon-sm tl-menu__chevron"
+      aria-hidden>`** (`icons.ts:129`, kein Glyphname im Code; R11); zugänglicher Name
       bleibt „Spalten, 32 von 58“ (Wert ist Teil des Textinhalts). Das `›` im Text entfällt.
-- [ ] Vitest: Name des Eintrags, Chevron vorhanden, Klick öffnet Seite 2 wie bisher. Gates Paket + Vitest +
+- [ ] Vitest: alle Matcher `getByRole('menuitem', { name: 'js.table.viewColumns' })` (`table-view-options.test.tsx:131,
+      139, 279, 359, 449, 486, 501, 510`, `inline-buttons.test.tsx:144`) auf Regex `/^js\.table\.viewColumns\b/`
+      umstellen (R10); Name des Eintrags, Chevron vorhanden, Klick öffnet Seite 2 wie bisher. Gates Paket + Vitest +
       `check-messages-en.sh`; Commit.
 
 ### Task 15: Sichtprüfung (Orchestrator) und Abschluss
