@@ -195,6 +195,7 @@ diesen PR (Variante A), vor Bernhards Review.
 | Z6 | **Ausnahmen sichtbar abgelehnt.** Die letzte sichtbare Spalte nimmt „Ausgeblendet“ nicht an (keine Hervorhebung, `dropEffect = none`, Cursor „nicht erlaubt“). |
 | Z7 | **Tastatur wie Maus.** Alt+Pfeil geht über die Grenze: Alt+↑ auf der ersten beweglichen fixiert sie (ans Ende von „Fixiert“), Alt+↓ auf der letzten fixierten löst sie, Alt+↓ auf der letzten beweglichen blendet aus, Alt+↑ auf einer ausgeblendeten blendet sie am Ende von „Beweglich“ ein. Innerhalb von „Ausgeblendet“ verschiebt Alt+Pfeil nichts. Die Ansage nennt den neuen Zustand („Teile, fixiert, Position 2 von 5“ / „Teile, ausgeblendet“). Der Fokus bleibt am Griff. |
 | Z8 | **Kein Springen.** Nach dem Ablegen (und nach Alt+Pfeil) zeigt die Liste sofort die erwartete Reihenfolge und den erwarteten Zustand, bis die Antwort des Servers kommt; die Antwort ersetzt das Bild. Weicht sie ab (Server lehnt ab), gilt die Antwort. |
+| Z9 | **„Spalten“ sieht aus wie ein Weg auf die nächste Seite.** Der Eintrag in „Ansicht“ ist heute „Spalten · 32 von 58 ›“ in einem Text, das Chevron klebt am Wort (Hendrik 04.11.). Neu: Beschriftung „Spalten“ links, rechts am Zeilenende der Wert „32 von 58“ leise (`--tl-text-secondary`) und ein Chevron-Icon (`fa-chevron-right`, Icon-Größe wie `tl-menu__icon`) — das Muster eines Untermenü-Eintrags; Hover und Fokus wie jeder Menüeintrag. Paketklasse `tl-menu__item--nav` mit `tl-menu__value` und `tl-menu__chevron`, wiederverwendbar für jeden Eintrag, der eine Seite weiter führt. |
 
 **Nicht-Ziele:** Reihenfolge innerhalb „Ausgeblendet“ wählen; Ziehen in andere umsortierbare Listen als der Spaltenwahl
 übertragen (Z8 darf im Hook liegen, wenn es dort für alle gleich gilt).
@@ -207,3 +208,4 @@ diesen PR (Variante A), vor Bernhards Review.
 - Nach dem Loslassen steht die Zeile sofort an der neuen Stelle, ohne Rücksprung.
 - Ohne fixierte Spalte steht „Fixiert“ mit der leisen Ablagezeile da und nimmt eine Spalte an.
 - Alt+↑ auf der ersten beweglichen Spalte fixiert sie; die Ansage nennt „fixiert“.
+- In „Ansicht“ steht „Spalten“ links, „32 von 58“ und ein Chevron rechtsbündig; die Zeile reagiert auf Hover wie ein Menüeintrag.

@@ -464,6 +464,21 @@ Vitest der Spaltenwahl (`inline-buttons.test.tsx` in `layout.react.mui`, ggf. ei
 - [ ] I18N nach Liste; `TL_WORKTREE=… tools/check-messages-en.sh`, Diff committen, Deutsch von Hand.
 - [ ] Gates: Vitest beide Module + typecheck, Maven `layout.react` mit Tests, Paket-Gates; Commit.
 
+### Task 14b: „Spalten“ als Eintrag mit Weg (Z9)
+
+**Dateien:** `tl-design-system/src/components/menu/menu.css` + `menu.contract.md` + Specimen,
+`engine-classes.test.mjs` falls Klassen registriert werden; `TableViewOptions.tsx` (Zeilen 218–231),
+`I18NConstants` (layout.react) + `messages_de.properties`, Vitest `table-view-options.test.tsx`.
+
+- [ ] Paket: `.tl-menu__item--nav` (Zeile als Flex, Wert und Chevron ans Ende: `margin-inline-start: auto` am Wert),
+      `.tl-menu__value` (`--tl-text-secondary`), `.tl-menu__chevron` (Größe/Farbe wie `.tl-menu__icon`); Vertrag und
+      Specimen. Nur Tokens.
+- [ ] Client: Beschriftung `js.table.viewColumns` „Columns“, neu `js.table.viewColumnsCount` „{0} of {1}“
+      (Deutsch „Spalten“, „{0} von {1}“); Icon `fa-solid fa-chevron-right` mit `aria-hidden`; zugänglicher Name
+      bleibt „Spalten, 32 von 58“ (Wert ist Teil des Textinhalts). Das `›` im Text entfällt.
+- [ ] Vitest: Name des Eintrags, Chevron vorhanden, Klick öffnet Seite 2 wie bisher. Gates Paket + Vitest +
+      `check-messages-en.sh`; Commit.
+
 ### Task 15: Sichtprüfung (Orchestrator) und Abschluss
 
 - [ ] Lokale Demo (clean install, CSS-Kopf prüfen): jeder Punkt aus Spec-Nachtrag „Erfolg zusätzlich“, hell/dunkel,
