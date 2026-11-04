@@ -177,3 +177,33 @@ Hendrik hat am 04.11. K1–K6 angekreuzt, K7 nicht.
 - Shift+F10 auf einem fokussierten Spaltenkopf öffnet das Kopfmenü, Fokus auf dem ersten Eintrag.
 - In „Ansicht“ wandern Pfeile über Dichte, Schalter, „Spalten“ und „Zurücksetzen“; „Zurücksetzen“ schließt.
 - Suchbegriff tippen und sofort einen Vorlagen-Chip klicken: der Server bekommt erst die Suche, dann den Chip.
+
+## Spaltenwahl: Abschnitte als Ablagezonen (Nachtrag 04.11., nach Docker-Prüfung)
+
+**Anlass:** Hendriks Prüfung von !2149 auf Docker. (1) Nach dem Ablegen bleibt die Zeile kurz an der alten Stelle und
+springt dann an die neue. (2) Die Abschnitte „Fixiert“, „Beweglich“, „Ausgeblendet“ sind zu schwach voneinander getrennt.
+(3) Die Abschnitte sehen aus wie Ablagezonen, nehmen aber nichts an. Hendrik hat am 04.11. entschieden: alles in
+diesen PR (Variante A), vor Bernhards Review.
+
+| # | Entscheidung |
+|---|---|
+| Z1 | **Der Abschnitt, in dem abgelegt wird, bestimmt den Zustand.** Ziehen geht über jede Grenze: Beweglich → Fixiert fixiert, Fixiert → Beweglich löst, sichtbar → Ausgeblendet blendet aus (eine fixierte wird dabei gelöst), Ausgeblendet → Fixiert/Beweglich blendet **an der Ablagestelle** ein (und fixiert in „Fixiert“). Schloss und Auge bleiben unverändert. |
+| Z2 | **Ein Befehl je Geste.** `columnReorder` trägt zusätzlich den Zielzustand (`locked`, `visible`); der Server setzt Zustand und Stelle in einem Schritt, ein Push. Kein Zwischenbild. |
+| Z3 | **„Ausgeblendet“ ist eine Zone, keine Reihenfolge.** Der Server hält eine ausgeblendete Spalte an ihrer Stelle (wieder eingeblendet steht sie, wo sie war — bleibt so). In „Ausgeblendet“ zeigt die Ablage darum keine Linie zwischen Zeilen, sondern hebt den ganzen Abschnitt hervor; eine Zeile ablegen heißt nur „ausblenden“. Eine ausgeblendete Zeile bekommt einen Griff und ist ziehbar. |
+| Z4 | **Leere Abschnitte bleiben als Ablagefläche stehen.** Ohne Suche zeigt die Liste immer alle drei Abschnitte; ein leerer zeigt eine leise Zeile („Hierher ziehen, um zu fixieren“ / „Hierher ziehen, um auszublenden“), die die Ablage annimmt. Mit Suchbegriff entfallen leere Abschnitte wie bisher. Die Überschrift „Beweglich“ steht immer (nicht mehr nur nach „Fixiert“). |
+| Z5 | **Grenzen sichtbar.** Jeder Abschnitt außer dem ersten beginnt mit einer Trennlinie im Bild von `tl-divider` (Token, kein Literal), darunter die Überschrift. Während des Ziehens trägt der Zielabschnitt einen Zustand (`data-tl-state="drop-target"` am Abschnitt), der ihn hervorhebt — so sieht man vor dem Loslassen, ob man fixiert oder ausblendet. |
+| Z6 | **Ausnahmen sichtbar abgelehnt.** Die letzte sichtbare Spalte nimmt „Ausgeblendet“ nicht an (keine Hervorhebung, `dropEffect = none`, Cursor „nicht erlaubt“). |
+| Z7 | **Tastatur wie Maus.** Alt+Pfeil geht über die Grenze: Alt+↑ auf der ersten beweglichen fixiert sie (ans Ende von „Fixiert“), Alt+↓ auf der letzten fixierten löst sie, Alt+↓ auf der letzten beweglichen blendet aus, Alt+↑ auf einer ausgeblendeten blendet sie am Ende von „Beweglich“ ein. Innerhalb von „Ausgeblendet“ verschiebt Alt+Pfeil nichts. Die Ansage nennt den neuen Zustand („Teile, fixiert, Position 2 von 5“ / „Teile, ausgeblendet“). Der Fokus bleibt am Griff. |
+| Z8 | **Kein Springen.** Nach dem Ablegen (und nach Alt+Pfeil) zeigt die Liste sofort die erwartete Reihenfolge und den erwarteten Zustand, bis die Antwort des Servers kommt; die Antwort ersetzt das Bild. Weicht sie ab (Server lehnt ab), gilt die Antwort. |
+
+**Nicht-Ziele:** Reihenfolge innerhalb „Ausgeblendet“ wählen; Ziehen in andere umsortierbare Listen als der Spaltenwahl
+übertragen (Z8 darf im Hook liegen, wenn es dort für alle gleich gilt).
+
+**Erfolg zusätzlich:**
+- Eine bewegliche Spalte in „Fixiert“ ziehen: sie ist fixiert und steht an der Ablagestelle im Block; die Tabelle friert sie ein.
+- Eine ausgeblendete Spalte zwischen zwei bewegliche ziehen: sie ist eingeblendet und steht genau dort, in Liste und Tabelle.
+- Eine fixierte Spalte nach „Ausgeblendet“ ziehen: ausgeblendet und gelöst; in „Ausgeblendet“ erscheint keine Einfügelinie, der Abschnitt ist hervorgehoben.
+- Die letzte sichtbare Spalte lässt sich nicht nach „Ausgeblendet“ ziehen.
+- Nach dem Loslassen steht die Zeile sofort an der neuen Stelle, ohne Rücksprung.
+- Ohne fixierte Spalte steht „Fixiert“ mit der leisen Ablagezeile da und nimmt eine Spalte an.
+- Alt+↑ auf der ersten beweglichen Spalte fixiert sie; die Ansage nennt „fixiert“.
