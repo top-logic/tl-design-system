@@ -3,7 +3,9 @@
 **Datum:** 2026-11-02 · **Ticket:** #30102 (angenommen, CC bhu) · **Befunde:** U27, U42 (`docs/ui-durchgang.md`) ·
 **Mockup:** `.superpowers/brainstorm/25838-1793614286/content/u27-filter-popover.html` (bedienbar, von Hendrik am
 02.11. durchgeklickt) · **Baut auf:** UI-Durchgang 1 (#30000, !2014) und dem Umzug des Pakets ins Engine-Repo
-(#30098, !2101)
+(#30098, !2101) · **Nachtrag 04.11.:** nach Bernhards Nein an !2014 („Keine neuen Formen von Menüs, die alle nicht
+richtig funktionieren“) gehört „Ansicht“ in diesen PR, und alle Menüs der Tabelle bekommen vorher ein Verhalten
+(Abschnitt „Ein Verhalten für alle Tabellenmenüs“, K1–K6, von Hendrik am 04.11. angekreuzt)
 
 ## Warum
 
@@ -18,6 +20,8 @@ nur Kästchen und Text auf einen Klick, nicht die Zeile (U42).
 1. Filtern geschieht am Spaltenkopf, ohne die Seite zu sperren, und wirkt, während man klickt.
 2. Die Spaltenwahl ist eine Seite im Popover „Ansicht“ und wirkt sofort.
 3. In Popovers und Menüs ist die ganze Zeile die Klickfläche eines Häkchens oder Schalters.
+4. Jedes Menü und Popover der Tabelle öffnet, schließt, rollt und reagiert auf Tasten gleich (K2, K4, K5).
+5. Kein Suchbegriff geht verloren und keiner kommt zu spät (K6).
 
 ## Nicht-Ziele
 
@@ -143,7 +147,33 @@ nur Kästchen und Text auf einen Klick, nicht die Zeile (U42).
 ## Offen
 
 - **Was eine Werteliste mit „alle abgehakt“ speichert:** siehe Abschnitt 1, Entscheidung beim Bau mit Test.
-- **Reihenfolge zu !2014 und !2101:** gebaut wird auf dem Stand nach beiden Merges (Paket im Modul
-  `tl-design-system`). Bis dahin nur Spec und Plan.
+- **Reihenfolge zu !2014:** !2101 ist gemergt. Gebaut wird auf dem Kopf von !2014 (`75bf7aee41`) plus den beiden
+  Reverts, die „Ansicht“ zurückbringen (04.11.); nach dem Merge von !2014 `git merge origin/master`. Der PR geht erst
+  an Bernhard, wenn lokale Instanz und Docker alle Punkte aus „Erfolg“ bestanden haben.
 - Wer den Trichter fokussiert, wenn die Tabelle während eines offenen Popovers neu zeichnet (Zeilen ändern sich
   durch den eigenen Filter): Anker bleibt der Kopf der Spalte, nicht eine Zeile — im Plan prüfen.
+
+## Ein Verhalten für alle Tabellenmenüs (Nachtrag 04.11.)
+
+**Anlass:** Bernhards Nein an !2014. Die Bestandsaufnahme vom 04.11. fand neun Menüs, Popovers und Dialoge an der
+Tabelle auf vier Grundbausteinen: Bridge-`Menu` (Vorlagen „+ n weitere“, Kopf-Kontextmenü), `PickerPopover`
+(„Ansicht“), Toolbar-`MenuGroup` (Export u. a., eigener Nachbau) und `DialogManager`-Fenster (Spaltenwahl, Filter).
+Hendrik hat am 04.11. K1–K6 angekreuzt, K7 nicht.
+
+| # | Entscheidung |
+|---|---|
+| K1 | **Alles wirkt sofort** (= E1–E8): Spaltenwahl und Filter verlieren ihre Dialoge; Gruppieren und Fixieren wirken in der Spaltenwahl wie im Kopfmenü. Einzige Ausnahme `ColumnFilterUI` (E5). |
+| K2 | **Eine Hülle für alle schwebenden Flächen.** `Menu` (Liste von Befehlen) und `PickerPopover` (Inhalt mit Feldern) bleiben zwei Bausteine nach Zweck, teilen aber eine Hülle: Lage über `usePopover` mit `size()` (Höhe = freier Platz, E13), Schließen bei Klick daneben (`pointerdown`) und Esc über den Keyboard-Scope (greift auch, wenn der Fokus nicht in der Fläche liegt), Fokus beim Öffnen — notfalls einen Frame später, wenn die Fläche am Zeigerpunkt erst dann steht —, Rückgabe an den Anker. Die Toolbar-`MenuGroup` nutzt dieselbe Hülle (bleibt gemountet). **Ein Auslöser:** Klick schaltet um, ein Druck, der die Fläche gerade geschlossen hat, öffnet sie nicht wieder (`pressClosedSurface`), `aria-haspopup` und `aria-expanded` an jedem Auslöser — Zahnrad, „+ n weitere“, Trichter, Toolbar. |
+| K3 | **Zeile = Klickfläche, Hover nur wo ein Klick wirkt** (= E8, E14): Spaltenwahl, Schalter in „Ansicht“, Werteliste. |
+| K4 | **Tastatur gleich:** Pfeile, Home und End wandern in jedem Menü und auf der ersten Seite von „Ansicht“ (Einträge als `menuitemcheckbox`/`menuitemradio`/`menuitem`); Shift+F10 und die Kontextmenütaste öffnen das Kopfmenü am Spaltenkopf. Type-ahead nicht jetzt. |
+| K5 | **Ein „Zurücksetzen“** in „Ansicht“ (= E16); es schließt danach wie jeder Menüeintrag. |
+| K6 | **Tabellensuche:** ein getippter Begriff wird vor jedem anderen Kommando der Tabelle, beim Verlassen des Felds und beim Aushängen der Tabelle gesendet, nicht verworfen. |
+| K7 | *Nicht jetzt:* MUI-Ersatz für Bridge-`Menu` und `PickerPopover` — erst, wenn K2 steht. |
+
+**Erfolg zusätzlich:**
+- Esc schließt jedes Menü der Tabelle, auch wenn die Maus es geöffnet hat und der Fokus noch am Auslöser liegt.
+- Ein zweiter Klick auf Zahnrad, „+ n weitere“ oder Trichter schließt die offene Fläche und öffnet sie nicht neu.
+- Ein Menü an einem Anker nahe dem unteren Fensterrand überdeckt den Anker nicht, sondern klappt um oder rollt.
+- Shift+F10 auf einem fokussierten Spaltenkopf öffnet das Kopfmenü, Fokus auf dem ersten Eintrag.
+- In „Ansicht“ wandern Pfeile über Dichte, Schalter, „Spalten“ und „Zurücksetzen“; „Zurücksetzen“ schließt.
+- Suchbegriff tippen und sofort einen Vorlagen-Chip klicken: der Server bekommt erst die Suche, dann den Chip.

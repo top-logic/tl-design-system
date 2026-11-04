@@ -4,7 +4,8 @@
 > superpowers:executing-plans. Schritte mit `- [ ]`.
 
 **Ziel:** Spaltenfilter als nicht modales Popover am Trichter, sofort wirksam; Spaltenwahl als zweite Seite von
-„Ansicht“, sofort wirksam; ganze Zeile als Klickfläche (U27, U42).
+„Ansicht“, sofort wirksam; ganze Zeile als Klickfläche (U27, U42); **ein Verhalten für alle Menüs der Tabelle (K1–K6, Spec-Nachtrag
+04.11.)** — Bedingung, unter der Bernhard den PR überhaupt ansieht.
 
 **Aufbau:** Beide Popovers sind Client-Flächen der Tabelle (`PickerPopover`, wie „Ansicht“ heute), ihr Inhalt sind
 Server-Kinder, die `TableViewControl` in seinen State legt (`putState(key, control)`, Client `<TLChild>`). Jede
@@ -14,15 +15,17 @@ ihre `FilterEditor`-Felder; `ColumnFilterUI` behält „Anwenden“. Die Dialoge
 
 **Technik:** Java 21, React/TSX (Vite, Vitest), Paket `tl-design-system` (Node, `node --test`).
 
-**Plan-Review:** 02.11., frischer Agent (Fable): 13 Befunde, alle eingearbeitet.
+**Plan-Review:** 02.11., frischer Agent (Fable): 13 Befunde, alle eingearbeitet. **Nachtrag 04.11.** (Tasks 1, 4, 7–10
+neu oder erweitert) braucht ein neues Plan-Review vor dem Start.
 
 **Spec:** `docs/superpowers/specs/2026-11-02-ui-durchgang-2-filter-spalten-design.md` (freigegeben 02.11.), Mockup
 `.superpowers/brainstorm/25838-1793614286/content/u27-filter-popover.html`. **Ticket:** #30102.
 
 ## Global Constraints
 
-- **Start erst nach dem Merge von !2101 (Paket als Modul `tl-design-system`) und !2014 (UI-Durchgang 1).** Basis:
-  `origin/master` danach. Paketpfade: `tl-design-system/src/components/…`; kein `publish-to-worktree` mehr.
+- **Basis (04.11.):** Kopf von !2014 (`75bf7aee41`) plus `4cce1551c2` und `4e1984ee42` (Reverts, „Ansicht“ ist
+  wieder da, Client und Server). Nach dem Merge von !2014: `git merge origin/master`. Paketpfade:
+  `tl-design-system/src/components/…`; kein `publish-to-worktree` mehr.
 - Engine-Worktree `_Working-Tree/tl8-wt-30102`, Branch `CWS/CWS_30102_ui_pass_2_filter_columns`. Commits englisch,
   Präfix `Ticket #30102:`. Kein Push ohne Hendriks Freigabe; Subagenten pushen nie.
 - `messages_en.properties` nie von Hand: JavaDoc an `I18NConstants`, dann `tools/check-messages-en.sh`
@@ -61,9 +64,29 @@ ihre `FilterEditor`-Felder; `ColumnFilterUI` behält „Anwenden“. Die Dialoge
   zeigt ihn, solange sein Popover offen ist (sonst verschwindet der Anker ohne aktiven Filter).
 - **Nicht modal (E1):** `PickerPopover` bekommt `trapFocus?: boolean` (Standard `true`); beide neuen Popovers
   setzen `false`. Esc und Klick daneben schließen wie heute.
+- **Hülle (K2):** ein Hook `usePopupSurface({ open, anchor, placement, onClose, initialFocus, trapFocus, inside })`
+  in `bridge/popup-surface.ts` bündelt `usePopover`, `useCloseOnOutsidePress`, `useStandaloneKeyboardScope` (Esc),
+  `useFocusTrap` und die Rückgabe an den Anker; liefert `{ setFloating, style }`. `Menu`, `PickerPopover` und die
+  Toolbar-`MenuGroup` nutzen ihn; `useRovingMenu` verliert seinen Esc-Zweig (der Scope übernimmt). Kein neuer
+  sichtbarer Baustein. Grund: drei Esc-Wege, drei Auslöser, eine fehlende Höhe — Fehler, die je Baustein einzeln
+  wiederkämen.
+- **Fokus am Zeigerpunkt (K2):** findet die Falle beim Öffnen kein Ziel, weil die Fläche erst im nächsten Frame
+  steht, versucht die Hülle es einmal per `requestAnimationFrame` erneut (wie `MuiMenuAdapter` heute).
+- **Auslöser (K2):** Hook `usePopupTrigger(open, setOpen, kind: 'menu' | 'dialog')` → `{ onClick, 'aria-haspopup',
+  'aria-expanded' }`; `onClick` schaltet um und ignoriert den Druck, der gerade geschlossen hat (`pressClosedSurface`).
+  Zahnrad, „+ n weitere“, Trichter, Toolbar-`MenuGroup` (die behält ihr `onMouseDown preventDefault`, Grund im
+  Kommentar dort).
+- **Höhe (K2/E13):** `usePopover` hängt `size()` an und setzt `maxHeight` = freie Höhe; die CSS-Kappe
+  `max-height: var(--tl-size-popover-max)` an `.tl-popover` bleibt als Obergrenze (das Inline-`maxHeight` greift nur,
+  wo der Platz kleiner ist: der Hook setzt `min(verfügbar, Kappe)`, die Kappe aus dem Token gelesen).
+- **„Ansicht“ als Menü (K4):** die erste Seite ist `role="menu"` mit `useRovingMenu`; Dichte als drei
+  `menuitemradio`, Streifen und Spaltenlinien als `menuitemcheckbox`, „Spalten“ und „Zurücksetzen“ als `menuitem`.
+  Die Fläche bleibt `PickerPopover` (`role="dialog"`), weil Seite 2 kein Menü ist.
 
 ## Review Focus
 
+0. **Jedes Menü der Tabelle** nach der Liste „Erfolg zusätzlich“ der Spec (Esc ohne Fokus in der Fläche, zweiter
+   Klick schließt, Höhe am unteren Rand, Shift+F10, Pfeile in „Ansicht“, Suche vor Chip). (Tasks 4, 7–9, Task 10.)
 1. **Alte gespeicherte Filter:** `OptionsFilterState({Offen})` aus der persönlichen Konfiguration zeigt „Offen“
    angehakt, Rest abgehakt; die erste Änderung speichert die neue Form. (Test in Task 2.)
 2. **Neuer Wert nach Abhaken:** abgehakt {Erledigt}, dann kommt „Neu“ in die Daten → „Neu“ ist sichtbar.
@@ -78,7 +101,11 @@ ihre `FilterEditor`-Felder; `ColumnFilterUI` behält „Anwenden“. Die Dialoge
 
 ### Task 1: Worktree
 
-- [ ] Nach beiden Merges: im Hauptrepo `git fetch origin`,
+- [x] **04.11.:** Branch auf `75bf7aee41` vorgespult, „Ansicht“ per Revert zurück (`4cce1551c2`, `4e1984ee42`;
+      Konflikt in `table-view-attributes.test.tsx` gelöst, beide Testblöcke bleiben).
+- [ ] Gates des Ausgangsstands: Paket `npm test`, Java `layout.react` + `TestDefaultTableView` +
+      `TestTableViewStateCodec`, Vitest beide Module — grün, bevor Task 2 beginnt.
+- [ ] (alt) Nach beiden Merges: im Hauptrepo `git fetch origin`,
       `git worktree add ../tl8-wt-30102 -b CWS/CWS_30102_ui_pass_2_filter_columns origin/master`.
       **Vorgezogen 03.11. (Hendrik):** Worktree und Branch stehen schon, auf `origin/CWS/CWS_30000_ui_durchgang_1`
       (`a8426306e7`, ohne Upstream). Nach dem Merge von !2014: `git merge origin/master` (bringt den Merge-Commit), dann
@@ -138,10 +165,20 @@ Tests in `tl-design-system/test/`.
       `npm run test:dom` im Modul grün.
 - [ ] Commit.
 
-### Task 4: Popover-Höhe und nicht modales Picker-Popover (Client)
+### Task 4: Eine Hülle, ein Auslöser, Höhe, nicht modal (Client, K2)
 
-**Dateien:** `com.top_logic.layout.react/react-src/bridge/popover.ts`,
-`react-src/controls/picker/PickerPopover.tsx`; Vitest in `com.top_logic.layout.react.mui/react-src/adapters/pickers.test.tsx`.
+**Dateien:** `com.top_logic.layout.react/react-src/bridge/popover.ts`, neu `bridge/popup-surface.ts` und
+`bridge/popup-trigger.ts` (+ Export in `bridge-entry.ts`), `bridge/menu.tsx`, `controls/picker/PickerPopover.tsx`,
+`controls/TLToolbar.tsx` (`MenuGroup`), Auslöser in `controls/table/TableViewOptions.tsx` (Zahnrad) und
+`controls/table/FilterPresets.tsx`; Vitest in `com.top_logic.layout.react.mui/react-src/adapters/pickers.test.tsx` und
+neu `popup-surface.test.tsx`.
+
+- [ ] Vitest zuerst, je Baustein (`Menu`, `PickerPopover`, `MenuGroup`): Esc schließt, auch wenn der Fokus noch am
+      Auslöser liegt; Klick daneben schließt; zweiter Klick auf den Auslöser schließt und öffnet nicht neu; Auslöser
+      trägt `aria-haspopup` und `aria-expanded`; Fokus kehrt an den Auslöser zurück; ein `Menu` am Zeigerpunkt
+      bekommt Fokus auf den ersten Eintrag. In einem `TLWindow` schließt Esc nur das Menü, nicht das Fenster.
+- [ ] `usePopupSurface` und `usePopupTrigger` nach „Entscheidungen“; die drei Bausteine darauf umstellen, ohne
+      ihre öffentlichen Props zu brechen (alle Aufrufer per `git grep` prüfen, auch `layout.react.mui`).
 
 **Produces:** `usePopover` setzt am schwebenden Element `style.maxHeight = availableHeight + 'px'` (floating-ui
 `size`, in 0.27.20 vorhanden); `PickerPopover` Prop `trapFocus?: boolean` (Standard `true`) → bei `false`
@@ -238,14 +275,36 @@ State-Key `columnSelection` an `TLTableView` (Kind oder `null`); Kommandos `open
 
 **Dateien:** `TableViewOptions.tsx`, Vitest `table-view-options.test.tsx`.
 
-- [ ] Vitest zuerst: Klick auf die Zeile (nicht auf Kästchen oder Text) von „Streifen“ schaltet.
-- [ ] Schalter in `tl-menu__item--check` (Task 3) statt `tl-table-view-options__switch` mit `tl-choice`.
+- [ ] Vitest zuerst: Klick auf die Zeile (nicht auf Kästchen oder Text) von „Streifen“ schaltet; Pfeile, Home, End
+      wandern über alle Einträge der ersten Seite (K4); „Zurücksetzen“ schickt `resetView` und schließt (K5).
+- [ ] Schalter in `tl-menu__item--check` (Task 3) statt `tl-table-view-options__switch` mit `tl-choice`; Rollen nach
+      „‚Ansicht‘ als Menü“.
 - [ ] Gates, Commit.
 
-### Task 8: Sichtprüfung und Abschluss
+### Task 8: Kopfmenü per Tastatur (K4)
 
-- [ ] Demo `tl-demo-react` (`-Pide,with-h2`, eigener Port), Prüfung per Subagent im Browser, alle Punkte aus
-      Spec „Erfolg“ in hell und dunkel, normal und kompakt, plus Review-Focus 5 (Fenster 600 px).
+**Dateien:** `TLTableView.tsx` (Kontextmenü des Spaltenkopfs), Vitest in `layout.react.mui`.
+
+- [ ] Vitest zuerst: Shift+F10 und `ContextMenu` auf dem fokussierten Kopf öffnen das Kopfmenü, verankert am Kopf
+      (nicht an einem Zeigerpunkt), Fokus auf dem ersten Eintrag; Esc schließt, Fokus zurück am Kopf.
+- [ ] Umsetzen wie `TLMenuRegion` (gleiche Tasten); Gates, Commit.
+
+### Task 9: Tabellensuche verliert nichts (K6)
+
+**Dateien:** `TLTableView.tsx` (Suche), Vitest in `layout.react.mui`.
+
+- [ ] Vitest zuerst: Tippen, dann innerhalb der Pause Klick auf einen Vorlagen-Chip bzw. einen Sortierkopf → erst
+      `search`, dann das andere Kommando; Tippen, dann Blur → `search` ohne Warten; Tippen, dann Aushängen → `search`
+      wird gesendet.
+- [ ] Eine Funktion `flushSearch()`; jeder andere `sendCommand` der Tabelle ruft sie vorher (eine Hülle um
+      `sendCommand`, nicht je Aufrufer), dazu `onBlur` und das Unmount-Cleanup. Gates, Commit.
+
+### Task 10: Sichtprüfung und Abschluss
+
+- [ ] Demo `tl-demo-react` (`-Pide,with-h2`, eigener Port; CSS-Kopf „tl-design-system (src/“ prüfen), **der
+      Orchestrator prüft selbst** im Browser alle Punkte aus Spec „Erfolg“ und „Erfolg zusätzlich“ in hell und
+      dunkel, normal und kompakt, plus Review-Focus 5 (Fenster 600 px). Jeder Formbruch gegen Spec und Mockup ist
+      ein Befund, nicht nur ein Funktionsfehler.
 - [ ] `docs/ui-durchgang.md` (Paket-Repo): U27, U42 auf ✅; `docs/skalen.md` Abschnitt „UI-Durchgang 2“;
       `STATUS.md`.
 - [ ] Alle Gates: Paket, Java `control.table` + `TestOptionChecks` + `TestFilterEditors`, Vitest beide Module,
