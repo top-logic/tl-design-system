@@ -537,3 +537,132 @@ Vitest der Spaltenwahl (`inline-buttons.test.tsx` in `layout.react.mui`, ggf. ei
       kleines Fenster; Ziehen mit synthetischen Drag-Events, echtes Ziehen bleibt Hendrik.
 - [ ] Final-Review (frischer Agent, Opus) über die neuen Commits; Befunde einmal fixen.
 - [ ] Gates komplett, `check-messages-en.sh`; `docs/ui-durchgang.md`/`STATUS.md` nachziehen. **Nicht pushen.**
+
+## Nachtrag 05.11. (3): Tabellenkopf über die Fixiergrenze (Spec Z10)
+
+**Anlass:** Hendrik, Sichtprüfung von !2014 (05.11.): im Tabellenkopf lässt sich eine Spalte umsortieren, aber nicht von
+beweglich in fixiert ziehen; Alt+←/→ im Kopf gibt es gar nicht (geprüft in der lokalen Demo).
+**Basis:** Branch-Kopf `5648f13522` (Nachtrag 2 gebaut, nicht gepusht).
+
+**Befund im Code:** Die Fixierung ist ein Präfix-Zähler (`TableView.frozenColumnCount()`, State-Key `frozenColumnCount`).
+Das Kopf-Ziehen schickt `columnReorder` (`TLTableView.tsx:585`), der Server ruft nur `_view.moveColumn(column, target)`
+(`TableViewControl.java:2529`), der Zähler bleibt. Eine bewegliche Spalte, die vor die Grenze gezogen wird, steht danach
+im Block — und die bisher letzte fixierte fällt heraus. Der Kopf bindet von `useListReorder` nur `itemProps` (Maus), nicht
+`handleProps` (Alt+Pfeil).
+
+### Entscheidungen des Orchestrators (Nachtrag 3)
+
+- **Ein Befehl für den Kopf: `columnMove` an `TableViewControl`** mit dem vorhandenen `ColumnMoveArguments` (`column`,
+  `targetIndex`, `locked`, `visible`). Neue Konstante `CMD_COLUMN_MOVE = "columnMove"` in `TableViewControl`, in
+  `nonRecordableCommands()` wie heute `CMD_COLUMN_REORDER` (Spaltengeometrie, keine Absicht).
+- **`columnReorder` wird abgeschnitten** (Projektregel „Altlasten werden abgeschnitten“): kein Client sendet es mehr,
+  es ist nicht aufzeichenbar. Weg: `CMD_COLUMN_REORDER`, `handleColumnReorder`, `ColumnReorderArguments.java`, seine
+  Einträge in `messages_*.properties` (en über `check-messages-en.sh`, de von Hand), der `ColumnReorderArguments`-Teil
+  in `TestColumnCommandArguments` (wandert als Fall „nicht ganzzahliger `targetIndex` abgelehnt“ auf
+  `ColumnMoveArguments` an `TableViewControl`). Vorher `git grep -n columnReorder` über das ganze Repo.
+- **Semantik `columnMove` am Kopf** (ein Schritt, ein Patch über das vorhandene `rearrange(...)`):
+  - `D` = Namen von `_view.columns()` (angezeigt, in Reihenfolge, angeheftete am Ende eingeschlossen),
+    `N = min(frozenColumnCount, Zahl der nicht angehefteten)`.
+  - Abgelehnt, ohne Änderung: unbekannte oder nicht angezeigte Spalte, angeheftete Spalte (`pinnedEnd`),
+    `visible=false` (der Kopf hat keine Zone „Ausgeblendet“).
+  - Sonst: `from = D.indexOf(column)`; entfernen; `N' = N - (from < N ? 1 : 0)`; `U'` = Zahl der nicht angehefteten
+    nach dem Entfernen; `t = clamp(targetIndex, 0, U')`; `locked` → `t = min(t, N')`, neuer Zähler `N' + 1`; sonst
+    `t = max(t, N')`, Zähler `N'`. Einfügen bei `t`; dann `rearrange(() -> { _view.setColumnOrder(D'); _view.setFrozenColumnCount(n); })`.
+  - `targetIndex` ist wie in der Spaltenwahl die Stelle in `D` **nach dem Entfernen** — das ist genau das `to` von
+    `useListReorder.onMove`.
+- **Maus: welcher Block?** Aus dem Ablageziel (`onMove(from, to, target)`, Task 13): `locked = target.index < N`
+  (die Spalte, über der losgelassen wird, ist fixiert). „Hinter der letzten fixierten“ fixiert, „vor der ersten
+  beweglichen“ löst — gleiche Stelle, verschiedener Zustand, wie Z1. Ohne `target` (Tastatur, Standardweg):
+  `locked = from < N` (Schritt bleibt im Block).
+- **Sichtbar beim Ziehen:** würde die Ablage den Zustand ändern (Block des Ziels ≠ Block der gezogenen Spalte), tragen
+  die Kopfzellen des **Zielblocks** das Zustandswort `drop-target` (vorhanden, `drag.css:64`, Fläche
+  `--tl-surface-interactive-strong`). Bleibt die Spalte in ihrem Block, nichts Zusätzliches (Einfügemarke wie heute).
+  Kein Vorhersage-Bild im Kopf: der Server antwortet mit einem Patch (Z8 erfüllt, kein Zwischenzustand).
+- **Tastatur (Z10, wie Z7):** `onStep` im Kopf:
+  - Alt+← auf der ersten beweglichen (`index === N`, auch bei `N = 0`) → `columnMove(locked=true, targetIndex=N)`,
+    Stelle bleibt, Ansage `js.table.columnMovedLocked`;
+  - Alt+→ auf der letzten fixierten (`index === N-1`) → `columnMove(locked=false, targetIndex=N-1)`, Stelle bleibt,
+    Ansage `js.table.columnMovedMovable`;
+  - ein Schritt auf eine angeheftete Stelle → `null` (nichts);
+  - sonst `undefined` (Standardweg, Ansage `js.reorder.moved`).
+  Position und Gesamtzahl der Ansage zählen über `columns` (1-basiert).
+- **Griff im Kopf:** `handleProps(colIdx)` geht **nicht** gesammelt auf ein Element:
+  - `onKeyDown` an die Kopfzelle (`div[role=columnheader]`) — Alt+Pfeil aus Sortier- oder Filterknopf erreicht sie;
+    der Breiten-Griff hält seine Pfeiltasten selbst (`stopPropagation` in `handleResizeKeyDown`), bleibt so.
+  - `ref` und `aria-describedby` an den Sortierknopf; ohne Sortierknopf an die Kopfzelle, die dann `tabIndex={-1}`
+    bekommt (Fokus-Rückweg nach dem Schritt).
+  - `aria-label` wird **nicht** übernommen — es würde den Namen des Sortierknopfs („Betrag“) durch „Move Betrag“
+    ersetzen. `labelOf` bleibt gesetzt (Name in der Ansage).
+  - Angeheftete Spalten: weder `itemProps` noch `handleProps` (wie heute).
+- **I18N:** nichts Neues — `js.table.columnMovedLocked`/`…Movable` (Nachtrag 2) und `js.reorder.*` sind da.
+
+### Review Focus (Nachtrag 3)
+
+- Ablage genau auf der Grenze: hinter der letzten fixierten → fixiert; vor der ersten beweglichen → beweglich.
+- Ohne fixierte Spalte: Alt+← auf der ersten Spalte fixiert sie; Ziehen kann nichts fixieren (kein fixierter Block als Ziel).
+- Die einzige fixierte nach rechts ziehen oder Alt+→: Zähler 0, keine Fixiergrenze mehr im Bild.
+- Tabelle mit angehefteter letzter Spalte: kein Zug und kein Schritt landet hinter ihr, `N` überschreitet sie nie.
+- Gruppierte Tabelle: das Verschieben ändert die Gruppierung nicht (`rearrange` lässt sie, wie sie ist).
+
+### Task 16: Server — `columnMove` am Tabellenkopf, `columnReorder` weg
+
+**Dateien:** `TableViewControl.java`, `ColumnMoveArguments.java` (JavaDoc: gilt auch für den Tabellenkopf; dort ohne
+Ausblenden), `ColumnReorderArguments.java` (löschen), `messages_de.properties`, Tests: neu
+`TestHeaderColumnMove.java` (Muster und Fixture wie `TestPinnedColumns.java`, `executeClientCommand`,
+`clientState(FROZEN_COLUMN_COUNT)`), `TestColumnCommandArguments.java`, ggf. `TestPinnedColumns.java`.
+
+- [ ] Tests zuerst (`TestHeaderColumnMove`): bewegliche hinter die letzte fixierte mit `locked=true` → Zähler +1, Stelle
+      `N`; fixierte an Stelle `N-1` mit `locked=false` → Zähler −1, Stelle bleibt; bewegliche weit nach vorn mit
+      `locked=false` → steht bei `N` (geklemmt), Zähler gleich; fixierte weit nach hinten mit `locked=true` → steht bei
+      `N'`; ohne fixierte, erste mit `locked=true` → Zähler 1; mit angehefteter letzter: `targetIndex` über das Ende →
+      vor der angehefteten, Zähler überschreitet sie nie; `visible=false`, angeheftete, unbekannte Spalte → nichts
+      geändert; gruppierte Tabelle bleibt gruppiert; Reihenfolge und Zähler kommen in **einem** Patch (wie die
+      vorhandenen `rearrange`-Tests, falls einer den Patch zählt — sonst Zustand nach dem Befehl).
+- [ ] Umsetzung nach „Semantik `columnMove` am Kopf“; `CMD_COLUMN_MOVE` in `nonRecordableCommands()`.
+- [ ] `columnReorder` abschneiden nach Entscheidung; `TestColumnCommandArguments` umstellen.
+- [ ] `TL_WORKTREE=… tools/check-messages-en.sh`, Diff committen, Deutsch von Hand.
+- [ ] Gates: `mvn -B -o clean install -pl com.top_logic.layout.react -DskipTests=false
+      -Dtest=test.com.top_logic.layout.react.control.table.TestHeaderColumnMove`, danach ohne `-Dtest`; Commit.
+
+### Task 17: Paket — Zielblock im Kopf
+
+**Dateien:** `tl-design-system/src/components/table/table.css` (nur falls nötig), `table.contract.md`,
+`table.spec.html`, `test/table.test.mjs`.
+
+- [ ] Prüfen, ob `[data-tl-state~="drop-target"]` (`drag.css:64`) an `.tl-table__header-cell` greift — fixierte
+      Kopfzellen tragen eine eigene Fläche (`data-tl-state~="frozen"`); wenn sie gewinnt, eine Regel
+      `.tl-table__header-cell[data-tl-state~="drop-target"]` mit `--tl-surface-interactive-strong` in `table.css`.
+- [ ] Test in `table.test.mjs`: eine Kopfzelle mit `drop-target` bekommt `--tl-surface-interactive-strong`, auch fixiert
+      (Regel per `rulesOf`, Reihenfolge/Spezifität wie die vorhandenen Zustands-Tests). Vertrag: Zustandstabelle um
+      `drop-target` an Kopfzellen („der Block, in den die Ablage die Spalte fixiert oder löst“); Tastatur-Tabelle um
+      Alt+←/→ am Spaltenkopf (Z10). Specimen: ein Kopf mit hervorgehobenem fixiertem Block.
+- [ ] Gates: `node tools/generate.mjs`, `npm test`, `npm run test:dom`, `node tools/lint-css.mjs`; Commit.
+
+### Task 18: Client — Kopf zieht und schreitet über die Grenze
+
+**Dateien:** `TLTableView.tsx`, Vitest `com.top_logic.layout.react.mui/react-src/table-view-attributes.test.tsx`
+(dort mountet die Tabelle schon; `frozenColumnCount` als State), Artikel `view-layer/tables.md` (Abschnitt zum
+Umsortieren im Kopf, `git grep -n "drag" -- '*tables.md'`).
+
+- [ ] Vitest zuerst: Ablage (synthetische Drag-Events wie in den vorhandenen Reorder-Tests) einer beweglichen auf die
+      hintere Hälfte der letzten fixierten → `sendCommand('columnMove', {column, targetIndex: N, locked: true,
+      visible: true})`; auf die vordere Hälfte der ersten beweglichen → `locked: false`; Ablage innerhalb des eigenen
+      Blocks → `locked` wie vorher; während eines Zugs über die Grenze tragen die Kopfzellen des Zielblocks
+      `drop-target`, innerhalb des Blocks keine; Alt+← am Sortierknopf der ersten beweglichen → `columnMove locked:true`,
+      Ansage `js.table.columnMovedLocked`; Alt+→ an der letzten fixierten → `locked:false`; Alt+← bei `N = 0` auf der
+      ersten → `locked:true`; Alt+→ auf der letzten nicht angehefteten vor einer angehefteten → kein Befehl; der
+      Sortierknopf behält seinen Namen (kein `aria-label` „Move …“); nach dem Schritt steht der Fokus wieder am
+      Sortierknopf der Spalte; nirgends mehr `columnReorder`.
+- [ ] Umsetzung nach „Maus: welcher Block?“, „Sichtbar beim Ziehen“, „Tastatur“, „Griff im Kopf“. Der Komponenten-Doc
+      und der Absatz in `tables.md` nennen Ziehen und Alt+←/→ über die Fixiergrenze.
+- [ ] Gates: Vitest `layout.react` + `npm run typecheck`, MUI-Vitest (`NODE_OPTIONS=--no-experimental-webstorage`),
+      Paket-Gates (`engine-classes.test.mjs` liest `TLTableView.tsx`), Maven `layout.react` mit Tests; Commit.
+
+### Task 19: Sichtprüfung (Orchestrator) und Abschluss
+
+- [ ] Lokale Demo (clean install, CSS-Kopf prüfen), „Attribute“ → Tabelle mit „Name“ fixiert: jeder Punkt aus „Review
+      Focus (Nachtrag 3)“ und die Spec-Zeilen zu Z10 aus „Erfolg zusätzlich“; Tab- und Alt+Pfeil-Folge im Kopf echt
+      gedrückt; hell/dunkel. Echtes Ziehen mit der Maus bleibt Hendrik.
+- [ ] Final-Review (frischer Agent) über die Commits von Nachtrag 3; Befunde einmal fixen.
+- [ ] Gates komplett, `check-messages-en.sh`; `docs/ui-durchgang.md` (U58 erledigt) und `STATUS.md` nachziehen.
+      **Nicht pushen.**
