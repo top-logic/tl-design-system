@@ -542,11 +542,12 @@ Vitest der Spaltenwahl (`inline-buttons.test.tsx` in `layout.react.mui`, ggf. ei
 
 **Anlass:** Hendrik, Sichtprüfung von !2014 (05.11.): im Tabellenkopf lässt sich eine Spalte umsortieren, aber nicht von
 beweglich in fixiert ziehen; Alt+←/→ im Kopf gibt es gar nicht (geprüft in der lokalen Demo).
-**Basis:** Branch-Kopf `5648f13522` (Nachtrag 2 gebaut, nicht gepusht).
+**Basis:** Branch-Kopf `1d5dc3cfc0` = Nachtrag 2 plus Merge von !2014 (master mit #30147, gespiegelter Kopf der
+Zahlenspalten), lokal, nicht gepusht. Zeilenangaben unten gelten für diesen Stand.
 
 **Befund im Code:** Die Fixierung ist ein Präfix-Zähler (`TableView.frozenColumnCount()`, State-Key `frozenColumnCount`).
 Das Kopf-Ziehen schickt `columnReorder` (`TLTableView.tsx:585`), der Server ruft nur `_view.moveColumn(column, target)`
-(`TableViewControl.java:2529`), der Zähler bleibt. Eine bewegliche Spalte, die vor die Grenze gezogen wird, steht danach
+(`TableViewControl.java:2529`; `rearrange` bei 1912, `nonRecordableCommands` bei 2364), der Zähler bleibt. Eine bewegliche Spalte, die vor die Grenze gezogen wird, steht danach
 im Block — und die bisher letzte fixierte fällt heraus. Der Kopf bindet von `useListReorder` nur `itemProps` (Maus), nicht
 `handleProps` (Alt+Pfeil).
 
@@ -588,7 +589,12 @@ im Block — und die bisher letzte fixierte fällt heraus. Der Kopf bindet von `
   Position und Gesamtzahl der Ansage zählen über `columns` (1-basiert).
 - **Griff im Kopf:** `handleProps(colIdx)` geht **nicht** gesammelt auf ein Element:
   - `onKeyDown` an die Kopfzelle (`div[role=columnheader]`) — Alt+Pfeil aus Sortier- oder Filterknopf erreicht sie;
-    der Breiten-Griff hält seine Pfeiltasten selbst (`stopPropagation` in `handleResizeKeyDown`), bleibt so.
+    der Breiten-Griff hält seine Pfeiltasten selbst (`stopPropagation` in `handleResizeKeyDown`, `TLTableView.tsx:843`),
+    bleibt so. Die Kopfzelle hat **schon** `onKeyDown={(e) => handleColumnContextKey(colIdx, e)}` (Shift+F10, K4;
+    `TLTableView.tsx:2175`): **ein** Handler ruft zuerst `handleColumnContextKey`, dann — wenn nicht
+    `defaultPrevented` — das `onKeyDown` aus `handleProps`.
+  - Der Kopf ist seit !2014 gespiegelt (`mirrored`, `heading`, `groupMark`, `filterButton`, `TLTableView.tsx:2112-2160`):
+    in Zahlenspalten steht der Filterknopf im DOM vor dem Sortierknopf. Die Griff-Regeln gelten für beide Reihenfolgen.
   - `ref` und `aria-describedby` an den Sortierknopf; ohne Sortierknopf an die Kopfzelle, die dann `tabIndex={-1}`
     bekommt (Fokus-Rückweg nach dem Schritt).
   - `aria-label` wird **nicht** übernommen — es würde den Namen des Sortierknopfs („Betrag“) durch „Move Betrag“
@@ -652,7 +658,8 @@ Umsortieren im Kopf, `git grep -n "drag" -- '*tables.md'`).
       Ansage `js.table.columnMovedLocked`; Alt+→ an der letzten fixierten → `locked:false`; Alt+← bei `N = 0` auf der
       ersten → `locked:true`; Alt+→ auf der letzten nicht angehefteten vor einer angehefteten → kein Befehl; der
       Sortierknopf behält seinen Namen (kein `aria-label` „Move …“); nach dem Schritt steht der Fokus wieder am
-      Sortierknopf der Spalte; nirgends mehr `columnReorder`.
+      Sortierknopf der Spalte; Shift+F10 an der Kopfzelle öffnet weiter das Kopfmenü (K4) und Alt+Pfeil daneben
+      verschiebt; in einer Zahlenspalte (gespiegelt) gilt dasselbe; nirgends mehr `columnReorder`.
 - [ ] Umsetzung nach „Maus: welcher Block?“, „Sichtbar beim Ziehen“, „Tastatur“, „Griff im Kopf“. Der Komponenten-Doc
       und der Absatz in `tables.md` nennen Ziehen und Alt+←/→ über die Fixiergrenze.
 - [ ] Gates: Vitest `layout.react` + `npm run typecheck`, MUI-Vitest (`NODE_OPTIONS=--no-experimental-webstorage`),
