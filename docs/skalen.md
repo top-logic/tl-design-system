@@ -213,7 +213,7 @@ weil der schwächere gewann, erfüllte kein Eingabefeld in TopLogic die Norm, he
 
 | Stufe | hell | dunkel | hell / dunkel | Regel |
 |---|---|---|---|---|
-| `border-separator` | `#C1C4C9` | `#34383C` | 1,68 / 1,51 | **Trennt**, begrenzt nicht. Tabellenzeilen, Abgrenzungen. Schuldet keinen Kontrast. |
+| `border-separator` | `#C1C4C9` | `#44484C` (`gray-60`, seit 06.11.; davor `gray-66`) | 1,68 / 1,93 | **Trennt**, begrenzt nicht. Tabellenzeilen, Abgrenzungen. Schuldet keinen Kontrast. |
 | `border-control` | `#888B90` | `#75787D` | 3,28 / 4,01 | **Begrenzt ein Bedienelement.** Eingabefelder, Auswahlfelder, Schaltflächen mit Umriss. |
 | `border-emphasis` | `#6F7277` | `#7F8286` | 4,63 / 4,61 | **Hebt hervor.** Ausgewählte Zeile, betonte Abgrenzung. |
 | `border-interactive` | `#0B5ED7` | `#5394FF` | 5,59 / 5,97 | **Trägt die Marke.** Fokus, aktiver Zustand. |
@@ -282,7 +282,7 @@ ist der hellste Wert, der ihre Anforderung noch erfüllt.
 | `text-placeholder` | `#6B6E73` | `#8E9196` | 4,6 | **`surface-field`**, nicht Grund |
 | `border-emphasis` | `#6F7277` | `#7F8286` | 4,6 | Grund |
 | `border-control` | `#888B90` | `#75787D` | 3,0 | alle fünf Feldgründe (knappstes Paar hell `surface-field` 3,10, dunkel `surface-overlay` 3,04) |
-| `border-separator` | `#C1C4C9` | `#34383C` | — | trennt nur |
+| `border-separator` | `#C1C4C9` | `#44484C` | — | trennt nur |
 
 **Nachgezogen 09.10. (Hendrik): Hilfetext hell eine Stufe dunkler, `gray-48` → `gray-49`.** Auf der ausgewählten Zeile
 (`surface-interactive-selected`, `gray-7`) hielt `text-helper` hell nur 4,42; mit `gray-49` sind es 4,63, auf dem Grund
@@ -2925,6 +2925,30 @@ Menüs der Tabelle dieselbe Form haben und auf Docker durchgetestet sind. Stand 
 **Verworfen:** U27 in !2014 nachziehen (der PR wächst, Bernhard prüft alles neu); nur die Schalter reparieren (der
 Einwand gilt der Form, nicht dem Fehler); Serverseite ohne Oberfläche stehen lassen (Bernhard prüfte Code eines
 abgelehnten Features).
+
+### Der Tabellenkopf zeigt seine Spaltengrenzen (06.11., Review !2014)
+
+**Befund (Bernhard):** Zwischen einer Textspalte (Titel am Anfang) und einer Zahlenspalte (Titel am Ende) lag im Kopf
+eine leere Fläche. Wo die eine Spalte endet und der Griff der Breite sitzt, war nicht zu sehen — wer es nicht wusste,
+fand ihn nicht. Der Kopf war „ohne Trennlinie“, und unter dem Zeiger zeigte nur der Sortierknopf eine Fläche.
+
+**Entschieden (Hendrik):**
+
+- **Der Griff der Breite zeigt immer einen Trenner** — in Ruhe eine kurze Linie `border-width-sm` in
+  `border-separator`, oben und unten um `space-sm` eingerückt; unter dem Zeiger, beim Ziehen und bei Tastaturfokus
+  volle Höhe, `border-width-md` in `border-interactive` wie bisher. Der Körper bleibt ohne Spaltenlinien. Wo die Zelle
+  ihre Kante selbst zeichnet (`frozen-last`, `data-tl-column-lines`), bleibt der Trenner in Ruhe weg. Verworfen:
+  Trenner erst beim Zeigen auf den Kopf — der Ruhezustand ist genau der, nach dem Bernhard fragte.
+- **Die ganze Kopfzelle zeigt die Fläche unter dem Zeiger**, nicht nur der Sortierknopf — sobald sie sortiert oder einen
+  Griff trägt. Die Fläche reicht bis an den Griff und zeigt, wo man zieht. Sie ist `surface-interactive-strong`, eine
+  Stufe kräftiger: `surface-interactive-hover` (`gray-4`) ist auf `surface-layer-muted` (`gray-3`) im Hellen dieselbe
+  Farbe — dieselbe Regel wie „Knöpfe im Feld zeigen eine Stufe kräftiger“. Die Spaltenwahl im Kopf folgt. Der Schleier
+  `surface-state-hover` schied aus: er gehört den halos (Lint).
+- **`border-separator` dunkel `gray-66` → `gray-60`.** Im Dunkeln ist die Kopffläche heller als die Zeilen; `gray-66`
+  stand dort bei 1,23 und war kaum zu sehen, im Hellen steht der Trenner bei 1,58. `gray-60` trifft 1,58 auf dem Kopf,
+  1,77 auf den Zeilen, 1,93 auf dem Grund — hell und dunkel jetzt gleich stark. Das gilt für jede Trennlinie im
+  Dunkelmodus; `border-disabled` bleibt `gray-66`. Verworfen: ein eigener Token für den Kopf — eine zweite
+  Separator-Rolle für dieselbe Aufgabe.
 
 ## Befunde aus dem Specimen
 
