@@ -21,8 +21,8 @@ je Tabelle. Diese Trennung ist der Kern der Änderung.
    Tabellen, der Rest der Anwendung bleibt, wie er ist. (So schon vorher entschieden; Hendrik 09.11.: „dichte unabhängig
    für tabellen vom rest des themes“.)
 3. **Eine Änderung wirkt sofort** auf jede offene Tabelle im selben Browserfenster, ohne Neuladen. Ein anderes
-   Fenster oder ein anderer Browser-Tab zeigt sie nach dem Neuladen — wie die Dichte der Anwendung (die SSE-Queue gilt
-   je Fenster, `SSEUpdateQueue.java:13-17`). *(Claudes Entscheidung nach dem Builder-Check.)*
+   Fenster oder ein anderer Browser-Tab zeigt sie nach dem Neuladen (der Speicher der Bridge, 6.3, gilt je Seite).
+   *(Claudes Entscheidung nach dem Builder-Check.)*
 4. **Eingestellt wird nur im Popover „Ansicht“** einer Tabelle (Hendrik 09.11.: „nur im Popover“). Kein Eintrag im
    Benutzermenü.
 5. **„Zurücksetzen“ betrifft nur die Tabelle, in der geklickt wird,** und heißt danach so, wie es wirkt:
@@ -77,24 +77,25 @@ Anwendung seit 5d hat.
 Ein unbekannter oder fehlender Wert gilt als ab Werk (leer bzw. aus). Gelesen und geschrieben wird an **einer**
 Stelle (ein kleiner Dienst oder statische Helfer neben `UIThemeService`; Name und Ort entscheidet der Bauende).
 
-**6.2 Weg auf die Seite: Attribute am `html`, wie die Anwendungsdichte.** Der Server schreibt die drei Werte ins
-erste HTML als Attribute am `html`-Element: `data-tl-table-density` (nur bei `normal`/`compact`),
-`data-tl-table-striped` und `data-tl-table-column-lines` (vorhanden = an). Eine Änderung schickt der Server über die
-SSE-Queue als Aufruf einer Funktion des bestehenden Client-API (`UIThemeService.CLIENT_API`, analog
-`DENSITY_FUNCTION` / `SetDensityCommand.clientCode`), die die Attribute setzt oder entfernt.
-Begründung: eine Quelle je Seite statt eines Pushs in jede `TableViewControl` der Sitzung; jede Tabelle — auch eine,
-die erst später öffnet — liest denselben Stand; Fenster und Neuladen verhalten sich wie bei der Anwendungsdichte.
+**6.2 Weg auf die Seite: Startwerte am Wurzelelement, live über einen Speicher der Bridge** *(geändert beim
+Planen, 09.11.: klassische Seiten haben kein `window.tlTheme`, ein SSE-Aufruf käme dort nie an).* Der Server schreibt
+die drei Werte ins erste HTML als Attribute an das Element, das auch `data-tl-density` trägt: am `html` der React-Seite
+(`ViewServlet`) und am `div.tlReactHost` der klassischen Seite (`ReactViewComponent`). Attribute:
+`data-tl-table-view` (immer, leer — die Marke, an der die Bridge sie findet), `data-tl-table-density` (nur bei
+`normal`/`compact`), `data-tl-table-striped` und `data-tl-table-column-lines` (vorhanden = an). Das CSS liest sie nicht.
 
-**6.3 Lesen im Client.** Eine kleine Funktion der Bridge liefert die drei Werte vom `html` und meldet Änderungen
-(z. B. `useSyncExternalStore` mit `MutationObserver` auf die drei Attribute). `TLTableView` setzt daraus wie bisher
-`data-tl-density`, `data-tl-striped` und `data-tl-column-lines` an seiner Wurzel — **CSS und Vertrag des Pakets bleiben
-unverändert**, auch alles, was die Tabelle aus der Dichte misst (`tokenPx`, Zeilenhöhe der Virtualisierung). Das
-Popover „Ansicht“ zeigt dieselben Werte.
+**6.3 Lesen im Client.** Ein Modul der Bridge hält die drei Werte für die Seite: beim ersten Lesen aus dem Element mit
+`data-tl-table-view`, danach im Speicher. Eine Änderung im Popover schreibt zuerst in diesen Speicher — jede
+`TLTableView` der Seite rendert sofort neu (`useSyncExternalStore`) — und schickt dann den Befehl, der speichert.
+`TLTableView` setzt daraus wie bisher `data-tl-density`, `data-tl-striped` und `data-tl-column-lines` an seiner Wurzel
+— **CSS und Vertrag des Pakets bleiben unverändert**, auch alles, was die Tabelle aus der Dichte misst. Andere Fenster
+lesen beim Neuladen den gespeicherten Stand.
 
 **6.4 Befehl.** Das Popover schickt weiter `setViewOptions` (`density`, `striped`, `columnLines`) an die Tabelle, in der
-es offen ist. Der Handler speichert in der persönlichen Konfiguration und stellt den Client-Aufruf aus 6.2 in die
-Queue; er fasst `TableView`/`TableViewState` nicht mehr an. Die Zustandsschlüssel `viewDensity`, `striped`,
-`columnLines` der Tabelle und `pushViewOptions` entfallen.
+es offen ist. Der Handler speichert in der persönlichen Konfiguration; er fasst `TableView`/`TableViewState` nicht mehr
+an und schickt nichts zurück. Die Zustandsschlüssel `viewDensity`, `striped`, `columnLines` der Tabelle und
+`pushViewOptions` entfallen; `viewOptions` sagt künftig nur noch, ob die Tabelle ihren Zustand speichert (dann steht
+„Spalten zurücksetzen“ da).
 
 **6.5 Abschneiden.** Aus `TableViewState` fallen `density`, `striped`, `columnLines` samt Konstanten; aus `TableView`
 `setViewOptions`; aus `TableViewStateCodec` deren Kodierung; `resetToDefaults` setzt nur noch die Anordnung zurück (samt Sortierung und Gruppierung).
@@ -124,7 +125,6 @@ stattdessen offen bleibt und die Liste neu zeigt, entscheidet der Bauende nach d
 ## 8. Dem Bauenden überlassen
 
 - Name und Ort des Lese-/Schreibhelfers (6.1) und der Bridge-Funktion (6.3).
-- Ob das Client-API eine Funktion je Wert oder eine für alle drei bekommt.
 - Verhalten des Popovers direkt nach „Spalten zurücksetzen“ (6.6).
 - Ob `TestTableViewOptions` umgebaut oder durch einen neuen Test ersetzt wird.
 
@@ -132,10 +132,11 @@ stattdessen offen bleibt und die Liste neu zeigt, entscheidet der Bauende nach d
 
 - **Ohne Seite „Spalten“** (Tabelle ohne `columnSelect`): „Spalten zurücksetzen“ bleibt auf der ersten Seite, als
   letzter Eintrag hinter den drei Werten. Auch ohne Spaltenwahl ändert die Person Breiten und Fixierung.
-- **Klassische Seiten** (`tlReactHost`, z. B. tl-chat-classic): dort tragen Host und Portal die Theme-Attribute
-  (`tl-chat-classic/src/main/webapp/script/tl-react-host.js:48`, `:84`). `tl-react-host.js` kopiert die drei neuen
-  Attribute mit; die Bridge-Funktion liest am nächsten Vorfahren, der sie trägt, sonst am `html`; der SSE-Aufruf
-  prüft, ob `window.tlTheme` existiert.
+- **Klassische Seiten** (`tlReactHost`, z. B. tl-chat-classic): `ReactViewComponent` schreibt die Attribute an den
+  Host (6.2); die Bridge findet sie dort über `data-tl-table-view`. Kein SSE-Aufruf, also nichts, was ohne
+  `window.tlTheme` scheitert.
+- **Commits nennen die Sonderfälle** (Hendrik 09.11.): Tabelle ohne Spaltenseite, klassische Seiten, andere Fenster
+  erst nach Neuladen, alte gespeicherte Zustände.
 - **Sichtprüfung:** „zwei Reiter“ heißt zwei Reiter der Anwendung im selben Fenster, nicht zwei Browser-Tabs.
 - **Tests im MUI-Modul:** `com.top_logic.layout.react.mui/react-src/table-view-options.test.tsx` und
   `table-view-attributes.test.tsx` speisen heute `viewDensity`, `striped`, `columnLines` als Zustand ein; sie ziehen auf
