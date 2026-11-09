@@ -10,13 +10,25 @@
 
 **Spec:** `docs/superpowers/specs/2026-11-09-u63-tabellenansicht-je-person-design.md` (dieses Repo). Alle Engine-Pfade relativ zum Worktree `_Working-Tree/tl8-wt-30102`, Branch `CWS/CWS_30102_ui_pass_2_filter_columns`.
 
+## Nachträge aus dem Plan-Review (Fable, 09.11.)
+
+Die zwölf Befunde des Reviews sind unten in die Tasks eingearbeitet; die wichtigsten vorab:
+- **Doclint** (`-Xdoclint:reference/private`, `tl-parent-core/internal/pom.xml:31`) bricht den Build an JavaDoc-Links auf
+  Gelöschtes → Task 2 zieht `SetViewOptionsArguments.java:22` und `TableView.java:315-316` nach.
+- **Ohne `TLContext` ist die `PersonalConfiguration` nie `null`,** sondern `NoPersonalConfig` (Schreiben wird mit Warnung
+  geschluckt). Tests, die speichern und lesen, laufen in `ThreadContext.inSystemContext(...)` (Muster
+  `TestCommandSeesForeignCommit.java:97`); `store(...)` prüft `TLContext.getContext() == null`.
+- **Öffentliche Oberfläche der Bridge ist `react-src/bridge-entry.ts`**, nicht `bridge/tl-react-bridge.ts`.
+- **„Spalten zurücksetzen“ auf der Spaltenseite ist ein schlichter Knopf ohne Menürolle** (die Seite ist kein Menü).
+- **Zwei Tabellen in einem MUI-Test** brauchen eine `controlId`-Option in `adapters/wire-test-support.tsx`.
+
 ## Global Constraints
 
 - Schlüssel der `PersonalConfiguration`: `react.table.density` (String: `""`, `normal`, `compact`), `react.table.striped`, `react.table.columnLines` (Boolean). Unbekannt oder fehlend = ab Werk (`""`, `false`, `false`).
 - Attribute am Wurzelelement: `data-tl-table-view` (immer, leer), `data-tl-table-density` (nur `normal`/`compact`), `data-tl-table-striped`, `data-tl-table-column-lines` (vorhanden = an).
 - Message-Schlüssel `js.table.viewReset` wird `js.table.columnsReset`; de „Spalten zurücksetzen“, en „Reset columns“. Kein Alias.
 - Kein Wert im CSS; Paket (`tl-design-system/`) bleibt unverändert.
-- `messages_en.properties` nie von Hand: JavaDoc/I18N-Konstante schreiben, `tools/check-messages-en.sh` (im Doku-Repo) laufen lassen, Diff committen, Deutsch nachziehen. Die `js.table.*`-Texte des Clients stehen in `I18NConstants` von `com.top_logic.layout.react` mit `@en`-JavaDoc — dort umbenennen.
+- `messages_en.properties` nie von Hand: JavaDoc/I18N-Konstante schreiben, `TL_WORKTREE=<Projekt>/_Working-Tree/tl8-wt-30102 tools/check-messages-en.sh` (im Doku-Repo; ohne die Variable prüft es `tl8-wt-29584`) laufen lassen, Diff committen, Deutsch nachziehen. Die `js.table.*`-Texte des Clients stehen in `I18NConstants` von `com.top_logic.layout.react` mit `@en`-JavaDoc — dort umbenennen.
 - Maven immer `mvn -B -o clean install` aus `tl-parent-engine/` mit `-pl ../<modul>`; `JAVA_HOME` = JDK 21.
 - Commits: `Ticket #30102: …`, englisch, ohne Attribution. **Jeder Commit, der einen Sonderfall berührt, nennt ihn im Text** (Hendrik 09.11.): Tabelle ohne Spaltenseite, klassische Seiten (`tlReactHost`), andere Fenster erst nach Neuladen, alte gespeicherte Zustände.
 - Nichts pushen. Eclipse-Metadaten (`.settings/`, `.factorypath`) nie committen.
@@ -44,29 +56,31 @@
   - Konstanten `KEY_DENSITY = "react.table.density"`, `KEY_STRIPED = "react.table.striped"`, `KEY_COLUMN_LINES = "react.table.columnLines"`, `ATTR_MARK = "data-tl-table-view"`, `ATTR_DENSITY = "data-tl-table-density"`, `ATTR_STRIPED = "data-tl-table-striped"`, `ATTR_COLUMN_LINES = "data-tl-table-column-lines"`
   - `static String density()` / `static boolean striped()` / `static boolean columnLines()` — lesen aus `PersonalConfiguration.getPersonalConfiguration()`; ohne PC oder bei fremdem Wert ab Werk
   - `static String densityOf(Object stored)` — `"normal"`/`"compact"`, sonst `""`
-  - `static void store(String density, boolean striped, boolean columnLines)` — schreibt alle drei, dann `PersonalConfiguration.storePersonalConfiguration()`; ohne PC nichts
-  - `static void writeAttributes(TagWriter out)` — schreibt die vier Attribute nach Global Constraints
+  - `static void store(String density, boolean striped, boolean columnLines)` — ohne `TLContext.getContext()` nichts (sonst warnt `NoPersonalConfig` bei jedem Aufruf); sonst alle drei schreiben, dann `PersonalConfiguration.storePersonalConfiguration()`
+  - `static void writeAttributes(TagWriter out)` — liest die drei Werte und ruft
+  - `static void writeAttributes(TagWriter out, String density, boolean striped, boolean columnLines)` — schreibt die vier Attribute nach Global Constraints (für Tests direkt fütterbar)
 
-- [ ] **Step 1: Failing test** `TestTableViewPreferences`: `testDensityOf` (`"compact"`→`"compact"`, `"normal"`→`"normal"`, `"huge"`/`null`/`Integer 1`→`""`); `testNoPersonalConfiguration` (ohne PC: `density()==""`, `striped()==false`, `store(...)` wirft nicht); `testAttributes` (Ausgabe von `writeAttributes` enthält `data-tl-table-view=""`, bei Startwerten **kein** `data-tl-table-density`/`-striped`/`-column-lines`). Muster für einen Test ohne PC: `TestUIThemeService.testNoDensityWithoutPersonalConfiguration`.
+- [ ] **Step 1: Failing test** `TestTableViewPreferences`: `testDensityOf` (`"compact"`→`"compact"`, `"normal"`→`"normal"`, `"huge"`/`null`/`Integer 1`→`""`); `testNoContext` (ohne `TLContext`: `density()==""`, `striped()==false`, `store(...)` wirft nicht und ändert nichts); `testStoreAndRead` in `ThreadContext.inSystemContext(...)` (transiente PC: `store("compact", true, false)` → `density()=="compact"`, `striped()`, `!columnLines()`); `testAttributes` über die Überladung mit Werten, in einem offenen Start-Tag (`out.beginBeginTag("html"); …; out.endBeginTag()`, Muster `TestUIThemeService.java:271-275`): Startwerte → nur `data-tl-table-view=""`; `("compact", true, true)` → alle vier.
 - [ ] **Step 2:** `mvn -B -o clean install -DskipTests=false -pl ../com.top_logic.layout.react -Dtest=test.com.top_logic.layout.react.control.table.TestTableViewPreferences` → FAIL (Klasse fehlt).
 - [ ] **Step 3:** `TableViewPreferences` implementieren (Klassen-JavaDoc mit SPDX-Kopf wie Nachbarklassen); `ViewServlet` und `ReactViewComponent` rufen `TableViewPreferences.writeAttributes(out)` direkt nach der Dichte.
 - [ ] **Step 4:** Test → PASS; `mvn … install -pl ../com.top_logic.layout.react,../com.top_logic.layout.view,../tl-chat-classic` grün.
-- [ ] **Step 5: Commit** — Text nennt: klassische Seiten tragen die Startwerte am Host.
+- [ ] **Step 5: Commit** — Text nennt: klassische Seiten tragen die Startwerte am Host (dort steht die Anwendungsdichte fest auf `normal`; die Tabellendichte wirkt an der Tabellenwurzel).
 
 ### Task 2: Server — Felder abschneiden, Befehl speichert
 
 **Files:**
 - Modify: `com.top_logic/src/main/java/com/top_logic/table/TableViewState.java` (Felder `_density`, `_striped`, `_columnLines`, `DENSITY_*`-Konstanten, Getter/Setter weg)
-- Modify: `com.top_logic/src/main/java/com/top_logic/table/TableView.java:438-456` (`setViewOptions` weg; JavaDoc `resetToDefaults`: Anordnung samt Sortierung und Gruppierung)
+- Modify: `com.top_logic/src/main/java/com/top_logic/table/TableView.java:438-456` (`setViewOptions` weg; JavaDoc `resetToDefaults`: Anordnung samt Sortierung und Gruppierung) und `:315-316` (JavaDoc `isPersonalized` ohne Link auf `setViewOptions`: „ob die Tabelle ihren Zustand speichert“)
+- Modify: `com.top_logic.layout.react/src/main/java/com/top_logic/layout/react/control/table/SetViewOptionsArguments.java:22` (`@see` auf `TableViewPreferences#store(String, boolean, boolean)`; JavaDoc: speichert je Person)
 - Modify: `com.top_logic/src/main/java/com/top_logic/table/impl/DefaultTableView.java`, `.../impl/TableViewStateCodec.java`
 - Modify: `com.top_logic.layout.react/src/main/java/com/top_logic/layout/react/control/table/TableViewControl.java` (Schlüssel `VIEW_DENSITY`, `STRIPED`, `COLUMN_LINES`, `pushViewOptions` weg; `handleSetViewOptions` → `TableViewPreferences.store(...)`; `handleResetView` ohne `pushViewOptions`; `VIEW_OPTIONS`-JavaDoc: „ob die Tabelle ihren Zustand speichert“)
-- Test: `com.top_logic/src/test/java/test/com/top_logic/table/TestTableViewStateCodec.java`, `TestDefaultTableView.java`; `com.top_logic.layout.react/src/test/java/test/com/top_logic/layout/react/control/table/TestTableViewOptions.java`
+- Test: `com.top_logic/src/test/java/test/com/top_logic/table/TestTableViewStateCodec.java` (die vier Tests `testViewOptionsRoundTrip`, `testDefaultViewOptionsWriteNoEntries`, `testMissingViewOptionsAreDefaults`, `testUnknownDensityIsDefault`, Z. 96-137, fallen weg), `TestDefaultTableView.java` (Z. 573-616, vier Tests fallen weg); `com.top_logic.layout.react/src/test/java/test/com/top_logic/layout/react/control/table/TestTableViewOptions.java`
 
 **Interfaces:**
 - Consumes: `TableViewPreferences.store(String, boolean, boolean)` (Task 1)
 - Produces: State-Schlüssel der Tabelle ohne `viewDensity`/`striped`/`columnLines`; `viewOptions` (boolean) bleibt.
 
-- [ ] **Step 1: Failing tests:** Codec — `testDecodeIgnoresFormerViewOptions`: ein gespeicherter JSON-Stand mit `"density":"compact","striped":true,"columnLines":true` plus einer Spaltenreihenfolge wird gelesen, die Reihenfolge stimmt, kein Fehler. `TestTableViewOptions` — `setViewOptions` speichert in der PC (`TableViewPreferences.striped()` danach `true`) und ändert den `TableViewState` nicht; `resetView` lässt die drei PC-Werte stehen und setzt Spaltenreihenfolge, Sortierung, Gruppierung zurück.
+- [ ] **Step 1: Failing tests:** Codec — `testDecodeIgnoresFormerViewOptions`: ein gespeicherter JSON-Stand mit `"density":"compact","striped":true,"columnLines":true` plus einer Spaltenreihenfolge wird gelesen, die Reihenfolge stimmt, kein Fehler. `TestTableViewOptions` (Testkörper in `ThreadContext.inSystemContext(TestTableViewOptions.class, () -> …)`; Klassen-JavaDoc 47-50 und Konstanten 56-60 nachziehen) — `setViewOptions` speichert in der PC (`TableViewPreferences.striped()` danach `true`) und ändert den `TableViewState` nicht; `resetView` lässt die drei PC-Werte stehen und setzt Spaltenreihenfolge, Sortierung, Gruppierung zurück.
 - [ ] **Step 2:** Tests laufen lassen → FAIL (Kompilat oder Assertion).
 - [ ] **Step 3:** Abschneiden wie unter Files; wo `TestDefaultTableView` die Optionen prüft, Tests entfernen.
 - [ ] **Step 4:** `mvn -B -o clean install -DskipTests=false -pl ../com.top_logic,../com.top_logic.layout.react` → grün (Tests `TestDefaultTableView`, `TestTableViewStateCodec`, `TestTableViewOptions`); `layout.view` bauen.
@@ -76,7 +90,7 @@
 
 **Files:**
 - Create: `com.top_logic.layout.react/react-src/bridge/table-view-preferences.ts`
-- Modify: `com.top_logic.layout.react/react-src/bridge/tl-react-bridge.ts` (Export)
+- Modify: `com.top_logic.layout.react/react-src/bridge-entry.ts` (Export; das ist die Oberfläche von `'tl-react-bridge'`)
 - Test: `com.top_logic.layout.react/react-src/bridge/table-view-preferences.test.ts`
 
 **Interfaces:**
@@ -99,18 +113,19 @@
 - Modify: `com.top_logic.layout.react/react-src/controls/TLTableView.tsx` (Zeilen um 493, 516, 1663-1695, 1833, 1845, 2051-2053, 2075, 2486)
 - Modify: `com.top_logic.layout.react/react-src/controls/table/TableViewOptions.tsx`
 - Modify: `com.top_logic.layout.react/src/main/java/com/top_logic/layout/react/I18NConstants.java` (`js.table.viewReset` → `js.table.columnsReset`), `messages_de.properties`
-- Test: `com.top_logic.layout.react.mui/react-src/table-view-options.test.tsx`, `table-view-attributes.test.tsx`
+- Modify: `com.top_logic.layout.react.mui/react-src/adapters/wire-test-support.tsx` (`mountAdapter` mit Option `controlId`, Default `CONTROL_ID`; `root()` je Id)
+- Test: `com.top_logic.layout.react.mui/react-src/table-view-options.test.tsx`, `table-view-attributes.test.tsx`; jede MUI-Testdatei mit Tabelle ruft in `beforeEach` `resetTableViewPreferencesForTest()` und räumt in `afterEach` die `data-tl-table-*`-Attribute am `html` ab
 
 **Interfaces:**
 - Consumes: `useTableViewPreferences`, `setTableViewPreferences`, `TableDensity` (Task 3)
 - Produces: `TableViewOptionsProps.viewOptions` heißt `canReset` (gespeicherter Zustand); `TableViewOptions` hat keinen `onReset` mehr auf der ersten Seite, außer `!columnSelect && canReset`.
 
 - [ ] **Step 1: Failing tests (MUI):**
-  - `table-view-attributes`: die Wurzel trägt `data-tl-density`/`data-tl-striped`/`data-tl-column-lines` aus dem Speicher (vorher `setTableViewPreferences`), nicht aus dem State; zwei Tabellen, Zebra im Popover der ersten → zweite trägt `data-tl-striped` ohne Server-Antwort.
+  - `table-view-attributes`: der Dichte-Zeilenhöhen-Test (Z. 293-309, `patchState({ viewDensity })`) zieht auf `act(() => setTableViewPreferences(...))` um; die Wurzel trägt `data-tl-density`/`data-tl-striped`/`data-tl-column-lines` aus dem Speicher (vorher `setTableViewPreferences`), nicht aus dem State; zwei Tabellen, Zebra im Popover der ersten → zweite trägt `data-tl-striped` ohne Server-Antwort.
   - `table-view-options`: erste Seite hat immer Dichte, Zebra, Spaltenlinien (auch `canReset: false`); mit `columnSelect` steht „Spalten zurücksetzen“ (`js.table.columnsReset`) auf der Spaltenseite am Ende, nicht auf der ersten; ohne `columnSelect`, mit `canReset` letzter Eintrag der ersten Seite; ohne `canReset` nirgends; Klick sendet `resetView` und schließt das Popover; das Zahnrad steht an einer Tabelle mit `viewOptions: false, columnSelect: false`.
 - [ ] **Step 2:** `NODE_OPTIONS=--no-experimental-webstorage npx vitest run react-src/table-view-options.test.tsx react-src/table-view-attributes.test.tsx` (in `com.top_logic.layout.react.mui`) → FAIL.
-- [ ] **Step 3:** `TLTableView`: Werte aus `useTableViewPreferences()`; `handleViewChange` ruft zuerst `setTableViewPreferences(values)`, dann `sendCommand('setViewOptions', …)`; Zahnrad-Bedingungen (1833, 1845, 2486) ohne `viewOptions || columnSelect` — immer; `canReset={viewOptions}`. `TableViewOptions`: Stops `['density','stripes','columnLines', …(columnSelect ? ['columns'] : []), …(!columnSelect && canReset ? ['reset'] : [])]`; Spaltenseite in `TableViewButton` bekommt unter `TLChild` den Eintrag „Spalten zurücksetzen“ (nur `canReset`), `role="menuitem"`, Klasse wie heute. I18N umbenennen, Deutsch „Spalten zurücksetzen“.
-- [ ] **Step 4:** MUI-Vitest komplett, react-Vitest komplett, `npm run typecheck` → grün; `tools/check-messages-en.sh` → Diff committen.
+- [ ] **Step 3:** `TLTableView`: Werte aus `useTableViewPreferences()`; `handleViewChange` ruft zuerst `setTableViewPreferences(values)`, dann `sendCommand('setViewOptions', …)`; Zahnrad-Bedingungen (1833, 1845, 2486) ohne `viewOptions || columnSelect` — immer; `canReset={viewOptions}`. `TableViewOptions`: Stops `['density','stripes','columnLines', …(columnSelect ? ['columns'] : []), …(!columnSelect && canReset ? ['reset'] : [])]`; Spaltenseite in `TableViewButton` bekommt unter `TLChild` den Eintrag „Spalten zurücksetzen“ (nur `canReset`) als schlichten `<button type="button" className="tl-menu__item tl-type-body">` **ohne** `role="menuitem"` (die Seite ist kein Menü; Test fragt `getByRole('button', { name })`). I18N: `I18NConstants.java:857-861` `JS_TABLE_VIEW_RESET` → `JS_TABLE_COLUMNS_RESET`, `@en Reset columns`, `@CustomKey("js.table.columnsReset")`; `TableViewOptions.tsx:19` und `:243`; `table-view-options.test.tsx:57`; `messages_de.properties:1482` weg, `js.table.columnsReset = Spalten zurücksetzen` sortiert hinter `js.table.columnsMovable`.
+- [ ] **Step 4:** MUI-Vitest komplett (erwartete Kollateral-Rotstellen durch „Zahnrad immer“, z. B. Knopfzählungen in `table-header-move*`, `table-view-search`, `dropdown-chips`: nachziehen, nicht zurückbauen), react-Vitest komplett, `npm run typecheck` → grün; `tools/check-messages-en.sh` → Diff committen.
 - [ ] **Step 5: Commit** — Text nennt: Tabelle ohne Spaltenseite (Rücksetzen auf der ersten Seite), andere Fenster erst nach Neuladen.
 
 ### Task 5: Doku, Gates, Sichtprüfung
