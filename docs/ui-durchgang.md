@@ -111,6 +111,16 @@ lesen sich in beiden Modi, die Zeilenhöhe ist ruhig.
 | U6 | **Bewegung im Ganzen:** die Wellen bauen nur Minimalfassungen (z. B. Drawer gleitet per `@starting-style` nur herein, kein Ausgang); Choreografie, Ein- und Ausgänge, Dauern je Komponente | Hendrik 16.10. nach 4b | `skalen.md` (Bewegung), `altlast.md` „Welle 4b“ S4 |
 | U19 | **Anker-Aufblitzen unter `prefers-reduced-motion`** ist weg (die globale Regel in `base.css` setzt 0,01 ms; vor 5d bewusst 0,6 s) — ein Sprung ohne Scrollen gibt dann keine Rückmeldung; Farbwechsel ist keine Bewegung, braucht eine Ausnahme der globalen Regel | Review 5d Task 2, 20.10. | `generate.mjs` (baseCss) |
 
+## Paket: Gates und Kundenvertrag
+
+Aus einem Probelauf eines Analyse-Plugins (12.11., Protokoll verworfen). Ein eigener kleiner PR, wenn die Kette
+!2206–!2231 gemergt ist; Doppelungen zwischen Komponenten prüft künftig jeder PR an seinem Diff vor dem Merge.
+
+| # | Was | Woher | Quelle |
+|---|---|---|---|
+| U65 | **Die Gates prüfen weniger, als sie vorgeben:** elf Blöcke ohne Modifier-Eintrag prüft `lint-css` gar nicht (`tl-fab`, `tl-copy-button`, `tl-drag-image`, …); `missingInContract` akzeptiert Präfixe (`tl-popoverXYZ` erfüllt `tl-popover`); der Vertragstest „nennt jedes gelesene Token“ läuft für 12 von 64 Komponenten (über alle 23 Verletzer); Tests, die nicht scheitern können (`eingaben.test:60-62`, `behaelter.test:140` mit `?? ''`, `tokens.test:87` rechnet, prüft nie). `derive.mjs:187, 266, 315` fangen jede Exception, gemeint ist nur „Helligkeit nicht erreichbar“ — ein kaputtes Kundentheme kann still durchgehen | Plugin-Probelauf 12.11. | `tools/lint-css.mjs:85-171`, `test/contracts-*.test.mjs`, `tools/derive.mjs` |
+| U66 | **`tokens.json` trägt 75 Literale:** `type.*` (`weight`, `lineHeight`, `tracking`) und `print.*` stehen als Zahl statt als Referenz (nachgezählt 12.11.). Widerspricht CLAUDE.md „ein Wert in `tokens.json` ist ein Fehler, und der Test fängt ihn“ und `primitives.json` „einzige Stelle mit Zahlen“ — ein Kunde kann Schriftstärke und Zeilenhöhe nicht über die Primitive ändern. Werte als Primitive, Test auf alle Gruppen ausdehnen | Plugin-Probelauf 12.11. | `src/tokens.json`, `src/primitives.json`, `test/tokens.test.mjs` |
+
 ## Offen außerhalb des Durchgangs, aber mit UI-Folge
 
 - Dichte-Schalter: in 5d als Gruppe „Dichte“ im Benutzermenü gebaut (vorläufig, 20.10.); der Durchgang kann ihn verschieben.
