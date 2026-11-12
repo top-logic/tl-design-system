@@ -2950,7 +2950,7 @@ fand ihn nicht. Der Kopf war „ohne Trennlinie“, und unter dem Zeiger zeigte 
   Dunkelmodus; `border-disabled` bleibt `gray-66`. Verworfen: ein eigener Token für den Kopf — eine zweite
   Separator-Rolle für dieselbe Aufgabe.
 
-### Login-Hintergrund: Halbton aus der Hausfarbe (12.11., #30294)
+### Login-Hintergrund: Halbton aus der Markenfarbe (12.11., #30294)
 
 Die Login-Seite stand seit #30281 mittig, aber auf leerer Fläche. `<login-backdrop>` zeichnet dahinter ein
 **Halbton-Raster**: gerades Gitter (`size-halftone-step`), Punkte in der Mitte am größten, nach außen kleiner. Darüber
@@ -2960,7 +2960,7 @@ optional ein Logo auf eigener Fläche (`surface-layer`), weil das Logo gegen die
   `blue-21`/`blue-27`, dunkel `blue-62`/`blue-55` — gewählt nach OKLCH auf dem Farbton der Marke (L 0,794/0,735 bzw.
   0,375/0,454), das entspricht der Skizze mit 38 % bzw. 45 % Deckkraft auf dem Grund. Keine Deckkraft-Primitive: die
   Rollen sind deckende Farben. `derive` rechnet beide aus dem Farbton der Saat (`MARKE_HALFTONE`), ein Kunde bekommt
-  das Raster in seiner Hausfarbe. **Kein Kontrastpaar:** die Punkte tragen keine Beschriftung.
+  das Raster in seiner Markenfarbe. **Kein Kontrastpaar:** die Punkte tragen keine Beschriftung.
 - **Ruhig, bis man etwas tut:** im Ruhezustand kein Animationsframe; Highlight unter dem Mauszeiger
   (`size-halftone-glow`, 40 px, leise), Welle bei Klick auf den Hintergrund (`duration-ripple`), jeder 5. Klick wechselt
   die Form Punkt → Plus → Quadrat (`duration-morph`) — ein Easter Egg ohne sichtbares Bedienelement; Ring, Dreieck,
