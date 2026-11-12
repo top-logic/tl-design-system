@@ -2969,6 +2969,22 @@ optional ein Logo auf eigener Fläche (`surface-layer`), weil das Logo gegen die
   (Welle löscht das Raster nach erfolgreicher Anmeldung) ist PR 2, nach Abstimmung des Signals mit Bernhard.
 - Spec `docs/superpowers/specs/2026-11-12-login-hintergrund-design.md`, Plan `docs/superpowers/plans/2026-11-12-login-hintergrund-pr1.md`.
 
+### Login-Formular: Anmelden als Hauptaktion, Alternativen unter „oder“ (12.11., #30296)
+
+In einer **schmalen Karte mit genau einer Aufgabe** (Login, zweiter Faktor, Passkey, Einladung) stehen die Aktionen
+untereinander und gleich breit — der übliche Login. Auf Inhaltsseiten und in Panels nehmen Knöpfe ihre
+Beschriftungsbreite; eine **globale** Knopfregel gibt es nicht (in !2274 zurückgenommen: sie machte die SSO-Knöpfe,
+die Methodenwahl des zweiten Faktors und die Passkey-Dialoge schmal). Eine View, die Knöpfe in ihrer Breite will, sagt
+es mit `<stack align="start">`.
+
+- Das Anmeldeformular (`login-form.view.xml`, Seite und Dialog): Felder → „Passwort vergessen?“ → **Anmelden** voll
+  breit, primär, `key="Enter"` → „oder“ → Alternativen (SSO, Passkey) voll breit, sekundär. Vorher stand die
+  Hauptaktion klein in der Knopfleiste und die Alternative wirkte wichtiger.
+- Die Alternativen bilden die Gruppe `login-alternatives` (`tl-login-alternatives`); ohne Knopf darin blendet sie sich
+  samt „oder“ aus. SSO ist kundenabhängig, intern ungenutzt — deshalb die Nebenposition. „oder“ ist leiser Text ohne
+  Linien; ein Trenner mit Text wäre ein neuer Baustein.
+- Overlays, die sich an `login-methods` hängen, adressieren jetzt die Gruppe (Migration im Ticket).
+
 ## Befunde aus dem Specimen
 
 ### Inter trägt nur zwei Gewichte
