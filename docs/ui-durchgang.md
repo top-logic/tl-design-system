@@ -104,6 +104,12 @@ lesen sich in beiden Modi, die Zeilenhöhe ist ruhig.
 | U23 | **Kalender: „+“ und Ablage wie im macOS-Kalender.** Ein „+“-Knopf in der Leiste legt einen Termin von Hand an, ohne Ziehen über freie Zeit; daneben eine Ablage (Eingang) für neue Termine, die z. B. in geteilten Kalendern hinzukommen. Die Ablage braucht eine Aussage des Servers, was für die Person neu ist | Sichtprüfung Hendrik, 23.10. | `TLCalendar.tsx`, `calendar.contract.md` |
 | U24 | **Gantt und Flow-Diagramm aus dem Paket:** Seit 23.10. kommen nur Zeilenköpfe, Zeitachse und Ecke aus Rollen (CSS über `#ffffff` des Modells, der PDF-Export bleibt weiß); die Balken der Demo sind Pastell-Literale mit schwarzem SVG-Text, Raster und Zeilen neutrales Grau mit Alpha. Offen: Balkenfarben aus den Kategorien (`category-N-*`, Text gerechnet), Vorgaben in `GanttLayoutOperations` (`#606060`, `rgba(100,100,100,0.2)`) und `FlowFactory` (`gray`, `black`) als Rollen, PDF-Export mit aufgelösten Rollen statt `var()` (Batik), Zoom-Anzeige `surface-inverse` prüfen. Hendrik 23.10.: keine großen Eingriffe; nativer Neubau von Gantt und Flow als eigenes Projekt zur Diskussion (STATUS „Offene Fäden“) | Sichtprüfung Hendrik, 23.10. | `tl-react-flow.css`, `GanttLayoutOperations.java`, `gantt-demo.view.xml` |
 
+## Login-Hintergrund
+
+| # | Was | Woher | Quelle |
+|---|---|---|---|
+| U67 | **Login-Hintergrund (#30294), zurückgestellt aus dem Abschluss-Review:** (a) jeder Punkt ein eigener Pfad, bei jeder Mausbewegung das ganze Raster — auf sehr großen Schirmen prüfen, ob es ruckelt, sonst Grunddurchgang in einen Pfad; (b) kein Neuzuschnitt des Canvas bei Wechsel von `devicePixelRatio` ohne Größenänderung (Fenster auf anderen Monitor); (c) Fehler beim Zeichnen schalten das Raster still ab, ohne Konsolenhinweis | Abschluss-Review #30294, 12.11. | `TLLoginBackdrop.tsx` |
+
 ## Bewegung
 
 | # | Was | Woher | Quelle |
