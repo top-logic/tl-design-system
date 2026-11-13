@@ -599,6 +599,28 @@ Das Gate bekommt eine Regel mehr: **Ein `font-size` oder `font-weight` außerhal
 ein Verstoß.** Ohne sie wandert die nächste Komponente wieder auf `.72rem`, so wie es der
 Größenbefund oben für sieben Werte zwischen 9 und 11,52 px zeigt.
 
+#### Gewicht, Zeilenhöhe und Laufweite sind Primitive (#30322, 13.11.)
+
+Bis zum 13.11. standen Gewicht, Zeilenhöhe, Laufweite und die Druckgrößen als Zahl in `tokens.json` — gegen die
+Regel, dass dort nur Referenzen stehen, und ein Kundentheme konnte sie nicht ändern. Jetzt gilt für sie dasselbe wie
+für Familie und Größe:
+
+| Was | Primitive (`primitives.json`) | Rollen (`--tl-…`) |
+|---|---|---|
+| Gewicht | `weight-1` 400, `weight-2` 600 (Gruppe `font`) | `font-weight-regular`, `font-weight-strong` |
+| Zeilenhöhe | `leading-1…6` (Gruppe `font`) | `font-line-height-label`, `-body`, `-heading-sm`, `-heading-md`, `-heading-lg`, `-display`, `-print-*` |
+| Laufweite | `tracking-1…5` (Gruppe `font`) | `font-letter-spacing-tight`, `-snug`, `-normal`, `-wide`, `-wider` |
+| Druckgröße | `print-1…4` (Gruppe `measure`) | `font-size-print-title`, `-heading`, `-body`, `-caption` |
+
+Die Zeilenhöhen heißen nach der Größe, für die sie gedacht sind, nicht nach einer Stufe (`tight`, `relaxed`): so stellt
+ein Theme die Zeilenhöhe der Überschriften getrennt vom Fließtext um. Gekoppelt ist nichts — jede Typo-Klasse nennt
+ihre Zeilenhöhe in `tokens.json` selbst. Die Werte jeder Klasse sind dieselben wie in den Tabellen oben; ein
+Regressionstest hält sie fest.
+
+Das Gate prüft seitdem auch das: in `base.css` lesen `.tl-type-*` und `.tl-print-*` Schrift nur aus `var(--tl-font-…)`,
+und die Wache über `tokens.json` prüft jede Gruppe, auch `type` und `print` — eine neue Gruppe ohne Regel lässt sie
+scheitern.
+
 ### Radius: zwei Stufen, zwei Formen
 
 TopLogic steht in Konzernen im Tagesbetrieb — acht Stunden Formulare, Tabellen und Dialoge. Ein
