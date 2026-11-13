@@ -3007,6 +3007,30 @@ es mit `<stack align="start">`.
   Linien; ein Trenner mit Text wäre ein neuer Baustein.
 - Overlays, die sich an `login-methods` hängen, adressieren jetzt die Gruppe (Migration im Ticket).
 
+### Die Gates prüfen, was sie vorgeben (13.11., #30323, #30324)
+
+Ein Probelauf (12.11.) fand Gates, die weniger prüften, als ihr Name sagt (U65). Seitdem gilt:
+
+* **Jeder Block hat einen Eintrag in `MODIFIERS`** (`tools/lint-css.mjs`), auch ohne Modifier (`new Set([])`); ein
+  Block ohne Eintrag ist ein Verstoß. Ausgenommen sind nur die Grundklassen, die `base.css` definiert (`tl-type-*`,
+  `tl-icon-*` …) — die Ausnahme rechnet das Gate aus der Datei, keine Namensliste.
+* **Element-Modifier sind entschieden wie Block-Modifier** (`ELEMENT_MODIFIERS`, heute 17 in 7 Elementen, z. B.
+  `tl-card__body--pad-compact`, `tl-overlay__layer--<anker>`). Ein neuer ist ein Eintrag mit Begründung.
+* **Ein Vertrag nennt einen Begriff nur als ganzes Wort in einem Codespan** — `` `tl-picker__actions` `` nennt nicht
+  `tl-picker`.
+* **Jeder Vertrag nennt jedes Token, das sein Stylesheet liest** (`test/contracts.test.mjs`, ein Test für alle
+  Komponenten statt zwölf Einzelprüfungen). Stylesheet und Vertrag gehören über den Basisnamen zusammen
+  (`upload.css` ↔ `upload.contract.md`). Tokens, die erst die Rollenregeln (`@tl-roles`) erzeugen, dürfen als Muster
+  stehen: `category-<n>-subtle`, `status-<s>-border`, `text-on-category-<n>`.
+* **Ein Test, der prüft, dass eine Regel etwas nicht setzt, prüft zuerst, dass es die Regel gibt** — sonst ist er
+  grün, sobald jemand den Selektor umbenennt. Gemeinsamer Helfer `declarationsOfAll` (liest alle Regeln eines
+  Selektors, auch in `@media`).
+* **`derive` fängt nur, was es meint:** `KontrastNichtErreichbar` aus `aufKontrast`. Jeder andere Fehler hält an
+  (Exit 1); vorher schrieb ein Programmfehler still ein Theme mit falschen Befunden. Exit 2 bleibt Eingabefehlern,
+  Exit 3 den Befunden.
+
+Offen und bewusst getrennt: die Theme-Eingabe nimmt in `measure`, `motion`, `font`, `effect` jeden Wert an (U68).
+
 ## Befunde aus dem Specimen
 
 ### Inter trägt nur zwei Gewichte
