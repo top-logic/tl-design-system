@@ -2972,6 +2972,28 @@ fand ihn nicht. Der Kopf war „ohne Trennlinie“, und unter dem Zeiger zeigte 
   Dunkelmodus; `border-disabled` bleibt `gray-66`. Verworfen: ein eigener Token für den Kopf — eine zweite
   Separator-Rolle für dieselbe Aufgabe.
 
+### Der verborgene Trichter hält keine Breite (16.11., Review !2206)
+
+**Befund (Bernhard):** Zwei Reviews auf !2206, die zusammen gelten. 09.11.: der Trichter einer Zahlenspalte stand vor
+dem Titel, „statt wie bei anderen Spalten dahinter“ — die Spiegelung fiel (U53). 13.11.: danach endete „BETRAG“ weit
+vor den Ziffern. Ursache: der Trichter ist seit UI-Durchgang 1 nur beim Zeigen zu sehen (`tl-reveal-on-hover`,
+`opacity: 0`), hielt aber seine Breite; hinter dem Titel schob er ihn um 28 px von den Ziffern.
+
+**Entschieden (Hendrik):** Die Folge Titel → Trichter gilt in jeder Spalte. Verborgen hat der Trichter keine Breite;
+beim Zeigen auf die Kopfzelle, bei Tastaturfokus darin und bei aktivem Filter fährt sein Platz auf, der Titel einer
+Zahlenspalte gleitet dabei nach links. Nur auf Geräten mit Zeiger (`@media (hover: hover)`) — auf Touch steht er immer.
+Beschrieben ist nur der verborgene Zustand; aufgedeckt gilt, was der Knopf selbst sagt (auch ein MUI-Knopf). „Breite an
+Inhalt anpassen“ misst den Kopf mit aufgedecktem Trichter. Tests: `table-align.test.mjs` (Kanten im Browser, beide
+Dichten, Fokus), `table.test.mjs`.
+
+**Bleibt:** Sortierte oder gefilterte Spalte — Pfeil bzw. Trichter stehen dauerhaft hinter dem Titel, der dann nicht
+bündig ist; das zeigt den Zustand und gilt in jeder Spalte gleich. Touch: Titel um die Trichterbreite vor den Ziffern.
+
+**Verworfen:** Spiegelung, auch im DOM statt `row-reverse` (Bernhard 09.11.: andere Reihenfolge als die übrigen
+Spalten); Trichter ohne Breite über dem Titelende (verdeckt beim Zeigen die letzten Buchstaben); ein Spaltenmenü statt
+Trichter (erst mit Bernhards Filter-Semantik, U64); die Ziffern um die Trichterbreite einrücken (Leerraum in jeder
+Zeile).
+
 ### Login-Hintergrund: Halbton aus der Markenfarbe (12.11., #30294)
 
 Die Login-Seite stand seit #30281 mittig, aber auf leerer Fläche. `<login-backdrop>` zeichnet dahinter ein
