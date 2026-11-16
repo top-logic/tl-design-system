@@ -3013,6 +3013,18 @@ optional ein Logo auf eigener Fläche (`surface-layer`), weil das Logo gegen die
   (Bernhard 13.11.: „sieht aus wie Masern“; Hendrik vertritt das Raster).
 - **Zuerst nur die Demo-Login-Seite;** die Framework-Login-Seite folgt nach Freigabe mit einer Zeile. Der Einstieg
   (Welle löscht das Raster nach erfolgreicher Anmeldung) ist PR 2, nach Abstimmung des Signals mit Bernhard.
+- **Einstieg mit TopLogic-Zeichen (16.11., Hendrik):** Beim Wipe nach der Anmeldung bleibt hinter der Front nur das
+  App-Icon von TopLogic stehen (abgerundetes Quadrat, „TL“ als Lücke; Pfade unverändert aus `TL-icon-blue.svg`),
+  leuchtet kurz und verblasst von außen nach innen (`easeInOut`), während die App weich einblendet. **Fest TopLogic,
+  kein Kundenlogo:** Nutzer sollen sehen, mit welchem System sie arbeiten; das Kundenstyling trägt das Logo über der
+  Karte und die App. **Farbe aus dem Theme** (Rollen des Rasters, also die Markenfarbe des Kunden), nicht fest
+  TL-Blau `#2968c8` — die Form sagt „TopLogic“, ein festes Blau wäre im Kundentheme ein Fremdkörper. Damit keine
+  Option `mark` und kein Bildladen: die Pfade stehen als Konstante im Client. Nicht in der Klick-Welle — dort
+  verdeckt die Karte die Mitte des Zeichens. Kein Schalter zum Abschalten, bis ein Kunde ihn braucht. Skizze:
+  `.superpowers/brainstorm/14150-1794476958/content/login-marke.html`.
+- **Ruhezustand reduzieren (16.11., offen bis zur Entscheidung über !2275):** kleinere Punkte, weniger Deckkraft in
+  Ruhe, flacherer Abfall, damit das Raster als feine Textur liest und nicht als „Masern“ (Bernhard 13.11.); die
+  Welle hebt sich dadurch deutlicher ab. Werte aus der Skizze, übernommen erst mit der Überarbeitung von !2275.
 - Spec `docs/superpowers/specs/2026-11-12-login-hintergrund-design.md`, Plan `docs/superpowers/plans/2026-11-12-login-hintergrund-pr1.md`.
 
 ### Login-Formular: Anmelden als Hauptaktion, Alternativen unter „oder“ (12.11., #30296)
