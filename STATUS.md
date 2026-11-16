@@ -23,7 +23,7 @@ Gates prüfen, was sie behaupten), !2284 (#30324 Verträge nennen jedes Token); 
 **Kette UI-Durchgang** (nur die zwei untersten Ebenen haben Build und Review, Ketten höchstens 2–3 PRs):
 !2207 (#30229) → !2208 (#30230) → !2226 (#30236) → !2227 (#30102) → !2228 (#30234) → !2229 (#30235) →
 !2230 (#30233) → !2231 (#30232, Draft). Rückt nach jedem Merge zwei Ebenen nach. Vor jeder Arbeit dort pullen
-— Bernhard merged master selbst hinein. !2014 und !2149 bleiben als Drafts offen (Hendrik).
+— Bernhard merged master selbst hinein. !2149 bleibt als Draft offen (Hendrik); !2014 am 16.11. geschlossen, sein Inhalt steckt vollständig in der Kette.
 
 **Lokal, ohne PR:** Grenztest C (#30325, Branch `CWS/CWS_30325_limits_test_customer_ui`, Worktree `tl8-wt-30325`):
 MUI-Demo und Theme `weich`, Befunde U69–U83 in `docs/ui-durchgang.md`; Kommentar an Bernhard auf Trac #29650.
