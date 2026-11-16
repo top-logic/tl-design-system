@@ -9,12 +9,11 @@ Lagebild: http://localhost:8138/ (liest „## Gesamtplan“)
 ## Jetzt (Stand 16.11.)
 
 **Auf master seit 13.11.:** !2274 (#30281 Login-Karte mittig), !2282 (#30322 Schrift-Primitive), !2283 (#30323
-Gates prüfen, was sie behaupten), !2284 (#30324 Verträge nennen jedes Token); 16.11. !2276 (#30296 Login-Formular).
+Gates prüfen, was sie behaupten), !2284 (#30324 Verträge nennen jedes Token); 16.11. !2276 (#30296 Login-Formular), !2206 (#30228 Spaltenausrichtung).
 
 **Wartet auf Bernhard (`bhu`):**
 
-* **!2206** (#30228 Spaltenausrichtung, Worktree `tl8-wt-30228`): Trichter fährt ein (`137eef0867`) und master
-  gemergt (`a38894b809`), gepusht 16.11., `bhu` + `jenkins` angefragt. Danach !2206 in !2207 mergen.
+* **!2207** (#30229, jetzt auf master) und **!2208** (#30230): `jenkins` angefragt 16.11., Builds stehen aus.
 * **!2275** (#30294 Login-Hintergrund, Worktree `tl8-wt-30294`): REQUEST_CHANGES 13.11. („sieht aus wie Masern“).
   Hendrik verteidigt das Raster; der Formwechsel (Easter Egg) fliegt raus, geändert wird erst nach der Entscheidung.
   Ruhezustand wird reduziert (feine Textur statt „Masern“). PR 2 Einstieg (Welle nach Anmeldung, nur das feste
@@ -22,7 +21,7 @@ Gates prüfen, was sie behaupten), !2284 (#30324 Verträge nennen jedes Token); 
   (`LoginFlow.complete` → `rebuildWindow`); Skizze `.superpowers/brainstorm/14150-1794476958/content/login-marke.html`.
 
 **Kette UI-Durchgang** (nur die zwei untersten Ebenen haben Build und Review, Ketten höchstens 2–3 PRs):
-!2206 → !2207 (#30229) → !2208 (#30230) → !2226 (#30236) → !2227 (#30102) → !2228 (#30234) → !2229 (#30235) →
+!2207 (#30229) → !2208 (#30230) → !2226 (#30236) → !2227 (#30102) → !2228 (#30234) → !2229 (#30235) →
 !2230 (#30233) → !2231 (#30232, Draft). Rückt nach jedem Merge zwei Ebenen nach. Vor jeder Arbeit dort pullen
 — Bernhard merged master selbst hinein. !2014 und !2149 bleiben als Drafts offen (Hendrik).
 
