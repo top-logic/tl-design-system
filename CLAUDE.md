@@ -4,7 +4,7 @@
 
 | Datei | Inhalt |
 |---|---|
-| `STATUS.md` | Wo die Arbeit steht und wo anzuknüpfen ist |
+| `STATUS.md` | Wo die Arbeit steht und wo anzuknüpfen ist — nur der aktuelle Stand; Erledigtes streichen, nicht anhängen (Verlauf: `git log`) |
 | `docs/superpowers/specs/2026-09-17-design-system-neuaufbau-design.md` | Die Spec: Paket, Namensschema, Kundenvertrag, Wellen, Gates |
 | `docs/skalen.md` | Jede Entscheidung mit ihrer Begründung — die maßgebliche Quelle |
 | `docs/praesentation-v2.md` | Die PowerPoint für alle Kollegen, auch ohne Fachhintergrund: **was** das Design System ist, **wie** es funktioniert, **welche Vorteile** es bringt (z. B. unabhängig von der Basisversion). Oberflächlich und leicht verständlich, keine Beschreibung je Komponente, keine Entscheidungsquelle. Mitgezogen nur, wenn sich am Gesamtbild etwas ändert (Hendrik 19.10.) |
