@@ -3006,9 +3006,11 @@ optional ein Logo auf eigener Fläche (`surface-layer`), weil das Logo gegen die
   Rollen sind deckende Farben. `derive` rechnet beide aus dem Farbton der Saat (`MARKE_HALFTONE`), ein Kunde bekommt
   das Raster in seiner Markenfarbe. **Kein Kontrastpaar:** die Punkte tragen keine Beschriftung.
 - **Ruhig, bis man etwas tut:** im Ruhezustand kein Animationsframe; Highlight unter dem Mauszeiger
-  (`size-halftone-glow`, 40 px, leise), Welle bei Klick auf den Hintergrund (`duration-ripple`), jeder 5. Klick wechselt
-  die Form Punkt → Plus → Quadrat (`duration-morph`) — ein Easter Egg ohne sichtbares Bedienelement; Ring, Dreieck,
-  Raute, Strich verworfen. `prefers-reduced-motion`: stehendes Raster, Formwechsel ohne Übergang.
+  (`size-halftone-glow`, 40 px, leise), Welle bei Klick auf den Hintergrund (`duration-ripple`).
+  `prefers-reduced-motion`: stehendes Raster.
+- **Formwechsel gestrichen (16.11., Hendrik):** das Easter Egg (jeder 5. Klick Punkt → Plus → Quadrat,
+  `duration-morph`) fällt aus !2275, damit der PR schlanker wird. Umgesetzt erst nach der Entscheidung über !2275
+  (Bernhard 13.11.: „sieht aus wie Masern“; Hendrik vertritt das Raster).
 - **Zuerst nur die Demo-Login-Seite;** die Framework-Login-Seite folgt nach Freigabe mit einer Zeile. Der Einstieg
   (Welle löscht das Raster nach erfolgreicher Anmeldung) ist PR 2, nach Abstimmung des Signals mit Bernhard.
 - Spec `docs/superpowers/specs/2026-11-12-login-hintergrund-design.md`, Plan `docs/superpowers/plans/2026-11-12-login-hintergrund-pr1.md`.
