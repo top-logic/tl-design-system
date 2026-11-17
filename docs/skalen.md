@@ -3198,3 +3198,49 @@ Sie hat zwei Dinge sichtbar gemacht, die auf dem Papier nicht zu sehen waren: da
 mehrdeutigen Tokens keine Wahl, sondern eine Aufteilung sind, und dass eine Beschriftung immer der
 Fläche folgen muss, auf der sie steht. Mit dem Schnitt entfällt der Rückweg, und die Ansicht mit
 ihm. Was sie gezeigt hat, steht oben unter „Die Abbildung der alten Tokens“.
+
+### Felder in der bearbeiteten Tabellenzeile (17.11., #30383)
+
+**Befund (tri, #30383):** In einer Tabelle mit `row-edit` waren die Felder der bearbeiteten Zeile randlos und
+durchsichtig; nur eine Linie von 1 px unten zeigte, dass man schreiben kann. Sie fiel auf die Trennlinie der Zeile und
+war praktisch unsichtbar. Unter `row-edit="SELECTED"` war nach dem Wählen nicht zu sehen, welche Zellen Felder sind,
+und eine Pflichtspalte war nirgends gekennzeichnet. Entschieden an einer Demo mit dem Paket-CSS und Zebra aus !2226,
+jede Variante gemessen.
+
+**Entschieden (Hendrik):**
+
+- **Das Feld sieht aus wie im Formular, eine Stufe niedriger.** Fläche `surface-field`, voller Rahmen
+  `border-width-sm` in `border-control`, `radius-sm`. Höhe `size-control` − `space-2xs`: 28 px normal, 24 px kompakt,
+  auf dem Raster. Es steht 3 px unter der Oberkante der Zeile und 4 px über der Trennlinie — ganze Pixel statt 3,5
+  mittig; 3 px sind `space-2xs` − `border-width-sm`, das hält, solange `size-row` eine Rasterstufe über `size-control`
+  liegt (beide Dichten). Seitlich `space-2xs` Luft zur Zellkante, um die der Innenabstand des Felds kleiner ist: der
+  Text steht beim Bearbeiten pixelgenau wie beim Lesen, und die Zeile bleibt so hoch wie beim Lesen, auch mit `ALL`.
+  Die Höhe muss fest sein — `height: 100%` greift in der Zelle nicht, weil deren Höhe nicht fest ist; das Feld blieb bei
+  30 px, und jede bearbeitete Zeile wuchs um 3 px.
+- **Die Auswahl bleibt, wie sie beim Lesen ist:** ganze Zeile `surface-selected` und die Kante, auch auf Zebrazeilen
+  (gewählt vor gezeigt vor Zebra). **Die Rahmen bleiben grau** — auf gewählter und gezeigter Zeile `border-emphasis`
+  statt `border-control` (der hielte auf der gewählten Zeile hell nur 2,84). Das Blau gehört der Auswahl und dem
+  Fokusring: Waren die Rahmen dort `border-interactive`, unterschied sich der Fokus nur noch durch 2 px statt 1 px in
+  derselben Farbe (Kontrast 1,00), und jeder Hover färbte eine ganze Reihe Kästchen blau.
+- **Lesezellen bleiben Text.** Berechnete Werte und Zellen ohne Schreibrecht zeigen ihren Wert wie beim Lesen — wie
+  das nur lesende Feld im Formular. Das fehlende Kästchen unterscheidet sie genug.
+- **Pflicht zeigt der Stern im Spaltenkopf**, wenn das Attribut der Spalte Pflicht ist; das Feld trägt
+  `aria-required`. Dafür muss das Spaltenmodell die Pflicht an den Client geben.
+- **Fehler und Warnung** gewinnen mit ihrem Rahmen wie bisher; gemessen 3,39–4,81 auf allen Zeilenflächen.
+
+**Verworfen:**
+
+- Nur die Feldfläche ohne Rahmen: `surface-field` steht auf jeder Zeilenfläche bei 1,00–1,14, auf einer Zebrazeile ist
+  sie dieselbe Farbe. Die Fläche hält das Feld formulargleich, sichtbar macht es der Rahmen.
+- Rahmen ohne Fläche, eckig bis zur Zellkante: Die Rahmen benachbarter Felder stoßen aneinander, die Zeile wird ein
+  Gitter.
+- Die gewählte Zeile weiß und gehoben (Schatten), Felder bis zur Zellkante: Die Auswahl war nicht mehr zu erkennen,
+  und mit Luft um die Felder blieb vom Weiß nur eine Fuge. Die ganze Zeile in Auswahlfarbe ist das Zeichen, das man
+  vom Lesen kennt.
+- Lesezellen markieren statt Felder (gedämpfte Fläche und Schloss): Die gedämpfte Fläche ist die Zebrafläche. Ein
+  Disabled-Aussehen ebenso — `text-disabled` hält keinen Kontrast, und eine Summe will man lesen.
+- Pflichtzeichen in der Zelle (Ecke, Stern als Platzhalter): in Reserve, falls Pflicht je Zeile wechselt.
+
+**Offen:** Dunkel auf der gezeigten Zeile hält `border-emphasis` nur 2,98 (auf einer gezeigten Zebrazeile mit
+`surface-interactive-strong`, U85, 2,80) statt 3:1. Zu prüfen vor dem PR: `border-emphasis` dunkel eine Stufe heller
+gegen die Paarliste. Den Rahmen beim Zeigen unverändert zu lassen hilft nicht: `border-control` steht dort dunkel bei 2,60.

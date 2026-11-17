@@ -6,7 +6,7 @@ Entscheidungen stehen in `docs/skalen.md`, Befunde des UI-Durchgangs in `docs/ui
 
 Lagebild: http://localhost:8138/ (liest „## Gesamtplan“)
 
-## Jetzt (Stand 16.11.)
+## Jetzt (Stand 17.11.)
 
 **Auf master seit 13.11.:** !2274 (#30281 Login-Karte mittig), !2282 (#30322 Schrift-Primitive), !2283 (#30323
 Gates prüfen, was sie behaupten), !2284 (#30324 Verträge nennen jedes Token); 16.11. !2276 (#30296 Login-Formular), !2206 (#30228 Spaltenausrichtung).
@@ -27,6 +27,11 @@ Gates prüfen, was sie behaupten), !2284 (#30324 Verträge nennen jedes Token); 
 
 **Lokal, ohne PR:** Grenztest C (#30325, Branch `CWS/CWS_30325_limits_test_customer_ui`, Worktree `tl8-wt-30325`):
 MUI-Demo und Theme `weich`, Befunde U69–U83 in `docs/ui-durchgang.md`; Kommentar an Bernhard auf Trac #29650.
+
+**#30383 Felder in der bearbeiteten Tabellenzeile** (tri, Hendrik zugeteilt): entschieden 17.11. (`skalen.md`
+„Felder in der bearbeiteten Tabellenzeile“) — Feld wie im Formular, 28/24 px, Rahmen grau, Auswahl bleibt blau, Stern
+im Spaltenkopf. Offen vor dem PR: Rahmen auf gezeigter Zeile dunkel 2,98. Nächster Schritt: Spec und Plan, zwei PRs
+(CSS in `table.css`; Pflicht im Spaltenmodell, Java + TSX). U85 (Zebra-Hover) gehört zu !2226.
 
 **Weiter — Hendrik wählt:**
 
