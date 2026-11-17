@@ -3084,6 +3084,13 @@ optional ein Logo auf eigener Fläche (`surface-layer`), weil das Logo gegen die
   Standard-Login** (Formular, `LoginFlow`): Logins über einen Identity Provider bekommen nichts — Kundenlogins bleiben
   unberührt, dort steht unsere Seite höchstens einen Augenblick, das rechtfertigt keinen Umbau. Gefällt der Auftritt,
   kann die Rückkehr vom BOS-Keycloak (`login.top-logic.com`) später dazukommen.
+- **Name der Anwendung oben, „Powered by TopLogic“ unten, Framework-Login mit Hintergrund (17.11., Hendrik, auf
+  Bernhards Review):** Bernhard: „it's only demo“ und „No app would ever present just "TopLogic" as its primary logo“.
+  Darum nutzt `login-page.view.xml` des Frameworks den Hintergrund — jede Anwendung bekommt ihn ohne Konfiguration. Über
+  der Karte steht der Titel ihrer `ViewConfig` als `h1` auf der Unterlage; ein Logo (`logo`) ersetzt ihn, sein
+  Alternativtext fällt auf den Titel zurück. Am unteren Rand steht immer „Powered by TopLogic“
+  (`js.loginBackdrop.poweredBy`). Die Demo zeigt „TopLogic React Demo“ statt des TL-Logos. **Die TL-Marke im Wipe
+  bleibt** — sie ist die bewegte Form von „Powered by“, nicht das Logo der Anwendung.
 - Spec `docs/superpowers/specs/2026-11-12-login-hintergrund-design.md`, Plan `docs/superpowers/plans/2026-11-12-login-hintergrund-pr1.md`.
 
 ### Login-Formular: Anmelden als Hauptaktion, Alternativen unter „oder“ (12.11., #30296)
