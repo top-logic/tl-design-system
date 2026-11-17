@@ -1228,10 +1228,24 @@ Die vier Stufen stehen als Klassen `.tl-icon-glyph|sm|md|lg` in `base.css`; `fon
 * `-filled` gibt es nur für Namen auf der Liste.
 * Jeder Icon-Name, den Code oder Konfiguration lesen, existiert im Set.
 
+**Kundensysteme behalten ihre Icons (Hendrik, 17.11.).** Ein Kundensystem wie MBUI muss weiterhin Font-Awesome- und Bootstrap-Icons (`css:fa-…`, `css:bi bi-…`) und eigene Icons verwenden können. Das TL-Set ist der Standard der Engine, aber keine Pflicht für Anwendungen:
+
+* **Die Engine** zeichnet nur noch aus dem TL-Set. Ihre eigenen Fundstellen werden migriert, ohne Aliase im Paket.
+* **Die Bibliotheksmodule** (`ext.com.fontawesome`, `ext.com.bootstrap.icons`) bleiben als **Wahl der Anwendung** verfügbar. Sie sind dann keine Abhängigkeit der Engine mehr. Eine Anwendung, die alte Namen schreibt, bindet das Modul selbst ein.
+* **Gespeicherte Icons** in Modelldaten (vom Icon-Picker geschrieben) bleiben gültig. Es gibt keine Zwangsmigration von Kundendaten.
+* Der Icon-Mechanismus (`ThemeIcon`) nimmt darum weiter mehrere Quellen an. Das Gate „jeder gelesene Name existiert im Set“ gilt nur für die Engine.
+
+**Erhebung** (17.11., `origin/master` `d4d9867579`, vollständig in `docs/migration/icon-erhebung.md`):
+
+* Im Einsatz sind 491 verschiedene Glyphen, 258 von Font Awesome und 233 von Bootstrap Icons. 109 davon kommen nur in Demo-Modulen vor.
+* Lucide-Abdeckung nach Namen: 187 mit gleichem Namen, 249 sinngemäß, 47 unsicher, 8 ohne Entsprechung. „Sinngemäß“ und „unsicher“ sind nach Bedeutung beurteilt, nicht nach Zeichnung. Für die Startliste muss das jemand ansehen.
+* Es gibt 1416 Fundstellen, davon 1128 in Konfiguration. Font Awesome sitzt in Themes und Engine-Code, Bootstrap in den React-Views (548 Stellen in `*.view.xml`). Viel Code liest über Schlüssel (`theme:KEY`, `Icons`-Klassen, `%KEY%`). Dort wird die Glyphe hinter dem Schlüssel getauscht, die Lesestelle bleibt.
+
 **Offen:**
 
-* Die **Erhebung** der heute genutzten `fa-*`/`bi-*`-Glyphen und ihrer Lucide-Abdeckung. Daraus ergeben sich die Startliste und die Zahl der Icons, die wir selbst zeichnen müssen.
-* Der **Weg alter Namen in Konfigurationen.** Wo Anwendungen `css:fa-…` schreiben, gilt „abschneiden, nicht übersetzen“. Es gibt also keine Aliase im Paket, sondern eine Migration der Fundstellen.
+* **Der eigene Icon-Font `tl-icon`** (`colored:tl-icon …`, rund 295 Fundstellen) ist ein drittes System, das bisher übersehen wurde. Er wird ins TL-Set überführt.
+* **Zustände, die heute als solid/regular-Paar gezeichnet sind:** Radio, Stern, Checkbox und Toggle. Sie sind die ersten Kandidaten für die `-filled`-Liste.
+* **`form.css:2756ff`** stylt das Meldungsfeld über vier `.bi-*`-Klassen. Diese Bindung an Glyphnamen fällt mit dem Umbau.
 
 ### Die Abbildung der alten Tokens: erledigt und abgeschnitten
 

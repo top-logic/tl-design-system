@@ -70,7 +70,8 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
   Theme-Editor; Übergabe `docs/uebergabe/`).
 * Dichte-Schalter in der Oberfläche (Issue #18; Kandidat Benutzermenü unter der Themewahl).
 * Icon-Set: entschieden 17.11. — eigenes Set auf Lucide-Basis, gefüllt nur als Zustand (`skalen.md` „Icon-Set“).
-  Offen: Strichstärke 1,5/2, Erhebung der genutzten `fa-*`/`bi-*`-Glyphen, Migration alter Namen in Konfigurationen.
+  Erhebung in `docs/migration/icon-erhebung.md` (491 Glyphen, Lucide deckt fast alle). Kundensysteme (z. B. MBUI)
+  behalten FA/BI und eigene Icons, nur die Engine wird umgestellt. Offen: Strichstärke 1,5/2, `tl-icon`-Font, Startliste.
 * Kunden-Typografie: was bricht, wenn ein Kunde die Schrift tauscht (Issue #12).
 
 **Nebenstränge** (ohne eigene Welle):
