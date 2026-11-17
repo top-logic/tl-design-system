@@ -96,6 +96,14 @@ freigegebenen Push macht der Orchestrator. Steht „push“ als Schritt in einem
 **Nie direkt auf `master` von tl-engine-7** — dort nur über PR und Merge in Gitea; gepusht werden nur die
 `CWS/CWS_<ticket>_…`-Branches und `main` dieses Repos (`TopLogic/tl-design-system`, nur noch Doku). Jede Push-Frage nennt Repo und Branch.
 
+**`NoPreview` vor jeder `jenkins`-Anfrage prüfen** (Bernhard 17.11.): Das Trac-Keyword `NoPreview` verhindert das
+Docker-Deploy des PR-Builds; der Webhook liest es in dem Moment, in dem `jenkins` angefragt wird. Darum vorher am
+Ticket gegen das Gebaute abgleichen: Ist etwas in einer laufenden Anwendung sichtbar oder anklickbar (Komponente,
+Styling, Beschriftung, Dialog, Login, Demo-Ansicht), dann **kein** `NoPreview`. Wirkt die Änderung nur über Tests,
+Gates oder Doku (Paket-Gates, `lint-css`, Verträge, Werkzeuge, Primitive ohne sichtbare Änderung, JavaDoc), dann setzt
+das Ticket `NoPreview`. Im Zweifel Vorschau behalten. Fällt bei einem Folge-Push der sichtbare Teil weg oder kommt einer
+dazu, das Keyword vor der neuen `jenkins`-Anfrage nachziehen.
+
 **Kein Plan geht ohne Plan-Review in die Ausführung.** Die Selbstprüfung des Autors (`writing-plans`) prüft
 gegen die Spec; sie findet nicht, was am Code scheitert. Vor dem Start der SDD prüft ein **frischer Agent**
 (Opus, oder Fable selbst, wenn Opus geplant hat) jeden Plan gegen die Gates: jedes geplante CSS gegen
