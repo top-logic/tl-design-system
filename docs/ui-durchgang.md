@@ -12,7 +12,7 @@ Neue Einträge: Datum, Welle, woher (Sichtprüfung, Hendrik, Review), Quelle in 
 0. **Bestandsaufnahme:** die meistgenutzten Views der Demo in hell, dunkel und kompakt fotografieren, Kritik und
    Audit darüber; Befunde kommen als neue U-Einträge hierher, Doppelungen mit Konsolidierungs-Prognose. **Tabellen
    zuerst** — in echten Anwendungen die meistgenutzte Komponente; bei Konflikten gewinnt die Tabelle.
-1. **Systemweit:** Bewegung (U6, U19); Zustandssprache als ein Paket (U3, U13, U14); Icon-Bibliothek entscheiden;
+1. **Systemweit:** Bewegung (U6, U19); Zustandssprache als ein Paket (U3, U13, U14); Icon-Set (entschieden 17.11.: eigenes auf Lucide-Basis, `skalen.md` „Icon-Set“);
    Pfeiltasten in Leisten (U15); Tabellen-Befunde aus Schritt 0.
 2. **Signature-Komponenten:** Farb- und Icon-Picker (U1, U4); Kalender (U23, U12); Player (U7).
 3. **Kleine Korrekturen, ein Paket:** U8, U9, U11, U17, U22, U5, U10, U18.
@@ -176,5 +176,5 @@ aufzeichenbar. **Nicht geprüft:** GWT-Teile (Gantt/Flow) sind nicht in der Reac
 
 - Dichte-Schalter: in 5d als Gruppe „Dichte“ im Benutzermenü gebaut (vorläufig, 20.10.); der Durchgang kann ihn verschieben.
 - Script-Editor: der Fehlerrahmen ist verdrahtet, der Server meldet `hasError` aber nie (Syntaxfehler kommen als Diagnose) — Server-Seite als Folgeticket.
-- Icon-Bibliothek: Wechsel z. B. zu Lucide prüfen (01.10.); die Wellen binden nichts an Glyphnamen.
+- Icon-Set: entschieden 17.11., eigenes auf Lucide-Basis (`skalen.md` „Icon-Set“); offen Strichstärke, Erhebung, Migration alter Namen.
 - Fokusfalle ohne Tab-Zyklus am Dokumentende (alle portalierten Popups): Trac #29879.

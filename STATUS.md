@@ -69,7 +69,8 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 * Wo `derive` rechnet — Bauzeit, Browser oder Theme-Editor (Bernhards TL-Script-Einwand 25.09.; Empfehlung
   Theme-Editor; Übergabe `docs/uebergabe/`).
 * Dichte-Schalter in der Oberfläche (Issue #18; Kandidat Benutzermenü unter der Themewahl).
-* Icon-Bibliothek: Wechsel z. B. auf Lucide prüfen; bis dahin bindet nichts an Glyphnamen.
+* Icon-Set: entschieden 17.11. — eigenes Set auf Lucide-Basis, gefüllt nur als Zustand (`skalen.md` „Icon-Set“).
+  Offen: Strichstärke 1,5/2, Erhebung der genutzten `fa-*`/`bi-*`-Glyphen, Migration alter Namen in Konfigurationen.
 * Kunden-Typografie: was bricht, wenn ein Kunde die Schrift tauscht (Issue #12).
 
 **Nebenstränge** (ohne eigene Welle):

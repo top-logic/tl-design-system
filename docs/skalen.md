@@ -1197,6 +1197,42 @@ Das Gate bekommt drei Regeln: **eine `font-size` an einem Icon, die keine Icon-S
 
 Die vier Stufen stehen als Klassen `.tl-icon-glyph|sm|md|lg` in `base.css`; `font-size` ist nur dort erlaubt.
 
+### Icon-Set: ein eigenes, auf Lucide-Basis (17.11.)
+
+**Der Befund.** TopLogic zeichnet mit zwei fremden Bibliotheken: Font Awesome `fa-solid` über `ThemeIcon`, Bootstrap Icons im Specimen und im Altbestand (`bi-*`). Das sind zwei Formsprachen nebeneinander, gefüllt neben Linie, und zwei Abhängigkeiten, deren Abdeckung und Namen wir nicht bestimmen.
+
+**Die Entscheidung (Hendrik, 17.11.):** Wir bauen ein **eigenes Set** und übernehmen dafür eine bestehende Bibliothek als Basis. Wir zeichnen also nicht alles selbst, hängen aber auch an keinem Paket.
+
+| Frage | Entscheidung |
+|---|---|
+| Besitz | Die SVGs werden **einmal** ins Paket übernommen. Danach gehören sie uns. Es gibt kein npm-Paket und keinen Abgleich mit dem Original, die Basis bleibt nur der Vorrat, aus dem wir schöpfen. Ins Set kommt nur, was TopLogic nutzt. |
+| Basis | **Lucide** (ISC). Die Formen sind rund und ruhig, das Raster ist einheitlich, und die Bibliothek deckt viel ab. |
+| Raster | 24 × 24, `stroke="currentColor"`, runde Enden und Ecken. Eigene Icons für Lücken (Domäne: Modell, Typ, Attribut, Flow) werden auf demselben Raster gezeichnet, damit das Set aus einem Guss bleibt. |
+| Strichstärke | **Offen.** Lucide zeichnet 2 px auf 24. Bei `size-icon-sm` (16 px) wirkt das schwer. 1,5 oder 2 entscheidet sich am Specimen, und dann gilt **eine** Stärke für das ganze Set. |
+| Gefüllt | **Nur als Zustand, in einer geschlossenen Liste.** Anlass ist der aktive Filter im Spaltenkopf, weitere Kandidaten sind Favorit, angeheftet, Lesezeichen und ungelesen. Die Variante ist eine eigene Datei `<name>-filled.svg`, der Zustand steht im Namen, nicht in einer CSS-Regel. Ist die Lucide-Form geschlossen, entsteht sie durch `fill="currentColor"` (belegt: `filter` in Lucide 0.460.0 ist ein einziges geschlossenes `<polygon>`). Andernfalls wird sie einmal von Hand nachgezeichnet. |
+| Auslieferung | Ein SVG-Sprite, das `tools/generate.mjs` aus `src/icons/` erzeugt. Font-Glyphen entfallen. |
+| Lizenz | Der ISC-Vermerk von Lucide liegt als `LICENSE` neben den Quellen. Mehr verlangt die Lizenz nicht. |
+
+**Verworfen:**
+
+* **Font Awesome und Bootstrap Icons behalten:** Das sind zwei Stile und zwei Abhängigkeiten, also genau der Befund.
+* **Phosphor:** Es hätte Linie und Fläche als fertige Paare, ist Hendrik aber zu kantig.
+* **Alles selbst zeichnen:** Das ist Aufwand ohne sichtbaren Gewinn gegenüber einer guten Basis.
+* **In Reserve: Tabler** (MIT). Gleich rund, gleiches Raster, rund tausend gefüllte Icons fertig. Das wäre der Ausweg, falls die Liste der gefüllten Icons deutlich wächst, ohne dass die Formsprache wechselt.
+
+**Was mit den Stufen geschieht.** Die vier Stufen bleiben, wie sie sind. Ein SVG mit `width: 1em; height: 1em` in der Stufenklasse folgt der `font-size` wie bisher der Glyph. Die beiden Font-Begründungen (`line-height: 1`, quadratischer Kasten in Listen) richten keinen Schaden an, werden aber überflüssig: Ein SVG ist quadratisch und erbt keine Zeilenhöhe.
+
+**Als Gate**, wenn das Set gebaut wird:
+
+* Jedes SVG hat `viewBox="0 0 24 24"`, `stroke="currentColor"`, die eine Strichstärke und keine eigene Farbe.
+* `-filled` gibt es nur für Namen auf der Liste.
+* Jeder Icon-Name, den Code oder Konfiguration lesen, existiert im Set.
+
+**Offen:**
+
+* Die **Erhebung** der heute genutzten `fa-*`/`bi-*`-Glyphen und ihrer Lucide-Abdeckung. Daraus ergeben sich die Startliste und die Zahl der Icons, die wir selbst zeichnen müssen.
+* Der **Weg alter Namen in Konfigurationen.** Wo Anwendungen `css:fa-…` schreiben, gilt „abschneiden, nicht übersetzen“. Es gibt also keine Aliase im Paket, sondern eine Migration der Fundstellen.
+
 ### Die Abbildung der alten Tokens: erledigt und abgeschnitten
 
 Bevor der Schnitt entschieden war, wurde jedes der 54 alten Farbtokens einer Rolle der Skala
