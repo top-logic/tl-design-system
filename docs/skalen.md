@@ -3088,8 +3088,10 @@ optional ein Logo auf eigener Fläche (`surface-layer`), weil das Logo gegen die
   Bernhards Review):** Bernhard: „it's only demo“ und „No app would ever present just "TopLogic" as its primary logo“.
   Darum nutzt `login-page.view.xml` des Frameworks den Hintergrund — jede Anwendung bekommt ihn ohne Konfiguration. Über
   der Karte steht der Titel ihrer `ViewConfig` als `h1` auf der Unterlage; ein Logo (`logo`) ersetzt ihn, sein
-  Alternativtext fällt auf den Titel zurück. Am unteren Rand steht immer „Powered by TopLogic“
-  (`js.loginBackdrop.poweredBy`). Die Demo zeigt „TopLogic React Demo“ statt des TL-Logos. **Die TL-Marke im Wipe
+  Alternativtext fällt auf den Titel zurück. Am unteren Rand steht immer „Powered by“
+  (`js.loginBackdrop.poweredBy`) mit der TopLogic-Wortmarke, 16 px (`size-login-wordmark`), in Graustufen: gefüllt mit
+  `currentColor` der Fußzeile (`text-secondary`), damit sie in hell, dunkel und jedem Kundentheme trägt — das blaue
+  Original hat dunkel zu wenig Kontrast, die Fassung mit Unterzeile ist unter 24 px unlesbar. Die Demo zeigt „TopLogic React Demo“ statt des TL-Logos. **Die TL-Marke im Wipe
   bleibt** — sie ist die bewegte Form von „Powered by“, nicht das Logo der Anwendung.
 - Spec `docs/superpowers/specs/2026-11-12-login-hintergrund-design.md`, Plan `docs/superpowers/plans/2026-11-12-login-hintergrund-pr1.md`.
 

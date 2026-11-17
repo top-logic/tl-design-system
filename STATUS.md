@@ -16,8 +16,8 @@ Gates prüfen, was sie behaupten), !2284 (#30324 Verträge nennen jedes Token); 
 * **!2207** (#30229, jetzt auf master) und **!2208** (#30230): `jenkins` angefragt 16.11., Builds stehen aus.
 * **!2275** (#30294 Login-Hintergrund, Worktree `tl8-wt-30294`): REQUEST_CHANGES 13.11. („sieht aus wie Masern“).
   17.11. `4211250db3` gepusht (Formwechsel raus, Ruhezustand reduziert), PR-Text/Titel und Trac #30294 neu, `bhu` +
-  `jenkins` angefragt. 17.11. 13:25 bhu erneut REQUEST_CHANGES („only demo“, kein App-Name): lokal `3e4fdf78f0`
-  — Framework-Login mit Hintergrund, Titel der Anwendung oben, „Powered by TopLogic“ unten (skalen 17.11.), lokal in der
+  `jenkins` angefragt. 17.11. 13:25 bhu erneut REQUEST_CHANGES („only demo“, kein App-Name): lokal `3e4fdf78f0` + Wortmarke
+  — Framework-Login mit Hintergrund, Titel der Anwendung oben, „Powered by“ mit TL-Wortmarke unten (skalen 17.11.), lokal in der
   Demo geprüft; **nicht gepusht**, PR-Text-Entwurf im Scratchpad der Sitzung. Signal für PR 2 (Einstieg mit TL-Zeichen): Framework-
   Ticket #30388 (Auftritt der geladenen Seite, nur Standard-Login, skalen 17.11.), CC bhu. Skizze
   `.superpowers/brainstorm/14150-1794476958/content/login-marke.html`.
