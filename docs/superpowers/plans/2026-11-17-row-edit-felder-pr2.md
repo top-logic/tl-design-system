@@ -1,4 +1,4 @@
-# Plan PR 2: Pflicht in der bearbeiteten Tabellenzeile (#30383)
+# Plan PR 2: Pflicht in der bearbeiteten Tabellenzeile (#30391, aus #30383)
 
 Spec: `docs/superpowers/specs/2026-11-17-row-edit-felder-design.md`, Abschnitt „PR 2“. Baut auf PR 1
 (`CWS/CWS_30383_row_edit_fields`, lokal, drei Commits). Kette höchstens zwei.
@@ -29,12 +29,13 @@ Geklärt aus der Spec („Zu klären im Plan“):
 - **Attribut mit dynamischer Sichtbarkeit:** kein Stern, auch wenn es statisch Pflicht ist (der Modus entscheidet
   pro Zeile). Teil B trägt die Pflicht.
 
-Commits englisch, Präfix `Ticket #30383:`. **Nicht pushen** — melden, Hendrik gibt frei.
+Eigenes Ticket **#30391** (angenommen 17.11.), damit ein tägliches Release #30383 nach dem Merge von PR 1 nicht
+schließt, solange PR 2 offen ist. Commits englisch, Präfix `Ticket #30391:`. **Nicht pushen** — melden, Hendrik gibt frei.
 
 ## Schritt 0: Branch und Ausgangslage
 
 1. Im Worktree `_Working-Tree/tl8-wt-30383`: `git status` muss sauber sein, HEAD = `CWS/CWS_30383_row_edit_fields`
-   (Commit `7444448256`). Dann `git switch -c CWS/CWS_30383_row_edit_required`.
+   (Commit `7444448256`). Dann `git switch -c CWS/CWS_30391_row_edit_required`.
 2. `cd tl-design-system && node tools/generate.mjs && npm test && npm run test:dom && node tools/lint-css.mjs` —
    alles grün (Stand PR 1: 716/0, 17/0). Ist etwas rot, anhalten und melden.
 
@@ -347,4 +348,4 @@ PR 1. Soll-Liste, hell und dunkel, normal und kompakt:
   (`case ColumnView(…)`) suchen: `git grep -n 'ColumnView(' -- '*.java'`.
 - `TLTableView.tsx` setzt `label` an zwei Stellen ein (Knopf und nicht sortierbar) — das Fragment deckt beide.
 - `lint-css`: keine Pixel, kein `:focus` ohne `-visible`.
-- Nicht pushen. Eine Push-Frage nennt `tl-engine-7` und `CWS/CWS_30383_row_edit_required`.
+- Nicht pushen. Eine Push-Frage nennt `tl-engine-7` und `CWS/CWS_30391_row_edit_required`.
