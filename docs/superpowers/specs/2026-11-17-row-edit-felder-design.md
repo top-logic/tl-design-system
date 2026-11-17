@@ -54,10 +54,11 @@ nirgends gekennzeichnet — dass ein Wert fehlt, erfährt man erst beim Speicher
 Die 3 px oben halten, solange `size-row` genau eine Rasterstufe über `size-control` liegt (normal 36/32, kompakt
 32/28). Ein Test schreibt das fest (unten).
 
-**Warum eine feste Höhe:** Heute steht `.tl-table__cell .tl-field { height: 100% }`. Die Höhe der Zelle ist nicht fest
-(Flex-Element einer Zeile mit `min-height`), die Prozentangabe greift nicht; in der Demo blieb das Feld bei seinen
-natürlichen 30 px und jede bearbeitete Zeile wuchs um 3 px. Die feste Höhe sitzt am direkten Kind der Zelle (das Feld
-oder seine Hülle — `TLChild`, `tl-field-group`), das Feld darin behält `height: 100%`.
+**Warum eine feste Höhe:** Heute füllt das Feld mit `height: 100%` die Zeile ganz (35 px, am Produkt-DOM gemessen im
+Plan-Review). Es soll niedriger sein als die Zeile, mit Luft oben und unten. Die feste Höhe sitzt am direkten Kind der
+Zelle (das Feld oder seine Hülle — `tl-form-field--compact`, `tl-field-group`, `tl-table__tree`), das Feld darin
+behält `height: 100%`. (Die erste Fassung behauptete, `height: 100%` greife nicht und die Zeile wachse um 3 px — das
+galt nur für das Zell-DOM der Demo.) Die verbindlichen Regeln stehen im Plan zu PR 1 (nach Plan-Review).
 
 ### Regeln (Entwurf, gegen das echte DOM im Plan-Review zu prüfen)
 

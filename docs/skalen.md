@@ -3215,8 +3215,8 @@ jede Variante gemessen.
   mittig; 3 px sind `space-2xs` − `border-width-sm`, das hält, solange `size-row` eine Rasterstufe über `size-control`
   liegt (beide Dichten). Seitlich `space-2xs` Luft zur Zellkante, um die der Innenabstand des Felds kleiner ist: der
   Text steht beim Bearbeiten pixelgenau wie beim Lesen, und die Zeile bleibt so hoch wie beim Lesen, auch mit `ALL`.
-  Die Höhe muss fest sein — `height: 100%` greift in der Zelle nicht, weil deren Höhe nicht fest ist; das Feld blieb bei
-  30 px, und jede bearbeitete Zeile wuchs um 3 px.
+  Die Höhe ist fest gesetzt, weil das Feld niedriger ist als die Zeile (am Produkt-DOM füllt `height: 100%` die Zeile
+  ganz, 35 px; dass die Zeile um 3 px wuchs, zeigte nur die Demo mit anderem Zell-DOM — Plan-Review 17.11.).
 - **Die Auswahl bleibt, wie sie beim Lesen ist:** ganze Zeile `surface-selected` und die Kante, auch auf Zebrazeilen
   (gewählt vor gezeigt vor Zebra). **Die Rahmen bleiben grau** — auf gewählter und gezeigter Zeile `border-emphasis`
   statt `border-control` (der hielte auf der gewählten Zeile hell nur 2,84). Das Blau gehört der Auswahl und dem

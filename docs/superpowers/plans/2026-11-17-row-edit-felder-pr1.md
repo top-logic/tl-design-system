@@ -56,71 +56,103 @@ Commit: `Ticket #30383: Lighten border-emphasis in dark mode to gray-36 so field
 
 ## Schritt 2: Feld in der Zelle — Regeln in `table.css`
 
-Datei: `src/components/table/table.css`, Block ab „Ein Feld in der Zelle ist die Zelle: randlos …“ (heute Zeilen
-675–720). Kommentare deutsch, wie im Paket.
+Datei: `src/components/table/table.css`, Block ab „Ein Feld in der Zelle ist die Zelle: randlos …“ bis
+einschließlich der Regel `:where(.tl-table__row:hover, …) .tl-table__cell .tl-field:not(:disabled, [readonly])`
+(heute Zeilen **675–707**, Review S8). **Unverändert bleiben** 709–720: Warnung, Fehler,
+`.tl-table__cell .tl-field-group { height: 100%; }`, die Marken-Regel (sonst wird `table.test.mjs:41–43` rot).
+Kommentare deutsch, wie im Paket.
 
-Ersetzen:
+Ersetzen durch (Fassung nach Plan-Review 17.11.: B1, B2, B3, S1, S2, S7, H1 eingearbeitet und im Headless-Chrome
+am Produkt-DOM gemessen):
 
 ```css
 /* Ein Feld in der Zelle sieht aus wie im Formular, eine Stufe niedriger (#30383): Fläche surface-field, voller Rahmen,
-   Höhe size-control − space-2xs (28 px normal, 24 px kompakt). Es steht space-2xs − border-width-sm (3 px) unter der
-   Oberkante und hält unten 4 px bis zur Trennlinie — ganze Pixel statt 3,5 mittig; das trägt, solange size-row eine
-   Rasterstufe über size-control liegt (tokens.test.mjs). Seitlich space-2xs Luft, um die der Innenabstand des Felds
-   kleiner ist: der Text steht wie beim Lesen, die Zeile bleibt so hoch wie beim Lesen. Die Höhe sitzt fest am
-   direkten Kind der Zelle (Feld oder Hülle: tl-form-field--compact, tl-field-group, tl-table__tree) — height: 100%
-   griff nicht, weil die Höhe der Zelle nicht fest ist (das Feld blieb 30 px, die Zeile wuchs um 3 px).
+   Höhe size-control − space-2xs (28 px normal, 24 px kompakt) — niedriger als die Zeile, damit oben und unten Luft
+   bleibt und benachbarte Zeilen nicht zu einem Raster aus Kästchen zusammenwachsen. Es steht space-2xs −
+   border-width-sm (3 px) unter der Oberkante und hält unten 4 px bis zur Trennlinie — ganze Pixel statt 3,5 mittig;
+   das trägt, solange size-row eine Rasterstufe über size-control liegt (tokens.test.mjs). Seitlich space-2xs Luft,
+   um die der Innenabstand des Felds kleiner ist: der Text steht wie beim Lesen. Die Höhe sitzt fest am direkten
+   Kind der Zelle (Feld oder Hülle: tl-form-field--compact, tl-field-group, tl-table__tree).
    Fokus ist der Basis-Ring nach innen (3a §5.2); Warnung und Fehler zeichnen einen inneren Rahmen in Statusfarbe. */
 .tl-table__cell:has(.tl-field) {
   padding: calc(var(--tl-space-2xs) - var(--tl-border-width-sm)) var(--tl-space-2xs) 0;
   align-items: flex-start;
 }
 
-.tl-table__cell:has(.tl-field) > * {
+/* (0,3,0): schlägt .tl-table__cell .tl-field { height: 100% }, wenn das Feld selbst direktes Kind ist (S2). */
+.tl-table__cell:has(.tl-field) > :not([hidden]) {
   height: calc(var(--tl-size-control) - var(--tl-space-2xs));
 }
 
+/* Innenabstand an (0,2,0): field.css (Gruppe mit Knopf oder Icon, (0,3,0)) behält Platz für Endknopf und Icon (B1);
+   readonly und disabled rücken so wie beschreibbare Felder (S1). */
 .tl-table__cell .tl-field {
   height: 100%;
   min-height: 0;
+  padding-inline: calc(var(--tl-space-control-x) - var(--tl-space-2xs));
   border: 0;
   border-radius: var(--tl-radius-sm);
   background: transparent;
+}
+
+/* Die Auswahl hat einen Mindestinhalt aus padding-block und Knopf; in der Zelle ohne padding-block, sonst wird sie
+   30/26 px statt 28/24 hoch (B2). Der Pfeil steht space-2xs vor dem Ende wie in jedem anderen Zellfeld. */
+.tl-table__cell .tl-select {
+  padding-block: 0;
+  padding-inline-end: var(--tl-space-2xs);
 }
 
 .tl-table__cell .tl-field:focus-visible {
   outline-offset: calc(-1 * var(--tl-focus-offset));
 }
 
-/* Ein Feld, in das man schreiben kann: Fläche und Rahmen in border-control. Ein Feld mit disabled oder readonly
-   bleibt durchsichtig und ohne Rahmen — es liest sich wie eine Lesezelle. Auf gezeigter und gewählter Zeile trägt
-   border-emphasis den Rahmen (border-control hielte dort hell 2,84 / dunkel 2,60); das Blau bleibt Auswahl und
-   Fokusring vorbehalten. Gleich spezifisch wie Warnung und Fehler, die danach stehen und mit ihrem Rahmen gewinnen. */
-.tl-table__cell .tl-field:not(:disabled, [readonly]) {
-  padding-inline: calc(var(--tl-space-control-x) - var(--tl-space-2xs));
+/* Knöpfe im Feld (Leeren, Kalender, Pfeil): kompakt so hoch wie das Feld, sie deckten dessen Rahmen oben und unten
+   (S7) — eine Rahmenbreite kürzer. Ihr Fokusring liegt nach innen wie im kompakten Feld (compact-field.css), sonst
+   schneidet die Zelle ihn oben und unten (B3, focus-clip). */
+.tl-table__cell .tl-field-group > .tl-button,
+.tl-table__cell .tl-select__controls > .tl-button {
+  max-height: calc(100% - 2 * var(--tl-border-width-sm));
+}
+
+.tl-table__cell .tl-field-group > .tl-button:focus-visible,
+.tl-table__cell .tl-select__controls > .tl-button:focus-visible {
+  outline-offset: calc(-1 * var(--tl-focus-offset));
+}
+
+/* Der native Kalenderknopf des Datumsfelds rechnet mit dem Innenabstand des Formularfelds (field.css); in der Zelle
+   ist der um space-2xs kleiner (S7). */
+.tl-table__cell .tl-field::-webkit-calendar-picker-indicator {
+  margin-inline-end: calc(2 * var(--tl-space-2xs) - var(--tl-space-control-x));
+}
+
+/* Ein Feld, in das man schreiben kann: Fläche und Rahmen in border-control. Ein Feld mit disabled, readonly oder
+   aria-disabled (die Auswahl ist ein div, H1) bleibt durchsichtig und ohne Rahmen — es liest sich wie eine
+   Lesezelle. Auf gezeigter und gewählter Zeile trägt border-emphasis den Rahmen (border-control hielte dort hell
+   2,84 / dunkel 2,60); das Blau bleibt Auswahl und Fokusring vorbehalten. Gleich spezifisch wie Warnung und Fehler,
+   die danach stehen und mit ihrem Rahmen gewinnen. */
+.tl-table__cell .tl-field:not(:disabled, [readonly], [aria-disabled="true"]) {
   background: var(--tl-surface-field);
   box-shadow: inset 0 0 0 var(--tl-border-width-sm) var(--tl-border-control);
 }
 
-:where(.tl-table__row:hover, .tl-table__row[aria-selected="true"]) .tl-table__cell .tl-field:not(:disabled, [readonly]) {
+:where(.tl-table__row:hover, .tl-table__row[aria-selected="true"]) .tl-table__cell .tl-field:not(:disabled, [readonly], [aria-disabled="true"]) {
   box-shadow: inset 0 0 0 var(--tl-border-width-sm) var(--tl-border-emphasis);
 }
 ```
 
-Danach unverändert: Warnung, Fehler, `.tl-table__cell .tl-field-group { height: 100%; }`, die Marken-Regel
-(`padding-inline-end: calc(var(--tl-size-icon-sm) / 2)` ist spezifischer als die Kurzform oben und behält ihr
-Ende).
+**Nachmessen beim Umsetzen** (vom Review nicht gegen diese Gesamtfassung gelaufen): `max-height` der Knöpfe und der
+Kalender-Abstand (S7) — Knopf kompakt 22 px, Rahmen oben und unten sichtbar, Kalenderknopf 4 px vom Feldrand; der
+Löschknopf hat 36 px Platz am Ende (B1). `lint-css` grün. Zeigt `max-height` keine Wirkung (Knopf mit fester
+`height`), melden statt eine weitere Regel zu erfinden.
 
 **Zu prüfen beim Umsetzen, bevor der Schritt als fertig gilt** (im Specimen und an der Instanz, Schritt 4/6):
 
-- **Innenabstand der Auswahl** (`.tl-select`): `padding-inline` an `.tl-field` muss die Werte der Auswahl
-  überstimmen. Wenn `select.css` den Innenabstand an einem inneren Element setzt (`.tl-select__values`), dort
-  nachmessen, ob der Text wie beim Lesen steht; sonst eine Regel `.tl-table__cell .tl-select …` ergänzen und melden.
-- **Datumsfeld** (`tl-field-group`, Eingabe plus Knopf): Wo sitzt der Rahmen — an der Gruppe oder an der Eingabe?
-  Steht er nur an der Eingabe, umschließt er den Kalenderknopf nicht. Befund melden, nicht selbst entscheiden.
-- **Baumspalte** (`.tl-table__cell:has(> .tl-table__tree)`): direktes Kind ist `.tl-table__tree`; es bekommt die feste
-  Höhe, der Toggle steht darin mittig (0,5 px höher als beim Lesen, hingenommen). Das Feld nach dem Toggle hat jetzt
-  Innenabstand `space-control-x − space-2xs` — der Text rückt beim Bearbeiten um diesen Betrag nach rechts (heute um
-  `space-control-x`). Messen und melden; keine eigene Regel ohne Rückfrage.
+- **Datumsfeld** (`tl-field-group`, Eingabe plus Löschknopf; der Kalenderknopf ist nativ in der Eingabe): Der Rahmen
+  sitzt an der Eingabe, der Löschknopf liegt in ihr (Platz 36 px, B1). Sichtprüfung, dass der Rahmen beide umschließt.
+- **Baumspalte**: rückt beim Bearbeiten gemessen 5,63 px (master 9,3), weil der Toggle schrumpft — Bestand, hingenommen
+  (Review H6). Nur nachmessen, keine Regel.
+- **Mehrsprachiger Text** (`.tl-table__cell > .tl-stack--row`) und bearbeitende `tl-value-list` bekämen als direktes Kind
+  ebenfalls 28 px: in einer Instanz mit `row-edit` prüfen, ob es sie dort gibt, und melden.
 - **Feld mit Marke**: Die Marke sitzt an der oberen Ecke der Wurzel `tl-form-field--compact`; die Wurzel ist jetzt
   28/24 px hoch und steht 3 px tiefer. Prüfen, dass die Marke nicht oben abgeschnitten wird.
 - **Mehrzeiliger Text** in der Zelle: gibt es ihn in einer Zeile mit `row-edit`? Wenn ja, melden (die feste Höhe
@@ -140,13 +172,17 @@ Ende).
      const zelle = declarationsOf(css, '.tl-table__cell:has(.tl-field)') ?? '';
      assert.match(zelle, /padding:\s*calc\(var\(--tl-space-2xs\) - var\(--tl-border-width-sm\)\) var\(--tl-space-2xs\) 0/);
      assert.match(zelle, /align-items:\s*flex-start/);
-     assert.match(declarationsOf(css, '.tl-table__cell:has(.tl-field) > *') ?? '',
+     assert.match(declarationsOf(css, '.tl-table__cell:has(.tl-field) > :not([hidden])') ?? '',
        /height:\s*calc\(var\(--tl-size-control\) - var\(--tl-space-2xs\)\)/);
-     const feld = '.tl-table__cell .tl-field:not(:disabled, [readonly])';
+     // Innenabstand an (0,2,0), damit field.css Platz für Endknopf und Icon behält (Plan-Review B1).
+     assert.match(declarationsOf(css, '.tl-table__cell .tl-field') ?? '',
+       /padding-inline:\s*calc\(var\(--tl-space-control-x\) - var\(--tl-space-2xs\)\)/);
+     assert.match(declarationsOf(css, '.tl-table__cell .tl-select') ?? '', /padding-block:\s*0/);
+     const feld = '.tl-table__cell .tl-field:not(:disabled, [readonly], [aria-disabled="true"])';
      const d = declarationsOf(css, feld) ?? '';
      assert.match(d, /background:\s*var\(--tl-surface-field\)/);
      assert.match(d, /box-shadow:\s*inset 0 0 0 var\(--tl-border-width-sm\) var\(--tl-border-control\)/);
-     assert.match(d, /padding-inline:\s*calc\(var\(--tl-space-control-x\) - var\(--tl-space-2xs\)\)/);
+     assert.doesNotMatch(d, /padding/);
      assert.match(declarationsOf(css, `:where(.tl-table__row:hover, .tl-table__row[aria-selected="true"]) ${feld}`) ?? '',
        /box-shadow:\s*inset 0 0 0 var\(--tl-border-width-sm\) var\(--tl-border-emphasis\)/);
      // Kein Blau am Feldrahmen der Zelle: der Fokusring hätte sonst dieselbe Farbe (Kontrast 1,00).
@@ -180,20 +216,31 @@ Ende).
    `--tl-border-emphasis`, Radius `--tl-radius-sm`, Höhe `--tl-size-control` − `--tl-space-2xs`, oben
    `--tl-space-2xs` − `--tl-border-width-sm`, seitlich `--tl-space-2xs`, Innenabstand `--tl-space-control-x` −
    `--tl-space-2xs`; `disabled`/`readonly` ohne Fläche und Rahmen; Fokusring innen; Warnung/Fehler wie bisher).
-   Das Gate „Verträge nennen jedes Token“ (#30324) muss grün bleiben.
-4. `npm test` — grün.
+   Das Gate „Verträge nennen jedes Token“ (`contracts.test.mjs:29`) meldet sonst `radius-sm`, `surface-field`.
+   Außerdem `table.contract.md:285` (zweite Fundstelle zum Feld) nachziehen.
+4. Veraltete Kommentare nachziehen (kein Gate, Review H2): `table.css:754–758` (Baumspalte „so hoch wie die Zeile“),
+   `form.css:180` und `compact-field.css:30` (Feldzelle „hat keinen Innenabstand“), `tools/lib/pairs.mjs:66,84`
+   (Begründung `border-interactive` auf der Zeile).
+5. `npm test` — grün.
 
 Commit: `Ticket #30383: Fields in an edited table row get the form field's surface and frame, one step lower; the row keeps its height.`
 
 ## Schritt 4: Specimen mit bearbeiteter Zeile
 
-Datei: `src/components/table/table.spec.html`. Neues Panel „Bearbeitete Zeilen (#30383)“ nach dem ersten, nach dem
-Muster der vorhandenen Tabellen (gleiche Breiten-Skript-Logik; die Breitentabelle `WIDTHS` um die Spaltenzahl des
-neuen Panels ergänzen):
+Datei: `src/components/table/table.spec.html`. Neues Panel „Bearbeitete Zeilen (#30383)“ **am Ende der Seite** —
+davor verschöbe es das Gate `table-align.test.mjs:25–26,41`, das die erste Zahlenspalte der Seite nimmt (Review S4).
+Breiten: 5 Spalten nutzen den **vorhandenen** Schlüssel `5` in `WIDTHS` (`table.spec.html:287,290`); keinen zweiten
+Schlüssel anlegen (S5).
 
-- Spalten: Name (Text, `tl-field`), Lieferdatum (`tl-field-group` mit Eingabe und Kalenderknopf, wie in
-  `field.spec.html`), Status (`tl-field tl-select`, Markup wie `select.spec.html`), Menge (Zahl, `data-tl-align="end"`),
-  Summe (Lesezelle, `tl-text tl-nums`).
+Jede Feldzelle trägt das **Produkt-DOM** (Review S3; aus `TLTableView.tsx`, `TLFormField.tsx`, `TLDatePicker.tsx`,
+`TLDropdownSelect.tsx`), nicht das der Feld-Specimen:
+`div.tl-table__cell > div.tl-form-field.tl-form-field--hidden.tl-form-field--compact > div.tl-form-field__input > …`
+mit `input.tl-field` (Text, Zahl), `span.tl-field-group > input.tl-field[type=date] + button.tl-button` (Löschknopf
+wie `ClearButton.tsx`) bzw. der Auswahl direkt in `__input`. Eine Zelle mit dem Feld als direktem Kind
+(wie `table.spec.html:125`) bleibt zusätzlich drin (S2).
+
+- Spalten: Name (Text), Lieferdatum (Datum mit Löschknopf), Status (Auswahl mit Löschknopf), Menge (Zahl,
+  `data-tl-align="end"`), Summe (Lesezelle, `tl-text tl-nums`).
 - Zeilen: eine Lesezeile (ohne Felder), eine gewählte bearbeitete Zeile (`aria-selected="true"`), eine bearbeitete
   Zeile mit Fehler (`aria-invalid="true"` am leeren Namen), eine mit `readonly`-Feld.
 - Jede Zelle und Zeile mit einem `data-test`-Attribut oder einer `id`, damit der DOM-Test sie findet.
@@ -211,9 +258,12 @@ Neue Datei `test/row-edit.test.mjs` nach dem Muster von `test/titlebar-height.te
   Zeile;
 - der Textanfang (linke Kante plus `padding-left` der Eingabe) liegt auf derselben x-Position wie der Text der
   Lesezelle derselben Spalte; für die Zahlenspalte die rechte Kante;
-- die Rahmenfarbe auf der gewählten Zeile ist `--tl-border-emphasis`, nicht `--tl-border-interactive`.
+- die Rahmenfarbe auf der gewählten Zeile ist `--tl-border-emphasis`, nicht `--tl-border-interactive` — die Farbe
+  kommt als `rgb()` aus `box-shadow`; gegen ein Probe-Element mit `color: var(--tl-border-emphasis)` vergleichen (H5);
+- auch die `readonly`-Zeile: Textanfang wie in der Lesezelle (S1).
 
-`npm run test:dom` — grün, außerdem die drei bestehenden DOM-Gates.
+`npm run test:dom` — grün, außerdem die **vier** bestehenden DOM-Gates (`focus-clip`, `app-bar-shrink`,
+`titlebar-height`, `table-align`; H3). `focus-clip` läuft über das neue Panel und muss ohne Ausnahme grün sein (B3).
 
 Commit: `Ticket #30383: Specimen and DOM gate for fields in an edited table row.`
 
@@ -221,7 +271,8 @@ Commit: `Ticket #30383: Specimen and DOM gate for fields in an edited table row.
 
 Lokale Demo `tl-demo-react` aus dem Worktree, `mvn clean install` (Memory „Lokale Builds immer clean“; Kopf von
 `components.css` muss „tl-design-system (src/“ zeigen). Anmelden als root mit Testpasswort. Ansichten mit
-`row-edit`: `demo/table-columns.view.xml`, `demo/tree-grid-demo.view.xml`, `attributes.view.xml`.
+`row-edit`: `demo/table-columns.view.xml`, `demo/tree-grid-demo.view.xml`, `attributes.view.xml`, und im
+Modell-Editor (`com.top_logic.dev.tools/…/admin/model/model-editor.view.xml`, H4).
 
 Soll-Liste je Ansicht, hell und dunkel, normal und kompakt, `SELECTED` und `ALL` wo vorhanden:
 
@@ -232,7 +283,8 @@ Soll-Liste je Ansicht, hell und dunkel, normal und kompakt, `SELECTED` und `ALL`
 5. Datum, Auswahl, Zahl (rechtsbündig) stehen wie die Lesewerte.
 
 Dann **alle Views im Dunkelmodus** durchsehen wegen `border-emphasis` (Feldrahmen beim Zeigen, Kopf-Unterkante,
-Kante fixierter Spalten, Kästchen, Flow): wirkt eine Linie zu hell oder zu laut, Screenshot und melden.
+Kante fixierter Spalten, Kästchen, Flow): wirkt eine Linie zu hell oder zu laut, Screenshot und melden. Das MUI-Modul
+liest `border-emphasis` ebenfalls (`themeProperties.ts:85`) — dort nur ansehen, nichts ändern.
 
 **Fertig, wenn:** Soll-Liste erfüllt oder Abweichungen gemeldet, Gates grün (`npm test`, `npm run test:dom`,
 `lint-css`), drei Commits lokal auf `CWS/CWS_30383_row_edit_fields`. Kein Push.
