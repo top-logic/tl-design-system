@@ -91,7 +91,10 @@ Dateien: `…/layout/view/table/CellEditing.java`, `…/table/AttributeCellEditi
 2. `AttributeCellEditing.java`: Feld `private final boolean _required;`, Konstruktor
    `AttributeCellEditing(String attribute, boolean required)` (JavaDoc `@param required` „Whether every row type
    holding the attribute requires a value for it.“), `required()` gibt `_required` zurück. Der bisherige
-   Ein-Parameter-Konstruktor hat genau einen Aufrufer (`AttributeColumn.java:124`) und entfällt.
+   Ein-Parameter-Konstruktor entfällt. Aufrufer (Review B1; vor dem Ändern mit `git grep -n 'new AttributeCellEditing('`
+   bestätigen): `AttributeColumn.java:124` (siehe 3.), dazu die Tests `TestAttributeCellMode.java:135, 143, 154, 259`
+   und `TestTableColumnAccessRights.java:280, 281, 282, 522, 523` — sie bekommen `, false`. Die Tests werden auch mit
+   `skipTests=true` kompiliert; ein vergessener Aufrufer bricht `mvn install`.
 3. `AttributeColumn.resolve`: `new AttributeCellEditing(attribute, alwaysRequired(scope, attribute))` mit
 
    ```java
@@ -106,7 +109,8 @@ Dateien: `…/layout/view/table/CellEditing.java`, `…/table/AttributeCellEditi
            if (part == null) {
                continue;
            }
-           if (!part.isMandatory() || part.isDerived() || DynamicVisibility.modeSelector(part) != null) {
+           if (!part.isMandatory() || part.isDerived() || !DisplayAnnotations.isEditable(part)
+                   || DynamicVisibility.modeSelector(part) != null) {
                return false;
            }
            held = true;
@@ -115,7 +119,11 @@ Dateien: `…/layout/view/table/CellEditing.java`, `…/table/AttributeCellEditi
    }
    ```
 
-   Imports (`DynamicVisibility` wie in `AttributeCellEditing`) prüfen.
+   Imports: `DynamicVisibility` wie in `AttributeCellEditing`, `DisplayAnnotations`
+   (`com.top_logic.model.annotate`), `TLStructuredType`. `!DisplayAnnotations.isEditable(part)` (Review S1): ein
+   Pflichtattribut, das statisch nur gelesen wird, hat in keiner Zeile ein Feld — das Formular zeigt dort auch keinen
+   Stern (`TLFormField.tsx:194`, `required && !readOnly`). JavaDoc der Methode um „and its visibility lets it be
+   edited“ ergänzen.
 4. `RowSetTableControl.EditAwareColumn`:
 
    ```java
@@ -176,12 +184,14 @@ Dateien: `com.top_logic.layout.react/react-src/controls/TLTableView.tsx`, `…/c
 
    Der Stern ist `aria-hidden` wie im Formular (`TLFormField.tsx:194`); die Pflicht nennt das Feld selbst über
    `aria-required`.
-3. Vitest in `TLTableView.test.tsx` nach dem Muster der vorhandenen Kopf-Tests: Spalte mit `required: true` zeigt
+3. Vitest in `TLTableView.test.tsx` mit `mountTable({ columns: [...] })` (Zeile ~124; `...state` überschreibt die
+   Spalten — Kopf-Tests gibt es dort noch nicht): Spalte mit `required: true` zeigt
    `.tl-table__required` mit `aria-hidden="true"` im Kopf, sortierbar und nicht sortierbar; ohne `required` keiner.
 
-**Fertig, wenn:** `mvn -B clean install -pl com.top_logic.layout.react` grün (der Build führt Vitest aus; sonst im
-Modul `npx vitest run controls/TLTableView.test.tsx` — wie in den Nachbarmodulen, ggf. mit
-`--no-experimental-webstorage`, siehe Memory „Parts seit #29787“).
+**Fertig, wenn:** `mvn -B clean install -pl com.top_logic.layout.react` grün **und** Vitest grün: der Maven-Build
+führt Vitest nur mit `-DskipTests=false` aus (`com.top_logic.layout.react/pom.xml:123–127`). Darum im Modul
+`npx vitest run react-src/controls/TLTableView.test.tsx` (bei Webstorage-Fehlern mit `--no-experimental-webstorage`,
+Memory „Parts seit #29787“) — Ausgabe in den Bericht.
 
 ## Schritt 5: Paket (`tl-design-system`)
 
@@ -198,6 +208,19 @@ Dateien: `src/components/table/table.css`, `table.contract.md`, `table.spec.html
      color: var(--tl-status-error-text);
    }
    ```
+
+   Zahlenspalte (Review S5): Der Titel einer Spalte mit `data-tl-align="end"` endet bündig mit den Ziffern (Review
+   !2206, `table.css:478`, `test/table-align.test.mjs`). Dort steht der Stern **vor** dem Titel, damit das so bleibt:
+
+   ```css
+   .tl-table__header-cell[data-tl-align="end"] .tl-table__required {
+     order: -1;
+   }
+   ```
+
+   In `test/table-align.test.mjs` einen Fall ergänzen: Zahlenspalte mit Stern, Titel endet weiterhin bündig mit den
+   Ziffern (Muster der vorhandenen Messung; das Specimen bekommt dafür in `#ed-panel` den Stern auch an „Menge“ —
+   Menge als Pflicht ist im Specimen frei gewählt).
 
 2. **Teil B (Z3)** — direkt nach der PR-1-Regel `.tl-table__cell .tl-field:not(:disabled, [readonly],
    [aria-disabled="true"]) { background: var(--tl-surface-field); … }`:
@@ -245,14 +268,21 @@ Dateien: `src/components/table/table.css`, `table.contract.md`, `table.spec.html
    mit `[aria-required="true"]` liest `--tl-status-error-text` und `--tl-space-xs` und schließt `:disabled`,
    `[readonly]`, `[aria-disabled="true"]` aus.
 6. `table.contract.md`: Zeile in der Klassentabelle nach `tl-table__label`: „`tl-table__required` | der
-   Pflichtstern hinter dem Titel, solange die Tabelle bearbeitet wird: `--tl-status-error-text`, `aria-hidden`; gibt
-   nie nach“. In der Farbtabelle (Zeile ~171) den Stern mit 3:1 als Symbol nennen. Für Teil B: „Pflichtfeld in der bearbeiteten Zeile: Ecke `--tl-status-error-text`, `--tl-space-xs` breit, oben
+   Pflichtstern hinter dem Titel, solange die Tabelle bearbeitet wird: `--tl-status-error-text`, `aria-hidden`, ohne
+   eigene Typo-Klasse (erbt die Schrift der Kopfzelle); gibt nie nach; in einer Zahlenspalte vor dem Titel“. In der Farbtabelle (Zeile ~171) den Stern mit 3:1 als Symbol nennen. Für Teil B: „Pflichtfeld in der bearbeiteten Zeile: Ecke `--tl-status-error-text`, `--tl-space-xs` breit, oben
    rechts im Feld, an `[aria-required="true"]`; nicht an read-only oder inaktiven Feldern“.
 7. `table.spec.html`, Panel `#ed-panel`: Kopf „Name“ bekommt den Stern nach dem Titel, die Felder der Spalte
    „Name“ `aria-required="true"`; für Teil B trägt zusätzlich ein Feld einer anderen Spalte (Status, `tl-select`) in einer Zeile `aria-required`
    (bedingte Pflicht) und das Datumsfeld einer Zeile (Fall `.tl-field-group`). `test/row-edit.test.mjs` (PR 1): ein
-   Test, dass die Ecke in normal und kompakt innerhalb des Feldrechtecks liegt (berechnetes `background-image` ≠
-   `none` am Pflichtfeld, `none` am Nicht-Pflichtfeld).
+   Test in normal und kompakt — am Pflichtfeld berechnetes `background-image` ≠ `none`, `background-size` gleich
+   `--tl-space-xs` in beiden Achsen, `background-position` `100% 0%`; am Nicht-Pflichtfeld und am read-only-Feld
+   `background-image` = `none`.
+8. **Kundentheme `probe` (Review B2):** Die drei neuen Paare erzeugen am Probe-Theme (`status-error-text: #F07070`)
+   drei weitere Befunde. `node tools/derive.mjs test/fixtures/probe.primitives.json specimen/probe.theme.css` aufrufen
+   und das Erzeugnis committen (nie von Hand). In `test/derive.test.mjs:199–204` die erwartete Zahl 4 → 7 setzen
+   (`befunde.length` und „Findings: 7 pairs below its threshold“) und den Kommentar ergänzen: „… dazu die drei
+   Symbolpaare (3:1) des Pflichtzeichens der Tabelle, #30383: surface-layer-muted, surface-interactive-strong,
+   surface-field.“ Vorher den Lauf sehen: Es müssen genau diese drei sein.
 
 **Fertig, wenn:** `node tools/generate.mjs && npm test && npm run test:dom && node tools/lint-css.mjs` grün.
 
@@ -260,15 +290,23 @@ Dateien: `src/components/table/table.css`, `table.contract.md`, `table.spec.html
 
 Neue Klasse `test.com.top_logic.layout.view.form.TestRowSetTableRequired extends AbstractModelAccessTest`, Muster
 `TestRowSetTableAlignment` (Spalten-JSON per `columnState(name)`), Edit-Modus wie `TestRowSetEditSession`
-(`form.enterEditMode()`). Pflichtattribut des Testmodells: `name` von `Item` (Komposition `items` eines `Step`,
-`AbstractModelAccessTest` Zeile 76). Gibt die Fixture keinen Step mit Items, im Test einen anlegen.
+(`form.enterEditMode()`). Pflichtattribut des Testmodells: `name` von `Item` (`TestViewModelAccess.model.xml:353–366`,
+`Item` hat nur dieses Attribut). Die Fixture legt keinen Step und kein Item an: im Test einen Step mit Item anlegen,
+Muster `TestRowSetEditSession.java:354` (`newPart(step, ITEMS, ITEM)`) und `:418` (`createStepWithSubstep`).
 
-1. Im Edit-Modus trägt die Spalte `name` `"required":true`, eine Spalte eines nicht verpflichtenden Attributs nicht.
-2. Ohne Edit-Modus trägt keine Spalte `"required"`.
-3. Nach `enterEditMode()` erscheint `required` ohne Neuaufbau der Tabelle von außen (die Spalten werden beim
+1. Tabelle über `items` eines Steps, im Edit-Modus: Spalte `name` trägt `"required":true`.
+2. Dieselbe Tabelle ohne Edit-Modus: keine Spalte trägt `"required"`.
+3. Tabelle mit den Zeilentypen `[STEP, ITEM]` (`setRowTypes`) im Edit-Modus: `name` trägt **kein** `required`, weil
+   `Step.name` nicht Pflicht ist — prüft die Regel „jeder Zeilentyp“ (Review S2).
+4. Ungetestet bleibt „Pflicht mit dynamischer Sichtbarkeit → kein Stern“: das Testmodell hat kein solches Attribut
+   (`Step.remark` ist dynamisch, nicht Pflicht). Im Bericht nennen; an der Instanz (Schritt 8) prüfen.
+5. Nach `enterEditMode()` erscheint `required` ohne Neuaufbau der Tabelle von außen (die Spalten werden beim
    Moduswechsel neu gesendet) — falls das nicht so ist: anhalten und melden, nicht selbst einbauen.
-4. In `TestRowSetTableAlignment.testAdaptedColumnKeepsPinningAndCssClass` zusätzlich `assertFalse(adapted.required())`
-   (Spalte ohne Setup).
+6. In `TestRowSetTableAlignment.testAdaptedColumnKeepsPinningAndCssClass` eine zweite Instanz mit
+   `constructor.newInstance(table, inner, null, true, false)` (editierbar, ohne Setup) und darauf
+   `assertFalse(required())` — prüft den null-Schutz (Review S3; mit `editable=false` wäre es schon wegen `_editable`
+   falsch).
+7. `TestDelegatingColumn.java:98`: `assertFalse(wrapped.required())` ergänzen (Delegation, Review H).
 
 `mvn -B test -DskipTests=false -pl com.top_logic.layout.view -Dtest=test.com.top_logic.layout.view.form.TestRowSetTableRequired`
 und dasselbe für `TestRowSetTableAlignment`. Neue `.java`: SPDX-Kopf und Klassen-JavaDoc.
@@ -298,7 +336,13 @@ PR 1. Soll-Liste, hell und dunkel, normal und kompakt:
 ## Bekannte Fallen
 
 - Die Ein-Parameter-Variante von `AttributeCellEditing` nicht stehen lassen — sonst bekommt ein künftiger Aufrufer
-  stillschweigend keinen Stern.
+  stillschweigend keinen Stern. Alle neun Testaufrufer mitziehen.
+- `derive.test.mjs` und `specimen/probe.theme.css` ziehen jede Änderung der Paarliste nach (Schritt 5.8).
+- Im Fehlerzustand verschmilzt die rote Ecke mit dem roten Fehlerrahmen — erwartet, kein Befund. Löschknopf, Pfeil
+  und Kalenderknopf überlappen das Eckquadrat um etwa 3 px; in Ruhe durchsichtig, beim Zeigen deckt ihre Fläche diese
+  Pixel — an der Instanz ansehen und melden, nicht umbauen.
+- Die Paarliste prüft den Stern auf getönten Köpfen (`*-subtle`) nicht; gemessen ≥ 3,94 im Paket. Bewusst nicht
+  aufgenommen (13 weitere Paare, weitere Befunde in jedem Kundentheme).
 - `ColumnView` ist ein Record: die neue Komponente ändert den kanonischen Konstruktor. Muster-Dekonstruktionen
   (`case ColumnView(…)`) suchen: `git grep -n 'ColumnView(' -- '*.java'`.
 - `TLTableView.tsx` setzt `label` an zwei Stellen ein (Knopf und nicht sortierbar) — das Fragment deckt beide.
