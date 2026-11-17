@@ -215,7 +215,7 @@ weil der schwächere gewann, erfüllte kein Eingabefeld in TopLogic die Norm, he
 |---|---|---|---|---|
 | `border-separator` | `#C1C4C9` | `#44484C` (`gray-60`, seit 06.11.; davor `gray-66`) | 1,68 / 1,93 | **Trennt**, begrenzt nicht. Tabellenzeilen, Abgrenzungen. Schuldet keinen Kontrast. |
 | `border-control` | `#888B90` | `#75787D` | 3,28 / 4,01 | **Begrenzt ein Bedienelement.** Eingabefelder, Auswahlfelder, Schaltflächen mit Umriss. |
-| `border-emphasis` | `#6F7277` | `#7F8286` | 4,63 / 4,61 | **Hebt hervor.** Ausgewählte Zeile, betonte Abgrenzung. |
+| `border-emphasis` | `#6F7277` | `#888B90` (`gray-36`, seit 17.11.; davor `gray-39`) | 4,63 / 5,20 | **Hebt hervor.** Ausgewählte Zeile, betonte Abgrenzung. |
 | `border-interactive` | `#0B5ED7` | `#5394FF` | 5,59 / 5,97 | **Trägt die Marke.** Fokus, aktiver Zustand. |
 
 > Die Werte dieser Tabelle stammen aus der späteren, aus den Anforderungen abgeleiteten
@@ -280,7 +280,7 @@ ist der hellste Wert, der ihre Anforderung noch erfüllt.
 | `text-secondary` | `#54565B` | `#A0A3A8` | 7,0 | Grund |
 | `text-helper` | `#64676B` (seit 09.10., vorher `#676A6F`) | `#93969B` | 4,5 auf vier Flächen (Grund 5,45), hell auch auf `surface-interactive-selected` | `surface-base`, `surface-layer`, `surface-layer-nested`, `surface-overlay` |
 | `text-placeholder` | `#6B6E73` | `#8E9196` | 4,6 | **`surface-field`**, nicht Grund |
-| `border-emphasis` | `#6F7277` | `#7F8286` | 4,6 | Grund |
+| `border-emphasis` | `#6F7277` | `#888B90` | 4,6 | Grund; seit 17.11. auch 3,0 auf gezeigter, gewählter und gezeigter Zebrazeile |
 | `border-control` | `#888B90` | `#75787D` | 3,0 | alle fünf Feldgründe (knappstes Paar hell `surface-field` 3,10, dunkel `surface-overlay` 3,04) |
 | `border-separator` | `#C1C4C9` | `#44484C` | — | trennt nur |
 
@@ -3241,6 +3241,11 @@ jede Variante gemessen.
   Disabled-Aussehen ebenso — `text-disabled` hält keinen Kontrast, und eine Summe will man lesen.
 - Pflichtzeichen in der Zelle (Ecke, Stern als Platzhalter): in Reserve, falls Pflicht je Zeile wechselt.
 
-**Offen:** Dunkel auf der gezeigten Zeile hält `border-emphasis` nur 2,98 (auf einer gezeigten Zebrazeile mit
-`surface-interactive-strong`, U85, 2,80) statt 3:1. Zu prüfen vor dem PR: `border-emphasis` dunkel eine Stufe heller
-gegen die Paarliste. Den Rahmen beim Zeigen unverändert zu lassen hilft nicht: `border-control` steht dort dunkel bei 2,60.
+**`border-emphasis` dunkel `gray-39` → `gray-36` (Hendrik 17.11.).** Mit `gray-39` hielt der Rahmen dunkel auf der
+gezeigten Zeile 2,98, auf der gezeigten Zebrazeile (`surface-interactive-strong`, U85) 2,80. `gray-36` ist die kleinste
+vorhandene Stufe, die alle Zeilenflächen trägt: gezeigt 3,37, gezeigt auf Zebra 3,16, gewählt 4,27, gewählt und
+gezeigt 3,93; zum `border-control` (`gray-43`) 1,30 statt 1,15. Die Paarliste prüft `border-emphasis` jetzt auch auf
+`surface-interactive-hover`, `surface-interactive-strong`, `surface-selected`, `surface-selected-hover` (3,0);
+`gray-39` fällt aus den Primitiven. Dunkel wird jede Linie in `border-emphasis` eine Stufe heller (Feldrahmen beim
+Zeigen, Kopf-Unterkante, Kante fixierter Spalten, Flow). Verworfen: die neue Stufe `gray-37` (gezeigt auf Zebra nur
+3,08) und den Rahmen beim Zeigen unverändert zu lassen (`border-control` dunkel 2,60).

@@ -97,7 +97,7 @@ eine Lesezelle. Im Plan zu klären, mit Blick ins DOM:
 - das Feld mit Marke (`.tl-table__cell:has(> .tl-form-field--compact > .tl-form-field__marker)`, `padding-inline-end`);
 - Kästchen und Schalter in der Zelle: sie sind keine `.tl-field` und bleiben, wie sie sind.
 
-### Primitive: `border-emphasis` dunkel `gray-39` → `gray-36`
+### Primitive: `border-emphasis` dunkel `gray-39` → `gray-36` (entschieden 17.11.)
 
 Mit `gray-39` hält `border-emphasis` dunkel auf der gezeigten Zeile 2,98 und auf der gezeigten Zebrazeile
 (`surface-interactive-strong`, U85) 2,80. `gray-36` ist die kleinste **vorhandene** Stufe, die alle Zeilenflächen

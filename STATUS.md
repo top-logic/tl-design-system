@@ -30,8 +30,8 @@ MUI-Demo und Theme `weich`, Befunde U69–U83 in `docs/ui-durchgang.md`; Komment
 
 **#30383 Felder in der bearbeiteten Tabellenzeile** (tri, Hendrik zugeteilt): entschieden 17.11. (`skalen.md`
 „Felder in der bearbeiteten Tabellenzeile“) — Feld wie im Formular, 28/24 px, Rahmen grau, Auswahl bleibt blau, Stern
-im Spaltenkopf. Offen vor dem PR: Rahmen auf gezeigter Zeile dunkel 2,98. Nächster Schritt: Spec und Plan, zwei PRs
-(CSS in `table.css`; Pflicht im Spaltenmodell, Java + TSX). U85 (Zebra-Hover) gehört zu !2226.
+im Spaltenkopf. `border-emphasis` dunkel → `gray-36`. Spec `docs/superpowers/specs/2026-11-17-row-edit-felder-design.md`;
+nächster Schritt Plan PR 1 (Paket) mit Plan-Review, dann PR 2 (Pflicht im Spaltenmodell, Java + TSX). U85 (Zebra-Hover) gehört zu !2226.
 
 **Weiter — Hendrik wählt:**
 
