@@ -15,9 +15,9 @@ Gates prüfen, was sie behaupten), !2284 (#30324 Verträge nennen jedes Token); 
 
 * **!2207** (#30229, jetzt auf master) und **!2208** (#30230): `jenkins` angefragt 16.11., Builds stehen aus.
 * **!2275** (#30294 Login-Hintergrund, Worktree `tl8-wt-30294`): REQUEST_CHANGES 13.11. („sieht aus wie Masern“).
-  Lokal `4211250db3` (nicht gepusht): Formwechsel raus, Ruhezustand reduziert; neuer PR-Text liegt bereit. PR 2
-  Einstieg (TL-Zeichen in Themefarbe, siehe skalen 16.11.) braucht ein Framework-Ticket fürs Signal (skalen 17.11.:
-  Auftritt der geladenen Seite, nur Standard-Login) — Entwurf fertig, noch nicht angelegt. Skizze
+  17.11. `4211250db3` gepusht (Formwechsel raus, Ruhezustand reduziert), PR-Text/Titel und Trac #30294 neu, `bhu` +
+  `jenkins` angefragt; Ruhezustand auf der Docker-Instanz prüfen. Signal für PR 2 (Einstieg mit TL-Zeichen): Framework-
+  Ticket #30388 (Auftritt der geladenen Seite, nur Standard-Login, skalen 17.11.), CC bhu. Skizze
   `.superpowers/brainstorm/14150-1794476958/content/login-marke.html`.
 
 **Kette UI-Durchgang** (nur die zwei untersten Ebenen haben Build und Review, Ketten höchstens 2–3 PRs):
