@@ -3225,7 +3225,8 @@ jede Variante gemessen.
 - **Lesezellen bleiben Text.** Berechnete Werte und Zellen ohne Schreibrecht zeigen ihren Wert wie beim Lesen — wie
   das nur lesende Feld im Formular. Das fehlende Kästchen unterscheidet sie genug.
 - **Pflicht zeigt der Stern im Spaltenkopf**, wenn das Attribut der Spalte Pflicht ist; das Feld trägt
-  `aria-required`. Dafür muss das Spaltenmodell die Pflicht an den Client geben.
+  `aria-required`. Dafür muss das Spaltenmodell die Pflicht an den Client geben. Präzisiert beim Plan zu PR 2 (siehe
+  unten): Stern nur für „immer Pflicht“, dazu eine Ecke im Feld für jede Pflicht der Zeile.
 - **Fehler und Warnung** gewinnen mit ihrem Rahmen wie bisher; gemessen 3,39–4,81 auf allen Zeilenflächen.
 
 **Verworfen:**
@@ -3239,7 +3240,28 @@ jede Variante gemessen.
   vom Lesen kennt.
 - Lesezellen markieren statt Felder (gedämpfte Fläche und Schloss): Die gedämpfte Fläche ist die Zebrafläche. Ein
   Disabled-Aussehen ebenso — `text-disabled` hält keinen Kontrast, und eine Summe will man lesen.
-- Pflichtzeichen in der Zelle (Ecke, Stern als Platzhalter): in Reserve, falls Pflicht je Zeile wechselt.
+- Pflichtzeichen in der Zelle (Ecke, Stern als Platzhalter): in Reserve, falls Pflicht je Zeile wechselt — sie
+  wechselt (bedingte Pflicht), darum seit dem Plan zu PR 2 die Ecke, siehe unten.
+
+**Pflicht in der bearbeiteten Zeile: Stern im Kopf und Ecke im Feld (Hendrik 17.11., PR 2).** Pflicht kann je Zeile
+wechseln: ein Attribut mit dynamischer Sichtbarkeit wird erst durch einen anderen Wert Pflicht (Demo „Begründung“ bei
+„abgelehnt“), und in einer Tabelle mit Zeilen verschiedener Typen kann dasselbe Attribut hier Pflicht sein und dort
+nicht. Ein Stern im Kopf kann das nicht zeigen. Darum zwei Zeichen:
+
+- **Stern im Spaltenkopf** nur, wenn das Attribut in jedem Zeilentyp, der es hat, immer Pflicht ist (nicht abgeleitet,
+  ohne dynamische Sichtbarkeit), und nur während die Tabelle bearbeitet wird — wie das Formular, das den Stern beim
+  Lesen auch nicht zeigt.
+- **Ecke im Feld:** ein Dreieck in `status-error-text`, `space-xs` breit, oben rechts im Feld, an jedem Feld mit
+  `aria-required` — gefüllt oder leer, nicht an read-only oder inaktiven Feldern. Das Feld trägt `aria-required` schon
+  heute pro Zeile, auch bedingt; die Ecke ist darum reines CSS.
+- **Kontrast als Symbol, 3:1** (WCAG 1.4.11), wie der Markenblau-Trichter im Kopf. Der Stern hält hell auf
+  `surface-layer-muted` 4,29, beim Zeigen auf `surface-interactive-strong` 3,85 (dunkel 4,89 / 3,63), auf getönten
+  Köpfen mindestens 3,94; die Ecke auf `surface-field` hell 4,29, dunkel 4,89. Als Text (4,5) hielte das Rot im Hellen
+  nicht, und ein dunkleres Rot hätte auch das Formular verändert. Die Pflicht für Screenreader trägt `aria-required`.
+
+Verworfen an der Demo `row-edit-required-demo.html`: nur der Stern im Kopf (bedingte Pflicht bliebe unmarkiert); ein
+Stern im Feld (unruhiger als die Ecke); Zeichen nur am leeren Pflichtfeld — Stern, Platzhalter „Pflicht“ oder roter
+Rahmen — weil das Feld dafür einen Zustand „leer“ melden müsste, den es heute nicht gibt.
 
 **`border-emphasis` dunkel `gray-39` → `gray-36` (Hendrik 17.11.).** Mit `gray-39` hielt der Rahmen dunkel auf der
 gezeigten Zeile 2,98, auf der gezeigten Zebrazeile (`surface-interactive-strong`, U85) 2,80. `gray-36` ist die kleinste
