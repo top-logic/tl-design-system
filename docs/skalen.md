@@ -3249,8 +3249,9 @@ wechseln: ein Attribut mit dynamischer Sichtbarkeit wird erst durch einen andere
 nicht. Ein Stern im Kopf kann das nicht zeigen. Darum zwei Zeichen:
 
 - **Stern im Spaltenkopf** nur, wenn das Attribut in jedem Zeilentyp, der es hat, immer Pflicht ist (nicht abgeleitet,
-  ohne dynamische Sichtbarkeit), und nur während die Tabelle bearbeitet wird — wie das Formular, das den Stern beim
-  Lesen auch nicht zeigt.
+  statisch bearbeitbar, ohne dynamische Sichtbarkeit), und nur während die Tabelle bearbeitet wird — wie das Formular,
+  das den Stern beim Lesen und an nur lesenden Feldern auch nicht zeigt. In einer Zahlenspalte steht er **vor** dem
+  Titel: der Titel endet dort bündig mit den Ziffern (Review !2206), und das bleibt so.
 - **Ecke im Feld:** ein Dreieck in `status-error-text`, `space-xs` breit, oben rechts im Feld, an jedem Feld mit
   `aria-required` — gefüllt oder leer, nicht an read-only oder inaktiven Feldern. Das Feld trägt `aria-required` schon
   heute pro Zeile, auch bedingt; die Ecke ist darum reines CSS.
