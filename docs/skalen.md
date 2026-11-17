@@ -3058,9 +3058,18 @@ optional ein Logo auf eigener Fläche (`surface-layer`), weil das Logo gegen die
   Option `mark` und kein Bildladen: die Pfade stehen als Konstante im Client. Nicht in der Klick-Welle — dort
   verdeckt die Karte die Mitte des Zeichens. Kein Schalter zum Abschalten, bis ein Kunde ihn braucht. Skizze:
   `.superpowers/brainstorm/14150-1794476958/content/login-marke.html`.
-- **Ruhezustand reduzieren (16.11., offen bis zur Entscheidung über !2275):** kleinere Punkte, weniger Deckkraft in
-  Ruhe, flacherer Abfall, damit das Raster als feine Textur liest und nicht als „Masern“ (Bernhard 13.11.); die
-  Welle hebt sich dadurch deutlicher ab. Werte aus der Skizze, übernommen erst mit der Überarbeitung von !2275.
+- **Ruhezustand reduziert (16.11., in !2275 seit 17.11.):** kleinere Punkte (Mitte ein Siebtel des Abstands statt
+  ein Drittel, Abfall `(1−d)^0,6`), blasser (`surface-halftone` hell `blue-8`, dunkel `blue-72`, entspricht 16 %
+  Deckkraft der Skizze), damit das Raster als feine Textur liest und nicht als „Masern“ (Bernhard 13.11.); Highlight
+  und Welle heben sich in `surface-halftone-strong` deutlicher ab. Der Formwechsel ist mit demselben Commit entfernt.
+- **Signal für den Einstieg: Auftritt der geladenen Seite (17.11., Hendrik, auf Bernhards Anstoß):** Nach erfolgreicher
+  Anmeldung lädt der Browser die Seite neu (`rebuildWindow` → `PageNavigationEvent` → `location.reload()`). Statt das
+  Neuladen für einen Abgang der Login-Seite aufzuhalten, spielt die **zuerst geladene Seite einen Auftritt**; der Login
+  wartet nie. Vorschlag: `PageNavigationEvent` trägt einen Grund `login`, der Client legt ihn über das Neuladen in
+  `sessionStorage` ab, die neue Seite liest ihn einmal. Framework-Ticket nach Bernhards Wunsch. **Nur der
+  Standard-Login** (Formular, `LoginFlow`): Logins über einen Identity Provider bekommen nichts — Kundenlogins bleiben
+  unberührt, dort steht unsere Seite höchstens einen Augenblick, das rechtfertigt keinen Umbau. Gefällt der Auftritt,
+  kann die Rückkehr vom BOS-Keycloak (`login.top-logic.com`) später dazukommen.
 - Spec `docs/superpowers/specs/2026-11-12-login-hintergrund-design.md`, Plan `docs/superpowers/plans/2026-11-12-login-hintergrund-pr1.md`.
 
 ### Login-Formular: Anmelden als Hauptaktion, Alternativen unter „oder“ (12.11., #30296)

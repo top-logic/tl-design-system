@@ -15,10 +15,10 @@ Gates prüfen, was sie behaupten), !2284 (#30324 Verträge nennen jedes Token); 
 
 * **!2207** (#30229, jetzt auf master) und **!2208** (#30230): `jenkins` angefragt 16.11., Builds stehen aus.
 * **!2275** (#30294 Login-Hintergrund, Worktree `tl8-wt-30294`): REQUEST_CHANGES 13.11. („sieht aus wie Masern“).
-  Hendrik verteidigt das Raster; der Formwechsel (Easter Egg) fliegt raus, geändert wird erst nach der Entscheidung.
-  Ruhezustand wird reduziert (feine Textur statt „Masern“). PR 2 Einstieg (Welle nach Anmeldung, nur das feste
-  TL-Zeichen in Themefarbe bleibt kurz stehen, siehe skalen 16.11.) wartet auf Abstimmung des Signals
-  (`LoginFlow.complete` → `rebuildWindow`); Skizze `.superpowers/brainstorm/14150-1794476958/content/login-marke.html`.
+  Lokal `4211250db3` (nicht gepusht): Formwechsel raus, Ruhezustand reduziert; neuer PR-Text liegt bereit. PR 2
+  Einstieg (TL-Zeichen in Themefarbe, siehe skalen 16.11.) braucht ein Framework-Ticket fürs Signal (skalen 17.11.:
+  Auftritt der geladenen Seite, nur Standard-Login) — Entwurf fertig, noch nicht angelegt. Skizze
+  `.superpowers/brainstorm/14150-1794476958/content/login-marke.html`.
 
 **Kette UI-Durchgang** (nur die zwei untersten Ebenen haben Build und Review, Ketten höchstens 2–3 PRs):
 !2207 (#30229) → !2208 (#30230) → !2226 (#30236) → !2227 (#30102) → !2228 (#30234) → !2229 (#30235) →
