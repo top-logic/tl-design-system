@@ -34,7 +34,7 @@ MUI-Demo und Theme `weich`, Befunde U69–U83 in `docs/ui-durchgang.md`; Komment
 „Felder in der bearbeiteten Tabellenzeile“) — Feld wie im Formular, 28/24 px, Rahmen grau, Auswahl bleibt blau, Stern
 im Spaltenkopf. `border-emphasis` dunkel → `gray-36`. Spec `docs/superpowers/specs/2026-11-17-row-edit-felder-design.md`;
 PR 1 (Paket) **!2371** (`CWS/CWS_30383_row_edit_fields`, gepusht 17.11., Reviewer tri + bhu, jenkins angefragt;
-an der Instanz geprüft: Tabelle, Baumtabelle, Formular dunkel, normal und kompakt). PR 2 **!2394** (Ticket #30391, `CWS/CWS_30391_row_edit_required` auf !2371, gepusht 18.11., noch keine Reviewer und kein jenkins angefragt): Stern im Kopf nur für „immer Pflicht“, dazu
+an der Instanz geprüft: Tabelle, Baumtabelle, Formular dunkel, normal und kompakt). PR 2 **!2394** (Ticket #30391, `CWS/CWS_30391_row_edit_required`, Basis master seit Merge von !2371; Bernhards Befund Pflicht-Ecke unter Fokusring behoben 811382ec2d, bhu, tri und jenkins angefragt 18.11.): Stern im Kopf nur für „immer Pflicht“, dazu
 Ecke im Feld für jede Pflicht der Zeile (Z3, 3:1 als Symbol); Plan `docs/superpowers/plans/2026-11-17-row-edit-felder-pr2.md`,
 Plan-Review eingearbeitet, bereit zur Umsetzung. PR 1 dazu: Fokusring der Fehlermarke innen, Öffner des
 kompakten Felds kürzer (d4750e539f). U85 (Zebra-Hover) gehört zu !2226.
