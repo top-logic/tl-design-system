@@ -1228,12 +1228,12 @@ Die vier Stufen stehen als Klassen `.tl-icon-glyph|sm|md|lg` in `base.css`; `fon
 * `-filled` gibt es nur für Namen auf der Liste.
 * Jeder Icon-Name, den Code oder Konfiguration lesen, existiert im Set.
 
-**Kundensysteme behalten ihre Icons (Hendrik, 17.11.).** Ein Kundensystem wie MBUI muss weiterhin Font-Awesome- und Bootstrap-Icons (`css:fa-…`, `css:bi bi-…`) und eigene Icons verwenden können. Das TL-Set ist der Standard der Engine, aber keine Pflicht für Anwendungen:
+**Kundensysteme mit eigener Bibliothek (Hendrik, 18.11.).** Ein Kunde wie MB bringt seine eigene Icon-Bibliothek mit, und die steckt in seinen eigenen Komponenten. Das TL-Set stört dabei nicht, und umgekehrt. Berührt werden wir nur an zwei Stellen, und beide sind schon so angelegt:
 
-* **Die Engine** zeichnet nur noch aus dem TL-Set. Ihre eigenen Fundstellen werden migriert, ohne Aliase im Paket.
-* **Die Bibliotheksmodule** (`ext.com.fontawesome`, `ext.com.bootstrap.icons`) bleiben als **Wahl der Anwendung** verfügbar. Sie sind dann keine Abhängigkeit der Engine mehr. Eine Anwendung, die alte Namen schreibt, bindet das Modul selbst ein.
-* **Gespeicherte Icons** in Modelldaten (vom Icon-Picker geschrieben) bleiben gültig. Es gibt keine Zwangsmigration von Kundendaten.
-* Der Icon-Mechanismus (`ThemeIcon`) nimmt darum weiter mehrere Quellen an. Das Gate „jeder gelesene Name existiert im Set“ gilt nur für die Engine.
+* **Kunden-Icons in TL-Komponenten** (Menü, Symbolleiste, Baum, Zelle): `ThemeIcon` nimmt weiter fremde Quellen an (SVG, Bild, Font-Klasse). Die Stufenklassen geben ihnen dieselbe Größe wie TL-Icons.
+* **TL-Komponenten sollen Kunden-Icons zeigen:** Die Engine liest Icons nur über Theme-Schlüssel, nie über einen festen Glyphnamen in einer Komponente. Ein Kundentheme überschreibt den Schlüssel, so wie es bei den Farben die Primitive überschreibt.
+
+Darum gilt das Gate „jeder gelesene Name existiert im Set“ nur für die Engine.
 
 **Erhebung** (17.11., `origin/master` `d4d9867579`, vollständig in `docs/migration/icon-erhebung.md`):
 
@@ -1243,6 +1243,7 @@ Die vier Stufen stehen als Klassen `.tl-icon-glyph|sm|md|lg` in `base.css`; `fon
 
 **Offen:**
 
+* **Alte Namen in Anwendungen** (`css:fa-…`, `css:bi bi-…`, auch vom Icon-Picker in Modelldaten gespeichert): Migration oder Weiterbetrieb der Module `ext.com.fontawesome`/`ext.com.bootstrap.icons` als Wahl der Anwendung — offen.
 * **Der eigene Icon-Font `tl-icon`** (`colored:tl-icon …`, rund 295 Fundstellen) ist ein drittes System, das bisher übersehen wurde. Er wird ins TL-Set überführt.
 * **Zustände, die heute als solid/regular-Paar gezeichnet sind:** Radio, Stern, Checkbox und Toggle. Sie sind die ersten Kandidaten für die `-filled`-Liste.
 * **`form.css:2756ff`** stylt das Meldungsfeld über vier `.bi-*`-Klassen. Diese Bindung an Glyphnamen fällt mit dem Umbau.
