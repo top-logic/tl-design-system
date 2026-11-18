@@ -96,6 +96,12 @@ freigegebenen Push macht der Orchestrator. Steht „push“ als Schritt in einem
 **Nie direkt auf `master` von tl-engine-7** — dort nur über PR und Merge in Gitea; gepusht werden nur die
 `CWS/CWS_<ticket>_…`-Branches und `main` dieses Repos (`TopLogic/tl-design-system`, nur noch Doku). Jede Push-Frage nennt Repo und Branch.
 
+**`jenkins` nur an PRs, deren Basis `master` ist.** Ein PR, der auf einen CWS-Branch zielt (gestapelt), bekommt
+keine `jenkins`-Anfrage, auch nicht als zweite Ebene einer Kette — er wartet, bis seine Basis gemergt ist und Gitea ihn
+auf master umstellt. Vor jeder Anfrage die Basis des PRs prüfen; „Reviewer anfragen“ heißt dann nur die menschlichen
+Reviewer. Anlass 18.11.: Build 1553 für !2394 (Basis `CWS/CWS_30383_row_edit_fields`) vom PR-Wächter abgebrochen,
+Jenkins hat zu wenig Kapazität.
+
 **`NoPreview` vor jeder `jenkins`-Anfrage prüfen** (Bernhard 17.11.): Das Trac-Keyword `NoPreview` verhindert das
 Docker-Deploy des PR-Builds; der Webhook liest es in dem Moment, in dem `jenkins` angefragt wird. Darum vorher am
 Ticket gegen das Gebaute abgleichen: Ist etwas in einer laufenden Anwendung sichtbar oder anklickbar (Komponente,
