@@ -3135,6 +3135,30 @@ es mit `<stack align="start">`.
   Linien; ein Trenner mit Text wäre ein neuer Baustein.
 - Overlays, die sich an `login-methods` hängen, adressieren jetzt die Gruppe (Migration im Ticket).
 
+### Anmeldestrecke: eine Karte für alle Schritte (18.11., #30422)
+
+Die Anmeldung war ein allgemeines Formular in einem allgemeinen Panel: zehn Hüllen bis zum ersten Feld, feste 420 px,
+jeder Folgeschritt ein Fenster über der Karte, jeder Fehler in der globalen Snackbar, kein `<form>`, kein
+`autocomplete`. Entschieden (Hendrik):
+
+- **Eigener Baustein `<login-card>`** statt Panel + Hüllen. Die Felder bleiben das Feld des Systems; neu ist alles
+  darum herum. Die Karte ist ein `<form>` (Semantik für Passwortmanager, `submit` löst die Hauptaktion aus).
+- **Folgeschritte in derselben Karte**, kein Fenster über Fenster. Die Karte ist Dialog-Manager und Fehlersenke ihres
+  Teilbaums; `LoginFlow` und die Self-Service-Aktionen bleiben unverändert, ein `<window>` zeichnet sich in der Karte
+  als Schritt („Abbrechen“ wird „Zurück“ oben, die Knopfleiste wird die voll breite Hauptaktion).
+- **Fehler in der Karte**, über den Feldern, `aria-live`; die Snackbar bleibt der Anwendung.
+- **Keine Überschrift im ersten Schritt** — der App-Name über der Karte ist die Überschrift der Seite.
+- **Breite höchstens 24rem, nie fest; unter 480 px keine Karte**, das Formular steht auf der Seite.
+- **Beiträge über benannte Plätze** (`login-password-actions`, `login-alternatives`, `login-footer`) per Overlay;
+  `LoginCommandsConfig` entfällt (ein Erweiterungsmittel statt zwei). „Passwort vergessen?“ in der Label-Zeile des
+  Passworts, „Registrieren“ als leise Zeile am Ende.
+- **`autocomplete` an jedem Feld der Strecke**, Passkey-Autofill (Conditional Mediation) gehört dazu.
+- **Alle Karten der Strecke ziehen mit** (unbekanntes Konto, Einladung, Dialog im anonymen Menü). Angemeldete Dialoge
+  (Passwort ändern, Passkey hinzufügen) bleiben Fenster.
+- Abgespalten: #30424 — der Self-Service-Reset prüfte die Passwort-Richtlinie nicht.
+- Spec `docs/superpowers/specs/2026-11-18-anmeldestrecke-design.md`, Skizze
+  `.superpowers/brainstorm/30422-anmeldestrecke/index.html`.
+
 ### Die Gates prüfen, was sie vorgeben (13.11., #30323, #30324)
 
 Ein Probelauf (12.11.) fand Gates, die weniger prüften, als ihr Name sagt (U65). Seitdem gilt:

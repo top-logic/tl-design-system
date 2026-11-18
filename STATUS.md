@@ -24,6 +24,12 @@ Gates prüfen, was sie behaupten), !2284 (#30324 Verträge nennen jedes Token); 
   Ticket #30388 (Auftritt der geladenen Seite, nur Standard-Login, skalen 17.11.), CC bhu. Skizze
   `.superpowers/brainstorm/14150-1794476958/content/login-marke.html`.
 
+**#30422 Anmeldestrecke** (angenommen 18.11.): Neubau als `<login-card>`, Folgeschritte und Fehler in der Karte,
+`<form>` + `autocomplete`, Passkey-Autofill, alle Karten der Strecke (skalen 18.11.). Spec
+`docs/superpowers/specs/2026-11-18-anmeldestrecke-design.md`, Skizze `.superpowers/brainstorm/30422-anmeldestrecke/`.
+Nächster Schritt: Hendrik prüft Spec und Skizze, dann Plan + Plan-Review. Abgespalten **#30424** (Reset ohne
+Passwort-Richtlinie, Worktree `tl8-wt-30424`, Branch `CWS/CWS_30424_reset_password_policy`, lokal).
+
 **Kette UI-Durchgang** (nur die zwei untersten Ebenen haben Build und Review, Ketten höchstens 2–3 PRs):
 !2207 (#30229) → !2208 (#30230) → !2226 (#30236) → !2227 (#30102) → !2228 (#30234) → !2229 (#30235) →
 !2230 (#30233) → !2231 (#30232, Draft). Rückt nach jedem Merge zwei Ebenen nach. Vor jeder Arbeit dort pullen
