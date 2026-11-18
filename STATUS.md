@@ -16,9 +16,11 @@ Gates prüfen, was sie behaupten), !2284 (#30324 Verträge nennen jedes Token); 
 * **!2207** (#30229, jetzt auf master) und **!2208** (#30230): `jenkins` angefragt 16.11., Builds stehen aus.
 * **!2275** (#30294 Login-Hintergrund, Worktree `tl8-wt-30294`): REQUEST_CHANGES 13.11. („sieht aus wie Masern“).
   17.11. `4211250db3` gepusht (Formwechsel raus, Ruhezustand reduziert), PR-Text/Titel und Trac #30294 neu, `bhu` +
-  `jenkins` angefragt. 17.11. 13:25 bhu erneut REQUEST_CHANGES („only demo“, kein App-Name): umgesetzt und gepusht
-  (`a03dbbd78c`, master gemergt) — Framework-Login mit Hintergrund, Titel der Anwendung oben, „Powered by“ mit
-  TL-Wortmarke unten (skalen 17.11.); Antwort an bhu, PR-Text/Trac neu, `bhu` + `jenkins` angefragt (kein NoPreview). Signal für PR 2 (Einstieg mit TL-Zeichen): Framework-
+  `jenkins` angefragt. 17.11. umgesetzt (App-Name oben, „Powered by“ mit TL-Wortmarke). 18.11. Bernhard
+  baut selbst um (`tl.title` statt `ViewConfig#getTitle()`, Logo als ThemeImage, `tl.title = TopLogic` in der Engine);
+  Handy-Befund von bhu: Scroll-Kasten des Hintergrunds behoben (`43672e7aaa`, gepusht), feste Kartenbreite gehört zum
+  Formular → **#30422** (Anmeldeformular überarbeiten, eigenes Ticket). **`jenkins` erst, wenn die Login-Seite
+  insgesamt fertig ist** (bhu darf vorher selbst anfragen). Signal für PR 2 (Einstieg mit TL-Zeichen): Framework-
   Ticket #30388 (Auftritt der geladenen Seite, nur Standard-Login, skalen 17.11.), CC bhu. Skizze
   `.superpowers/brainstorm/14150-1794476958/content/login-marke.html`.
 
