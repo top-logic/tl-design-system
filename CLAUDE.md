@@ -104,6 +104,13 @@ Gates oder Doku (Paket-Gates, `lint-css`, Verträge, Werkzeuge, Primitive ohne s
 das Ticket `NoPreview`. Im Zweifel Vorschau behalten. Fällt bei einem Folge-Push der sichtbare Teil weg oder kommt einer
 dazu, das Keyword vor der neuen `jenkins`-Anfrage nachziehen.
 
+**Sichtprüfung und Specimen decken jede Feldart ab, die eine Änderung trifft — auch lokal ausgeblendete.** Was eine
+Ansicht standardmäßig nicht zeigt, gehört trotzdem dazu: in `tl-demo-react` über die Spaltenwahl (Zahnrad, „Ok“)
+einblenden (der Demo-Typ unter „Attribute“ hat jede Feldart), bedingt sichtbare Felder auslösen; ins Specimen und
+ins DOM-Gate gehören dieselben Fälle. Meldet ein Subagent einen Befund an einer Stelle, die man nicht findet: erst
+die Stelle finden, nicht umdeuten. Anlass 17.11.: Bernhard lehnte !2371 ab, der Sprachknopf des mehrsprachigen Felds
+stand in der Zelle als Fremdkörper — die Spalte war lokal ausgeblendet (#30414).
+
 **Kein Plan geht ohne Plan-Review in die Ausführung.** Die Selbstprüfung des Autors (`writing-plans`) prüft
 gegen die Spec; sie findet nicht, was am Code scheitert. Vor dem Start der SDD prüft ein **frischer Agent**
 (Opus, oder Fable selbst, wenn Opus geplant hat) jeden Plan gegen die Gates: jedes geplante CSS gegen
