@@ -3142,7 +3142,8 @@ jeder Folgeschritt ein Fenster über der Karte, jeder Fehler in der globalen Sna
 `autocomplete`. Entschieden (Hendrik):
 
 - **Eigener Baustein `<login-card>`** statt Panel + Hüllen. Die Felder bleiben das Feld des Systems; neu ist alles
-  darum herum. Die Karte ist ein `<form>` (Semantik für Passwortmanager, `submit` löst die Hauptaktion aus).
+  darum herum. Das Systemfeld selbst wird verschlankt (eigener PR davor): jede seiner vier Hüllen um das `<input>`
+  bleibt nur mit Zweck — davon gewinnt jedes Formular, nicht nur die Anmeldung. Die Karte ist ein `<form>` (Semantik für Passwortmanager, `submit` löst die Hauptaktion aus).
 - **Folgeschritte in derselben Karte**, kein Fenster über Fenster. Die Karte ist Dialog-Manager und Fehlersenke ihres
   Teilbaums; `LoginFlow` und die Self-Service-Aktionen bleiben unverändert, ein `<window>` zeichnet sich in der Karte
   als Schritt („Abbrechen“ wird „Zurück“ oben, die Knopfleiste wird die voll breite Hauptaktion).

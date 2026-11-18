@@ -50,7 +50,7 @@ Schritt in derselben Karte, jeder Fehler dort, wo man hinschaut.
 - Dialoge der angemeldeten Anwendung (Passwort ändern, Passkey hinzufügen, umbenennen) bleiben Fenster. Sie gewinnen
   nur `autocomplete` an ihren Feldern.
 - Kein eigenes Eingabefeld für die Anmeldung: die Felder bleiben das Feld des Systems (`tl-form-field`, Validierung,
-  Fehler, ARIA). Neu gebaut wird alles darum herum.
+  Fehler, ARIA). Das Systemfeld selbst wird verschlankt (siehe „Systemfeld“), davon profitiert jedes Formular.
 - Legacy (`LoginViewDialog`, `loginDialog.css`, JSP-Fehlerseiten) bleibt unberührt. `com.top_logic/.../style/login.css`
   hat keinen Leser mehr und wird gelöscht.
 
@@ -157,6 +157,21 @@ Für die Label-Zeile bekommt `<field>` einen allgemeinen Platz für eine Nebenak
 Formularfeld des Systems zeichnet ihn rechts in seiner Label-Zeile. Er taugt auch außerhalb der Anmeldung (Hilfe,
 „Passwort anzeigen“).
 
+### Systemfeld: Hüllen nur mit Zweck (18.11., Hendrik)
+
+Heute stehen je Feld vier Hüllen um das `<input>`:
+
+```
+div.tl-form-field (Grid) › div.__label › label
+                         › div.__input › span (ohne Klasse, ohne Stil) › span.tl-field-group › input
+```
+
+Jede Hülle wird auf ihren Zweck geprüft und fällt, wenn sie keinen hat. Ziel: das namenlose `span` entfällt;
+`tl-field-group` nur, wenn das Feld einen Zusatz trägt (Symbol, Suffix, Aktion); das Grid nur, wo das Label neben dem
+Feld steht (`--side`), sonst eine Flex-Spalte. Die Klassen und ihr Vertrag bleiben, wo sie einen Zweck haben;
+Aussehen jedes Formulars bleibt gleich (Gate: Specimen und Sichtprüfung über alle Feldarten der Demo, auch
+ausgeblendete Spalten). Breit wirkend, darum Prüfung über alle Views vor dem Push.
+
 ### `autocomplete` an Feldern
 
 `<field>` bekommt die Option `autocomplete` (Wert wie in HTML), die bis zum `<input>` durchgereicht wird. Gesetzt in
@@ -257,6 +272,7 @@ Jede Zeile wird an der lokalen Instanz durchgespielt, auf dem Schreibtisch und b
 
 ## Schnitt (Vorschlag, kleine PRs)
 
+0. **Systemfeld verschlanken:** Hüllen ohne Zweck fallen, kein sichtbarer Unterschied.
 1. **Felder:** `<field autocomplete>`, `<label-actions>` – allgemein, sofort nützlich, ohne Sichtänderung außer Label-Zeile.
 2. **Karte:** `<login-card>` mit Fehlersenke und Schrittstapel, Fenster als Schritt; Login-Seite, Dialog, Plätze,
    Wegfall `LoginCommandsConfig`; alle Views der Strecke.
