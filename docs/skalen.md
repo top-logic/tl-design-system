@@ -3262,6 +3262,15 @@ nicht. Ein Stern im Kopf kann das nicht zeigen. Darum zwei Zeichen:
   statisch bearbeitbar, ohne dynamische Sichtbarkeit), und nur während die Tabelle bearbeitet wird — wie das Formular,
   das den Stern beim Lesen und an nur lesenden Feldern auch nicht zeigt. In einer Zahlenspalte steht er **vor** dem
   Titel: der Titel endet dort bündig mit den Ziffern (Review !2206), und das bleibt so.
+  Warum **jede** dynamische Sichtbarkeit den Stern nimmt, auch wenn sie nur sperrt oder versteckt (Hendrik 18.11.,
+  an der Demo: „Priorität“ ist immer Pflicht, wird bei „Felder gesperrt“ nur inaktiv und hat trotzdem keinen Stern):
+  Ein Modus-Selektor liefert je Zeile `default` (Pflicht aus dem Modell), `mandatory` (Pflicht), `editable`
+  (**optional**, auch wenn das Modell Pflicht sagt) oder `read-only`/`disabled`/`hidden` (kein Feld). Ein im Modell
+  verpflichtendes Attribut kann also per `editable` in einzelnen Zeilen optional werden, und ob ein Selektor das tut,
+  steht in seinem TL-Script — vorab nicht sicher erkennbar. Ein Stern, der in manchen Zeilen nicht stimmt, ist
+  schlimmer als ein fehlender: Wer einmal einen falschen Stern erlebt, traut ihm nicht mehr. Die Pflicht geht nicht
+  verloren — die Ecke im Feld kommt aus dem Zustand der Zeile und steht an jedem betroffenen Feld. Verworfen: Stern
+  nach dem Modell allein (Variante B), er versprach bei `editable` eine Pflicht, die nicht besteht.
 - **Ecke im Feld:** ein Dreieck in `status-error-text`, `space-xs` breit, oben rechts im Feld, an jedem Feld mit
   `aria-required` — gefüllt oder leer, nicht an read-only oder inaktiven Feldern. Das Feld trägt `aria-required` schon
   heute pro Zeile, auch bedingt; die Ecke ist darum reines CSS.
