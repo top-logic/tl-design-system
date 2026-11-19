@@ -42,6 +42,9 @@ dort bestätigt). Lokaler Hilfsbranch `local/phone-test` (beide Fixes, Demo 8094
 !2207 (#30229) → !2208 (#30230) → !2226 (#30236) → !2227 (#30102) → !2228 (#30234) → !2229 (#30235) →
 !2230 (#30233) → !2231 (#30232, Draft). Rückt nach jedem Merge zwei Ebenen nach. Vor jeder Arbeit dort pullen
 — Bernhard merged master selbst hinein. !2149 bleibt als Draft offen (Hendrik); !2014 am 16.11. geschlossen, sein Inhalt steckt vollständig in der Kette.
+!2226: bhu-Review 18.11. (Zebrastreifen nicht das Wichtigste) → Spaltenwahl zuerst im Popover, Startfokus darauf
+(ac7b59ca68, master gemergt cf5fe2cc0e), gepusht 19.11., jenkins + bhu angefragt; Worktree `tl8-wt-30236`.
+**Nächster Schritt:** Stapel !2227–!2231 nachziehen — dort Seite 1 „Columns n of m“ vor die Ansichtsoptionen.
 
 **Lokal, ohne PR:** Grenztest C (#30325, Branch `CWS/CWS_30325_limits_test_customer_ui`, Worktree `tl8-wt-30325`):
 MUI-Demo und Theme `weich`, Befunde U69–U83 in `docs/ui-durchgang.md`; Kommentar an Bernhard auf Trac #29650.
