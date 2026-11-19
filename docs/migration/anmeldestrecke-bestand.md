@@ -39,7 +39,7 @@
 - Richtlinie Demo: min 8 Zeichen, 2 von 4 Zeichenarten, letzte 3 gesperrt, Ablauf 365 Tage. Texte: „Passwort zu kurz!“ ohne Zahl; es gibt PASSWORD_TOO_SHORT__CHARS mit Zahl.
 - P8 Nach erfolgreichem Reset: Info-Snackbar „Ihr Passwort wurde geändert …“, Login-Feld NICHT mit dem Benutzernamen vorbelegt.
 - X1 Anmeldeversuch eines gesperrten Kontos landet als ERROR mit Stacktrace im Log (erwartetes Ereignis, kein Fehler).
-- X2 (Nebenbefund, nicht Strecke) Benutzermenü (Avatar root) öffnet nicht mehr, nachdem das „Mehr“-Menü der Personenliste benutzt wurde – auch nach Neuladen; keine Konsolenfehler.
+- X2 ZURÜCKGENOMMEN: das „hängende Benutzermenü“ war das unsichtbare Element `BIT-NOTIFICATION-BAR-ROOT` der Bitwarden-Erweiterung, das nach jeder Anmeldung über dem Avatar liegt (elementFromPoint belegt). Kein Fehler der Anwendung. Bitwarden erkennt die Anmeldung heute nur durch Raten.
 
 ## Passwort abgelaufen / zweiter Faktor (Anna, Admin: „Passwort ablaufen lassen“, „MFA verlangen“)
 - F1 Login → Fenster „Passwort ändern“ mit Hinweis „Ihr Passwort ist abgelaufen …“; Enter funktioniert hier (Standardbefehl). Keine Regeln sichtbar.
@@ -48,10 +48,8 @@
 - F4 falscher TOTP → „Der eingegebene Code ist nicht gültig …“; richtig → angemeldet, ohne Hinweis „2FA eingerichtet“.
 - F5 Nächster Login → „Zwei-Faktor-Authentifizierung“ Code-Feld (type=text, kein one-time-code); 4.+ Fehlversuch: Server bremst („bitte 4 s warten“) – sichtbar bleibt die ALTE Meldung (Snackbar-Fehler, 3. Ort).
 - F6 Code-Feld nimmt beliebige Länge/Zeichen; kein Auto-Absenden bei 6 Ziffern; Code aus der Zwischenablage → normal.
-- X2 präzisiert: Benutzermenü (Avatar) öffnet sich nach Neuladen nicht mehr (mehrfach reproduziert, Tabellenansicht, Nutzer Anna); vorher einmal je Tab geöffnet. Keine Konsolenfehler. Nicht Teil der Strecke → eigenes Ticket nach Ursachenbeleg.
 
 ## Nicht durchgespielt (Grund)
-- Einladung annehmen (Benutzermenü X2 blockierte das Abmelden; Schritte Code + Konto anlegen sind dieselben wie bei der Registrierung).
 - Registrierung Modus direct (Neustart nötig), Captcha-Fehlschlag.
 - SSO (kein Identity Provider lokal), Seite „unbekanntes Konto“.
 - Passkey: Knopf deaktiviert, Server liefert keine Optionen (options null) – Ursache offen.
@@ -60,3 +58,31 @@
 
 ## Ursache Snackbar (19.11.)
 - `ReactSnackbarControl.enqueue` stellt jede Meldung hinter die sichtbare (FIFO, 5 s je Meldung, Hover hält fest): die aktuelle Meldung kommt zuletzt. Ticket #30452.
+
+## Nachgeholt (19.11., Instanz im Modus direct)
+- K1 Passkey-Knopf: Tooltip „Für diese Installation sind keine Passkeys eingerichtet. Bitte wenden Sie sich an Ihren Administrator.“ – kein Relying Party (`tl_host` fehlt), trotzdem für jeden Besucher ein deaktivierter Knopf; Grund nur per Hover (Handy: nie). → ohne eingerichtete Passkeys kein Knopf, kein „oder“.
+- K2 Passkey live testen braucht `tl_host=http://localhost:8092` und einen echten Authenticator (Touch ID/Schlüsselbund) – nur mit Hendrik am Rechner.
+- R15 Modus direct: nach „Konto anlegen“ sofort angemeldet, ohne Begrüßung/Hinweis.
+- R16 Registrierung mit vorhandener Adresse: Oberfläche identisch (Code-Schritt), Mail „Mit dieser Adresse besteht bereits ein Zugang … Passwort vergessen“ (gut). Der Code-Schritt wartet dann auf einen Code, der nie kommt – der Text des Schritts muss diesen Fall mitdenken („Kein Code? Prüfen Sie Ihr Postfach – besteht schon ein Konto, haben wir Ihnen das geschrieben.“).
+
+## Einladung (19.11.)
+- E1 Admin „Einladen“: Dialog E-Mail, Sprache, MFA-Anforderung → Snackbar „Die Einladung wurde an … versendet.“; Liste zeigt „gültig bis“ (7 Tage).
+- E2 Mail „Einladung zu <App>“ mit Link `…/accept-invitation.view.xml?invitation=<id>`; Gültigkeit nicht genannt.
+- E3 Seite „Einladung“: Karte klebt OBEN, ohne Hintergrund, ohne App-Namen; Knopf „Bestätigungscode senden“ sieht aus wie eine Trennlinie (nicht primär). Zweiter Nachweis per Code, obwohl der Link schon per Mail kam (ein Schritt mehr als üblich – bewusst? Weitergeleitete Mails).
+- E4 Danach dieselben Fenster wie Registrierung (Code mit „Neuen Code senden“, Konto anlegen) → angemeldet ohne Begrüßung.
+- E5 Link erneut (angemeldet): „Die Einladung wurde bereits zur Erstellung eines Kontos verwendet.“ – Sackgasse, kein Weg zur Anwendung/Anmeldung.
+- E6 unbekannter Link: „Für diesen Link liegt keine Einladung vor. Möglicherweise ist der Link unvollständig, oder die Einladung wurde mit einem neuen Link erneut versendet oder widerrufen.“ – gut erklärt, aber ebenfalls Sackgasse.
+
+## Login-Meldung und Wartung (19.11.)
+- M1 Login-Meldung (Admin → System → Login-Meldungen, aktiv): nach dem Passwort ein Fenster „Mitteilungen“ mit Maximieren-Knopf, Text, „OK“ (primär) / „Abbrechen“. Gilt auch für root.
+- M2 „Abbrechen“ bricht die Anmeldung still ab: Login-Karte mit gefüllten Feldern, kein Hinweis, warum man nicht drin ist. → in der Karte: „Ohne Bestätigung keine Anmeldung.“ und Rückweg.
+- M3 Ein offener Login-Schritt überlebt Neuladen und Adresswechsel (Flow liegt in der Sub-Session) – gut; im Neubau muss der Schritt nach Neuladen wieder in der Karte stehen (nicht als Fenster).
+- W1 Wartungsmodus an: Login-Seite zeigt vorher KEINEN Hinweis. Anmeldeversuch → „Anmeldung fehlgeschlagen für Benutzer 'ben…', da das System sich im Wartungsmodus befindet.“ – ohne die Admin-Nachricht („Update bis 10 Uhr“), mit Benutzername im Text.
+- W2 Wartung prüft erst nach dem Passwort (falsches Passwort → „Anmeldung fehlgeschlagen“) – keine Aufzählung, gut.
+- W3 Angemeldete sehen eine rote Leiste „Das System befindet sich im Wartungsmodus. Update bis 10 Uhr“ – die Login-Seite sollte dieselbe Nachricht vor dem Anmelden zeigen.
+
+## Captcha (aus dem Code, tl-security-captcha) und SSO
+- C1 Zustände des Widgets: „Ich bin kein Roboter“, Lädt…, Prüft…, Geprüft, „Prüfung erforderlich“, „Prüft… bitte warten“ (Absenden zu früh), „Prüfung fehlgeschlagen, später erneut“, „Abgelaufen, erneut versuchen“ + „Neu laden“, „erfordert HTTPS“. Absenden vor Abschluss → `ERROR_CAPTCHA_INVALID` („Die Sicherheitsprüfung ist noch nicht abgeschlossen oder abgelaufen …“) – heute Snackbar. Live: Prüfung lief still in < 1 s, Fehlerzustände nicht ausgelöst.
+- C2 Server-Warnung ohne `hmac-key`: Challenges gelten nur auf diesem Knoten bis zum Neustart (Cluster!) – Betriebshinweis, nicht Oberfläche.
+- S1 SSO-Knöpfe lokal nicht vorhanden (kein Anbieter); Fehlschlag kommt als Alert mit Schließen in der Alternativen-Gruppe (Code `LoginMethodsElement`).
+- S2 Seite „Nicht registriert“ (`unknown-account.view.xml`, direkt geöffnet): Karte klebt oben, ohne Hintergrund/App-Namen; „Die Anmeldung war erfolgreich, Sie sind jedoch nicht für diese Anwendung registriert. Bitte wenden Sie sich an Ihren Administrator.“ + Link „Zur Anmeldung“. Bei eingeschalteter Selbstregistrierung kein Angebot „Konto beantragen“.
