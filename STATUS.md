@@ -44,7 +44,11 @@ dort bestätigt). Lokaler Hilfsbranch `local/phone-test` (beide Fixes, Demo 8094
 — Bernhard merged master selbst hinein. !2149 bleibt als Draft offen (Hendrik); !2014 am 16.11. geschlossen, sein Inhalt steckt vollständig in der Kette.
 !2226: bhu-Review 18.11. (Zebrastreifen nicht das Wichtigste) → Spaltenwahl zuerst im Popover, Startfokus darauf
 (ac7b59ca68, master gemergt cf5fe2cc0e), gepusht 19.11., jenkins + bhu angefragt; Worktree `tl8-wt-30236`.
-**Nächster Schritt:** Stapel !2227–!2231 nachziehen — dort Seite 1 „Columns n of m“ vor die Ansichtsoptionen.
+Stapel !2227–!2231 am 19.11. lokal nachgezogen (Worktree `tl8-wt-30102`, Branches 30102_menus, 30234, 30235,
+30233, 30232; master über !2226 mit drin). Ab !2228 Seiten getauscht (Plan `docs/superpowers/plans/2026-11-19-ansicht-seiten-tauschen.md`):
+Zahnrad „Spalten“ öffnet die Spaltenliste, Fuß „Spalten zurücksetzen“ + „Ansicht ›“, dahinter Dichte/Streifen/Linien; „n von m“ entfernt.
+!2227 bekommt die Einrückung der Schalter zurück (Menü-TSX kommt erst mit !2228). Sichtprüfung 8093 (Demo vom 30232-Stand) ohne Bruch.
+**Nächster Schritt:** Push der fünf Branches nach Freigabe; PR-Text !2227 (Menü-TSX erst in #30234) und !2228 (Seitentausch) nachziehen.
 
 **Lokal, ohne PR:** Grenztest C (#30325, Branch `CWS/CWS_30325_limits_test_customer_ui`, Worktree `tl8-wt-30325`):
 MUI-Demo und Theme `weich`, Befunde U69–U83 in `docs/ui-durchgang.md`; Kommentar an Bernhard auf Trac #29650.
