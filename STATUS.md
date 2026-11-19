@@ -38,6 +38,8 @@ an der Instanz geprüft: Tabelle, Baumtabelle, Formular dunkel, normal und kompa
 Ecke im Feld für jede Pflicht der Zeile (Z3, 3:1 als Symbol); Plan `docs/superpowers/plans/2026-11-17-row-edit-felder-pr2.md`,
 Plan-Review eingearbeitet, bereit zur Umsetzung. PR 1 dazu: Fokusring der Fehlermarke innen, Öffner des
 kompakten Felds kürzer (d4750e539f). U85 (Zebra-Hover) gehört zu !2226.
+Folge **#30454** (angelegt 19.11.): kompaktes Pflichtfeld in der Zeile für Screenreader stumm (nur Ecke, `role=group`
+erlaubt kein `aria-required`) — Öffner nennt bei Pflicht „(Pflicht)“; Branch gestapelt auf `CWS/CWS_30391_row_edit_required`.
 
 **Weiter — Hendrik wählt:**
 
