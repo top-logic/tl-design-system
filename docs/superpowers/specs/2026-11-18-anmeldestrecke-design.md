@@ -318,7 +318,13 @@ Benutzername nötig ist. Die Oberfläche antwortet in jedem Fall gleich.
 | dirty-Punkt am Label in der Anmeldung | in der Karte kein Änderungsmarker |
 | nach Registrierung alte Eingaben in der Karte | Namen übernehmen (siehe oben) |
 | gesperrtes Konto als ERROR mit Stacktrace im Log | INFO ohne Stacktrace (erwartetes Ereignis) |
-| Passkey-Knopf deaktiviert ohne Grund (Server liefert keine Optionen) | Ursache im Plan belegen; ohne nutzbaren Passkey kein Knopf |
+| Passkey-Knopf deaktiviert, Grund nur im Tooltip: „keine Passkeys eingerichtet“ (kein Relying Party, `tl_host` fehlt) | ohne eingerichtete Passkeys kein Knopf (und ohne andere Alternative kein „oder“) |
+| nach Registrierung (`direct`) und Einladung angemeldet ohne ein Wort | Begrüßung als Hinweis in der Karte vor dem Wechsel in die App, oder in der App |
+| Registrierung mit vorhandener Adresse: Code-Schritt wartet auf einen Code, der nie kommt | Text des Code-Schritts deckt den Fall ab („Kein Code? Besteht schon ein Konto, haben wir Ihnen das geschrieben.“) |
+| Seiten „Einladung“ und „Nicht registriert“ kleben oben, ohne Hintergrund; Einladungsknopf wirkt wie Trennlinie; abgelaufene/benutzte Einladung ist Sackgasse | `<login-card>` im Hintergrund, Hauptaktion primär, jeder Endzustand mit Weg („Zur Anmeldung“, bei Selbstregistrierung „Konto beantragen“) |
+| Login-Meldung „Abbrechen“ bricht still ab | Hinweis in der Karte „Ohne Bestätigung ist keine Anmeldung möglich.“ |
+| offener Login-Schritt nach Neuladen wieder als Fenster | steht nach Neuladen als Schritt in der Karte |
+| Wartungsmodus: Login-Seite ohne Hinweis; Fehlertext mit Benutzername, ohne Admin-Nachricht | Hinweis mit Admin-Nachricht schon auf der Login-Seite; Fehlertext ohne Namen, mit Nachricht |
 | Reset: unbegrenzte Code-Versuche, keine Bremse beim Anfordern | #30424 (eigener PR) |
 
 ## Schnitt (Vorschlag, kleine PRs)
