@@ -39,7 +39,7 @@ Ecke im Feld für jede Pflicht der Zeile (Z3, 3:1 als Symbol); Plan `docs/superp
 Plan-Review eingearbeitet, bereit zur Umsetzung. PR 1 dazu: Fokusring der Fehlermarke innen, Öffner des
 kompakten Felds kürzer (d4750e539f). U85 (Zebra-Hover) gehört zu !2226.
 Folge **#30454** (angelegt 19.11.): kompaktes Pflichtfeld in der Zeile für Screenreader stumm (nur Ecke, `role=group`
-erlaubt kein `aria-required`) — Öffner nennt bei Pflicht „(Pflicht)“; Branch gestapelt auf `CWS/CWS_30391_row_edit_required`.
+erlaubt kein `aria-required`) — Öffner nennt bei Pflicht „(Pflicht)“; **!2419** (`CWS/CWS_30454_compact_field_required_label`, Basis `CWS/CWS_30391_row_edit_required`, bhu angefragt 19.11.; jenkins erst nach Merge von !2394).
 
 **Weiter — Hendrik wählt:**
 
