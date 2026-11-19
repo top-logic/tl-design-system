@@ -57,3 +57,6 @@
 - Passkey: Knopf deaktiviert, Server liefert keine Optionen (options null) – Ursache offen.
 - Login-Messages (keine Nachricht konfiguriert).
 - Handy-Breite der heutigen Seite (bekannt aus #30422: 420 px fest).
+
+## Ursache Snackbar (19.11.)
+- `ReactSnackbarControl.enqueue` stellt jede Meldung hinter die sichtbare (FIFO, 5 s je Meldung, Hover hält fest): die aktuelle Meldung kommt zuletzt. Ticket #30452.
