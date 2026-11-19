@@ -27,8 +27,12 @@ Gates prüfen, was sie behaupten), !2284 (#30324 Verträge nennen jedes Token); 
 **#30422 Anmeldestrecke** (angenommen 18.11.): Neubau als `<login-card>`, Folgeschritte und Fehler in der Karte,
 `<form>` + `autocomplete`, Passkey-Autofill, alle Karten der Strecke (skalen 18.11.). Spec
 `docs/superpowers/specs/2026-11-18-anmeldestrecke-design.md`, Skizze `.superpowers/brainstorm/30422-anmeldestrecke/`.
-Nächster Schritt: Hendrik prüft Spec und Skizze, dann Plan + Plan-Review. Abgespalten **#30424** (Reset ohne
-Passwort-Richtlinie, Worktree `tl8-wt-30424`, Branch `CWS/CWS_30424_reset_password_policy`, lokal).
+19.11.: alle Vorgänge live durchgespielt (Instanz 8092 aus Worktree `tl8-wt-30422`, Branch
+`CWS/CWS_30422_login_flow`, Mail-Fänger im Scratchpad), Fallkatalog `docs/migration/anmeldestrecke-bestand.md`,
+16 moderne Funktionen entschieden, Schnitt 0–4 in der Spec. Nächster Schritt: Plan PR 0 + Plan-Review. **Kein Push,
+bevor Hendrik lokal getestet hat** (gilt auch für #30424). Abgespalten **#30424** (Reset-Code unbegrenzt, keine
+Bremse; Worktree `tl8-wt-30424`, lokaler Commit wird ersetzt). Offen: Ticket „verschluckte Snackbar-Meldungen“ nach
+Ursachenbeleg; Nebenbefund Benutzermenü öffnet nach Neuladen nicht (X2).
 
 **Kette UI-Durchgang** (nur die zwei untersten Ebenen haben Build und Review, Ketten höchstens 2–3 PRs):
 !2207 (#30229) → !2208 (#30230) → !2226 (#30236) → !2227 (#30102) → !2228 (#30234) → !2229 (#30235) →

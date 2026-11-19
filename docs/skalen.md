@@ -3156,7 +3156,16 @@ jeder Folgeschritt ein Fenster über der Karte, jeder Fehler in der globalen Sna
 - **`autocomplete` an jedem Feld der Strecke**, Passkey-Autofill (Conditional Mediation) gehört dazu.
 - **Alle Karten der Strecke ziehen mit** (unbekanntes Konto, Einladung, Dialog im anonymen Menü). Angemeldete Dialoge
   (Passwort ändern, Passkey hinzufügen) bleiben Fenster.
-- Abgespalten: #30424 — der Self-Service-Reset prüfte die Passwort-Richtlinie nicht.
+- **19.11., nach dem Live-Durchgang aller Vorgänge** (`docs/migration/anmeldestrecke-bestand.md`): alle Fälle
+  abdecken; moderne Funktionen alle gewählt (Passwort anzeigen, Feststelltaste, Bremse mit Countdown, Ladezustand,
+  E-Mail-Format live, Passwortregeln als Checkliste, **ein** Passwortfeld ohne Wiederholung, Freigabe-Abschluss,
+  modernes Code-Feld, Neuen Code direkt senden, Gültigkeit nennen, E-Mail ändern, Namen übernehmen, Bestätigungen in
+  der Karte, Browser-Zurück, Admin-Mail); „Passwort vergessen“ mit Benutzername **oder** E-Mail.
+- **Keine Konto-Aufzählung:** live geprüft werden nur Format und Regeln, nie ob ein Konto existiert; jede Antwort
+  ist gleich, ob es das Konto gibt oder nicht.
+- Abgespalten: #30424 — der Reset-Code erlaubt unbegrenzt viele Versuche, Anfragen werden nicht gebremst (die
+  Richtlinie selbst prüft das Gerät; die erste Beschreibung war falsch, live widerlegt).
+- Nichts wird gepusht, bevor Hendrik die Strecke lokal getestet hat.
 - Spec `docs/superpowers/specs/2026-11-18-anmeldestrecke-design.md`, Skizze
   `.superpowers/brainstorm/30422-anmeldestrecke/index.html`.
 

@@ -265,18 +265,74 @@ Jede Zeile wird an der lokalen Instanz durchgespielt, auf dem Schreibtisch und b
 | Passkey | Autofill, Knopf, abgebrochen, unbekannter Passkey, kein WebAuthn (Knopf weg), als zweiter Faktor |
 | Zweiter Faktor | Methodenwahl, Code, falscher Code, Einrichtung mit QR, keine Methode möglich |
 | Registrieren | E-Mail leer/ungültig, deaktiviert, zu oft angefordert, Code gesendet (Info im nächsten Schritt), Code falsch/zu oft falsch/abgelaufen, neuen Code senden, Nachname leer, Passwörter ungleich, wartet auf Freigabe, Erfolg |
-| Passwort vergessen | leer, Code gesendet, Code ungültig, Passwörter ungleich/leer, Richtlinie verletzt (nach #30424), Erfolg → zurück zum Anmelden mit Info |
+| Passwort vergessen | leer, mit Name, mit E-Mail (ein Konto, mehrere Konten, keins), Code gesendet, Code falsch/zu oft falsch/abgelaufen (nach #30424), Richtlinie verletzt, zuvor genutzt, Erfolg → Anmelden mit Name und Hinweis |
 | Einladung | unbekannt/abgelaufen/angenommen, Code, Konto anlegen, Mailfehler |
 | Login-Messages | Bestätigen als Schritt |
 | Dialog im anonymen Menü | alle Folgeschritte im selben Fenster |
 
+## Grundsätze (19.11., Hendrik)
+
+- **Absolut sauber, alle Fälle.** Jeder Zustand des Fallkatalogs (`docs/migration/anmeldestrecke-bestand.md`, live
+  durchgespielt 19.11.) hat im Neubau ein geplantes Verhalten und steht in der Prüfliste.
+- **Keine Konto-Aufzählung, nirgends.** Live geprüft werden nur Format und Passwortregeln, nie ob ein Konto oder eine
+  Adresse existiert. Registrieren, Passwort vergessen (auch mit E-Mail), Bremsen und Sperren antworten gleich, ob es
+  das Konto gibt oder nicht (heute schon so – bleibt).
+- **Nichts wird gepusht, bevor Hendrik die ganze Strecke lokal getestet hat.** Das gilt auch für #30424.
+
+## Moderne Funktionen (19.11., Hendrik: alle 16 gewählt)
+
+| Bereich | Funktion | Verhalten |
+|---|---|---|
+| Anmelden | Passwort anzeigen | Auge im Feld, in jedem Passwortfeld der Strecke; `aria-pressed`, Beschriftung „Passwort anzeigen/verbergen“ |
+| | Feststelltaste | „Feststelltaste ist aktiv“ unter dem Passwortfeld, solange `getModifierState('CapsLock')` |
+| | Bremse mit Countdown | Hinweis in der Karte „Zu viele Versuche. Bitte 0:04 warten.“, Hauptaktion gesperrt und zählt herunter; gilt für Login, zweiten Faktor, Codes |
+| | Ladezustand | Hauptaktion mit Spinner während der Anfrage, kein zweites Absenden |
+| Live | E-Mail-Format | `type=email`, Prüfung beim Verlassen, danach je Eingabe; Feldfehler am Feld |
+| | Passwortregeln | Checkliste unter dem Feld aus der Richtlinie des Geräts (Mindestlänge, n von 4 Zeichenarten), jede Regel hakt live ab; „nicht eines der letzten n“ prüft erst der Server |
+| | Ein Passwortfeld | „Passwort (Wiederholung)“ entfällt überall (Registrierung, Reset, Passwortwechsel); dafür das Auge |
+| | Freigabe-Abschluss | nach Registrierung im Modus `approval` ein Abschluss-Schritt „Danke – wir melden uns per E-Mail“ mit „Zur Anmeldung“; Anmeldeversuch vorher: „Ihr Konto wartet auf Freigabe“ statt „gesperrt“ |
+| Codes | Code-Feld | `autocomplete=one-time-code`, `inputmode=numeric`, nur Ziffern, Länge aus der Konfiguration, Auto-Absenden bei voller Länge, Einfügen aus der Zwischenablage |
+| | Neuen Code senden | sendet sofort im selben Schritt, danach Countdown bis zum nächsten möglichen Versand (Bremse des Servers) |
+| | Gültigkeit | Dauer aus der Konfiguration in Mail und Schritt („15 Minuten gültig“) |
+| | E-Mail ändern | Code-Schritt nennt die Adresse, Link „Ändern“ führt mit vorbelegter Adresse zurück |
+| Übergänge | Namen übernehmen | Login-Feld → „Passwort vergessen“ vorbelegt; nach Reset/Registrierung steht der Name im Login-Feld, Fokus aufs Passwort; nie fremde alte Eingaben |
+| | Bestätigungen | „Passwort geändert – bitte anmelden“, „Sie wurden abgemeldet“, „Zwei-Faktor eingerichtet“ als Hinweis in der Karte |
+| | Browser-Zurück | jeder Schritt ein Verlaufseintrag (`history.pushState`); Zurück-Taste/Wischgeste schließt den obersten Schritt |
+| | Admin-Mail | Modus `approval`: Administratoren bekommen „Neue Registrierung wartet auf Freigabe“ mit Link zur Liste |
+
+**Passwort vergessen mit Benutzername oder E-Mail.** Das Feld heißt „Benutzername oder E-Mail“
+(`autocomplete=username`). Gibt es ein Konto mit diesem Namen, gilt es; sonst die Konten mit dieser E-Mail-Adresse:
+genau eins → Code an seine Adresse; mehrere → eine Mail an die Adresse, dass mehrere Konten bestehen und der
+Benutzername nötig ist. Die Oberfläche antwortet in jedem Fall gleich.
+
+## Korrekturen an der Strecke (aus dem Live-Durchgang)
+
+| Befund | Korrektur |
+|---|---|
+| Folgemeldungen gehen in der Snackbar verloren (Bremse, „zu oft falsch“, Richtlinie beim Reset erschien als „Code ungültig“) | in der Karte: neue Meldung ersetzt die alte immer; App-weite Ursache als eigenes Ticket nach Ursachenbeleg |
+| „Neuen Code senden“ führt zurück zur Registrierung (Captcha erneut) | sendet direkt (siehe oben) |
+| Code-Schritt: Enter wirkungslos, „Weiter“ nicht primär | Hauptaktion des Schritts = `submit` |
+| nicht freigegebenes Konto: „gesperrt, wenden Sie sich an …“ | „wartet auf Freigabe“ |
+| „Bitte beheben Sie die Validierungsfehler vor dem Speichern“ zusätzlich zum Feldfehler | nur der Feldfehler, Fokus aufs Feld |
+| „Passwort zu kurz!“ ohne Länge | Checkliste; Servertext mit Zahl (`PASSWORD_TOO_SHORT__CHARS`) |
+| dirty-Punkt am Label in der Anmeldung | in der Karte kein Änderungsmarker |
+| nach Registrierung alte Eingaben in der Karte | Namen übernehmen (siehe oben) |
+| gesperrtes Konto als ERROR mit Stacktrace im Log | INFO ohne Stacktrace (erwartetes Ereignis) |
+| Passkey-Knopf deaktiviert ohne Grund (Server liefert keine Optionen) | Ursache im Plan belegen; ohne nutzbaren Passkey kein Knopf |
+| Reset: unbegrenzte Code-Versuche, keine Bremse beim Anfordern | #30424 (eigener PR) |
+
 ## Schnitt (Vorschlag, kleine PRs)
 
 0. **Systemfeld verschlanken:** Hüllen ohne Zweck fallen, kein sichtbarer Unterschied.
-1. **Felder:** `<field autocomplete>`, `<label-actions>` – allgemein, sofort nützlich, ohne Sichtänderung außer Label-Zeile.
-2. **Karte:** `<login-card>` mit Fehlersenke und Schrittstapel, Fenster als Schritt; Login-Seite, Dialog, Plätze,
-   Wegfall `LoginCommandsConfig`; alle Views der Strecke.
-3. **Passkey-Autofill.**
+1. **Felder:** `<field autocomplete>`, `<label-actions>`, Passwort anzeigen, Feststelltaste, Code-Feld
+   (`one-time-code`, Ziffern, Auto-Absenden), E-Mail-Format live – allgemein, auch außerhalb der Anmeldung nützlich.
+2. **Karte:** `<login-card>` mit Fehlersenke und Schrittstapel, Fenster als Schritt, Browser-Zurück, Ladezustand,
+   Bremse mit Countdown; Login-Seite, Dialog, Plätze, Wegfall `LoginCommandsConfig`; alle Views der Strecke.
+3. **Strecke fachlich:** ein Passwortfeld, Passwortregeln als Checkliste, Neuen Code direkt senden, Gültigkeit,
+   E-Mail ändern, Namen übernehmen, Bestätigungen, Freigabe-Abschluss und „wartet auf Freigabe“, Admin-Mail,
+   Passwort vergessen mit E-Mail, Korrekturen oben.
+4. **Passkey:** Ursache des deaktivierten Knopfs, Autofill.
+- Daneben: **#30424** (Reset-Code begrenzen, Anfragen bremsen) und ein Ticket für die verschluckten Snackbar-Meldungen.
 
 ## Offen für den Plan
 
