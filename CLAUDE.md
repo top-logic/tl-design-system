@@ -135,6 +135,12 @@ Unter `.claude/worktrees/<name>/` können weitere Claude-Instanzen auf eigenen B
 mergen, nicht löschen — der Abgleich läuft über `git merge` des jeweiligen Branches nach `main`,
 wenn Hendrik es sagt. `STATUS.md` auf `main` gehört der Sitzung, die dort arbeitet.
 
+**Doku je Teilaufgabe auf eigenem lokalen Branch** (Hendrik 20.11.): Parallele Sitzungen committen Doku nicht auf
+das lokale `main`, sonst lässt sich eine Teilaufgabe nur mit dem ganzen Stapel pushen. Jede Sitzung arbeitet auf
+`doku/<ticket>` ab `origin/main` (Worktree `_Working-Tree/doku-<ticket>`), in `STATUS.md` nur im eigenen Abschnitt.
+Push nach Freigabe: `git fetch && git rebase origin/main && git push origin doku/<ticket>:main`, danach Branch und
+Worktree löschen. Das lokale `main` im Projektordner wird nur per `git pull --ff-only` nachgezogen.
+
 ## Modelle
 
 Fable oder Opus 5.5 orchestriert (seit 02.10.: beide gleichwertig). Verteilt wird nach der Art der
