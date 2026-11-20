@@ -85,7 +85,8 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 * Icon-Set: entschieden 17.11. — eigenes Set auf Lucide-Basis, gefüllt nur als Zustand (`skalen.md` „Icon-Set“).
   Erhebung in `docs/migration/icon-erhebung.md` (491 Glyphen, Lucide deckt fast alle). Kunden mit eigener
   Bibliothek (z. B. MB) berührt es nur über Theme-Schlüssel und `ThemeIcon`-Quellen. FA/BI verschwinden ganz (20.11.):
-  Migration inkl. Modelldaten, danach Ratsche. Offen: Strichstärke 1,5/2, `tl-icon`-Font, Startliste.
+  Migration inkl. Modelldaten, danach Ratsche. Das Set ist die Basis für alle Icons, auch
+  `tl-icon`-Font und PNG-Icons (20.11.). Offen: Strichstärke 1,5/2, Erhebung der Bild-Icons, Startliste.
 * Kunden-Typografie: was bricht, wenn ein Kunde die Schrift tauscht (Issue #12).
 
 **Nebenstränge** (ohne eigene Welle):

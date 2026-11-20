@@ -1228,6 +1228,16 @@ Die vier Stufen stehen als Klassen `.tl-icon-glyph|sm|md|lg` in `base.css`; `fon
 * `-filled` gibt es nur für Namen auf der Liste.
 * Jeder Icon-Name, den Code oder Konfiguration lesen, existiert im Set.
 
+**Geltungsbereich: alle Icons, die wir beeinflussen können (Hendrik, 20.11.).** Das TL-Set wird die **eine Basis** für jedes Icon, das Engine, Demo und unsere Anwendungen zeichnen, nicht nur der Ersatz für Font Awesome und Bootstrap. Überführt werden:
+
+* Font Awesome und Bootstrap Icons (siehe Erhebung),
+* der eigene Icon-Font `tl-icon` (`colored:tl-icon …`, 40 verschiedene Glyphen),
+* **Bild-Icons:** Unter `themes/` liegen 447 Bilddateien (388 `.png`, 57 `.svg`, je ein `.gif` und `.jpg`). 226 Theme-Icon-Einträge verweisen auf einen Bildpfad. Im ganzen Repo sind es 1175 Bilddateien außerhalb von Tests, Doku und den beiden Bibliotheksmodulen. Davon ist nur ein Teil Icon.
+
+Ein PNG-Icon wird nicht hochgerechnet oder nachgefärbt. Es wird durch ein Icon des Sets ersetzt oder auf dessen Raster neu gezeichnet. Nur so folgt es `currentColor`, den Stufen und dem Dunkelmodus.
+
+**Nicht im Geltungsbereich:** Logos, Illustrationen, Fotos, Login-Hintergründe und Inhalte, die Benutzer hochladen. Das sind Bilder mit eigener Aussage, keine Icons. Welche der Bilddateien Icon sind und welche Bild, klärt eine eigene Erhebung. Die Zahlen oben stammen aus `git ls-tree` auf `origin/master` `d4d9867579` und sind nicht klassifiziert.
+
 **Kundensysteme mit eigener Bibliothek (Hendrik, 18.11.).** Ein Kunde wie MB bringt seine eigene Icon-Bibliothek mit, und die steckt in seinen eigenen Komponenten. Das TL-Set stört dabei nicht, und umgekehrt. Berührt werden wir nur an zwei Stellen, und beide sind schon so angelegt:
 
 * **Kunden-Icons in TL-Komponenten** (Menü, Symbolleiste, Baum, Zelle): `ThemeIcon` nimmt weiter fremde Quellen an (SVG, Bild, Font-Klasse). Die Stufenklassen geben ihnen dieselbe Größe wie TL-Icons.
@@ -1244,7 +1254,7 @@ Darum gilt das Gate „jeder gelesene Name existiert im Set“ nur für die Engi
 **Offen:**
 
 * **Font Awesome und Bootstrap Icons verschwinden ganz (Hendrik, 20.11.).** Es gibt eine saubere Migration und keinen Weiterbetrieb der Module `ext.com.fontawesome`/`ext.com.bootstrap.icons`. Die Migration erfasst Engine, Demo, Anwendungskonfiguration (Theme-Settings, `*.view.xml`, Layouts) und die vom Icon-Picker in Modelldaten gespeicherten `css:fa-…`/`css:bi bi-…`. Sie läuft als Migration mit dem Release (`RequiresMigration`), damit Kundenprojekte sie mitbekommen. Grundlage ist die Zuordnungstabelle alt → neu aus `docs/migration/icon-erhebung.md`, nach Sichtprüfung der Einträge „sinngemäß“ und „unsicher“. **Vorbild im Bestand:** `IconReplacer` (Ticket #28386) hat schon einmal `bi` → `fa` umgeschrieben, als `DescendingRewriter` über die Konfiguration. Danach kamen mit den React-Views 548 neue `bi`-Stellen hinzu, weil keine Ratsche sie verhinderte. Darum: **Nach der Migration ist jedes `fa-`/`bi-` in Engine-Quellen ein Gate-Verstoß.** Wie beim gelöschten `tlReactControls.css` wacht eine Ratsche darüber. Eigene Bibliotheken der Kunden betrifft das nicht, siehe oben.
-* **Der eigene Icon-Font `tl-icon`** (`colored:tl-icon …`, rund 295 Fundstellen) ist ein drittes System, das bisher übersehen wurde. Er wird ins TL-Set überführt.
+* **Erhebung der Bild-Icons:** Welche der Bilddateien sind Icons, wo werden sie gelesen, und welches Set-Icon ersetzt sie? Dasselbe gilt für die 40 `tl-icon`-Glyphen (rund 295 Fundstellen).
 * **Zustände, die heute als solid/regular-Paar gezeichnet sind:** Radio, Stern, Checkbox und Toggle. Sie sind die ersten Kandidaten für die `-filled`-Liste.
 * **`form.css:2756ff`** stylt das Meldungsfeld über vier `.bi-*`-Klassen. Diese Bindung an Glyphnamen fällt mit dem Umbau.
 
