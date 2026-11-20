@@ -101,15 +101,14 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 | Punkt | Teile | Phase | Wo |
 |---|---|---|---|
 | Kundenprojekt Stufe A in der Demo-App gezeigt (JSON mit Hausfarbe → `derive` → Gate grün → Kundenlook) | 1 | offen | Spec §3 |
-| Themes in der Engine: `UIThemeService` setzt `data-tl-theme` (Paketseite fertig) | 1 | offen | Issue #16 |
-| Tokens in Figma, Modi Hell/Dunkel, Blattnamen = Tokennamen | 1 | offen | Issue #7 |
-| TSX-Lint: kein Hex, kein `style={{ color }}`, nur `tl-`-Klassen | 1 | offen | Issue #9 |
+| Themes in der Engine: `UIThemeService` setzt `data-tl-theme` statt `data-theme`, Demo zeigt ein Zweit-Theme (Paketseite fertig) | 1 | offen | Spec §2, Trac #29909 |
+| Tokens in Figma, Modi Hell/Dunkel, Blattnamen = Tokennamen | 1 | erledigt 17.11.; Komponenten laufen, Stand auf Branch `figma` | Figma `02fje…` / `r0LC…` |
+| TSX-Lint: kein Hex, kein `style={{ color }}`, nur `tl-`-Klassen; Restfunde `ColorPopup.tsx` `#000000`, Serverwert im Klassennamen `tl-{stack,columns,grid}--gap-${gap}` | 1 | offen | Spec §5 |
 
 **Offen zu entscheiden** (Hendrik):
 
 * Wo `derive` rechnet — Bauzeit, Browser oder Theme-Editor (Bernhards TL-Script-Einwand 25.09.; Empfehlung
   Theme-Editor; Übergabe `docs/uebergabe/`).
-* Dichte-Schalter in der Oberfläche (Issue #18; Kandidat Benutzermenü unter der Themewahl).
 * Icon-Set: entschieden 17.11. — eigenes Set auf Lucide-Basis, gefüllt nur als Zustand (`skalen.md` „Icon-Set“).
   Erhebung in `docs/migration/icon-erhebung.md` (491 Glyphen, Lucide deckt fast alle). Kunden mit eigener
   Bibliothek (z. B. MB) berührt es nur über Theme-Schlüssel und `ThemeIcon`-Quellen. FA/BI verschwinden ganz (20.11.):
@@ -118,7 +117,8 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
   `docs/migration/`): tote Dateien gelöscht in #30478,
   PR !2442 (210 Dateien; `beacon/` bleibt, Pfade werden zur Laufzeit zusammengesetzt), wartet auf Review; Font und Spinner-GIFs fallen. Offen: Strichstärke 1,5/2, 124 unsichere
   Dateien, Startliste.
-* Kunden-Typografie: was bricht, wenn ein Kunde die Schrift tauscht (Issue #12).
+* Kunden-Typografie, wenn ein Kunde die Schrift tauscht: offen sind die Metrik-Normalisierung im `@font-face`, der Rückfall
+  ohne `tnum` und die Prüfung eines Kundenthemes (Schrift, Schnitte, `tnum`, Zeichensatz). Dringend erst mit dem ersten Kunden.
 
 **Nebenstränge** (ohne eigene Welle):
 
@@ -134,8 +134,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
   gehört an den Tisch; bis dahin nur funktionale Fixes (U24).
 * **Wo `derive` rechnet** und wie veraltete Kundenthemes erkannt werden — Vorschlag Trac #29909 an Bernhard.
 * **Spaltenfilter:** keine neue Gestaltung, bis Bernhard die Semantik entscheidet (U64).
-* Gitea-Issues im Design-System-Repo: #7 Figma-Push, #9 TSX-Lint, #12 Kunden-Typografie, #16 Themes in der Engine,
-  #18 Dichte-Schalter.
+* **Navigation ohne globale Kopfleiste:** Vorschlag an bhu/dbu (Issue #27, geschlossen 20.11. ohne Antwort), nichts gebaut.
 
 ## Verweise
 
