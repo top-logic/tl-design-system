@@ -10,7 +10,7 @@ Lagebild: http://localhost:8138/ (liest „## Gesamtplan“)
 
 **Auf master seit 16.11.:** !2276 (#30296 Login-Formular), !2206 (#30228 Spaltenausrichtung); 17.11. !2207 (#30229
 Gruppenwert läuft über), !2208 (#30230 Filtervorgaben „+ n weitere“), !2371 (#30383 Felder der bearbeiteten Zeile);
-18.11. !2275 (#30294 Login-Hintergrund; Worktree `tl8-wt-30294` kann weg). Einstieg mit TL-Zeichen (PR 2) wartet auf
+18.11. !2275 (#30294 Login-Hintergrund). Einstieg mit TL-Zeichen (PR 2) wartet auf
 Framework-Ticket #30388 (Auftritt der geladenen Seite, CC bhu), Skizze `.superpowers/brainstorm/14150-1794476958/content/login-marke.html`.
 
 **Offen auf unserer Seite** (Abgleich Gitea 20.11.; alle Builds auf dem aktuellen Head grün, sofern gebaut):
@@ -18,14 +18,13 @@ Framework-Ticket #30388 (Auftritt der geladenen Seite, CC bhu), Skizze `.superpo
 | PR | Ticket | Basis | Stand |
 |---|---|---|---|
 | !2226 | #30236 Ansicht-Popover | master | Build 1675 grün, bhu angefragt 20.11. — **zuerst** |
-| !2227 | #30102 Menüverhalten | !2226 | bhu-Anfrage vom 10.11. (veraltet); kein `jenkins` bis Basis master |
+| !2227 | #30102 Menüverhalten | !2226 | wartet auf !2226; kein `jenkins` bis Basis master |
 | !2228–!2231 | #30234, #30235, #30233, #30232 (Draft) | gestapelt | warten, kein Review |
-| !2394 | #30391 Pflicht in der Zeile | master | Build 1655 grün; tri- und bhu-Anfrage veraltet (Head fb8d7fe484 neuer), bhu-Approval vom 18.11. stale → beide neu anfragen |
+| !2394 | #30391 Pflicht in der Zeile | master | Build 1655 grün; wartet auf tri und bhu (bhu-Approval vom 18.11. galt dem alten Stand) |
 | !2419 | #30454 Pflicht für Screenreader | !2394 | bhu angefragt 19.11.; `jenkins` nach Merge von !2394 |
 | !2439 | #30476 Login-Karte Handy | master | Build 1676 grün, bhu angefragt |
 | !2441 | #30477 kein Feld-Zoom iPhone | master | Build 1678 grün, bhu angefragt |
 | !2442 | #30478 tote Bilddateien | master | Build 1679 grün, bhu angefragt |
-| !2149 | #30102 (alt) | CWS_30000 | Draft, bleibt offen (Hendrik) |
 
 **#30422 Anmeldestrecke** (angenommen 18.11.): Neubau als `<login-card>`, Folgeschritte und Fehler in der Karte,
 `<form>` + `autocomplete`, Passkey-Autofill, alle Karten der Strecke (skalen 18.11.). Spec
@@ -44,7 +43,7 @@ dort bestätigt). Lokaler Hilfsbranch `local/phone-test` (beide Fixes, Demo 8094
 **Kette UI-Durchgang** (nur die zwei untersten Ebenen haben Build und Review, Ketten höchstens 2–3 PRs):
 !2207 (#30229) → !2208 (#30230) → !2226 (#30236) → !2227 (#30102) → !2228 (#30234) → !2229 (#30235) →
 !2230 (#30233) → !2231 (#30232, Draft). Rückt nach jedem Merge zwei Ebenen nach. Vor jeder Arbeit dort pullen
-— Bernhard merged master selbst hinein. !2149 bleibt als Draft offen (Hendrik); !2014 am 16.11. geschlossen, sein Inhalt steckt vollständig in der Kette.
+— Bernhard merged master selbst hinein. !2014 (16.11.) und !2149 (20.11.) geschlossen, ihr Inhalt steckt in der Kette.
 !2226: bhu-Review 18.11. (Zebrastreifen nicht das Wichtigste) → Spaltenwahl zuerst im Popover, Startfokus darauf
 (ac7b59ca68, master gemergt cf5fe2cc0e), gepusht 19.11., jenkins + bhu angefragt; Worktree `tl8-wt-30236`.
 Stapel !2227–!2231 am 19.11. lokal nachgezogen (Worktree `tl8-wt-30102`, Branches 30102_menus, 30234, 30235,
