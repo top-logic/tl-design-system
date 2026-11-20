@@ -115,7 +115,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
   Migration inkl. Modelldaten, danach Ratsche. Das Set ist die Basis für alle Icons, auch
   `tl-icon`-Font und PNG-Icons (20.11.). Schnitt entschieden (Bild-Erhebung in
   `docs/migration/`): tote Dateien gelöscht in #30478,
-  PR !2442 (210 Dateien; `beacon/` bleibt, Pfade werden zur Laufzeit zusammengesetzt), wartet auf Review; Font und Spinner-GIFs fallen. Offen: Strichstärke 1,5/2, 124 unsichere
+  PR !2442 (210 Dateien; `beacon/` bleibt, Pfade werden zur Laufzeit zusammengesetzt), wartet auf Review; Font und Spinner-GIFs fallen. Strichstärke 2 px (20.11.). Offen: 124 unsichere
   Dateien, Startliste.
 * Kunden-Typografie, wenn ein Kunde die Schrift tauscht: offen sind die Metrik-Normalisierung im `@font-face`, der Rückfall
   ohne `tnum` und die Prüfung eines Kundenthemes (Schrift, Schnitte, `tnum`, Zeichensatz). Dringend erst mit dem ersten Kunden.
