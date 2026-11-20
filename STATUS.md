@@ -52,7 +52,8 @@ Zahnrad „Spalten“ öffnet die Spaltenliste, Fuß „Spalten zurücksetzen“
 Abschnitt 19./20.11.). Alle sechs Branches gepusht 20.11. (!2226 b225806444 … !2231 436dcc4275), PR-Texte !2226–!2228, Trac
 #30234/#30236 nachgezogen; !2226: Kommentar, jenkins + bhu angefragt; !2227: bhu angefragt.
 „eye“ → `tl-reorder-list__visibility` lokal (30234 e0e1d4ddfd … 30232 be451b3ae9), Sichtprüfung 8093 ok (Minus/Plus, Icons, hell/dunkel);
-mui-`tsc`-Fehler aus master an Bernhard (Trac #30415). **Nächster Schritt:** Push der vier Branches nach Freigabe.
+mui-`tsc`-Fehler aus master an Bernhard (Trac #30415). Eine Breite für beide Seiten (Token `size-popover-view` = 24rem,
+30234 534c6037d6 … 30232 125bfdc560), an der Demo 384/384 px. **Nächster Schritt:** Push der vier Branches nach Freigabe.
 
 **Lokal, ohne PR:** Grenztest C (#30325, Branch `CWS/CWS_30325_limits_test_customer_ui`, Worktree `tl8-wt-30325`):
 MUI-Demo und Theme `weich`, Befunde U69–U83 in `docs/ui-durchgang.md`; Kommentar an Bernhard auf Trac #29650.
