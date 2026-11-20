@@ -6,23 +6,26 @@ Entscheidungen stehen in `docs/skalen.md`, Befunde des UI-Durchgangs in `docs/ui
 
 Lagebild: http://localhost:8138/ (liest „## Gesamtplan“)
 
-## Jetzt (Stand 17.11.)
+## Jetzt (Stand 20.11.)
 
-**Auf master seit 13.11.:** !2274 (#30281 Login-Karte mittig), !2282 (#30322 Schrift-Primitive), !2283 (#30323
-Gates prüfen, was sie behaupten), !2284 (#30324 Verträge nennen jedes Token); 16.11. !2276 (#30296 Login-Formular), !2206 (#30228 Spaltenausrichtung).
+**Auf master seit 16.11.:** !2276 (#30296 Login-Formular), !2206 (#30228 Spaltenausrichtung); 17.11. !2207 (#30229
+Gruppenwert läuft über), !2208 (#30230 Filtervorgaben „+ n weitere“), !2371 (#30383 Felder der bearbeiteten Zeile);
+18.11. !2275 (#30294 Login-Hintergrund; Worktree `tl8-wt-30294` kann weg). Einstieg mit TL-Zeichen (PR 2) wartet auf
+Framework-Ticket #30388 (Auftritt der geladenen Seite, CC bhu), Skizze `.superpowers/brainstorm/14150-1794476958/content/login-marke.html`.
 
-**Wartet auf Bernhard (`bhu`):**
+**Offen auf unserer Seite** (Abgleich Gitea 20.11.; alle Builds auf dem aktuellen Head grün, sofern gebaut):
 
-* **!2207** (#30229, jetzt auf master) und **!2208** (#30230): `jenkins` angefragt 16.11., Builds stehen aus.
-* **!2275** (#30294 Login-Hintergrund, Worktree `tl8-wt-30294`): REQUEST_CHANGES 13.11. („sieht aus wie Masern“).
-  17.11. `4211250db3` gepusht (Formwechsel raus, Ruhezustand reduziert), PR-Text/Titel und Trac #30294 neu, `bhu` +
-  `jenkins` angefragt. 17.11. umgesetzt (App-Name oben, „Powered by“ mit TL-Wortmarke). 18.11. Bernhard
-  baut selbst um (`tl.title` statt `ViewConfig#getTitle()`, Logo als ThemeImage, `tl.title = TopLogic` in der Engine);
-  Handy-Befund von bhu: Scroll-Kasten des Hintergrunds behoben (`43672e7aaa`, gepusht), feste Kartenbreite gehört zum
-  Formular → **#30422** (Anmeldeformular überarbeiten, eigenes Ticket). **`jenkins` erst, wenn die Login-Seite
-  insgesamt fertig ist** (bhu darf vorher selbst anfragen). Signal für PR 2 (Einstieg mit TL-Zeichen): Framework-
-  Ticket #30388 (Auftritt der geladenen Seite, nur Standard-Login, skalen 17.11.), CC bhu. Skizze
-  `.superpowers/brainstorm/14150-1794476958/content/login-marke.html`.
+| PR | Ticket | Basis | Stand |
+|---|---|---|---|
+| !2226 | #30236 Ansicht-Popover | master | Build 1675 grün, bhu angefragt 20.11. — **zuerst** |
+| !2227 | #30102 Menüverhalten | !2226 | bhu-Anfrage vom 10.11. (veraltet); kein `jenkins` bis Basis master |
+| !2228–!2231 | #30234, #30235, #30233, #30232 (Draft) | gestapelt | warten, kein Review |
+| !2394 | #30391 Pflicht in der Zeile | master | Build 1655 grün; tri- und bhu-Anfrage veraltet (Head fb8d7fe484 neuer), bhu-Approval vom 18.11. stale → beide neu anfragen |
+| !2419 | #30454 Pflicht für Screenreader | !2394 | bhu angefragt 19.11.; `jenkins` nach Merge von !2394 |
+| !2439 | #30476 Login-Karte Handy | master | Build 1676 grün, bhu angefragt |
+| !2441 | #30477 kein Feld-Zoom iPhone | master | Build 1678 grün, bhu angefragt |
+| !2442 | #30478 tote Bilddateien | master | Build 1679 grün, bhu angefragt |
+| !2149 | #30102 (alt) | CWS_30000 | Draft, bleibt offen (Hendrik) |
 
 **#30422 Anmeldestrecke** (angenommen 18.11.): Neubau als `<login-card>`, Folgeschritte und Fehler in der Karte,
 `<form>` + `autocomplete`, Passkey-Autofill, alle Karten der Strecke (skalen 18.11.). Spec
@@ -61,7 +64,7 @@ MUI-Demo und Theme `weich`, Befunde U69–U83 in `docs/ui-durchgang.md`; Komment
 **#30383 Felder in der bearbeiteten Tabellenzeile** (tri, Hendrik zugeteilt): entschieden 17.11. (`skalen.md`
 „Felder in der bearbeiteten Tabellenzeile“) — Feld wie im Formular, 28/24 px, Rahmen grau, Auswahl bleibt blau, Stern
 im Spaltenkopf. `border-emphasis` dunkel → `gray-36`. Spec `docs/superpowers/specs/2026-11-17-row-edit-felder-design.md`;
-PR 1 (Paket) **!2371** (`CWS/CWS_30383_row_edit_fields`, gepusht 17.11., Reviewer tri + bhu, jenkins angefragt;
+PR 1 (Paket) **!2371** (gemergt 17.11.;
 an der Instanz geprüft: Tabelle, Baumtabelle, Formular dunkel, normal und kompakt). PR 2 **!2394** (Ticket #30391, `CWS/CWS_30391_row_edit_required`, Basis master seit Merge von !2371; Ecke unter Fokusring 811382ec2d, master gemergt 673a67905d, Ecke am kompakten Feld (data-tl-state~="required") 7dbbbc35d0, Ticket- und PR-Text nachgezogen, bhu und jenkins angefragt 19.11.; bhu hat master hineingemergt (fb8d7fe484), Build 1655 grün; offen: tri-Review und bhu-Approval des neuen Stands): Stern im Kopf nur für „immer Pflicht“, dazu
 Ecke im Feld für jede Pflicht der Zeile (Z3, 3:1 als Symbol); Plan `docs/superpowers/plans/2026-11-17-row-edit-felder-pr2.md`,
 Plan-Review eingearbeitet, bereit zur Umsetzung. PR 1 dazu: Fokusring der Fehlermarke innen, Öffner des
