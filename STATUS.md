@@ -48,7 +48,11 @@ Stapel !2227–!2231 am 19.11. lokal nachgezogen (Worktree `tl8-wt-30102`, Branc
 30233, 30232; master über !2226 mit drin). Ab !2228 Seiten getauscht (Plan `docs/superpowers/plans/2026-11-19-ansicht-seiten-tauschen.md`):
 Zahnrad „Spalten“ öffnet die Spaltenliste, Fuß „Spalten zurücksetzen“ + „Ansicht ›“, dahinter Dichte/Streifen/Linien; „n von m“ entfernt.
 !2227 bekommt die Einrückung der Schalter zurück (Menü-TSX kommt erst mit !2228). Sichtprüfung 8093 (Demo vom 30232-Stand) ohne Bruch.
-**Nächster Schritt:** Push der fünf Branches nach Freigabe; PR-Text !2227 (Menü-TSX erst in #30234) und !2228 (Seitentausch) nachziehen.
+20.11.: Bernhard hat master in !2226 gemergt (691e4f9623) und nachgelegt („Befehle … Icons“); !2226 trägt jetzt Icons an
+„Spalten …“/„Zurücksetzen“ (b225806444, lokal, Worktree `tl8-wt-30236`). Hendrik: Ein-/Ausblenden in der Spaltenwahl Plus/Minus
+statt Plus/Auge (skalen.md, Abschnitt 19./20.11.). Stapel wird mit beidem erneut nachgezogen (ab !2228 Minus, Icons an „Ansicht ›“ und Zurücksetzen).
+**Nächster Schritt:** nach dem Nachziehen Push von !2226 und den fünf Branches nach Freigabe; Kommentar an Bernhard (ein Satz);
+PR-Texte !2227 (Menü-TSX erst in #30234) und !2228 (Seitentausch, Minus) nachziehen.
 
 **Lokal, ohne PR:** Grenztest C (#30325, Branch `CWS/CWS_30325_limits_test_customer_ui`, Worktree `tl8-wt-30325`):
 MUI-Demo und Theme `weich`, Befunde U69–U83 in `docs/ui-durchgang.md`; Kommentar an Bernhard auf Trac #29650.

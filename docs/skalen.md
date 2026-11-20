@@ -3361,3 +3361,33 @@ gezeigt 3,93; zum `border-control` (`gray-43`) 1,30 statt 1,15. Die Paarliste pr
 `gray-39` fällt aus den Primitiven. Dunkel wird jede Linie in `border-emphasis` eine Stufe heller (Feldrahmen beim
 Zeigen, Kopf-Unterkante, Kante fixierter Spalten, Flow). Verworfen: die neue Stufe `gray-37` (gezeigt auf Zebra nur
 3,08) und den Rahmen beim Zeigen unverändert zu lassen (`border-control` dunkel 2,60).
+
+### Das Zahnrad öffnet die Spalten; Befehle tragen Icons; Plus und Minus (19./20.11., Review !2226)
+
+**Befund (Bernhard, 18.11.):** „Ich glaube nicht, dass das wichtigste, was man an einer Tabelle einstellen will, ob
+diese eine Tabelle Zebrastreifen hat oder nicht.“ Das Popover „Ansicht“ zeigte zuerst Dichte, Streifen und
+Spaltenlinien, die Spaltenwahl kam dahinter. Am 19.11. nachgelegt: „Meinst Du nicht dass die Befehle für Spalten und
+zurücksetzen Icons bekommen sollten? Spätestens wenn noch ein Punkt dazukommt wirds sonst unübersichtlich.“ Und
+Hendrik (20.11.): In der Spaltenwahl blendet ein Plus ein, ein offenes Auge aus — zwei Bildsprachen für ein Paar.
+
+**Entschieden (Hendrik):**
+
+- **Die Spaltenwahl liegt direkt hinter dem Zahnrad.** Wo das Popover eine Seite hat (!2226, !2227), steht
+  „Spalten …“ zuerst und trägt den Startfokus. Ab !2228 sind die Seiten getauscht: Das Zahnrad heißt „Spalten“ und
+  öffnet die Spaltenliste; an ihrem Fuß „Spalten zurücksetzen“ (wo die Tabelle ihren Zustand speichert) und
+  „Ansicht ›“, dahinter Dichte, Streifen und Spaltenlinien mit Rückweg. Ohne Spaltenwahl bleibt nur die Ansichtsseite.
+  Die Zählung „n von m“ entfällt, denn die Liste selbst steht vorn. Plan:
+  `docs/superpowers/plans/2026-11-19-ansicht-seiten-tauschen.md`.
+- **Befehle tragen ein Icon, Einstellungen nicht.** „Spalten …“ `fa-table-columns`, jedes Zurücksetzen
+  `fa-arrow-rotate-left`, „Ansicht ›“ `fa-sliders` — als `tl-menu__icon` vor der Beschriftung. Dichte (Segmente) und
+  die Schalter haben ihre eigene Form und kein Icon.
+- **Ein- und Ausblenden sind Plus und Minus.** Seit die Spaltenwahl die Abschnitte „Fixiert“, „Beweglich“ und
+  „Ausgeblendet“ hat, nennt der Abschnitt den Zustand; das Icon der Zeile ist die Aktion. Eine gezeigte Spalte trägt
+  ein Minus (`ICON_MINUS`, „Ausblenden“), eine ausgeblendete ein Plus („Einblenden“). Das ersetzt „Zeile = Griff ·
+  Name · Schloss · Auge“ und „Das zugeklappte Auge trägt den Zustand mit“ oben (12.10.), ebenso „keine getrennten
+  Bereiche Sichtbar/Ausgeblendet“ — die Abschnitte kamen mit #30234. Tooltips und zugängliche Namen bleiben.
+
+**Verworfen:** Popover beibehalten und die Spaltenzeile nur nach oben (Hendrik wollte die Spalten ohne Zwischenklick);
+die Darstellung als Abschnitt in den Spaltendialog (der Dialog fällt ab !2228 weg); Auge offen / Auge zu als Paar
+(im Abschnitt „Ausgeblendet“ stünde überall das zugeklappte Auge, doppelt zum Titel); Icons auch für Dichte und
+Schalter.
