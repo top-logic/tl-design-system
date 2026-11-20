@@ -1242,7 +1242,7 @@ Ein PNG-Icon wird nicht hochgerechnet oder nachgefärbt. Es wird durch ein Icon 
 
 | Gruppe | Schnitt |
 |---|---|
-| **Tot** (266, davon 15 ganze Ordner mit 96 Dateien) | Wird gelöscht, unabhängig vom Set und vorab als eigener kleiner PR (#30478). Belegt ist das nur über Textsuche, darum entscheiden Build und Tests. |
+| **Tot** (laut Erhebung 266) | Wird gelöscht, unabhängig vom Set und vorab als eigener kleiner PR (#30478, !2442). Gelöscht sind **210**. Herausgenommen wurden 17 Dateien, auf die noch ein Theme-Schlüssel zeigt; drei davon liest CSS, die Erhebung hatte sie als tot geführt. Ebenso herausgenommen wurden `beacon/` und `images/people/unknown.jpg`, deren Namen der Code zur Laufzeit zusammensetzt (`_inactive`, Klassifikator-Namen). **Lehre:** Eine Textsuche nach Pfad und Namen reicht nicht; vor dem Löschen eines Ordners auch Verzeichnis-Literale im Code suchen (`"/beacon/" +`). |
 | **Unsicher** (124, vor allem `mime.<Typ>`, zusammengesetzte Pfade in Gantt und Tristate) | Wird einzeln geklärt, bevor etwas gelöscht wird. |
 | **Icons, gelesen** | Werden durch ein Set-Icon ersetzt (Lucide-Kandidat je Datei in der Liste) oder auf dem Raster neu gezeichnet. Mehrfarbige Icons verlieren dabei die zweite Farbe. Wo die Farbe etwas bedeutet, trägt das Set ein Zustandssignal. |
 | **`tl-icon`-Font** (252 Glyphen, 32 im Repo benutzt) | Fällt ganz, samt 492 Quell-SVGs und dem alten Migrationsskript `imageIconFontMapping.txt`. Der Icon-Chooser bietet alle 252 Glyphen an, darum braucht die Migration der Modelldaten eine Zuordnung für **jede** Glyphe, nicht nur für die 32. Mit dem Font fällt auch die Kollision von `.tl-icon` mit `.tl-icon-sm|md|lg|glyph`. |
