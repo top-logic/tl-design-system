@@ -134,7 +134,6 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
   gehört an den Tisch; bis dahin nur funktionale Fixes (U24).
 * **Wo `derive` rechnet** und wie veraltete Kundenthemes erkannt werden — Vorschlag Trac #29909 an Bernhard.
 * **Spaltenfilter:** keine neue Gestaltung, bis Bernhard die Semantik entscheidet (U64).
-* **Navigation ohne globale Kopfleiste:** Vorschlag an bhu/dbu (Issue #27, geschlossen 20.11. ohne Antwort), nichts gebaut.
 
 ## Verweise
 
