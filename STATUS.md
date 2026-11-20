@@ -34,12 +34,12 @@ MUI-Demo und Theme `weich`, Befunde U69–U83 in `docs/ui-durchgang.md`; Komment
 „Felder in der bearbeiteten Tabellenzeile“) — Feld wie im Formular, 28/24 px, Rahmen grau, Auswahl bleibt blau, Stern
 im Spaltenkopf. `border-emphasis` dunkel → `gray-36`. Spec `docs/superpowers/specs/2026-11-17-row-edit-felder-design.md`;
 PR 1 (Paket) **!2371** (`CWS/CWS_30383_row_edit_fields`, gepusht 17.11., Reviewer tri + bhu, jenkins angefragt;
-an der Instanz geprüft: Tabelle, Baumtabelle, Formular dunkel, normal und kompakt). PR 2 **!2394** (Ticket #30391, `CWS/CWS_30391_row_edit_required`, Basis master seit Merge von !2371; Ecke unter Fokusring 811382ec2d, master gemergt 673a67905d, Ecke am kompakten Feld (data-tl-state~="required") 7dbbbc35d0, Ticket- und PR-Text nachgezogen, bhu und jenkins angefragt 19.11.; tri-Review offen): Stern im Kopf nur für „immer Pflicht“, dazu
+an der Instanz geprüft: Tabelle, Baumtabelle, Formular dunkel, normal und kompakt). PR 2 **!2394** (Ticket #30391, `CWS/CWS_30391_row_edit_required`, Basis master seit Merge von !2371; Ecke unter Fokusring 811382ec2d, master gemergt 673a67905d, Ecke am kompakten Feld (data-tl-state~="required") 7dbbbc35d0, Ticket- und PR-Text nachgezogen, bhu und jenkins angefragt 19.11.; bhu hat master hineingemergt (fb8d7fe484), Build 1655 grün; offen: tri-Review und bhu-Approval des neuen Stands): Stern im Kopf nur für „immer Pflicht“, dazu
 Ecke im Feld für jede Pflicht der Zeile (Z3, 3:1 als Symbol); Plan `docs/superpowers/plans/2026-11-17-row-edit-felder-pr2.md`,
 Plan-Review eingearbeitet, bereit zur Umsetzung. PR 1 dazu: Fokusring der Fehlermarke innen, Öffner des
 kompakten Felds kürzer (d4750e539f). U85 (Zebra-Hover) gehört zu !2226.
 Folge **#30454** (angelegt 19.11.): kompaktes Pflichtfeld in der Zeile für Screenreader stumm (nur Ecke, `role=group`
-erlaubt kein `aria-required`) — Öffner nennt bei Pflicht „(Pflicht)“; **!2419** (`CWS/CWS_30454_compact_field_required_label`, Basis `CWS/CWS_30391_row_edit_required`, bhu angefragt 19.11.; jenkins erst nach Merge von !2394).
+erlaubt kein `aria-required`) — Öffner nennt bei Pflicht „(Pflicht)“; **!2419** (`CWS/CWS_30454_compact_field_required_label`, Basis `CWS/CWS_30391_row_edit_required`, bhu angefragt 19.11.). **Nach Merge von !2394:** Basis von !2419 auf master prüfen, dann `jenkins` (kein `NoPreview`, Beschriftung sichtbar).
 
 **Weiter — Hendrik wählt:**
 
