@@ -3168,6 +3168,19 @@ jeder Folgeschritt ein Fenster über der Karte, jeder Fehler in der globalen Sna
 - Nichts wird gepusht, bevor Hendrik die Strecke lokal getestet hat.
 - Spec `docs/superpowers/specs/2026-11-18-anmeldestrecke-design.md`, Skizze
   `.superpowers/brainstorm/30422-anmeldestrecke/index.html`.
+- **Aufgeteilt (20.11.):** Der Neubau wartet, bis geklärt ist, wo die Anmeldung beim Kunden überhaupt zu sehen ist
+  (steht SSO davor, lohnt er sich kaum). Vorgezogen, was auf dem Handy heute kaputt ist (nächster Abschnitt).
+
+### Anmeldung auf dem Handy (20.11., #30476, #30477)
+
+- **Karte (#30476):** Eine feste Kartenbreite (`width` an `<panel>`) ist im Login-Hintergrund ein Höchstmaß. Die
+  Spalte ist `minmax(0, 1fr)`, Inhalt und Karte werden nie breiter als der Hintergrund; vorher schnitt er bei 375 px
+  rechts ab.
+- **Kein Zoom ins Feld (#30477):** iOS-Safari zoomt in jedes Feld unter 16 px. Felder bekommen auf reinen
+  Finger-Geräten (`hover: none` und `pointer: coarse`) `--tl-font-size-field-touch` (16 px), Desktop und Laptop
+  — auch mit Touchscreen — behalten die Typo-Klasse. **Gegen** die Breite entschieden (iPhone quer ist breiter als
+  jede Handy-Grenze) und **gegen** den User-Agent (iPad meldet sich als Mac, „Desktop-Website“ am iPhone zoomt
+  trotzdem). **Gegen** `maximum-scale=1`: sperrt auch das Zoomen mit zwei Fingern. Auf dem iPhone bestätigt.
 
 ### Die Gates prüfen, was sie vorgeben (13.11., #30323, #30324)
 

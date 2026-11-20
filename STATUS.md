@@ -29,9 +29,14 @@ Gates prüfen, was sie behaupten), !2284 (#30324 Verträge nennen jedes Token); 
 `docs/superpowers/specs/2026-11-18-anmeldestrecke-design.md`, Skizze `.superpowers/brainstorm/30422-anmeldestrecke/`.
 19.11.: alle Vorgänge live durchgespielt (Instanz 8092 aus Worktree `tl8-wt-30422`, Branch
 `CWS/CWS_30422_login_flow`, Mail-Fänger im Scratchpad), Fallkatalog `docs/migration/anmeldestrecke-bestand.md`,
-16 moderne Funktionen entschieden, Schnitt 0–4 in der Spec. Nächster Schritt: Plan PR 0 + Plan-Review. **Kein Push,
-bevor Hendrik lokal getestet hat** (gilt auch für #30424). Abgespalten **#30424** (Reset-Code unbegrenzt, keine
-Bremse; Worktree `tl8-wt-30424`, lokaler Commit wird ersetzt). Snackbar-Warteschlange als **#30452** (neue Meldung wartet hinter der alten).
+16 moderne Funktionen entschieden, Schnitt 0–4 in der Spec. **Neubau wartet** (20.11.): Hendrik klärt, wo die
+Anmeldung beim Kunden überhaupt zu sehen ist (SSO davor?); erst danach Plan PR 0 + Plan-Review. **Kein Push, bevor
+Hendrik lokal getestet hat** (gilt auch für #30424). Abgespalten **#30424** (Reset-Code unbegrenzt, keine Bremse;
+Worktree `tl8-wt-30424`, lokaler Commit `5772c78930` ist falsch und wird ersetzt: Versuchsgrenze + Bremse).
+Snackbar-Warteschlange als **#30452** (neue Meldung wartet hinter der alten).
+Vorgezogen fürs Handy (skalen 20.11.), beide auf master-Basis, `bhu` + `jenkins` angefragt:
+**!2439** (#30476, Karte schneidet bei 375 px nicht mehr ab) und **!2441** (#30477, kein Zoom ins Feld auf dem iPhone,
+dort bestätigt). Lokaler Hilfsbranch `local/phone-test` (beide Fixes, Demo 8094) nach dem Merge löschen.
 
 **Kette UI-Durchgang** (nur die zwei untersten Ebenen haben Build und Review, Ketten höchstens 2–3 PRs):
 !2207 (#30229) → !2208 (#30230) → !2226 (#30236) → !2227 (#30102) → !2228 (#30234) → !2229 (#30235) →
