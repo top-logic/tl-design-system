@@ -1238,6 +1238,20 @@ Ein PNG-Icon wird nicht hochgerechnet oder nachgefärbt. Es wird durch ein Icon 
 
 **Nicht im Geltungsbereich:** Logos, Illustrationen, Fotos, Login-Hintergründe und Inhalte, die Benutzer hochladen. Das sind Bilder mit eigener Aussage, keine Icons. Welche der Bilddateien Icon sind und welche Bild, klärt eine eigene Erhebung. Die Zahlen oben stammen aus `git ls-tree` auf `origin/master` `d4d9867579` und sind nicht klassifiziert.
 
+**Der Schnitt (Hendrik, 20.11.): Was nur mitgeschleppt wird, fällt.** Grundlage ist die Erhebung `docs/migration/bild-erhebung.md` mit der Liste je Datei in `bild-erhebung-dateien.tsv`, Stand `origin/master` vom 20.11. Von den 1175 Bilddateien werden 274 gelesen, 124 sind unsicher, 19 werden nur in Tests gelesen, 266 sind tot, und 492 sind Quellen für den Bau des `tl-icon`-Fonts.
+
+| Gruppe | Schnitt |
+|---|---|
+| **Tot** (266, davon 15 ganze Ordner mit 96 Dateien) | Wird gelöscht, unabhängig vom Set und vorab als eigener kleiner PR. Belegt ist das nur über Textsuche, darum entscheiden Build und Tests. |
+| **Unsicher** (124, vor allem `mime.<Typ>`, zusammengesetzte Pfade in Gantt und Tristate) | Wird einzeln geklärt, bevor etwas gelöscht wird. |
+| **Icons, gelesen** | Werden durch ein Set-Icon ersetzt (Lucide-Kandidat je Datei in der Liste) oder auf dem Raster neu gezeichnet. Mehrfarbige Icons verlieren dabei die zweite Farbe. Wo die Farbe etwas bedeutet, trägt das Set ein Zustandssignal. |
+| **`tl-icon`-Font** (252 Glyphen, 32 im Repo benutzt) | Fällt ganz, samt 492 Quell-SVGs und dem alten Migrationsskript `imageIconFontMapping.txt`. Der Icon-Chooser bietet alle 252 Glyphen an, darum braucht die Migration der Modelldaten eine Zuordnung für **jede** Glyphe, nicht nur für die 32. Mit dem Font fällt auch die Kollision von `.tl-icon` mit `.tl-icon-sm|md|lg|glyph`. |
+| **Spinner** (`Slider.gif`, `loading.gif` …) | Werden durch `.tl-spinner` oder `tl-progress` aus dem Paket ersetzt. Ein GIF als Ladeanzeige gibt es danach nicht mehr. |
+| **Bedienteile alter Art** (164: Rahmen-, Ecken-, Baumlinien-Sprites …) | Fallen mit ihrem klassischen Leser. Wo dieser Leser noch lebt, wird das einzeln geklärt. |
+| **Bilder** (79: Logos, Illustrationen …) und **Fremdbestand** (pdf.js, CKEditor) | Nicht im Geltungsbereich. Sie stammen nicht aus unserer Gestaltung. |
+
+**Das ist der dritte Versuch, und darum braucht er eine Ratsche.** `IconReplacer` (#28386) hat `bi` → `fa` umgeschrieben, `imageIconFontMapping.txt` alte Bilder → `tl-icon`. Beide Male blieben die alten Quellen liegen und wuchsen wieder an. Nach dem Schnitt ist darum jede alte Quelle in Engine-Quellen ein Gate-Verstoß: `fa-`, `bi-`, die Font-Klasse `tl-icon` und ein Bildpfad als Icon-Wert in `theme-settings.xml`.
+
 **Kundensysteme mit eigener Bibliothek (Hendrik, 18.11.).** Ein Kunde wie MB bringt seine eigene Icon-Bibliothek mit, und die steckt in seinen eigenen Komponenten. Das TL-Set stört dabei nicht, und umgekehrt. Berührt werden wir nur an zwei Stellen, und beide sind schon so angelegt:
 
 * **Kunden-Icons in TL-Komponenten** (Menü, Symbolleiste, Baum, Zelle): `ThemeIcon` nimmt weiter fremde Quellen an (SVG, Bild, Font-Klasse). Die Stufenklassen geben ihnen dieselbe Größe wie TL-Icons.
@@ -1254,7 +1268,6 @@ Darum gilt das Gate „jeder gelesene Name existiert im Set“ nur für die Engi
 **Offen:**
 
 * **Font Awesome und Bootstrap Icons verschwinden ganz (Hendrik, 20.11.).** Es gibt eine saubere Migration und keinen Weiterbetrieb der Module `ext.com.fontawesome`/`ext.com.bootstrap.icons`. Die Migration erfasst Engine, Demo, Anwendungskonfiguration (Theme-Settings, `*.view.xml`, Layouts) und die vom Icon-Picker in Modelldaten gespeicherten `css:fa-…`/`css:bi bi-…`. Sie läuft als Migration mit dem Release (`RequiresMigration`), damit Kundenprojekte sie mitbekommen. Grundlage ist die Zuordnungstabelle alt → neu aus `docs/migration/icon-erhebung.md`, nach Sichtprüfung der Einträge „sinngemäß“ und „unsicher“. **Vorbild im Bestand:** `IconReplacer` (Ticket #28386) hat schon einmal `bi` → `fa` umgeschrieben, als `DescendingRewriter` über die Konfiguration. Danach kamen mit den React-Views 548 neue `bi`-Stellen hinzu, weil keine Ratsche sie verhinderte. Darum: **Nach der Migration ist jedes `fa-`/`bi-` in Engine-Quellen ein Gate-Verstoß.** Wie beim gelöschten `tlReactControls.css` wacht eine Ratsche darüber. Eigene Bibliotheken der Kunden betrifft das nicht, siehe oben.
-* **Erhebung der Bild-Icons:** Welche der Bilddateien sind Icons, wo werden sie gelesen, und welches Set-Icon ersetzt sie? Dasselbe gilt für die 40 `tl-icon`-Glyphen (rund 295 Fundstellen).
 * **Zustände, die heute als solid/regular-Paar gezeichnet sind:** Radio, Stern, Checkbox und Toggle. Sie sind die ersten Kandidaten für die `-filled`-Liste.
 * **`form.css:2756ff`** stylt das Meldungsfeld über vier `.bi-*`-Klassen. Diese Bindung an Glyphnamen fällt mit dem Umbau.
 

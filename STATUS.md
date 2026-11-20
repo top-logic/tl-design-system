@@ -86,7 +86,9 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
   Erhebung in `docs/migration/icon-erhebung.md` (491 Glyphen, Lucide deckt fast alle). Kunden mit eigener
   Bibliothek (z. B. MB) berührt es nur über Theme-Schlüssel und `ThemeIcon`-Quellen. FA/BI verschwinden ganz (20.11.):
   Migration inkl. Modelldaten, danach Ratsche. Das Set ist die Basis für alle Icons, auch
-  `tl-icon`-Font und PNG-Icons (20.11.). Offen: Strichstärke 1,5/2, Erhebung der Bild-Icons, Startliste.
+  `tl-icon`-Font und PNG-Icons (20.11.). Schnitt entschieden (Bild-Erhebung in
+  `docs/migration/`): tote Dateien als eigener PR löschen, Font und Spinner-GIFs fallen. Offen: Strichstärke 1,5/2, 124 unsichere
+  Dateien, Startliste.
 * Kunden-Typografie: was bricht, wenn ein Kunde die Schrift tauscht (Issue #12).
 
 **Nebenstränge** (ohne eigene Welle):
