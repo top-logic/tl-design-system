@@ -2917,6 +2917,15 @@ Token, zwei Aufgaben“.
   gewählte Richtung hätte sie selbst verletzt); neue Tonleitern Orange und Violett (die Prüfung besteht ohne sie).
 - **Später** (`ui-durchgang.md` U20, U21): Mengenskala aus der Marke, Hervorheben (alles grau, eine Reihe farbig).
 
+### Tabelle ohne Schatten (23.11., Hendrik)
+
+Die Tabelle trägt keinen Schatten mehr; sie liegt in der Oberfläche wie die Karte. Richtung B (26.10.) gab ihr
+`shadow-1`, ein Primitiv: das umging die Regel „Schatten bekommt nur, was wirklich schwebt“ und wechselte nicht mit dem
+Modus — dunkel stand der helle Schatten, auf dem Grund fast unsichtbar. Eine vierte Schattenrolle (hell `shadow-1`,
+dunkel `shadow-4`) und `shadow-popover` an der Tabelle sind verworfen: die Elevation kennt drei Stufen für Schwebendes.
+Die Tiefe kommt von Fläche (`surface-layer`), Rand, Rundung und dem abgesetzten Kopf. Gate: `table.test.mjs` verbietet
+jeden `--tl-shadow-*` in `table.css`. Anlass: die Figma-Doku zeigte die Abweichung im Dark-Modus.
+
 ### UI-Durchgang 1: Tabelle mit Tiefe, eine Auswahl-Form (26.10., Hendrik — Ticket folgt)
 
 **Befund (Bestandsaufnahme 26.10., `ui-durchgang.md` U25–U31):** Tabellen wirken flach; gewählt und Hover sind zwei
@@ -2940,7 +2949,7 @@ Komponente. Spec `docs/superpowers/specs/2026-10-26-ui-durchgang-1-tabelle-desig
   Cursor-Ring aus `base.css`. Hendriks Kreuz lautete „neutral wie Hover“; das ergab 1,1:1 und hätte die Position
   unsichtbar gemacht. Kein eigener Ring in der Komponente (Fokus-Gate, Konsolidierung 01.10.). Der Zeiger setzt dieselbe
   Position: eine aktive Option wie in nativen Menüs.
-- **Tabelle mit Tiefe** (Hendrik: Richtung B): Fläche mit `shadow-1` (nicht `shadow-popover` — ein Token, eine Aufgabe),
+- **Tabelle mit Tiefe** (Hendrik: Richtung B): Fläche mit `shadow-1` (nicht `shadow-popover` — ein Token, eine Aufgabe; **abgelöst 23.11.:** kein Schatten, siehe unten „Tabelle ohne Schatten“),
   füllt sie ein Panel (`tl-fill`), kein Schatten; Kopf auf `surface-layer-muted` (neu: hell sind `surface-layer` und
   `-nested` gleich) in `tl-type-overline` (neu) und Großbuchstaben; Trichter über das vorhandene `tl-reveal-on-hover`,
   gefiltert immer sichtbar; Sortierpfeil immer sichtbar; Spaltenlinien und Zebra als Attribut, ab Werk aus (Hendrik);
