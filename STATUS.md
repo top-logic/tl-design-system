@@ -107,7 +107,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 |---|---|---|---|
 | Kundenprojekt Stufe A in der Demo-App gezeigt (JSON mit Hausfarbe → `derive` → Gate grün → Kundenlook) | 1 | offen | Spec §3 |
 | Themes in der Engine: `UIThemeService` setzt `data-tl-theme` statt `data-theme`, Demo zeigt ein Zweit-Theme (Paketseite fertig) | 1 | offen | Spec §2, Trac #29909 |
-| Tokens in Figma, Modi Hell/Dunkel, Blattnamen = Tokennamen | 1 | erledigt 17.11.; Komponenten laufend: Bibliothek Figma `02fjeGJYJVtkS13LqMk7G4` (Tokens, Icons auf Lucide 0.460.0, Button, Field, Form Field, Choice, Toggle, Select mit Chips, Pill, Badge); Doku `r0LCAH2pa4nxcUU2JNkBZu` mit Skelett aller 69 Code-Komponenten, Seite „Status“ zeigt Stand je Komponente (23.11.: 9 von 69 dokumentiert); nächster Block offen | Figma `02fje…` / `r0LC…` |
+| Tokens in Figma, Modi Hell/Dunkel, Blattnamen = Tokennamen | 1 | erledigt 17.11.; Komponenten laufend: Bibliothek Figma `02fjeGJYJVtkS13LqMk7G4` (Tokens, Icons auf Lucide 0.460.0, Button, Field, Form Field, Choice, Toggle, Select mit Chips, Pill, Badge, Alert mit Notice Bar und Snackbar, Tooltip, Progress mit Spinner); Doku `r0LCAH2pa4nxcUU2JNkBZu` mit Skelett aller 69 Code-Komponenten, Seite „Status“ zeigt Stand je Komponente (23.11.: 14 von 69 dokumentiert); nächster Block offen | Figma `02fje…` / `r0LC…` |
 | TSX-Lint: kein Hex, kein `style={{ color }}`, nur `tl-`-Klassen; Restfunde `ColorPopup.tsx` `#000000`, Serverwert im Klassennamen `tl-{stack,columns,grid}--gap-${gap}` | 1 | offen | Spec §5 |
 
 **Offen zu entscheiden** (Hendrik):
