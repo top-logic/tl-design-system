@@ -76,7 +76,7 @@ erlaubt kein `aria-required`) — Öffner nennt bei Pflicht „(Pflicht)“; **!
 1. **#30502 U69 `radius-mark`** (23.11.): Checkbox-Ecke `min(radius-sm, radius-mark)`, `radius-mark` = `bevel-1`, Formbefund in `derive`; Branch
    `CWS/CWS_30502_checkbox_radius_mark` (Worktree `tl8-wt-30502`) lokal committet, Gates grün, Sichtprüfung im Specimen
    ok. Plan `docs/superpowers/plans/2026-11-23-radius-mark.md` mit Plan-Review, Code-Review `derive` eingearbeitet
-   (`f3759f7c14`). Offen: Push + PR (`NoPreview`: in TopLogic nichts sichtbar).
+   (`f3759f7c14`). Gepusht 23.11., **!2458** (Basis master, Label `design-system`, `NoPreview`), bhu + `jenkins` angefragt.
 2. Kleine Korrekturen U8, U9, U11, U17, U22, U10 (Kalender-ARIA) — je eigener PR von master.
 3. U68 Theme-Eingabe prüft Nicht-Farbwerte nicht (Entscheidung); U84 Filter per Rechtsklick zurücksetzen (eigener PR).
 
