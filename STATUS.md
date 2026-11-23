@@ -24,7 +24,6 @@ Framework-Ticket #30388 (Auftritt der geladenen Seite, CC bhu), Skizze `.superpo
 | !2419 | #30454 Pflicht für Screenreader | !2394 | bhu angefragt 19.11.; `jenkins` nach Merge von !2394 |
 | !2439 | #30476 Login-Karte Handy | master | Build 1676 grün, bhu angefragt |
 | !2441 | #30477 kein Feld-Zoom iPhone | master | Build 1678 grün, bhu angefragt |
-| !2442 | #30478 tote Bilddateien | master | Build 1679 grün, bhu angefragt |
 
 **#30422 Anmeldestrecke** (angenommen 18.11.): Neubau als `<login-card>`, Folgeschritte und Fehler in der Karte,
 `<form>` + `autocomplete`, Passkey-Autofill, alle Karten der Strecke (skalen 18.11.). Spec
@@ -119,8 +118,8 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
   Bibliothek (z. B. MB) berührt es nur über Theme-Schlüssel und `ThemeIcon`-Quellen. FA/BI verschwinden ganz (20.11.):
   Migration inkl. Modelldaten, danach Ratsche. Das Set ist die Basis für alle Icons, auch
   `tl-icon`-Font und PNG-Icons (20.11.). Schnitt entschieden (Bild-Erhebung in
-  `docs/migration/`): tote Dateien gelöscht in #30478,
-  PR !2442 (210 Dateien; `beacon/` bleibt, Pfade werden zur Laufzeit zusammengesetzt), wartet auf Review; Font und Spinner-GIFs fallen. Strichstärke 2 px (20.11.). Offen: 124 unsichere
+  `docs/migration/`): tote Dateien vorgemerkt in #30478,
+  !2442 geschlossen (23.11., bhu: Quellen der Legacy-Icons): die 210 Dateien sind nur vorgemerkt, Prüfung nach Abschalten der Legacy-Oberfläche (`bild-erhebung.md` §2); Font und Spinner-GIFs fallen. Strichstärke 2 px (20.11.). Offen: 124 unsichere
   Dateien, Startliste.
 * Kunden-Typografie, wenn ein Kunde die Schrift tauscht: offen sind die Metrik-Normalisierung im `@font-face`, der Rückfall
   ohne `tnum` und die Prüfung eines Kundenthemes (Schrift, Schnitte, `tnum`, Zeichensatz). Dringend erst mit dem ersten Kunden.
