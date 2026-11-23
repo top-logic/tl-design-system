@@ -56,8 +56,12 @@ Abschnitt 19./20.11.). Alle sechs Branches gepusht 20.11. (!2226 b225806444 … 
 mui-`tsc`-Fehler aus master an Bernhard (Trac #30415). Eine Breite für beide Seiten (Token `size-popover-view` = 24rem,
 30234 534c6037d6 … 30232 125bfdc560), an der Demo 384/384 px. Alle vier gepusht 20.11. **Nächster Schritt:** Reviews von Bernhard abwarten (!2226 zuerst).
 23.11.: bhu-Review !2230 (18.11., Ansicht wirkt auf alle Tabellen → persönliche Einstellungen) umgesetzt: Dichte, Zebra, Linien ins
-Benutzermenü, Popover nur Spalten (Plan `docs/superpowers/plans/2026-11-23-ansicht-ins-benutzermenue.md`, skalen 23.11.);
-30233 lokal 4 Commits (bis 05086a447e), Merge nach 30232 319b6d4b5c, Sichtprüfung 8093 ok (Schalter, Popover nur Spalten, Kompakt, Neuladen); **nicht gepusht**. Hinweis an !2226 wartet auf Freigabe.
+Benutzermenü, Popover nur Spalten (Plan `docs/superpowers/plans/2026-11-23-ansicht-ins-benutzermenue.md`, skalen 23.11.).
+**Geschnitten** (neue Menüs nur als eigener, auf Docker geprüfter PR): 30233 (ad89be44f0 … e1b8003038) = Speichern je Person,
+Popover nur Spalten, keine Tabellendichte; **neu #30506**, Branch `CWS/CWS_30506_ui_pass_2_table_look_menu` (696e68a8f9,
+b64079ac57) = Menüeintrag als Schalter + Gruppe „Tabellen“, zwischen !2230 und !2231; 30232 = Merge 1027d5d368 (baumgleich
+mit dem geprüften Stand, Sichtprüfung 8093 ok). Alles **lokal, nicht gepusht**; PR für #30506 noch anzulegen; #30506 erst
+nach Docker-Durchklicken an Bernhard. Hinweis an !2226 wartet auf Freigabe.
 
 **Lokal, ohne PR:** Grenztest C (#30325, Branch `CWS/CWS_30325_limits_test_customer_ui`, Worktree `tl8-wt-30325`):
 MUI-Demo und Theme `weich`, Befunde U69–U83 in `docs/ui-durchgang.md`; Kommentar an Bernhard auf Trac #29650.

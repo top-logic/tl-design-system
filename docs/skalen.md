@@ -3466,5 +3466,9 @@ das Icon `fa-sliders`. Plan: `docs/superpowers/plans/2026-11-23-ansicht-ins-benu
 eine eigene Seite „Persönliche Einstellungen“ (das Benutzermenü trägt die Ein-Entscheidungs-Einstellungen schon);
 Schalter als zwei Alternativen „an/aus“ (doppelt so viele Einträge für eine Ja/Nein-Frage).
 
+**Schnitt:** Die neue Menüform (Eintrag als Schalter) und die Gruppe „Tabellen“ kommen als eigener PR (#30506) über
+!2230 — neue Menüs nur als eigener, auf Docker durchgetesteter PR (Absprache 03.11.). Zwischen den Merges sind Zebra und
+Linien gespeichert, aber nicht einstellbar.
+
 **Folge:** Auf klassischen Seiten (tl-chat-classic) gibt es dieses Benutzermenü nicht; dort gelten die gespeicherten
 Werte, umgestellt wird in der React-Oberfläche.
