@@ -55,6 +55,9 @@ Abschnitt 19./20.11.). Alle sechs Branches gepusht 20.11. (!2226 b225806444 … 
 „eye“ → `tl-reorder-list__visibility` lokal (30234 e0e1d4ddfd … 30232 be451b3ae9), Sichtprüfung 8093 ok (Minus/Plus, Icons, hell/dunkel);
 mui-`tsc`-Fehler aus master an Bernhard (Trac #30415). Eine Breite für beide Seiten (Token `size-popover-view` = 24rem,
 30234 534c6037d6 … 30232 125bfdc560), an der Demo 384/384 px. Alle vier gepusht 20.11. **Nächster Schritt:** Reviews von Bernhard abwarten (!2226 zuerst).
+23.11.: bhu-Review !2230 (18.11., Ansicht wirkt auf alle Tabellen → persönliche Einstellungen) umgesetzt: Dichte, Zebra, Linien ins
+Benutzermenü, Popover nur Spalten (Plan `docs/superpowers/plans/2026-11-23-ansicht-ins-benutzermenue.md`, skalen 23.11.);
+30233 lokal 4 Commits (bis 05086a447e), Merge nach 30232 läuft; **nicht gepusht**. Hinweis an !2226 wartet auf Freigabe.
 
 **Lokal, ohne PR:** Grenztest C (#30325, Branch `CWS/CWS_30325_limits_test_customer_ui`, Worktree `tl8-wt-30325`):
 MUI-Demo und Theme `weich`, Befunde U69–U83 in `docs/ui-durchgang.md`; Kommentar an Bernhard auf Trac #29650.

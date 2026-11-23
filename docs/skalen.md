@@ -3438,3 +3438,33 @@ nur hat sie niemand an jeder Stelle gesetzt.
 **Warum über den Container:** Ein Knopf weiß nicht, wo er steht; die Zeile weiß es. Setzt jeder Aufrufer die Größe
 selbst, fehlt sie beim nächsten neuen Control wieder — genau das war der Befund. Außen nicht: `chat` (eigene Klassen,
 eigenes Thema).
+
+### Dichte, Zebra und Spaltenlinien stehen im Benutzermenü (23.11., Review !2230)
+
+**Anlass:** Bernhard auf !2230 (18.11.): „Die Option wirkt auf alle Tabellen gleichzeitig. Das stellt man bestenfalls
+einmal um – irgendwo in den persönlichen Einstellungen? – das will man nicht in jeder Tabelle immer und überall
+sehen.“ Seit !2230 gelten die drei Einstellungen je Person für jede Tabelle; der Ort im Popover jeder Tabelle passte
+dazu nicht mehr. Die Dichte gab es zudem doppelt: global im Benutzermenü (5d) und als Override je Tabelle.
+
+**Entschieden (Hendrik):**
+
+- **Alle drei ins Benutzermenü.** Die Dichte stellt nur noch die Gruppe „Dichte“ ein; die Tabelle hat keine eigene
+  Dichte mehr und erbt sie von `<html data-tl-density>`. Zebra und Spaltenlinien sind zwei Schalter einer neuen
+  Gruppe „Tabellen“ (`<table-view-commands/>`), je Person gespeichert (`TableViewPreferences`), wirksam an jeder
+  Tabelle der Seite ohne Neuladen.
+- **Das Popover am Zahnrad ist eine Seite:** die Spaltenliste, im Fuß „Spalten zurücksetzen“. Die Seite „Ansicht ›“
+  mit Rückweg entfällt — und mit ihr der Menüeintrag mit Weg (`tl-menu__item--nav`, `__value`, `__chevron`), der
+  sonst keinen Nutzer hatte. Der Fokus wartet auf dem Popover selbst, nie auf dem Zurücksetzen.
+- **Ein Menüeintrag kann ein Schalter sein** (`MenuState.Entry.toggle`): `menuitemcheckbox` mit `aria-checked` und
+  der Schalterzeichnung, kein `aria-current`. Eine gewählte Alternative (Theme, Sprache, Dichte) bleibt ein Eintrag
+  in Kraft.
+
+Das ersetzt im Abschnitt davor (19./20.11.) „‚Ansicht ›‘, dahinter Dichte, Streifen und Spaltenlinien mit Rückweg“ und
+das Icon `fa-sliders`. Plan: `docs/superpowers/plans/2026-11-23-ansicht-ins-benutzermenue.md`.
+
+**Verworfen:** nur die Dichte verschieben, Zebra und Linien im Popover lassen (Bernhards Begründung trifft alle drei);
+eine eigene Seite „Persönliche Einstellungen“ (das Benutzermenü trägt die Ein-Entscheidungs-Einstellungen schon);
+Schalter als zwei Alternativen „an/aus“ (doppelt so viele Einträge für eine Ja/Nein-Frage).
+
+**Folge:** Auf klassischen Seiten (tl-chat-classic) gibt es dieses Benutzermenü nicht; dort gelten die gespeicherten
+Werte, umgestellt wird in der React-Oberfläche.
