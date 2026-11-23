@@ -139,6 +139,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
   gehört an den Tisch; bis dahin nur funktionale Fixes (U24).
 * **Wo `derive` rechnet** und wie veraltete Kundenthemes erkannt werden — Vorschlag Trac #29909 an Bernhard.
 * **Spaltenfilter:** keine neue Gestaltung, bis Bernhard die Semantik entscheidet (U64).
+* **Tabelle ohne Schatten** (23.11., `skalen.md`): lokal auf Engine-Branch `CWS/CWS_TBD_table_no_shadow` (`a4f43e6675`, Commit mit `#TBD-UI`), Gates grün; braucht Ticket, Umschreiben der Nachricht, Push und PR.
 
 ## Verweise
 
