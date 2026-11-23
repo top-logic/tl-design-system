@@ -58,7 +58,13 @@ Stand: `origin/master` (nach `git fetch`), Lucide: `lucide-static` **1.77.0** (`
 
 Hinweis zur Zeile „Icon, Build-Quelle“: 264 SVG in `com.top_logic.layout.icons/icons/` (Font-Quelle, 252 davon sind Glyphen, 12 nicht: `file-knowledgeObject`, `file-metaAttribute`, `file-metaClass`, `overlay-add|create|export|gear|import|remove|reset|search`, `type-iO`) und 228 in `icons/raw/` (Rohfassungen, 225 mit gleichnamiger Datei in `icons/`, 3 ohne: `maximize-document`, `traffic`, `unlocked`).
 
-## 2. Sofort löschbar (tot)
+## 2. Löschvorschlag, erst nach Abschalten der Legacy-Oberfläche (tot)
+
+**Vorgemerkt, nicht gelöscht** (23.11., #30478): Bernhard lehnte !2442 ab — „unbenutzt“ ist relativ, z. B. ist
+`com.top_logic.demo/…/themes/core/demo/new-as.svg` die Quelle eines Icons, das die Legacy-Demo zeigt. Löschen wir die
+SVG, bleibt das PNG ohne Quelle. Die 210 Dateien des PRs stehen in `bild-loeschvorschlag-legacy.txt`. **Wenn die
+Legacy-Oberfläche abgeschaltet ist:** je Datei prüfen, ob das zugehörige Bild (PNG/GIF gleichen Namens) und sein
+Leser ebenfalls weg sind; erst dann Datei und Quelle gemeinsam löschen.
 
 Kriterium: keine Fundstelle per Pfad, Dateiname (auch ohne Pfad) oder Theme-Schlüssel. Der Schlüssel wurde nicht nur nach Name, sondern geprüft: bei `Icons.X` im selben Paket oder per Import, bei Kurzschlüsseln als Token. Fremdmodule (`ext.*`) stehen weiter unten.
 
