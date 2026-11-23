@@ -72,7 +72,7 @@ erlaubt kein `aria-required`) — Öffner nennt bei Pflicht „(Pflicht)“; **!
 
 **#30528 Icon-Knöpfe** (23.11., Anlass bhu auf !2461): Audit aller Ansichten, Regel nachgezogen (`skalen.md` 23.11.),
 Plan `docs/superpowers/plans/2026-11-23-icon-knoepfe.md` mit Plan-Review. Branch `CWS/CWS_30528_icon_button_size`
-(Worktree `tl8-wt-30528`, 7 Commits bis `ffda1e64b9`), Gates grün, Sichtprüfung Demo 8095; **wartet auf Push und PR**.
+(Worktree `tl8-wt-30528`, 8 Commits bis `32d7616bc0`; Zeilenregel für alle Tabellen, Medienknöpfe ausgenommen), Gates grün, Sichtprüfung Demo 8095; **wartet auf Push und PR**.
 Spaltenwahl `sm` als U86 an den Stapel.
 
 **Weiter — Hendrik wählt:**

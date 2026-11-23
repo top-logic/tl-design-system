@@ -3425,11 +3425,11 @@ nur hat sie niemand an jeder Stelle gesetzt.
 
 | Fall | Regel |
 |---|---|
-| Größe in der Tabellenzeile | Der Container sagt es: die Körperzeilen setzen `ButtonDefaults small`; jeder Icon-Knopf darin ist `sm`, auch Download, Sprachknopf, Popover-Auslöser und Medienknopf. Popover, Menüs, Picker und Bildüberlagerung, die aus einer Zeile öffnen, setzen `small` zurück. `sm` wirkt nur auf icon-only **mit** Bild. |
+| Größe in der Tabellenzeile | Der Container sagt es: die Körperzeilen setzen `ButtonDefaults small`; jeder Icon-Knopf darin ist `sm`, auch Download, Sprachknopf und Popover-Auslöser — in jeder Tabelle, auch in Kundenanwendungen und für künftige Knöpfe (Hendrik 23.11., ausdrücklich so breit). Medienknöpfe nicht: die Medien-Controls setzen `small={false}` und behalten Control-Höhe. Popover, Menüs, Picker und Bildüberlagerung, die aus einer Zeile öffnen, setzen `small` zurück. `sm` wirkt nur auf icon-only **mit** Bild. |
 | Kopfknopf | Kopf einer Formulargruppe und einer Karte setzen `ghost` + `small` (wie Titelleiste und Hinweis). |
 | `sm` außerdem | Pfeile der Reiterleiste, Toolbar im Feld (Rich-Text), Reorder-Liste der Spaltenwahl. |
 | Sprachknopf neben dem Feld | `ghost` in Control-Höhe (in der Zelle `sm`). |
-| Ausnahme `secondary` | Medienknöpfe und Knöpfe über einem Bild (Bild-Editor: Blättern, Schließen) — sie brauchen eine Fläche. |
+| Ausnahme `secondary` | Medienknöpfe (auch Größe, s. o.) und Knöpfe über einem Bild (Bild-Editor: Blättern, Schließen) — sie brauchen eine Fläche. |
 | Kein Icon-Knopf | Aufklapper (`tl-toggle`), Einträge der eingeklappten Sidebar (Menüeinträge), Symbol- und Farbraster (Auswahlzellen). |
 | Quadrat | `.tl-button--icon` schrumpft in keiner Flex-Zeile (`flex-shrink: 0`, Test in `square.test.mjs`). |
 | Hover-Auslöser | Ein Auslöser, der seine Fläche beim Zeigen öffnet, trägt keinen Tooltip — die Fläche sagt es schon. |
