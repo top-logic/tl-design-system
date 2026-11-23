@@ -631,7 +631,7 @@ zurückhaltenden Ende**, dort wo Carbon (4 px) und Fluent (4 px) auch stehen.
 | Token | Wert | Gilt für |
 |---|---|---|
 | `radius-sm` | `0.25rem` (4 px) | Feld, Schaltfläche, Auswahlfeld, Reiter, Tabellenzelle, Chip-Ecke |
-| `radius-mark` | `0.25rem` (4 px), Primitiv `bevel-1` | Kästchen der Checkbox |
+| `radius-mark` | `0.25rem` (4 px), Primitiv `bevel-1` | Kappe für das Kästchen der Checkbox; es nimmt `min(radius-sm, radius-mark)` |
 | `radius-md` | `0.5rem` (8 px) | Karte, Dialog, Popover, Panel, Drawer |
 | `radius-full` | `999px` | Badge, Zähler, Umschalter, Fortschrittsbalken |
 | `radius-round` | `50%` | Avatar, Statuspunkt, runder Icon-Knopf |
@@ -657,7 +657,9 @@ Aus dem Bestand fallen zwei Werte:
 `corner-1` = 12 px das 16-px-Kästchen rund, und es las sich als Radio. Im Theme war das nicht zu lösen: jeder eckige
 Wert für `corner-1` macht Felder und Knöpfe wieder eckig. Das Kästchen liest darum `radius-mark` auf eigener
 Primitivfamilie `bevel-*` („Familie plus Stufe, keine Rolle“ wie `veil-*`), unabhängig von `corner-1`/`corner-2`.
-Das Radio bleibt `radius-round`: eckig heißt mehrere, rund heißt eins. **Grenze:** `radius-mark` bleibt unter einem
+Das Kästchen nimmt den kleineren Wert aus `radius-sm` und `radius-mark`: nie runder als die Felder, damit ein ganz
+eckiges Theme (`corner-1: 0`) auch eine eckige Checkbox behält, und nie runder als die Kappe. Das Radio bleibt
+`radius-round`: eckig heißt mehrere, rund heißt eins. **Grenze:** `radius-mark` bleibt unter einem
 Drittel der Kante (`size-choice`), sonst kippt das Quadrat zum Kreis. Ein Test hält TopLogic darunter (4 < 5,33 px),
 `derive` meldet einen gelieferten Verstoß (`bevel-1` oder die Stufe hinter `size-choice`) als Formbefund.
 
@@ -2153,7 +2155,7 @@ nichts. MUI, Material und Fluent zeigen an derselben Stelle eine Fläche um die 
 | Farbe | Zeigen `surface-interactive-hover`, Drücken `surface-interactive-active` — deckend, angekreuzt wie leer |
 | Größe | Ausdehnung (`size-control` − `size-choice`) / 2: der halo füllt die Marke auf die Trefferfläche auf, folgt damit der Dichte (8 px normal, 6 px kompakt) |
 | Zeichnung | `box-shadow: 0 0 0 <Ausdehnung> <Fläche>` — zeichnet nur außerhalb der Marke, verschiebt nichts, braucht kein Pseudo-Element; Übergang `duration-fast`, `easing-standard` |
-| Form | die der Marke: Kreis am Radio, Quadrat mit `radius-mark` + Ausdehnung am Kästchen, Pille um die Spur am Schalter |
+| Form | die der Marke: Kreis am Radio, Quadrat mit der Ecke des Kästchens (`min(radius-sm, radius-mark)`) + Ausdehnung, Pille um die Spur am Schalter |
 | Wächter | kein halo bei `:disabled` und `aria-readonly="true"`, dieselbe `:where`-Klammer wie beim Rand |
 | Fokus | Fokus allein zeigt keinen halo; der Fokus bleibt der eine Ring aus `base.css` |
 

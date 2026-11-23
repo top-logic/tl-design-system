@@ -73,6 +73,11 @@ Sichtprüfung: Specimen `choice` hell/dunkel, Kästchen 4 px wie vorher; mit `da
 
 Figma-Variable `bevel-1`/`radius-mark` (Figma-Doku-Durchgang), Dichte im Theme-Vertrag (U70), Abstandsfamilie (U71).
 
+## Nachtrag 23.11. (Hendrik)
+
+Ein ganz eckiges Theme hätte eine 4-px-Checkbox bekommen. Entschieden: `.tl-checkbox` nimmt
+`min(var(--tl-radius-sm), var(--tl-radius-mark))`. Die Probe-Fixture bleibt ohne `bevel-1`, `probe.theme.css` wie auf master.
+
 ## Korrekturen aus dem Plan-Review (23.11., frischer Agent)
 
 Gehen den Schritten oben vor.
