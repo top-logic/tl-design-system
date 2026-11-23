@@ -107,7 +107,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
 |---|---|---|---|
 | Kundenprojekt Stufe A in der Demo-App gezeigt (JSON mit Hausfarbe → `derive` → Gate grün → Kundenlook) | 1 | offen | Spec §3 |
 | Themes in der Engine: `UIThemeService` setzt `data-tl-theme` statt `data-theme`, Demo zeigt ein Zweit-Theme (Paketseite fertig) | 1 | offen | Spec §2, Trac #29909 |
-| Tokens in Figma, Modi Hell/Dunkel, Blattnamen = Tokennamen | 1 | erledigt 17.11.; Komponenten laufend: Bibliothek Figma `02fjeGJYJVtkS13LqMk7G4` (Tokens, Icons auf Lucide 0.460.0, Button, Field, Form Field, Choice, Toggle, Select mit Chips, Pill, Badge, Alert mit Notice Bar und Snackbar, Tooltip, Progress mit Spinner, Divider, Avatar, Tabs, Breadcrumb, Card, Popover, Titlebar, Button Bar, Panel, Accordion, Dialog, Drawer, Menu, Toolbar, Floating Action, App Bar, Sidebar, Bottom Bar, Steps, Wizard; Schatten folgen dem Modus über Farbvariablen); Doku `r0LCAH2pa4nxcUU2JNkBZu` mit Skelett aller 69 Code-Komponenten, Seite „Status“ zeigt Stand je Komponente (23.11.: 34 von 69 dokumentiert; offen: Card auf die gemeinsame Titlebar umstellen, Scrollknöpfe der Tabs); nächster Block offen | Figma `02fje…` / `r0LC…` |
+| Tokens in Figma, Modi Hell/Dunkel, Blattnamen = Tokennamen | 1 | erledigt 17.11.; Komponenten laufend: Bibliothek Figma `02fjeGJYJVtkS13LqMk7G4` (Tokens, Icons auf Lucide 0.460.0, Button, Field, Form Field, Choice, Toggle, Select mit Chips, Pill, Badge, Alert mit Notice Bar und Snackbar, Tooltip, Progress mit Spinner, Divider, Avatar, Tabs, Breadcrumb, Card, Popover, Titlebar, Button Bar, Panel, Accordion, Dialog, Drawer, Menu, Toolbar, Floating Action, App Bar, Sidebar, Bottom Bar, Steps, Wizard, Table, Tree, List, Reorder List; Schatten folgen dem Modus über Farbvariablen); Doku `r0LCAH2pa4nxcUU2JNkBZu` mit Skelett aller 69 Code-Komponenten, Seite „Status“ zeigt Stand je Komponente (23.11.: 38 von 69 dokumentiert; offen: Card auf die gemeinsame Titlebar umstellen, Scrollknöpfe der Tabs); nächster Block offen | Figma `02fje…` / `r0LC…` |
 | TSX-Lint: kein Hex, kein `style={{ color }}`, nur `tl-`-Klassen; Restfunde `ColorPopup.tsx` `#000000`, Serverwert im Klassennamen `tl-{stack,columns,grid}--gap-${gap}` | 1 | offen | Spec §5 |
 
 **Offen zu entscheiden** (Hendrik):
@@ -139,7 +139,7 @@ Stands nachziehen. Quellen: Spec §4 und „Abnahme“, `skalen.md` „Welle 4�
   gehört an den Tisch; bis dahin nur funktionale Fixes (U24).
 * **Wo `derive` rechnet** und wie veraltete Kundenthemes erkannt werden — Vorschlag Trac #29909 an Bernhard.
 * **Spaltenfilter:** keine neue Gestaltung, bis Bernhard die Semantik entscheidet (U64).
-* **Tabelle ohne Schatten** (23.11., `skalen.md`): lokal auf Engine-Branch `CWS/CWS_TBD_table_no_shadow` (`a4f43e6675`, Commit mit `#TBD-UI`), Gates grün; braucht Ticket, Umschreiben der Nachricht, Push und PR.
+* **Tabelle ohne Schatten** (23.11., `skalen.md`): Ticket #30507 (angenommen, ohne weiteres Review), Engine-Branch `CWS/CWS_30507_table_no_shadow` (`8105e2d003`) lokal, Gates grün; wartet auf Push, PR und Merge.
 
 ## Verweise
 
