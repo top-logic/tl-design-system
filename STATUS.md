@@ -70,6 +70,11 @@ kompakten Felds kürzer (d4750e539f). U85 (Zebra-Hover) gehört zu !2226.
 Folge **#30454** (angelegt 19.11.): kompaktes Pflichtfeld in der Zeile für Screenreader stumm (nur Ecke, `role=group`
 erlaubt kein `aria-required`) — Öffner nennt bei Pflicht „(Pflicht)“; **!2419** (`CWS/CWS_30454_compact_field_required_label`, Basis `CWS/CWS_30391_row_edit_required`, bhu angefragt 19.11.). **Nach Merge von !2394:** Basis von !2419 auf master prüfen, dann `jenkins` (kein `NoPreview`, Beschriftung sichtbar).
 
+**#30528 Icon-Knöpfe** (23.11., Anlass bhu auf !2461): Audit aller Ansichten, Regel nachgezogen (`skalen.md` 23.11.),
+Plan `docs/superpowers/plans/2026-11-23-icon-knoepfe.md` mit Plan-Review. Branch `CWS/CWS_30528_icon_button_size`
+(Worktree `tl8-wt-30528`, 7 Commits bis `ffda1e64b9`), Gates grün, Sichtprüfung Demo 8095; **wartet auf Push und PR**.
+Spaltenwahl `sm` als U86 an den Stapel.
+
 **Weiter — Hendrik wählt:**
 
 1. **#30502 U69 `radius-mark`** (23.11.): Checkbox-Ecke `min(radius-sm, radius-mark)`, `radius-mark` = `bevel-1`, Formbefund in `derive`; Branch

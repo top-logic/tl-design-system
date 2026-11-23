@@ -3411,3 +3411,30 @@ Hendrik (20.11.): In der Spaltenwahl blendet ein Plus ein, ein offenes Auge aus 
 die Darstellung als Abschnitt in den Spaltendialog (der Dialog fällt ab !2228 weg); Auge offen / Auge zu als Paar
 (im Abschnitt „Ausgeblendet“ stünde überall das zugeklappte Auge, doppelt zum Titel); Icons auch für Dichte und
 Schalter.
+
+### Icon-Knöpfe folgen der Semantik; die Tabellenzeile macht sie klein (23.11., #30528)
+
+**Befund.** Bernhard fand auf !2461 einen Löschknopf in der bearbeiteten Zeile, der wie ein Kasten wirkte: `secondary`,
+28 px, gefülltes 20-px-Icon zwischen 24-px-Feldern. Ein Audit aller Ansichten der Demo fand dasselbe Muster an
+weiteren Stellen: Kalender-Toolbar und Chip-Feld `secondary`, Kopf der Listengruppe im Konfigurationseditor `secondary`
+mit Glyphen statt Icons (▲▼✕✓), Sprachknopf `secondary`, ein Popover-Auslöser ohne `--icon`, ein von Hand gebauter
+Upload-Knopf, und Icon-Knöpfe, die eine Flex-Zeile auf 22 × 28 px staucht. Die Regel (Abschnitt Button) stand,
+nur hat sie niemand an jeder Stelle gesetzt.
+
+**Entschieden (Hendrik 23.11.):**
+
+| Fall | Regel |
+|---|---|
+| Größe in der Tabellenzeile | Der Container sagt es: die Körperzeilen setzen `ButtonDefaults small`; jeder Icon-Knopf darin ist `sm`, auch Download, Sprachknopf, Popover-Auslöser und Medienknopf. Popover, Menüs, Picker und Bildüberlagerung, die aus einer Zeile öffnen, setzen `small` zurück. `sm` wirkt nur auf icon-only **mit** Bild. |
+| Kopfknopf | Kopf einer Formulargruppe und einer Karte setzen `ghost` + `small` (wie Titelleiste und Hinweis). |
+| `sm` außerdem | Pfeile der Reiterleiste, Toolbar im Feld (Rich-Text), Reorder-Liste der Spaltenwahl. |
+| Sprachknopf neben dem Feld | `ghost` in Control-Höhe (in der Zelle `sm`). |
+| Ausnahme `secondary` | Medienknöpfe und Knöpfe über einem Bild (Bild-Editor: Blättern, Schließen) — sie brauchen eine Fläche. |
+| Kein Icon-Knopf | Aufklapper (`tl-toggle`), Einträge der eingeklappten Sidebar (Menüeinträge), Symbol- und Farbraster (Auswahlzellen). |
+| Quadrat | `.tl-button--icon` schrumpft in keiner Flex-Zeile (`flex-shrink: 0`, Test in `square.test.mjs`). |
+| Hover-Auslöser | Ein Auslöser, der seine Fläche beim Zeigen öffnet, trägt keinen Tooltip — die Fläche sagt es schon. |
+| Spaltenwahl | Immer `sm`; umgesetzt im Stapel !2228–!2231 (U86), nicht in #30528. |
+
+**Warum über den Container:** Ein Knopf weiß nicht, wo er steht; die Zeile weiß es. Setzt jeder Aufrufer die Größe
+selbst, fehlt sie beim nächsten neuen Control wieder — genau das war der Befund. Außen nicht: `chat` (eigene Klassen,
+eigenes Thema).
