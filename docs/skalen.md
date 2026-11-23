@@ -630,7 +630,8 @@ zurückhaltenden Ende**, dort wo Carbon (4 px) und Fluent (4 px) auch stehen.
 
 | Token | Wert | Gilt für |
 |---|---|---|
-| `radius-sm` | `0.25rem` (4 px) | Feld, Schaltfläche, Auswahlfeld, Checkbox, Reiter, Tabellenzelle, Chip-Ecke |
+| `radius-sm` | `0.25rem` (4 px) | Feld, Schaltfläche, Auswahlfeld, Reiter, Tabellenzelle, Chip-Ecke |
+| `radius-mark` | `0.25rem` (4 px), Primitiv `bevel-1` | Kästchen der Checkbox |
 | `radius-md` | `0.5rem` (8 px) | Karte, Dialog, Popover, Panel, Drawer |
 | `radius-full` | `999px` | Badge, Zähler, Umschalter, Fortschrittsbalken |
 | `radius-round` | `50%` | Avatar, Statuspunkt, runder Icon-Knopf |
@@ -651,6 +652,14 @@ Aus dem Bestand fallen zwei Werte:
 * **`0`**, zweimal literal. Wo eine Kante wirklich scharf sein muss — eine Zelle mitten in einer
   Tabelle —, ist das kein Radiuswert, sondern das Fehlen eines Rahmens. Es wird nicht als Token
   geführt.
+
+**Die Auswahlmarke hat eine eigene Ecke** (23.11., #30502, U69). Im Grenztest `weich` machte ein Kundentheme mit
+`corner-1` = 12 px das 16-px-Kästchen rund, und es las sich als Radio. Im Theme war das nicht zu lösen: jeder eckige
+Wert für `corner-1` macht Felder und Knöpfe wieder eckig. Das Kästchen liest darum `radius-mark` auf eigener
+Primitivfamilie `bevel-*` („Familie plus Stufe, keine Rolle“ wie `veil-*`), unabhängig von `corner-1`/`corner-2`.
+Das Radio bleibt `radius-round`: eckig heißt mehrere, rund heißt eins. **Grenze:** `radius-mark` bleibt unter einem
+Drittel der Kante (`size-choice`), sonst kippt das Quadrat zum Kreis. Ein Test hält TopLogic darunter (4 < 5,33 px),
+`derive` meldet einen gelieferten Verstoß (`bevel-1` oder die Stufe hinter `size-choice`) als Formbefund.
 
 **Verschachtelung:** Liegt ein Element mit `radius-sm` bündig in einem Behälter mit `radius-md`,
 bleibt die innere Rundung kleiner als die äußere — 4 in 8 geht auf. Der umgekehrte Fall, ein
@@ -896,7 +905,7 @@ Die Spec vom 17.09. kennt den Kunden nur als Tausch: `customer.primitives.css` n
 | Achse | `data-tl-theme="<id>"` am `html`. Ohne Attribut gilt das TopLogic-Theme; es steht auf `:root`. |
 | Kundentheme | eine erzeugte Datei je Theme, `<id>.theme.css`, Selektoren `[data-tl-theme="acme"]` und `[data-tl-theme="acme"][data-tl-mode="dark"]`, geladen nach `tokens.css`. Sie trägt **Rollen mit Werten**, nur die, die von TopLogic abweichen; beide Blöcke dieselben Farbrollen. `derive` schreibt sie aus `acme.primitives.json`. |
 | Beschriftungen | `--tl-text-on-*` und `--tl-icon-on-*` werden je Theme × Modus gerechnet; darum sind sie die Datei, nicht der Kunde. |
-| Gate | Die Paarliste (`tools/lib/pairs.mjs`) läuft über das Ergebnis. Gerechnete Werte bestehen sie immer, notfalls durch Nachführung in der Helligkeit, mit Hinweis; gelieferte dürfen sie verfehlen, der Befund steht im Bericht und im Dateikopf, `--strict` macht ihn zum Fehler. |
+| Gate | Die Paarliste (`tools/lib/pairs.mjs`) läuft über das Ergebnis. Gerechnete Werte bestehen sie immer, notfalls durch Nachführung in der Helligkeit, mit Hinweis; gelieferte dürfen sie verfehlen, der Befund steht im Bericht und im Dateikopf (ebenso ein Formbefund: `radius-mark` ab einem Drittel von `size-choice`), `--strict` macht ihn zum Fehler. |
 | Engine | `UIThemeService` setzt künftig `data-tl-theme` statt `data-theme` und behält Nutzerwahl, Vererbung und Systemfolge. Vererbung wird zur Frage an `derive`, nicht an CSS: Was das Kundentheme nicht setzt, bleibt beim Wert von `:root`, weil die Kaskade es so löst. |
 | Ort der Definition | im Paket als JSON, nicht in XML. Die XML-Tokenkonfiguration entfällt mit den Wellen (Spec §4). Wie die Engine die Liste der verfügbaren Themes erfährt, entscheidet die Welle, die `derive` bringt. |
 
@@ -2144,7 +2153,7 @@ nichts. MUI, Material und Fluent zeigen an derselben Stelle eine Fläche um die 
 | Farbe | Zeigen `surface-interactive-hover`, Drücken `surface-interactive-active` — deckend, angekreuzt wie leer |
 | Größe | Ausdehnung (`size-control` − `size-choice`) / 2: der halo füllt die Marke auf die Trefferfläche auf, folgt damit der Dichte (8 px normal, 6 px kompakt) |
 | Zeichnung | `box-shadow: 0 0 0 <Ausdehnung> <Fläche>` — zeichnet nur außerhalb der Marke, verschiebt nichts, braucht kein Pseudo-Element; Übergang `duration-fast`, `easing-standard` |
-| Form | die der Marke: Kreis am Radio, Quadrat mit `radius-sm` + Ausdehnung am Kästchen, Pille um die Spur am Schalter |
+| Form | die der Marke: Kreis am Radio, Quadrat mit `radius-mark` + Ausdehnung am Kästchen, Pille um die Spur am Schalter |
 | Wächter | kein halo bei `:disabled` und `aria-readonly="true"`, dieselbe `:where`-Klammer wie beim Rand |
 | Fokus | Fokus allein zeigt keinen halo; der Fokus bleibt der eine Ring aus `base.css` |
 

@@ -54,7 +54,7 @@ Tausch durch.
   nur die Rollen, die von TopLogic abweichen, unter `[data-tl-theme="acme"]`. Was wir rechnen, erfüllt
   WCAG immer, notfalls um einen Helligkeitsschritt nachgeführt, mit Hinweis. Was der Kunde liefert,
   gilt, auch unter WCAG: der Befund steht im Bericht und im Dateikopf, `--strict` macht ihn zum
-  Fehler. Gebaut seit 25.09.; die Engine setzt `data-tl-theme` noch nicht (Issue #16).
+  Fehler. Dasselbe gilt für eine Form, die kippt: eine Checkbox-Ecke ab einem Drittel der Kante liest sich als Radio. Gebaut seit 25.09.; die Engine setzt `data-tl-theme` noch nicht (Issue #16).
 - **B · Rollen.** Ein `customer.tokens.css` nach unserem `tokens.css`. Der Kunde trägt die Rechnung
   selbst, das Gate prüft trotzdem.
 - **C · Eigene Komponenten.** Je Komponente ein Vertrag (`button.contract.md`) in zwei Hälften: **Muss**
