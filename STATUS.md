@@ -21,7 +21,7 @@ Framework-Ticket #30388 (Auftritt der geladenen Seite, CC bhu), Skizze `.superpo
 | !2229 | #30235 Kopf über die Freeze-Linie | !2228 | Basis lokal gemergt 24.11. (e968499fa8, Konflikte `reorderable`/`required`: beide behalten), **nicht gepusht** |
 | !2230 | #30233 Ansicht je Person | !2229 | lokal +3 Commits (Review bhu 18.11.) und Merge 206fc4a937, **nicht gepusht** |
 | — | #30506 Menüschalter „Tabellen“ | 30233 | Branch lokal (Merge 7705f70bd2), PR noch anzulegen |
-| !2231 | #30232 Filter-Popover (Draft) | 30506 | Merge der Kette scheitert an master-!2413 (#30393 Spaltenfilter je Typ): Konflikte in 4 Dateien, **Entscheidung Hendrik** |
+| !2231 | #30232 Filter-Popover (Draft) | 30506 | Merge der Kette scheitert an master-!2413 (#30393 Spaltenfilter je Typ): Konflikte in 4 Dateien; **bleibt WIP** (Hendrik 24.11.), bis er auf Bernhards Filtermodell umgestellt ist |
 | !2458 | #30502 `radius-mark` | master | bhu + `jenkins` angefragt 23.11., mit Vorschau |
 
 **#30422 Anmeldestrecke** (angenommen 18.11.): Neubau als `<login-card>`, Folgeschritte und Fehler in der Karte,
@@ -61,6 +61,12 @@ Popover nur Spalten, keine Tabellendichte; **neu #30506**, Branch `CWS/CWS_30506
 04aeb7b414) = Menüeintrag als Schalter + Gruppe „Tabellen“, zwischen !2230 und !2231; 30232 = Merge ea6fbe0807 (baumgleich
 mit dem geprüften Stand, Sichtprüfung 8093 ok). Alles **lokal, nicht gepusht**; PR für #30506 noch anzulegen; #30506 erst
 nach Docker-Durchklicken an Bernhard. (Hinweis an !2226 entfällt, gemergt 23.11.)
+24.11.: Push 30233 + 30506 freigegeben, **nicht ausgeführt** — 30233 trägt den ungepushten Merge 30235 (e968499fa8, von Hand
+gelöst, ohne Gate-Lauf); allein gepusht stünde master im Diff von !2230. **Nächster Schritt (neue Sitzung):** Gates auf dem
+Merge-Stand (npm test, test:dom, lint-css, Vitest, typecheck, `mvn -o clean install`, check-messages-en), dann neue Freigabe
+und einzeln pushen 30235 → 30233 → 30506; danach PR #30506 (Basis 30233, Label design-system, bhu, kein jenkins), Texte
+!2230/#30233. Konfliktprüfung 24.11.: 30233/30506 sauber gegen master; gegen !2489 (#30528) und !2459 (#30487) nur die
+Import-Zeile von `TLTableView.tsx`.
 
 **Lokal, ohne PR:** Grenztest C (#30325, Branch `CWS/CWS_30325_limits_test_customer_ui`, Worktree `tl8-wt-30325`):
 MUI-Demo und Theme `weich`, Befunde U69–U83 in `docs/ui-durchgang.md`; Kommentar an Bernhard auf Trac #29650.
