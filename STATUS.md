@@ -21,8 +21,10 @@ Framework-Ticket #30388 (Auftritt der geladenen Seite, CC bhu), Skizze `.superpo
 | !2229 | #30235 Kopf über die Freeze-Linie | !2228 | Basis gemergt (e968499fa8), gepusht 24.11., bhu angefragt |
 | !2230 | #30233 Ansicht je Person | !2229 | Review bhu 18.11. umgesetzt, gepusht 24.11. (206fc4a937), PR-/Trac-Text nachgezogen, bhu angefragt |
 | !2491 | #30506 Menüschalter „Tabellen“ | !2230 | gepusht 24.11. (7705f70bd2), PR angelegt; an bhu erst nach Docker-Durchklicken |
-| !2231 | #30232 Filter-Popover (Draft) | 30506 | Merge der Kette scheitert an master-!2413 (#30393 Spaltenfilter je Typ): Konflikte in 4 Dateien; **bleibt WIP** (Hendrik 24.11.), bis er auf Bernhards Filtermodell umgestellt ist |
+| !2231 | #30232 Filter-Popover (Draft) | !2230 (enthält !2491 nicht) | Merge der Kette scheitert an master-!2413 (#30393 Spaltenfilter je Typ): Konflikte in 4 Dateien; **bleibt WIP** (Hendrik 24.11.), bis er auf Bernhards Filtermodell umgestellt ist |
 | !2458 | #30502 `radius-mark` | master | bhu + `jenkins` angefragt 23.11., mit Vorschau |
+| !2461 | #30507 Tabelle ohne Schatten | master | offen, Merge mit master konfliktfrei (24.11.) |
+| !2489 | #30528 Icon-Knöpfe | master | offen seit 24.11., Merge mit master konfliktfrei |
 
 **#30422 Anmeldestrecke** (angenommen 18.11.): Neubau als `<login-card>`, Folgeschritte und Fehler in der Karte,
 `<form>` + `autocomplete`, Passkey-Autofill, alle Karten der Strecke (skalen 18.11.). Spec
@@ -59,7 +61,7 @@ Benutzermenü, Popover nur Spalten (Plan `docs/superpowers/plans/2026-11-23-ansi
 **Geschnitten** (neue Menüs nur als eigener, auf Docker geprüfter PR): 30233 (ad89be44f0 … 7e52647335, Gates grün) = Speichern je Person,
 Popover nur Spalten, keine Tabellendichte; **neu #30506**, Branch `CWS/CWS_30506_ui_pass_2_table_look_menu` (afabcdb0cb,
 04aeb7b414) = Menüeintrag als Schalter + Gruppe „Tabellen“, zwischen !2230 und !2231; 30232 = Merge ea6fbe0807 (baumgleich
-mit dem geprüften Stand, Sichtprüfung 8093 ok). Alles **lokal, nicht gepusht**; PR für #30506 noch anzulegen; #30506 erst
+mit dem geprüften Stand, Sichtprüfung 8093 ok). Gepusht 24.11. nach den Gates, PR !2491 für #30506; #30506 erst
 nach Docker-Durchklicken an Bernhard. (Hinweis an !2226 entfällt, gemergt 23.11.)
 24.11.: Gates auf dem Merge-Stand grün (30235 und 30506: npm test 772, test:dom 31, lint-css, Vitest, typecheck, Maven, check-messages-en;
 rot nur DB-Backend-Tests in `com.top_logic` ohne Datenbank, Tabellentests dort 173 grün), 30235 → 30233 → 30506 gepusht, alle drei
