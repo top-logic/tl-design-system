@@ -1732,6 +1732,12 @@ nicht wiederholt.
 Die Regel dahinter, wie bei `size-avatar-*`: ein Maß folgt der Dichte, wenn es eine Bedienhöhe ist
 (`size-control`, `size-row`); ein gezeichnetes Symbol oder eine Spalte tut es nicht.
 
+**Flächen folgen der Dichte nicht (Hendrik, 24.11.).** Abstände zwischen Flächen und ihre Innenmaße — Lücke der
+Dashboard-Kacheln, Spalten und Karten des Boards, Kalendertage, Körper der Karte — bleiben in beiden Dichten gleich.
+Kompakt wird eine Maske über das, was darin bedient wird: Köpfe (`tl-titlebar`, `size-bar`), Toolbars, Controls,
+Zeilen. Verworfen: ein Dichte-Token für Flächenabstände (kein Bedarf benannt) und die Höhe der Kalendertage allein an
+der Dichte (eine Komponente entschiede wieder für sich, was „kompakt“ heißt).
+
 **Reihenfolge der Zustandsregeln.** *Befund:* Fehler und Warnung haben dieselbe Spezifität; stand die
 Warnregel nach der Fehlerregel, gewann bei beiden Attributen die Warnung — das Attribut des Screenreaders
 und das Bild widersprachen sich. *Entschieden:* Die Warnung steht **vor** dem Fehler, der Fehler gewinnt
