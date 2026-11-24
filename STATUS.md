@@ -13,17 +13,16 @@ Gruppenwert läuft über), !2208 (#30230 Filtervorgaben „+ n weitere“), !237
 18.11. !2275 (#30294 Login-Hintergrund). Einstieg mit TL-Zeichen (PR 2) wartet auf
 Framework-Ticket #30388 (Auftritt der geladenen Seite, CC bhu), Skizze `.superpowers/brainstorm/14150-1794476958/content/login-marke.html`.
 
-**Offen auf unserer Seite** (Abgleich Gitea 20.11.; alle Builds auf dem aktuellen Head grün, sofern gebaut):
+**Offen auf unserer Seite** (Abgleich Gitea 24.11.; am 23.11. gemergt: !2226, !2227, !2394, !2419, !2439, !2441):
 
 | PR | Ticket | Basis | Stand |
 |---|---|---|---|
-| !2226 | #30236 Ansicht-Popover | master | Build 1675 grün, bhu angefragt 20.11. — **zuerst** |
-| !2227 | #30102 Menüverhalten | !2226 | wartet auf !2226; kein `jenkins` bis Basis master |
-| !2228–!2231 | #30234, #30235, #30233, #30232 (Draft) | gestapelt | warten, kein Review |
-| !2394 | #30391 Pflicht in der Zeile | master | Build 1655 grün; wartet auf tri und bhu (bhu-Approval vom 18.11. galt dem alten Stand) |
-| !2419 | #30454 Pflicht für Screenreader | !2394 | bhu angefragt 19.11.; `jenkins` nach Merge von !2394 |
-| !2439 | #30476 Login-Karte Handy | master | Build 1676 grün, bhu angefragt |
-| !2441 | #30477 kein Feld-Zoom iPhone | master | Build 1678 grün, bhu angefragt |
+| !2228 | #30234 Spaltenwahl | master | Build 1725 grün (23.11., Bernhard hat master gemergt), bhu-Anfrage vom 10.11. — **zuerst** |
+| !2229 | #30235 Kopf über die Freeze-Linie | !2228 | Basis lokal gemergt 24.11. (e968499fa8, Konflikte `reorderable`/`required`: beide behalten), **nicht gepusht** |
+| !2230 | #30233 Ansicht je Person | !2229 | lokal +3 Commits (Review bhu 18.11.) und Merge 206fc4a937, **nicht gepusht** |
+| — | #30506 Menüschalter „Tabellen“ | 30233 | Branch lokal (Merge 7705f70bd2), PR noch anzulegen |
+| !2231 | #30232 Filter-Popover (Draft) | 30506 | Merge der Kette scheitert an master-!2413 (#30393 Spaltenfilter je Typ): Konflikte in 4 Dateien, **Entscheidung Hendrik** |
+| !2458 | #30502 `radius-mark` | master | bhu + `jenkins` angefragt 23.11., mit Vorschau |
 
 **#30422 Anmeldestrecke** (angenommen 18.11.): Neubau als `<login-card>`, Folgeschritte und Fehler in der Karte,
 `<form>` + `autocomplete`, Passkey-Autofill, alle Karten der Strecke (skalen 18.11.). Spec
@@ -61,7 +60,7 @@ Benutzermenü, Popover nur Spalten (Plan `docs/superpowers/plans/2026-11-23-ansi
 Popover nur Spalten, keine Tabellendichte; **neu #30506**, Branch `CWS/CWS_30506_ui_pass_2_table_look_menu` (afabcdb0cb,
 04aeb7b414) = Menüeintrag als Schalter + Gruppe „Tabellen“, zwischen !2230 und !2231; 30232 = Merge ea6fbe0807 (baumgleich
 mit dem geprüften Stand, Sichtprüfung 8093 ok). Alles **lokal, nicht gepusht**; PR für #30506 noch anzulegen; #30506 erst
-nach Docker-Durchklicken an Bernhard. Hinweis an !2226 wartet auf Freigabe.
+nach Docker-Durchklicken an Bernhard. (Hinweis an !2226 entfällt, gemergt 23.11.)
 
 **Lokal, ohne PR:** Grenztest C (#30325, Branch `CWS/CWS_30325_limits_test_customer_ui`, Worktree `tl8-wt-30325`):
 MUI-Demo und Theme `weich`, Befunde U69–U83 in `docs/ui-durchgang.md`; Kommentar an Bernhard auf Trac #29650.
