@@ -20,8 +20,8 @@ Framework-Ticket #30388 (Auftritt der geladenen Seite, CC bhu), Skizze `.superpo
 | !2228 | #30234 Spaltenwahl | master | Build 1725 grün (23.11., Bernhard hat master gemergt), bhu-Anfrage vom 10.11. — **zuerst** |
 | !2229 | #30235 Kopf über die Freeze-Linie | !2228 | Basis gemergt (e968499fa8), gepusht 24.11., bhu angefragt |
 | !2230 | #30233 Ansicht je Person | !2229 | Review bhu 18.11. umgesetzt, gepusht 24.11. (206fc4a937), PR-/Trac-Text nachgezogen, bhu angefragt |
-| !2491 | #30506 Menüschalter „Tabellen“ | !2230 | gepusht 24.11. (7705f70bd2), PR angelegt; an bhu erst nach Docker-Durchklicken |
-| !2231 | #30232 Filter-Popover (Draft) | !2230 (enthält !2491 nicht) | Merge der Kette scheitert an master-!2413 (#30393 Spaltenfilter je Typ): Konflikte in 4 Dateien; **bleibt WIP** (Hendrik 24.11.), bis er auf Bernhards Filtermodell umgestellt ist |
+| — | #30506 Menüschalter „Tabellen“ | — | PR !2491 geschlossen 24.11. (Kette zu tief), Branch bleibt (7705f70bd2); **neu gegen master öffnen, wenn !2230 gemergt ist**, dann erst Docker-Durchklicken und bhu |
+| — | #30232 Filter-Popover | — | Draft !2231 geschlossen 24.11. (Kette zu tief), Branch bleibt; Umbau auf Bernhards Filtermodell (!2413), dann neuer PR von master |
 | !2458 | #30502 `radius-mark` | master | bhu + `jenkins` angefragt 23.11., mit Vorschau |
 | !2461 | #30507 Tabelle ohne Schatten | master | offen, Merge mit master konfliktfrei (24.11.) |
 | !2489 | #30528 Icon-Knöpfe | master | offen seit 24.11., Merge mit master konfliktfrei |
@@ -40,7 +40,7 @@ Vorgezogen fürs Handy (skalen 20.11.), beide auf master-Basis, `bhu` + `jenkins
 **!2439** (#30476, Karte schneidet bei 375 px nicht mehr ab) und **!2441** (#30477, kein Zoom ins Feld auf dem iPhone,
 dort bestätigt). Lokaler Hilfsbranch `local/phone-test` (beide Fixes, Demo 8094) nach dem Merge löschen.
 
-**Kette UI-Durchgang** (nur die zwei untersten Ebenen haben Build und Review, Ketten höchstens 2–3 PRs):
+**Kette UI-Durchgang** (nur die zwei untersten Ebenen haben Build und Review, Ketten höchstens 2–3 PRs; 24.11. auf !2228 ← !2229 ← !2230 gekürzt, kein neuer PR auf der Kette, bevor die unteren gemergt sind):
 !2207 (#30229) → !2208 (#30230) → !2226 (#30236) → !2227 (#30102) → !2228 (#30234) → !2229 (#30235) →
 !2230 (#30233) → !2231 (#30232, Draft). Rückt nach jedem Merge zwei Ebenen nach. Vor jeder Arbeit dort pullen
 — Bernhard merged master selbst hinein. !2014 (16.11.) und !2149 (20.11.) geschlossen, ihr Inhalt steckt in der Kette.
