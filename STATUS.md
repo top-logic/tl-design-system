@@ -18,9 +18,9 @@ Framework-Ticket #30388 (Auftritt der geladenen Seite, CC bhu), Skizze `.superpo
 | PR | Ticket | Basis | Stand |
 |---|---|---|---|
 | !2228 | #30234 Spaltenwahl | master | Build 1725 grün (23.11., Bernhard hat master gemergt), bhu-Anfrage vom 10.11. — **zuerst** |
-| !2229 | #30235 Kopf über die Freeze-Linie | !2228 | Basis lokal gemergt 24.11. (e968499fa8, Konflikte `reorderable`/`required`: beide behalten), **nicht gepusht** |
-| !2230 | #30233 Ansicht je Person | !2229 | lokal +3 Commits (Review bhu 18.11.) und Merge 206fc4a937, **nicht gepusht** |
-| — | #30506 Menüschalter „Tabellen“ | 30233 | Branch lokal (Merge 7705f70bd2), PR noch anzulegen |
+| !2229 | #30235 Kopf über die Freeze-Linie | !2228 | Basis gemergt (e968499fa8), gepusht 24.11., bhu angefragt |
+| !2230 | #30233 Ansicht je Person | !2229 | Review bhu 18.11. umgesetzt, gepusht 24.11. (206fc4a937), PR-/Trac-Text nachgezogen, bhu angefragt |
+| !2491 | #30506 Menüschalter „Tabellen“ | !2230 | gepusht 24.11. (7705f70bd2), PR angelegt; an bhu erst nach Docker-Durchklicken |
 | !2231 | #30232 Filter-Popover (Draft) | 30506 | Merge der Kette scheitert an master-!2413 (#30393 Spaltenfilter je Typ): Konflikte in 4 Dateien; **bleibt WIP** (Hendrik 24.11.), bis er auf Bernhards Filtermodell umgestellt ist |
 | !2458 | #30502 `radius-mark` | master | bhu + `jenkins` angefragt 23.11., mit Vorschau |
 
@@ -61,12 +61,10 @@ Popover nur Spalten, keine Tabellendichte; **neu #30506**, Branch `CWS/CWS_30506
 04aeb7b414) = Menüeintrag als Schalter + Gruppe „Tabellen“, zwischen !2230 und !2231; 30232 = Merge ea6fbe0807 (baumgleich
 mit dem geprüften Stand, Sichtprüfung 8093 ok). Alles **lokal, nicht gepusht**; PR für #30506 noch anzulegen; #30506 erst
 nach Docker-Durchklicken an Bernhard. (Hinweis an !2226 entfällt, gemergt 23.11.)
-24.11.: Push 30233 + 30506 freigegeben, **nicht ausgeführt** — 30233 trägt den ungepushten Merge 30235 (e968499fa8, von Hand
-gelöst, ohne Gate-Lauf); allein gepusht stünde master im Diff von !2230. **Nächster Schritt (neue Sitzung):** Gates auf dem
-Merge-Stand (npm test, test:dom, lint-css, Vitest, typecheck, `mvn -o clean install`, check-messages-en), dann neue Freigabe
-und einzeln pushen 30235 → 30233 → 30506; danach PR #30506 (Basis 30233, Label design-system, bhu, kein jenkins), Texte
-!2230/#30233. Konfliktprüfung 24.11.: 30233/30506 sauber gegen master; gegen !2489 (#30528) und !2459 (#30487) nur die
-Import-Zeile von `TLTableView.tsx`.
+24.11.: Gates auf dem Merge-Stand grün (30235 und 30506: npm test 772, test:dom 31, lint-css, Vitest, typecheck, Maven, check-messages-en;
+rot nur DB-Backend-Tests in `com.top_logic` ohne Datenbank, Tabellentests dort 173 grün), 30235 → 30233 → 30506 gepusht, alle drei
+mergeable. Neuer master (24.11., #30503, #30463, Renovate) berührt die Kette nicht, nicht nachgezogen. **Nächster Schritt:**
+Reviews abwarten (!2228 zuerst); nach jedem Merge Basis prüfen, `jenkins` erst, wenn ein PR auf master zeigt.
 
 **Lokal, ohne PR:** Grenztest C (#30325, Branch `CWS/CWS_30325_limits_test_customer_ui`, Worktree `tl8-wt-30325`):
 MUI-Demo und Theme `weich`, Befunde U69–U83 in `docs/ui-durchgang.md`; Kommentar an Bernhard auf Trac #29650.
